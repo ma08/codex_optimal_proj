@@ -37,11 +37,18 @@ def run_davinci(path, num, outdir):
 
 
 if __name__ == "__main__":
-    # prompt_file_path = sys.argv[1]
-    prompt_file_path = "search-questions.txt_dir/0201/question.txt"
-    num = prompt_file_path.split("/")[1]
-    out_dir =f"davinci_runs/{num}"
-    os.mkdir(out_dir)
+    #Example: python3 ./test/0179/question.txt
+    prompt_file_path = sys.argv[1] #test/sort-questions.txt_dir/4997/question.txt
+    out_dir = sys.argv[2] #davinci_runs/test/sort-questions.txt_dir
+
+    split_parts = prompt_file_path.split('/')
+    num = split_parts[2]
+    
+    print(f"num: {num}")
+
+    # out_dir = f"davinci_runs/{type_of_sample}/{num}"
+    # os.makedirs(out_dir, exist_ok=True)
+
     sys.stdout = open(f'{out_dir}/out.log', 'w')
     run_davinci(prompt_file_path, num, out_dir)
     sys.stdout.close()
