@@ -2,7 +2,7 @@
 
 test_or_train="test"
 COUNTER=$(( 0 ))
-LIMIT = $(( 10 ))
+LIMIT=$(( 10 ))
 
 for input_set in $test_or_train/*.txt; do 
 
