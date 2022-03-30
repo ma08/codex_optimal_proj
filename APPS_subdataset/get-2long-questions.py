@@ -31,7 +31,7 @@ def get2longqs(d, wl):
 				max_sol_wc = max(wcounts)
 
 			if q_nw + max_sol_wc >= wl:
-				print("Question %s is too long" %(os.path.join(subdir, f)))
+				print(os.path.join(subdir, f))
 
 for d in rootdirs:
 	get2longqs(d, word_lim)
