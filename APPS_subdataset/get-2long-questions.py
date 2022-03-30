@@ -8,7 +8,9 @@ d1 = './train/sort-questions.txt_dir'
 d2 = './train/search-questions.txt_dir'
 d3 = './test/sort-questions.txt_dir'
 d4 = './test/search-questions.txt_dir'
-rootdirs = [d1, d2, d3, d4]
+d5 = './train/intro-questions.txt_dir'
+d6 = './test/intro-questions.txt_dir'
+rootdirs = [d1, d2, d3, d4, d5, d6]
 # 2920 is roughly 4000 tokens
 word_lim = 2920 #1500
 
@@ -17,6 +19,7 @@ def get2longqs(d, wl):
 		max_sol_wc = 0
 		for f in dirs:
 			qf = os.path.join(subdir, f, "question.txt")
+			print("Working on %s" %qf)
 			qc = open(qf, "r").read()
 			q_nw = len(word_tokenize(qc))
 
