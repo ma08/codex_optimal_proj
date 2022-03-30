@@ -9,7 +9,8 @@ d2 = './train/search-questions.txt_dir'
 d3 = './test/sort-questions.txt_dir'
 d4 = './test/search-questions.txt_dir'
 rootdirs = [d1, d2, d3, d4]
-word_lim = 1500 #2920
+# 2920 is roughly 4000 tokens
+word_lim = 2920 #1500
 
 def get2longqs(d, wl):
 	for subdir, dirs, files in os.walk(d):
