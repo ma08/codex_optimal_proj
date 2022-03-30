@@ -138,6 +138,8 @@ if __name__ == "__main__":
     #python3 run_edit_module.py example_output.json
     input_file_name = sys.argv[1]
 
+    #The following code is to save the example prompt and outputs
+    """
     with open(input_file_name,"r") as input_fp:
         data = json.load(input_fp)
 
@@ -146,9 +148,8 @@ if __name__ == "__main__":
         
         save_strings_to_py_file(data["solutions"], "example_outputs")
     exit()
+    """
 
-        # with open('example_prompt.txt', 'w') as outfile:
-            # json.dump(data["prompt"], outfile)
 
         
 
