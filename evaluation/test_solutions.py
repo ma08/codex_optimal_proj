@@ -44,7 +44,7 @@ def evaluate_problems(args):
     results = {}
 
     #save the path of the file where we want to store the evaluations results
-    results_save = os.path.join(args.save, f"all_results.json") 
+    results_save = os.path.join(args.save, f"results.json") 
 
     # evaluation loop across the targeted prompts and corresponding solutions
     #OUTER LOOP ACOROSS PROMPTS
@@ -123,8 +123,7 @@ def main(args):
 
     if args.print_results:
         results = {}
-        codes_loc = os.path.join(args.save, f"all_codes.json")
-        results_save = os.path.join(args.save, f"all_results.json")
+        results_save = os.path.join(args.save, f"results.json")
         with open(results_save, "r") as f:
             results = json.load(f)
     else:
