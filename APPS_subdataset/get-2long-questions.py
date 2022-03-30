@@ -19,7 +19,6 @@ def get2longqs(d, wl):
 		max_sol_wc = 0
 		for f in dirs:
 			qf = os.path.join(subdir, f, "question.txt")
-			print("Working on %s" %qf)
 			qc = open(qf, "r").read()
 			q_nw = len(word_tokenize(qc))
 
@@ -27,8 +26,8 @@ def get2longqs(d, wl):
 			if os.path.exists(sf):
 				sc = open(sf)
 				sols = json.load(sc)
-				wcounts = [len(word_tokenize(s)) for s in sols]
-				max_sol_wc = max(wcounts)
+				wcounts = [len(word_tokenize(s)) for s in sols if len(s) <= wl]
+				max_sol_wc = max(wcounts) if wcounts else wl
 
 			if q_nw + max_sol_wc >= wl:
 				print(os.path.join(subdir, f))
