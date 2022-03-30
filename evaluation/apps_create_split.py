@@ -20,8 +20,11 @@ training_sort_problems="../APPS_subdataset/train/sort-questions.txt_dir/"
 testing_sort_problems="../APPS_subdataset/test/sort-questions.txt_dir/"
 training_search_problems="../APPS_subdataset/train/search-questions.txt_dir/"
 testing_sort_problems="../APPS_subdataset/test/search-questions.txt_dir/"
+training_overlap_problems="../APPS_subdataset/train/overlap-questions.txt_dir/"
+testing_overlap_problems="../APPS_subdataset/test/overlap-questions.txt_dir/"
+davinci_runs="../APPS_subdataset/davinci_runs/test/overlap.txt_dir/"
 
-paths_to_probs = [training_sort_problems, testing_sort_problems]
+paths_to_probs = [training_sort_problems, davinci_runs]
 names = ["train", "test"]
 
 all_paths = []
