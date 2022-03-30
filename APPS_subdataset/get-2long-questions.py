@@ -2,52 +2,33 @@
 
 import os
 from nltk.tokenize import word_tokenize
+import json
 
-rootdir1 = './train/sort-questions.txt_dir'
-rootdir2 = './train/search-questions.txt_dir'
-rootdir3 = './test/sort-questions.txt_dir'
-rootdir4 = './test/search-questions.txt_dir'
-
+d1 = './train/sort-questions.txt_dir'
+d2 = './train/search-questions.txt_dir'
+d3 = './test/sort-questions.txt_dir'
+d4 = './test/search-questions.txt_dir'
+rootdirs = [d1, d2, d3, d4]
 word_lim = 1500
 
-for subdir, dirs, files in os.walk(rootdir1):
-	for f in files:
-		if f == "question.txt":
-			fp = os.path.join(subdir, f)
-			fc = open(fp, "r").read()
-			nwords = len(word_tokenize(fc))
-			if nwords >= word_lim:
-				print("File %s has %s words" %(fp, nwords))
+def get2longqs(d, wl):
+	for subdir, dirs, files in os.walk(d):
+		max_sol_wc = 0
+		for f in dirs:
+			qf = os.path.join(subdir, f, "question.txt")
+			qc = open(qf, "r").read()
+			q_nw = len(word_tokenize(qc))
 
-print()
+			sf = os.path.join(subdir, f, "solutions.json")
+			if os.path.exists(sf):
+				sc = open(sf)
+				sols = json.load(sc)
+				wcounts = [len(word_tokenize(s)) for s in sols]
+				max_sol_wc = max(wcounts)
 
-for subdir, dirs, files in os.walk(rootdir2):
-	for f in files:
-		if f == "question.txt":
-			fp = os.path.join(subdir, f)
-			fc = open(fp, "r").read()
-			nwords = len(word_tokenize(fc))
-			if nwords >= word_lim:
-				print("File %s has %s words" %(fp, nwords))
+			if q_nw + max_sol_wc >= wl:
+				print("Question %s is too long" %(os.path.join(subdir, f)))
 
-print()
-
-for subdir, dirs, files in os.walk(rootdir3):
-	for f in files:
-		if f == "question.txt":
-			fp = os.path.join(subdir, f)
-			fc = open(fp, "r").read()
-			nwords = len(word_tokenize(fc))
-			if nwords >= word_lim:
-				print("File %s has %s words" %(fp, nwords))
-
-print()
-
-for subdir, dirs, files in os.walk(rootdir4):
-	for f in files:
-		if f == "question.txt":
-			fp = os.path.join(subdir, f)
-			fc = open(fp, "r").read()
-			nwords = len(word_tokenize(fc))
-			if nwords >= word_lim:
-				print("File %s has %s words" %(fp, nwords))
+for d in rootdirs:
+	get2longqs(d, word_lim)
+	print()
