@@ -9,3 +9,6 @@
 # question's metadata.json
 grep -rl introductory ./train --include=metadata.json > ./train-questions/intro-questions.txt
 grep -rl introductory ./test --include=metadata.json > ./test-questions/intro-questions.txt
+
+awk '{gsub(/\/metadata\.json/, ""); print $0}' ./train-questions/intro-questions.txt > tmp && mv tmp ./train-questions/intro-questions.txt
+awk '{gsub(/\/metadata\.json/, ""); print $0}' ./test-questions/intro-questions.txt > tmp && mv tmp ./test-questions/intro-questions.txt
