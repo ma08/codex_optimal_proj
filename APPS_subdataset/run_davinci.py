@@ -2,11 +2,17 @@ import os
 import sys
 from numpy import promote_types
 import openai
+import json
 import shutil
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def run_davinci(path, num, outdir):
+TEMPERATURE = 0.5 #T
+N_SOLUTIONS = 2 #k
+ENGINE = "code-davinci-002"
+MAX_TOKENS=4096
+
+def run_davinci(path, out_dir):
     with open(path) as f:
         prompt = f.read()
 
@@ -16,39 +22,70 @@ def run_davinci(path, num, outdir):
     print("--------------------------")
 
     response = openai.Completion.create(
-    engine="code-davinci-002",
-    prompt=input_prompt,
-    temperature=0,
-    max_tokens=300,
-    top_p=1,
-    frequency_penalty=0,
-    presence_penalty=0
+        engine=ENGINE,
+        prompt=input_prompt,
+        temperature=TEMPERATURE,
+        max_tokens=MAX_TOKENS,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
+        n=N_SOLUTIONS
     )
 
     print(response)
 
-    for choice in response["choices"]:
+    output = {"prompt":input_prompt, "solutions":[]}
+    solution_set = set()
+
+    for i in range(len(response["choices"])):
+    # for choice in response["choices"]:
+        choice = response["choices"][i]
+        print(i, choice)
+
+
+
         finish_reason = choice["finish_reason"]
         print(f"REASON {finish_reason}")
         if(finish_reason == "stop"):
-            shutil.copyfile(prompt_file_path, f"{out_dir}/question.txt")
-            with open(f"{out_dir}/gen_code_out.py", "w") as fp:
-                fp.write(choice["text"])
+            if("text" in choice):
+                solution_set.add(choice["text"])
+            shutil.copyfile(path, f"{out_dir}/question.txt")
+            prompt_file_folder = os.path.dirname(path)
+            try:
+                shutil.copyfile(f"{prompt_file_folder}/metadata.json", f"{out_dir}/metadata.json")
+                shutil.copyfile(f"{prompt_file_folder}/solutions.json", f"{out_dir}/solutions.json")
+                shutil.copyfile(f"{prompt_file_folder}/input_output.json", f"{out_dir}/input_output.json")
+            except Exception as e:
+                print(path, e)
+
+            # shutil.copyfile(path, f"{out_dir}/solutions.json")
+            # shutil.copyfile(path, f"{out_dir}/input_output.json")
+            # with open(f"{out_dir}/gen_code_out_{i}.py", "w") as fp:
+                # fp.write(choice["text"])
+    
+    output["solutions"].extend(solution_set)
+
+
+
+    with open(f'{out_dir}/codex_solutions.json', 'w') as outfile:
+        json.dump(output["solutions"], outfile)
+    
+
 
 
 if __name__ == "__main__":
     #Example: python3 ./test/0179/question.txt
-    prompt_file_path = sys.argv[1] #test/sort-questions.txt_dir/4997/question.txt
+    path = sys.argv[1] #test/sort-questions.txt_dir/4997/question.txt
     out_dir = sys.argv[2] #davinci_runs/test/sort-questions.txt_dir
 
-    split_parts = prompt_file_path.split('/')
-    num = split_parts[2]
+    # split_parts = prompt_file_path.split('/')
+    # num = split_parts[2]
     
-    print(f"num: {num}")
+    # print(f"num: {num}")
 
     # out_dir = f"davinci_runs/{type_of_sample}/{num}"
     # os.makedirs(out_dir, exist_ok=True)
 
     sys.stdout = open(f'{out_dir}/out.log', 'w')
-    run_davinci(prompt_file_path, num, out_dir)
+    run_davinci(path, out_dir)
     sys.stdout.close()
