@@ -17,12 +17,12 @@ response = openai.Completion.create(
 
 
 with open("resp.txt",'w',encoding = 'utf-8') as f:
-   f.write("my first file\n")
+   # f.write("my first file\n")
    for i in range(0,choices_number):
-     f.write("choice {}".format(i))
+     # f.write("choice {}".format(i))
      resp=response.choices[i]
      f.write("{} ".format(resp))
-     f.write("\n \n")
+     f.write("\n")
 
 f.close()
 
