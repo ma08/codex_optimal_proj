@@ -1,0 +1,81 @@
+"""
+You are a coach at your local university. There are $n$ students under your supervision, the programming skill of the $i$-th student is $a_i$.
+
+You have to form $k$ teams for yet another new programming competition. As you know, the more students are involved in competition the more probable the victory of your university is! So you have to form no more than $k$ (and at least one) non-empty teams so that the total number of students in them is maximized. But you also know that each team should be balanced. It means that the programming skill of each pair of students in each team should differ by no more than $5$. Teams are independent from one another (it means that the difference between programming skills of two students from two different teams does not matter).
+
+It is possible that some students not be included in any team at all.
+
+Your task is to report the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the number of students and the maximum number of teams, correspondingly.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is a programming skill of the $i$-th student.
+
+
+-----Output-----
+
+Print one integer — the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+
+-----Examples-----
+Input
+5 2
+1 2 15 15 15
+
+Output
+5
+
+Input
+6 1
+36 4 1 25 9 16
+
+Output
+2
+
+Input
+4 4
+1 10 100 1000
+
+Output
+4
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom heapq import heappush, heappop, heapify\nfrom typing import List, Tuple, Dict\nfrom sys import stdin, stdout\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\ndef read_int():\n    return int(stdin.readline())\n\ndef read_lines(n: int):\n    return [stdin.readline().strip() for _ in range(n)]\n\ndef write_line(s: str):\n    stdout.write(s)\n    stdout.write(\"\\n\")\n\ndef write_lines(lines: List[str]):\n    stdout.write(\"\\n\".join(lines))\n    stdout.write(\"\\n\")\n\ndef solve(n: int, k: int, skills: List[int]):\n    # return number of students that can be included in k teams\n    # such that the difference between the skills of any 2 students\n    # in a team is no more than 5\n    d = defaultdict(lambda: 0)\n    for skill in skills:\n        d[skill] += 1\n    heap = []\n    for skill, count in d.items():\n        heappush(heap, (count, skill))\n    ans = 0\n    while heap:\n        count, skill = heappop(heap)\n        if count <= k:\n            ans += count\n            k -= count\n            if k == 0:\n                return ans\n        else:\n            ans += k\n            return ans\n        if k == 0:\n            return ans\n        for i in range(skill-5, skill+1):\n            if i in d:\n                heappush(heap, (d[i], i))\n    return ans\n\ndef main():\n    n, k = read_ints()\n    skills = read_ints()\n    ans = solve(n, k, skills)\n    write_line(str(ans))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\na.sort()\n\nif k == 1:\n    print(n)\nelif k == n:\n    print(1)\nelse:\n    b = []\n    for i in range(n-1):\n        b.append(a[i+1] - a[i])\n    b.sort()\n    s = sum(b[:-k+1]) + n\n    print(s)"
+    }
+  ],
+  "created": 1648684430,
+  "id": "cmpl-4rcQIZqA8VLRlZc8PtDZSi728Aqwn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom heapq import heappush, heappop, heapify\nfrom typing import List, Tuple, Dict\nfrom sys import stdin, stdout\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\ndef read_int():\n    return int(stdin.readline())\n\ndef read_lines(n: int):\n    return [stdin.readline().strip() for _ in range(n)]\n\ndef write_line(s: str):\n    stdout.write(s)\n    stdout.write(\"\\n\")\n\ndef write_lines(lines: List[str]):\n    stdout.write(\"\\n\".join(lines))\n    stdout.write(\"\\n\")\n\ndef solve(n: int, k: int, skills: List[int]):\n    # return number of students that can be included in k teams\n    # such that the difference between the skills of any 2 students\n    # in a team is no more than 5\n    d = defaultdict(lambda: 0)\n    for skill in skills:\n        d[skill] += 1\n    heap = []\n    for skill, count in d.items():\n        heappush(heap, (count, skill))\n    ans = 0\n    while heap:\n        count, skill = heappop(heap)\n        if count <= k:\n            ans += count\n            k -= count\n            if k == 0:\n                return ans\n        else:\n            ans += k\n            return ans\n        if k == 0:\n            return ans\n        for i in range(skill-5, skill+1):\n            if i in d:\n                heappush(heap, (d[i], i))\n    return ans\n\ndef main():\n    n, k = read_ints()\n    skills = read_ints()\n    ans = solve(n, k, skills)\n    write_line(str(ans))\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\na.sort()\n\nif k == 1:\n    print(n)\nelif k == n:\n    print(1)\nelse:\n    b = []\n    for i in range(n-1):\n        b.append(a[i+1] - a[i])\n    b.sort()\n    s = sum(b[:-k+1]) + n\n    print(s)"
+}
+REASON stop

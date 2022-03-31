@@ -1,0 +1,103 @@
+"""
+You are given $n$ strings. Each string consists of lowercase English letters. Rearrange (reorder) the given strings in such a way that for every string, all strings that are placed before it are its substrings.
+
+String $a$ is a substring of string $b$ if it is possible to choose several consecutive letters in $b$ in such a way that they form $a$. For example, string "for" is contained as a substring in strings "codeforces", "for" and "therefore", but is not contained as a substring in strings "four", "fofo" and "rof".
+
+
+-----Input-----
+
+The first line contains an integer $n$ ($1 \le n \le 100$) — the number of strings.
+
+The next $n$ lines contain the given strings. The number of letters in each string is from $1$ to $100$, inclusive. Each string consists of lowercase English letters.
+
+Some strings might be equal.
+
+
+-----Output-----
+
+If it is impossible to reorder $n$ given strings in required order, print "NO" (without quotes).
+
+Otherwise print "YES" (without quotes) and $n$ given strings in required order.
+
+
+-----Examples-----
+Input
+5
+a
+aba
+abacaba
+ba
+aba
+
+Output
+YES
+a
+ba
+aba
+aba
+abacaba
+
+Input
+5
+a
+abacaba
+ba
+aba
+abab
+
+Output
+NO
+
+Input
+3
+qwerty
+qwerty
+qwerty
+
+Output
+YES
+qwerty
+qwerty
+qwerty
+
+
+
+-----Note-----
+
+In the second example you cannot reorder the strings because the string "abab" is not a substring of the string "abacaba".
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    l = []\n    for i in range(n):\n        l.append(input())\n    l.sort(key=len)\n    for i in range(n):\n        for j in range(i+1,n):\n            if l[j].find(l[i]) == -1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for i in l:\n        print(i)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\ndef dfs_topsort(graph):\n    \"\"\"Performs a depth-first search and returns a Topological Sort of the graph.\n    Raises an exception if the graph has a cycle.\n    \"\"\"\n    # A list to keep track of the visit status of nodes\n    visited = [False]*len(graph)\n    # A list to store the sorted elements\n    top_sort = []\n\n    # Function to perform DFS\n    def dfs(node):\n        # Mark the current node as visited\n        visited[node] = True\n        # Recur for all the vertices adjacent to this vertex\n        for n in graph[node]:\n            if not visited[n]:\n                dfs(n)\n        # Push current vertex to the stack which stores the result\n        top_sort.append(node)\n\n    # Call the recursive helper function to store Topological Sort starting from all vertices one by one\n    for node in range(len(graph)):\n        if not visited[node]:\n            dfs(node)\n\n    return top_sort[::-1]\n\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n\n    graph = defaultdict(list)\n    for i, word in enumerate(words):\n        for j, other in enumerate(words):\n            if i == j:\n                continue\n            if word in other:\n                graph[i].append(j)\n\n    try:\n        top_sort = dfs_topsort(graph)\n    except:\n        print(\"NO\")\n        return\n\n    print(\"YES\")\n    for i in top_sort:\n        print(words[i])\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1648683152,
+  "id": "cmpl-4rc5gydAzyBENEjcQKhK5xRw5a6DZ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    l = []\n    for i in range(n):\n        l.append(input())\n    l.sort(key=len)\n    for i in range(n):\n        for j in range(i+1,n):\n            if l[j].find(l[i]) == -1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for i in l:\n        print(i)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\ndef dfs_topsort(graph):\n    \"\"\"Performs a depth-first search and returns a Topological Sort of the graph.\n    Raises an exception if the graph has a cycle.\n    \"\"\"\n    # A list to keep track of the visit status of nodes\n    visited = [False]*len(graph)\n    # A list to store the sorted elements\n    top_sort = []\n\n    # Function to perform DFS\n    def dfs(node):\n        # Mark the current node as visited\n        visited[node] = True\n        # Recur for all the vertices adjacent to this vertex\n        for n in graph[node]:\n            if not visited[n]:\n                dfs(n)\n        # Push current vertex to the stack which stores the result\n        top_sort.append(node)\n\n    # Call the recursive helper function to store Topological Sort starting from all vertices one by one\n    for node in range(len(graph)):\n        if not visited[node]:\n            dfs(node)\n\n    return top_sort[::-1]\n\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n\n    graph = defaultdict(list)\n    for i, word in enumerate(words):\n        for j, other in enumerate(words):\n            if i == j:\n                continue\n            if word in other:\n                graph[i].append(j)\n\n    try:\n        top_sort = dfs_topsort(graph)\n    except:\n        print(\"NO\")\n        return\n\n    print(\"YES\")\n    for i in top_sort:\n        print(words[i])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop

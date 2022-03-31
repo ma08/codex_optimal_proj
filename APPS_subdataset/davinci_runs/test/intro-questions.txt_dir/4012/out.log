@@ -1,0 +1,87 @@
+"""
+You are given three integers $a \le b \le c$.
+
+In one move, you can add $+1$ or $-1$ to any of these integers (i.e. increase or decrease any number by one). You can perform such operation any (possibly, zero) number of times, you can even perform this operation several times with one number. Note that you cannot make non-positive numbers using such operations.
+
+You have to perform the minimum number of such operations in order to obtain three integers $A \le B \le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$.
+
+You have to answer $t$ independent test cases. 
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases.
+
+The next $t$ lines describe test cases. Each test case is given on a separate line as three space-separated integers $a, b$ and $c$ ($1 \le a \le b \le c \le 10^4$).
+
+
+-----Output-----
+
+For each test case, print the answer. In the first line print $res$ — the minimum number of operations you have to perform to obtain three integers $A \le B \le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$. On the second line print any suitable triple $A, B$ and $C$.
+
+
+-----Example-----
+Input
+8
+1 2 3
+123 321 456
+5 10 15
+15 18 21
+100 100 101
+1 22 29
+3 19 38
+6 30 46
+
+Output
+1
+1 1 3
+102
+114 228 456
+4
+4 8 16
+6
+18 18 18
+1
+100 100 100
+7
+1 22 22
+2
+1 19 38
+8
+6 24 48
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# We use the fact that the largest number that divides two integers $a$ and $b$ is the greatest common divisor of $a$ and $b$.\n# Let's denote the greatest common divisor of $a$ and $b$ as $gcd(a, b)$.\n# Let's denote the minimum number of operations needed to obtain three integers $A \\le B \\le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$ as $f(a, b, c)$.\n# Then $f(a, b, c) = min(f(a, b, c-1), f(a, b-1, c-1), f(a, b-1, c))$ for $a, b, c > 1$.\n# To obtain the answer, we can use dynamic programming.\n# Let's define $dp[a][b][c] = f(a, b, c)$.\n# Then $dp[a][b][c] = min(dp[a][b][c-1], dp[a][b-1][c-1], dp[a][b-1][c])$ for $a, b, c > 1$.\n# The answer is $dp[a][b][c]$.\n# The time complexity is $O(a*b*c)$.\n# The space complexity is $O(a*b*c)$.\n\nimport sys\ninput = sys.stdin.readline\n\nt = int(input())\nwhile t:\n    a, b, c = map(int, input().split())\n    dp = [[[0 for _ in range(c+1)] for _ in range(b+1)] for _ in range(a+1)]\n    for i in range(1, a+1):\n        for j in range(1, b+1):\n            for k in range(1, c+1):\n                dp[i][j][k] = min(dp[i][j][k-1], dp[i][j-1][k-1], dp[i][j-1][k])\n                if i == j == k:\n                    dp[i][j][k] = 0\n                elif i == j:\n                    dp[i][j][k] = dp[i][j][k-1] + 1\n                else:\n                    dp[i][j][k] = min(dp[i][j][k], dp[i][j-1][k-1] + 1)\n                    if j % i == 0:\n                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1])\n                    else:\n                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1] + 1)\n    print(dp[a][b][c])\n    print(a, b, c)\n    t -= 1"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\n1. Find the largest common divisor of the three numbers\n2. Find the smallest common multiple of the three numbers\n3. Find the smallest common multiple of the two numbers that are not the largest common divisor\n4. Find the smallest common multiple of the two numbers that are not the smallest common multiple\n\"\"\"\n\nimport math\n\ndef lcd(a, b):\n    return (a*b)//math.gcd(a, b)\n\ndef scm(a, b):\n    return (a*b)//math.gcd(a, b)\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, c = [int(x) for x in input().split()]\n        A, B, C = a, b, c\n        lcd_ab = lcd(a, b)\n        lcd_ac = lcd(a, c)\n        lcd_bc = lcd(b, c)\n        large_lcd = max(lcd_ab, lcd_ac, lcd_bc)\n        A, B, C = a, b, c\n        if large_lcd == lcd_ab:\n            scm_bc = scm(b, c)\n            scm_ac = scm(a, c)\n            small_scm = min(scm_bc, scm_ac)\n            if small_scm == scm_bc:\n                A, B = b, scm_bc\n            else:\n                B, C = scm_ac, c\n        elif large_lcd == lcd_ac:\n            scm_bc = scm(b, c)\n            scm_ab = scm(a, b)\n            small_scm = min(scm_bc, scm_ab)\n            if small_scm == scm_bc:\n                A, B = b, scm_bc\n            else:\n                A, B = scm_ab, b\n        else:\n            scm_ac = scm(a, c)\n            scm_ab = scm(a, b)\n            small_scm = min(scm_ac, scm_ab)\n            if small_scm == scm_ac:\n                B, C = scm_ac, c\n            else:\n                A, B = scm_ab, b\n        res = sum(x-y for x, y in zip([A, B, C], [a, b, c]))\n        print(res)\n        print(A, B, C)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1648682970,
+  "id": "cmpl-4rc2kO3me71oy57JhhTZWchFtAHKY",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# We use the fact that the largest number that divides two integers $a$ and $b$ is the greatest common divisor of $a$ and $b$.\n# Let's denote the greatest common divisor of $a$ and $b$ as $gcd(a, b)$.\n# Let's denote the minimum number of operations needed to obtain three integers $A \\le B \\le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$ as $f(a, b, c)$.\n# Then $f(a, b, c) = min(f(a, b, c-1), f(a, b-1, c-1), f(a, b-1, c))$ for $a, b, c > 1$.\n# To obtain the answer, we can use dynamic programming.\n# Let's define $dp[a][b][c] = f(a, b, c)$.\n# Then $dp[a][b][c] = min(dp[a][b][c-1], dp[a][b-1][c-1], dp[a][b-1][c])$ for $a, b, c > 1$.\n# The answer is $dp[a][b][c]$.\n# The time complexity is $O(a*b*c)$.\n# The space complexity is $O(a*b*c)$.\n\nimport sys\ninput = sys.stdin.readline\n\nt = int(input())\nwhile t:\n    a, b, c = map(int, input().split())\n    dp = [[[0 for _ in range(c+1)] for _ in range(b+1)] for _ in range(a+1)]\n    for i in range(1, a+1):\n        for j in range(1, b+1):\n            for k in range(1, c+1):\n                dp[i][j][k] = min(dp[i][j][k-1], dp[i][j-1][k-1], dp[i][j-1][k])\n                if i == j == k:\n                    dp[i][j][k] = 0\n                elif i == j:\n                    dp[i][j][k] = dp[i][j][k-1] + 1\n                else:\n                    dp[i][j][k] = min(dp[i][j][k], dp[i][j-1][k-1] + 1)\n                    if j % i == 0:\n                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1])\n                    else:\n                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1] + 1)\n    print(dp[a][b][c])\n    print(a, b, c)\n    t -= 1"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\n1. Find the largest common divisor of the three numbers\n2. Find the smallest common multiple of the three numbers\n3. Find the smallest common multiple of the two numbers that are not the largest common divisor\n4. Find the smallest common multiple of the two numbers that are not the smallest common multiple\n\"\"\"\n\nimport math\n\ndef lcd(a, b):\n    return (a*b)//math.gcd(a, b)\n\ndef scm(a, b):\n    return (a*b)//math.gcd(a, b)\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, c = [int(x) for x in input().split()]\n        A, B, C = a, b, c\n        lcd_ab = lcd(a, b)\n        lcd_ac = lcd(a, c)\n        lcd_bc = lcd(b, c)\n        large_lcd = max(lcd_ab, lcd_ac, lcd_bc)\n        A, B, C = a, b, c\n        if large_lcd == lcd_ab:\n            scm_bc = scm(b, c)\n            scm_ac = scm(a, c)\n            small_scm = min(scm_bc, scm_ac)\n            if small_scm == scm_bc:\n                A, B = b, scm_bc\n            else:\n                B, C = scm_ac, c\n        elif large_lcd == lcd_ac:\n            scm_bc = scm(b, c)\n            scm_ab = scm(a, b)\n            small_scm = min(scm_bc, scm_ab)\n            if small_scm == scm_bc:\n                A, B = b, scm_bc\n            else:\n                A, B = scm_ab, b\n        else:\n            scm_ac = scm(a, c)\n            scm_ab = scm(a, b)\n            small_scm = min(scm_ac, scm_ab)\n            if small_scm == scm_ac:\n                B, C = scm_ac, c\n            else:\n                A, B = scm_ab, b\n        res = sum(x-y for x, y in zip([A, B, C], [a, b, c]))\n        print(res)\n        print(A, B, C)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
