@@ -1,0 +1,95 @@
+"""
+You are given a long decimal number $a$ consisting of $n$ digits from $1$ to $9$. You also have a function $f$ that maps every digit from $1$ to $9$ to some (possibly the same) digit from $1$ to $9$.
+
+You can perform the following operation no more than once: choose a non-empty contiguous subsegment of digits in $a$, and replace each digit $x$ from this segment with $f(x)$. For example, if $a = 1337$, $f(1) = 1$, $f(3) = 5$, $f(7) = 3$, and you choose the segment consisting of three rightmost digits, you get $1553$ as the result.
+
+What is the maximum possible number you can obtain applying this operation no more than once?
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of digits in $a$.
+
+The second line contains a string of $n$ characters, denoting the number $a$. Each character is a decimal digit from $1$ to $9$.
+
+The third line contains exactly $9$ integers $f(1)$, $f(2)$, ..., $f(9)$ ($1 \le f(i) \le 9$).
+
+
+-----Output-----
+
+Print the maximum number you can get after applying the operation described in the statement no more than once.
+
+
+-----Examples-----
+Input
+4
+1337
+1 2 5 4 6 6 3 1 9
+
+Output
+1557
+
+Input
+5
+11111
+9 8 7 6 5 4 3 2 1
+
+Output
+99999
+
+Input
+2
+33
+1 1 1 1 1 1 1 1 1
+
+Output
+33
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(raw_input())\n    a = raw_input()\n    f = map(int, raw_input().split())\n\n    f_map = {}\n    for i in range(1, 10):\n        f_map[str(i)] = str(f[i - 1])\n\n    max_num = 0\n    for i in range(n):\n        for j in range(i, n):\n            k = j\n            while k < n:\n                if int(a[j:k + 1]) > max_num:\n                    max_num = int(a[j:k + 1])\n                k += 1\n            if int(a[j:k + 1]) > max_num:\n                max_num = int(a[j:k + 1])\n            s = a[i:j + 1]\n            for key in f_map.keys():\n                s = s.replace(key, f_map[key])\n            if int(s) > max_num:\n                max_num = int(s)\n    print max_num\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\ndef solution(a, f):\n    a = list(map(int, a))\n    f = list(map(int, f))\n    ans = 0\n\n    for i in range(0, len(a)):\n        ans += max(f[a[i]-1:a[i]+1]) * 10**(len(a) - i - 1)\n\n    return ans\n\n#-----Test-----\na = '1337'\nf = '1 2 5 4 6 6 3 1 9'\n\nprint(solution(a, f))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#@author: K. Palmer\n\nn = input()\na = raw_input()\nf = raw_input().split()\nf = map(int, f)\n\nfor i in range(len(a)):\n    a = a[:i] + str(f[int(a[i])-1]) + a[i+1:]\n#    print a\n    if i == len(a)-1:\n        break\n    for j in range(len(a)-i-1, i, -1):\n        if a[j] > a[j-1]:\n            a = a[:j-1] + a[j] + a[j-1] + a[j+1:]\n            break\nprint a"
+    }
+  ],
+  "created": 1648692064,
+  "id": "cmpl-4rePQMJVwZ8tqAlt4gDLwMWrZT1fc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(raw_input())\n    a = raw_input()\n    f = map(int, raw_input().split())\n\n    f_map = {}\n    for i in range(1, 10):\n        f_map[str(i)] = str(f[i - 1])\n\n    max_num = 0\n    for i in range(n):\n        for j in range(i, n):\n            k = j\n            while k < n:\n                if int(a[j:k + 1]) > max_num:\n                    max_num = int(a[j:k + 1])\n                k += 1\n            if int(a[j:k + 1]) > max_num:\n                max_num = int(a[j:k + 1])\n            s = a[i:j + 1]\n            for key in f_map.keys():\n                s = s.replace(key, f_map[key])\n            if int(s) > max_num:\n                max_num = int(s)\n    print max_num\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\ndef solution(a, f):\n    a = list(map(int, a))\n    f = list(map(int, f))\n    ans = 0\n\n    for i in range(0, len(a)):\n        ans += max(f[a[i]-1:a[i]+1]) * 10**(len(a) - i - 1)\n\n    return ans\n\n#-----Test-----\na = '1337'\nf = '1 2 5 4 6 6 3 1 9'\n\nprint(solution(a, f))"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#@author: K. Palmer\n\nn = input()\na = raw_input()\nf = raw_input().split()\nf = map(int, f)\n\nfor i in range(len(a)):\n    a = a[:i] + str(f[int(a[i])-1]) + a[i+1:]\n#    print a\n    if i == len(a)-1:\n        break\n    for j in range(len(a)-i-1, i, -1):\n        if a[j] > a[j-1]:\n            a = a[:j-1] + a[j] + a[j-1] + a[j+1:]\n            break\nprint a"
+}
+REASON stop

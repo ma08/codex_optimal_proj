@@ -1,0 +1,83 @@
+"""
+You are given an array $a$ consisting of $n$ integers.
+
+Your task is to say the number of such positive integers $x$ such that $x$ divides each number from the array. In other words, you have to find the number of common divisors of all elements in the array.
+
+For example, if the array $a$ will be $[2, 4, 6, 2, 10]$, then $1$ and $2$ divide each number from the array (so the answer for this test is $2$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 4 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^{12}$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the number of such positive integers $x$ such that $x$ divides each number from the given array (in other words, the answer is the number of common divisors of all elements in the array).
+
+
+-----Examples-----
+Input
+5
+1 2 3 4 5
+
+Output
+1
+
+Input
+6
+6 90 12 18 30 18
+
+Output
+4
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom math import gcd\n\ndef solve(a):\n    n = len(a)\n    g = a[0]\n    for i in range(1, n):\n        g = gcd(g, a[i])\n    return len(list(divisors(g)))\n\ndef divisors(n):\n    i = 1\n    while i * i <= n:\n        if n % i == 0:\n            yield i\n            if n // i != i:\n                yield n // i\n        i += 1\n\ndef main():\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(a))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nimport math\n\n\ndef factorize(num):\n    factors = []\n    while num > 1:\n        for i in range(2, int(math.sqrt(num)) + 1):\n            if num % i == 0:\n                factors.append(i)\n                num //= i\n                break\n        else:\n            factors.append(num)\n            break\n    return factors\n\n\ndef factorize_efficient(num):\n    factors = []\n    while num % 2 == 0:\n        factors.append(2)\n        num //= 2\n    for i in range(3, int(math.sqrt(num)) + 1, 2):\n        while num % i == 0:\n            factors.append(i)\n            num //= i\n    if num > 1:\n        factors.append(num)\n    return factors\n\n\ndef common_factors(arr):\n    factor_dict = {}\n    for num in arr:\n        factors = factorize_efficient(num)\n        for factor in factors:\n            factor_dict[factor] = factor_dict.get(factor, 0) + 1\n\n    max_occur = max(factor_dict.values())\n    return max_occur\n\n\nprint(common_factors(arr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef find_factors(n):\n    factors = []\n    for i in range(1, n + 1):\n        if n % i == 0:\n            factors.append(i)\n    return factors\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    smallest_num = a[0]\n    for i in range(1, n):\n        smallest_num = lcm(smallest_num, a[i])\n\n    print(len(find_factors(smallest_num)))\n\nmain()"
+    }
+  ],
+  "created": 1648693070,
+  "id": "cmpl-4refeHJhaxJoVSd8p5DOyPZkWsF29",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom math import gcd\n\ndef solve(a):\n    n = len(a)\n    g = a[0]\n    for i in range(1, n):\n        g = gcd(g, a[i])\n    return len(list(divisors(g)))\n\ndef divisors(n):\n    i = 1\n    while i * i <= n:\n        if n % i == 0:\n            yield i\n            if n // i != i:\n                yield n // i\n        i += 1\n\ndef main():\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(a))\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nimport math\n\n\ndef factorize(num):\n    factors = []\n    while num > 1:\n        for i in range(2, int(math.sqrt(num)) + 1):\n            if num % i == 0:\n                factors.append(i)\n                num //= i\n                break\n        else:\n            factors.append(num)\n            break\n    return factors\n\n\ndef factorize_efficient(num):\n    factors = []\n    while num % 2 == 0:\n        factors.append(2)\n        num //= 2\n    for i in range(3, int(math.sqrt(num)) + 1, 2):\n        while num % i == 0:\n            factors.append(i)\n            num //= i\n    if num > 1:\n        factors.append(num)\n    return factors\n\n\ndef common_factors(arr):\n    factor_dict = {}\n    for num in arr:\n        factors = factorize_efficient(num)\n        for factor in factors:\n            factor_dict[factor] = factor_dict.get(factor, 0) + 1\n\n    max_occur = max(factor_dict.values())\n    return max_occur\n\n\nprint(common_factors(arr))"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef find_factors(n):\n    factors = []\n    for i in range(1, n + 1):\n        if n % i == 0:\n            factors.append(i)\n    return factors\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    smallest_num = a[0]\n    for i in range(1, n):\n        smallest_num = lcm(smallest_num, a[i])\n\n    print(len(find_factors(smallest_num)))\n\nmain()"
+}
+REASON stop

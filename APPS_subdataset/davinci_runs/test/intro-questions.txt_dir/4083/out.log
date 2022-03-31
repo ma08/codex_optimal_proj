@@ -1,0 +1,94 @@
+"""
+The only difference between easy and hard versions is the number of elements in the array.
+
+You are given an array $a$ consisting of $n$ integers. In one move you can choose any $a_i$ and divide it by $2$ rounding down (in other words, in one move you can set $a_i := \lfloor\frac{a_i}{2}\rfloor$).
+
+You can perform such an operation any (possibly, zero) number of times with any $a_i$.
+
+Your task is to calculate the minimum possible number of operations required to obtain at least $k$ equal numbers in the array.
+
+Don't forget that it is possible to have $a_i = 0$ after some operations, thus the answer always exists.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 50$) — the number of elements in the array and the number of equal numbers required.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the minimum possible number of operations required to obtain at least $k$ equal numbers in the array.
+
+
+-----Examples-----
+Input
+5 3
+1 2 2 4 5
+
+Output
+1
+
+Input
+5 3
+1 2 3 4 5
+
+Output
+2
+
+Input
+5 3
+1 2 3 3 3
+
+Output
+0
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_val = min(a)\n\ncount = 0\nfor i in range(n):\n    a[i] -= min_val\n    count += a[i] // 2\n\nif count >= k - 1:\n    print(math.ceil((count - k + 1) / (k-1)))\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef solve(n, k, a):\n    \"\"\"\n    :param n: number of elements in a\n    :param k: number of equal numbers required\n    :param a: array a\n    :return: minimum possible number of operations required to obtain at least k equal numbers in the array\n    \"\"\"\n    d = defaultdict(int)\n    for num in a:\n        d[num] += 1\n    if k in d:\n        return 0\n    a.sort()\n    if a[-1] % 2 == 0:\n        a[-1] //= 2\n        a.append(a[-1])\n        return 1 + solve(n + 1, k, a)\n    else:\n        a[-2] //= 2\n        a[-1] //= 2\n        if a[-1] == a[-2]:\n            return 1 + solve(n, k, a)\n        else:\n            a.append(a[-1])\n            return 1 + solve(n + 1, k, a)\n\n\ndef main():\n    n, k = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(n, k, a))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, raw_input().split())\n    a = map(int, raw_input().split())\n    a.sort()\n    diff = a[n - 1] - a[0]\n    while diff > 0:\n        a[0] += 1\n        a[n - 1] -= 1\n        a.sort()\n        diff = a[n - 1] - a[0]\n    print a[n - 1] - a[0]\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1648693788,
+  "id": "cmpl-4rerEtmQoLk6q5WXnMmr4zbce5HHQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_val = min(a)\n\ncount = 0\nfor i in range(n):\n    a[i] -= min_val\n    count += a[i] // 2\n\nif count >= k - 1:\n    print(math.ceil((count - k + 1) / (k-1)))\nelse:\n    print(-1)"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef solve(n, k, a):\n    \"\"\"\n    :param n: number of elements in a\n    :param k: number of equal numbers required\n    :param a: array a\n    :return: minimum possible number of operations required to obtain at least k equal numbers in the array\n    \"\"\"\n    d = defaultdict(int)\n    for num in a:\n        d[num] += 1\n    if k in d:\n        return 0\n    a.sort()\n    if a[-1] % 2 == 0:\n        a[-1] //= 2\n        a.append(a[-1])\n        return 1 + solve(n + 1, k, a)\n    else:\n        a[-2] //= 2\n        a[-1] //= 2\n        if a[-1] == a[-2]:\n            return 1 + solve(n, k, a)\n        else:\n            a.append(a[-1])\n            return 1 + solve(n + 1, k, a)\n\n\ndef main():\n    n, k = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(n, k, a))\n\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, raw_input().split())\n    a = map(int, raw_input().split())\n    a.sort()\n    diff = a[n - 1] - a[0]\n    while diff > 0:\n        a[0] += 1\n        a[n - 1] -= 1\n        a.sort()\n        diff = a[n - 1] - a[0]\n    print a[n - 1] - a[0]\n\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop

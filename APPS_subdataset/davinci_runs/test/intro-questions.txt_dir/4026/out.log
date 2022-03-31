@@ -1,0 +1,124 @@
+"""
+Masha has $n$ types of tiles of size $2 \times 2$. Each cell of the tile contains one integer. Masha has an infinite number of tiles of each type.
+
+Masha decides to construct the square of size $m \times m$ consisting of the given tiles. This square also has to be a symmetric with respect to the main diagonal matrix, and each cell of this square has to be covered with exactly one tile cell, and also sides of tiles should be parallel to the sides of the square. All placed tiles cannot intersect with each other. Also, each tile should lie inside the square. See the picture in Notes section for better understanding.
+
+Symmetric with respect to the main diagonal matrix is such a square $s$ that for each pair $(i, j)$ the condition $s[i][j] = s[j][i]$ holds. I.e. it is true that the element written in the $i$-row and $j$-th column equals to the element written in the $j$-th row and $i$-th column.
+
+Your task is to determine if Masha can construct a square of size $m \times m$ which is a symmetric matrix and consists of tiles she has. Masha can use any number of tiles of each type she has to construct the square. Note that she can not rotate tiles, she can only place them in the orientation they have in the input.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases. Then $t$ test cases follow.
+
+The first line of the test case contains two integers $n$ and $m$ ($1 \le n \le 100$, $1 \le m \le 100$) — the number of types of tiles and the size of the square Masha wants to construct.
+
+The next $2n$ lines of the test case contain descriptions of tiles types. Types of tiles are written one after another, each type is written on two lines. 
+
+The first line of the description contains two positive (greater than zero) integers not exceeding $100$ — the number written in the top left corner of the tile and the number written in the top right corner of the tile of the current type. The second line of the description contains two positive (greater than zero) integers not exceeding $100$ — the number written in the bottom left corner of the tile and the number written in the bottom right corner of the tile of the current type.
+
+It is forbidden to rotate tiles, it is only allowed to place them in the orientation they have in the input.
+
+
+-----Output-----
+
+For each test case print the answer: "YES" (without quotes) if Masha can construct the square of size $m \times m$ which is a symmetric matrix. Otherwise, print "NO" (withtout quotes).
+
+
+-----Example-----
+Input
+6
+3 4
+1 2
+5 6
+5 7
+7 4
+8 9
+9 8
+2 5
+1 1
+1 1
+2 2
+2 2
+1 100
+10 10
+10 10
+1 2
+4 5
+8 4
+2 2
+1 1
+1 1
+1 2
+3 4
+1 2
+1 1
+1 1
+
+Output
+YES
+NO
+YES
+NO
+YES
+YES
+
+
+
+-----Note-----
+
+The first test case of the input has three types of tiles, they are shown on the picture below. [Image] 
+
+Masha can construct, for example, the following square of size $4 \times 4$ which is a symmetric matrix: $\left. \begin{array}{|c|c|c|c|} \hline 5 & {7} & {8} & {9} \\ \hline 7 & {4} & {9} & {8} \\ \hline 8 & {9} & {5} & {7} \\ \hline 9 & {8} & {7} & {4} \\ \hline \end{array} \right.$
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef check_rows_for_symmetry(rows):\n    # check if rows are symmetric\n    for i, row in enumerate(rows):\n        for j, value in enumerate(row):\n            if rows[j][i] != value:\n                return False\n    return True\n\ndef check_for_symmetry(tile_grid):\n    # check the rows for symmetry\n    if check_rows_for_symmetry(tile_grid):\n        # check the columns for symmetry\n        col_grid = [[row[i] for row in tile_grid] for i in range(len(tile_grid))]\n        if check_rows_for_symmetry(col_grid):\n            return True\n    return False\n\ndef get_tile_grid(tiles, m):\n    # make grid\n    tile_grid = []\n    for i in range(m):\n        row = []\n        for j in range(m):\n            row.append(tiles[i%2][j%2])\n        tile_grid.append(row)\n    return tile_grid\n\ndef solve(n, m, tiles_list):\n    # check all combinations\n    for tiles in tiles_list:\n        tile_grid = get_tile_grid(tiles, m)\n        if check_for_symmetry(tile_grid):\n            return True\n    return False\n\nt = int(input())\nfor _ in range(t):\n    n, m = map(int, input().split())\n    tiles_list = []\n    for i in range(n):\n        tile = []\n        for j in range(2):\n            tile.append(list(map(int, input().split())))\n        tiles_list.append(tile)\n    if solve(n, m, tiles_list):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\nfor i in range(t):\n    n, m = map(int, input().split())\n    l = []\n    for j in range(n):\n        a = input().split()\n        b = input().split()\n        l.append(a + b)\n    l.sort()\n    x = 0\n    flag = False\n    while x < n:\n        if l[x][0] == l[x][2] and l[x][1] == l[x][3]:\n            flag = True\n            break\n        x += 1\n    if flag:\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef build_tiles():\n    tiles = defaultdict(list)\n    n = int(input())\n    m = int(input())\n    for i in range(n):\n        a, b = [int(x) for x in input().split()]\n        c, d = [int(x) for x in input().split()]\n        tiles[(a,b)].append((c,d))\n        tiles[(c,d)].append((a,b))\n    return tiles\n\ndef build_matrix(tiles, m):\n    matrix = [[-1 for _ in range(m)] for _ in range(m)]\n    i, j = 0, 0\n    while i < m:\n        if matrix[i][j] != -1:\n            i += 1\n            j = 0\n            continue\n        a, b = tiles[(i,j)]\n        if matrix[a][b] != -1:\n            return None\n        matrix[i][j] = matrix[j][i] = 0\n        matrix[a][b] = matrix[b][a] = 0\n        j += 1\n    return matrix\n\ndef solve():\n    tiles = build_tiles()\n    m = build_matrix(tiles, m)\n    if m:\n        return \"YES\"\n    else:\n        return \"NO\"\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        print(solve())\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+    }
+  ],
+  "created": 1648692398,
+  "id": "cmpl-4reUoe37nT4fvvbvmPC3isNIRQSX8",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef check_rows_for_symmetry(rows):\n    # check if rows are symmetric\n    for i, row in enumerate(rows):\n        for j, value in enumerate(row):\n            if rows[j][i] != value:\n                return False\n    return True\n\ndef check_for_symmetry(tile_grid):\n    # check the rows for symmetry\n    if check_rows_for_symmetry(tile_grid):\n        # check the columns for symmetry\n        col_grid = [[row[i] for row in tile_grid] for i in range(len(tile_grid))]\n        if check_rows_for_symmetry(col_grid):\n            return True\n    return False\n\ndef get_tile_grid(tiles, m):\n    # make grid\n    tile_grid = []\n    for i in range(m):\n        row = []\n        for j in range(m):\n            row.append(tiles[i%2][j%2])\n        tile_grid.append(row)\n    return tile_grid\n\ndef solve(n, m, tiles_list):\n    # check all combinations\n    for tiles in tiles_list:\n        tile_grid = get_tile_grid(tiles, m)\n        if check_for_symmetry(tile_grid):\n            return True\n    return False\n\nt = int(input())\nfor _ in range(t):\n    n, m = map(int, input().split())\n    tiles_list = []\n    for i in range(n):\n        tile = []\n        for j in range(2):\n            tile.append(list(map(int, input().split())))\n        tiles_list.append(tile)\n    if solve(n, m, tiles_list):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\nfor i in range(t):\n    n, m = map(int, input().split())\n    l = []\n    for j in range(n):\n        a = input().split()\n        b = input().split()\n        l.append(a + b)\n    l.sort()\n    x = 0\n    flag = False\n    while x < n:\n        if l[x][0] == l[x][2] and l[x][1] == l[x][3]:\n            flag = True\n            break\n        x += 1\n    if flag:\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef build_tiles():\n    tiles = defaultdict(list)\n    n = int(input())\n    m = int(input())\n    for i in range(n):\n        a, b = [int(x) for x in input().split()]\n        c, d = [int(x) for x in input().split()]\n        tiles[(a,b)].append((c,d))\n        tiles[(c,d)].append((a,b))\n    return tiles\n\ndef build_matrix(tiles, m):\n    matrix = [[-1 for _ in range(m)] for _ in range(m)]\n    i, j = 0, 0\n    while i < m:\n        if matrix[i][j] != -1:\n            i += 1\n            j = 0\n            continue\n        a, b = tiles[(i,j)]\n        if matrix[a][b] != -1:\n            return None\n        matrix[i][j] = matrix[j][i] = 0\n        matrix[a][b] = matrix[b][a] = 0\n        j += 1\n    return matrix\n\ndef solve():\n    tiles = build_tiles()\n    m = build_matrix(tiles, m)\n    if m:\n        return \"YES\"\n    else:\n        return \"NO\"\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        print(solve())\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+}
+REASON stop

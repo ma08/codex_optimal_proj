@@ -1,0 +1,111 @@
+"""
+The only difference between problems C1 and C2 is that all values in input of problem C1 are distinct (this condition may be false for problem C2).
+
+You are given a sequence $a$ consisting of $n$ integers.
+
+You are making a sequence of moves. During each move you must take either the leftmost element of the sequence or the rightmost element of the sequence, write it down and remove it from the sequence. Your task is to write down a strictly increasing sequence, and among all such sequences you should take the longest (the length of the sequence is the number of elements in it).
+
+For example, for the sequence $[1, 2, 4, 3, 2]$ the answer is $4$ (you take $1$ and the sequence becomes $[2, 4, 3, 2]$, then you take the rightmost element $2$ and the sequence becomes $[2, 4, 3]$, then you take $3$ and the sequence becomes $[2, 4]$ and then you take $4$ and the sequence becomes $[2]$, the obtained increasing sequence is $[1, 2, 3, 4]$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+In the first line of the output print $k$ — the maximum number of elements in a strictly increasing sequence you can obtain.
+
+In the second line print a string $s$ of length $k$, where the $j$-th character of this string $s_j$ should be 'L' if you take the leftmost element during the $j$-th move and 'R' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+1 2 4 3 2
+
+Output
+4
+LRRR
+
+Input
+7
+1 3 5 6 5 4 2
+
+Output
+6
+LRLRRR
+
+Input
+3
+2 2 2
+
+Output
+1
+R
+
+Input
+4
+1 2 4 3
+
+Output
+4
+LLRR
+
+
+
+-----Note-----
+
+The first example is described in the problem statement.
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(1)\n    print('R')\n    exit()\n\n# lis_len[i] is the longest increasing subsequence ending at index i\nlis_len = [1] * n\nfor i in range(1, n):\n    for j in range(i):\n        if a[j] < a[i] and lis_len[j] + 1 > lis_len[i]:\n            lis_len[i] = lis_len[j] + 1\n\n# lds_len[i] is the longest decreasing subsequence starting at index i\nlds_len = [1] * n\nfor i in range(n-2, -1, -1):\n    for j in range(i+1, n):\n        if a[j] < a[i] and lds_len[j] + 1 > lds_len[i]:\n            lds_len[i] = lds_len[j] + 1\n\n# lcs_len[i] is the longest increasing subsequence ending before index i and\n# the longest decreasing subsequence starting at index i\nlcs_len = [0] * n\nfor i in range(n):\n    lcs_len[i] = lis_len[i] + lds_len[i] - 1\n\n# the answer is the maximum of the lcs lengths\nprint(max(lcs_len))\n\n# reconstruct the answer\nans = []\nmax_len = max(lcs_len)\nfor i in range(n):\n    if lcs_len[i] == max_len:\n        # we can start at index i because it is the start of a longest decreasing subsequence\n        ans.append(i)\n        break\n\n# reconstruct the answer from left to right\nfor i in range(ans[-1] + 1, n):\n    if a[ans[-1]] < a[i] and lis_len[i] + 1 == lis_len[ans[-1]]:\n        ans.append(i)\n\n# reconstruct the answer from right to left\nfor i in range(ans[0] - 1, -1, -1):\n    if a[ans[0]] > a[i] and lds_len[i] + 1 == lds_len[ans[0]]:\n        ans.insert(0, i)\n\n# output which side was chosen at each step\nfor i in range(max_len):\n    if ans[i] == i:\n        print('R', end='')\n    else:\n        print('L', end='')\nprint()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    l = []\n    r = []\n    ans = []\n    while a:\n        if not l:\n            l.append(a.pop(0))\n            ans.append('L')\n        elif not r:\n            r.append(a.pop())\n            ans.append('R')\n        elif l[-1] < r[-1]:\n            r.append(a.pop())\n            ans.append('R')\n        elif l[-1] < a[0]:\n            l.append(a.pop(0))\n            ans.append('L')\n        elif r[-1] < a[-1]:\n            r.append(a.pop())\n            ans.append('R')\n        else:\n            break\n    print(len(l) + len(r))\n    print(''.join(ans))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solution(n, array):\n    l = 1\n    r = 1\n    i = 1\n    j = 1\n    temp = array[0]\n    string = 'L'\n    while i < n:\n        if array[i] > temp:\n            l += 1\n            temp = array[i]\n            string += 'L'\n        i += 1\n    temp = array[n-1]\n    string = 'R'\n    while j < n:\n        if array[n-1-j] < temp:\n            r += 1\n            temp = array[n-1-j]\n            string += 'R'\n        j += 1\n    if l > r:\n        return l, string\n    else:\n        return r, string[::-1]\n\n\nn = int(input())\narray = [int(x) for x in input().split()]\n\nprint(solution(n, array)[0])\nprint(solution(n, array)[1])"
+    }
+  ],
+  "created": 1648691929,
+  "id": "cmpl-4reNF4qNaLSDGChDR9aAEN8ACrMke",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(1)\n    print('R')\n    exit()\n\n# lis_len[i] is the longest increasing subsequence ending at index i\nlis_len = [1] * n\nfor i in range(1, n):\n    for j in range(i):\n        if a[j] < a[i] and lis_len[j] + 1 > lis_len[i]:\n            lis_len[i] = lis_len[j] + 1\n\n# lds_len[i] is the longest decreasing subsequence starting at index i\nlds_len = [1] * n\nfor i in range(n-2, -1, -1):\n    for j in range(i+1, n):\n        if a[j] < a[i] and lds_len[j] + 1 > lds_len[i]:\n            lds_len[i] = lds_len[j] + 1\n\n# lcs_len[i] is the longest increasing subsequence ending before index i and\n# the longest decreasing subsequence starting at index i\nlcs_len = [0] * n\nfor i in range(n):\n    lcs_len[i] = lis_len[i] + lds_len[i] - 1\n\n# the answer is the maximum of the lcs lengths\nprint(max(lcs_len))\n\n# reconstruct the answer\nans = []\nmax_len = max(lcs_len)\nfor i in range(n):\n    if lcs_len[i] == max_len:\n        # we can start at index i because it is the start of a longest decreasing subsequence\n        ans.append(i)\n        break\n\n# reconstruct the answer from left to right\nfor i in range(ans[-1] + 1, n):\n    if a[ans[-1]] < a[i] and lis_len[i] + 1 == lis_len[ans[-1]]:\n        ans.append(i)\n\n# reconstruct the answer from right to left\nfor i in range(ans[0] - 1, -1, -1):\n    if a[ans[0]] > a[i] and lds_len[i] + 1 == lds_len[ans[0]]:\n        ans.insert(0, i)\n\n# output which side was chosen at each step\nfor i in range(max_len):\n    if ans[i] == i:\n        print('R', end='')\n    else:\n        print('L', end='')\nprint()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    l = []\n    r = []\n    ans = []\n    while a:\n        if not l:\n            l.append(a.pop(0))\n            ans.append('L')\n        elif not r:\n            r.append(a.pop())\n            ans.append('R')\n        elif l[-1] < r[-1]:\n            r.append(a.pop())\n            ans.append('R')\n        elif l[-1] < a[0]:\n            l.append(a.pop(0))\n            ans.append('L')\n        elif r[-1] < a[-1]:\n            r.append(a.pop())\n            ans.append('R')\n        else:\n            break\n    print(len(l) + len(r))\n    print(''.join(ans))\n\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solution(n, array):\n    l = 1\n    r = 1\n    i = 1\n    j = 1\n    temp = array[0]\n    string = 'L'\n    while i < n:\n        if array[i] > temp:\n            l += 1\n            temp = array[i]\n            string += 'L'\n        i += 1\n    temp = array[n-1]\n    string = 'R'\n    while j < n:\n        if array[n-1-j] < temp:\n            r += 1\n            temp = array[n-1-j]\n            string += 'R'\n        j += 1\n    if l > r:\n        return l, string\n    else:\n        return r, string[::-1]\n\n\nn = int(input())\narray = [int(x) for x in input().split()]\n\nprint(solution(n, array)[0])\nprint(solution(n, array)[1])"
+}
+REASON stop

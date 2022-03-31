@@ -1,0 +1,97 @@
+"""
+There is a robot staying at $X=0$ on the $Ox$ axis. He has to walk to $X=n$. You are controlling this robot and controlling how he goes. The robot has a battery and an accumulator with a solar panel.
+
+The $i$-th segment of the path (from $X=i-1$ to $X=i$) can be exposed to sunlight or not. The array $s$ denotes which segments are exposed to sunlight: if segment $i$ is exposed, then $s_i = 1$, otherwise $s_i = 0$.
+
+The robot has one battery of capacity $b$ and one accumulator of capacity $a$. For each segment, you should choose which type of energy storage robot will use to go to the next point (it can be either battery or accumulator). If the robot goes using the battery, the current charge of the battery is decreased by one (the robot can't use the battery if its charge is zero). And if the robot goes using the accumulator, the current charge of the accumulator is decreased by one (and the robot also can't use the accumulator if its charge is zero).
+
+If the current segment is exposed to sunlight and the robot goes through it using the battery, the charge of the accumulator increases by one (of course, its charge can't become higher than it's maximum capacity).
+
+If accumulator is used to pass some segment, its charge decreases by 1 no matter if the segment is exposed or not.
+
+You understand that it is not always possible to walk to $X=n$. You want your robot to go as far as possible. Find the maximum number of segments of distance the robot can pass if you control him optimally.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, b, a$ ($1 \le n, b, a \le 2 \cdot 10^5$) — the robot's destination point, the battery capacity and the accumulator capacity, respectively.
+
+The second line of the input contains $n$ integers $s_1, s_2, \dots, s_n$ ($0 \le s_i \le 1$), where $s_i$ is $1$ if the $i$-th segment of distance is exposed to sunlight, and $0$ otherwise.
+
+
+-----Output-----
+
+Print one integer — the maximum number of segments the robot can pass if you control him optimally.
+
+
+-----Examples-----
+Input
+5 2 1
+0 1 0 1 0
+
+Output
+5
+
+Input
+6 2 1
+1 0 0 1 0 1
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the robot can go through the first segment using the accumulator, and charge levels become $b=2$ and $a=0$. The second segment can be passed using the battery, and charge levels become $b=1$ and $a=1$. The third segment can be passed using the accumulator, and charge levels become $b=1$ and $a=0$. The fourth segment can be passed using the battery, and charge levels become $b=0$ and $a=1$. And the fifth segment can be passed using the accumulator.
+
+In the second example the robot can go through the maximum number of segments using battery two times and accumulator one time in any order.
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The code is written in Python 3.6.1. To run the code, please use the below command in the terminal.\n\n    python3 solution.py < input.txt\n\n    \"\"\"\n\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    b_init = b\n    a_init = a\n    count = 0\n    while a > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            a -= 1\n        count += 1\n    while b > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            b -= 1\n        count += 1\n    print(count-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#The main idea is to keep track of the maximum number of segments that can be passed with the battery and the accumulator.\n#The accumulator can only be used to pass segments that are exposed to sunlight.\n#The battery can only be used to pass segments that are not exposed to sunlight.\n#When using the battery, the accumulator is charged by one.\n#When using the accumulator, the battery is charged by one.\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_segments = 0\nb_cur = b\na_cur = a\n\nfor i in range(n):\n    if s[i] == 1:\n        if a_cur > 0:\n            a_cur -= 1\n            b_cur += 1\n        elif b_cur > 0:\n            b_cur -= 1\n    else:\n        if b_cur > 0:\n            b_cur -= 1\n            a_cur += 1\n        elif a_cur > 0:\n            a_cur -= 1\n    if a_cur == 0 and b_cur == 0:\n        break\n    max_segments += 1\nprint(max_segments)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport numpy as np\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n    s = np.array(s)\n    b_prev, a_prev = b, a\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a_prev < a:\n                a_prev += 1\n            else:\n                b_prev += 1\n            i += 1\n        elif s[i] == 0:\n            if b_prev > 0:\n                b_prev -= 1\n                i += 1\n            elif a_prev > 0:\n                a_prev -= 1\n                i += 1\n            else:\n                break\n    print(i)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1648694288,
+  "id": "cmpl-4rezI20S2p4VYqfxAzZEBEDqLUvr5",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The code is written in Python 3.6.1. To run the code, please use the below command in the terminal.\n\n    python3 solution.py < input.txt\n\n    \"\"\"\n\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    b_init = b\n    a_init = a\n    count = 0\n    while a > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            a -= 1\n        count += 1\n    while b > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            b -= 1\n        count += 1\n    print(count-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#The main idea is to keep track of the maximum number of segments that can be passed with the battery and the accumulator.\n#The accumulator can only be used to pass segments that are exposed to sunlight.\n#The battery can only be used to pass segments that are not exposed to sunlight.\n#When using the battery, the accumulator is charged by one.\n#When using the accumulator, the battery is charged by one.\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_segments = 0\nb_cur = b\na_cur = a\n\nfor i in range(n):\n    if s[i] == 1:\n        if a_cur > 0:\n            a_cur -= 1\n            b_cur += 1\n        elif b_cur > 0:\n            b_cur -= 1\n    else:\n        if b_cur > 0:\n            b_cur -= 1\n            a_cur += 1\n        elif a_cur > 0:\n            a_cur -= 1\n    if a_cur == 0 and b_cur == 0:\n        break\n    max_segments += 1\nprint(max_segments)"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport numpy as np\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n    s = np.array(s)\n    b_prev, a_prev = b, a\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a_prev < a:\n                a_prev += 1\n            else:\n                b_prev += 1\n            i += 1\n        elif s[i] == 0:\n            if b_prev > 0:\n                b_prev -= 1\n                i += 1\n            elif a_prev > 0:\n                a_prev -= 1\n                i += 1\n            else:\n                break\n    print(i)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop

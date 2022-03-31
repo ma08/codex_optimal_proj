@@ -1,0 +1,100 @@
+"""
+You are given a bracket sequence $s$ (not necessarily a regular one). A bracket sequence is a string containing only characters '(' and ')'.
+
+A regular bracket sequence is a bracket sequence that can be transformed into a correct arithmetic expression by inserting characters '1' and '+' between the original characters of the sequence. For example, bracket sequences "()()" and "(())" are regular (the resulting expressions are: "(1)+(1)" and "((1+1)+1)"), and ")(", "(" and ")" are not.
+
+Your problem is to calculate the number of regular bracket sequences of length $2n$ containing the given bracket sequence $s$ as a substring (consecutive sequence of characters) modulo $10^9+7$ ($1000000007$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 100$) — the half-length of the resulting regular bracket sequences (the resulting sequences must have length equal to $2n$).
+
+The second line of the input contains one string $s$ ($1 \le |s| \le 200$) — the string $s$ that should be a substring in each of the resulting regular bracket sequences ($|s|$ is the length of $s$).
+
+
+-----Output-----
+
+Print only one integer — the number of regular bracket sequences containing the given bracket sequence $s$ as a substring. Since this number can be huge, print it modulo $10^9+7$ ($1000000007$).
+
+
+-----Examples-----
+Input
+5
+()))()
+
+Output
+5
+
+Input
+3
+(()
+
+Output
+4
+
+Input
+2
+(((
+
+Output
+0
+
+
+
+-----Note-----
+
+All regular bracket sequences satisfying the conditions above for the first example:   "(((()))())";  "((()()))()";  "((()))()()";  "(()(()))()";  "()((()))()". 
+
+All regular bracket sequences satisfying the conditions above for the second example:   "((()))";  "(()())";  "(())()";  "()(())". 
+
+And there is no regular bracket sequences of length $4$ containing "(((" as a substring in the third example.
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef f(n, s, m):\n\tdp = [0 for i in range(m+1)]\n\tdp[0] = 1\n\tfor i in range(len(s)):\n\t\tif(s[i]=='('):\n\t\t\tfor j in range(i+1, m+1):\n\t\t\t\tdp[j]+=dp[j-1]\n\t\t\t\tdp[j]%=1000000007\n\t\telse:\n\t\t\tfor j in range(i+1, m+1):\n\t\t\t\tdp[j]+=dp[j-1]*2\n\t\t\t\tdp[j]%=1000000007\n\treturn dp[m]\n\nn = int(input())\ns = input()\nprint(f(n, s, 2*n))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# TODO: TLE\n\nimport sys\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    mod = 1000000007\n    # dp[i][j] = number of sequences ending with j, i-th bracket matches\n    dp = [[0 for i in range(len(s)+1)] for j in range(2*n+1)]\n    dp[0][0] = 1\n    for i in range(1, 2*n+1):\n        for j in range(len(s)+1):\n            if i-1-j < 0 or 2*n-i < j:\n                continue\n            if dp[i-1][j] > 0:\n                if s[j] == '(':\n                    dp[i][j+1] = (dp[i][j+1] + dp[i-1][j]) % mod\n                else:\n                    dp[i][j] = (dp[i][j] + dp[i-1][j]) % mod\n                    dp[i][j+2] = (dp[i][j+2] + dp[i-1][j]) % mod\n    ans = dp[2*n][len(s)] % mod\n    print(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    num_ways = [1,1]\n    for i in range(2,2*n+1):\n        num_ways.append(num_ways[i-1]+num_ways[i-2])\n    if s[0] == '(':\n        s_left_parens = 1\n    else:\n        s_left_parens = 0\n    s_right_parens = len(s) - s_left_parens\n    if s_left_parens > s_right_parens:\n        return 0\n    if s_left_parens > n:\n        return 0\n    if s_right_parens > n:\n        return 0\n    if s_left_parens == s_right_parens:\n        return num_ways[s_left_parens]\n    if s_left_parens == n:\n        return num_ways[s_right_parens]\n    if s_right_parens == n:\n        return num_ways[s_left_parens]\n    return (num_ways[s_left_parens] * num_ways[s_right_parens]) % (10**9+7)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1648692422,
+  "id": "cmpl-4reVCkSdCWksu4C8U72so6uP6JxGF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef f(n, s, m):\n\tdp = [0 for i in range(m+1)]\n\tdp[0] = 1\n\tfor i in range(len(s)):\n\t\tif(s[i]=='('):\n\t\t\tfor j in range(i+1, m+1):\n\t\t\t\tdp[j]+=dp[j-1]\n\t\t\t\tdp[j]%=1000000007\n\t\telse:\n\t\t\tfor j in range(i+1, m+1):\n\t\t\t\tdp[j]+=dp[j-1]*2\n\t\t\t\tdp[j]%=1000000007\n\treturn dp[m]\n\nn = int(input())\ns = input()\nprint(f(n, s, 2*n))"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# TODO: TLE\n\nimport sys\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    mod = 1000000007\n    # dp[i][j] = number of sequences ending with j, i-th bracket matches\n    dp = [[0 for i in range(len(s)+1)] for j in range(2*n+1)]\n    dp[0][0] = 1\n    for i in range(1, 2*n+1):\n        for j in range(len(s)+1):\n            if i-1-j < 0 or 2*n-i < j:\n                continue\n            if dp[i-1][j] > 0:\n                if s[j] == '(':\n                    dp[i][j+1] = (dp[i][j+1] + dp[i-1][j]) % mod\n                else:\n                    dp[i][j] = (dp[i][j] + dp[i-1][j]) % mod\n                    dp[i][j+2] = (dp[i][j+2] + dp[i-1][j]) % mod\n    ans = dp[2*n][len(s)] % mod\n    print(ans)"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    num_ways = [1,1]\n    for i in range(2,2*n+1):\n        num_ways.append(num_ways[i-1]+num_ways[i-2])\n    if s[0] == '(':\n        s_left_parens = 1\n    else:\n        s_left_parens = 0\n    s_right_parens = len(s) - s_left_parens\n    if s_left_parens > s_right_parens:\n        return 0\n    if s_left_parens > n:\n        return 0\n    if s_right_parens > n:\n        return 0\n    if s_left_parens == s_right_parens:\n        return num_ways[s_left_parens]\n    if s_left_parens == n:\n        return num_ways[s_right_parens]\n    if s_right_parens == n:\n        return num_ways[s_left_parens]\n    return (num_ways[s_left_parens] * num_ways[s_right_parens]) % (10**9+7)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop

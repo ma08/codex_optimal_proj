@@ -1,0 +1,94 @@
+"""
+You are a coach at your local university. There are $n$ students under your supervision, the programming skill of the $i$-th student is $a_i$.
+
+You have to form $k$ teams for yet another new programming competition. As you know, the more students are involved in competition the more probable the victory of your university is! So you have to form no more than $k$ (and at least one) non-empty teams so that the total number of students in them is maximized. But you also know that each team should be balanced. It means that the programming skill of each pair of students in each team should differ by no more than $5$. Teams are independent from one another (it means that the difference between programming skills of two students from two different teams does not matter).
+
+It is possible that some students not be included in any team at all.
+
+Your task is to report the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the number of students and the maximum number of teams, correspondingly.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is a programming skill of the $i$-th student.
+
+
+-----Output-----
+
+Print one integer — the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+
+-----Examples-----
+Input
+5 2
+1 2 15 15 15
+
+Output
+5
+
+Input
+6 1
+36 4 1 25 9 16
+
+Output
+2
+
+Input
+4 4
+1 10 100 1000
+
+Output
+4
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\na.sort()\n\nres = 0\nm = 0\ni = 0\nwhile i < n:\n    cnt = 1\n    j = i + 1\n    while j < n and a[j] - a[i] <= 5:\n        cnt += 1\n        j += 1\n\n    if cnt < k:\n        res += cnt\n        m = max(m, res)\n        res -= 1\n    else:\n        res += k\n        m = max(m, res)\n    i = j\n\nprint(m)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = map(int, input().split())\n\n    d = {}\n    for i in s:\n        d[i] = d.get(i, 0) + 1\n\n    for i in range(1, 5):\n        for j in range(i):\n            if d.get(i - j, 0) > 0 and d.get(i + j, 0) > 0:\n                d[i - j] -= 1\n                d[i + j] -= 1\n                d[i] = d.get(i, 0) + 2\n\n    ans = 0\n    for i in d.values():\n        ans += i // 2\n\n    print(min(ans, k))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n# Solution\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ndp = [0] * n\ndp[0] = 1\n\nfor i in range(1, n):\n    dp[i] = dp[i-1]\n    for j in range(i-1, -1, -1):\n        if abs(a[i] - a[j]) <= 5:\n            dp[i] = max(dp[i], dp[j]+1)\n\nprint(max(dp))"
+    }
+  ],
+  "created": 1648694136,
+  "id": "cmpl-4rewqf48b7jmAdwGpmswAUaZrmMCj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\na.sort()\n\nres = 0\nm = 0\ni = 0\nwhile i < n:\n    cnt = 1\n    j = i + 1\n    while j < n and a[j] - a[i] <= 5:\n        cnt += 1\n        j += 1\n\n    if cnt < k:\n        res += cnt\n        m = max(m, res)\n        res -= 1\n    else:\n        res += k\n        m = max(m, res)\n    i = j\n\nprint(m)"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = map(int, input().split())\n\n    d = {}\n    for i in s:\n        d[i] = d.get(i, 0) + 1\n\n    for i in range(1, 5):\n        for j in range(i):\n            if d.get(i - j, 0) > 0 and d.get(i + j, 0) > 0:\n                d[i - j] -= 1\n                d[i + j] -= 1\n                d[i] = d.get(i, 0) + 2\n\n    ans = 0\n    for i in d.values():\n        ans += i // 2\n\n    print(min(ans, k))\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n# Solution\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ndp = [0] * n\ndp[0] = 1\n\nfor i in range(1, n):\n    dp[i] = dp[i-1]\n    for j in range(i-1, -1, -1):\n        if abs(a[i] - a[j]) <= 5:\n            dp[i] = max(dp[i], dp[j]+1)\n\nprint(max(dp))"
+}
+REASON stop
