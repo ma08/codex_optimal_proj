@@ -21,6 +21,8 @@ The first experiment (experiment 1), conducted on ~100 samples from the introduc
 - Pass@2 metric after Completion(T=0.5, k=2)=5.5% 
 <p align='center'>
 <img src="fig/completion.png" height="150px" width='700px'>  
+
+
 - Pass@2 metric after Completion(T=0.5, k=2) + Edit(T'=0.5,k'=2)=9.61%
 <p align='center'>
 <img src="fig/edit.png" height="150px" width='700px'>  
