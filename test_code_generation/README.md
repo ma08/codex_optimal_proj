@@ -1,1 +1,1 @@
-This folder contains a simple demo of how to use code-davinci-001 to carry out a Completion task on a natural language input prompt, generate multiple solutions ([./script.py](./script.py) and save them into a [file](./resp.txt).
+This folder contains a simple demo of how to use code-davinci-001 to carry out a Completion task on a natural language input prompt, generate multiple solutions ([./script.py](./script.py)) and save them into a [file](./resp.txt).
