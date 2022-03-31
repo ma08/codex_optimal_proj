@@ -15,7 +15,7 @@ This automatically prints the pass@k metric for the target batch of prompts eval
 
 While the `apps_create_spilt.py` and `testing_util.py` scripts have been borrowed integrally from https://github.com/hendrycks/apps , the "test_solutions.py" script, which drive the evaluations, has been built starting from some scripts provided by APPS and significantly restructured to address our own needs for calculating the correct evaluation metrics, which are different from those used by the APPS authors.
 
-#Experiment 1 results:
+### Experiment 1 results:
 
 The first experiment (experiment 1), conducted on ~100 samples from the introductory problems of APPS dataset, shows the following results:  
 - Pass@2 metric after Completion(T=0.5, k=2)=5.77%  
