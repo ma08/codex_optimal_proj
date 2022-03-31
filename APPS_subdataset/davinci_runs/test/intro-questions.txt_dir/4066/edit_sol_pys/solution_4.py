@@ -1,0 +1,22 @@
+# coding: utf-8
+
+n, m = map(int, input().split())
+a = list(map(int, input().split()))[:n]
+
+a.sort()
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+min_lcm = float('inf')
+for i in range(n):
+    for j in range(i+1, n):
+        min_lcm = min(min_lcm, lcm(a[i], a[j]))
+
+for i in range(n):
+    for j in range(i+1, n):
+        if min_lcm == lcm(a[i], a[j]):
+            print(i + 1, j + 1)
+            break
