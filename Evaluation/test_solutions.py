@@ -53,7 +53,7 @@ def evaluate_problems(args):
 
         #Load the solutions obtained with Codex Completions
 
-        samples_path = os.path.join(problem, "codex_edit_solutions.json")
+        samples_path = os.path.join(problem, "codex_solutions.json")
         # print("samples_path",samples_path)
         try:
           with open(samples_path, "r") as f:
