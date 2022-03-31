@@ -1,10 +1,23 @@
 
 
-k = int(input())
+def get_num_digits(num):
+    return len(str(num))
+# end get_num_digits
 
-i = 1
-while True:
-    if (7 * (10 ** i)) % k == 0:
-        print(i + 1)
-        break
-    i += 1
+def get_first_multiple(k):
+    if k % 7 == 0:
+        return 1
+    else:
+        digits = 1
+        while True:
+            num = 7*10**(digits-1)
+            if num % k == 0:
+                break
+            else:
+                digits += 1
+        return digits
+    # end if
+# end get_first_multiple
+
+k = int(input())
+print(get_first_multiple(k))

@@ -1,22 +1,28 @@
 
 
-import sys
-import math
+from sys import stdin
+from math import gcd
 
-# sys.stdin = open('input.txt', 'r')
+def solve(a):
+    n = len(a)
+    g = a[0]
+    for i in range(1, n):
+        g = gcd(g, a[i])
+    return len(list(divisors(g)))
 
-n = int(input())
-a = list(map(int, input().split()))
+def divisors(n):
+    i = 1
+    while i * i <= n:
+        if n % i == 0:
+            yield i
+            if n // i != i:
+                yield n // i
+        i += 1
 
-gcd = a[0]
-for i in range(1, n):
-    gcd = math.gcd(gcd, a[i])
+def main():
+    n = int(stdin.readline())
+    a = list(map(int, stdin.readline().split()))
+    print(solve(a))
 
-cnt = 0
-for i in range(1, math.ceil(math.sqrt(gcd)) + 1):
-    if gcd % i == 0:
-        cnt += 1
-    if i * i != gcd:
-        cnt += 1
-
-print(cnt)
+if __name__ == '__main__':
+    main()

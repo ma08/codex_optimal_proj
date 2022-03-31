@@ -1,22 +1,24 @@
 
 
+import fileinput
+
 n = int(input())
-f = list(map(int, input().split()))
+friends_list = [int(x) for x in input().split()]
 
-if f.count(0) == 2:
-    for i in range(n):
-        if f[i] == 0:
-            for j in range(n):
-                if f[j] != 0:
-                    f[i] = j + 1
-                    break
-else:
-    for i in range(n):
-        if f[i] == 0:
-            for j in range(n):
-                if f[j] == 0:
-                    f[i] = j + 1
-                    f[j] = i + 1
-                    break
+for i in range(n):
+    if friends_list[i] == 0:
+        friends_list[i] = i + 1
 
-print(*f)
+for i in range(n):
+    if friends_list[i] == 0:
+        friends_list[i] = friends_list[i - 1] + 1
+
+for i in range(n):
+    if friends_list[i] == i + 1:
+        friends_list[i] = friends_list[i - 1] + 1
+
+for i in range(n):
+    if friends_list[i] == i + 1:
+        friends_list[i] = friends_list[i - 1] + 1
+
+print(friends_list)

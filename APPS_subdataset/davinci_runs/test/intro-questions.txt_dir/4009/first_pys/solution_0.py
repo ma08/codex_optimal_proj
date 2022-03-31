@@ -1,22 +1,22 @@
 
 
 def main():
-    n, x, y = [int(x) for x in input().split()]
-    number = input()
-    result = int(number, 2)
-    #print(result)
-    rem = result % (10 ** x)
-    #print(rem)
-    if rem == 10 ** y:
-        print(0)
-    else:
-        #print(rem)
-        rem = 10 ** y - rem
-        #print(rem)
-        if rem % 2 == 0:
-            print(1)
-        else:
-            print(2)
+    n, x, y = map(int, input().split())
+    num = input().strip()
+    mod_num = int(num[:x])
+    remainder = mod_num % (10**y)
+    if remainder == 0:
+        return 0
+    
+    ans = 0
+    for i in range(x - y):
+        if num[i] == '1':
+            ans += 1
+    for i in range(x - y, x):
+        if num[i] == '0':
+            ans += 1
+    return ans
 
-if __name__ == "__main__":
-    main()
+
+if __name__ == '__main__':
+    print(main())

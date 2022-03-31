@@ -1,10 +1,27 @@
 
 
-import sys
+def subsequence(s, t):
+    i = 0
+    for c in s:
+        if i < len(t) and c == t[i]:
+            i += 1
+    return i == len(t)
 
-# read in the data
-s = sys.stdin.readline().strip()
-t = sys.stdin.readline().strip()
+def main():
+    s = input()
+    t = input()
+    i = 0
+    j = 0
+    best = 0
+    while True:
+        while j < len(s) and subsequence(s[i:j + 1], t):
+            best = max(best, j - i + 1)
+            j += 1
+        if j >= len(s):
+            break
+        i += 1
+        j = max(j, i)
+    print(len(s) - best)
 
-# the answer is the length of s minus the length of the longest common subsequence of s and t
-print len(s) - len(lcs(s, t))
+if __name__ == '__main__':
+    main()

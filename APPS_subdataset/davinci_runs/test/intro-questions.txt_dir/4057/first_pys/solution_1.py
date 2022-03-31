@@ -1,22 +1,15 @@
 
 
+n = int(input())
 
-def main():
-    n = int(input())
-    a = list(map(int, input().split()))
-    a.sort()
+coins = list(map(int, input().split()))
+coins.sort()
 
-    num_pockets = 1
-    current_pocket = a[0]
-    for i in range(1, n):
-        if a[i] == current_pocket:
-            num_pockets += 1
-            current_pocket = a[i]
-        elif a[i] > current_pocket:
-            current_pocket = a[i]
+count = 1
+last = coins[0]
+for coin in coins:
+    if coin != last:
+        count += 1
+    last = coin
 
-    print(num_pockets)
-
-
-if __name__ == "__main__":
-    main()
+print(count)

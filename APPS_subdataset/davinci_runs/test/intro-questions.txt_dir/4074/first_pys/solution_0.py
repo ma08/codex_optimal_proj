@@ -1,20 +1,31 @@
 
-import math
 
-def get_min_packages(n, k):
-    if(n==1):
-        return 1
-    if(k==1):
-        return n
-    if(k==2):
-        return int(math.ceil(n/2.0))
-    if(k==3):
-        return int(math.ceil(n/3.0))
-    if(k==4):
-        return int(math.ceil(n/4.0))
-    return int(math.ceil(n/k))
+# SOLUTION
+# https://codeforces.com/problemset/problem/1281/A
 
-t = int(input())
-for i in range(t):
-    n,k = map(int,input().split())
-    print(get_min_packages(n,k))
+import re
+
+def shovelPackages(n, k):
+    """
+    >>> shovelPackages(8, 7)
+    2
+    >>> shovelPackages(8, 1)
+    8
+    >>> shovelPackages(6, 10)
+    1
+    >>> shovelPackages(999999733, 999999732)
+    999999733
+    >>> shovelPackages(999999733, 999999733)
+    1
+    """
+    x = n // k
+    return n // x if n % x == 0 else n // (x + 1)
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+    t = int(input())
+    for _ in range(t):
+        n, k = map(int, re.findall(r"\d+", input()))
+        print(shovelPackages(n, k))

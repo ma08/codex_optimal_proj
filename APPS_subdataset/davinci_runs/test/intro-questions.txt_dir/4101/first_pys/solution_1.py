@@ -1,56 +1,24 @@
 
 
-n, m = map(int, input().split())
-matrix = []
-for i in range(n):
-    matrix.append(list(map(int, input().split())))
-
-def inverse(arr):
-    return [1 - x for x in arr]
-
-def is_sorted(arr):
-    for i in range(1, len(arr)):
-        if arr[i - 1] > arr[i]:
-            return False
-    return True
-
-def is_sorted_matrix(matrix):
-    arr = []
+def main():
+    n, m = map(int, input().split())
+    a = [list(map(int, input().split())) for _ in range(n)]
+    ans = [0] * n
+    ans2 = [0] * m
+    for i in range(n):
+        if a[i].count(1) % 2 == 1:
+            ans[i] = 1
+    for j in range(m):
+        if [a[i][j] for i in range(n)].count(1) % 2 == 1:
+            ans2[j] = 1
     for i in range(n):
         for j in range(m):
-            arr.append(matrix[i][j])
-    return is_sorted(arr)
+            if a[i][j] != ans[i] ^ ans2[j]:
+                print('NO')
+                return
+    print('YES')
+    print(''.join(map(str, ans)))
+    print(''.join(map(str, ans2)))
 
-def is_sorted_matrix_inv(matrix):
-    for i in range(n):
-        if not is_sorted(matrix[i]):
-            return False
-    for j in range(m):
-        arr = []
-        for i in range(n):
-            arr.append(matrix[i][j])
-        if not is_sorted(arr):
-            return False
-    return True
-
-r = [0] * n
-c = [0] * m
-for i in range(n):
-    if not is_sorted(matrix[i]):
-        r[i] = 1
-        matrix[i] = inverse(matrix[i])
-for j in range(m):
-    arr = []
-    for i in range(n):
-        arr.append(matrix[i][j])
-    if not is_sorted(arr):
-        c[j] = 1
-        for i in range(n):
-            matrix[i][j] = 1 - matrix[i][j]
-
-if is_sorted_matrix_inv(matrix):
-    print("YES")
-    print("".join(map(str, r)))
-    print("".join(map(str, c)))
-else:
-    print("NO")
+if __name__ == "__main__":
+    main()

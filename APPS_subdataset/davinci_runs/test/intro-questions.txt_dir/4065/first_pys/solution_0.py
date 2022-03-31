@@ -3,13 +3,12 @@
 n = int(input())
 a = list(map(int, input().split()))
 
-ans = 0
-l = 0
-r = 0
-while l < n:
-    while r < n and a[r] <= 2*a[l]:
-        r += 1
-    ans = max(ans, r - l)
-    l += 1
+maxs = [0] * n
 
-print(ans)
+for i in range(1, n):
+    if a[i] <= 2 * a[i - 1]:
+        maxs[i] = maxs[i - 1] + 1
+    else:
+        maxs[i] = maxs[i - 1]
+
+print(maxs[-1] + 1)

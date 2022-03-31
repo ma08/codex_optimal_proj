@@ -1,25 +1,18 @@
 
 
-from functools import reduce
-from collections import Counter
+n = int(input())
 
-def gcd(a, b):
-    if a == 0:
-        return b
-    return gcd(b % a, a)
+d = [int(x) for x in input().split()]
 
-def lcm(a, b):
-    return (a*b) // gcd(a, b)
+d.sort()
 
-def main():
-    n = int(input())
-    divisors = Counter(map(int, input().split()))
-    x = reduce(lcm, divisors.keys())
-    y = x
-    for divisor, count in divisors.items():
-        if count == 1:
-            y = lcm(y, divisor)
-    print(x, y)
+x = 1
+y = 1
 
-if __name__ == "__main__":
-    main()
+for i in range(len(d)):
+    if i % 2 == 0:
+        x *= d[i]
+    else:
+        y *= d[i]
+
+print(x, y)

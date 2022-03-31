@@ -1,15 +1,23 @@
 
 
+import sys
+
 def main():
-    N, K, Q = map(int, input().split())
-    A = list(map(int, [input() for _ in range(Q)]))
+    # Read input
+    n,k,q = map(int,sys.stdin.readline().split())
+    answers = [int(sys.stdin.readline()) for i in range(q)]
 
-    players = [K - Q] * N
-    for i in range(Q):
-        players[A[i] - 1] += 1
+    # Calculate the players' score after each question
+    scores = [k] * n
+    for a in answers:
+        scores[a-1] += 1
+        for i in range(n):
+            if i != a-1:
+                scores[i] -= 1
 
-    for player in players:
-        if player > 0:
+    # Print whether each player survived the game
+    for s in scores:
+        if s > 0:
             print("Yes")
         else:
             print("No")

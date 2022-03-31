@@ -1,5 +1,8 @@
 
 
-a = int(input())
+# SOLUTION 1
+print(int(input())**3)
 
-print((2**a) - 1)
+# SOLUTION 2
+a = int(input())
+print(a**3)

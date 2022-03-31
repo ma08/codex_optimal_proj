@@ -1,32 +1,20 @@
 
 
-# SOLUTION
-
 n = int(input())
 a = list(map(int, input().split()))
 
-# the maximum length of the increasing subarray
-max_length = 1
-# the length of the increasing subarray
-length = 1
-
-# iterate through the array
-for i in range(1, n):
-    # if the current element is greater than
-    # the previous element, then increase
-    # the length of the increasing subarray
-    if a[i] > a[i - 1]:
-        length += 1
-    else:
-        # if the current element is not greater than
-        # the previous element, then update the maximum
-        # length of the increasing subarray
-        max_length = max(max_length, length)
-        # reset the length of the increasing subarray
-        length = 1
-
-# update the maximum length of the increasing subarray
-max_length = max(max_length, length)
-
-# print the maximum length of the increasing subarray
-print(max_length)
+if n == 2:
+    print(2)
+else:
+    count = 1
+    for i in range(1, n):
+        if a[i] > a[i-1]:
+            count += 1
+        else:
+            break
+    for j in range(n-2, 0, -1):
+        if a[j] < a[j+1]:
+            count += 1
+        else:
+            break
+    print(count)

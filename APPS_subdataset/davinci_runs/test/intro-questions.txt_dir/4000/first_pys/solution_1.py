@@ -1,40 +1,44 @@
 
 
+# Solution
 
-def main():
-    n = int(input())
-    adj = [[] for _ in range(n + 1)]
-    for _ in range(n - 1):
-        a, b = map(int, input().split())
-        adj[a].append(b)
-        adj[b].append(a)
+import queue
 
-    def dfs(v, p=None):
-        ret = 1
-        for u in adj[v]:
-            if u == p:
-                continue
-            ret += dfs(u, v)
-        return ret
+N = int(input())
+graph = [[] for _ in range(N)]
+for i in range(N - 1):
+    a, b = map(int, input().split())
+    graph[a - 1].append(b - 1)
+    graph[b - 1].append(a - 1)
 
-    def solve():
-        a, b = None, None
-        for i in range(1, n + 1):
-            if len(adj[i]) == 1:
-                a = i
-                break
-        for i in range(1, n + 1):
-            if len(adj[i]) == 1:
-                b = i
-                break
-        if a is None or b is None:
-            return -1, -1, -1
-        return a, b, n - dfs(a) - dfs(b)
+def bfs(graph, start):
+    dist = [None for i in graph]
+    dist[start] = 0
+    q = queue.Queue()
+    q.put(start)
+    while not q.empty():
+        cur = q.get()
+        for neighbor in graph[cur]:
+            if dist[neighbor] is None:
+                dist[neighbor] = dist[cur] + 1
+                q.put(neighbor)
+    return dist
 
-    a, b, c = solve()
-    print(c)
-    print(a, b, c)
+dist_from_1 = bfs(graph, 0)
+max_vertex = 0
+for i in range(1, N):
+    if dist_from_1[i] > dist_from_1[max_vertex]:
+        max_vertex = i
 
+a = 0
+b = max_vertex
+dist_from_b = bfs(graph, max_vertex)
+max_vertex = 0
+for i in range(1, N):
+    if dist_from_b[i] > dist_from_b[max_vertex]:
+        max_vertex = i
+c = max_vertex
 
-if __name__ == "__main__":
-    main()
+res = dist_from_1[b] + dist_from_b[c]
+print(res)
+print(a + 1, b + 1, c + 1)

@@ -1,16 +1,31 @@
 
 
-import sys
+from functools import wraps
 
-def main():
-    n = int(sys.stdin.readline())
-    a = [int(i) for i in sys.stdin.readline().split()]
-    dp = [1] * n
-    for i in range(n):
-        for j in range(i):
-            if a[j] < a[i] and dp[i] < dp[j] + 1:
-                dp[i] = dp[j] + 1
-    print(max(dp))
+def memoize(f):
+    memo = {}
+    @wraps(f)
+    def helper(x):
+        if x not in memo:
+            memo[x] = f(x)
+        return memo[x]
+    return helper
 
-if __name__ == "__main__":
-    main()
+@memoize
+def fibonacci(n):
+    if n == 0:
+        return 1
+    elif n == 1:
+        return 1
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+
+num = int(raw_input())
+array = map(int, raw_input().split())
+
+fib_array = [fibonacci(i) for i in range(max(array))]
+
+total = 0
+for i in array:
+    total += fib_array[i-1]
+print total % 1000000007

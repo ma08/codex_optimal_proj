@@ -1,22 +1,28 @@
 
 
-n, m = map(int, raw_input().split())
-cups = map(int, raw_input().split())
+def main():
+    n, m = map(int, input().split())
+    a = list(map(int, input().split()))
 
-pages = 0
-days = 0
+    a.sort(reverse=True)
+    if a[0] > m:
+        print(-1)
+        return
 
-while pages < m:
-    days += 1
-    pages_today = 0
-    for i in range(n):
-        if cups[i] > 0:
-            pages_today += cups[i] - days + 1
-            if pages_today < 0:
-                pages_today = 0
-    pages += pages_today
+    s = 0
+    for k in range(n):
+        if s >= m:
+            print(k)
+            return
+        s += a[k] - k
 
-if pages >= m:
-    print days
-else:
-    print -1
+    if s >= m:
+        print(n)
+        return
+    else:
+        print(-1)
+        return
+
+
+if __name__ == '__main__':
+    main()

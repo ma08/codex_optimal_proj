@@ -1,4 +1,8 @@
 
 
-a, b, c, d = list(map(int, input().split()))
-print(max(a*c, a*d, b*c, b*d))
+a,b,c,d = map(int, input().split())
+
+if a <= c:
+    print(b*d)
+else:
+    print(a*d)

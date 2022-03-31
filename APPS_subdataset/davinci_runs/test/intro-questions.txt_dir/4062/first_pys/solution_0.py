@@ -1,13 +1,11 @@
 
+a, b, c, d = map(int, input().split())
 
-a,b,c,d = map(int,input().split())
-
-max_value = a*c
-if a*d > max_value:
-    max_value = a*d
-if b*c > max_value:
-    max_value = b*c
-if b*d > max_value:
-    max_value = b*d
-
-print(max_value)
+if a * c <= a * d and a * c <= b * c:
+    print(a * c)
+elif a * d <= a * c and a * d <= b * d:
+    print(a * d)
+elif b * c <= a * c and b * c <= b * d:
+    print(b * c)
+else:
+    print(b * d)

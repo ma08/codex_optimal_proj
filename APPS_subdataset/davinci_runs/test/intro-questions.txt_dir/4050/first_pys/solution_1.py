@@ -1,26 +1,23 @@
 
 
-import sys
-
 def main():
-    n = int(sys.stdin.readline())
-    arr = [int(x) for x in sys.stdin.readline().split()]
-    result = []
-    i = 0
-    while i < n:
-        j = i + 1
-        while j < n:
-            if arr[i] == arr[j]:
-                result.append([i, j])
-                i = j
-                j = i + 1
-            else:
-                j += 1
-        result.append([i, i])
-        i += 1
-    print(len(result))
-    for r in result:
-        print(str(r[0] + 1) + " " + str(r[1] + 1))
+    n = int(input())
+    nums = list(map(int, input().split()))
+    sums = []
+    num_sets = []
+    for i in range(n):
+        for j in range(i+1, n+1):
+            sums.append(sum(nums[i:j]))
+            num_sets.append([i,j-1])
+    sums.sort()
+    max_count = 0
+    for i in range(len(sums)-1, 0, -1):
+        if sums[i] == sums[i-1]:
+            max_count += 1
+        else:
+            break
+    print(max_count+1)
+    for i in range(len(sums)-1, len(sums)-max_count-2, -1):
+        print(str(num_sets[i][0]+1) + " " + str(num_sets[i][1]+1))
 
-if __name__ == "__main__":
-    main()
+main()

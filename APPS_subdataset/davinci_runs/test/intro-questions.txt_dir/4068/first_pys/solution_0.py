@@ -1,33 +1,21 @@
 
 
-# My version
-# Time complexity: O(n)
-# Space complexity: O(n)
-def staircase_v1(N, M, a_list):
-    dp = [0] * (N + 1)
+import sys
+sys.setrecursionlimit(100000)
+
+n, m = map(int, input().split())
+a = [int(input()) for _ in range(m)]
+
+def solve(n, a):
+    dp = [0] * (n+1)
     dp[0] = 1
     dp[1] = 1
-    for i in range(2, N + 1):
-        if i not in a_list:
-            dp[i] = dp[i - 1] + dp[i - 2]
-        else:
-            dp[i] = dp[i - 1]
-    return dp[N]
+    for i in range(2, n+1):
+        dp[i] = dp[i-1] + dp[i-2]
+        if i in a:
+            dp[i] = 0
+    return dp[n] % 1000000007
 
-# My version
-# Time complexity: O(n)
-# Space complexity: O(1)
-def staircase_v2(N, M, a_list):
-    a = 1
-    b = 1
-    for i in range(2, N + 1):
-        if i not in a_list:
-            a, b = b, a + b
-        else:
-            a = b
-    return b
+print(solve(n, a))
 
-if __name__ == '__main__':
-    N, M = map(int, input().split())
-    a_list = list(map(int, [input() for _ in range(M)]))
-    print(staircase_v2(N, M, a_list))
+# 累積和とかにすればもっと速くなるかも

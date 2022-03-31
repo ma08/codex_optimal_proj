@@ -1,21 +1,40 @@
 
 
+import unittest
 
-n, r = map(int, input().split())
+from typing import List
 
-a = []
-b = []
+from utils.common import ListNode
 
-for i in range(n):
-    ai, bi = map(int, input().split())
-    a.append(ai)
-    b.append(bi)
 
-dp = [0] * (r + 1)
+class Solution:
+    def maxProfit(self, k: int, prices: List[int]) -> int:
+        pass
 
-for i in range(n):
-    for j in range(r, 0, -1):
-        if j >= a[i]:
-            dp[j] = max(dp[j], dp[j - a[i]] + b[i])
 
-print(max(dp))
+class TestSolution(unittest.TestCase):
+    def setUp(self):
+        self.sol = Solution()
+
+    def test_empty(self):
+        self.assertEqual(self.sol.maxProfit([]), 0)
+
+    def test_one(self):
+        self.assertEqual(self.sol.maxProfit([1]), 0)
+        self.assertEqual(self.sol.maxProfit([2]), 0)
+
+    def test_two(self):
+        self.assertEqual(self.sol.maxProfit([2, 1]), 0)
+        self.assertEqual(self.sol.maxProfit([1, 2]), 1)
+
+    def test_three(self):
+        self.assertEqual(self.sol.maxProfit([1, 3, 2]), 2)
+
+    def test_general(self):
+        self.assertEqual(self.sol.maxProfit([1, 2, 3, 4, 5]), 4)
+        self.assertEqual(self.sol.maxProfit([7, 1, 5, 3, 6, 4]), 5)
+        self.assertEqual(self.sol.maxProfit([7, 6, 4, 3, 1]), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

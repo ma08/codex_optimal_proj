@@ -1,46 +1,25 @@
 
 
-n, m, d = map(int, input().split())
-c = list(map(int, input().split()))
+import sys
 
-if sum(c) > n:
-    print('NO')
-    exit()
+def main():
+    n, m, d = map(int, sys.stdin.readline().split())
+    c = map(int, sys.stdin.readline().split())
+    river = [0] * n
+    i = 0
 
-if m == 1:
-    if d < n:
+    for platform_size in c:
+        if i + platform_size + d > n:
+            i = 0
+        river[i:i + platform_size] = [i + 1] * platform_size
+        i += platform_size
+
+    if 0 in river:
+        print(river)
         print('NO')
-        exit()
-    else:
-        print('YES')
-        print(*[0] * n)
-        exit()
+        return
 
-if m == 2:
-    if d < n - c[0]:
-        print('NO')
-        exit()
-    else:
-        print('YES')
-        print(*([0] * c[0] + [1] * c[1]))
-        exit()
+    print('YES')
+    print(' '.join(map(str, river)))
 
-if m == 3:
-    if d < n - c[0] - c[1]:
-        print('NO')
-        exit()
-    else:
-        print('YES')
-        print(*([0] * c[0] + [1] * c[1] + [2] * c[2]))
-        exit()
-
-if m == 4:
-    if d < n - c[0] - c[1] - c[2]:
-        print('NO')
-        exit()
-    else:
-        print('YES')
-        print(*([0] * c[0] + [1] * c[1] + [2] * c[2] + [3] * c[3]))
-        exit()
-
-print('NO')
+main()

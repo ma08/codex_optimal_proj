@@ -1,15 +1,11 @@
 
-
 import math
 
-# Read input
-a, b, h, m = map(int, input().split())
+def main():
+    a, b, h, m = map(int, input().split())
+    h = h + m / 60
+    theta = (h / 12 - m / 60) * 2 * math.pi
+    print(math.sqrt(a**2 + b**2 - 2 * a * b * math.cos(theta)))
 
-# Calculate the angle between the hands
-angle = abs(h * 30 + m * 0.5 - m * 6)
-
-# Calculate the distance
-distance = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.radians(angle)))
-
-# Print the result
-print(distance)
+if __name__ == '__main__':
+    main()

@@ -1,28 +1,25 @@
 
 
-n = int(input())
-s = input()
+# TODO: TLE
 
-def get_num_sequences(s):
-    num_sequences = 1
-    num_open_brackets = 0
-    for char in s:
-        if char == '(':
-            num_open_brackets += 1
-        elif char == ')':
-            num_sequences *= num_open_brackets
-        else:
-            raise Exception('Error: invalid character')
-    return num_sequences
+import sys
 
-def get_num_sequences_with_substring(n, s):
-    num_sequences = 0
-    for i in range(len(s)):
-        for j in range(i+1, len(s)+1):
-            substring = s[i:j]
-            if len(substring) % 2 == 0:
-                num_sequences += get_num_sequences(substring)
-    return num_sequences
-
-num_sequences = get_num_sequences_with_substring(n, s)
-print(num_sequences % 1000000007)
+if __name__ == '__main__':
+    n = int(sys.stdin.readline())
+    s = sys.stdin.readline().strip()
+    mod = 1000000007
+    # dp[i][j] = number of sequences ending with j, i-th bracket matches
+    dp = [[0 for i in range(len(s)+1)] for j in range(2*n+1)]
+    dp[0][0] = 1
+    for i in range(1, 2*n+1):
+        for j in range(len(s)+1):
+            if i-1-j < 0 or 2*n-i < j:
+                continue
+            if dp[i-1][j] > 0:
+                if s[j] == '(':
+                    dp[i][j+1] = (dp[i][j+1] + dp[i-1][j]) % mod
+                else:
+                    dp[i][j] = (dp[i][j] + dp[i-1][j]) % mod
+                    dp[i][j+2] = (dp[i][j+2] + dp[i-1][j]) % mod
+    ans = dp[2*n][len(s)] % mod
+    print(ans)

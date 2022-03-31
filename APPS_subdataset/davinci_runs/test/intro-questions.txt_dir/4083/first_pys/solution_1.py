@@ -1,85 +1,41 @@
 
 
-from math import log2
-from collections import Counter
-from functools import reduce
+from sys import stdin
+from collections import defaultdict
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
 
-def lcm(a, b):
-    return a * b // gcd(a, b)
-
-def get_min_operations(n, k, arr):
+def solve(n, k, a):
     """
-    :param n:
-    :param k:
-    :param arr:
-    :return:
+    :param n: number of elements in a
+    :param k: number of equal numbers required
+    :param a: array a
+    :return: minimum possible number of operations required to obtain at least k equal numbers in the array
     """
-    def get_min_operations_from_dict(n, k, arr_dict):
-        """
-        :param n:
-        :param k:
-        :param arr_dict:
-        :return:
-        """
-        def get_min_operations_from_dict_inner(n, k, arr_dict):
-            """
-            :param n:
-            :param k:
-            :param arr_dict:
-            :return:
-            """
-            if k == 1:
-                return 0
-            if n == k:
-                return min(map(lambda x: get_min_operations_from_dict_inner(n, k, {key: val - 1 for key, val in arr_dict.items()}) + 1, arr_dict.keys()))
-            return min(map(lambda x: get_min_operations_from_dict_inner(n - 1, k, {key: val - 1 for key, val in arr_dict.items() if key != x}) + 1, arr_dict.keys()))
-
-        if arr_dict[max(arr_dict.keys())] >= k:
-            return 0
-        return get_min_operations_from_dict_inner(n, k, arr_dict)
-
-    def get_min_operations_from_arr(n, k, arr):
-        """
-        :param n:
-        :param k:
-        :param arr:
-        :return:
-        """
-        def get_min_operations_from_arr_inner(n, k, arr):
-            """
-            :param n:
-            :param k:
-            :param arr:
-            :return:
-            """
-            if k == 1:
-                return 0
-            if n == k:
-                return min(map(lambda x: get_min_operations_from_arr_inner(n, k, [y for y in arr if y != x]) + 1, arr))
-            return min(map(lambda x: get_min_operations_from_arr_inner(n - 1, k, [y for y in arr if y != x]) + 1, arr))
-
-        if arr.count(max(arr)) >= k:
-            return 0
-        return get_min_operations_from_arr_inner(n, k, arr)
-
-    if n <= 5:
-        return get_min_operations_from_arr(n, k, arr)
+    d = defaultdict(int)
+    for num in a:
+        d[num] += 1
+    if k in d:
+        return 0
+    a.sort()
+    if a[-1] % 2 == 0:
+        a[-1] //= 2
+        a.append(a[-1])
+        return 1 + solve(n + 1, k, a)
     else:
-        return get_min_operations_from_dict(n, k, Counter(arr))
+        a[-2] //= 2
+        a[-1] //= 2
+        if a[-1] == a[-2]:
+            return 1 + solve(n, k, a)
+        else:
+            a.append(a[-1])
+            return 1 + solve(n + 1, k, a)
+
 
 def main():
-    """
-    :return:
-    """
-    n, k = map(int, input().split())
-    arr = list(map(int, input().split()))
+    n, k = map(int, stdin.readline().split())
+    a = list(map(int, stdin.readline().split()))
+    print(solve(n, k, a))
 
-    print(get_min_operations(n, k, arr))
 
 if __name__ == '__main__':
     main()

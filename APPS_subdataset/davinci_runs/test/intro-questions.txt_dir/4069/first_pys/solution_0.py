@@ -1,23 +1,14 @@
 
+import math
 
-# input
-x, k, d = map(int, input().split())
+x, k, d = map(int,input().split())
 
-# initialization
-res = 0
-
-# process
-if x < 0:
-    x = -x
-
-if k <= x // d:
-    res = x - k * d
-else:
-    k -= x // d
-    x %= d
-    if k % 2 == 0:
-        res = x
+if k*d > abs(x):
+    k = abs(x) // d
+    x -= k*d
+    if abs(x) % d == 0:
+        print(abs(x))
     else:
-        res = d - x
-
-print(res)
+        print(abs(x) - d)
+else:
+    print(abs(x - k*d))

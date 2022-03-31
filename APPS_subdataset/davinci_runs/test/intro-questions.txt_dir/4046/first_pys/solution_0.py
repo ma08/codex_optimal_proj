@@ -1,26 +1,24 @@
 
 
-# SOLUTION
-# Note: This is a very nice problem.
-# 1. We can see that the sum of the array q is equal to the sum of the array p.
-# 2. For each i, we can see that p[i] = q[i] + p[i-1].
-# 3. We can see that for each i, p[i] >= 1 and p[i] <= n.
+import sys
 
-from sys import stdin, stdout
+def main():
+	n = int(sys.stdin.readline())
+	q = list(map(int, sys.stdin.readline().split()))
 
-n = int(stdin.readline())
-q = [int(x) for x in stdin.readline().split()]
+	if n == 2:
+		print(1,1+q[0])
+		return
 
-p = [0]*n
+	p = [0]*n
+	p[0] = q[0]
+	p[1] = q[1]+p[0]
+	for i in range(2,n):
+		p[i] = q[i]+p[i-1]
+		if p[i] < p[i-1] or p[i] < 1:
+			print(-1)
+			return
+	print(*p)
 
-if sum(q) != n*(n+1)//2:
-    stdout.write("-1")
-    exit()
-
-for i in range(1, n):
-    p[i] = q[i-1] + p[i-1]
-    if p[i] < 1 or p[i] > n:
-        stdout.write("-1")
-        exit()
-
-stdout.write(" ".join([str(x) for x in p]))
+if __name__ == "__main__":
+	main()

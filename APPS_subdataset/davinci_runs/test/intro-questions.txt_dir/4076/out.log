@@ -31,17 +31,23 @@ The two hands will be in the positions shown in the figure below, so the answer 
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": "\nimport math\n\n# The distance between two points (x1, y1) and (x2, y2) is given by\n# sqrt((x1 - x2)^2 + (y1 - y2)^2)\n#\n# The equation of a line passing through (x1, y1) and (x2, y2) is\n# y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)\n#\n# The equation of a line perpendicular to the line passing through (x1, y1) and (x2, y2) is\n# y - y1 = -(x2 - x1) / (y2 - y1) * (x - x1)\n\n# The distance between two points (x1, y1) and (x2, y2) is given by\n# sqrt((x1 - x2)^2 + (y1 - y2)^2)\ndef getDistance(x1, y1, x2, y2):\n    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)\n\n# The equation of a line passing through (x1, y1) and (x2, y2) is\n# y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)\ndef getLine(x1, y1, x2, y2):\n    slope = (y2 - y1) / (x2 - x1)\n    intercept = y1 - slope * x1\n    return slope, intercept\n\n# The equation of a line perpendicular to the line passing through (x1, y1) and (x2, y2) is\n# y - y1 = -(x2 - x1) / (y2 - y1) * (x - x1)\ndef getPerpendicularLine(x1, y1, x2, y2):\n    slope = -(x2 - x1) / (y2 - y1)\n    intercept = y1 - slope * x1\n    return slope, intercept\n\n# The intersection of two lines is given by the point\n# x = (b1 - b2) / (m1 - m2)\n# y = m1 * x + b1\ndef getIntersectionPoint(m1, b1, m2, b2):\n    x = (b1 - b2) / (m1 - m2)\n    y = m1 * x + b1\n    return x, y\n\ndef getIntersectionPointFromLines(line1, line2):\n    m1, b1 = line1\n    m2, b2 = line2\n    return getIntersectionPoint(m1, b1, m2, b2)\n\ndef getIntersectionPointFromLineAndPoint(line, point):\n    m, b = line\n    x, y = point\n    return getIntersectionPoint(m, b, -1/m, y - 1/m * x)\n\ndef main():\n    A, B, H, M = map(int, input().split())\n\n    # Get the position of the hour and minute hands at time H:M\n    thetaH = 2 * math.pi * (H + M / 60) / 12\n    thetaM = 2 * math.pi * M / 60\n    xH, yH = A * math.sin(thetaH), A * math.cos(thetaH)\n    xM, yM = B * math.sin(thetaM), B * math.cos(thetaM)\n\n    # Get the lines that the hour and minute hands make\n    lineH = getLine(0, 0, xH, yH)\n    lineM = getLine(0, 0, xM, yM)\n\n    # Get the line perpendicular to the minute hand that passes through the hour hand\n    linePerpM = getPerpendicularLine(xM, yM, xH, yH)\n\n    # Get the intersection point of the line perpendicular to the minute hand and the minute hand\n    xI, yI = getIntersectionPointFromLines(lineM, linePerpM)\n\n    # Get the distance between the intersection point and the hour hand\n    print(getDistance(xH, yH, xI, yI))\n\nif __name__ == '__main__':\n    main()"
+      "text": "\n\nfrom math import pi, cos, sin\n\ndef get_answer(A, B, H, M):\n    hour_angle = (H + M / 60) * (360 / 12) * (pi / 180)\n    minute_angle = M * (360 / 60) * (pi / 180)\n\n    x1 = A * cos(hour_angle)\n    y1 = A * sin(hour_angle)\n    x2 = B * cos(minute_angle)\n    y2 = B * sin(minute_angle)\n    return ((x2-x1)**2 + (y2-y1)**2)**0.5\n\ndef main():\n    A, B, H, M = map(int, input().split())\n    print(\"{:.20f}\".format(get_answer(A, B, H, M)))\n\nif __name__ == '__main__':\n    main()"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\nimport math\n\n# Read input\na, b, h, m = map(int, input().split())\n\n# Calculate the angle between the hands\nangle = abs(h * 30 + m * 0.5 - m * 6)\n\n# Calculate the distance\ndistance = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.radians(angle)))\n\n# Print the result\nprint(distance)"
+      "text": "\nimport math\n\ndef main():\n    a, b, h, m = map(int, input().split())\n    # print(a, b, h, m)\n    hour_angle = 30*h + 30*m/60\n    min_angle = 6*m\n    theta = abs(hour_angle-min_angle)\n    ans = math.sqrt(a**2 + b**2 - 2*a*b*math.cos(math.radians(theta)))\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport math\n\ndef main():\n    a, b, h, m = map(int, input().split())\n    h = h + m / 60\n    theta = (h / 12 - m / 60) * 2 * math.pi\n    print(math.sqrt(a**2 + b**2 - 2 * a * b * math.cos(theta)))\n\nif __name__ == '__main__':\n    main()"
     }
   ],
-  "created": 1648683905,
-  "id": "cmpl-4rcHpxbgWApHldCc0yTc9J4LuKVvk",
+  "created": 1648693582,
+  "id": "cmpl-4renuwfjvsW5svdbktC94Zd7ncCGK",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -49,13 +55,20 @@ The two hands will be in the positions shown in the figure below, so the answer 
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": "\nimport math\n\n# The distance between two points (x1, y1) and (x2, y2) is given by\n# sqrt((x1 - x2)^2 + (y1 - y2)^2)\n#\n# The equation of a line passing through (x1, y1) and (x2, y2) is\n# y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)\n#\n# The equation of a line perpendicular to the line passing through (x1, y1) and (x2, y2) is\n# y - y1 = -(x2 - x1) / (y2 - y1) * (x - x1)\n\n# The distance between two points (x1, y1) and (x2, y2) is given by\n# sqrt((x1 - x2)^2 + (y1 - y2)^2)\ndef getDistance(x1, y1, x2, y2):\n    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)\n\n# The equation of a line passing through (x1, y1) and (x2, y2) is\n# y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)\ndef getLine(x1, y1, x2, y2):\n    slope = (y2 - y1) / (x2 - x1)\n    intercept = y1 - slope * x1\n    return slope, intercept\n\n# The equation of a line perpendicular to the line passing through (x1, y1) and (x2, y2) is\n# y - y1 = -(x2 - x1) / (y2 - y1) * (x - x1)\ndef getPerpendicularLine(x1, y1, x2, y2):\n    slope = -(x2 - x1) / (y2 - y1)\n    intercept = y1 - slope * x1\n    return slope, intercept\n\n# The intersection of two lines is given by the point\n# x = (b1 - b2) / (m1 - m2)\n# y = m1 * x + b1\ndef getIntersectionPoint(m1, b1, m2, b2):\n    x = (b1 - b2) / (m1 - m2)\n    y = m1 * x + b1\n    return x, y\n\ndef getIntersectionPointFromLines(line1, line2):\n    m1, b1 = line1\n    m2, b2 = line2\n    return getIntersectionPoint(m1, b1, m2, b2)\n\ndef getIntersectionPointFromLineAndPoint(line, point):\n    m, b = line\n    x, y = point\n    return getIntersectionPoint(m, b, -1/m, y - 1/m * x)\n\ndef main():\n    A, B, H, M = map(int, input().split())\n\n    # Get the position of the hour and minute hands at time H:M\n    thetaH = 2 * math.pi * (H + M / 60) / 12\n    thetaM = 2 * math.pi * M / 60\n    xH, yH = A * math.sin(thetaH), A * math.cos(thetaH)\n    xM, yM = B * math.sin(thetaM), B * math.cos(thetaM)\n\n    # Get the lines that the hour and minute hands make\n    lineH = getLine(0, 0, xH, yH)\n    lineM = getLine(0, 0, xM, yM)\n\n    # Get the line perpendicular to the minute hand that passes through the hour hand\n    linePerpM = getPerpendicularLine(xM, yM, xH, yH)\n\n    # Get the intersection point of the line perpendicular to the minute hand and the minute hand\n    xI, yI = getIntersectionPointFromLines(lineM, linePerpM)\n\n    # Get the distance between the intersection point and the hour hand\n    print(getDistance(xH, yH, xI, yI))\n\nif __name__ == '__main__':\n    main()"
+  "text": "\n\nfrom math import pi, cos, sin\n\ndef get_answer(A, B, H, M):\n    hour_angle = (H + M / 60) * (360 / 12) * (pi / 180)\n    minute_angle = M * (360 / 60) * (pi / 180)\n\n    x1 = A * cos(hour_angle)\n    y1 = A * sin(hour_angle)\n    x2 = B * cos(minute_angle)\n    y2 = B * sin(minute_angle)\n    return ((x2-x1)**2 + (y2-y1)**2)**0.5\n\ndef main():\n    A, B, H, M = map(int, input().split())\n    print(\"{:.20f}\".format(get_answer(A, B, H, M)))\n\nif __name__ == '__main__':\n    main()"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\nimport math\n\n# Read input\na, b, h, m = map(int, input().split())\n\n# Calculate the angle between the hands\nangle = abs(h * 30 + m * 0.5 - m * 6)\n\n# Calculate the distance\ndistance = math.sqrt(a ** 2 + b ** 2 - 2 * a * b * math.cos(math.radians(angle)))\n\n# Print the result\nprint(distance)"
+  "text": "\nimport math\n\ndef main():\n    a, b, h, m = map(int, input().split())\n    # print(a, b, h, m)\n    hour_angle = 30*h + 30*m/60\n    min_angle = 6*m\n    theta = abs(hour_angle-min_angle)\n    ans = math.sqrt(a**2 + b**2 - 2*a*b*math.cos(math.radians(theta)))\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport math\n\ndef main():\n    a, b, h, m = map(int, input().split())\n    h = h + m / 60\n    theta = (h / 12 - m / 60) * 2 * math.pi\n    print(math.sqrt(a**2 + b**2 - 2 * a * b * math.cos(theta)))\n\nif __name__ == '__main__':\n    main()"
 }
 REASON stop

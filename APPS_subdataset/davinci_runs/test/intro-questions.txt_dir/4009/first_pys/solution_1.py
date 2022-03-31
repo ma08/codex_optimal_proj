@@ -1,17 +1,14 @@
 
 
-def main():
-    n, x, y = map(int, input().split())
-    num = input()
-    if num[0] == '0':
-        print(1)
-    else:
-        for i in range(x, n):
-            if num[i] == '0':
-                print(1)
-                break
-        else:
-            print(0)
+n, x, y = map(int, input().split())
+number = input()
 
-if __name__ == '__main__':
-    main()
+number = list(number)
+
+for i in range(n-y-1, n):
+	if number[i] == '0':
+		number[i] = '1'
+	else:
+		number[i] = '0'
+
+print(n-x-y)

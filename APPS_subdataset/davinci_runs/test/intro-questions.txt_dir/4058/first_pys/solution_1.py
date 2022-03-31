@@ -1,20 +1,36 @@
 
+import math
 
-def solve(n, r, heaters):
-    heaters = [i for i, x in enumerate(heaters) if x == 1]
-    heaters.sort()
-    if not heaters:
+def solve(n, r, a):
+    heaters = []
+    for i in range(n):
+        if a[i] == 1:
+            heaters.append(i)
+    if len(heaters) == 0:
         return -1
-    if heaters[0] > r - 1:
-        return -1
-    if heaters[-1] < n - r:
-        return -1
-    count = 1
-    for i in range(1, len(heaters)):
-        if heaters[i] - heaters[i - 1] > 2 * r - 1:
-            count += 1
-    return count
+    if len(heaters) == 1:
+        if r < heaters[0] or r > n - heaters[0] - 1:
+            return -1
+        return 1
+    i = 0
+    c = 0
+    while i < len(heaters) - 1:
+        if heaters[i + 1] - heaters[i] > 2 * r:
+            return -1
+        if heaters[i + 1] - heaters[i] > r:
+            c += 1
+            i += 1
+        else:
+            c += 1
+            i += 2
+    if i < len(heaters):
+        c += 1
+    return c
 
-n, r = map(int, input().split())
-heaters = list(map(int, input().split()))
-print(solve(n, r, heaters))
+def main():
+    n, r = list(map(int, input().split(' ')))
+    a = list(map(int, input().split(' ')))
+    print(solve(n, r, a))
+
+if __name__ == "__main__":
+    main()

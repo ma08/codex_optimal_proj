@@ -67,17 +67,23 @@ In the third example the best answer is to distribute problems in the following 
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": ""
+      "text": "\n\nimport fileinput\n\ndef solve(n, k, a):\n    t = []\n    while len(a) > 0:\n        t.append(sum(1 for i in range(k) if len(a) > 0 and a[i] == max(a)))\n        a = a[t[-1]:]\n    return t\n\ndef main():\n    f = fileinput.input()\n    n, k = map(int, f.readline().split())\n    a = map(int, f.readline().split())\n    t = solve(n, k, a)\n    print sum(max(a[i:i+t[j]]) for j in range(k) for i in range(0, n, t[j]))\n    print \" \".join(map(str, t))\n\nif __name__ == \"__main__\":\n    main()"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0] * (n + 1) for _ in range(k + 1)]\n\nfor i in range(1, k + 1):\n    for j in range(1, n + 1):\n        dp[i][j] = max(dp[i][j-1], dp[i-1][j-1] + a[j-1])\n\nprint(dp[k][n])\n\n# reconstruct answer\nans = []\ni = k\nj = n\nwhile i > 0:\n    if dp[i][j] == dp[i][j-1]:\n        j -= 1\n    else:\n        ans.append(j)\n        j -= 1\n        i -= 1\nans.reverse()\n\nfor i in ans:\n    print(i - ans[ans.index(i) - 1] if ans.index(i) > 0 else i, end=\" \")"
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = [int(x) for x in input().split()]\n    total_profit = 0\n    days = [0] * k\n\n    for i in range(n):\n        j = (i % k)\n        days[j] += 1\n        if a[i] > total_profit:\n            total_profit = a[i]\n\n    print(total_profit)\n    print(' '.join(map(str, days)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # dp[i][j] means max profit from first i problems, divided into j groups\n    dp = [[0] * (k + 1) for _ in range(n + 1)]\n\n    # max_profit[i][j] means max profit from a[i] to a[j]\n    max_profit = [[0] * (n + 1) for _ in range(n + 1)]\n    for i in range(n):\n        max_profit[i][i] = a[i]\n        for j in range(i + 1, n):\n            max_profit[i][j] = max(max_profit[i][j - 1], a[j])\n\n    for i in range(1, n + 1):\n        for j in range(1, k + 1):\n            if i >= j:\n                for l in range(0, i - j + 1):\n                    dp[i][j] = max(dp[i][j], dp[l][j - 1] + max_profit[l][i - 1])\n\n    print(dp[n][k])\n\n    groups = []\n    group_size = []\n    i, j = n, k\n    while i > 0 and j > 0:\n        for l in range(0, i - j + 1):\n            if dp[i][j] == dp[l][j - 1] + max_profit[l][i - 1]:\n                groups.append((l, i - 1))\n                group_size.append(i - l)\n                i, j = l, j - 1\n                break\n\n    for g in reversed(groups):\n        print(max(a[g[0]:g[1] + 1]), end=' ')\n\nsolve()"
     }
   ],
-  "created": 1648684287,
-  "id": "cmpl-4rcNzzWilCUvVBT4K9ZWMVSATNdaj",
+  "created": 1648693999,
+  "id": "cmpl-4reudCr6iLeWWVlAk0GeOdk8VMgJu",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -85,13 +91,20 @@ In the third example the best answer is to distribute problems in the following 
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": ""
+  "text": "\n\nimport fileinput\n\ndef solve(n, k, a):\n    t = []\n    while len(a) > 0:\n        t.append(sum(1 for i in range(k) if len(a) > 0 and a[i] == max(a)))\n        a = a[t[-1]:]\n    return t\n\ndef main():\n    f = fileinput.input()\n    n, k = map(int, f.readline().split())\n    a = map(int, f.readline().split())\n    t = solve(n, k, a)\n    print sum(max(a[i:i+t[j]]) for j in range(k) for i in range(0, n, t[j]))\n    print \" \".join(map(str, t))\n\nif __name__ == \"__main__\":\n    main()"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0] * (n + 1) for _ in range(k + 1)]\n\nfor i in range(1, k + 1):\n    for j in range(1, n + 1):\n        dp[i][j] = max(dp[i][j-1], dp[i-1][j-1] + a[j-1])\n\nprint(dp[k][n])\n\n# reconstruct answer\nans = []\ni = k\nj = n\nwhile i > 0:\n    if dp[i][j] == dp[i][j-1]:\n        j -= 1\n    else:\n        ans.append(j)\n        j -= 1\n        i -= 1\nans.reverse()\n\nfor i in ans:\n    print(i - ans[ans.index(i) - 1] if ans.index(i) > 0 else i, end=\" \")"
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = [int(x) for x in input().split()]\n    total_profit = 0\n    days = [0] * k\n\n    for i in range(n):\n        j = (i % k)\n        days[j] += 1\n        if a[i] > total_profit:\n            total_profit = a[i]\n\n    print(total_profit)\n    print(' '.join(map(str, days)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # dp[i][j] means max profit from first i problems, divided into j groups\n    dp = [[0] * (k + 1) for _ in range(n + 1)]\n\n    # max_profit[i][j] means max profit from a[i] to a[j]\n    max_profit = [[0] * (n + 1) for _ in range(n + 1)]\n    for i in range(n):\n        max_profit[i][i] = a[i]\n        for j in range(i + 1, n):\n            max_profit[i][j] = max(max_profit[i][j - 1], a[j])\n\n    for i in range(1, n + 1):\n        for j in range(1, k + 1):\n            if i >= j:\n                for l in range(0, i - j + 1):\n                    dp[i][j] = max(dp[i][j], dp[l][j - 1] + max_profit[l][i - 1])\n\n    print(dp[n][k])\n\n    groups = []\n    group_size = []\n    i, j = n, k\n    while i > 0 and j > 0:\n        for l in range(0, i - j + 1):\n            if dp[i][j] == dp[l][j - 1] + max_profit[l][i - 1]:\n                groups.append((l, i - 1))\n                group_size.append(i - l)\n                i, j = l, j - 1\n                break\n\n    for g in reversed(groups):\n        print(max(a[g[0]:g[1] + 1]), end=' ')\n\nsolve()"
 }
 REASON stop

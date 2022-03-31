@@ -1,12 +1,11 @@
 
 
 def main():
-    a, b = map(int, input().split())
-    if a > b:
-        a, b = b, a
-    if a == b:
-        print(4 * a)
-    else:
-        print((a + b) * 2)
+    a,b = map(int,input().split())
+    n = max(a,b)
+    m = min(a,b)
+    ans = 2*m + 2*(n-m)
+    print(ans)
 
-main()
+if __name__ == "__main__":
+    main()

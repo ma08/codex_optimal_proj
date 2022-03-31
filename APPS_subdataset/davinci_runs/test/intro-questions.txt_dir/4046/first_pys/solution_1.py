@@ -1,35 +1,22 @@
 
 
-
 import sys
 
-def main():
-    n = int(sys.stdin.readline().strip())
-    q = [int(i) for i in sys.stdin.readline().strip().split()]
-    p = [0] * n
-    for i in range(n-1):
-        if q[i] == 0:
-            p[i] = p[i+1] = i+1
-        elif q[i] > 0:
-            if p[i] == 0:
-                p[i] = i+1
-            p[i+1] = p[i] + q[i]
-        else:
-            if p[i+1] == 0:
-                p[i+1] = i+2
-            p[i] = p[i+1] + q[i]
-    if p[0] == 0:
-        p[0] = 1
-    if p[-1] == 0:
-        p[-1] = n
-    if p[0] < 1 or p[-1] > n:
-        print(-1)
-    else:
-        for i in range(n-1):
-            if p[i] == p[i+1]:
-                print(-1)
-                return
-        print(*p)
+n = int(input())
+q = list(map(int, input().split()))
 
-if __name__ == "__main__":
-    main()
+if (sum(q) != 0):
+    print("-1")
+    sys.exit(0)
+
+i = 0
+p = [0] * (n + 1)
+
+for j in range(1, n + 1):
+    p[j] = p[j - 1] + q[j - 1]
+    if (p[j] < 1 or p[j] > n):
+        print("-1")
+        sys.exit(0)
+
+p = p[1:]
+print(*p)

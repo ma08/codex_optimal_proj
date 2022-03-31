@@ -1,14 +1,27 @@
 
 
-def main():
-    """
-    The bug is that the last operand is not added to the result.
-    """
-    expression = input()
-    result = 0
-    for operand in expression.split('+'):
-        result -= int(operand)
-    print(result)
+exp = input()
 
-if __name__ == '__main__':
-    main()
+# Convert to list of numbers and list of operators
+nums = []
+op = []
+
+n = ''
+for c in exp:
+    if c.isdigit():
+        n += c
+    else:
+        nums.append(int(n))
+        op.append(c)
+        n = ''
+nums.append(int(n))
+
+# Evaluate expression using order of operations
+total = nums[0]
+for i in range(len(op)):
+    if op[i] == '+':
+        total += nums[i+1]
+    elif op[i] == '-':
+        total -= nums[i+1]
+
+print(total)

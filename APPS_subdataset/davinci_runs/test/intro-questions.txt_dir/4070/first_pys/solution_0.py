@@ -1,15 +1,16 @@
 
 
-# Function
-def solution(n):
-    answer = 0
-    while n != 0:
-        if n % 2 == 0:
-            n = n - 1
-            answer += 1
-        n = n // 2
-    return answer
-
-# Main
 n = int(input())
+
+def solution(x):
+    i = 1
+    j = 1
+    while i < x:
+        i += j
+        j += 1
+    if i == x and (j%2 == 1):
+        return 1
+    else:
+        return 0
+
 print(solution(n))

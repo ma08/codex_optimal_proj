@@ -1,30 +1,40 @@
 
 
+
 def main():
     n = int(input())
     s = input()
-    s = list(map(int, s))
-    s.sort()
-    ans = []
-    a = 0
-    b = 1
-    c = 2
-    i = 0
-    while i < len(s):
-        if s[i] == 0:
-            ans.append(s[i])
-            i+=1
-        elif s[i] == 1:
-            ans.append(s[i])
-            i+=1
+
+    if n % 3 == 1:
+        s = '2' + s
+
+    if n % 3 == 2:
+        s = '1' + s
+
+    count_0, count_1, count_2 = 0, 0, 0
+    for i in range(n):
+        if s[i] == '0':
+            count_0 += 1
+        elif s[i] == '1':
+            count_1 += 1
         else:
-            ans.append(s[i])
-            i+=1
-            ans.append(s[i])
-            i+=1
-            ans.append(s[i])
-            i+=1
-    print(''.join(map(str, ans)))
+            count_2 += 1
+
+    if count_0 == count_1 == count_2:
+        print(s)
+        return
+
+    # if it's not equal then we need to change something
+    # let's try to change one 0 to 1
+    if count_0 > count_1:
+        print('0' * n)
+        return
+
+    if count_1 > count_2:
+        print('1' * n)
+        return
+
+    print('2' * n)
 
 if __name__ == '__main__':
     main()

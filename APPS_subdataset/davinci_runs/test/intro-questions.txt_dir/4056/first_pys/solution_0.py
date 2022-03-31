@@ -1,24 +1,28 @@
 
 
-
 def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
-
+    if b == 0:
+        return a
+    return gcd(b, a % b)
 
 def lcm(a, b):
     return a * b // gcd(a, b)
 
+def find_factors(n):
+    factors = []
+    for i in range(1, n + 1):
+        if n % i == 0:
+            factors.append(i)
+    return factors
 
 def main():
     n = int(input())
-    arr = list(map(int, input().split()))
-    lcm_arr = arr[0]
+    a = list(map(int, input().split()))
+
+    smallest_num = a[0]
     for i in range(1, n):
-        lcm_arr = lcm(lcm_arr, arr[i])
-    print(len(str(lcm_arr)))
+        smallest_num = lcm(smallest_num, a[i])
 
+    print(len(find_factors(smallest_num)))
 
-if __name__ == '__main__':
-    main()
+main()

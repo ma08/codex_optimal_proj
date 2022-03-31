@@ -1,24 +1,40 @@
 
 
-def main():
-    n = int(input())
-    a = [int(x) for x in input().split()]
-    a.sort()
-    if n == 1:
-        print(0)
-        return
-    if n == 2:
-        if a[0] == a[1]:
-            print(0)
-        else:
-            print(-1)
-        return
-    if a[0] == a[n-1]:
-        print(0)
-        return
-    if a[0] + 1 == a[n-1]:
-        print(1)
-        return
-    print(-1)
+# Solved
 
-main()
+import sys
+
+n = int(input())
+a = list(map(int, input().split()))
+
+max_a = max(a)
+min_a = min(a)
+
+if n == 1:
+    print(0)
+    sys.exit()
+
+if max_a == min_a:
+    print(0)
+    sys.exit()
+
+if max_a - min_a > 100:
+    print(-1)
+    sys.exit()
+
+for i in range(max_a - min_a + 1):
+    if i == 0:
+        continue
+
+    flag = True
+
+    for j in range(len(a)):
+        if a[j] - i < min_a:
+            flag = False
+            break
+
+    if flag:
+        print(i)
+        sys.exit()
+
+print(-1)

@@ -1,19 +1,23 @@
 
 
-n, m = map(int, input().split())
-a = list(map(int, input().split()))
 
-c = [0]*(2*10**5+1)
-for i in range(n):
-    c[a[i]] += 1
+def solve(n, m, arr):
+    """
+    :param n: Number of elements in the array
+    :param m: Value of the median
+    :param arr: Array of values
+    :return: Number of indices that have the median equal to m
+    """
+    count = 0
+    for i in range(n):
+        for j in range(i, n):
+            if arr[i:j+1] == [m]*(j-i+1):
+                count += 1
 
-for i in range(1, len(c)):
-    c[i] += c[i-1]
+    return count
 
-ans = 0
-for i in range(n):
-    ans += c[m-1] - c[a[i]-1]
-    if a[i] == m:
-        ans += 1
 
-print(ans)
+if __name__ == "__main__":
+    n, m = list(map(int, input().split()))
+    arr = list(map(int, input().split()))
+    print(solve(n, m, arr))

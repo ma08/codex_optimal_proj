@@ -1,17 +1,16 @@
 
 
-a,b,x=map(int,input().split())
-if a>b:
-    a,b=b,a
-if x>a:
-    if a==1:
-        print("0"*(a+b-1)+"1")
-    else:
-        print("0"*(a-1)+"1"*(b+1))
-elif x<a:
-    if x==1:
-        print("0"*(a+b-1)+"1")
-    else:
-        print("0"*(a-x)+"1"*(b+x))
-else:
-    print("1"*(a+b))
+#------------------------------------------------------------------------------#
+
+def main():
+    a,b,x = map(int,input().split())
+    s = ['0']*a+['1']*b
+    if a+b-1-x < x:
+        x = a+b-1-x
+        s = s[::-1]
+    
+    for i in range(x):
+        s[i],s[i+1] = s[i+1],s[i]
+    print(''.join(s))
+
+main()

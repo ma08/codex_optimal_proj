@@ -1,54 +1,23 @@
 
 
-from sys import stdin
 
-n = int(stdin.readline())
-a = [int(x) for x in stdin.readline().split()]
+def main():
+    _ = input()
+    A = list(map(int, input().split()))
+    # find minimum and second minimum
+    min1 = A[0]
+    min2 = A[1]
+    if min2 < min1:
+        min1, min2 = min2, min1
+    for i in range(2, len(A)):
+        if A[i] < min2:
+            if A[i] < min1:
+                min2 = min1
+                min1 = A[i]
+            else:
+                min2 = A[i]
+    print(min1, min2)
 
-d = {}
-for i in range(n):
-    if a[i] in d:
-        d[a[i]].append(i)
-    else:
-        d[a[i]] = [i]
 
-# print(d)
-
-# print(d)
-
-ans = n
-for x in d:
-    if len(d[x]) > 1:
-        for i in range(len(d[x]) - 1):
-            if d[x][i + 1] - d[x][i] < ans:
-                ans = d[x][i + 1] - d[x][i]
-
-# print(ans)
-
-for x in d:
-    if len(d[x]) > 1:
-        for i in range(len(d[x]) - 1):
-            if d[x][i + 1] - d[x][i] == ans:
-                print(d[x][i] + 1, d[x][i + 1] + 1)
-                exit(0)
-
-for x in d:
-    if len(d[x]) > 1:
-        for i in range(len(d[x]) - 1):
-            if d[x][i + 1] - d[x][i] == ans + 1:
-                print(d[x][i] + 1, d[x][i + 1] + 1)
-                exit(0)
-
-for x in d:
-    if len(d[x]) > 1:
-        for i in range(len(d[x]) - 1):
-            if d[x][i + 1] - d[x][i] == ans + 2:
-                print(d[x][i] + 1, d[x][i + 1] + 1)
-                exit(0)
-
-for x in d:
-    if len(d[x]) > 1:
-        for i in range(len(d[x]) - 1):
-            if d[x][i + 1] - d[x][i] == ans + 3:
-                print(d[x][i] + 1, d[x][i + 1] + 1)
-                exit(0)
+if __name__ == "__main__":
+    main()

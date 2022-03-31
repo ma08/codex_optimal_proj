@@ -1,0 +1,88 @@
+"""
+You are given a binary matrix $a$ of size $n \times m$. A binary matrix is a matrix where each element is either $0$ or $1$.
+
+You may perform some (possibly zero) operations with this matrix. During each operation you can inverse the row of this matrix or a column of this matrix. Formally, inverting a row is changing all values in this row to the opposite ($0$ to $1$, $1$ to $0$). Inverting a column is changing all values in this column to the opposite.
+
+Your task is to sort the initial matrix by some sequence of such operations. The matrix is considered sorted if the array $[a_{1, 1}, a_{1, 2}, \dots, a_{1, m}, a_{2, 1}, a_{2, 2}, \dots, a_{2, m}, \dots, a_{n, m - 1}, a_{n, m}]$ is sorted in non-descending order.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 200$) — the number of rows and the number of columns in the matrix.
+
+The next $n$ lines contain $m$ integers each. The $j$-th element in the $i$-th line is $a_{i, j}$ ($0 \le a_{i, j} \le 1$) — the element of $a$ at position $(i, j)$.
+
+
+-----Output-----
+
+If it is impossible to obtain a sorted matrix, print "NO" in the first line.
+
+Otherwise print "YES" in the first line. In the second line print a string $r$ of length $n$. The $i$-th character $r_i$ of this string should be '1' if the $i$-th row of the matrix is inverted and '0' otherwise. In the third line print a string $c$ of length $m$. The $j$-th character $c_j$ of this string should be '1' if the $j$-th column of the matrix is inverted and '0' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+2 2
+1 1
+0 1
+
+Output
+YES
+00
+10
+
+Input
+3 4
+0 0 0 1
+0 0 0 0
+1 1 1 1
+
+Output
+YES
+010
+0000
+
+Input
+3 3
+0 0 0
+1 0 1
+1 1 0
+
+Output
+NO
+"""
+--------------------------
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\nmatrix = []\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\ndef inverse(arr):\n    return [1 - x for x in arr]\n\ndef is_sorted(arr):\n    for i in range(1, len(arr)):\n        if arr[i - 1] > arr[i]:\n            return False\n    return True\n\ndef is_sorted_matrix(matrix):\n    arr = []\n    for i in range(n):\n        for j in range(m):\n            arr.append(matrix[i][j])\n    return is_sorted(arr)\n\ndef is_sorted_matrix_inv(matrix):\n    for i in range(n):\n        if not is_sorted(matrix[i]):\n            return False\n    for j in range(m):\n        arr = []\n        for i in range(n):\n            arr.append(matrix[i][j])\n        if not is_sorted(arr):\n            return False\n    return True\n\nr = [0] * n\nc = [0] * m\nfor i in range(n):\n    if not is_sorted(matrix[i]):\n        r[i] = 1\n        matrix[i] = inverse(matrix[i])\nfor j in range(m):\n    arr = []\n    for i in range(n):\n        arr.append(matrix[i][j])\n    if not is_sorted(arr):\n        c[j] = 1\n        for i in range(n):\n            matrix[i][j] = 1 - matrix[i][j]\n\nif is_sorted_matrix_inv(matrix):\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    matrix = []\n    for i in range(n):\n        matrix.append([int(x) for x in input().split()])\n\n    rows = [0] * n\n    columns = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                rows[i] += 1\n                columns[j] += 1\n\n    for i in range(n):\n        for j in range(m):\n            if (rows[i] + columns[j]) % 2 != matrix[i][j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join([\"1\" if x % 2 == 1 else \"0\" for x in rows]))\n    print(\"\".join([\"1\" if x % 2 == 1 else \"0\" for x in columns]))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1648684458,
+  "id": "cmpl-4rcQkI1uJ3oB8cY2VKHeAQpX304LP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\nmatrix = []\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\ndef inverse(arr):\n    return [1 - x for x in arr]\n\ndef is_sorted(arr):\n    for i in range(1, len(arr)):\n        if arr[i - 1] > arr[i]:\n            return False\n    return True\n\ndef is_sorted_matrix(matrix):\n    arr = []\n    for i in range(n):\n        for j in range(m):\n            arr.append(matrix[i][j])\n    return is_sorted(arr)\n\ndef is_sorted_matrix_inv(matrix):\n    for i in range(n):\n        if not is_sorted(matrix[i]):\n            return False\n    for j in range(m):\n        arr = []\n        for i in range(n):\n            arr.append(matrix[i][j])\n        if not is_sorted(arr):\n            return False\n    return True\n\nr = [0] * n\nc = [0] * m\nfor i in range(n):\n    if not is_sorted(matrix[i]):\n        r[i] = 1\n        matrix[i] = inverse(matrix[i])\nfor j in range(m):\n    arr = []\n    for i in range(n):\n        arr.append(matrix[i][j])\n    if not is_sorted(arr):\n        c[j] = 1\n        for i in range(n):\n            matrix[i][j] = 1 - matrix[i][j]\n\nif is_sorted_matrix_inv(matrix):\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\nelse:\n    print(\"NO\")"
+}
+REASON stop
+1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    matrix = []\n    for i in range(n):\n        matrix.append([int(x) for x in input().split()])\n\n    rows = [0] * n\n    columns = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                rows[i] += 1\n                columns[j] += 1\n\n    for i in range(n):\n        for j in range(m):\n            if (rows[i] + columns[j]) % 2 != matrix[i][j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join([\"1\" if x % 2 == 1 else \"0\" for x in rows]))\n    print(\"\".join([\"1\" if x % 2 == 1 else \"0\" for x in columns]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop

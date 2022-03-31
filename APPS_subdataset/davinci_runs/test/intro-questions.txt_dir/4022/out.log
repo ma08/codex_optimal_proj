@@ -78,17 +78,23 @@ In the fourth example you will get the intersection $[3;10]$ (length $7$) if you
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": "\n\nn = int(raw_input())\n\nsegments = []\nfor i in xrange(n):\n    segments.append(map(int, raw_input().split()))\n\nsegments = sorted(segments, key=lambda x: x[1])\n\nresult = float(\"-inf\")\n\nfor i in xrange(n):\n    left = segments[i][0]\n    right = segments[i][1]\n    max_right = right\n    max_left = left\n    for j in xrange(i + 1, n):\n        if segments[j][0] <= right:\n            max_left = max(max_left, segments[j][0])\n        else:\n            break\n    for j in xrange(i - 1, -1, -1):\n        if segments[j][1] >= left:\n            max_right = min(max_right, segments[j][1])\n        else:\n            break\n    result = max(max_right - max_left, result)\n\nprint result"
+      "text": "\n\n#If you remove a segment, you can only do one of two things:\n#1. remove a segment that is entirely contained within another segment\n#2. remove a segment that contains another segment entirely\n#\n#If you remove a segment that is entirely contained within another segment, the maximum length of the resulting intersection is the length of the smallest remaining segment\n#\n#If you remove a segment that contains another segment entirely, the maximum length of the resulting intersection is the length of the largest remaining segment\n#\n#This means that the maximum length of the intersection is the maximum of the length of the smallest remaining segment and the length of the largest remaining segment\n\ndef main():\n    n = int(input())\n    segments = []\n    for _ in range(n):\n        segments.append([int(x) for x in input().split()])\n    segments.sort(key=lambda x: x[0])\n\n    largest = segments[0][1]\n    smallest = segments[0][1] - segments[0][0]\n    for i in range(1, n):\n        if segments[i][0] >= segments[i - 1][0]:\n            largest = max(largest, segments[i][1] - segments[i - 1][0])\n        else:\n            smallest = min(smallest, segments[i][1] - segments[i][0])\n    print(max(largest, smallest))\n\nmain()"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\n# Solution\n\ndef solve(segments):\n    segments.sort()\n    max_length = 0\n    for i in range(1, len(segments)):\n        max_length = max(max_length, min(segments[i][0], segments[i-1][1]) - max(segments[i][1], segments[i-1][0]))\n\n    return max_length\n\nn = int(input())\nsegments = [tuple(map(int, input().split())) for _ in range(n)]\nprint(solve(segments))"
+      "text": "\n\n\ndef main():\n    n = int(input())\n    seq = []\n    for i in range(n):\n        line = [int(x) for x in input().split()]\n        seq.append(line)\n    seq.sort(key=lambda x: x[1])\n    ans = 0\n    for i in range(n):\n        if i == 0:\n            ans = max(ans, seq[i][1] - seq[i+1][0])\n        elif i == n-1:\n            ans = max(ans, seq[i][0] - seq[i-1][1])\n        else:\n            ans = max(ans, seq[i][0] - seq[i-1][1])\n            ans = max(ans, seq[i][1] - seq[i+1][0])\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nclass Segment:\n    def __init__(self, left, right):\n        self.left = left\n        self.right = right\n\ndef main():\n    segments = []\n    n = int(input())\n    for _ in range(n):\n        l, r = [int(i) for i in input().split()]\n        segments.append(Segment(l, r))\n    print(solve(segments))\n\ndef solve(segments):\n    segments = sorted(segments, key=lambda x: (x.left, x.right))\n    max_length = 0\n    for i in range(len(segments)):\n        left = segments[i].left\n        right = segments[i].right\n        max_right = right\n        for j in range(i+1, len(segments)):\n            if segments[j].left <= right:\n                max_right = max(max_right, segments[j].right)\n            else:\n                break\n        max_length = max(max_length, max_right - left)\n    return max_length\n\nif __name__ == \"__main__\":\n    main()"
     }
   ],
-  "created": 1648683070,
-  "id": "cmpl-4rc4MFFqBUt8FmPOrsAOoqJ8FhfU8",
+  "created": 1648692351,
+  "id": "cmpl-4reU3tQRnrxmt0hTFn86QK4McYgcO",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -96,13 +102,20 @@ In the fourth example you will get the intersection $[3;10]$ (length $7$) if you
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": "\n\nn = int(raw_input())\n\nsegments = []\nfor i in xrange(n):\n    segments.append(map(int, raw_input().split()))\n\nsegments = sorted(segments, key=lambda x: x[1])\n\nresult = float(\"-inf\")\n\nfor i in xrange(n):\n    left = segments[i][0]\n    right = segments[i][1]\n    max_right = right\n    max_left = left\n    for j in xrange(i + 1, n):\n        if segments[j][0] <= right:\n            max_left = max(max_left, segments[j][0])\n        else:\n            break\n    for j in xrange(i - 1, -1, -1):\n        if segments[j][1] >= left:\n            max_right = min(max_right, segments[j][1])\n        else:\n            break\n    result = max(max_right - max_left, result)\n\nprint result"
+  "text": "\n\n#If you remove a segment, you can only do one of two things:\n#1. remove a segment that is entirely contained within another segment\n#2. remove a segment that contains another segment entirely\n#\n#If you remove a segment that is entirely contained within another segment, the maximum length of the resulting intersection is the length of the smallest remaining segment\n#\n#If you remove a segment that contains another segment entirely, the maximum length of the resulting intersection is the length of the largest remaining segment\n#\n#This means that the maximum length of the intersection is the maximum of the length of the smallest remaining segment and the length of the largest remaining segment\n\ndef main():\n    n = int(input())\n    segments = []\n    for _ in range(n):\n        segments.append([int(x) for x in input().split()])\n    segments.sort(key=lambda x: x[0])\n\n    largest = segments[0][1]\n    smallest = segments[0][1] - segments[0][0]\n    for i in range(1, n):\n        if segments[i][0] >= segments[i - 1][0]:\n            largest = max(largest, segments[i][1] - segments[i - 1][0])\n        else:\n            smallest = min(smallest, segments[i][1] - segments[i][0])\n    print(max(largest, smallest))\n\nmain()"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\n# Solution\n\ndef solve(segments):\n    segments.sort()\n    max_length = 0\n    for i in range(1, len(segments)):\n        max_length = max(max_length, min(segments[i][0], segments[i-1][1]) - max(segments[i][1], segments[i-1][0]))\n\n    return max_length\n\nn = int(input())\nsegments = [tuple(map(int, input().split())) for _ in range(n)]\nprint(solve(segments))"
+  "text": "\n\n\ndef main():\n    n = int(input())\n    seq = []\n    for i in range(n):\n        line = [int(x) for x in input().split()]\n        seq.append(line)\n    seq.sort(key=lambda x: x[1])\n    ans = 0\n    for i in range(n):\n        if i == 0:\n            ans = max(ans, seq[i][1] - seq[i+1][0])\n        elif i == n-1:\n            ans = max(ans, seq[i][0] - seq[i-1][1])\n        else:\n            ans = max(ans, seq[i][0] - seq[i-1][1])\n            ans = max(ans, seq[i][1] - seq[i+1][0])\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nclass Segment:\n    def __init__(self, left, right):\n        self.left = left\n        self.right = right\n\ndef main():\n    segments = []\n    n = int(input())\n    for _ in range(n):\n        l, r = [int(i) for i in input().split()]\n        segments.append(Segment(l, r))\n    print(solve(segments))\n\ndef solve(segments):\n    segments = sorted(segments, key=lambda x: (x.left, x.right))\n    max_length = 0\n    for i in range(len(segments)):\n        left = segments[i].left\n        right = segments[i].right\n        max_right = right\n        for j in range(i+1, len(segments)):\n            if segments[j].left <= right:\n                max_right = max(max_right, segments[j].right)\n            else:\n                break\n        max_length = max(max_length, max_right - left)\n    return max_length\n\nif __name__ == \"__main__\":\n    main()"
 }
 REASON stop

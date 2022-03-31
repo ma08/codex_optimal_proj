@@ -1,12 +1,25 @@
 
 
-def check(n, m, a):
-    a = sorted(a, reverse=True)
-    for i in range(1, n+1):
-        if sum(a[:i]) >= m:
-            return i
+
+def cup_of_coffee():
+    n, m = map(int, input().split())
+    a = map(int, input().split())
+
+    total_pages = 0
+    for i in range(n):
+        total_pages += max(0, a[i] - i)
+
+    if total_pages < m:
+        return -1
+
+    max_cups = 0
+    for i in range(n):
+        max_cups += min(a[i], n - i)
+
+    if max_cups >= m:
+        return 1
+
     return -1
 
-n, m = map(int, input().split())
-a = list(map(int, input().split()))
-print(check(n, m, a))
+
+print(cup_of_coffee())

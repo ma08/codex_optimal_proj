@@ -1,12 +1,10 @@
 
 
-from math import floor
-
 a, b = map(int, input().split())
 
-for i in range(1, 101):
-    if floor(i * 0.08) == a and floor(i * 0.1) == b:
-        print(i)
-        exit()
-
-print(-1)
+if a * 9 == b * 8:
+    print(a * 9 // 8 + 1)
+elif a * 9 < b * 8:
+    print(-1)
+else:
+    print((a * 9 // 8 // 10 + 1) * 10)

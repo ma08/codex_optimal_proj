@@ -1,26 +1,37 @@
 
 
+def main():
+    """
+    The code is written in Python 3.6.1. To run the code, please use the below command in the terminal.
 
-def solve(n, b, a, s):
-    ans = 0
-    cur_b, cur_a = b, a
-    for i in range(n):
-        if s[i]:
-            if cur_a:
-                cur_a -= 1
-            elif cur_b:
-                cur_b -= 1
-        else:
-            if cur_b:
-                cur_b -= 1
-            elif cur_a:
-                cur_a -= 1
-        if cur_b or cur_a:
-            ans += 1
-        else:
-            break
-    return ans
+    python3 solution.py < input.txt
 
-n, b, a = map(int, input().split())
-s = list(map(int, input().split()))
-print(solve(n, b, a, s))
+    """
+
+    n, b, a = map(int, input().split())
+    s = list(map(int, input().split()))
+    b_init = b
+    a_init = a
+    count = 0
+    while a > 0:
+        if s[count] == 1:
+            if b < b_init:
+                b += 1
+            else:
+                a -= 1
+        else:
+            a -= 1
+        count += 1
+    while b > 0:
+        if s[count] == 1:
+            if b < b_init:
+                b += 1
+            else:
+                a -= 1
+        else:
+            b -= 1
+        count += 1
+    print(count-1)
+
+if __name__ == "__main__":
+    main()

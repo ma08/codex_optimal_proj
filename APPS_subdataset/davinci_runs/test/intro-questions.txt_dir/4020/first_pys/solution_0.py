@@ -1,26 +1,22 @@
 
-import sys
 
-def main():
-    # get the input
-    h1, m1 = sys.stdin.readline().strip().split(':')
-    h2, m2 = sys.stdin.readline().strip().split(':')
-    h1 = int(h1)
-    m1 = int(m1)
-    h2 = int(h2)
-    m2 = int(m2)
-    # calculate midpoint
-    h = (h1 + h2) // 2
-    m = (m1 + m2) // 2
-    # check if we need to add an hour to the midpoint
-    if m > 59:
-        h += 1
-        m -= 60
-    # check if we need to add a day to the midpoint
-    if h > 23:
-        h -= 24
-    # print the result
-    print("{:02d}:{:02d}".format(h, m))
+h1, m1 = map(int, input().split(':'))
+h2, m2 = map(int, input().split(':'))
 
-if __name__ == "__main__":
-    main()
+m_difference = (m2 - m1) / 2
+
+h_difference = (h2 - h1) / 2
+if m_difference >= 30:
+    h_difference += 0.5
+
+if m_difference >= 30:
+    m_difference -= 30
+
+m3 = m1 + m_difference
+h3 = h1 + h_difference
+
+if m3 >= 60:
+    m3 -= 60
+    h3 += 1
+
+print(str(int(h3)).zfill(2) + ':' + str(int(m3)).zfill(2))

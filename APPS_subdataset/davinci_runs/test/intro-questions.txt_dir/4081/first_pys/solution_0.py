@@ -1,45 +1,59 @@
 
 
-def read_array():
-    return [int(i) for i in input().split()]
+# Solution
 
-def read_single_int():
-    return int(input())
+n = int(input())
 
-def solve(a):
-    n = len(a)
-    l = [0] * n
-    r = [0] * n
+a = list(input().split())
 
-    for i in range(1, n):
-        if a[i] > a[i - 1]:
-            l[i] = l[i - 1] + 1
+a = [int(i) for i in a]
+
+#print(a)
+
+ind = [0]*n
+
+for i in range(n):
+    ind[a[i]-1] = i
+
+#print(ind)
+
+left = a[:]
+
+right = a[:]
+
+#print(left)
+
+#print(right)
+
+
+ans = ""
+
+while len(left) > 0:
+    if len(right) > 0:
+        if ind[left[0]-1] < ind[right[0]-1]:
+            ans += "L"
+            left.pop(0)
+        elif ind[left[0]-1] > ind[right[0]-1]:
+            ans += "R"
+            right.pop(0)
         else:
-            l[i] = 0
+            if ind[left[-1]-1] < ind[right[0]-1]:
+                ans += "L"
+                left.pop(0)
+            elif ind[left[-1]-1] > ind[right[0]-1]:
+                ans += "R"
+                right.pop(0)
+            else:
+                if left[0] > right[0]:
+                    ans += "L"
+                    left.pop(0)
+                else:
+                    ans += "R"
+                    right.pop(0)
+    else:
+        ans += "L"
+        left.pop(0)
 
-    for i in range(n - 2, -1, -1):
-        if a[i] < a[i + 1]:
-            r[i] = r[i + 1] + 1
-        else:
-            r[i] = 0
+print(len(ans))
 
-    ans = 0
-    sol = []
-
-    for i in range(n):
-        if l[i] + r[i] + 1 > ans:
-            ans = l[i] + r[i] + 1
-            sol = [1] * (l[i] + 1)
-            sol += [0] * (r[i] + 1)
-
-    return ans, sol
-
-def main():
-    n = read_single_int()
-    a = read_array()
-    ans, sol = solve(a)
-    print(ans)
-    print("".join("L" if i else "R" for i in sol))
-
-if __name__ == '__main__':
-    main()
+print(ans)

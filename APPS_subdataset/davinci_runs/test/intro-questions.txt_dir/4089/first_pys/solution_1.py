@@ -1,27 +1,16 @@
 
 
-import sys
+# === Solution ===
 
-def name(n):
-    if n == 1:
-        return 'a'
-    
-    n -= 1
-    letters = 'abcdefghijklmnopqrstuvwxyz'
-    length = 1
-    while True:
-        if n < 26**length:
-            break
-        n -= 26**length
-        length += 1
-    
-    name = ''
-    while length > 0:
-        name += letters[n // 26**(length - 1)]
-        n %= 26**(length - 1)
-        length -= 1
-    
-    return name
+def convert(num):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    base = len(alphabet)
+    if num <= 0:
+        return ''
+    elif num <= base:
+        return alphabet[num-1]
+    else:
+        return convert(num//base) + alphabet[(num%base)-1]
 
-n = int(sys.stdin.readline().rstrip())
-print(name(n))
+num = int(input())
+print(convert(num))

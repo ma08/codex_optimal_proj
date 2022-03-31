@@ -1,28 +1,39 @@
 
 
-n, k = map(int, input().split())
-a = list(map(int, input().split()))
+def solve():
+    n, k = map(int, input().split())
+    a = list(map(int, input().split()))
 
-dp = [[0] * (n + 1) for _ in range(k + 1)]
+    # dp[i][j] means max profit from first i problems, divided into j groups
+    dp = [[0] * (k + 1) for _ in range(n + 1)]
 
-for i in range(1, k + 1):
-    for j in range(1, n + 1):
-        dp[i][j] = max(dp[i][j-1], dp[i-1][j-1] + a[j-1])
+    # max_profit[i][j] means max profit from a[i] to a[j]
+    max_profit = [[0] * (n + 1) for _ in range(n + 1)]
+    for i in range(n):
+        max_profit[i][i] = a[i]
+        for j in range(i + 1, n):
+            max_profit[i][j] = max(max_profit[i][j - 1], a[j])
 
-print(dp[k][n])
+    for i in range(1, n + 1):
+        for j in range(1, k + 1):
+            if i >= j:
+                for l in range(0, i - j + 1):
+                    dp[i][j] = max(dp[i][j], dp[l][j - 1] + max_profit[l][i - 1])
 
-# reconstruct answer
-ans = []
-i = k
-j = n
-while i > 0:
-    if dp[i][j] == dp[i][j-1]:
-        j -= 1
-    else:
-        ans.append(j)
-        j -= 1
-        i -= 1
-ans.reverse()
+    print(dp[n][k])
 
-for i in ans:
-    print(i - ans[ans.index(i) - 1] if ans.index(i) > 0 else i, end=" ")
+    groups = []
+    group_size = []
+    i, j = n, k
+    while i > 0 and j > 0:
+        for l in range(0, i - j + 1):
+            if dp[i][j] == dp[l][j - 1] + max_profit[l][i - 1]:
+                groups.append((l, i - 1))
+                group_size.append(i - l)
+                i, j = l, j - 1
+                break
+
+    for g in reversed(groups):
+        print(max(a[g[0]:g[1] + 1]), end=' ')
+
+solve()

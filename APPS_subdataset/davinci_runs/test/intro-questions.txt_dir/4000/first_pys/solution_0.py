@@ -1,53 +1,52 @@
 
 
-def get_distance(tree, root, node):
-    dist = 0
-    while node != root:
-        dist += 1
-        node = tree[node]
-    return dist
+import sys
+import queue
 
-def find_lca(tree, root, node1, node2):
-    dist1 = get_distance(tree, root, node1)
-    dist2 = get_distance(tree, root, node2)
-    if dist1 < dist2:
-        node1, node2 = node2, node1
-        dist1, dist2 = dist2, dist1
-    while dist1 > dist2:
-        node1 = tree[node1]
-        dist1 -= 1
-    while node1 != node2:
-        node1 = tree[node1]
-        node2 = tree[node2]
-    return node1
+def bfs(tree, root, visited):
+    visited[root] = True
+    q = queue.Queue()
+    q.put(root)
+    while not q.empty():
+        curr = q.get()
+        for neighbor in tree[curr]:
+            if not visited[neighbor]:
+                q.put(neighbor)
+                visited[neighbor] = True
 
-def solve(n, tree):
-    root = 1
-    tree = [0] + tree
-    lca = [[0] * n for _ in range(n)]
-    for i in range(1, n+1):
-        for j in range(i+1, n+1):
-            lca[i][j] = lca[j][i] = find_lca(tree, root, i, j)
-    max_edges = 0
-    best_nodes = (0, 0, 0)
-    for i in range(1, n+1):
-        for j in range(i+1, n+1):
-            for k in range(j+1, n+1):
-                edges = get_distance(tree, root, i) + get_distance(tree, root, j) + get_distance(tree, root, k) - get_distance(tree, root, lca[i][j]) - get_distance(tree, root, lca[j][k]) - get_distance(tree, root, lca[i][k])
-                if edges > max_edges:
-                    max_edges = edges
-                    best_nodes = (i, j, k)
-    return max_edges, best_nodes
+def get_connected_components(tree, n):
+    visited = [False] * (n + 1)
+    cc = 0
+    for i in range(1, n + 1):
+        if not visited[i]:
+            bfs(tree, i, visited)
+            cc += 1
+    return cc
 
 def main():
-    n = int(input())
-    tree = [0] * n
-    for _ in range(n-1):
-        a, b = map(int, input().split())
-        tree[b-1] = a
-    max_edges, best_nodes = solve(n, tree)
-    print(max_edges)
-    print(*best_nodes)
+    nextint = iter(map(int, sys.stdin.read().split())).__next__
+    n = nextint()
+    tree = [[] for _ in range(n + 1)]
+    for _ in range(n - 1):
+        a, b = nextint(), nextint()
+        tree[a].append(b)
+        tree[b].append(a)
+    # No need to check if the input is a tree, since it's guaranteed to be a tree.
+    cc = get_connected_components(tree, n)
+    if cc == 1:
+        res = n - 1
+        a = 1
+        b = 2
+        c = 3
+    elif cc == 2:
+        res = n - 2
+        a = b = c = 1
+    else:
+        res = n - 3
+        a = b = 1
+        c = 2
+    print(res)
+    print('{} {} {}'.format(a, b, c))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

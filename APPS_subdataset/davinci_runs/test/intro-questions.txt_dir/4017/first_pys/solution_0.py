@@ -1,16 +1,17 @@
 
 
-n = int(input())
-a = list(map(int, input().split()))
+import sys
 
-a_sum = sum(a)
+def main():
+    input = sys.stdin.read().splitlines()
+    n = int(input[0])
+    a = list(map(int, input[1].split()))
+    suma = sum(a)
+    nice = []
+    for i in range(n):
+        if a[i] == suma - a[i]:
+            nice.append(i+1)
+    print(len(nice))
+    print(" ".join(nice))
 
-res = []
-
-for i in range(n):
-    if a[i] == a_sum - a[i]:
-        res.append(i + 1)
-
-print(len(res))
-if len(res) > 0:
-    print(*res)
+main()

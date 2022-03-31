@@ -1,29 +1,40 @@
 
 
-# My answer
-def equalize_strings(s, t):
-    if s == t:
-        return 'Yes'
-    else:
-        for i in range(len(s)):
-            for j in range(i+1, len(s)):
-                if s[i] != s[j]:
-                    s = s.replace(s[i], 'a')
-                    s = s.replace(s[j], s[i])
-                    s = s.replace('a', s[j])
-                    if s == t:
-                        return 'Yes'
-        return 'No'
-
-# A better answer
-def equalize_strings(s, t):
-    if (sorted(s) == sorted(t)):
-        return 'Yes'
-    else:
-        return 'No'
-
-# Test
 s = input()
 t = input()
 
-print(equalize_strings(s, t))
+# s = "azzel"
+# t = "apple"
+
+# s = "abcdefghijklmnopqrstuvwxyz"
+# t = "bcdefghijklmnopqrstuvwxyza"
+
+# s = "abcdefghijklmnopqrstuvwxyz"
+# t = "bcdefghijklmnopqrstuvwxyz"
+
+s_dict = {}
+s_list = list(s)
+for i in s_list:
+    if i in s_dict:
+        s_dict[i] += 1
+    else:
+        s_dict[i] = 1
+
+t_dict = {}
+t_list = list(t)
+for i in t_list:
+    if i in t_dict:
+        t_dict[i] += 1
+    else:
+        t_dict[i] = 1
+
+for k, v in t_dict.items():
+    if k not in s_dict:
+        print("No")
+        exit()
+    else:
+        if v > s_dict[k]:
+            print("No")
+            exit()
+
+print("Yes")

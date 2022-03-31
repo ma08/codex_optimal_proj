@@ -1,23 +1,25 @@
 
 
-import math
+import string
+
 N = int(input())
 
-def calc_digits(n):
-    return math.ceil(math.log(n+1, 26))
+def solve(N):
+  if N <= 26:
+    return string.ascii_lowercase[N - 1]
+  else:
+    word_len = 1
+    while True:
+      if N - 26**word_len <= 0:
+        break
+      N -= 26**word_len
+      word_len += 1
+    N -= 1
+    alphabet = string.ascii_lowercase
+    answer = ''
+    for _ in range(word_len):
+      answer = alphabet[N % 26] + answer
+      N = N // 26
+    return answer
 
-def calc_index(n, digits):
-    return n - 26**(digits-1)
-
-def calc_char(n):
-    return chr(n+97)
-
-digits = calc_digits(N)
-index = calc_index(N, digits)
-
-ans = ""
-for i in range(digits-1, -1, -1):
-    num = math.floor(index/26**i)
-    ans += calc_char(num)
-    index -= num*26**i
-print(ans)
+print(solve(N))

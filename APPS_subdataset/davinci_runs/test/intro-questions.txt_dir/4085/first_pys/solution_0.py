@@ -1,41 +1,25 @@
 
 
-import math
+def solve(n, divs):
+    mx = max(divs)
+    divs.remove(mx)
+    sums = {}
+    for d in divs:
+        for e in divs:
+            s = d + e
+            if s in sums:
+                return mx * s
+            sums[s] = True
+    return -1
 
-t = int(input())
-for _ in range(t):
-    n = int(input())
-    divisors = list(map(int, input().split()))
 
-    divisors.sort()
+def main():
+    t = int(input())
+    for i in range(t):
+        n = int(input())
+        divs = [int(x) for x in input().split()]
+        print(solve(n, divs))
 
-    # print(divisors)
 
-    num_divisors = len(divisors)
-    root = math.floor(math.sqrt(divisors[-1]))
-
-    # print(root)
-
-    if root * root == divisors[-1]:
-        root -= 1
-
-    # print(root)
-
-    if num_divisors == 1:
-        if divisors[0] == 2:
-            print(4)
-        else:
-            print(divisors[0] * 2)
-    elif num_divisors == 2:
-        if divisors[0] == 2:
-            print(divisors[1] * 2)
-        else:
-            print(divisors[0] * divisors[1])
-    else:
-        if divisors[0] == 2:
-            if divisors[1] == 4:
-                print(divisors[-1] * divisors[-2])
-            else:
-                print(divisors[-1] * 2)
-        else:
-            print(divisors[-1] * divisors[-2])
+if __name__ == "__main__":
+    main()

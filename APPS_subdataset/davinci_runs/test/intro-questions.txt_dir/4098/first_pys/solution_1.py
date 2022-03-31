@@ -1,17 +1,17 @@
 
+# Solution
+n, k = map(int, input().split())
+a = list(map(int, input().split()))
 
-n, k = [int(x) for x in input().split()]
-a = [int(x) for x in input().split()]
 a.sort()
 
-if k == 1:
-    print(n)
-elif k == n:
-    print(1)
-else:
-    b = []
-    for i in range(n-1):
-        b.append(a[i+1] - a[i])
-    b.sort()
-    s = sum(b[:-k+1]) + n
-    print(s)
+dp = [0] * n
+dp[0] = 1
+
+for i in range(1, n):
+    dp[i] = dp[i-1]
+    for j in range(i-1, -1, -1):
+        if abs(a[i] - a[j]) <= 5:
+            dp[i] = max(dp[i], dp[j]+1)
+
+print(max(dp))

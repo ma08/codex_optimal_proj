@@ -1,26 +1,30 @@
 
 
-n, b, a = map(int, input().split())
-s = list(map(int, input().split()))
+import numpy as np
 
-battery = b
-accumulator = a
+def main():
+    n, b, a = [int(x) for x in input().split()]
+    s = [int(x) for x in input().split()]
+    s = np.array(s)
+    b_prev, a_prev = b, a
+    i = 0
+    while i < n:
+        if s[i] == 1:
+            if a_prev < a:
+                a_prev += 1
+            else:
+                b_prev += 1
+            i += 1
+        elif s[i] == 0:
+            if b_prev > 0:
+                b_prev -= 1
+                i += 1
+            elif a_prev > 0:
+                a_prev -= 1
+                i += 1
+            else:
+                break
+    print(i)
 
-segments = 0
-
-for i in range(n):
-    if s[i] == 1:
-        if battery < b:
-            battery += 1
-        else:
-            accumulator += 1
-    if battery > 0:
-        battery -= 1
-        segments += 1
-    elif accumulator > 0:
-        accumulator -= 1
-        segments += 1
-    else:
-        break
-
-print(segments)
+if __name__ == "__main__":
+    main()

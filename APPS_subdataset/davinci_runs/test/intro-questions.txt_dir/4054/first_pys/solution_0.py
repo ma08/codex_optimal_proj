@@ -3,7 +3,10 @@
 import sys
 
 def main():
-    a = map(int, sys.stdin.readline().strip().split())
-    print(sum(a) - max(a) - min(a))
+    f = sys.stdin
+    a = list(map(int, f.readline().strip().split()))
 
-main()
+    print(sum(a) % 3)
+    
+if __name__ == "__main__":
+    main()

@@ -1,12 +1,14 @@
 
 
-#Solution
+def solve(a):
+    if a % 4 == 0:
+        return a
+    else:
+        return a + (4 - a % 4)
 
-a = int(input())
+def main():
+    a = int(raw_input())
+    print solve(a)
 
-def is_interesting(n):
-    return sum(int(i) for i in str(n)) % 4 == 0
-
-while not is_interesting(a):
-    a += 1
-print(a)
+if __name__ == "__main__":
+    main()

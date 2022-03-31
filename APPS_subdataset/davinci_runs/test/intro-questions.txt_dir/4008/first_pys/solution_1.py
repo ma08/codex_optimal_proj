@@ -1,17 +1,24 @@
 
 
-def main():
-    n, k = map(int, input().split())
-    a = list(map(int, input().split()))
-    a_set = set(a)
-    if len(a_set) > k:
-        print("NO")
-        return
-    color = [0 for _ in range(n)]
-    for i in range(n):
-        color[i] = (a[i] - 1) % k + 1
-    print("YES")
-    print(*color)
+n, k = map(int, input().split())
+a = list(map(int, input().split()))
 
-if __name__ == "__main__":
-    main()
+if k >= n:
+    print("YES")
+    for i in range(n):
+        print(i+1, end=' ')
+    print()
+else:
+    colors = [0]*(n+1)
+    count = 0
+    for i in range(n):
+        if colors[a[i]] == 0:
+            colors[a[i]] = i+1
+            count += 1
+    if count < k:
+        print("NO")
+    else:
+        print("YES")
+        for i in range(n):
+            print(colors[a[i]] if colors[a[i]] != 0 else colors[a[i-1]], end=' ')
+        print()

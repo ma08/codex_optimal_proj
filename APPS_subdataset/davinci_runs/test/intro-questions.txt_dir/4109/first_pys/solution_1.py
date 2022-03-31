@@ -1,34 +1,27 @@
 
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#@author: alison
-
-n, m = map(int, input().split())
-
-a = []
-for i in range(n):
-    a.append(list(map(int, input().split())))
-
-b = list(map(int, input().split()))
-
-ans = 'Yes'
-
-for i in range(m):
-    sum = 0
-    for j in range(n):
-        sum += a[j][i]
-    if sum < b[i]:
-        ans = 'No'
-
-if ans == 'No':
-    print(ans)
-else:
-    print(ans)
-    x = [0] * n
-    for i in range(m):
+def main():
+    n,m,x=map(int,input().split())
+    c=[0]*n
+    a=[]
+    for i in range(n):
+        c[i],*a=map(int,input().split())
+        a=[0]*m
+    ans=10**9
+    for i in range(1,1<<n):
+        cost=0
+        algo=[0]*m
         for j in range(n):
-            if a[j][i] > 0:
-                x[j] += b[i]
-                break
-    print(*x)
+            if i>>j&1:
+                cost+=c[j]
+                for k in range(m):
+                    algo[k]+=a[j][k]
+        if min(algo)>=x:
+            ans=min(ans,cost)
+    if ans==10**9:
+        print(-1)
+    else:
+        print(ans)
+
+if __name__=='__main__':
+    main()

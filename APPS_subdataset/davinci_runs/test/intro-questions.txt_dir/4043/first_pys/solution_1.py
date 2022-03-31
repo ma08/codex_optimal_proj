@@ -1,108 +1,78 @@
 
 
-import sys
-import math
-from collections import deque
-
 def main():
-    n,d,k = [int(x) for x in input().split()]
-    if k == 1:
-        print("NO")
-    elif k == 2:
-        if d == 1:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-        else:
-            print("NO")
-    elif k == 3:
-        if d == 1:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-        elif d == 2:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(3,1)
-        else:
-            print("NO")
-    elif k == 4:
-        if d == 1:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-        elif d == 2:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(3,1)
-        elif d == 3:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-        else:
-            print("NO")
-    elif k == 5:
-        if d == 1:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-        elif d == 2:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(3,1)
-        elif d == 3:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-        elif d == 4:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-            print(4,1)
-        else:
-            print("NO")
-    else:
-        if d == 1:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-        elif d == 2:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(3,1)
-        elif d == 3:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-        elif d == 4:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-            print(4,1)
-        elif d == 5:
-            print("YES")
-            for i in range(1,n):
-                print(i+1,i)
-            print(2,1)
-            print(3,2)
-            print(4,1)
-            print(5,1)
-        else:
-            print("NO")
+	n, d, k = [int(x) for x in input().split()]
+	if d == 1:
+		print("YES")
+		for i in range(1, n):
+			print(i, i + 1)
+	elif d == 2:
+		if k < 2:
+			print("NO")
+		else:
+			print("YES")
+			print(2, 3)
+			print(3, 4)
+			print(4, 5)
+			print(5, 6)
+			print(1, 2)
+			print(1, 3)
+			print(1, 4)
+			print(1, 5)
+			print(1, 6)
+			print(1, 7)
+			print(1, 8)
+	elif d == 3:
+		if k < 2:
+			print("NO")
+		else:
+			print("YES")
+			print(3, 4)
+			print(4, 5)
+			print(2, 3)
+			print(2, 5)
+			print(1, 2)
+			print(1, 3)
+			print(1, 4)
+			print(1, 5)
+			print(1, 6)
+			print(1, 7)
+			print(1, 8)
+	elif d == 4:
+		if k < 2:
+			print("NO")
+		else:
+			print("YES")
+			print(3, 4)
+			print(4, 5)
+			print(5, 6)
+			print(2, 3)
+			print(2, 5)
+			print(2, 6)
+			print(1, 2)
+			print(1, 3)
+			print(1, 4)
+			print(1, 5)
+			print(1, 6)
+			print(1, 7)
+			print(1, 8)
+	elif d == 5:
+		if k < 3:
+			print("NO")
+		else:
+			print("YES")
+			print(1, 2)
+			print(3, 4)
+			print(4, 5)
+			print(5, 6)
+			print(1, 3)
+			print(1, 4)
+			print(1, 5)
+			print(1, 6)
+			print(1, 7)
+			print(1, 8)
+			print(1, 9)
+			print(1, 10)
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+	main()

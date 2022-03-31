@@ -1,30 +1,24 @@
 
 
-n = int(raw_input())
 
-segments = []
-for i in xrange(n):
-    segments.append(map(int, raw_input().split()))
-
-segments = sorted(segments, key=lambda x: x[1])
-
-result = float("-inf")
-
-for i in xrange(n):
-    left = segments[i][0]
-    right = segments[i][1]
-    max_right = right
-    max_left = left
-    for j in xrange(i + 1, n):
-        if segments[j][0] <= right:
-            max_left = max(max_left, segments[j][0])
+def main():
+    n = int(input())
+    seq = []
+    for i in range(n):
+        line = [int(x) for x in input().split()]
+        seq.append(line)
+    seq.sort(key=lambda x: x[1])
+    ans = 0
+    for i in range(n):
+        if i == 0:
+            ans = max(ans, seq[i][1] - seq[i+1][0])
+        elif i == n-1:
+            ans = max(ans, seq[i][0] - seq[i-1][1])
         else:
-            break
-    for j in xrange(i - 1, -1, -1):
-        if segments[j][1] >= left:
-            max_right = min(max_right, segments[j][1])
-        else:
-            break
-    result = max(max_right - max_left, result)
+            ans = max(ans, seq[i][0] - seq[i-1][1])
+            ans = max(ans, seq[i][1] - seq[i+1][0])
+    print(ans)
 
-print result
+
+if __name__ == '__main__':
+    main()

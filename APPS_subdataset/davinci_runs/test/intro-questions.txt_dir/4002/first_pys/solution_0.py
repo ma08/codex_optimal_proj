@@ -1,21 +1,25 @@
 
 
-def solve(n, m, k, matrix):
-    dp = [[0 for i in range(m + 1)] for j in range(n)]
-    for i in range(m):
-        dp[0][i] = matrix[0][i]
-    for i in range(1, n):
-        for j in range(m):
-            for k in range(j + 1):
-                dp[i][j] = max(dp[i][j], dp[i - 1][k] + matrix[i][j])
-    return dp[n - 1][m - 1] % k
+n, m, k = map(int, input().split())
+matrix = [list(map(int, input().split())) for _ in range(n)]
 
+# dp[i][j] = max sum of the first j elements of the ith row, divisible by k
+dp = [[0] * m for _ in range(n)]
+for i in range(n):
+    for j in range(m):
+        if j == 0:
+            dp[i][j] = matrix[i][j]
+        else:
+            dp[i][j] = max(dp[i][j], dp[i][j-1] + matrix[i][j])
 
-def main():
-    n, m, k = [int(x) for x in input().split()]
-    matrix = [[int(x) for x in input().split()] for i in range(n)]
-    print(solve(n, m, k, matrix))
+# dp2[i][j] = max sum of the first i rows, ending with the jth element of the ith row, divisible by k
+dp2 = [[0] * m for _ in range(n)]
+for i in range(n):
+    for j in range(m):
+        if i == 0:
+            dp2[i][j] = dp[i][j]
+        else:
+            for k in range(j+1):
+                dp2[i][j] = max(dp2[i][j], dp2[i-1][k] + dp[i][j])
 
-
-if __name__ == '__main__':
-    main()
+print(max(dp2[-1]))

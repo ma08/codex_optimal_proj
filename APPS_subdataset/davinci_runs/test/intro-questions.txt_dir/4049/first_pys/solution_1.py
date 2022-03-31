@@ -1,11 +1,13 @@
 
 
-# SOLUTION
+# Solved by Shashwat Raj
 
-n, a1, a2, a3 = int(input()), *map(int, input().split())
-b1, b2, b3 = map(int, input().split())
+n = int(input())
+a = list(map(int, input().split()))
+b = list(map(int, input().split()))
 
-min_score = max(0, a2-b1) + max(0, a3-b2)
-max_score = min(a2, b3) + min(a3, b1)
+r = a[2] + b[1]
+p = a[1] + b[2]
+s = a[0] + b[0]
 
-print(min_score, max_score)
+print(min(r, min(p, s)), max(r, max(p, s)))

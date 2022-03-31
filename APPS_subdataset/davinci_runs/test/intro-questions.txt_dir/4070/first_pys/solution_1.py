@@ -1,35 +1,23 @@
 
 
+#Solution
+import math
 
-def get_odd_divisors(n):
-    """
-    :param n: int
-    :return: set
-    """
-    assert 0 <= n <= 2000000000
-    if n == 0:
-        return set()
-    if n == 1:
-        return {1}
+def solution(n):
     if n % 2 == 0:
-        return get_odd_divisors(n // 2)
+        return 0
     else:
-        return get_odd_divisors((n - 1) // 2) | {n}
+        i = 3
+        while i <= math.sqrt(n) + 1:
+            if n % i == 0:
+                return 0
+            i += 2
+        return 1
 
+#Test Cases
 
-def count_divisors(n):
-    """
-    :param n: int
-    :return: int
-    """
-    assert 0 <= n <= 2000000000
-    return len(get_odd_divisors(n))
-
-
-def main():
-    n = int(input())
-    print(count_divisors(n))
-
-
-if __name__ == '__main__':
-    main()
+print(solution(11))
+print(solution(14))
+print(solution(61441))
+print(solution(571576))
+print(solution(2128506))

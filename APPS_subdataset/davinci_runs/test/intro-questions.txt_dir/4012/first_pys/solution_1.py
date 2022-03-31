@@ -1,38 +1,144 @@
 
 
-# SOLUTION
-# We use the fact that the largest number that divides two integers $a$ and $b$ is the greatest common divisor of $a$ and $b$.
-# Let's denote the greatest common divisor of $a$ and $b$ as $gcd(a, b)$.
-# Let's denote the minimum number of operations needed to obtain three integers $A \le B \le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$ as $f(a, b, c)$.
-# Then $f(a, b, c) = min(f(a, b, c-1), f(a, b-1, c-1), f(a, b-1, c))$ for $a, b, c > 1$.
-# To obtain the answer, we can use dynamic programming.
-# Let's define $dp[a][b][c] = f(a, b, c)$.
-# Then $dp[a][b][c] = min(dp[a][b][c-1], dp[a][b-1][c-1], dp[a][b-1][c])$ for $a, b, c > 1$.
-# The answer is $dp[a][b][c]$.
-# The time complexity is $O(a*b*c)$.
-# The space complexity is $O(a*b*c)$.
-
-import sys
-input = sys.stdin.readline
-
-t = int(input())
-while t:
-    a, b, c = map(int, input().split())
-    dp = [[[0 for _ in range(c+1)] for _ in range(b+1)] for _ in range(a+1)]
-    for i in range(1, a+1):
-        for j in range(1, b+1):
-            for k in range(1, c+1):
-                dp[i][j][k] = min(dp[i][j][k-1], dp[i][j-1][k-1], dp[i][j-1][k])
-                if i == j == k:
-                    dp[i][j][k] = 0
-                elif i == j:
-                    dp[i][j][k] = dp[i][j][k-1] + 1
+def get_num_of_operations(a, b, c):
+    res = 0
+    a_divisor = a
+    b_divisor = b
+    c_divisor = c
+    while True:
+        if a_divisor == 0 and b_divisor == 0 and c_divisor == 0:
+            return res
+        elif a_divisor == 0 and b_divisor == 0 and c_divisor > 0:
+            res += c_divisor
+            c_divisor = 0
+        elif a_divisor == 0 and b_divisor > 0 and c_divisor == 0:
+            res += b_divisor
+            b_divisor = 0
+        elif a_divisor == 0 and b_divisor > 0 and c_divisor > 0:
+            if b_divisor > c_divisor:
+                res += b_divisor - c_divisor
+                b_divisor = c_divisor
+            elif b_divisor < c_divisor:
+                res += c_divisor - b_divisor
+                c_divisor = b_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor == 0 and c_divisor == 0:
+            res += a_divisor
+            a_divisor = 0
+        elif a_divisor > 0 and b_divisor == 0 and c_divisor > 0:
+            if a_divisor > c_divisor:
+                res += a_divisor - c_divisor
+                a_divisor = c_divisor
+            elif a_divisor < c_divisor:
+                res += c_divisor - a_divisor
+                c_divisor = a_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor > 0 and c_divisor == 0:
+            if a_divisor > b_divisor:
+                res += a_divisor - b_divisor
+                a_divisor = b_divisor
+            elif a_divisor < b_divisor:
+                res += b_divisor - a_divisor
+                b_divisor = a_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor > 0 and c_divisor > 0:
+            if a_divisor > b_divisor:
+                if a_divisor > c_divisor:
+                    res += a_divisor - c_divisor
+                    a_divisor = c_divisor
+                elif a_divisor < c_divisor:
+                    res += c_divisor - a_divisor
+                    c_divisor = a_divisor
                 else:
-                    dp[i][j][k] = min(dp[i][j][k], dp[i][j-1][k-1] + 1)
-                    if j % i == 0:
-                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1])
-                    else:
-                        dp[i][j][k] = min(dp[i][j][k], dp[i][j][k-1] + 1)
-    print(dp[a][b][c])
-    print(a, b, c)
-    t -= 1
+                    pass
+            elif a_divisor < b_divisor:
+                if b_divisor > c_divisor:
+                    res += b_divisor - c_divisor
+                    b_divisor = c_divisor
+                elif b_divisor < c_divisor:
+                    res += c_divisor - b_divisor
+                    c_divisor = b_divisor
+                else:
+                    pass
+            else:
+                pass
+
+def get_triple(a, b, c):
+    a_divisor = a
+    b_divisor = b
+    c_divisor = c
+    while True:
+        if a_divisor == 0 and b_divisor == 0 and c_divisor == 0:
+            return a, b, c
+        elif a_divisor == 0 and b_divisor == 0 and c_divisor > 0:
+            c -= c_divisor
+            c_divisor = 0
+        elif a_divisor == 0 and b_divisor > 0 and c_divisor == 0:
+            b -= b_divisor
+            b_divisor = 0
+        elif a_divisor == 0 and b_divisor > 0 and c_divisor > 0:
+            if b_divisor > c_divisor:
+                b -= b_divisor - c_divisor
+                b_divisor = c_divisor
+            elif b_divisor < c_divisor:
+                c -= c_divisor - b_divisor
+                c_divisor = b_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor == 0 and c_divisor == 0:
+            a -= a_divisor
+            a_divisor = 0
+        elif a_divisor > 0 and b_divisor == 0 and c_divisor > 0:
+            if a_divisor > c_divisor:
+                a -= a_divisor - c_divisor
+                a_divisor = c_divisor
+            elif a_divisor < c_divisor:
+                c -= c_divisor - a_divisor
+                c_divisor = a_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor > 0 and c_divisor == 0:
+            if a_divisor > b_divisor:
+                a -= a_divisor - b_divisor
+                a_divisor = b_divisor
+            elif a_divisor < b_divisor:
+                b -= b_divisor - a_divisor
+                b_divisor = a_divisor
+            else:
+                pass
+        elif a_divisor > 0 and b_divisor > 0 and c_divisor > 0:
+            if a_divisor > b_divisor:
+                if a_divisor > c_divisor:
+                    a -= a_divisor - c_divisor
+                    a_divisor = c_divisor
+                elif a_divisor < c_divisor:
+                    c -= c_divisor - a_divisor
+                    c_divisor = a_divisor
+                else:
+                    pass
+            elif a_divisor < b_divisor:
+                if b_divisor > c_divisor:
+                    b -= b_divisor - c_divisor
+                    b_divisor = c_divisor
+                elif b_divisor < c_divisor:
+                    c -= c_divisor - b_divisor
+                    c_divisor = b_divisor
+                else:
+                    pass
+            else:
+                pass
+
+if __name__ == "__main__":
+    t = int(input())
+    for i in range(0, t):
+        a, b, c = input().split()
+        a = int(a)
+        b = int(b)
+        c = int(c)
+        res = get_num_of_operations(a, b, c)
+        a, b, c = get_triple(a, b, c)
+        print(res)
+        print(a, b, c)

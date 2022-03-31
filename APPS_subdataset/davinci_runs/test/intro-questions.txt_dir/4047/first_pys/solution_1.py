@@ -1,35 +1,18 @@
 
 
-n = int(input())
-x = list(map(int, input().split()))
+import sys
 
-# if n == 1:
-#     print(0)
-#     exit()
+def min_coins_to_equalize(positions):
+    if len(positions) == 1:
+        return 0
+    positions.sort()
+    mid_pos = positions[len(positions) // 2]
+    return sum(abs(mid_pos - pos) for pos in positions)
 
-# x.sort()
-# m = x[0]
-# c = 0
-# for i in range(1, n):
-#     c += abs(m - x[i])
+def main():
+    n = int(input())
+    positions = list(map(int, input().split()))
+    print(min_coins_to_equalize(positions))
 
-# print(c)
-
-# if n == 1:
-#     print(0)
-#     exit()
-
-# x.sort()
-# m = x[0]
-# c = 0
-# for i in range(1, n):
-#     c += abs(m - x[i])
-
-# print(c)
-
-x.sort()
-c = 0
-for i in range(1, n):
-    c += abs(x[i] - x[i - 1])
-
-print(c)
+if __name__ == '__main__':
+    main()

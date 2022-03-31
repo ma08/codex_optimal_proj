@@ -1,19 +1,19 @@
 
 
-import sys
 
-def solve(n, x):
+def main():
+    n = int(input())
+    x = [int(i) for i in input().split()]
     x.sort()
-    return min(x[n//2]-x[0], x[n-1]-x[n//2])
+    if n%2 == 0:
+        mid = n//2
+    else:
+        mid = n//2 + 1
+    min_moves = 0
+    for i in range(n):
+        min_moves += abs(x[mid-1] - x[i])
+    print(min_moves)
 
-# def solve(n, x):
-#     x.sort()
-#     if n%2==0:
-#         return min(x[n//2]-x[0], x[n-1]-x[n//2])
-#     else:
-#         return min(x[n//2]-x[0], x[n-1]-x[n//2+1])
 
 if __name__ == '__main__':
-    n = int(sys.stdin.readline().strip())
-    x = list(map(int, sys.stdin.readline().strip().split()))
-    print(solve(n, x))
+    main()

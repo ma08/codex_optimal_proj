@@ -1,21 +1,29 @@
 
 
+
 def main():
     n, r = map(int, input().split())
-    a, b = [0] * n, [0] * n
-    for i in range(n):
-        a[i], b[i] = map(int, input().split())
-    if solve(n, r, a, b):
-        print('YES')
-    else:
-        print('NO')
+    a = []
+    b = []
+    for _ in range(n):
+        a_i, b_i = map(int, input().split())
+        a.append(a_i)
+        b.append(b_i)
 
-def solve(n, r, a, b):
+    # print(a)
+    # print(b)
+
     for i in range(n):
-        r += b[i]
         if r < a[i]:
-            return False
-    return True
+            print("NO")
+            break
+        r += b[i]
+        if r < 0:
+            print("NO")
+            break
+    else:
+        print("YES")
+
 
 if __name__ == '__main__':
     main()

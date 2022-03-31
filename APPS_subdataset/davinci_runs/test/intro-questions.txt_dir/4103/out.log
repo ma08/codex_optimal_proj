@@ -54,17 +54,23 @@ In the second example the robot can go through the maximum number of segments us
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nbattery = b\naccumulator = a\n\nsegments = 0\n\nfor i in range(n):\n    if s[i] == 1:\n        if battery < b:\n            battery += 1\n        else:\n            accumulator += 1\n    if battery > 0:\n        battery -= 1\n        segments += 1\n    elif accumulator > 0:\n        accumulator -= 1\n        segments += 1\n    else:\n        break\n\nprint(segments)"
+      "text": "\n\ndef main():\n    \"\"\"\n    The code is written in Python 3.6.1. To run the code, please use the below command in the terminal.\n\n    python3 solution.py < input.txt\n\n    \"\"\"\n\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    b_init = b\n    a_init = a\n    count = 0\n    while a > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            a -= 1\n        count += 1\n    while b > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            b -= 1\n        count += 1\n    print(count-1)\n\nif __name__ == \"__main__\":\n    main()"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\n\ndef solve(n, b, a, s):\n    ans = 0\n    cur_b, cur_a = b, a\n    for i in range(n):\n        if s[i]:\n            if cur_a:\n                cur_a -= 1\n            elif cur_b:\n                cur_b -= 1\n        else:\n            if cur_b:\n                cur_b -= 1\n            elif cur_a:\n                cur_a -= 1\n        if cur_b or cur_a:\n            ans += 1\n        else:\n            break\n    return ans\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\nprint(solve(n, b, a, s))"
+      "text": "\n\n#The main idea is to keep track of the maximum number of segments that can be passed with the battery and the accumulator.\n#The accumulator can only be used to pass segments that are exposed to sunlight.\n#The battery can only be used to pass segments that are not exposed to sunlight.\n#When using the battery, the accumulator is charged by one.\n#When using the accumulator, the battery is charged by one.\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_segments = 0\nb_cur = b\na_cur = a\n\nfor i in range(n):\n    if s[i] == 1:\n        if a_cur > 0:\n            a_cur -= 1\n            b_cur += 1\n        elif b_cur > 0:\n            b_cur -= 1\n    else:\n        if b_cur > 0:\n            b_cur -= 1\n            a_cur += 1\n        elif a_cur > 0:\n            a_cur -= 1\n    if a_cur == 0 and b_cur == 0:\n        break\n    max_segments += 1\nprint(max_segments)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport numpy as np\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n    s = np.array(s)\n    b_prev, a_prev = b, a\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a_prev < a:\n                a_prev += 1\n            else:\n                b_prev += 1\n            i += 1\n        elif s[i] == 0:\n            if b_prev > 0:\n                b_prev -= 1\n                i += 1\n            elif a_prev > 0:\n                a_prev -= 1\n                i += 1\n            else:\n                break\n    print(i)\n\nif __name__ == \"__main__\":\n    main()"
     }
   ],
-  "created": 1648684479,
-  "id": "cmpl-4rcR5h2zSDUnZcMV8P9BskB3NHADx",
+  "created": 1648694288,
+  "id": "cmpl-4rezI20S2p4VYqfxAzZEBEDqLUvr5",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -72,13 +78,20 @@ In the second example the robot can go through the maximum number of segments us
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nbattery = b\naccumulator = a\n\nsegments = 0\n\nfor i in range(n):\n    if s[i] == 1:\n        if battery < b:\n            battery += 1\n        else:\n            accumulator += 1\n    if battery > 0:\n        battery -= 1\n        segments += 1\n    elif accumulator > 0:\n        accumulator -= 1\n        segments += 1\n    else:\n        break\n\nprint(segments)"
+  "text": "\n\ndef main():\n    \"\"\"\n    The code is written in Python 3.6.1. To run the code, please use the below command in the terminal.\n\n    python3 solution.py < input.txt\n\n    \"\"\"\n\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    b_init = b\n    a_init = a\n    count = 0\n    while a > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            a -= 1\n        count += 1\n    while b > 0:\n        if s[count] == 1:\n            if b < b_init:\n                b += 1\n            else:\n                a -= 1\n        else:\n            b -= 1\n        count += 1\n    print(count-1)\n\nif __name__ == \"__main__\":\n    main()"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\n\ndef solve(n, b, a, s):\n    ans = 0\n    cur_b, cur_a = b, a\n    for i in range(n):\n        if s[i]:\n            if cur_a:\n                cur_a -= 1\n            elif cur_b:\n                cur_b -= 1\n        else:\n            if cur_b:\n                cur_b -= 1\n            elif cur_a:\n                cur_a -= 1\n        if cur_b or cur_a:\n            ans += 1\n        else:\n            break\n    return ans\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\nprint(solve(n, b, a, s))"
+  "text": "\n\n#The main idea is to keep track of the maximum number of segments that can be passed with the battery and the accumulator.\n#The accumulator can only be used to pass segments that are exposed to sunlight.\n#The battery can only be used to pass segments that are not exposed to sunlight.\n#When using the battery, the accumulator is charged by one.\n#When using the accumulator, the battery is charged by one.\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_segments = 0\nb_cur = b\na_cur = a\n\nfor i in range(n):\n    if s[i] == 1:\n        if a_cur > 0:\n            a_cur -= 1\n            b_cur += 1\n        elif b_cur > 0:\n            b_cur -= 1\n    else:\n        if b_cur > 0:\n            b_cur -= 1\n            a_cur += 1\n        elif a_cur > 0:\n            a_cur -= 1\n    if a_cur == 0 and b_cur == 0:\n        break\n    max_segments += 1\nprint(max_segments)"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport numpy as np\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n    s = np.array(s)\n    b_prev, a_prev = b, a\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a_prev < a:\n                a_prev += 1\n            else:\n                b_prev += 1\n            i += 1\n        elif s[i] == 0:\n            if b_prev > 0:\n                b_prev -= 1\n                i += 1\n            elif a_prev > 0:\n                a_prev -= 1\n                i += 1\n            else:\n                break\n    print(i)\n\nif __name__ == \"__main__\":\n    main()"
 }
 REASON stop

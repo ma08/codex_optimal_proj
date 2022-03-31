@@ -47,17 +47,23 @@ Output
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": "\n\nfrom sys import stdin\n\nn = int(stdin.readline())\na = [int(x) for x in stdin.readline().split()]\n\nd = {}\nfor i in range(n):\n    if a[i] in d:\n        d[a[i]].append(i)\n    else:\n        d[a[i]] = [i]\n\n# print(d)\n\n# print(d)\n\nans = n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] < ans:\n                ans = d[x][i + 1] - d[x][i]\n\n# print(ans)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 1:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 2:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 3:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)"
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 2:\n    print(\"1 2\")\nelse:\n    # Find the index of the smallest number in the list\n    smallest_ind = a.index(min(a))\n    # Find the second smallest number in the list\n    second_smallest_num = sorted(a)[1]\n    # Find the index of the second smallest number in the list\n    second_smallest_ind = a.index(second_smallest_num)\n    # If the second smallest number is at index 0, then the index of the smallest number is 1\n    if second_smallest_ind == 0:\n        print(\"1\", second_smallest_ind + 1)\n    # If the second smallest number is at the index of the smallest number, print the next index\n    elif second_smallest_ind == smallest_ind:\n        print(second_smallest_ind + 1, second_smallest_ind + 2)\n    # Otherwise, print the indexes of the smallest number and the second smallest number\n    else:\n        print(smallest_ind + 1, second_smallest_ind + 1)"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef gcd(x, y):\n    if y == 0:\n        return x\n    else:\n        return gcd(y, x % y)\n\ndef lcm(x, y):\n    return (x * y) // gcd(x, y)\n\nmin_lcm = float('inf')\nfor i in range(n):\n    for j in range(i+1, n):\n        min_lcm = min(min_lcm, lcm(a[i], a[j]))\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if min_lcm == lcm(a[i], a[j]):\n            print(i + 1, j + 1)\n            break"
+      "text": "\n\n\ndef main():\n    _ = input()\n    A = list(map(int, input().split()))\n    # find minimum and second minimum\n    min1 = A[0]\n    min2 = A[1]\n    if min2 < min1:\n        min1, min2 = min2, min1\n    for i in range(2, len(A)):\n        if A[i] < min2:\n            if A[i] < min1:\n                min2 = min1\n                min1 = A[i]\n            else:\n                min2 = A[i]\n    print(min1, min2)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\n\ndef gcd(a, b):\n    if a == 0:\n        return b\n    return gcd(b % a, a)\n\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\ndef solve(a, n):\n    min_lcm = float('inf')\n    ans = [0, 0]\n    for i in range(n):\n        for j in range(i + 1, n):\n            if lcm(a[i], a[j]) < min_lcm:\n                min_lcm = lcm(a[i], a[j])\n                ans[0] = i + 1\n                ans[1] = j + 1\n    return ans[0], ans[1]\n\nif __name__ == '__main__':\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    stdout.write(\"{} {}\\n\".format(*solve(a, n)))"
     }
   ],
-  "created": 1648683790,
-  "id": "cmpl-4rcFyDvo6RHFHAYL7ljkwjfWBBL5w",
+  "created": 1648693471,
+  "id": "cmpl-4rem7xkQeMWWGytHPjhneHkdJJBjB",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -65,13 +71,20 @@ Output
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": "\n\nfrom sys import stdin\n\nn = int(stdin.readline())\na = [int(x) for x in stdin.readline().split()]\n\nd = {}\nfor i in range(n):\n    if a[i] in d:\n        d[a[i]].append(i)\n    else:\n        d[a[i]] = [i]\n\n# print(d)\n\n# print(d)\n\nans = n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] < ans:\n                ans = d[x][i + 1] - d[x][i]\n\n# print(ans)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 1:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 2:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)\n\nfor x in d:\n    if len(d[x]) > 1:\n        for i in range(len(d[x]) - 1):\n            if d[x][i + 1] - d[x][i] == ans + 3:\n                print(d[x][i] + 1, d[x][i + 1] + 1)\n                exit(0)"
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 2:\n    print(\"1 2\")\nelse:\n    # Find the index of the smallest number in the list\n    smallest_ind = a.index(min(a))\n    # Find the second smallest number in the list\n    second_smallest_num = sorted(a)[1]\n    # Find the index of the second smallest number in the list\n    second_smallest_ind = a.index(second_smallest_num)\n    # If the second smallest number is at index 0, then the index of the smallest number is 1\n    if second_smallest_ind == 0:\n        print(\"1\", second_smallest_ind + 1)\n    # If the second smallest number is at the index of the smallest number, print the next index\n    elif second_smallest_ind == smallest_ind:\n        print(second_smallest_ind + 1, second_smallest_ind + 2)\n    # Otherwise, print the indexes of the smallest number and the second smallest number\n    else:\n        print(smallest_ind + 1, second_smallest_ind + 1)"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef gcd(x, y):\n    if y == 0:\n        return x\n    else:\n        return gcd(y, x % y)\n\ndef lcm(x, y):\n    return (x * y) // gcd(x, y)\n\nmin_lcm = float('inf')\nfor i in range(n):\n    for j in range(i+1, n):\n        min_lcm = min(min_lcm, lcm(a[i], a[j]))\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if min_lcm == lcm(a[i], a[j]):\n            print(i + 1, j + 1)\n            break"
+  "text": "\n\n\ndef main():\n    _ = input()\n    A = list(map(int, input().split()))\n    # find minimum and second minimum\n    min1 = A[0]\n    min2 = A[1]\n    if min2 < min1:\n        min1, min2 = min2, min1\n    for i in range(2, len(A)):\n        if A[i] < min2:\n            if A[i] < min1:\n                min2 = min1\n                min1 = A[i]\n            else:\n                min2 = A[i]\n    print(min1, min2)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\n\ndef gcd(a, b):\n    if a == 0:\n        return b\n    return gcd(b % a, a)\n\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\ndef solve(a, n):\n    min_lcm = float('inf')\n    ans = [0, 0]\n    for i in range(n):\n        for j in range(i + 1, n):\n            if lcm(a[i], a[j]) < min_lcm:\n                min_lcm = lcm(a[i], a[j])\n                ans[0] = i + 1\n                ans[1] = j + 1\n    return ans[0], ans[1]\n\nif __name__ == '__main__':\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    stdout.write(\"{} {}\\n\".format(*solve(a, n)))"
 }
 REASON stop

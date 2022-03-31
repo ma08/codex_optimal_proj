@@ -1,4 +1,5 @@
 
 
-n = int(input())
-print(pow(n, 3))
+a = int(input())
+
+print(a ** 3)

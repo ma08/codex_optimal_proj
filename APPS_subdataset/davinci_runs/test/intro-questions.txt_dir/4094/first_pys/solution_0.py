@@ -2,10 +2,9 @@
 
 K = int(input())
 
-i = 1
-while True:
-    x = int("7" * i)
-    if x % K == 0:
-        print(i)
-        break
-    i += 1
+for num in range(7, 1000000, 10):
+    if num % K == 0:
+        print(num // 10)
+        exit()
+
+print(-1)

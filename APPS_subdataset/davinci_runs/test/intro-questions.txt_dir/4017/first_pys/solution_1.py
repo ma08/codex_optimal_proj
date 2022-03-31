@@ -1,12 +1,12 @@
 
-
 n = int(input())
 a = list(map(int, input().split()))
-s = sum(a)
-d = {}
+total = sum(a)
+
+count = 0
 for i in range(n):
-    d[i+1] = s - a[i]
-d = {key:val for key,val in d.items() if val == a[key-1]}
-print(len(d))
-if len(d) > 0:
-    print(*d.keys())
+    if a[i] == total-a[i]:
+        count += 1
+        print(i+1, end=' ')
+if not count:
+    print(count)

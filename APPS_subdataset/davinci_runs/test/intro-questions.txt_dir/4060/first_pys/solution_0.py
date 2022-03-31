@@ -1,18 +1,40 @@
 
 
-def solve():
-    n = int(input())
-    s = input()
-    l = 0
-    r = 0
-    for i in range(n):
-        if s[i] == '(':
-            l += 1
-        else:
-            if l > 0:
-                l -= 1
-            else:
-                r += 1
-    print(l + r)
+import sys
 
-solve()
+
+def main():
+    n = int(sys.stdin.readline().strip())
+    brackets = list(sys.stdin.readline().strip())
+
+    count = 0
+
+    for i in range(n):
+        if brackets[i] == ')':
+            brackets[i] = '('
+            if check(brackets):
+                count += 1
+            brackets[i] = ')'
+        else:
+            brackets[i] = ')'
+            if check(brackets):
+                count += 1
+            brackets[i] = '('
+    print(count)
+
+
+def check(brackets):
+    stack = []
+    for bracket in brackets:
+        if bracket == '(':
+            stack.append(bracket)
+        else:
+            if len(stack) == 0:
+                return False
+            else:
+                stack.pop()
+    return not stack
+
+
+if __name__ == '__main__':
+    main()

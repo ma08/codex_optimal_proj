@@ -1,20 +1,30 @@
 
 
-def solve(s):
-    if len(s) == 1:
-        return 'YES\n0'
-    n = len(s)
-    s = list(s)
-    ans = [0] * n
-    for i in range(1, n):
-        if s[i] < s[i-1]:
-            ans[i] = 1
-            s[i] = chr(ord(s[i]) + 2)
-    for i in range(1, n):
-        if s[i] < s[i-1]:
-            return 'NO'
-    return 'YES\n' + ''.join(map(str, ans))
-
+# SOLUTION
 n = int(input())
 s = input()
-print(solve(s))
+#print(n,s)
+
+def is_possible(s, n):
+    color = [0] * n
+    flag = False
+    for i in range(n - 1):
+        if s[i] > s[i+1]:
+            flag = True
+            break
+    if flag:
+        for i in range(n):
+            if i % 2 == 0:
+                color[i] = 1
+            else:
+                color[i] = 0
+    else:
+        for i in range(n):
+            if i % 2 == 0:
+                color[i] = 0
+            else:
+                color[i] = 1
+    print("YES")
+    print("".join(map(str,color)))
+
+is_possible(s, n)

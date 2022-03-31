@@ -1,31 +1,38 @@
 
 
-n = int(input())
+#------------------------------------------------------------------------------#
 
-prefixes = []
-suffixes = []
+import sys
 
-for i in range(2 * n - 2):
-	string = input()
-	if len(string) == 1:
-		prefixes.append(string)
-	else:
-		suffixes.append(string)
+def main():
+    sys.stdin = open('inputs/game.txt', 'r')
+    n = int(input())
+    prefixes = []
+    for _ in range(n-1):
+        prefixes.append(input())
 
-suffixes.sort(key = lambda x: -len(x))
+    suffixes = []
+    for _ in range(n-1):
+        suffixes.append(input())
 
-string = ''
+    #print(prefixes, suffixes)
 
-for i in range(2 * n - 2):
-	if i % 2 == 0:
-		string += 'P'
-	else:
-		string += 'S'
+    s = []
+    for i in range(1, n):
+        p = prefixes[i-1]
+        s.append(p[-1])
+        prefixes[i] = prefixes[i][:-1]
 
-for i in range(len(prefixes)):
-	string = string.replace('P', prefixes[i][0], 1)
+    s.append(suffixes[-1][0])
+    suffixes[-1] = suffixes[-1][1:]
 
-for i in range(len(suffixes)):
-	string = string.replace('S', suffixes[i][-1], 1)
+    for i in range(n-2, 0, -1):
+        p = suffixes[i]
+        s.append(p[0])
+        suffixes[i-1] = suffixes[i-1][1:]
 
-print(string)
+    print(''.join(s))
+
+
+if __name__ == '__main__':
+    main()

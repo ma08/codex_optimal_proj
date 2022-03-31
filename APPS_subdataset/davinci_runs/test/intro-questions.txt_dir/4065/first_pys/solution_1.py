@@ -1,17 +1,19 @@
 
 
-n = int(input())
-a = [int(x) for x in input().split()]
-
-contest = []
-
-for i in range(n):
-    
-    if len(contest) == 0:
-        contest.append(a[i])
-    elif a[i] <= contest[-1] * 2:
-        contest.append(a[i])
+def check_contest(num, prev_diff, max_diff):
+    if num == 1:
+        return 1
+    elif num == 2:
+        return 2
+    elif num == 3:
+        return 3
     else:
-        contest = [a[i]]
+        if max_diff > 2 * prev_diff:
+            return check_contest(num - 1, prev_diff, max_diff)
+        else:
+            return check_contest(num - 1, max_diff, max_diff)
 
-print(len(contest))
+num_probs = int(input())
+difficulties = [int(x) for x in input().split()]
+max_diff = difficulties[-1]
+print(check_contest(num_probs, 0, max_diff))

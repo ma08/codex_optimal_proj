@@ -1,64 +1,33 @@
 
 
-
-def solve(n, h, l, r, a):
-    res = 0
-    if l <= 0 and r >= h - 1:
-        res = n
-    elif l <= 0:
-        res = 1
-        while r < h - 1:
-            if r + 1 in a:
-                res += 1
-                r += 1
-            else:
-                break
-        if r + 1 in a:
-            res += 1
-        else:
-            res += 1
-    elif r >= h - 1:
-        res = 1
-        while l > 0:
-            if l - 1 in a:
-                res += 1
-                l -= 1
-            else:
-                break
-        if l - 1 in a:
-            res += 1
-        else:
-            res += 1
-    else:
-        res = 1
-        while l > 0:
-            if l - 1 in a:
-                res += 1
-                l -= 1
-            else:
-                break
-        if l - 1 in a:
-            res += 1
-        else:
-            res += 1
-        while r < h - 1:
-            if r + 1 in a:
-                res += 1
-                r += 1
-            else:
-                break
-        if r + 1 in a:
-            res += 1
-        else:
-            res += 1
-    return res
-
-
 def main():
     n, h, l, r = map(int, input().split())
     a = list(map(int, input().split()))
-    print(solve(n, h, l, r, a))
 
+    # Time starts at 0, so we can subtract 1 from the time for each sleep
+    for i in range(n):
+        a[i] -= 1
+
+    # Initialize the first time to be bad
+    good = [0]
+    for i in range(n):
+        time = a[i] % h
+        if l <= time <= r:
+            good.append(good[-1] + 1)
+        else:
+            good.append(good[-1])
+
+    # Initialize the first time to be good
+    bad = [0]
+    for i in range(n):
+        time = a[i] % h
+        if l <= time <= r:
+            bad.append(bad[-1])
+        else:
+            bad.append(bad[-1] + 1)
+
+    # We want to maximize the number of good times, so we check which is better
+    print(max(good[n], bad[n]))
 
 if __name__ == "__main__":
     main()

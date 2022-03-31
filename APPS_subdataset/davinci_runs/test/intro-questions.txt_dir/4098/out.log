@@ -51,17 +51,23 @@ Output
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
-      "text": "\n\nfrom collections import defaultdict\nfrom heapq import heappush, heappop, heapify\nfrom typing import List, Tuple, Dict\nfrom sys import stdin, stdout\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\ndef read_int():\n    return int(stdin.readline())\n\ndef read_lines(n: int):\n    return [stdin.readline().strip() for _ in range(n)]\n\ndef write_line(s: str):\n    stdout.write(s)\n    stdout.write(\"\\n\")\n\ndef write_lines(lines: List[str]):\n    stdout.write(\"\\n\".join(lines))\n    stdout.write(\"\\n\")\n\ndef solve(n: int, k: int, skills: List[int]):\n    # return number of students that can be included in k teams\n    # such that the difference between the skills of any 2 students\n    # in a team is no more than 5\n    d = defaultdict(lambda: 0)\n    for skill in skills:\n        d[skill] += 1\n    heap = []\n    for skill, count in d.items():\n        heappush(heap, (count, skill))\n    ans = 0\n    while heap:\n        count, skill = heappop(heap)\n        if count <= k:\n            ans += count\n            k -= count\n            if k == 0:\n                return ans\n        else:\n            ans += k\n            return ans\n        if k == 0:\n            return ans\n        for i in range(skill-5, skill+1):\n            if i in d:\n                heappush(heap, (d[i], i))\n    return ans\n\ndef main():\n    n, k = read_ints()\n    skills = read_ints()\n    ans = solve(n, k, skills)\n    write_line(str(ans))\n\nif __name__ == \"__main__\":\n    main()"
+      "text": "\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\na.sort()\n\nres = 0\nm = 0\ni = 0\nwhile i < n:\n    cnt = 1\n    j = i + 1\n    while j < n and a[j] - a[i] <= 5:\n        cnt += 1\n        j += 1\n\n    if cnt < k:\n        res += cnt\n        m = max(m, res)\n        res -= 1\n    else:\n        res += k\n        m = max(m, res)\n    i = j\n\nprint(m)"
     },
     {
       "finish_reason": "stop",
       "index": 1,
       "logprobs": null,
-      "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\na.sort()\n\nif k == 1:\n    print(n)\nelif k == n:\n    print(1)\nelse:\n    b = []\n    for i in range(n-1):\n        b.append(a[i+1] - a[i])\n    b.sort()\n    s = sum(b[:-k+1]) + n\n    print(s)"
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = map(int, input().split())\n\n    d = {}\n    for i in s:\n        d[i] = d.get(i, 0) + 1\n\n    for i in range(1, 5):\n        for j in range(i):\n            if d.get(i - j, 0) > 0 and d.get(i + j, 0) > 0:\n                d[i - j] -= 1\n                d[i + j] -= 1\n                d[i] = d.get(i, 0) + 2\n\n    ans = 0\n    for i in d.values():\n        ans += i // 2\n\n    print(min(ans, k))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n# Solution\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ndp = [0] * n\ndp[0] = 1\n\nfor i in range(1, n):\n    dp[i] = dp[i-1]\n    for j in range(i-1, -1, -1):\n        if abs(a[i] - a[j]) <= 5:\n            dp[i] = max(dp[i], dp[j]+1)\n\nprint(max(dp))"
     }
   ],
-  "created": 1648684430,
-  "id": "cmpl-4rcQIZqA8VLRlZc8PtDZSi728Aqwn",
+  "created": 1648694136,
+  "id": "cmpl-4rewqf48b7jmAdwGpmswAUaZrmMCj",
   "model": "code-davinci:002",
   "object": "text_completion"
 }
@@ -69,13 +75,20 @@ Output
   "finish_reason": "stop",
   "index": 0,
   "logprobs": null,
-  "text": "\n\nfrom collections import defaultdict\nfrom heapq import heappush, heappop, heapify\nfrom typing import List, Tuple, Dict\nfrom sys import stdin, stdout\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\ndef read_int():\n    return int(stdin.readline())\n\ndef read_lines(n: int):\n    return [stdin.readline().strip() for _ in range(n)]\n\ndef write_line(s: str):\n    stdout.write(s)\n    stdout.write(\"\\n\")\n\ndef write_lines(lines: List[str]):\n    stdout.write(\"\\n\".join(lines))\n    stdout.write(\"\\n\")\n\ndef solve(n: int, k: int, skills: List[int]):\n    # return number of students that can be included in k teams\n    # such that the difference between the skills of any 2 students\n    # in a team is no more than 5\n    d = defaultdict(lambda: 0)\n    for skill in skills:\n        d[skill] += 1\n    heap = []\n    for skill, count in d.items():\n        heappush(heap, (count, skill))\n    ans = 0\n    while heap:\n        count, skill = heappop(heap)\n        if count <= k:\n            ans += count\n            k -= count\n            if k == 0:\n                return ans\n        else:\n            ans += k\n            return ans\n        if k == 0:\n            return ans\n        for i in range(skill-5, skill+1):\n            if i in d:\n                heappush(heap, (d[i], i))\n    return ans\n\ndef main():\n    n, k = read_ints()\n    skills = read_ints()\n    ans = solve(n, k, skills)\n    write_line(str(ans))\n\nif __name__ == \"__main__\":\n    main()"
+  "text": "\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\na.sort()\n\nres = 0\nm = 0\ni = 0\nwhile i < n:\n    cnt = 1\n    j = i + 1\n    while j < n and a[j] - a[i] <= 5:\n        cnt += 1\n        j += 1\n\n    if cnt < k:\n        res += cnt\n        m = max(m, res)\n        res -= 1\n    else:\n        res += k\n        m = max(m, res)\n    i = j\n\nprint(m)"
 }
 REASON stop
 1 {
   "finish_reason": "stop",
   "index": 1,
   "logprobs": null,
-  "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\na.sort()\n\nif k == 1:\n    print(n)\nelif k == n:\n    print(1)\nelse:\n    b = []\n    for i in range(n-1):\n        b.append(a[i+1] - a[i])\n    b.sort()\n    s = sum(b[:-k+1]) + n\n    print(s)"
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = map(int, input().split())\n\n    d = {}\n    for i in s:\n        d[i] = d.get(i, 0) + 1\n\n    for i in range(1, 5):\n        for j in range(i):\n            if d.get(i - j, 0) > 0 and d.get(i + j, 0) > 0:\n                d[i - j] -= 1\n                d[i + j] -= 1\n                d[i] = d.get(i, 0) + 2\n\n    ans = 0\n    for i in d.values():\n        ans += i // 2\n\n    print(min(ans, k))\n\nif __name__ == \"__main__\":\n    main()"
+}
+REASON stop
+2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n# Solution\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ndp = [0] * n\ndp[0] = 1\n\nfor i in range(1, n):\n    dp[i] = dp[i-1]\n    for j in range(i-1, -1, -1):\n        if abs(a[i] - a[j]) <= 5:\n            dp[i] = max(dp[i], dp[j]+1)\n\nprint(max(dp))"
 }
 REASON stop

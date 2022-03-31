@@ -1,16 +1,10 @@
 
 
-def main():
-    # Read the input data.
-    a, b, c = map(int, input().split())
-    # Compute the result.
-    result = min(a, b // 2, c // 3) * 7
-    a -= result // 7
-    b -= result // 7 * 2
-    c -= result // 7 * 3
-    result += min(a, b, c)
-    # Print the result.
-    print(result)
+a, b, c = [int(x) for x in input().split()]
 
-if __name__ == "__main__":
-    main()
+res = 0
+res += min(a, b, c)
+res += min(a, b) + min(a, c) + min(b, c)
+res += min(a, b) + min(a, c) + min(b, c)
+
+print(res)

@@ -1,26 +1,27 @@
 
 
-import sys
 
 def main():
-    n = int(sys.stdin.readline().strip())
-    s = sys.stdin.readline().strip()
-    a = [0, 0, 0]
-    for c in s:
-        a[int(c)] += 1
-    res = [0] * n
+    n = int(input())
+    s = input()
+    assert len(s) == n
+    assert n % 3 == 0
+    assert all([c in '012' for c in s])
+    s = list(s)
     for i in range(n):
-        if s[i] == '1' and a[1] > a[0]:
-            res[i] = '0'
-            a[1] -= 1
-            a[0] += 1
-        elif s[i] == '2' and a[2] > a[1]:
-            res[i] = '1'
-            a[2] -= 1
-            a[1] += 1
-        else:
-            res[i] = s[i]
-    print(''.join(res))
+        if s[i] == '2':
+            s[i] = '0'
+            break
+    for i in range(n):
+        if s[i] == '1':
+            s[i] = '0'
+            break
+    for i in range(n):
+        if s[i] == '2':
+            s[i] = '1'
+            break
+    print(''.join(s))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

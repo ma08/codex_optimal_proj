@@ -1,22 +1,14 @@
 
-
-n, r = map(int, input().split())
-
-projects = []
-for _ in range(n):
-    projects.append(list(map(int, input().split())))
-
-projects.sort(key=lambda x: x[0])
-
-i = 0
-j = 0
-while i < n:
-    if r >= projects[i][0]:
-        r += projects[i][1]
-        if r < 0:
-            break
-        i += 1
+#https://codeforces.com/contest/1253/problem/B2
+n,r = map(int,input().split())
+a = [list(map(int,input().split())) for _ in range(n)]
+a.sort(key=lambda x:x[0])
+#print(a)
+result = 0
+for i in range(n):
+    if a[i][0]<=r:
+        result+=1
+        r+=a[i][1]
     else:
-        j += 1
-
-print(i)
+        break
+print(result)

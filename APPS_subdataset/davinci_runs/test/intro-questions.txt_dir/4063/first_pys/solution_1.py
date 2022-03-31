@@ -1,25 +1,20 @@
 
 
-from collections import Counter
+N = int(input())
+problems = list(map(int, input().split()))
 
-def main():
-    N = int(input())
-    d = [int(i) for i in input().split()]
-    # print(N,d)
+problems.sort()
 
-    c = Counter(d)
-    # print(c)
+left = 0
+right = N - 1
 
-    d_u = list(set(d))
-    d_u.sort()
-    # print(d_u)
+while left < right:
+    if problems[left] + problems[right] == 10:
+        left += 1
+        right -= 1
+    elif problems[left] + problems[right] > 10:
+        right -= 1
+    else:
+        left += 1
 
-    s = 0
-    for i in d_u:
-        s += c[i]*(N-c[i])
-    # print(s)
-
-    print(s//2)
-
-if __name__ == '__main__':
-    main()
+print(right - left)

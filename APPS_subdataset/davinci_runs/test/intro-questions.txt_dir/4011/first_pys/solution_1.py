@@ -1,15 +1,19 @@
 
 
-def main():
-    n = int(input())
-    a = input()
-    f = list(map(int, input().split()))
+#@author: K. Palmer
 
-    res = 0
-    for i in range(n):
-        res = res * 10 + f[int(a[i]) - 1]
+n = input()
+a = raw_input()
+f = raw_input().split()
+f = map(int, f)
 
-    print(res)
-
-if __name__ == "__main__":
-    main()
+for i in range(len(a)):
+    a = a[:i] + str(f[int(a[i])-1]) + a[i+1:]
+#    print a
+    if i == len(a)-1:
+        break
+    for j in range(len(a)-i-1, i, -1):
+        if a[j] > a[j-1]:
+            a = a[:j-1] + a[j] + a[j-1] + a[j+1:]
+            break
+print a

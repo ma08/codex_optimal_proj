@@ -1,18 +1,14 @@
 
 
-def main():
-    n = int(input())
-    s = [int(x) for x in input().split()]
-    prefix = [0]
-    for i in range(n):
-        prefix.append(prefix[-1] + s[i])
+n = int(input())
+a = list(map(int, input().split()))
 
-    prefix.sort()
-    count = 0
-    for i in range(1, n + 1):
-        if prefix[i] == prefix[i - 1]:
-            count += 1
-    print(count)
+m = 0
+ans = 0
+for i in range(n):
+    m += a[i]
+    if m == 0:
+        ans += 1
+        m = 0
 
-if __name__ == "__main__":
-    main()
+print(ans)

@@ -1,26 +1,44 @@
 
 
-import sys
+n, k = map(int, input().split())
+s = input()
 
-def main(filepath):
-    with open(filepath, 'r') as f:
-        n, k = map(int, f.readline().strip().split())
-        s = f.readline().strip()
+# if the room has a router, place one
+# if the room does not have a router, connect directly
+# if the room has a router and it is too close to the previous router, connect directly
+# if the room has a router and it is too far from the previous router, connect directly and place a router
+# if the room does not have a router and it is too close to the previous router, connect directly
+# if the room does not have a router and it is too far from the previous router, connect directly
 
-        # Calculate total cost of direct internet connection
-        total_cost = 0
-        for i in range(n):
-            if s[i] == '0':
-                total_cost += i + 1
+# we start with the room 1
+# let's say the previous router was placed in room i
+# let's say we want to connect room j
+# if j-i > 2*k+1, we place a router in room i+k+1 and connect i+k+1
+# if j-i <= 2*k+1, we connect j
+# if j-i <= k, we connect j
+# if j-i > k, we connect j
+# if j-i <= 2*k, we connect j
+# if j-i > 2*k, we place a router in j-k and connect j-k
+# if j-i <= 3*k, we connect j
+# if j-i > 3*k, we connect j
 
-        # Calculate minimum cost of router placement
-        router_cost = 0
-        for i in range(n):
-            if s[i] == '1':
-                router_cost += min(i + 1, n - i)
-        
-        # Calculate minimum cost of internet connection
-        print(total_cost - router_cost)
+# if the room has a router, place one
+# if the room does not have a router, connect directly
 
-if __name__ == '__main__':
-    main(sys.argv[1])
+# we start with the room 1
+# let's say the previous router was placed in room i
+# let's say we want to connect room j
+# if j-i > 2*k+1, we place a router in room i+k+1 and connect i+k+1
+# if j-i <= 2*k+1, we connect j
+
+ans = 0
+i = 1
+for j in range(1, n+1):
+    if j-i > 2*k+1:
+        ans += i+k+1
+        i = i+k+1
+    if s[j-1] == "1":
+        ans += j
+        i = j
+
+print(ans)

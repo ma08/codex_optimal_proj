@@ -1,11 +1,17 @@
 
-#-----Solution-----
-a = int(input())
 
-if a < 10:
-    print(0)
-else:
-    if a % 10 == 0:
-        print(1)
+
+def is_prime(a):
+    if a == 1:
+        return 0
+    elif a == 2:
+        return 1
     else:
-        print(0)
+        for i in range(2, a):
+            if a % i == 0:
+                return 0
+        return 1
+
+
+a = int(input())
+print(is_prime(a))

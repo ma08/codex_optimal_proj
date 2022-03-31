@@ -1,24 +1,41 @@
 
-import sys
 
-def main():
-    n = int(sys.stdin.readline())
-    s = sys.stdin.readline()
-    if n == 1:
-        print("YES")
-        print(0)
-    else:
-        if s[0] == s[n - 1]:
-            print("NO")
+n = int(input())
+s = input()
+
+if len(set(s)) == 1:
+    print('YES')
+    print('0'*n)
+elif len(set(s)) == n:
+    print('YES')
+    print('1'*n)
+else:
+    char_count = {}
+    for c in s:
+        if c not in char_count:
+            char_count[c] = 1
         else:
-            print("YES")
-            print(1, end="")
-            for i in range(n - 2):
-                if (s[i] == s[i + 1] and s[i] == s[n - 1]) or (s[i] == s[i + 1] and s[i] == s[0]):
-                    print(0, end="")
-                else:
-                    print(1, end="")
-            print(0)
+            char_count[c] += 1
+    char_count = list(char_count.items())
+    char_count.sort()
 
-if __name__ == "__main__":
-    main()
+    if len(char_count) == 2:
+        if char_count[0][1] == 1 or char_count[1][1] == 1:
+            print('YES')
+            if char_count[0][1] == 1:
+                print('0'*char_count[0][1] + '1'*char_count[1][1])
+            else:
+                print('1'*char_count[0][1] + '0'*char_count[1][1])
+        else:
+            print('NO')
+    elif len(char_count) == 3:
+        if char_count[0][1] == 1 and char_count[2][1] == 1:
+            print('YES')
+            if char_count[0][0] < char_count[1][0]:
+                print('0'*char_count[0][1] + '1'*char_count[1][1] + '0'*char_count[2][1])
+            else:
+                print('0'*char_count[2][1] + '1'*char_count[1][1] + '0'*char_count[0][1])
+        else:
+            print('NO')
+    else:
+      
