@@ -2,11 +2,33 @@ import os
 import openai
 import json
 import sys
+import datetime
+from datetime import datetime
+import random
+import time
+
+old_print = print
+
+def timestamped_print(*args, **kwargs):
+  old_print(datetime.now(), *args, **kwargs)
+
+print = timestamped_print
+
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+"""
+API_KEYS = ["key1", "key2", "key3"]
+def random_number():
+    return random.randint(0,2)
+
+def set_api_key_rand():
+    openai.api_key = API_KEYS[random_number()]
+"""
+
 EDIT_ENGINE = "code-davinci-edit-001"
 
-TEMPERATURE = 0.5
+TEMPERATURE = 0.3
 N_SOLUTIONS = 2
 
 # EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax error", "cleanup code"]
@@ -23,6 +45,8 @@ output_codes: list of strings containing the code after application of operation
 """
 def run_edit(input_code, operation):
 
+    # set_api_key_rand()
+
     response = openai.Edit.create(
         engine= EDIT_ENGINE,
         input=input_code,
@@ -30,8 +54,9 @@ def run_edit(input_code, operation):
         temperature=TEMPERATURE,
         n=N_SOLUTIONS
     )
+    time.sleep(2)
 
-    print(input_code, operation, response)
+    print(operation, response)
 
     #check for failure?
     output_codes = []
@@ -90,7 +115,7 @@ def run_edit_multiple_op(input_code, operations):
 
     return final_outputs
 
-def save_strings_to_py_file(solution_strings, folder_name="solution_pys"):
+def save_strings_to_py_file(solution_strings, folder_name="edit_sol_pys"):
     os.makedirs(folder_name, exist_ok=True)
 
     # os.chdir(folder_name)
@@ -109,14 +134,14 @@ file_name: file name of json file that is output of codex-davinci-002 with natur
 They are multiple outputs for a single input depending upon k
 The file has outputs for multiple prompts
 """
-def run(file_name):
+def run(file_name,out_dir="."):
     with open(file_name,"r") as input_fp:
         data = json.load(input_fp)
 
-        output = {"prompt":data["prompt"], "solutions":[]}
+        output = {"solutions":[]}
 
         total_output_set = set()
-        for solution in data["solutions"]:
+        for solution in data:
             outputs = run_edit_multiple_op(solution, EDIT_OPERATIONS)
             total_output_set.update(outputs)
 
@@ -124,10 +149,11 @@ def run(file_name):
 
         # json_output = json.dumps(output)
 
-        with open('run_edit_output.json', 'w') as outfile:
-            json.dump(output, outfile)
+
+        with open(f'{out_dir}/codex_edit_solutions.json', 'w') as outfile:
+            json.dump(output["solutions"], outfile)
         
-        save_strings_to_py_file(output["solutions"])
+        save_strings_to_py_file(output["solutions"], f"{out_dir}/edit_sol_pys")
 
 
 
@@ -137,6 +163,7 @@ if __name__ == "__main__":
 
     #python3 run_edit_module.py example_output.json
     input_file_name = sys.argv[1]
+    out_dir = os.path.dirname(input_file_name)
 
     #The following code is to save the example prompt and outputs
     """
@@ -153,8 +180,8 @@ if __name__ == "__main__":
 
         
 
-    sys.stdout = open(f'./out.log', 'w')
-    run(input_file_name)
+    sys.stdout = open(f'{out_dir}/edit_out.log', 'w')
+    run(input_file_name,out_dir=out_dir)
     sys.stdout.close()
 
 
