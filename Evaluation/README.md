@@ -1,5 +1,5 @@
 This folder contains all the necessary scripts to perform evaluations and compute pass rates on a given set of input code implemenatiions, each on coming with the corresponding set of unit tests to execute.
-In the context of our work, this evaluation is first perfomed on the Completion results, and then again on the Edited results, as illustrated in the evaluation pipeline in the [home folder](../) of this repo.  
+In the context of our work, this evaluation is first perfomed on the Completion results, and then again on the Edited results, as illustrated in the evaluation pipeline in the [home folder](../README.md) of this repo.  
 
  Before launching the script [test_solutions.py](./test_solutions.py), the set of target prompts, and corresponding solutions that we want to test, has to be stored into a .json file. In order to automate this process for large experiments, select the target folder containing the prompts and the solutions in [apps_create_spilt.py](./apps_create_split.py) (ex:experiment_1,experiment_2, ecc..), and run the script to generate `train.json` and `test.json` that contains all the paths to the target prompt-solutions folders. Then, in order to run evaluation, launch the following command:
 
