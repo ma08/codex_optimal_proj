@@ -53,14 +53,15 @@ def evaluate_problems(args):
 
         #Load the solutions obtained with Codex Completions
 
-        samples_path = os.path.join(problem, "codex_solutions.json")
+        samples_path = os.path.join(problem, "codex_edit_solutions.json")
         # print("samples_path",samples_path)
-        with open(samples_path, "r") as f:
-          samples = json.load(f)
+        try:
+          with open(samples_path, "r") as f:
+            samples = json.load(f)
 
-        res = []
+          res = []
         #INNER LOOP FOR SINGLE PROMPT
-        for sample_idx, sample in enumerate(samples):  
+          for sample_idx, sample in enumerate(samples):  
             curr_res = [-2]
             try:
 
@@ -98,20 +99,24 @@ def evaluate_problems(args):
                 #solution of the current prompt under test.
                 res.append(curr_res)
 
-
         #store the res array, containing all the evaluation information for a single prompt, in the 
         #results array. In this way, once completed the outer loop across prompts, results contains all
         #evaluation informations for the batch of prompts targeted, and can be store in a dedicated
         #foler
 
-        results[index] = res
+          results[index] = res
 
-        with open(results_save, "w") as f:
+          with open(results_save, "w") as f:
             try:
-                f.write(json.dumps(results))
+              f.write(json.dumps(results))
             except Exception as e:
-                import pdb; pdb.set_trace()
-                print("didn't save problem due to {e}")
+              import pdb; pdb.set_trace()
+              print("didn't save problem due to {e}")
+
+        except:
+          print("########could not open file#########")
+          continue 
+
 
     return results
 
