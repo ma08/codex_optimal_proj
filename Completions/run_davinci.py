@@ -21,6 +21,7 @@ def run_davinci(path, out_dir):
 
     print("--------------------------")
 
+    # Add loop for sampling TEMPERATURE & N_SOLUTIONS...
     response = openai.Completion.create(
         engine=ENGINE,
         prompt=input_prompt,
@@ -49,12 +50,17 @@ def run_davinci(path, out_dir):
         if(finish_reason == "stop"):
             if("text" in choice):
                 solution_set.add(choice["text"])
-            shutil.copyfile(path, f"{out_dir}/question.txt")
+            if not os.path.exists(f"{out_dir}/question.txt"):
+                shutil.copyfile(path, f"{out_dir}/question.txt")
             prompt_file_folder = os.path.dirname(path)
             try:
-                shutil.copyfile(f"{prompt_file_folder}/metadata.json", f"{out_dir}/metadata.json")
-                shutil.copyfile(f"{prompt_file_folder}/solutions.json", f"{out_dir}/solutions.json")
-                shutil.copyfile(f"{prompt_file_folder}/input_output.json", f"{out_dir}/input_output.json")
+                # REVISE TO COPYFILE ONLY IF FILES DNE (FOR ALL THREE)
+                if not os.path.exists(f"{out_dir}/metadata.json"):
+                    shutil.copyfile(f"{prompt_file_folder}/metadata.json", f"{out_dir}/metadata.json")
+                if not os.path.exists(f"{out_dir}/solutions.json"):
+                    shutil.copyfile(f"{prompt_file_folder}/solutions.json", f"{out_dir}/solutions.json")
+                if not os.path.exists(f"{out_dir}/input_output.json"):
+                    shutil.copyfile(f"{prompt_file_folder}/input_output.json", f"{out_dir}/input_output.json")
             except Exception as e:
                 print(path, e)
 
@@ -67,6 +73,8 @@ def run_davinci(path, out_dir):
 
 
 
+    # REPLACE out_dir with folder = out_dir + '/' + TEMPERATURE + 'T_' + N_SOLUTIONS + 'k'
+    # need to check if it exists...if DNE, mkdir!!!
     with open(f'{out_dir}/codex_solutions.json', 'w') as outfile:
         json.dump(output["solutions"], outfile)
     
