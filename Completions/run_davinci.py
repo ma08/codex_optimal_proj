@@ -4,15 +4,14 @@ from numpy import promote_types
 import openai
 import json
 import shutil
+import numpy as np
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-TEMPERATURE = 0.5 #T
-N_SOLUTIONS = 2 #k
 ENGINE = "code-davinci-002"
-MAX_TOKENS=4096
+MAX_TOKENS=4000
 
-def run_davinci(path, out_dir):
+def run_davinci(path, out_dir, n_itr):
     with open(path) as f:
         prompt = f.read()
 
@@ -21,70 +20,70 @@ def run_davinci(path, out_dir):
 
     print("--------------------------")
 
-    # Add loop for sampling TEMPERATURE & N_SOLUTIONS...
-    response = openai.Completion.create(
-        engine=ENGINE,
-        prompt=input_prompt,
-        temperature=TEMPERATURE,
-        max_tokens=MAX_TOKENS,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
-        n=N_SOLUTIONS
-    )
+    for itr in n_itr:
+        TEMPERATURE = np.random.randint(0, 10)/10
+        N_SOLUTIONS = np.random.randint(1, 100)
 
-    print(response)
+        response = openai.Completion.create(
+            engine=ENGINE,
+            prompt=input_prompt,
+            temperature=TEMPERATURE,
+            max_tokens=MAX_TOKENS,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            n=N_SOLUTIONS
+        )
 
-    output = {"prompt":input_prompt, "solutions":[]}
-    solution_set = set()
+        print(response)
 
-    for i in range(len(response["choices"])):
-    # for choice in response["choices"]:
-        choice = response["choices"][i]
-        print(i, choice)
+        output = {"prompt":input_prompt, "solutions":[]}
+        solution_set = set()
+
+        for i in range(len(response["choices"])):
+        # for choice in response["choices"]:
+            choice = response["choices"][i]
+            print(i, choice)
 
 
+            finish_reason = choice["finish_reason"]
+            print(f"REASON {finish_reason}")
+            if(finish_reason == "stop"):
+                if("text" in choice):
+                    solution_set.add(choice["text"])
+                if not os.path.exists(f"{out_dir}/question.txt"):
+                    shutil.copyfile(path, f"{out_dir}/question.txt")
+                prompt_file_folder = os.path.dirname(path)
+                try:
+                    if not os.path.exists(f"{out_dir}/metadata.json"):
+                        shutil.copyfile(f"{prompt_file_folder}/metadata.json", f"{out_dir}/metadata.json")
+                    if not os.path.exists(f"{out_dir}/solutions.json"):
+                        shutil.copyfile(f"{prompt_file_folder}/solutions.json", f"{out_dir}/solutions.json")
+                    if not os.path.exists(f"{out_dir}/input_output.json"):
+                        shutil.copyfile(f"{prompt_file_folder}/input_output.json", f"{out_dir}/input_output.json")
+                except Exception as e:
+                    print(path, e)
 
-        finish_reason = choice["finish_reason"]
-        print(f"REASON {finish_reason}")
-        if(finish_reason == "stop"):
-            if("text" in choice):
-                solution_set.add(choice["text"])
-            if not os.path.exists(f"{out_dir}/question.txt"):
-                shutil.copyfile(path, f"{out_dir}/question.txt")
-            prompt_file_folder = os.path.dirname(path)
-            try:
-                # REVISE TO COPYFILE ONLY IF FILES DNE (FOR ALL THREE)
-                if not os.path.exists(f"{out_dir}/metadata.json"):
-                    shutil.copyfile(f"{prompt_file_folder}/metadata.json", f"{out_dir}/metadata.json")
-                if not os.path.exists(f"{out_dir}/solutions.json"):
-                    shutil.copyfile(f"{prompt_file_folder}/solutions.json", f"{out_dir}/solutions.json")
-                if not os.path.exists(f"{out_dir}/input_output.json"):
-                    shutil.copyfile(f"{prompt_file_folder}/input_output.json", f"{out_dir}/input_output.json")
-            except Exception as e:
-                print(path, e)
+                # shutil.copyfile(path, f"{out_dir}/solutions.json")
+                # shutil.copyfile(path, f"{out_dir}/input_output.json")
+                # with open(f"{out_dir}/gen_code_out_{i}.py", "w") as fp:
+                    # fp.write(choice["text"])
+        
+        output["solutions"].extend(solution_set)
 
-            # shutil.copyfile(path, f"{out_dir}/solutions.json")
-            # shutil.copyfile(path, f"{out_dir}/input_output.json")
-            # with open(f"{out_dir}/gen_code_out_{i}.py", "w") as fp:
-                # fp.write(choice["text"])
+
+        pref = str(TEMPERATURE) + 'T_' + str(N_SOLUTIONS) + 'k_'
+        if not os.path.exists(f"{out_dir}/{pref}codex_solutions.json"):
+            with open(f'{out_dir}/{pref}codex_solutions.json', 'w') as outfile:
+                json.dump(output["solutions"], outfile)
     
-    output["solutions"].extend(solution_set)
-
-
-
-    # REPLACE out_dir with folder = out_dir + '/' + TEMPERATURE + 'T_' + N_SOLUTIONS + 'k'
-    # need to check if it exists...if DNE, mkdir!!!
-    with open(f'{out_dir}/codex_solutions.json', 'w') as outfile:
-        json.dump(output["solutions"], outfile)
-    
-
 
 
 if __name__ == "__main__":
     #Example: python3 ./test/0179/question.txt
     path = sys.argv[1] #test/sort-questions.txt_dir/4997/question.txt
     out_dir = sys.argv[2] #davinci_runs/test/sort-questions.txt_dir
+    n_itr = sys.argv[3] # number of times want to sample
 
     # split_parts = prompt_file_path.split('/')
     # num = split_parts[2]
@@ -95,5 +94,5 @@ if __name__ == "__main__":
     # os.makedirs(out_dir, exist_ok=True)
 
     sys.stdout = open(f'{out_dir}/out.log', 'w')
-    run_davinci(path, out_dir)
+    run_davinci(path, out_dir, n_itr)
     sys.stdout.close()
