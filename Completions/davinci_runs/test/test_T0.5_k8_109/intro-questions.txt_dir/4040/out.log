@@ -1,0 +1,180 @@
+2022-04-09 22:57:12.609775 """
+There is a river of width $n$. The left bank of the river is cell $0$ and the right bank is cell $n + 1$ (more formally, the river can be represented as a sequence of $n + 2$ cells numbered from $0$ to $n + 1$). There are also $m$ wooden platforms on a river, the $i$-th platform has length $c_i$ (so the $i$-th platform takes $c_i$ consecutive cells of the river). It is guaranteed that the sum of lengths of platforms does not exceed $n$.
+
+You are standing at $0$ and want to reach $n+1$ somehow. If you are standing at the position $x$, you can jump to any position in the range $[x + 1; x + d]$. However you don't really like the water so you can jump only to such cells that belong to some wooden platform. For example, if $d=1$, you can jump only to the next position (if it belongs to the wooden platform). You can assume that cells $0$ and $n+1$ belong to wooden platforms.
+
+You want to know if it is possible to reach $n+1$ from $0$ if you can move any platform to the left or to the right arbitrary number of times (possibly, zero) as long as they do not intersect each other (but two platforms can touch each other). It also means that you cannot change the relative order of platforms.
+
+Note that you should move platforms until you start jumping (in other words, you first move the platforms and then start jumping).
+
+For example, if $n=7$, $m=3$, $d=2$ and $c = [1, 2, 1]$, then one of the ways to reach $8$ from $0$ is follow:
+
+ [Image] The first example: $n=7$. 
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $m$ and $d$ ($1 \le n, m, d \le 1000, m \le n$) — the width of the river, the number of platforms and the maximum distance of your jump, correspondingly.
+
+The second line of the input contains $m$ integers $c_1, c_2, \dots, c_m$ ($1 \le c_i \le n, \sum\limits_{i=1}^{m} c_i \le n$), where $c_i$ is the length of the $i$-th platform.
+
+
+-----Output-----
+
+If it is impossible to reach $n+1$ from $0$, print NO in the first line. Otherwise, print YES in the first line and the array $a$ of length $n$ in the second line — the sequence of river cells (excluding cell $0$ and cell $n + 1$).
+
+If the cell $i$ does not belong to any platform, $a_i$ should be $0$. Otherwise, it should be equal to the index of the platform ($1$-indexed, platforms are numbered from $1$ to $m$ in order of input) to which the cell $i$ belongs.
+
+Note that all $a_i$ equal to $1$ should form a contiguous subsegment of the array $a$ of length $c_1$, all $a_i$ equal to $2$ should form a contiguous subsegment of the array $a$ of length $c_2$, ..., all $a_i$ equal to $m$ should form a contiguous subsegment of the array $a$ of length $c_m$. The leftmost position of $2$ in $a$ should be greater than the rightmost position of $1$, the leftmost position of $3$ in $a$ should be greater than the rightmost position of $2$, ..., the leftmost position of $m$ in $a$ should be greater than the rightmost position of $m-1$.
+
+See example outputs for better understanding.
+
+
+-----Examples-----
+Input
+7 3 2
+1 2 1
+
+Output
+YES
+0 1 0 2 2 0 3 
+
+Input
+10 1 11
+1
+
+Output
+YES
+0 0 0 0 0 0 0 0 0 1 
+
+Input
+10 1 5
+2
+
+Output
+YES
+0 0 0 0 1 1 0 0 0 0 
+
+
+
+-----Note-----
+
+Consider the first example: the answer is $[0, 1, 0, 2, 2, 0, 3]$. The sequence of jumps you perform is $0 \rightarrow 2 \rightarrow 4 \rightarrow 5 \rightarrow 7 \rightarrow 8$.
+
+Consider the second example: it does not matter how to place the platform because you always can jump from $0$ to $11$.
+
+Consider the third example: the answer is $[0, 0, 0, 0, 1, 1, 0, 0, 0, 0]$. The sequence of jumps you perform is $0 \rightarrow 5 \rightarrow 6 \rightarrow 11$.
+"""
+2022-04-09 22:57:12.609802 --------------------------
+2022-04-09 22:59:23.896356 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, d = [int(x) for x in sys.stdin.readline().strip().split()]\n    c = [int(x) for x in sys.stdin.readline().strip().split()]\n    assert(len(c) == m)\n    assert(sum(c) <= n)\n    assert(1 <= n <= 1000)\n    assert(1 <= m <= n)\n    assert(1 <= d <= 1000)\n    for i in range(m):\n        assert(1 <= c[i] <= n)\n    print(\"YES\")\n    print(\"0 \" * n)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution \n\n#!/usr/bin/python\n\nn, m, d = map(int, raw_input().split())\nc = map(int, raw_input().split())\n\nif sum(c) > n:\n    print \"NO\"\n    exit()\n\nif d == 1:\n    print \"YES\"\n    print \" \".join(map(str, [0] * (n + 2)))\n    exit()\n\ndef solve(n, m, d, c):\n    p = [0] * (n + 2)\n    p[0] = -1\n    p[n + 1] = -1\n    pos = 1\n    for i in range(m):\n        for j in range(c[i]):\n            p[pos] = i + 1\n            pos += 1\n    for i in range(n + 2):\n        if p[i] == 0:\n            p[i] = -1\n    return p\n\np = solve(n, m, d, c)\n\nans = []\nfor i in range(n + 2):\n    ans.append(p[i])\n\nfor i in range(n + 2):\n    if p[i] > 0:\n        if p[i - 1] == 0 and i - 1 >= 0:\n            ans[i - 1] = p[i]\n        elif p[i + 1] == 0 and i + 1 <= n + 1:\n            ans[i + 1] = p[i]\n\nif -1 in ans:\n    print \"NO\"\nelse:\n    print \"YES\"\n    print \" \".join(map(str, ans))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn,m,d=map(int,input().split())\nc=list(map(int,input().split()))\n\n# n,m,d=10,1,11\n# c=[1]\n\n# n,m,d=7,3,2\n# c=[1,2,1]\n\n# n,m,d=10,1,5\n# c=[2]\n\ndef ispossible(n,m,d,c):\n\tif m==1:\n\t\tif c[0]<=d:\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\tif m==2:\n\t\t\tif c[0]+c[1]<=d:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\t\telse:\n\t\t\tif c[0]+c[1]<=d:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\nif ispossible(n,m,d,c):\n\tprint('YES')\n\ta=[0]*(n)\n\tfor i in range(m):\n\t\tfor j in range(c[i]):\n\t\t\ta[j]=i+1\n\tprint(*a)\nelse:\n\tprint('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n  lines = [line.strip() for line in sys.stdin]\n  n, m, d = [int(x) for x in lines[0].split()]\n  c = [int(x) for x in lines[1].split()]\n  if (sum(c) > n):\n    print('NO')\n    return\n  for i in range(1, m):\n    if (c[i] > d):\n      print('NO')\n      return\n  a = [0 for x in range(n)]\n  for i in range(m):\n    j = 0\n    while (c[i] > 0):\n      a[j] = i + 1\n      c[i] -= 1\n      j += 1\n  print('YES')\n  print(' '.join([str(x) for x in a]))\n\nif __name__ == '__main__':\n  main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n,m,d = map(int, sys.stdin.readline().strip().split(' '))\n    c = map(int, sys.stdin.readline().strip().split(' '))\n    print n,m,d\n    print c\n    if len(c) != m:\n        print \"Invalid input\"\n        return\n    # Construct the river\n    river = [0] * n\n    left = 0\n    right = 0\n    for i in xrange(m):\n        if left + c[i] > n:\n            print \"Invalid input\"\n            return\n        river[left:left+c[i]] = [i+1] * c[i]\n        left += c[i]\n    print river\n    # Construct the graph\n    graph = {}\n    for i in xrange(n):\n        if river[i] == 0:\n            continue\n        for j in xrange(1, d+1):\n            if i+j >= n:\n                break\n            if river[i+j] == 0:\n                continue\n            if river[i] not in graph:\n                graph[river[i]] = {}\n            if river[i+j] not in graph[river[i]]:\n                graph[river[i]][river[i+j]] = 0\n            graph[river[i]][river[i+j]] += 1\n    print graph\n    # Find the path\n    path = []\n    while m > 0:\n        if 1 not in graph:\n            print \"NO\"\n            return\n        path.append(1)\n        m -= 1\n        while path[-1] in graph and len(graph[path[-1]]) > 0:\n            path.append(graph[path[-1]].keys()[0])\n            graph[path[-2]][path[-1]] -= 1\n            if graph[path[-2]][path[-1]] == 0:\n                del graph[path[-2]][path[-1]]\n        if len(path) > 1:\n            if path[-2] in graph and path[-1] in graph[path[-2]]:\n                graph[path[-2]][path[-1]] += 1\n            else:\n                graph[path[-2]] = {path[-1]:1}\n        path = path[:-1]\n    print \"YES\"\n    print ' '.join(map(str, path))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nn,m,d = map(int,input().split())\nc = list(map(int,input().split()))\n\n# print(n,m,d)\n# print(c)\n\n# check if the sum of c is less than n\nif sum(c) > n:\n    print(\"NO\")\n    exit()\n\n# check if d is less than n\nif d > n:\n    print(\"YES\")\n    print(\"0 \"*n)\n    exit()\n\n# check if d is less than or equal to n-m\nif d <= n-m:\n    print(\"YES\")\n    print(\"0 \"*d+\"1 \"*c[0]+\"0 \"*(n-d-c[0]))\n    exit()\n\n# check if d is more than n-m\nif d > n-m:\n    print(\"NO\")\n    exit()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\ndef solve(n, m, d, c):\n    if sum(c) > n:\n        return \"NO\"\n    if d == 1:\n        if m == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 1:\n        if c[0] <= d:\n            return \"YES\"\n        return \"NO\"\n    if m == 2:\n        if c[0] + c[1] <= d:\n            return \"YES\"\n        return \"NO\"\n    if m == 3:\n        if c[0] + c[1] + c[2] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 4:\n        if c[0] + c[1] + c[2] + c[3] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 5:\n        if c[0] + c[1] + c[2] + c[3] + c[4] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 6:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 7:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 8:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 9:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] + c[8] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 10:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[9] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[9] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] + c[9] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] + c[9] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] + c[9] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 11:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] + c[10] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] + c[10] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[10] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[10] <= d and c[9] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[9] + c[10] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] + c[9] + c[10] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] + c[9] + c[10] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] + c[9] + c[10] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c["
+    }
+  ],
+  "created": 1649559433,
+  "id": "cmpl-4vI3F7YifYn7mF31TTuVDPxYSZwhB",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:59:23.896822 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, d = [int(x) for x in sys.stdin.readline().strip().split()]\n    c = [int(x) for x in sys.stdin.readline().strip().split()]\n    assert(len(c) == m)\n    assert(sum(c) <= n)\n    assert(1 <= n <= 1000)\n    assert(1 <= m <= n)\n    assert(1 <= d <= 1000)\n    for i in range(m):\n        assert(1 <= c[i] <= n)\n    print(\"YES\")\n    print(\"0 \" * n)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:59:23.896864 REASON stop
+2022-04-09 22:59:23.935836 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution \n\n#!/usr/bin/python\n\nn, m, d = map(int, raw_input().split())\nc = map(int, raw_input().split())\n\nif sum(c) > n:\n    print \"NO\"\n    exit()\n\nif d == 1:\n    print \"YES\"\n    print \" \".join(map(str, [0] * (n + 2)))\n    exit()\n\ndef solve(n, m, d, c):\n    p = [0] * (n + 2)\n    p[0] = -1\n    p[n + 1] = -1\n    pos = 1\n    for i in range(m):\n        for j in range(c[i]):\n            p[pos] = i + 1\n            pos += 1\n    for i in range(n + 2):\n        if p[i] == 0:\n            p[i] = -1\n    return p\n\np = solve(n, m, d, c)\n\nans = []\nfor i in range(n + 2):\n    ans.append(p[i])\n\nfor i in range(n + 2):\n    if p[i] > 0:\n        if p[i - 1] == 0 and i - 1 >= 0:\n            ans[i - 1] = p[i]\n        elif p[i + 1] == 0 and i + 1 <= n + 1:\n            ans[i + 1] = p[i]\n\nif -1 in ans:\n    print \"NO\"\nelse:\n    print \"YES\"\n    print \" \".join(map(str, ans))"
+}
+2022-04-09 22:59:23.935932 REASON stop
+2022-04-09 22:59:23.936601 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-09 22:59:23.936696 REASON stop
+2022-04-09 22:59:23.937407 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn,m,d=map(int,input().split())\nc=list(map(int,input().split()))\n\n# n,m,d=10,1,11\n# c=[1]\n\n# n,m,d=7,3,2\n# c=[1,2,1]\n\n# n,m,d=10,1,5\n# c=[2]\n\ndef ispossible(n,m,d,c):\n\tif m==1:\n\t\tif c[0]<=d:\n\t\t\treturn True\n\t\telse:\n\t\t\treturn False\n\telse:\n\t\tif m==2:\n\t\t\tif c[0]+c[1]<=d:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\t\telse:\n\t\t\tif c[0]+c[1]<=d:\n\t\t\t\treturn True\n\t\t\telse:\n\t\t\t\treturn False\n\nif ispossible(n,m,d,c):\n\tprint('YES')\n\ta=[0]*(n)\n\tfor i in range(m):\n\t\tfor j in range(c[i]):\n\t\t\ta[j]=i+1\n\tprint(*a)\nelse:\n\tprint('NO')"
+}
+2022-04-09 22:59:23.937496 REASON stop
+2022-04-09 22:59:23.938110 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n  lines = [line.strip() for line in sys.stdin]\n  n, m, d = [int(x) for x in lines[0].split()]\n  c = [int(x) for x in lines[1].split()]\n  if (sum(c) > n):\n    print('NO')\n    return\n  for i in range(1, m):\n    if (c[i] > d):\n      print('NO')\n      return\n  a = [0 for x in range(n)]\n  for i in range(m):\n    j = 0\n    while (c[i] > 0):\n      a[j] = i + 1\n      c[i] -= 1\n      j += 1\n  print('YES')\n  print(' '.join([str(x) for x in a]))\n\nif __name__ == '__main__':\n  main()"
+}
+2022-04-09 22:59:23.938201 REASON stop
+2022-04-09 22:59:23.938728 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n,m,d = map(int, sys.stdin.readline().strip().split(' '))\n    c = map(int, sys.stdin.readline().strip().split(' '))\n    print n,m,d\n    print c\n    if len(c) != m:\n        print \"Invalid input\"\n        return\n    # Construct the river\n    river = [0] * n\n    left = 0\n    right = 0\n    for i in xrange(m):\n        if left + c[i] > n:\n            print \"Invalid input\"\n            return\n        river[left:left+c[i]] = [i+1] * c[i]\n        left += c[i]\n    print river\n    # Construct the graph\n    graph = {}\n    for i in xrange(n):\n        if river[i] == 0:\n            continue\n        for j in xrange(1, d+1):\n            if i+j >= n:\n                break\n            if river[i+j] == 0:\n                continue\n            if river[i] not in graph:\n                graph[river[i]] = {}\n            if river[i+j] not in graph[river[i]]:\n                graph[river[i]][river[i+j]] = 0\n            graph[river[i]][river[i+j]] += 1\n    print graph\n    # Find the path\n    path = []\n    while m > 0:\n        if 1 not in graph:\n            print \"NO\"\n            return\n        path.append(1)\n        m -= 1\n        while path[-1] in graph and len(graph[path[-1]]) > 0:\n            path.append(graph[path[-1]].keys()[0])\n            graph[path[-2]][path[-1]] -= 1\n            if graph[path[-2]][path[-1]] == 0:\n                del graph[path[-2]][path[-1]]\n        if len(path) > 1:\n            if path[-2] in graph and path[-1] in graph[path[-2]]:\n                graph[path[-2]][path[-1]] += 1\n            else:\n                graph[path[-2]] = {path[-1]:1}\n        path = path[:-1]\n    print \"YES\"\n    print ' '.join(map(str, path))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:23.938803 REASON stop
+2022-04-09 22:59:23.939026 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nn,m,d = map(int,input().split())\nc = list(map(int,input().split()))\n\n# print(n,m,d)\n# print(c)\n\n# check if the sum of c is less than n\nif sum(c) > n:\n    print(\"NO\")\n    exit()\n\n# check if d is less than n\nif d > n:\n    print(\"YES\")\n    print(\"0 \"*n)\n    exit()\n\n# check if d is less than or equal to n-m\nif d <= n-m:\n    print(\"YES\")\n    print(\"0 \"*d+\"1 \"*c[0]+\"0 \"*(n-d-c[0]))\n    exit()\n\n# check if d is more than n-m\nif d > n-m:\n    print(\"NO\")\n    exit()"
+}
+2022-04-09 22:59:23.939056 REASON stop
+2022-04-09 22:59:23.939256 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\ndef solve(n, m, d, c):\n    if sum(c) > n:\n        return \"NO\"\n    if d == 1:\n        if m == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 1:\n        if c[0] <= d:\n            return \"YES\"\n        return \"NO\"\n    if m == 2:\n        if c[0] + c[1] <= d:\n            return \"YES\"\n        return \"NO\"\n    if m == 3:\n        if c[0] + c[1] + c[2] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 4:\n        if c[0] + c[1] + c[2] + c[3] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 5:\n        if c[0] + c[1] + c[2] + c[3] + c[4] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 6:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 7:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 8:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 9:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] + c[8] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 10:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] <= d and c[9] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[9] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] + c[9] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] + c[9] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] + c[9] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[4] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[3] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[2] == 1:\n            return \"YES\"\n        if c[0] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[1] == 1:\n            return \"YES\"\n        if c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[0] == 1:\n            return \"YES\"\n        return \"NO\"\n    if m == 11:\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] + c[10] <= d:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] + c[10] > d + 1:\n            return \"NO\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[9] <= d and c[10] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[8] + c[10] <= d and c[9] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[7] + c[9] + c[10] <= d and c[8] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[6] + c[8] + c[9] + c[10] <= d and c[7] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[5] + c[7] + c[8] + c[9] + c[10] <= d and c[6] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[4] + c[6] + c[7] + c[8] + c[9] + c[10] <= d and c[5] == 1:\n            return \"YES\"\n        if c[0] + c[1] + c[2] + c[3] + c[5] + c["
+}
+2022-04-09 22:59:23.939328 REASON length

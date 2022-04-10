@@ -1,0 +1,153 @@
+2022-04-09 22:09:51.221830 """
+It’s that time of the year when students head back to school, which will usually involve moving lots of stuff, and packing lots of that stuff into boxes. However, before we go through that effort, it would be nice to know whether the boxes we have are the right size!
+
+A box has three dimensions, $l$, $w$, and $h$, and a box’s volume $v$ is simply $l\cdot w \cdot h$. We have many small items to pack, and we don’t care about their exact geometry: we know that, as long as a box has a volume of, at least, $\mathbf{V}$, we will be able to pack all those items into that single box. So, given a box $i$, and its volume $v_ i$, then the difference $d_ i=v_ i-\mathbf{V}$ can tell us whether the box is big enough or not to pack all the items. If $d_ i$ is greater than or equal to zero, the box is big enough; otherwise, the box is too small.
+
+So, we want to answer a simple question: given multiple boxes, is the largest box (by volume) large enough to store all our items? For example, suppose $\mathbf{V}=10$ and we have three boxes, $A$, $B$, and $C$, with dimensions $(1,1,2)$, $(2,2,2)$, and $(3,2,1)$, respectively. Their volumes will be $v_ A=2$, $v_ B=8$, and $v_ C=6$, which means the largest box is $B$. Unfortunately, $d_ B=v_ B-\mathbf{V}=8-10=-2$, which means our largest box is not large enough.
+
+On the other hand, suppose $\mathbf{V}=980$, and we had four boxes, $W$, $X$, $Y$, and $Z$ with dimensions $(10,10,10)$, $(10,5,2)$, $(5,3,2)$, and $(90,5,2)$, respectively. Their volumes will be $v_ W=1000$, $v_ X=100$, $v_ Y=30$ and $v_ Z=900$, making $W$ the largest box and, since $d_ W=v_ W-\mathbf{V}=1000-980=20$, that means $W$ is big enough for all our items.
+
+-----Input-----
+The input specifies a set of boxes. It begins with a line containing two integers: $n$ ($1 \le n \le 100$), specifying the number of boxes, and $\mathbf{V}$, as defined above. The remaining input is composed of $n$ lines, each specifying one box. Each line contains the dimensions $l$, $w$, and $h$ for the box. You may assume that $1 \leqslant l, w, h, \mathbf{V} < 2^{32}$. You may also assume that, for any given box $i$, its volume $v_ i$ will always be less than $2^{32}$
+
+-----Output-----
+The output is a single integer: the value of $d_ i$ for the largest box by volume.
+
+-----Examples-----
+Sample Input 1:
+3 10
+1 1 2
+2 2 2
+3 2 1
+Sample Output 1:
+-2
+
+Sample Input 2:
+3 30
+1 1 1
+5 2 3
+5 2 1
+Sample Output 2:
+0
+"""
+2022-04-09 22:09:51.221858 --------------------------
+2022-04-09 22:10:15.636427 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, V = map(int, input().split())\n    max_d = -1\n    for _ in range(n):\n        l, w, h = map(int, input().split())\n        d = l * w * h - V\n        if d > max_d:\n            max_d = d\n    print(max_d)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef box_packing(n, v, boxes):\n    if n == 0:\n        return 0\n    else:\n        m = max(boxes)\n        boxes.remove(m)\n        if m >= v:\n            return m - v\n        else:\n            return box_packing(n-1, v, boxes)\n\ndef main():\n    n, v = map(int, input().split())\n    boxes = []\n    for i in range(n):\n        l, w, h = map(int, input().split())\n        boxes.append(l*w*h)\n    print(box_packing(n, v, boxes))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\nn = int(input())\nV = int(input())\n\nmax_volume = 0\n\nfor i in range(n):\n    l, w, h = [int(j) for j in input().split()]\n    max_volume = max(max_volume, l*w*h)\n\nprint(max_volume-V)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n# Solution\n\ndef main():\n    # Read the input\n    n, v = [int(x) for x in input().split()]\n    boxes = []\n    for i in range(n):\n        boxes.append([int(x) for x in input().split()])\n    # Sort the boxes by volume\n    boxes.sort(key=lambda box: box[0]*box[1]*box[2], reverse=True)\n    # Print the difference between the largest box and the volume required\n    print(boxes[0][0]*boxes[0][1]*boxes[0][2]-v)\n    \nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#------------------------------------------------------------------------------#\n\nn, V = map(int, input().split())\nvolumes = []\nfor _ in range(n):\n    l, w, h = map(int, input().split())\n    volumes.append(l * w * h)\n\nprint(max(volumes) - V)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, V = [int(x) for x in input().split()]\n\nlargest_box = 0\n\nfor i in range(n):\n    l, w, h = [int(x) for x in input().split()]\n    volume = l*w*h\n    if volume > largest_box:\n        largest_box = volume\n\nprint(largest_box - V)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Get input\n    n, V = map(int, input().split())\n    boxes = []\n    for i in range(n):\n        boxes.append(tuple(map(int, input().split())))\n    # Calculate volume of each box\n    volumes = []\n    for box in boxes:\n        volumes.append(box[0] * box[1] * box[2])\n    # Find largest box\n    largest = max(volumes)\n    # Calculate difference\n    difference = largest - V\n    # Print difference\n    print(difference)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, V = map(int, input().split())\n    box_volumes = []\n    for _ in range(n):\n        box_volumes.append(int(input().split()[0]) * int(input().split()[1]) * int(input().split()[2]))\n    print(max(box_volumes) - V)\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649556591,
+  "id": "cmpl-4vHJPQttKV0kl9agagQUQ05ddiFZe",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:10:15.636738 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, V = map(int, input().split())\n    max_d = -1\n    for _ in range(n):\n        l, w, h = map(int, input().split())\n        d = l * w * h - V\n        if d > max_d:\n            max_d = d\n    print(max_d)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:10:15.636775 REASON stop
+2022-04-09 22:10:15.637526 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.637551 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef box_packing(n, v, boxes):\n    if n == 0:\n        return 0\n    else:\n        m = max(boxes)\n        boxes.remove(m)\n        if m >= v:\n            return m - v\n        else:\n            return box_packing(n-1, v, boxes)\n\ndef main():\n    n, v = map(int, input().split())\n    boxes = []\n    for i in range(n):\n        l, w, h = map(int, input().split())\n        boxes.append(l*w*h)\n    print(box_packing(n, v, boxes))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:10:15.637615 REASON stop
+2022-04-09 22:10:15.637905 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.637926 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\nn = int(input())\nV = int(input())\n\nmax_volume = 0\n\nfor i in range(n):\n    l, w, h = [int(j) for j in input().split()]\n    max_volume = max(max_volume, l*w*h)\n\nprint(max_volume-V)"
+}
+2022-04-09 22:10:15.637971 REASON stop
+2022-04-09 22:10:15.638346 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.638360 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n# Solution\n\ndef main():\n    # Read the input\n    n, v = [int(x) for x in input().split()]\n    boxes = []\n    for i in range(n):\n        boxes.append([int(x) for x in input().split()])\n    # Sort the boxes by volume\n    boxes.sort(key=lambda box: box[0]*box[1]*box[2], reverse=True)\n    # Print the difference between the largest box and the volume required\n    print(boxes[0][0]*boxes[0][1]*boxes[0][2]-v)\n    \nmain()"
+}
+2022-04-09 22:10:15.638447 REASON stop
+2022-04-09 22:10:15.638808 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.638837 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#------------------------------------------------------------------------------#\n\nn, V = map(int, input().split())\nvolumes = []\nfor _ in range(n):\n    l, w, h = map(int, input().split())\n    volumes.append(l * w * h)\n\nprint(max(volumes) - V)"
+}
+2022-04-09 22:10:15.638905 REASON stop
+2022-04-09 22:10:15.639148 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.639160 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, V = [int(x) for x in input().split()]\n\nlargest_box = 0\n\nfor i in range(n):\n    l, w, h = [int(x) for x in input().split()]\n    volume = l*w*h\n    if volume > largest_box:\n        largest_box = volume\n\nprint(largest_box - V)"
+}
+2022-04-09 22:10:15.639196 REASON stop
+2022-04-09 22:10:15.639414 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.639430 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Get input\n    n, V = map(int, input().split())\n    boxes = []\n    for i in range(n):\n        boxes.append(tuple(map(int, input().split())))\n    # Calculate volume of each box\n    volumes = []\n    for box in boxes:\n        volumes.append(box[0] * box[1] * box[2])\n    # Find largest box\n    largest = max(volumes)\n    # Calculate difference\n    difference = largest - V\n    # Print difference\n    print(difference)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:10:15.639468 REASON stop
+2022-04-09 22:10:15.639690 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'
+2022-04-09 22:10:15.639702 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, V = map(int, input().split())\n    box_volumes = []\n    for _ in range(n):\n        box_volumes.append(int(input().split()[0]) * int(input().split()[1]) * int(input().split()[2]))\n    print(max(box_volumes) - V)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:10:15.639742 REASON stop
+2022-04-09 22:10:15.639971 test/intro-questions.txt_dir/4771/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4771/solutions.json'

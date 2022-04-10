@@ -1,0 +1,165 @@
+2022-04-09 23:47:42.351069 """
+You are given a permutation $p_1, p_2, \dots, p_n$. A permutation of length $n$ is a sequence such that each integer between $1$ and $n$ occurs exactly once in the sequence.
+
+Find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+The median of a sequence is the value of the element which is in the middle of the sequence after sorting it in non-decreasing order. If the length of the sequence is even, the left of two middle elements is used.
+
+For example, if $a=[4, 2, 7, 5]$ then its median is $4$ since after sorting the sequence, it will look like $[2, 4, 5, 7]$ and the left of two middle elements is equal to $4$. The median of $[7, 1, 2, 9, 6]$ equals $6$ since after sorting, the value $6$ will be in the middle of the sequence.
+
+Write a program to find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+
+-----Input-----
+
+The first line contains integers $n$ and $m$ ($1 \le n \le 2\cdot10^5$, $1 \le m \le n$) — the length of the given sequence and the required value of the median.
+
+The second line contains a permutation $p_1, p_2, \dots, p_n$ ($1 \le p_i \le n$). Each integer between $1$ and $n$ occurs in $p$ exactly once.
+
+
+-----Output-----
+
+Print the required number.
+
+
+-----Examples-----
+Input
+5 4
+2 4 5 3 1
+
+Output
+4
+
+Input
+5 5
+1 2 3 4 5
+
+Output
+1
+
+Input
+15 8
+1 15 2 14 3 13 4 8 12 5 11 6 10 7 9
+
+Output
+48
+
+
+
+-----Note-----
+
+In the first example, the suitable pairs of indices are: $(1, 3)$, $(2, 2)$, $(2, 3)$ and $(2, 4)$.
+"""
+2022-04-09 23:47:42.351108 --------------------------
+2022-04-09 23:48:16.115954 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#First solution\n\"\"\"\nn, m = map(int, input().split())\np = list(map(int, input().split()))\n\npairs = 0\nfor i in range(n):\n    for j in range(i+1, n+1):\n        if len(p[i:j])%2 == 0:\n            if p[i:j][len(p[i:j])//2-1] == m or p[i:j][len(p[i:j])//2] == m:\n                pairs += 1\n        else:\n            if p[i:j][len(p[i:j])//2] == m:\n                pairs += 1\n\nprint(pairs)\n\"\"\"\n\n#Second solution\nn, m = map(int, input().split())\np = list(map(int, input().split()))\n\nif len(p)%2 == 0:\n    median = p[len(p)//2-1]\nelse:\n    median = p[len(p)//2]\n\nif median == m:\n    print(n*(n+1)//2)\nelse:\n    left_count = 0\n    right_count = 0\n    for i in range(n):\n        if p[i] > median:\n            right_count += 1\n        elif p[i] < median:\n            left_count += 1\n    print(left_count*right_count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function contains the main logic of the program.\n    \"\"\"\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    arr.sort()\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if arr[(i + j) // 2] == m:\n                count += 1\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef get_median(nums, length):\n    if length % 2 == 0:\n        return (nums[length//2] + nums[length//2 - 1]) // 2\n    else:\n        return nums[length//2]\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    nums = list(map(int, sys.stdin.readline().split()))\n    nums.sort()\n    ans = 0\n    for i in range(n):\n        start = i\n        end = n\n        while start <= end:\n            mid = (start + end) // 2\n            median = get_median(nums[i:mid + 1], mid - i + 1)\n            if median == m:\n                ans += 1\n                break\n            elif median > m:\n                end = mid - 1\n            else:\n                start = mid + 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    p = list(map(int, input().split()))\n    c = Counter(p)\n    c_keys = sorted(c.keys())\n    c_values = sorted(c.values())\n    c_values = list(map(lambda x: x//2, c_values))\n\n    c_idx = 0\n    c_sum = 0\n    while c_sum < m:\n        c_sum += c_values[c_idx]\n        c_idx += 1\n\n    c_idx -= 1\n    c_sum -= c_values[c_idx]\n\n    ans = 0\n    for i in range(c_idx, n):\n        if c_keys[i] > m:\n            break\n        if c_keys[i] == m:\n            ans += c_values[i]**2\n\n    for i in range(c_idx):\n        if c_keys[i] >= m:\n            break\n        if c_keys[i] == m:\n            ans += c_values[i]**2\n\n    for i in range(c_idx):\n        for j in range(c_idx, n):\n            if c_keys[i] + c_keys[j] < 2*m:\n                ans += c_values[i]*c_values[j]\n            else:\n                break\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef median(nums):\n    nums = sorted(nums)\n    if len(nums) % 2 == 1:\n        return nums[len(nums)//2]\n    else:\n        return nums[len(nums)//2 - 1]\n\ndef main():\n    n, m = map(int, input().split())\n    nums = list(map(int, input().split()))\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if median(nums[i:j+1]) == m:\n                count += 1\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main(N, M, P):\n    # sort the array\n    P = sorted(P)\n    # get the median\n    median = P[(N-1)//2]\n    # count the number of instances of the median\n    count = P.count(median)\n    # get the number of pairs\n    pairs = count*(count-1)//2\n    print(pairs)\n\n\nif __name__ == '__main__':\n    N, M = map(int, input().split())\n    P = list(map(int, input().split()))\n    main(N, M, P)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\n\ndef read_int():\n    return int(stdin.readline())\n\n\ndef read_str():\n    return stdin.readline().strip()\n\n\ndef read_strs():\n    return list(map(str, stdin.readline().split()))\n\n\ndef is_odd(n):\n    return n % 2 == 1\n\n\ndef is_even(n):\n    return n % 2 == 0\n\n\ndef median(n):\n    if is_odd(n):\n        return (n + 1) // 2\n    else:\n        return n // 2\n\n\nn, m = read_ints()\narr = read_ints()\n\nleft_count = defaultdict(int)\nright_count = defaultdict(int)\n\nres = 0\n\nfor i, num in enumerate(arr):\n    left_count[num] += 1\n    right_count[arr[i]] += 1\n\n    if left_count[m] > median(i+1):\n        res += 1\n    if right_count[m] > median(n - i):\n        res += 1\n\nprint(res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#submitted by thr3sh0ld\n#programming language: Python3\n\nn, m = map(int,input().split())\na = list(map(int,input().split()))\nb = [0]*n\nc = [0]*n\nfor i in range(n):\n    b[i] = a[i]\n    c[i] = a[i]\nb.sort()\nc.sort()\nc.reverse()\nans = 0\nfor i in range(n):\n    if(b[i]==m):\n        ans += i\n    if(c[i]==m):\n        ans += i\nprint(ans)"
+    }
+  ],
+  "created": 1649562462,
+  "id": "cmpl-4vIq6pgvz4xf34RJdDOVE2JnGYKfW",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:48:16.116449 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#First solution\n\"\"\"\nn, m = map(int, input().split())\np = list(map(int, input().split()))\n\npairs = 0\nfor i in range(n):\n    for j in range(i+1, n+1):\n        if len(p[i:j])%2 == 0:\n            if p[i:j][len(p[i:j])//2-1] == m or p[i:j][len(p[i:j])//2] == m:\n                pairs += 1\n        else:\n            if p[i:j][len(p[i:j])//2] == m:\n                pairs += 1\n\nprint(pairs)\n\"\"\"\n\n#Second solution\nn, m = map(int, input().split())\np = list(map(int, input().split()))\n\nif len(p)%2 == 0:\n    median = p[len(p)//2-1]\nelse:\n    median = p[len(p)//2]\n\nif median == m:\n    print(n*(n+1)//2)\nelse:\n    left_count = 0\n    right_count = 0\n    for i in range(n):\n        if p[i] > median:\n            right_count += 1\n        elif p[i] < median:\n            left_count += 1\n    print(left_count*right_count)"
+}
+2022-04-09 23:48:16.116641 REASON stop
+2022-04-09 23:48:16.118114 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function contains the main logic of the program.\n    \"\"\"\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    arr.sort()\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if arr[(i + j) // 2] == m:\n                count += 1\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:48:16.118260 REASON stop
+2022-04-09 23:48:16.118978 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef get_median(nums, length):\n    if length % 2 == 0:\n        return (nums[length//2] + nums[length//2 - 1]) // 2\n    else:\n        return nums[length//2]\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    nums = list(map(int, sys.stdin.readline().split()))\n    nums.sort()\n    ans = 0\n    for i in range(n):\n        start = i\n        end = n\n        while start <= end:\n            mid = (start + end) // 2\n            median = get_median(nums[i:mid + 1], mid - i + 1)\n            if median == m:\n                ans += 1\n                break\n            elif median > m:\n                end = mid - 1\n            else:\n                start = mid + 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:48:16.119106 REASON stop
+2022-04-09 23:48:16.119695 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    p = list(map(int, input().split()))\n    c = Counter(p)\n    c_keys = sorted(c.keys())\n    c_values = sorted(c.values())\n    c_values = list(map(lambda x: x//2, c_values))\n\n    c_idx = 0\n    c_sum = 0\n    while c_sum < m:\n        c_sum += c_values[c_idx]\n        c_idx += 1\n\n    c_idx -= 1\n    c_sum -= c_values[c_idx]\n\n    ans = 0\n    for i in range(c_idx, n):\n        if c_keys[i] > m:\n            break\n        if c_keys[i] == m:\n            ans += c_values[i]**2\n\n    for i in range(c_idx):\n        if c_keys[i] >= m:\n            break\n        if c_keys[i] == m:\n            ans += c_values[i]**2\n\n    for i in range(c_idx):\n        for j in range(c_idx, n):\n            if c_keys[i] + c_keys[j] < 2*m:\n                ans += c_values[i]*c_values[j]\n            else:\n                break\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:48:16.119840 REASON stop
+2022-04-09 23:48:16.120989 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef median(nums):\n    nums = sorted(nums)\n    if len(nums) % 2 == 1:\n        return nums[len(nums)//2]\n    else:\n        return nums[len(nums)//2 - 1]\n\ndef main():\n    n, m = map(int, input().split())\n    nums = list(map(int, input().split()))\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if median(nums[i:j+1]) == m:\n                count += 1\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:48:16.121284 REASON stop
+2022-04-09 23:48:16.122718 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main(N, M, P):\n    # sort the array\n    P = sorted(P)\n    # get the median\n    median = P[(N-1)//2]\n    # count the number of instances of the median\n    count = P.count(median)\n    # get the number of pairs\n    pairs = count*(count-1)//2\n    print(pairs)\n\n\nif __name__ == '__main__':\n    N, M = map(int, input().split())\n    P = list(map(int, input().split()))\n    main(N, M, P)"
+}
+2022-04-09 23:48:16.123026 REASON stop
+2022-04-09 23:48:16.125425 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef read_ints():\n    return list(map(int, stdin.readline().split()))\n\n\ndef read_int():\n    return int(stdin.readline())\n\n\ndef read_str():\n    return stdin.readline().strip()\n\n\ndef read_strs():\n    return list(map(str, stdin.readline().split()))\n\n\ndef is_odd(n):\n    return n % 2 == 1\n\n\ndef is_even(n):\n    return n % 2 == 0\n\n\ndef median(n):\n    if is_odd(n):\n        return (n + 1) // 2\n    else:\n        return n // 2\n\n\nn, m = read_ints()\narr = read_ints()\n\nleft_count = defaultdict(int)\nright_count = defaultdict(int)\n\nres = 0\n\nfor i, num in enumerate(arr):\n    left_count[num] += 1\n    right_count[arr[i]] += 1\n\n    if left_count[m] > median(i+1):\n        res += 1\n    if right_count[m] > median(n - i):\n        res += 1\n\nprint(res)"
+}
+2022-04-09 23:48:16.125943 REASON stop
+2022-04-09 23:48:16.127701 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#submitted by thr3sh0ld\n#programming language: Python3\n\nn, m = map(int,input().split())\na = list(map(int,input().split()))\nb = [0]*n\nc = [0]*n\nfor i in range(n):\n    b[i] = a[i]\n    c[i] = a[i]\nb.sort()\nc.sort()\nc.reverse()\nans = 0\nfor i in range(n):\n    if(b[i]==m):\n        ans += i\n    if(c[i]==m):\n        ans += i\nprint(ans)"
+}
+2022-04-09 23:48:16.128114 REASON stop

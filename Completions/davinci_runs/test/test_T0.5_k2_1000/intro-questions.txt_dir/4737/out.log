@@ -1,0 +1,165 @@
+2022-04-09 21:43:17.530957 """
+ACM (Association for Computing Machinery) organizes the International Collegiate Programming Contest (ICPC) worldwide every year.
+
+In the ICPC, a team of three students is presented with a problem set that contains $N$ problems1 of varying types and difficulty levels. The teams are not told which problems are easier (or harder). As there is only one single computer per team, each team has to decide which one of the $N!$ possible problem solving orders that the team wants to use. This is called the “contest strategy” and teams who are expecting to do well in an ICPC should use the optimal contest strategy for their team.
+
+However, when a contest has ‘First to Solve Problem [‘A’/‘B’/.../‘A’$+(N-1)$] award’ – like this ICPC SG Regional Contest 15 – sponsored by Kattis, then some of the teams may throw the optimal contest strategy out of the window in order to grab the (smaller) award.
+
+-----Input-----
+The input describes a hypothetical scenario of a $300$ minute contest.
+
+The first line contains two non-negative integers $2 \leq N \leq 13$ and $0 \leq p \leq N-1$. The integer $N$ describes the number of problems in the problem set of this ACM ICPC and the integer $p$ is a 0-based index that describes the problem id that your team wants to solve first before attempting the other $N-1$ problems.
+
+The next line contains $N$ integers in the range between $1$ and $999$, inclusive. Each integer $i$ describes the estimated number of minutes to solve problem id $i$ according to your team. You have discussed with your team mates that your team will not put the same estimation for two different problems, so there is no ambiguity.
+
+As an ACM ICPC duration is $5$ hours, or $300$ minutes, any estimation of strictly larger than $300$ minutes for a certain problem $j$ basically says that you estimate that your team cannot solve problem $j$ during contest time.
+
+In this problem, you can assume that all your team’s estimations are perfectly accurate, i.e. if your team estimates that your team needs $30$ minutes to solve problem $k$, $270$ minutes to solve another problem $l$, and have no idea how to solve the rest, and decides to solve problem $k$ first followed by $l$, then after $30$ minutes have elapsed from the start of contest, your team really gets an ‘Accepted’ verdict from Kattis for problem $k$, immediately switches to problem $l$ for the next $270$ minutes, gets another ‘Accepted’ verdict from Kattis for problem $l$ at exactly $300$ minutes (in this problem, submission at minute $300$ is a valid submission2). Thus you have $2$ Accepted problems and the total penalty time of $30+300 = 330$ minutes as per the ICPC rules.
+
+-----Output-----
+Print two integers $Num\_ AC$ and $Penalty\_ Time$ separated by a single space in one line.
+
+$Num\_ AC$ is the highest number of problems that your team can solve and $Penalty\_ Time$ is the lowest penalty minutes that your team can get in order to solve $Num\_ AC$ problems in this $300$ minutes ACM ICPC if your team insists to solve problem $p$ first from the start of the contest and then use the remaining time to work on the other $N-1$ problems.
+
+For the example scenario above, if your team decides to solve problem $l$ first followed by $k$, then your team still solves $Num\_ AC = 2$ Accepted problems, but with the total penalty of $270+300 = 570$ minutes.
+
+-----Examples-----
+Sample Input 1:
+7 0
+30 270 995 996 997 998 999
+Sample Output 1:
+2 330
+
+Sample Input 2:
+7 1
+30 270 995 996 997 998 999
+Sample Output 2:
+2 570
+
+Sample Input 3:
+7 2
+30 270 995 996 997 998 999
+Sample Output 3:
+0 0
+"""
+2022-04-09 21:43:17.530978 --------------------------
+2022-04-09 21:43:56.561757 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, p = map(int, input().split())\n    times = list(map(int, input().split()))\n    times = times[p:] + times[:p]\n    max_solved = 0\n    min_penalty = 0\n    remaining = 300\n    for t in times:\n        if remaining >= t:\n            remaining -= t\n            max_solved += 1\n            min_penalty += t\n        else:\n            break\n    print(max_solved, min_penalty)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport fileinput\n\ndef main():\n    lines = fileinput.input()\n    N, p = map(int, lines[0].split())\n    estimations = list(map(int, lines[1].split()))\n\n    # The optimal solution is to solve the first problem, then the second\n    # problem, etc. Any other order will be worse.\n    _, penalty = solve(estimations, 0)\n    if p == 0:\n        print(N, penalty)\n    else:\n        print(0, 0)\n\ndef solve(estimations, start):\n    \"\"\"\n    Solves the problem of solving `estimations` problems, starting with\n    `start`. Returns a tuple of the number of problems solved and the penalty\n    time.\n    \"\"\"\n    N = len(estimations)\n    if start == N:\n        return 0, 0\n\n    # If the first problem is not solvable, then there is no solution.\n    if estimations[start] > 300:\n        return 0, 0\n\n    # Try solving the first problem, and then solving the rest of the problems.\n    num_ac_1, penalty_1 = solve(estimations, start + 1)\n\n    # Try skipping the first problem, and then solving the rest of the problems.\n    num_ac_2, penalty_2 = solve(estimations, start + 2)\n\n    # Choose the better of the two.\n    if num_ac_1 + 1 > num_ac_2:\n        return num_ac_1 + 1, penalty_1 + estimations[start]\n    else:\n        return num_ac_2, penalty_2\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1. Read input\n    2. Solve problem\n    3. Output result\n    \"\"\"\n    n, p = map(int, input().split())\n    times = list(map(int, input().split()))\n    num_ac, penalty_time = solve(n, p, times)\n    print(\"{} {}\".format(num_ac, penalty_time))\n\ndef solve(n, p, times):\n    \"\"\"\n    Solve problem\n    \"\"\"\n    # first_problem_time = times[p]\n    # times = times[:p] + times[p+1:]\n    # times.sort()\n    # num_ac = 0\n    # penalty_time = 0\n    # while times:\n    #     num_ac += 1\n    #     penalty_time += times[0]\n    #     times = times[1:]\n    # return num_ac, penalty_time + first_problem_time\n\n    max_time = 300\n    max_num_ac = 0\n    max_penalty_time = 0\n    for i in range(2**(n-1)):\n        num_ac = 0\n        penalty_time = 0\n        first_problem_time = times[p]\n        times_left = times[:p] + times[p+1:]\n        times_left.sort()\n        for j in range(n-1):\n            if i & (1 << j):\n                penalty_time += times_left[j]\n                times_left[j] = 0\n        for time in times_left:\n            if time <= max_time - penalty_time:\n                max_time -= penalty_time\n                penalty_time += time\n                num_ac += 1\n        penalty_time += first_problem_time\n        if penalty_time <= max_time:\n            if num_ac > max_num_ac:\n                max_num_ac = num_ac\n                max_penalty_time = penalty_time\n            elif num_ac == max_num_ac and penalty_time < max_penalty_time:\n                max_penalty_time = penalty_time\n    return max_num_ac, max_penalty_time\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, p = [int(x) for x in input().split()]\n    time = [int(x) for x in input().split()]\n    time.sort()\n    if time[p] > 300:\n        print(\"0 0\")\n        return\n    ans = 0\n    for i in range(p, n):\n        if time[i] > 300:\n            break\n        ans += 1\n    print(ans, sum(time[:ans]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N, p = map(int, sys.stdin.readline().split())\n    times = map(int, sys.stdin.readline().split())\n    # print(N, p)\n    # print(times)\n    # print('')\n    best = [0, 0]\n    for i in range(N):\n        if i == p:\n            continue\n        # print('i:', i)\n        # print('times[i]:', times[i])\n        # print('times[p]:', times[p])\n        # print('times[i] + times[p]:', times[i] + times[p])\n        # print('times[i] + times[p] < 300:', times[i] + times[p] < 300)\n        if times[i] + times[p] < 300:\n            # print('best[0]:', best[0])\n            # print('best[1]:', best[1])\n            # print('times[i]:', times[i])\n            # print('times[p]:', times[p])\n            # print('times[i] + times[p]:', times[i] + times[p])\n            if best[0] == 0:\n                best[0] = 2\n                best[1] = times[i] + times[p]\n            elif times[i] + times[p] < best[1]:\n                best[0] = 2\n                best[1] = times[i] + times[p]\n        else:\n            if best[0] == 0:\n                best[0] = 1\n                best[1] = times[p]\n            elif times[p] < best[1]:\n                best[0] = 1\n                best[1] = times[p]\n    # print(best)\n    print(best[0], best[1])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    This function is the main entry point of the program.\n    \"\"\"\n    # read input\n    N, p = map(int, sys.stdin.readline().split())\n    time_est = map(int, sys.stdin.readline().split())\n    # solve problem\n    num_ac, penalty_time = solve_problem(N, p, time_est)\n    # print output\n    print num_ac, penalty_time\n\ndef solve_problem(N, p, time_est):\n    \"\"\"\n    This function solves the problem of finding the optimal number of accepted problems and penalty time\n    given the problem set and the problem to solve first.\n    \"\"\"\n    # define the number of accepted problems and the penalty time\n    num_ac = 0\n    penalty_time = 0\n    # define the remaining time\n    remaining_time = 300\n    # define the problem to solve\n    problem_to_solve = (p + 1) % N\n    # iterate over all problems\n    for problem in range(N):\n        # check if the problem is the problem to solve\n        if problem == problem_to_solve:\n            # check if the problem can be solved\n            if time_est[problem] <= remaining_time:\n                # solve the problem\n                remaining_time -= time_est[problem]\n                penalty_time += time_est[problem]\n                num_ac += 1\n                # update the problem to solve\n                problem_to_solve = (problem_to_solve + 1) % N\n        # check if the problem can be solved\n        elif time_est[problem] <= remaining_time:\n            # solve the problem\n            remaining_time -= time_est[problem]\n            penalty_time += remaining_time\n            num_ac += 1\n            # update the problem to solve\n            problem_to_solve = (problem_to_solve + 1) % N\n    return num_ac, penalty_time\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom itertools import permutations\n\nN, p = map(int, stdin.readline().split())\nest = list(map(int, stdin.readline().split()))\n\n# If the first problem is estimated to be too long, then we can't solve any problems\nif est[p] > 300:\n    print(0, 0)\nelse:\n    # Create a list of all the possible permutations of the problems\n    perms = permutations(range(N))\n    # Sort the list by the time it takes to solve the first problem\n    perms = sorted(perms, key=lambda x: est[x[0]])\n    # Find the permutation that solves the most problems\n    max_ac = 0\n    min_time = 0\n    for perm in perms:\n        # If the first problem is the one we want to solve first, then we can start solving it\n        if perm[0] == p:\n            # Keep track of the time it takes to solve each problem\n            time = 0\n            # Keep track of how many problems we've solved\n            ac = 0\n            # Try to solve each problem\n            for problem in perm:\n                # If we don't have enough time to solve the problem, then we can't solve it\n                if time + est[problem] > 300:\n                    break\n                # Otherwise, we can solve it\n                else:\n                    ac += 1\n                    time += est[problem]\n            # If we solved more problems, then update the number of problems solved and the time it took\n            if ac > max_ac:\n                max_ac = ac\n                min_time = time\n    print(max_ac, min_time)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import permutations\n\ndef solve(problem_list, first_problem_index):\n    #print(problem_list)\n    #print(first_problem_index)\n    problem_list.pop(first_problem_index)\n    permutations_list = list(permutations(problem_list))\n    #print(permutations_list)\n    num_AC = 0\n    penalty_time = 0\n    for permutation in permutations_list:\n        permutation = list(permutation)\n        permutation.insert(0, first_problem_index)\n        #print(permutation)\n        time_elapsed = 0\n        AC_count = 0\n        for problem_index in permutation:\n            time_elapsed += problem_list[problem_index]\n            #print(time_elapsed)\n            if time_elapsed > 300:\n                break\n            AC_count += 1\n        #print(AC_count)\n        if AC_count > num_AC:\n            num_AC = AC_count\n            penalty_time = time_elapsed\n            #print(penalty_time)\n        elif AC_count == num_AC:\n            if time_elapsed < penalty_time:\n                penalty_time = time_elapsed\n    return num_AC, penalty_time\n\ndef main():\n    N, p = [int(x) for x in input().split()]\n    problem_list = [int(x) for x in input().split()]\n    num_AC, penalty_time = solve(problem_list, p)\n    print(num_AC, penalty_time)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649554997,
+  "id": "cmpl-4vGthibmKUd9es3xKIXkhL9lixJYy",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:43:56.562209 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, p = map(int, input().split())\n    times = list(map(int, input().split()))\n    times = times[p:] + times[:p]\n    max_solved = 0\n    min_penalty = 0\n    remaining = 300\n    for t in times:\n        if remaining >= t:\n            remaining -= t\n            max_solved += 1\n            min_penalty += t\n        else:\n            break\n    print(max_solved, min_penalty)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:43:56.562253 REASON stop
+2022-04-09 21:43:56.573571 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.573626 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport fileinput\n\ndef main():\n    lines = fileinput.input()\n    N, p = map(int, lines[0].split())\n    estimations = list(map(int, lines[1].split()))\n\n    # The optimal solution is to solve the first problem, then the second\n    # problem, etc. Any other order will be worse.\n    _, penalty = solve(estimations, 0)\n    if p == 0:\n        print(N, penalty)\n    else:\n        print(0, 0)\n\ndef solve(estimations, start):\n    \"\"\"\n    Solves the problem of solving `estimations` problems, starting with\n    `start`. Returns a tuple of the number of problems solved and the penalty\n    time.\n    \"\"\"\n    N = len(estimations)\n    if start == N:\n        return 0, 0\n\n    # If the first problem is not solvable, then there is no solution.\n    if estimations[start] > 300:\n        return 0, 0\n\n    # Try solving the first problem, and then solving the rest of the problems.\n    num_ac_1, penalty_1 = solve(estimations, start + 1)\n\n    # Try skipping the first problem, and then solving the rest of the problems.\n    num_ac_2, penalty_2 = solve(estimations, start + 2)\n\n    # Choose the better of the two.\n    if num_ac_1 + 1 > num_ac_2:\n        return num_ac_1 + 1, penalty_1 + estimations[start]\n    else:\n        return num_ac_2, penalty_2\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:43:56.573747 REASON stop
+2022-04-09 21:43:56.574385 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.574428 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1. Read input\n    2. Solve problem\n    3. Output result\n    \"\"\"\n    n, p = map(int, input().split())\n    times = list(map(int, input().split()))\n    num_ac, penalty_time = solve(n, p, times)\n    print(\"{} {}\".format(num_ac, penalty_time))\n\ndef solve(n, p, times):\n    \"\"\"\n    Solve problem\n    \"\"\"\n    # first_problem_time = times[p]\n    # times = times[:p] + times[p+1:]\n    # times.sort()\n    # num_ac = 0\n    # penalty_time = 0\n    # while times:\n    #     num_ac += 1\n    #     penalty_time += times[0]\n    #     times = times[1:]\n    # return num_ac, penalty_time + first_problem_time\n\n    max_time = 300\n    max_num_ac = 0\n    max_penalty_time = 0\n    for i in range(2**(n-1)):\n        num_ac = 0\n        penalty_time = 0\n        first_problem_time = times[p]\n        times_left = times[:p] + times[p+1:]\n        times_left.sort()\n        for j in range(n-1):\n            if i & (1 << j):\n                penalty_time += times_left[j]\n                times_left[j] = 0\n        for time in times_left:\n            if time <= max_time - penalty_time:\n                max_time -= penalty_time\n                penalty_time += time\n                num_ac += 1\n        penalty_time += first_problem_time\n        if penalty_time <= max_time:\n            if num_ac > max_num_ac:\n                max_num_ac = num_ac\n                max_penalty_time = penalty_time\n            elif num_ac == max_num_ac and penalty_time < max_penalty_time:\n                max_penalty_time = penalty_time\n    return max_num_ac, max_penalty_time\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:43:56.574539 REASON stop
+2022-04-09 21:43:56.574862 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.574882 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, p = [int(x) for x in input().split()]\n    time = [int(x) for x in input().split()]\n    time.sort()\n    if time[p] > 300:\n        print(\"0 0\")\n        return\n    ans = 0\n    for i in range(p, n):\n        if time[i] > 300:\n            break\n        ans += 1\n    print(ans, sum(time[:ans]))\n\nmain()"
+}
+2022-04-09 21:43:56.574930 REASON stop
+2022-04-09 21:43:56.575541 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.575624 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N, p = map(int, sys.stdin.readline().split())\n    times = map(int, sys.stdin.readline().split())\n    # print(N, p)\n    # print(times)\n    # print('')\n    best = [0, 0]\n    for i in range(N):\n        if i == p:\n            continue\n        # print('i:', i)\n        # print('times[i]:', times[i])\n        # print('times[p]:', times[p])\n        # print('times[i] + times[p]:', times[i] + times[p])\n        # print('times[i] + times[p] < 300:', times[i] + times[p] < 300)\n        if times[i] + times[p] < 300:\n            # print('best[0]:', best[0])\n            # print('best[1]:', best[1])\n            # print('times[i]:', times[i])\n            # print('times[p]:', times[p])\n            # print('times[i] + times[p]:', times[i] + times[p])\n            if best[0] == 0:\n                best[0] = 2\n                best[1] = times[i] + times[p]\n            elif times[i] + times[p] < best[1]:\n                best[0] = 2\n                best[1] = times[i] + times[p]\n        else:\n            if best[0] == 0:\n                best[0] = 1\n                best[1] = times[p]\n            elif times[p] < best[1]:\n                best[0] = 1\n                best[1] = times[p]\n    # print(best)\n    print(best[0], best[1])\n\nmain()"
+}
+2022-04-09 21:43:56.575780 REASON stop
+2022-04-09 21:43:56.576858 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.576939 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    This function is the main entry point of the program.\n    \"\"\"\n    # read input\n    N, p = map(int, sys.stdin.readline().split())\n    time_est = map(int, sys.stdin.readline().split())\n    # solve problem\n    num_ac, penalty_time = solve_problem(N, p, time_est)\n    # print output\n    print num_ac, penalty_time\n\ndef solve_problem(N, p, time_est):\n    \"\"\"\n    This function solves the problem of finding the optimal number of accepted problems and penalty time\n    given the problem set and the problem to solve first.\n    \"\"\"\n    # define the number of accepted problems and the penalty time\n    num_ac = 0\n    penalty_time = 0\n    # define the remaining time\n    remaining_time = 300\n    # define the problem to solve\n    problem_to_solve = (p + 1) % N\n    # iterate over all problems\n    for problem in range(N):\n        # check if the problem is the problem to solve\n        if problem == problem_to_solve:\n            # check if the problem can be solved\n            if time_est[problem] <= remaining_time:\n                # solve the problem\n                remaining_time -= time_est[problem]\n                penalty_time += time_est[problem]\n                num_ac += 1\n                # update the problem to solve\n                problem_to_solve = (problem_to_solve + 1) % N\n        # check if the problem can be solved\n        elif time_est[problem] <= remaining_time:\n            # solve the problem\n            remaining_time -= time_est[problem]\n            penalty_time += remaining_time\n            num_ac += 1\n            # update the problem to solve\n            problem_to_solve = (problem_to_solve + 1) % N\n    return num_ac, penalty_time\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:43:56.577295 REASON stop
+2022-04-09 21:43:56.577951 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.577981 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom itertools import permutations\n\nN, p = map(int, stdin.readline().split())\nest = list(map(int, stdin.readline().split()))\n\n# If the first problem is estimated to be too long, then we can't solve any problems\nif est[p] > 300:\n    print(0, 0)\nelse:\n    # Create a list of all the possible permutations of the problems\n    perms = permutations(range(N))\n    # Sort the list by the time it takes to solve the first problem\n    perms = sorted(perms, key=lambda x: est[x[0]])\n    # Find the permutation that solves the most problems\n    max_ac = 0\n    min_time = 0\n    for perm in perms:\n        # If the first problem is the one we want to solve first, then we can start solving it\n        if perm[0] == p:\n            # Keep track of the time it takes to solve each problem\n            time = 0\n            # Keep track of how many problems we've solved\n            ac = 0\n            # Try to solve each problem\n            for problem in perm:\n                # If we don't have enough time to solve the problem, then we can't solve it\n                if time + est[problem] > 300:\n                    break\n                # Otherwise, we can solve it\n                else:\n                    ac += 1\n                    time += est[problem]\n            # If we solved more problems, then update the number of problems solved and the time it took\n            if ac > max_ac:\n                max_ac = ac\n                min_time = time\n    print(max_ac, min_time)"
+}
+2022-04-09 21:43:56.578068 REASON stop
+2022-04-09 21:43:56.578344 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'
+2022-04-09 21:43:56.578365 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import permutations\n\ndef solve(problem_list, first_problem_index):\n    #print(problem_list)\n    #print(first_problem_index)\n    problem_list.pop(first_problem_index)\n    permutations_list = list(permutations(problem_list))\n    #print(permutations_list)\n    num_AC = 0\n    penalty_time = 0\n    for permutation in permutations_list:\n        permutation = list(permutation)\n        permutation.insert(0, first_problem_index)\n        #print(permutation)\n        time_elapsed = 0\n        AC_count = 0\n        for problem_index in permutation:\n            time_elapsed += problem_list[problem_index]\n            #print(time_elapsed)\n            if time_elapsed > 300:\n                break\n            AC_count += 1\n        #print(AC_count)\n        if AC_count > num_AC:\n            num_AC = AC_count\n            penalty_time = time_elapsed\n            #print(penalty_time)\n        elif AC_count == num_AC:\n            if time_elapsed < penalty_time:\n                penalty_time = time_elapsed\n    return num_AC, penalty_time\n\ndef main():\n    N, p = [int(x) for x in input().split()]\n    problem_list = [int(x) for x in input().split()]\n    num_AC, penalty_time = solve(problem_list, p)\n    print(num_AC, penalty_time)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:43:56.578446 REASON stop
+2022-04-09 21:43:56.578708 test/intro-questions.txt_dir/4737/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4737/solutions.json'

@@ -1,0 +1,172 @@
+2022-04-09 23:38:23.673748 """
+Our new contest submission system keeps a chronological log of all submissions made by each team during the contest. With each entry, it records the number of minutes into the competition at which the submission was received, the letter that identifies the relevant contest problem, and the result of testing the submission (designated for the sake of this problem simply as right or wrong). As an example, the following is a hypothetical log for a particular team:
+
+3 E right
+10 A wrong
+30 C wrong
+50 B wrong
+100 A wrong
+200 A right
+250 C wrong
+300 D right
+
+The rank of a team relative to others is determined by a primary and secondary scoring measure calculated from the submission data. The primary measure is the number of problems that were solved. The secondary measure is based on a combination of time and penalties. Specifically, a team’s time score is equal to the sum of those submission times that resulted in right answers, plus a 20-minute penalty for each wrong submission of a problem that is ultimately solved. If no problems are solved, the time measure is $0$.
+
+In the above example, we see that this team successfully completed three problems: E on their first attempt ($3$ minutes into the contest); A on their third attempt at that problem ($200$ minutes into the contest); and D on their first attempt at that problem ($300$ minutes into the contest). This team’s time score (including penalties) is $543$. This is computed to include $3$ minutes for solving E, $200$ minutes for solving A with an additional $40$ penalty minutes for two earlier mistakes on that problem, and finally $300$ minutes for solving D. Note that the team also attempted problems B and C, but were never successful in solving those problems, and thus received no penalties for those attempts.
+
+According to contest rules, after a team solves a particular problem, any further submissions of the same problem are ignored (and thus omitted from the log). Because times are discretized to whole minutes, there may be more than one submission showing the same number of minutes. In particular there could be more than one submission of the same problem in the same minute, but they are chronological, so only the last entry could possibly be correct. As a second example, consider the following submission log:
+
+7 H right
+15 B wrong
+30 E wrong
+35 E right
+80 B wrong
+80 B right
+100 D wrong
+100 C wrong
+300 C right
+300 D wrong
+
+This team solved 4 problems, and their total time score (including penalties) is $502$, with $7$ minutes for H, $35+20$ for E, $80+40$ for B, and $300+20$ for C.
+
+-----Input-----
+The input contains $n$ lines for $0 \leq n \leq 100$, with each line describing a particular log entry. A log entry has three parts: an integer $m$, with $1 \leq m \leq 300$, designating the number of minutes at which a submission was received, an uppercase letter designating the problem, and either the word right or wrong. The integers will be in nondecreasing order and may contain repeats. After all the log entries is a line containing just the number $-1$.
+
+-----Output-----
+Output two integers on a single line: the number of problems solved and the total time measure (including penalties).
+
+-----Examples-----
+Sample Input:
+3 E right
+10 A wrong
+30 C wrong
+50 B wrong
+100 A wrong
+200 A right
+250 C wrong
+300 D right
+-1
+Sample Output:
+3 543
+"""
+2022-04-09 23:38:23.673774 --------------------------
+2022-04-09 23:39:04.694652 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_input():\n    \"\"\"\n    Reads the input and returns a list of tuples containing the minute and the answer.\n    \"\"\"\n    contest_log = []\n    while True:\n        line = sys.stdin.readline().strip()\n        if line == '-1':\n            break\n        minute, problem, answer = line.split()\n        contest_log.append((int(minute), problem, answer))\n    return contest_log\n\ndef solve_contest(contest_log):\n    \"\"\"\n    Solves the contest and returns the number of problems solved and the total time measure.\n    \"\"\"\n    problems_solved = 0\n    time_measure = 0\n    problems_wrong = {}\n    for minute, problem, answer in contest_log:\n        if answer == 'right':\n            problems_solved += 1\n            time_measure += minute\n            if problem in problems_wrong:\n                time_measure += problems_wrong[problem] * 20\n                del problems_wrong[problem]\n        else:\n            if problem not in problems_wrong:\n                problems_wrong[problem] = 0\n            problems_wrong[problem] += 1\n    return problems_solved, time_measure\n\ndef print_solution(solution):\n    \"\"\"\n    Prints the solution in the specified format.\n    \"\"\"\n    print(solution[0], solution[1])\n\ndef main():\n    contest_log = read_input()\n    solution = solve_contest(contest_log)\n    print_solution(solution)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function.\n    \"\"\"\n    # Read in the input\n    input_lines = []\n    while True:\n        line = input()\n        if line == '-1':\n            break\n        input_lines.append(line)\n\n    # Split the input into a list of lists\n    input_list = [line.split() for line in input_lines]\n\n    # Create a dictionary to hold the problem and the time\n    problem_dict = {}\n    for entry in input_list:\n        problem_dict[entry[1]] = int(entry[0])\n\n    # Create a dictionary to hold the problem and the number of attempts\n    attempts_dict = {}\n    for entry in input_list:\n        if entry[1] not in attempts_dict.keys():\n            attempts_dict[entry[1]] = 0\n        attempts_dict[entry[1]] += 1\n\n    # Create a dictionary to hold the problem and the number of right/wrong\n    right_wrong_dict = {}\n    for entry in input_list:\n        if entry[1] not in right_wrong_dict.keys():\n            right_wrong_dict[entry[1]] = 0\n        if entry[2] == 'right':\n            right_wrong_dict[entry[1]] += 1\n        else:\n            right_wrong_dict[entry[1]] -= 1\n\n    # Create a dictionary to hold the problem and the penalty\n    penalty_dict = {}\n    for key, value in right_wrong_dict.items():\n        if value > 0:\n            penalty_dict[key] = (attempts_dict[key]-1)*20\n        else:\n            penalty_dict[key] = 0\n\n    # Create a dictionary to hold the problem and the time with penalty\n    time_penalty_dict = {}\n    for key, value in problem_dict.items():\n        time_penalty_dict[key] = value + penalty_dict[key]\n\n    # Create a list of all of the problems that were solved\n    solved_list = []\n    for key, value in right_wrong_dict.items():\n        if value > 0:\n            solved_list.append(key)\n\n    # Calculate the number of problems solved and the total time measure\n    number_of_problems_solved = len(solved_list)\n    total_time_measure = sum([time_penalty_dict[problem] for problem in solved_list])\n\n    # Output the results\n    print(number_of_problems_solved, total_time_measure)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    numberOfProblems = 0\n    time = 0\n    currentTime = 0\n    currentProblem = \"\"\n    problems = []\n    times = []\n    wrongs = []\n    while True:\n        line = input()\n        if line == \"-1\":\n            break\n        line = line.split(\" \")\n        currentTime = int(line[0])\n        currentProblem = line[1]\n        if line[2] == \"right\":\n            if currentProblem not in problems:\n                numberOfProblems += 1\n                time += currentTime\n                problems.append(currentProblem)\n                times.append(currentTime)\n                wrongs.append(0)\n        else:\n            if currentProblem not in problems:\n                problems.append(currentProblem)\n                times.append(currentTime)\n                wrongs.append(1)\n            else:\n                index = problems.index(currentProblem)\n                wrongs[index] += 1\n\n    for i in range(len(problems)):\n        if wrongs[i] > 0:\n            time += wrongs[i] * 20\n\n    print(numberOfProblems, time)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function that reads in input and outputs the solution\n    \"\"\"\n    problems = {}\n    current_time = 0\n    for line in sys.stdin:\n        if line.strip() == '-1':\n            break\n        time, problem, result = line.strip().split()\n        time = int(time)\n        current_time = time\n        if problem not in problems:\n            problems[problem] = {'solved': False, 'penalty': 0, 'last_submit': current_time}\n        if result == 'right':\n            problems[problem]['solved'] = True\n            problems[problem]['last_submit'] = current_time\n        else:\n            problems[problem]['penalty'] += 20\n    solved = sum([1 if problem['solved'] else 0 for problem in problems.values()])\n    penalty = sum([problem['penalty'] for problem in problems.values()])\n    submit_time = sum([problem['last_submit'] for problem in problems.values() if problem['solved']])\n    print(solved, submit_time + penalty)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    times = dict()\n    problems = dict()\n    while True:\n        line = sys.stdin.readline()\n        if line == \"-1\\n\":\n            break\n        time, problem, result = line.split()\n        time = int(time)\n        if problem in problems:\n            if result == \"right\":\n                times[problem] = time\n                problems[problem] = True\n        else:\n            times[problem] = time\n            problems[problem] = result == \"right\"\n    solved = 0\n    time = 0\n    for problem, solved in problems.items():\n        if solved:\n            time += times[problem]\n            solved += 1\n        else:\n            time += 20\n    print(solved, time)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main program.\n    \"\"\"\n    # Initialize the submission log and the number of problems solved.\n    submission_log = []\n    problems_solved = 0\n    # Read in the submission log.\n    while True:\n        submission = input()\n        if submission == \"-1\":\n            break\n        submission_log.append(submission.split())\n    # Initialize the time score.\n    time_score = 0\n    # Process the submission log.\n    for i in range(len(submission_log)):\n        # If the submission is correct, add the time to the time score.\n        if submission_log[i][2] == \"right\":\n            time_score += int(submission_log[i][0])\n            problems_solved += 1\n        # If the submission is wrong, check if the problem was solved.\n        else:\n            # If the problem was solved, add the penalty to the time score.\n            if submission_log[i][1] in [submission_log[j][1] for j in range(i) if submission_log[j][2] == \"right\"]:\n                time_score += 20\n    # Print the number of problems solved and the time score.\n    print(problems_solved, time_score)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read in the input\ninput = sys.stdin.readlines()\n\n# Parse the input\nlog = []\nfor line in input:\n    if line == \"-1\\n\":\n        break\n    log.append(line.split())\n\n# Create a dictionary of the problems and the number of times they\n# were solved\nproblems = {}\nfor entry in log:\n    problems[entry[1]] = 0\n\n# Create a dictionary of the problems and the number of times they\n# were attempted\nattempts = {}\nfor entry in log:\n    attempts[entry[1]] = 0\n\n# Create a dictionary of the problems and the time it took to solve\n# them\ntimes = {}\nfor entry in log:\n    times[entry[1]] = 0\n\n# Loop through the log and find out how many problems were solved\n# and how many attempts it took to solve them\nfor entry in log:\n    if entry[2] == \"right\":\n        problems[entry[1]] += 1\n        attempts[entry[1]] += 1\n        times[entry[1]] = int(entry[0])\n    else:\n        attempts[entry[1]] += 1\n\n# Count the number of problems solved\nsolved = 0\nfor problem in problems:\n    if problems[problem] == 1:\n        solved += 1\n\n# Calculate the time score\ntimeScore = 0\nfor problem in problems:\n    if problems[problem] == 1:\n        timeScore += times[problem]\n    else:\n        timeScore += (attempts[problem] - 1) * 20\n\n# Print the results\nprint(solved, timeScore)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    input_ = input()\n    while input_ != '-1':\n        input_ = input_.split()\n        print(input_)\n        input_ = input()\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649561904,
+  "id": "cmpl-4vIh6Lzn8554lKpCrpUFdhY1cfcpa",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:39:04.695096 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_input():\n    \"\"\"\n    Reads the input and returns a list of tuples containing the minute and the answer.\n    \"\"\"\n    contest_log = []\n    while True:\n        line = sys.stdin.readline().strip()\n        if line == '-1':\n            break\n        minute, problem, answer = line.split()\n        contest_log.append((int(minute), problem, answer))\n    return contest_log\n\ndef solve_contest(contest_log):\n    \"\"\"\n    Solves the contest and returns the number of problems solved and the total time measure.\n    \"\"\"\n    problems_solved = 0\n    time_measure = 0\n    problems_wrong = {}\n    for minute, problem, answer in contest_log:\n        if answer == 'right':\n            problems_solved += 1\n            time_measure += minute\n            if problem in problems_wrong:\n                time_measure += problems_wrong[problem] * 20\n                del problems_wrong[problem]\n        else:\n            if problem not in problems_wrong:\n                problems_wrong[problem] = 0\n            problems_wrong[problem] += 1\n    return problems_solved, time_measure\n\ndef print_solution(solution):\n    \"\"\"\n    Prints the solution in the specified format.\n    \"\"\"\n    print(solution[0], solution[1])\n\ndef main():\n    contest_log = read_input()\n    solution = solve_contest(contest_log)\n    print_solution(solution)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:39:04.695190 REASON stop
+2022-04-09 23:39:04.695994 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.696036 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function.\n    \"\"\"\n    # Read in the input\n    input_lines = []\n    while True:\n        line = input()\n        if line == '-1':\n            break\n        input_lines.append(line)\n\n    # Split the input into a list of lists\n    input_list = [line.split() for line in input_lines]\n\n    # Create a dictionary to hold the problem and the time\n    problem_dict = {}\n    for entry in input_list:\n        problem_dict[entry[1]] = int(entry[0])\n\n    # Create a dictionary to hold the problem and the number of attempts\n    attempts_dict = {}\n    for entry in input_list:\n        if entry[1] not in attempts_dict.keys():\n            attempts_dict[entry[1]] = 0\n        attempts_dict[entry[1]] += 1\n\n    # Create a dictionary to hold the problem and the number of right/wrong\n    right_wrong_dict = {}\n    for entry in input_list:\n        if entry[1] not in right_wrong_dict.keys():\n            right_wrong_dict[entry[1]] = 0\n        if entry[2] == 'right':\n            right_wrong_dict[entry[1]] += 1\n        else:\n            right_wrong_dict[entry[1]] -= 1\n\n    # Create a dictionary to hold the problem and the penalty\n    penalty_dict = {}\n    for key, value in right_wrong_dict.items():\n        if value > 0:\n            penalty_dict[key] = (attempts_dict[key]-1)*20\n        else:\n            penalty_dict[key] = 0\n\n    # Create a dictionary to hold the problem and the time with penalty\n    time_penalty_dict = {}\n    for key, value in problem_dict.items():\n        time_penalty_dict[key] = value + penalty_dict[key]\n\n    # Create a list of all of the problems that were solved\n    solved_list = []\n    for key, value in right_wrong_dict.items():\n        if value > 0:\n            solved_list.append(key)\n\n    # Calculate the number of problems solved and the total time measure\n    number_of_problems_solved = len(solved_list)\n    total_time_measure = sum([time_penalty_dict[problem] for problem in solved_list])\n\n    # Output the results\n    print(number_of_problems_solved, total_time_measure)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:39:04.696120 REASON stop
+2022-04-09 23:39:04.696684 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.696717 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    numberOfProblems = 0\n    time = 0\n    currentTime = 0\n    currentProblem = \"\"\n    problems = []\n    times = []\n    wrongs = []\n    while True:\n        line = input()\n        if line == \"-1\":\n            break\n        line = line.split(\" \")\n        currentTime = int(line[0])\n        currentProblem = line[1]\n        if line[2] == \"right\":\n            if currentProblem not in problems:\n                numberOfProblems += 1\n                time += currentTime\n                problems.append(currentProblem)\n                times.append(currentTime)\n                wrongs.append(0)\n        else:\n            if currentProblem not in problems:\n                problems.append(currentProblem)\n                times.append(currentTime)\n                wrongs.append(1)\n            else:\n                index = problems.index(currentProblem)\n                wrongs[index] += 1\n\n    for i in range(len(problems)):\n        if wrongs[i] > 0:\n            time += wrongs[i] * 20\n\n    print(numberOfProblems, time)\n\nmain()"
+}
+2022-04-09 23:39:04.696796 REASON stop
+2022-04-09 23:39:04.697281 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.697321 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function that reads in input and outputs the solution\n    \"\"\"\n    problems = {}\n    current_time = 0\n    for line in sys.stdin:\n        if line.strip() == '-1':\n            break\n        time, problem, result = line.strip().split()\n        time = int(time)\n        current_time = time\n        if problem not in problems:\n            problems[problem] = {'solved': False, 'penalty': 0, 'last_submit': current_time}\n        if result == 'right':\n            problems[problem]['solved'] = True\n            problems[problem]['last_submit'] = current_time\n        else:\n            problems[problem]['penalty'] += 20\n    solved = sum([1 if problem['solved'] else 0 for problem in problems.values()])\n    penalty = sum([problem['penalty'] for problem in problems.values()])\n    submit_time = sum([problem['last_submit'] for problem in problems.values() if problem['solved']])\n    print(solved, submit_time + penalty)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:39:04.697391 REASON stop
+2022-04-09 23:39:04.697862 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.697896 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    times = dict()\n    problems = dict()\n    while True:\n        line = sys.stdin.readline()\n        if line == \"-1\\n\":\n            break\n        time, problem, result = line.split()\n        time = int(time)\n        if problem in problems:\n            if result == \"right\":\n                times[problem] = time\n                problems[problem] = True\n        else:\n            times[problem] = time\n            problems[problem] = result == \"right\"\n    solved = 0\n    time = 0\n    for problem, solved in problems.items():\n        if solved:\n            time += times[problem]\n            solved += 1\n        else:\n            time += 20\n    print(solved, time)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:39:04.697966 REASON stop
+2022-04-09 23:39:04.698455 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.698487 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main program.\n    \"\"\"\n    # Initialize the submission log and the number of problems solved.\n    submission_log = []\n    problems_solved = 0\n    # Read in the submission log.\n    while True:\n        submission = input()\n        if submission == \"-1\":\n            break\n        submission_log.append(submission.split())\n    # Initialize the time score.\n    time_score = 0\n    # Process the submission log.\n    for i in range(len(submission_log)):\n        # If the submission is correct, add the time to the time score.\n        if submission_log[i][2] == \"right\":\n            time_score += int(submission_log[i][0])\n            problems_solved += 1\n        # If the submission is wrong, check if the problem was solved.\n        else:\n            # If the problem was solved, add the penalty to the time score.\n            if submission_log[i][1] in [submission_log[j][1] for j in range(i) if submission_log[j][2] == \"right\"]:\n                time_score += 20\n    # Print the number of problems solved and the time score.\n    print(problems_solved, time_score)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:39:04.698642 REASON stop
+2022-04-09 23:39:04.699182 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.699220 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read in the input\ninput = sys.stdin.readlines()\n\n# Parse the input\nlog = []\nfor line in input:\n    if line == \"-1\\n\":\n        break\n    log.append(line.split())\n\n# Create a dictionary of the problems and the number of times they\n# were solved\nproblems = {}\nfor entry in log:\n    problems[entry[1]] = 0\n\n# Create a dictionary of the problems and the number of times they\n# were attempted\nattempts = {}\nfor entry in log:\n    attempts[entry[1]] = 0\n\n# Create a dictionary of the problems and the time it took to solve\n# them\ntimes = {}\nfor entry in log:\n    times[entry[1]] = 0\n\n# Loop through the log and find out how many problems were solved\n# and how many attempts it took to solve them\nfor entry in log:\n    if entry[2] == \"right\":\n        problems[entry[1]] += 1\n        attempts[entry[1]] += 1\n        times[entry[1]] = int(entry[0])\n    else:\n        attempts[entry[1]] += 1\n\n# Count the number of problems solved\nsolved = 0\nfor problem in problems:\n    if problems[problem] == 1:\n        solved += 1\n\n# Calculate the time score\ntimeScore = 0\nfor problem in problems:\n    if problems[problem] == 1:\n        timeScore += times[problem]\n    else:\n        timeScore += (attempts[problem] - 1) * 20\n\n# Print the results\nprint(solved, timeScore)"
+}
+2022-04-09 23:39:04.699292 REASON stop
+2022-04-09 23:39:04.699797 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'
+2022-04-09 23:39:04.699836 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    input_ = input()\n    while input_ != '-1':\n        input_ = input_.split()\n        print(input_)\n        input_ = input()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:39:04.699910 REASON stop
+2022-04-09 23:39:04.700391 test/intro-questions.txt_dir/4915/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4915/solutions.json'

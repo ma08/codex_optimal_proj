@@ -1,0 +1,149 @@
+2022-04-09 22:46:12.605352 """
+Recently, Pero has been into robotics, so he decided to make a robot that checks whether a deck of poker cards is complete.
+
+He’s already done a fair share of work—he wrote a programme that recognizes the suits of the cards. For simplicity’s sake, we can assume that all cards have a suit and a number.
+
+The suit of the card is one of the characters P, K, H, T, and the number of the card is an integer between $1$ and $13$. The robot labels each card in the format $TXY$ where $T$ is the suit and $XY$ is the number. If the card’s number consists of one digit, then $X = 0$. For example, the card of suit P and number $9$ is labelled P09.
+
+A complete deck has $52$ cards in total—for each of the four suits there is exactly one card with a number between $1$ and $13$.
+
+The robot has read the labels of all the cards in the deck and combined them into the string $S$. Help Pero finish the robot by writing a programme that reads the string made out of card labels and outputs how many cards are missing for each suit. If there are two exact same cards in the deck, output GRESKA (Croatian for ERROR).
+
+-----Input-----
+The first and only line of input contains the string $S$ ($1 \leq \left|S\right| \leq 1\ 000$), containing all the card labels.
+
+-----Output-----
+If there are two exact same cards in the deck, output “GRESKA”. Otherwise, the first and only line of output must consist of 4 space-separated numbers: how many cards of the suit P, K, H, T are missing, respectively.
+
+-----Examples-----
+Sample Input 1:
+P01K02H03H04
+Sample Output 1:
+12 12 11 13
+
+Sample Input 2:
+H02H10P11H02
+Sample Output 2:
+GRESKA
+"""
+2022-04-09 22:46:12.605387 --------------------------
+2022-04-09 22:47:00.867273 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ns = input()\ncards = [0]*52\nfor i in range(0, len(s), 3):\n    cards[int(s[i+1:i+3])-1] += 1\n\nprint(\"GRESKA\" if any(cards[i] > 1 for i in range(52)) else \"{} {} {} {}\".format(*(13-cards[i*13:(i+1)*13].count(1) for i in range(4))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef check(labels):\n    suits = {'P': 0, 'K': 0, 'H': 0, 'T': 0}\n    numbers = {'P': [], 'K': [], 'H': [], 'T': []}\n\n    for label in labels:\n        suit = label[0]\n        number = label[1:]\n        suits[suit] += 1\n        numbers[suit].append(number)\n\n    for suit in suits:\n        if suits[suit] != 13:\n            print(13 - suits[suit], end=' ')\n        else:\n            if len(set(numbers[suit])) != 13:\n                print('GRESKA')\n                return\n    print()\n\ncheck(input())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    cards = input()\n    cards = cards.split(\" \")\n    p = [0] * 13\n    k = [0] * 13\n    h = [0] * 13\n    t = [0] * 13\n    for card in cards:\n        if card[0] == \"P\":\n            p[int(card[1:]) - 1] += 1\n        elif card[0] == \"K\":\n            k[int(card[1:]) - 1] += 1\n        elif card[0] == \"H\":\n            h[int(card[1:]) - 1] += 1\n        elif card[0] == \"T\":\n            t[int(card[1:]) - 1] += 1\n    if max(p) > 1 or max(k) > 1 or max(h) > 1 or max(t) > 1:\n        print(\"GRESKA\")\n    else:\n        print(13 - sum(p), 13 - sum(k), 13 - sum(h), 13 - sum(t))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    d = dict()\n    for i in range(len(s)):\n        if s[i] in d:\n            print(\"GRESKA\")\n            return\n        d[s[i]] = True\n    for i in range(4):\n        if chr(ord(\"P\")+i) not in d:\n            print(13, end=\" \")\n        else:\n            print(0, end=\" \")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef missing_cards(s):\n    cards = {'P': [], 'K': [], 'H': [], 'T': []}\n    suits = ['P', 'K', 'H', 'T']\n    for i in range(0, len(s) - 1, 3):\n        cards[s[i]].append(s[i + 1:i + 3])\n    for suit in suits:\n        if len(cards[suit]) != 13:\n            return 'GRESKA'\n        for card in cards[suit]:\n            if cards[suit].count(card) > 1:\n                return 'GRESKA'\n    return ' '.join([str(13 - len(cards[suit])) for suit in suits])\n\nprint(missing_cards(input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    cards = [0] * 52\n    suits = {\"P\": 0, \"K\": 13, \"H\": 26, \"T\": 39}\n    suit_names = [\"P\", \"K\", \"H\", \"T\"]\n\n    cards_input = input()\n    for i in range(0, len(cards_input), 3):\n        card = cards_input[i:i+3]\n        suit = suits[card[0]]\n        number = int(card[1:])\n        if cards[suit + number - 1] == 1:\n            print(\"GRESKA\")\n            return\n        cards[suit + number - 1] = 1\n\n    for suit in suit_names:\n        print(13 - sum(cards[suits[suit]:suits[suit] + 13]), end=\" \")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#-----import-----\nimport sys\n\n#-----main-----\ns = sys.stdin.readline().strip()\n\n#-----P-----\np = []\np_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'P':\n        if s[i+1:i+3] not in p:\n            p.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in p:\n            p_missing += 1\n    else:\n        if str(i) not in p:\n            p_missing += 1\n\n#-----K-----\nk = []\nk_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'K':\n        if s[i+1:i+3] not in k:\n            k.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in k:\n            k_missing += 1\n    else:\n        if str(i) not in k:\n            k_missing += 1\n\n#-----H-----\nh = []\nh_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'H':\n        if s[i+1:i+3] not in h:\n            h.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in h:\n            h_missing += 1\n    else:\n        if str(i) not in h:\n            h_missing += 1\n\n#-----T-----\nt = []\nt_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'T':\n        if s[i+1:i+3] not in t:\n            t.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in t:\n            t_missing += 1\n    else:\n        if str(i) not in t:\n            t_missing += 1\n\nprint('{} {} {} {}'.format(p_missing, k_missing, h_missing, t_missing))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\ndef main():\n    cards = stdin.readline().strip()\n    if len(cards) % 3 != 0:\n        print('GRESKA')\n        return\n    suits = Counter()\n    for i in range(0, len(cards), 3):\n        suits[cards[i]] += 1\n    for i in ['P', 'K', 'H', 'T']:\n        print(13 - suits[i], end=' ')\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649558773,
+  "id": "cmpl-4vHsbBpXQzI60ABGJGnBdbrtaidE2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:47:00.867595 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ns = input()\ncards = [0]*52\nfor i in range(0, len(s), 3):\n    cards[int(s[i+1:i+3])-1] += 1\n\nprint(\"GRESKA\" if any(cards[i] > 1 for i in range(52)) else \"{} {} {} {}\".format(*(13-cards[i*13:(i+1)*13].count(1) for i in range(4))))"
+}
+2022-04-09 22:47:00.867632 REASON stop
+2022-04-09 22:47:00.878919 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.879071 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef check(labels):\n    suits = {'P': 0, 'K': 0, 'H': 0, 'T': 0}\n    numbers = {'P': [], 'K': [], 'H': [], 'T': []}\n\n    for label in labels:\n        suit = label[0]\n        number = label[1:]\n        suits[suit] += 1\n        numbers[suit].append(number)\n\n    for suit in suits:\n        if suits[suit] != 13:\n            print(13 - suits[suit], end=' ')\n        else:\n            if len(set(numbers[suit])) != 13:\n                print('GRESKA')\n                return\n    print()\n\ncheck(input())"
+}
+2022-04-09 22:47:00.879159 REASON stop
+2022-04-09 22:47:00.879669 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.879702 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    cards = input()\n    cards = cards.split(\" \")\n    p = [0] * 13\n    k = [0] * 13\n    h = [0] * 13\n    t = [0] * 13\n    for card in cards:\n        if card[0] == \"P\":\n            p[int(card[1:]) - 1] += 1\n        elif card[0] == \"K\":\n            k[int(card[1:]) - 1] += 1\n        elif card[0] == \"H\":\n            h[int(card[1:]) - 1] += 1\n        elif card[0] == \"T\":\n            t[int(card[1:]) - 1] += 1\n    if max(p) > 1 or max(k) > 1 or max(h) > 1 or max(t) > 1:\n        print(\"GRESKA\")\n    else:\n        print(13 - sum(p), 13 - sum(k), 13 - sum(h), 13 - sum(t))\n\nmain()"
+}
+2022-04-09 22:47:00.879765 REASON stop
+2022-04-09 22:47:00.880196 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.880221 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    d = dict()\n    for i in range(len(s)):\n        if s[i] in d:\n            print(\"GRESKA\")\n            return\n        d[s[i]] = True\n    for i in range(4):\n        if chr(ord(\"P\")+i) not in d:\n            print(13, end=\" \")\n        else:\n            print(0, end=\" \")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:47:00.880360 REASON stop
+2022-04-09 22:47:00.880791 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.880817 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef missing_cards(s):\n    cards = {'P': [], 'K': [], 'H': [], 'T': []}\n    suits = ['P', 'K', 'H', 'T']\n    for i in range(0, len(s) - 1, 3):\n        cards[s[i]].append(s[i + 1:i + 3])\n    for suit in suits:\n        if len(cards[suit]) != 13:\n            return 'GRESKA'\n        for card in cards[suit]:\n            if cards[suit].count(card) > 1:\n                return 'GRESKA'\n    return ' '.join([str(13 - len(cards[suit])) for suit in suits])\n\nprint(missing_cards(input()))"
+}
+2022-04-09 22:47:00.880872 REASON stop
+2022-04-09 22:47:00.881285 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.881313 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    cards = [0] * 52\n    suits = {\"P\": 0, \"K\": 13, \"H\": 26, \"T\": 39}\n    suit_names = [\"P\", \"K\", \"H\", \"T\"]\n\n    cards_input = input()\n    for i in range(0, len(cards_input), 3):\n        card = cards_input[i:i+3]\n        suit = suits[card[0]]\n        number = int(card[1:])\n        if cards[suit + number - 1] == 1:\n            print(\"GRESKA\")\n            return\n        cards[suit + number - 1] = 1\n\n    for suit in suit_names:\n        print(13 - sum(cards[suits[suit]:suits[suit] + 13]), end=\" \")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:47:00.881374 REASON stop
+2022-04-09 22:47:00.881799 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.881825 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#-----import-----\nimport sys\n\n#-----main-----\ns = sys.stdin.readline().strip()\n\n#-----P-----\np = []\np_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'P':\n        if s[i+1:i+3] not in p:\n            p.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in p:\n            p_missing += 1\n    else:\n        if str(i) not in p:\n            p_missing += 1\n\n#-----K-----\nk = []\nk_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'K':\n        if s[i+1:i+3] not in k:\n            k.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in k:\n            k_missing += 1\n    else:\n        if str(i) not in k:\n            k_missing += 1\n\n#-----H-----\nh = []\nh_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'H':\n        if s[i+1:i+3] not in h:\n            h.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in h:\n            h_missing += 1\n    else:\n        if str(i) not in h:\n            h_missing += 1\n\n#-----T-----\nt = []\nt_missing = 0\nfor i in range(0, len(s), 3):\n    if s[i] == 'T':\n        if s[i+1:i+3] not in t:\n            t.append(s[i+1:i+3])\n        else:\n            print('GRESKA')\n            sys.exit()\nfor i in range(1, 14):\n    if len(str(i)) == 1:\n        if '0'+str(i) not in t:\n            t_missing += 1\n    else:\n        if str(i) not in t:\n            t_missing += 1\n\nprint('{} {} {} {}'.format(p_missing, k_missing, h_missing, t_missing))"
+}
+2022-04-09 22:47:00.881895 REASON stop
+2022-04-09 22:47:00.882424 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'
+2022-04-09 22:47:00.882453 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\ndef main():\n    cards = stdin.readline().strip()\n    if len(cards) % 3 != 0:\n        print('GRESKA')\n        return\n    suits = Counter()\n    for i in range(0, len(cards), 3):\n        suits[cards[i]] += 1\n    for i in ['P', 'K', 'H', 'T']:\n        print(13 - suits[i], end=' ')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:47:00.882530 REASON stop
+2022-04-09 22:47:00.883028 test/intro-questions.txt_dir/4821/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4821/solutions.json'

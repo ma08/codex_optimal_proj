@@ -1,0 +1,174 @@
+2022-04-09 22:32:19.620583 """
+You are given an array $a$ consisting of $n$ integers.
+
+Your task is to determine if $a$ has some subsequence of length at least $3$ that is a palindrome.
+
+Recall that an array $b$ is called a subsequence of the array $a$ if $b$ can be obtained by removing some (possibly, zero) elements from $a$ (not necessarily consecutive) without changing the order of remaining elements. For example, $[2]$, $[1, 2, 1, 3]$ and $[2, 3]$ are subsequences of $[1, 2, 1, 3]$, but $[1, 1, 2]$ and $[4]$ are not.
+
+Also, recall that a palindrome is an array that reads the same backward as forward. In other words, the array $a$ of length $n$ is the palindrome if $a_i = a_{n - i - 1}$ for all $i$ from $1$ to $n$. For example, arrays $[1234]$, $[1, 2, 1]$, $[1, 3, 2, 2, 3, 1]$ and $[10, 100, 10]$ are palindromes, but arrays $[1, 2]$ and $[1, 2, 3, 1]$ are not.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases.
+
+Next $2t$ lines describe test cases. The first line of the test case contains one integer $n$ ($3 \le n \le 5000$) — the length of $a$. The second line of the test case contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le n$), where $a_i$ is the $i$-th element of $a$.
+
+It is guaranteed that the sum of $n$ over all test cases does not exceed $5000$ ($\sum n \le 5000$).
+
+
+-----Output-----
+
+For each test case, print the answer — "YES" (without quotes) if $a$ has some subsequence of length at least $3$ that is a palindrome and "NO" otherwise.
+
+
+-----Example-----
+Input
+5
+3
+1 2 1
+5
+1 2 2 3 2
+3
+1 1 2
+4
+1 2 2 1
+10
+1 1 2 2 3 3 4 4 5 5
+
+Output
+YES
+YES
+NO
+YES
+NO
+
+
+
+-----Note-----
+
+In the first test case of the example, the array $a$ has a subsequence $[1, 2, 1]$ which is a palindrome.
+
+In the second test case of the example, the array $a$ has two subsequences of length $3$ which are palindromes: $[2, 3, 2]$ and $[2, 2, 2]$.
+
+In the third test case of the example, the array $a$ has no subsequences of length at least $3$ which are palindromes.
+
+In the fourth test case of the example, the array $a$ has one subsequence of length $4$ which is a palindrome: $[1, 2, 2, 1]$ (and has two subsequences of length $3$ which are palindromes: both are $[1, 2, 1]$).
+
+In the fifth test case of the example, the array $a$ has no subsequences of length at least $3$ which are palindromes.
+"""
+2022-04-09 22:32:19.620613 --------------------------
+2022-04-09 22:34:32.729083 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef check_palindrome(sub_seq):\n    return sub_seq[0] == sub_seq[-1] and sub_seq[1] == sub_seq[-2]\n\n\ndef is_palindrome(seq):\n    return check_palindrome(seq) or (len(seq) > 3 and is_palindrome(seq[1:-1]))\n\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        seq = list(map(int, input().split()))\n        if is_palindrome(seq):\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if n < 3:\n        print('NO')\n        continue\n    if n == 3:\n        if a[0] == a[1] or a[1] == a[2]:\n            print('YES')\n            continue\n        else:\n            print('NO')\n            continue\n    # n > 3    \n    if a[0] == a[1]:\n        i = 2\n        while i < n:\n            if a[0] == a[i]:\n                print('YES')\n                break\n            i += 1\n        if i == n:\n            print('NO')\n    else:\n        if a[1] == a[2]:\n            print('YES')\n        else:\n            print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        for j in range(n):\n            for k in range(j+1, n):\n                if a[j] == a[k]:\n                    for l in range(k+1, n):\n                        if a[l] == a[j]:\n                            print(\"YES\")\n                            break\n                    else:\n                        print(\"NO\")\n                    break\n            else:\n                continue\n            break\n        else:\n            print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef check_palindrome(arr):\n    if len(arr) < 3:\n        return False\n    for i in range(len(arr)):\n        if i == 0:\n            continue\n        elif i == len(arr)-1:\n            return True\n        if arr[i] != arr[-i-1]:\n            return False\n\ndef palindrome(arr):\n    for i in range(len(arr)):\n        for j in range(i+2, len(arr)+1):\n            if check_palindrome(arr[i:j]):\n                return True\n    return False\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        arr = list(map(int, input().split()))\n        if palindrome(arr):\n            print('YES')\n        else:\n            print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef isPalindrome(sub):\n    for i in range(int(len(sub)/2)):\n        if sub[i] != sub[-i-1]:\n            return False\n    return True\n\ndef isAnyPalindrome(a):\n    for i in range(3, len(a)+1):\n        for j in range(len(a)-i+1):\n            if isPalindrome(a[j:j+i]):\n                return True\n    return False\n\nt = int(input())\nfor _ in range(t):\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if isAnyPalindrome(a):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef isPalindrome(arr):\n    for i in range(len(arr)//2):\n        if arr[i] != arr[len(arr)-i-1]:\n            return False\n    return True\n\ndef isPalindromeSubsequence(arr):\n    for i in range(len(arr)-2):\n        for j in range(i+2,len(arr)+1):\n            if isPalindrome(arr[i:j]):\n                return True\n    return False\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        arr = list(map(int,input().split()))\n        if isPalindromeSubsequence(arr):\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor _ in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    flag = False\n    for i in range(n-2):\n        if a[i] == a[i+1]:\n            if a[i+1] == a[i+2]:\n                flag = True\n                break\n            if i+3 < n and a[i+1] == a[i+3]:\n                flag = True\n                break\n    if flag:\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#1\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#2\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#3\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#4\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#5\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#6\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#7\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#8\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#9\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#10\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#11\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#12\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#13\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#14\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#15\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#16\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#17\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#18\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#19\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#20\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#21\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#22\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#23\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#24\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#25\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#26\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#27\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#28\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#29\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#30\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#31\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#32\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#33\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#34\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#35\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#36\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#37\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#38\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#39\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#40\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#41\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#42\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#43\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#44\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#45\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#46\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#47\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#48\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#49\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#50\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#51\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#52\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#53\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#54\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#55\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#56\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#57\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#58\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#59\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#60\nn = int(input())\nfor _ in range(n):\n    a = list("
+    }
+  ],
+  "created": 1649557940,
+  "id": "cmpl-4vHfAUTGVzh5OQlLpfrqN0qrlyxQ7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:34:32.729650 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef check_palindrome(sub_seq):\n    return sub_seq[0] == sub_seq[-1] and sub_seq[1] == sub_seq[-2]\n\n\ndef is_palindrome(seq):\n    return check_palindrome(seq) or (len(seq) > 3 and is_palindrome(seq[1:-1]))\n\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        seq = list(map(int, input().split()))\n        if is_palindrome(seq):\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:34:32.729709 REASON stop
+2022-04-09 22:34:32.730299 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if n < 3:\n        print('NO')\n        continue\n    if n == 3:\n        if a[0] == a[1] or a[1] == a[2]:\n            print('YES')\n            continue\n        else:\n            print('NO')\n            continue\n    # n > 3    \n    if a[0] == a[1]:\n        i = 2\n        while i < n:\n            if a[0] == a[i]:\n                print('YES')\n                break\n            i += 1\n        if i == n:\n            print('NO')\n    else:\n        if a[1] == a[2]:\n            print('YES')\n        else:\n            print('NO')"
+}
+2022-04-09 22:34:32.730367 REASON stop
+2022-04-09 22:34:32.731192 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        for j in range(n):\n            for k in range(j+1, n):\n                if a[j] == a[k]:\n                    for l in range(k+1, n):\n                        if a[l] == a[j]:\n                            print(\"YES\")\n                            break\n                    else:\n                        print(\"NO\")\n                    break\n            else:\n                continue\n            break\n        else:\n            print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:34:32.731314 REASON stop
+2022-04-09 22:34:32.731848 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef check_palindrome(arr):\n    if len(arr) < 3:\n        return False\n    for i in range(len(arr)):\n        if i == 0:\n            continue\n        elif i == len(arr)-1:\n            return True\n        if arr[i] != arr[-i-1]:\n            return False\n\ndef palindrome(arr):\n    for i in range(len(arr)):\n        for j in range(i+2, len(arr)+1):\n            if check_palindrome(arr[i:j]):\n                return True\n    return False\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        arr = list(map(int, input().split()))\n        if palindrome(arr):\n            print('YES')\n        else:\n            print('NO')"
+}
+2022-04-09 22:34:32.731908 REASON stop
+2022-04-09 22:34:32.732578 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef isPalindrome(sub):\n    for i in range(int(len(sub)/2)):\n        if sub[i] != sub[-i-1]:\n            return False\n    return True\n\ndef isAnyPalindrome(a):\n    for i in range(3, len(a)+1):\n        for j in range(len(a)-i+1):\n            if isPalindrome(a[j:j+i]):\n                return True\n    return False\n\nt = int(input())\nfor _ in range(t):\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if isAnyPalindrome(a):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+2022-04-09 22:34:32.732686 REASON stop
+2022-04-09 22:34:32.733494 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef isPalindrome(arr):\n    for i in range(len(arr)//2):\n        if arr[i] != arr[len(arr)-i-1]:\n            return False\n    return True\n\ndef isPalindromeSubsequence(arr):\n    for i in range(len(arr)-2):\n        for j in range(i+2,len(arr)+1):\n            if isPalindrome(arr[i:j]):\n                return True\n    return False\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        arr = list(map(int,input().split()))\n        if isPalindromeSubsequence(arr):\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\nmain()"
+}
+2022-04-09 22:34:32.733606 REASON stop
+2022-04-09 22:34:32.734423 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor _ in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    flag = False\n    for i in range(n-2):\n        if a[i] == a[i+1]:\n            if a[i+1] == a[i+2]:\n                flag = True\n                break\n            if i+3 < n and a[i+1] == a[i+3]:\n                flag = True\n                break\n    if flag:\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+2022-04-09 22:34:32.734525 REASON stop
+2022-04-09 22:34:32.735306 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#1\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#2\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#3\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#4\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#5\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#6\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#7\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#8\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#9\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#10\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#11\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#12\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#13\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#14\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#15\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#16\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#17\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#18\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#19\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#20\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#21\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#22\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#23\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#24\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#25\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#26\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#27\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#28\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#29\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#30\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#31\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#32\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#33\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#34\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#35\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#36\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#37\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#38\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#39\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#40\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#41\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#42\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#43\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#44\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#45\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#46\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#47\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#48\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#49\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#50\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#51\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#52\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#53\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#54\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#55\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#56\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#57\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#58\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#59\nn = int(input())\nfor _ in range(n):\n    a = list(map(int, input().split()))\n    print('YES' if any(a[i] == a[i+2] for i in range(len(a)-2)) else 'NO')\n\n#60\nn = int(input())\nfor _ in range(n):\n    a = list("
+}
+2022-04-09 22:34:32.735487 REASON length

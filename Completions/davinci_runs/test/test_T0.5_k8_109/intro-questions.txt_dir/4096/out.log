@@ -1,0 +1,191 @@
+2022-04-09 23:48:16.671688 """
+The only difference between easy and hard versions is the constraints.
+
+Polycarp has to write a coursework. The coursework consists of $m$ pages.
+
+Polycarp also has $n$ cups of coffee. The coffee in the $i$-th cup has $a_i$ caffeine in it. Polycarp can drink some cups of coffee (each one no more than once). He can drink cups in any order. Polycarp drinks each cup instantly and completely (i.e. he cannot split any cup into several days).
+
+Surely, courseworks are not usually being written in a single day (in a perfect world of Berland, at least). Some of them require multiple days of hard work.
+
+Let's consider some day of Polycarp's work. Consider Polycarp drinks $k$ cups of coffee during this day and caffeine dosages of cups Polycarp drink during this day are $a_{i_1}, a_{i_2}, \dots, a_{i_k}$. Then the first cup he drinks gives him energy to write $a_{i_1}$ pages of coursework, the second cup gives him energy to write $max(0, a_{i_2} - 1)$ pages, the third cup gives him energy to write $max(0, a_{i_3} - 2)$ pages, ..., the $k$-th cup gives him energy to write $max(0, a_{i_k} - k + 1)$ pages.
+
+If Polycarp doesn't drink coffee during some day, he cannot write coursework at all that day.
+
+Polycarp has to finish his coursework as soon as possible (spend the minimum number of days to do it). Your task is to find out this number of days or say that it is impossible.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n \le 100$, $1 \le m \le 10^4$) — the number of cups of coffee and the number of pages in the coursework.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 100$), where $a_i$ is the caffeine dosage of coffee in the $i$-th cup.
+
+
+-----Output-----
+
+If it is impossible to write the coursework, print -1. Otherwise print the minimum number of days Polycarp needs to do it.
+
+
+-----Examples-----
+Input
+5 8
+2 3 1 1 2
+
+Output
+4
+
+Input
+7 10
+1 3 4 2 1 4 2
+
+Output
+2
+
+Input
+5 15
+5 5 5 5 5
+
+Output
+1
+
+Input
+5 16
+5 5 5 5 5
+
+Output
+2
+
+Input
+5 26
+5 5 5 5 5
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example Polycarp can drink fourth cup during first day (and write $1$ page), first and second cups during second day (and write $2 + (3 - 1) = 4$ pages), fifth cup during the third day (and write $2$ pages) and third cup during the fourth day (and write $1$ page) so the answer is $4$. It is obvious that there is no way to write the coursework in three or less days in this test.
+
+In the second example Polycarp can drink third, fourth and second cups during first day (and write $4 + (2 - 1) + (3 - 2) = 6$ pages) and sixth cup during second day (and write $4$ pages) so the answer is $2$. It is obvious that Polycarp cannot write the whole coursework in one day in this test.
+
+In the third example Polycarp can drink all cups of coffee during first day and write $5 + (5 - 1) + (5 - 2) + (5 - 3) + (5 - 4) = 15$ pages of coursework.
+
+In the fourth example Polycarp cannot drink all cups during first day and should drink one of them during the second day. So during first day he will write $5 + (5 - 1) + (5 - 2) + (5 - 3) = 14$ pages of coursework and during second day he will write $5$ pages of coursework. This is enough to complete it.
+
+In the fifth example Polycarp cannot write the whole coursework at all, even if he will drink one cup of coffee during each day, so the answer is -1.
+"""
+2022-04-09 23:48:16.671714 --------------------------
+2022-04-09 23:48:42.712029 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# get input\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# solve\nans = 1\ncurr = 0\nfor i in range(n):\n    if a[i] > ans:\n        ans = a[i]\n    curr += max(0, a[i] - ans + 1)\n    if curr >= m:\n        print(ans)\n        break\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,m=map(int,input().split())\na=list(map(int,input().split()))\n\n# a=[2,3,1,1,2]\n# m=8\n\ndef get_cups(a,m):\n    cups=0\n    for i in range(len(a)):\n        cups+=a[i]\n        if cups>=m:\n            return i+1\n    return -1\n\ndef get_days(a,m):\n    days=0\n    while True:\n        days+=1\n        cups=get_cups(a,m)\n        if cups>0:\n            for i in range(cups):\n                a[i]-=cups-i\n            m-=cups\n            a=a[cups:]\n        else:\n            return -1\n        if m<=0:\n            return days\n\nprint(get_days(a,m))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.reverse()\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += max(0, a[i] - i)\n        if pages >= m:\n            days += 1\n            break\n    if pages >= m:\n        print(days)\n    else:\n        print(-1)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    a = list(map(int, input().split()))\n    a.sort(reverse=True)\n\n    if a[0] >= m:\n        print(1)\n        return\n\n    if sum(a) < m:\n        print(-1)\n        return\n\n    day = 1\n    pages = 0\n    for i in range(n):\n        pages += max(a[i] - i, 0)\n        if pages >= m:\n            print(day)\n            return\n        day += 1\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    a.sort()\n    a.reverse()\n\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += a[i] - i\n        if pages >= m:\n            days += 1\n            pages = 0\n\n    if pages == 0:\n        print(days)\n    else:\n        print(-1)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    a.sort(reverse=True)\n    days = 0\n    pages = 0\n    for x in a:\n        days += 1\n        pages += x - days + 1\n        if pages < 0:\n            print(-1)\n            return\n\n    if pages < m:\n        print(-1)\n    else:\n        print(days)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    a.sort()\n    if sum(a) < m:\n        print(-1)\n        return\n    if m <= n:\n        print(1)\n        return\n    cur = 0\n    for i in range(n):\n        cur += a[i] - i\n        if cur >= m:\n            print(i + 1)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort(reverse=True)\n\nans = 1\n\nfor i in range(n):\n\tans = max(ans, (a[i] + i) // (i + 1))\n\nif (ans * (n + 1) < m):\n\tprint(-1)\nelse:\n\tprint(ans)"
+    }
+  ],
+  "created": 1649562497,
+  "id": "cmpl-4vIqfShdCJkBgXPRBwgSoEkmDD68n",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:48:42.713195 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# get input\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# solve\nans = 1\ncurr = 0\nfor i in range(n):\n    if a[i] > ans:\n        ans = a[i]\n    curr += max(0, a[i] - ans + 1)\n    if curr >= m:\n        print(ans)\n        break\nelse:\n    print(-1)"
+}
+2022-04-09 23:48:42.713373 REASON stop
+2022-04-09 23:48:42.728532 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,m=map(int,input().split())\na=list(map(int,input().split()))\n\n# a=[2,3,1,1,2]\n# m=8\n\ndef get_cups(a,m):\n    cups=0\n    for i in range(len(a)):\n        cups+=a[i]\n        if cups>=m:\n            return i+1\n    return -1\n\ndef get_days(a,m):\n    days=0\n    while True:\n        days+=1\n        cups=get_cups(a,m)\n        if cups>0:\n            for i in range(cups):\n                a[i]-=cups-i\n            m-=cups\n            a=a[cups:]\n        else:\n            return -1\n        if m<=0:\n            return days\n\nprint(get_days(a,m))"
+}
+2022-04-09 23:48:42.729281 REASON stop
+2022-04-09 23:48:42.731246 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.reverse()\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += max(0, a[i] - i)\n        if pages >= m:\n            days += 1\n            break\n    if pages >= m:\n        print(days)\n    else:\n        print(-1)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:48:42.731674 REASON stop
+2022-04-09 23:48:42.733459 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    a = list(map(int, input().split()))\n    a.sort(reverse=True)\n\n    if a[0] >= m:\n        print(1)\n        return\n\n    if sum(a) < m:\n        print(-1)\n        return\n\n    day = 1\n    pages = 0\n    for i in range(n):\n        pages += max(a[i] - i, 0)\n        if pages >= m:\n            print(day)\n            return\n        day += 1\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:48:42.733767 REASON stop
+2022-04-09 23:48:42.735411 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    a.sort()\n    a.reverse()\n\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += a[i] - i\n        if pages >= m:\n            days += 1\n            pages = 0\n\n    if pages == 0:\n        print(days)\n    else:\n        print(-1)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:48:42.735742 REASON stop
+2022-04-09 23:48:42.738024 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    a.sort(reverse=True)\n    days = 0\n    pages = 0\n    for x in a:\n        days += 1\n        pages += x - days + 1\n        if pages < 0:\n            print(-1)\n            return\n\n    if pages < m:\n        print(-1)\n    else:\n        print(days)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:48:42.738254 REASON stop
+2022-04-09 23:48:42.739331 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    a.sort()\n    if sum(a) < m:\n        print(-1)\n        return\n    if m <= n:\n        print(1)\n        return\n    cur = 0\n    for i in range(n):\n        cur += a[i] - i\n        if cur >= m:\n            print(i + 1)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:48:42.739465 REASON stop
+2022-04-09 23:48:42.740049 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort(reverse=True)\n\nans = 1\n\nfor i in range(n):\n\tans = max(ans, (a[i] + i) // (i + 1))\n\nif (ans * (n + 1) < m):\n\tprint(-1)\nelse:\n\tprint(ans)"
+}
+2022-04-09 23:48:42.740197 REASON stop

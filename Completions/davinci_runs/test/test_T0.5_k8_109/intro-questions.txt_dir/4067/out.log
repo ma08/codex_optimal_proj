@@ -1,0 +1,168 @@
+2022-04-09 23:22:59.854969 """
+You are given a string $s$ consisting of exactly $n$ characters, and each character is either '0', '1' or '2'. Such strings are called ternary strings.
+
+Your task is to replace minimum number of characters in this string with other characters to obtain a balanced ternary string (balanced ternary string is a ternary string such that the number of characters '0' in this string is equal to the number of characters '1', and the number of characters '1' (and '0' obviously) is equal to the number of characters '2').
+
+Among all possible balanced ternary strings you have to obtain the lexicographically (alphabetically) smallest.
+
+Note that you can neither remove characters from the string nor add characters to the string. Also note that you can replace the given characters only with characters '0', '1' and '2'.
+
+It is guaranteed that the answer exists.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($3 \le n \le 3 \cdot 10^5$, $n$ is divisible by $3$) — the number of characters in $s$.
+
+The second line contains the string $s$ consisting of exactly $n$ characters '0', '1' and '2'.
+
+
+-----Output-----
+
+Print one string — the lexicographically (alphabetically) smallest balanced ternary string which can be obtained from the given one with minimum number of replacements.
+
+Because $n$ is divisible by $3$ it is obvious that the answer exists. And it is obvious that there is only one possible answer.
+
+
+-----Examples-----
+Input
+3
+121
+
+Output
+021
+
+Input
+6
+000000
+
+Output
+001122
+
+Input
+6
+211200
+
+Output
+211200
+
+Input
+6
+120110
+
+Output
+120120
+"""
+2022-04-09 23:22:59.854998 --------------------------
+2022-04-09 23:25:06.526044 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef balanced_ternary_string(s):\n    s_dict = {'0': 0, '1': 0, '2': 0}\n    for c in s:\n        s_dict[c] += 1\n\n    if s_dict['0'] == s_dict['1'] and s_dict['1'] == s_dict['2']:\n        return s\n\n    # If the difference between the number of 0s and 1s is more than 1, we need to change some 0s to 1s\n    if abs(s_dict['0'] - s_dict['1']) > 1:\n        if s_dict['0'] > s_dict['1']:\n            s = s.replace('0', '1', 1)\n        else:\n            s = s.replace('1', '0', 1)\n\n    # If the difference between the number of 1s and 2s is more than 1, we need to change some 1s to 2s\n    if abs(s_dict['1'] - s_dict['2']) > 1:\n        if s_dict['1'] > s_dict['2']:\n            s = s.replace('1', '2', 1)\n        else:\n            s = s.replace('2', '1', 1)\n\n    # If the difference between the number of 0s and 1s is more than 1, we need to change some 0s to 1s\n    if abs(s_dict['0'] - s_dict['1']) > 1:\n        if s_dict['0'] > s_dict['1']:\n            s = s.replace('0', '1', 1)\n        else:\n            s = s.replace('1', '0', 1)\n\n    return s\n\nif __name__ == \"__main__\":\n    s = input()\n    print(balanced_ternary_string(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef min_balanced_ternary_string(s):\n    # count the number of 0's, 1's, and 2's\n    count_0 = s.count('0')\n    count_1 = s.count('1')\n    count_2 = s.count('2')\n    # if the counts are equal, the string is already balanced\n    if count_0 == count_1 and count_1 == count_2:\n        return s\n    # if the counts are not equal, we need to replace the extra character with the missing character\n    # the missing character is the one with the lowest count\n    missing_char = min(count_0, count_1, count_2)\n    # the extra character is the one with the highest count\n    extra_char = max(count_0, count_1, count_2)\n    # the index of the extra character is the index of the first occurrence of the extra character,\n    # sorted by the index of the first occurrence of the missing character\n    extra_index = sorted(range(len(s)), key=lambda i: s[i] == missing_char).pop()\n    # replace the extra character with the missing character\n    s = s[:extra_index] + missing_char + s[extra_index+1:]\n    # the string is now balanced\n    return s\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    print(min_balanced_ternary_string(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    s = input().strip()\n    count = [0]*3\n    for i in range(n):\n        count[int(s[i])] += 1\n    ans = [0]*n\n    for i in range(n):\n        if count[0] > count[1]:\n            ans[i] = 1\n            count[1] += 1\n            count[int(s[i])] -= 1\n        elif count[1] > count[2]:\n            ans[i] = 2\n            count[2] += 1\n            count[int(s[i])] -= 1\n        else:\n            ans[i] = 0\n            count[0] += 1\n            count[int(s[i])] -= 1\n    print(''.join(map(str, ans)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\ndef solution(s):\n    if len(s) == 3:\n        return \"012\"\n    if len(s) == 6:\n        return \"001122\"\n    \n    #find the first instance of 011\n    for i in range(len(s) - 2):\n        if s[i:i+3] == \"011\":\n            break\n        \n    #find the first instance of 001 after the first 011\n    for j in range(i + 1, len(s) - 2):\n        if s[j:j+3] == \"001\":\n            break\n        \n    #find the first instance of 012 after the first 001\n    for k in range(j + 1, len(s) - 2):\n        if s[k:k+3] == \"012\":\n            break\n        \n    #find the first instance of 020 after the first 012\n    for l in range(k + 1, len(s) - 2):\n        if s[l:l+3] == \"020\":\n            break\n        \n    #construct the string between the first 011 and the first 020\n    string = s[:i] + \"012\"\n    string += \"0\" * (j - i - 1)\n    string += \"012\"\n    string += \"0\" * (k - j - 1)\n    string += \"012\"\n    string += \"0\" * (l - k - 1)\n    string += \"020\"\n    string += s[l + 3:]\n    \n    return string\n    \nprint(solution(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\n# Find the first character which is not equal to the last character\n# If we replace all characters with the last character, we will get a balanced string\n# If we replace it with the character right after the last character, we will get a lexicographically smaller string\ni = 0\nwhile s[i] == s[-1]:\n    i += 1\n\nprint(s[:i] + s[-1] * (n - i) if s[i] == s[-2] else s[:i] + s[-2] + s[-1] * (n - i - 1))"
+    },
+    {
+      "finish_reason": "length",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\n#print(s)\n\n#print(n)\n\n#print(s.count('0'))\n\n#print(s.count('1'))\n\n#print(s.count('2'))\n\n#print(s.count('0')-s.count('1'))\n\n#print(s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('0')-s.count('2'))\n\n#print(s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    \"\"\"\n    >>> solve(3, '121')\n    '021'\n    >>> solve(6, '000000')\n    '001122'\n    >>> solve(6, '211200')\n    '211200'\n    >>> solve(6, '120110')\n    '120120'\n    \"\"\"\n    d = {'0': 0, '1': 0, '2': 0}\n    for i in s:\n        d[i] += 1\n    if d['0'] == d['1'] and d['1'] == d['2']:\n        return s\n    if d['0'] == d['1']:\n        return s[:d['0']] + '2' * d['2']\n    if d['0'] == d['2']:\n        return s[:d['0']] + '1' * d['1']\n    if d['1'] == d['2']:\n        return '0' * d['0'] + s[-d['1']:]\n    if d['0'] < d['1']:\n        if d['0'] < d['2']:\n            return '0' * (d['1'] - d['0']) + s[d['1'] - d['0']:]\n        else:\n            return s[:d['0']] + '2' * (d['1'] - d['2']) + s[-d['2']:]\n    else:\n        if d['1'] < d['2']:\n            return s[:d['1']] + '0' * (d['0'] - d['1']) + s[-d['1']:]\n        else:\n            return s[:d['1']] + '0' * (d['0'] - d['2']) + '1' * (d['2'] - d['1']) + s[-d['1']:]\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\ns = input()\n\na = s.count(\"0\")\nb = s.count(\"1\")\nc = s.count(\"2\")\n\nif a > b:\n    s = s.replace(\"0\", \"3\", a-b)\nelif a < b:\n    s = s.replace(\"1\", \"0\", b-a)\n\nwhile c > a:\n    s = s.replace(\"2\", \"1\", 1)\n    s = s.replace(\"1\", \"0\", 1)\n    c -= 1\n\nwhile c > b:\n    s = s.replace(\"2\", \"0\", 1)\n    s = s.replace(\"0\", \"1\", 1)\n    c -= 1\n\nif c < a:\n    s = s.replace(\"3\", \"0\", a-c)\nelif c < b:\n    s = s.replace(\"3\", \"1\", b-c)\n\ns = s.replace(\"3\", \"2\")\n\nprint(s)"
+    }
+  ],
+  "created": 1649560980,
+  "id": "cmpl-4vISCEWo9dPzcwvEY3VtVtg9lNoOk",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:25:06.526729 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef balanced_ternary_string(s):\n    s_dict = {'0': 0, '1': 0, '2': 0}\n    for c in s:\n        s_dict[c] += 1\n\n    if s_dict['0'] == s_dict['1'] and s_dict['1'] == s_dict['2']:\n        return s\n\n    # If the difference between the number of 0s and 1s is more than 1, we need to change some 0s to 1s\n    if abs(s_dict['0'] - s_dict['1']) > 1:\n        if s_dict['0'] > s_dict['1']:\n            s = s.replace('0', '1', 1)\n        else:\n            s = s.replace('1', '0', 1)\n\n    # If the difference between the number of 1s and 2s is more than 1, we need to change some 1s to 2s\n    if abs(s_dict['1'] - s_dict['2']) > 1:\n        if s_dict['1'] > s_dict['2']:\n            s = s.replace('1', '2', 1)\n        else:\n            s = s.replace('2', '1', 1)\n\n    # If the difference between the number of 0s and 1s is more than 1, we need to change some 0s to 1s\n    if abs(s_dict['0'] - s_dict['1']) > 1:\n        if s_dict['0'] > s_dict['1']:\n            s = s.replace('0', '1', 1)\n        else:\n            s = s.replace('1', '0', 1)\n\n    return s\n\nif __name__ == \"__main__\":\n    s = input()\n    print(balanced_ternary_string(s))"
+}
+2022-04-09 23:25:06.526814 REASON stop
+2022-04-09 23:25:06.539033 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef min_balanced_ternary_string(s):\n    # count the number of 0's, 1's, and 2's\n    count_0 = s.count('0')\n    count_1 = s.count('1')\n    count_2 = s.count('2')\n    # if the counts are equal, the string is already balanced\n    if count_0 == count_1 and count_1 == count_2:\n        return s\n    # if the counts are not equal, we need to replace the extra character with the missing character\n    # the missing character is the one with the lowest count\n    missing_char = min(count_0, count_1, count_2)\n    # the extra character is the one with the highest count\n    extra_char = max(count_0, count_1, count_2)\n    # the index of the extra character is the index of the first occurrence of the extra character,\n    # sorted by the index of the first occurrence of the missing character\n    extra_index = sorted(range(len(s)), key=lambda i: s[i] == missing_char).pop()\n    # replace the extra character with the missing character\n    s = s[:extra_index] + missing_char + s[extra_index+1:]\n    # the string is now balanced\n    return s\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    print(min_balanced_ternary_string(s))"
+}
+2022-04-09 23:25:06.539133 REASON stop
+2022-04-09 23:25:06.540114 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    s = input().strip()\n    count = [0]*3\n    for i in range(n):\n        count[int(s[i])] += 1\n    ans = [0]*n\n    for i in range(n):\n        if count[0] > count[1]:\n            ans[i] = 1\n            count[1] += 1\n            count[int(s[i])] -= 1\n        elif count[1] > count[2]:\n            ans[i] = 2\n            count[2] += 1\n            count[int(s[i])] -= 1\n        else:\n            ans[i] = 0\n            count[0] += 1\n            count[int(s[i])] -= 1\n    print(''.join(map(str, ans)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:25:06.540241 REASON stop
+2022-04-09 23:25:06.540832 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\ndef solution(s):\n    if len(s) == 3:\n        return \"012\"\n    if len(s) == 6:\n        return \"001122\"\n    \n    #find the first instance of 011\n    for i in range(len(s) - 2):\n        if s[i:i+3] == \"011\":\n            break\n        \n    #find the first instance of 001 after the first 011\n    for j in range(i + 1, len(s) - 2):\n        if s[j:j+3] == \"001\":\n            break\n        \n    #find the first instance of 012 after the first 001\n    for k in range(j + 1, len(s) - 2):\n        if s[k:k+3] == \"012\":\n            break\n        \n    #find the first instance of 020 after the first 012\n    for l in range(k + 1, len(s) - 2):\n        if s[l:l+3] == \"020\":\n            break\n        \n    #construct the string between the first 011 and the first 020\n    string = s[:i] + \"012\"\n    string += \"0\" * (j - i - 1)\n    string += \"012\"\n    string += \"0\" * (k - j - 1)\n    string += \"012\"\n    string += \"0\" * (l - k - 1)\n    string += \"020\"\n    string += s[l + 3:]\n    \n    return string\n    \nprint(solution(s))"
+}
+2022-04-09 23:25:06.540921 REASON stop
+2022-04-09 23:25:06.541416 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\n# Find the first character which is not equal to the last character\n# If we replace all characters with the last character, we will get a balanced string\n# If we replace it with the character right after the last character, we will get a lexicographically smaller string\ni = 0\nwhile s[i] == s[-1]:\n    i += 1\n\nprint(s[:i] + s[-1] * (n - i) if s[i] == s[-2] else s[:i] + s[-2] + s[-1] * (n - i - 1))"
+}
+2022-04-09 23:25:06.541493 REASON stop
+2022-04-09 23:25:06.541709 5 {
+  "finish_reason": "length",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\n#print(s)\n\n#print(n)\n\n#print(s.count('0'))\n\n#print(s.count('1'))\n\n#print(s.count('2'))\n\n#print(s.count('0')-s.count('1'))\n\n#print(s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('0')-s.count('2'))\n\n#print(s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2'))\n\n#print(s.count('0')-s.count('1')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')-s.count('2')+s.count('0')-s.count('2')+s.count('1')"
+}
+2022-04-09 23:25:06.541761 REASON length
+2022-04-09 23:25:06.541765 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    \"\"\"\n    >>> solve(3, '121')\n    '021'\n    >>> solve(6, '000000')\n    '001122'\n    >>> solve(6, '211200')\n    '211200'\n    >>> solve(6, '120110')\n    '120120'\n    \"\"\"\n    d = {'0': 0, '1': 0, '2': 0}\n    for i in s:\n        d[i] += 1\n    if d['0'] == d['1'] and d['1'] == d['2']:\n        return s\n    if d['0'] == d['1']:\n        return s[:d['0']] + '2' * d['2']\n    if d['0'] == d['2']:\n        return s[:d['0']] + '1' * d['1']\n    if d['1'] == d['2']:\n        return '0' * d['0'] + s[-d['1']:]\n    if d['0'] < d['1']:\n        if d['0'] < d['2']:\n            return '0' * (d['1'] - d['0']) + s[d['1'] - d['0']:]\n        else:\n            return s[:d['0']] + '2' * (d['1'] - d['2']) + s[-d['2']:]\n    else:\n        if d['1'] < d['2']:\n            return s[:d['1']] + '0' * (d['0'] - d['1']) + s[-d['1']:]\n        else:\n            return s[:d['1']] + '0' * (d['0'] - d['2']) + '1' * (d['2'] - d['1']) + s[-d['1']:]\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:25:06.541789 REASON stop
+2022-04-09 23:25:06.542300 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\ns = input()\n\na = s.count(\"0\")\nb = s.count(\"1\")\nc = s.count(\"2\")\n\nif a > b:\n    s = s.replace(\"0\", \"3\", a-b)\nelif a < b:\n    s = s.replace(\"1\", \"0\", b-a)\n\nwhile c > a:\n    s = s.replace(\"2\", \"1\", 1)\n    s = s.replace(\"1\", \"0\", 1)\n    c -= 1\n\nwhile c > b:\n    s = s.replace(\"2\", \"0\", 1)\n    s = s.replace(\"0\", \"1\", 1)\n    c -= 1\n\nif c < a:\n    s = s.replace(\"3\", \"0\", a-c)\nelif c < b:\n    s = s.replace(\"3\", \"1\", b-c)\n\ns = s.replace(\"3\", \"2\")\n\nprint(s)"
+}
+2022-04-09 23:25:06.542385 REASON stop

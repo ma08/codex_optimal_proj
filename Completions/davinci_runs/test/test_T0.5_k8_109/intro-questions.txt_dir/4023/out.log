@@ -1,0 +1,175 @@
+2022-04-09 22:46:27.651223 """
+Vova's family is building the Great Vova Wall (named by Vova himself). Vova's parents, grandparents, grand-grandparents contributed to it. Now it's totally up to Vova to put the finishing touches.
+
+The current state of the wall can be respresented by a sequence $a$ of $n$ integers, with $a_i$ being the height of the $i$-th part of the wall.
+
+Vova can only use $2 \times 1$ bricks to put in the wall (he has infinite supply of them, however).
+
+Vova can put bricks only horizontally on the neighbouring parts of the wall of equal height. It means that if for some $i$ the current height of part $i$ is the same as for part $i + 1$, then Vova can put a brick there and thus increase both heights by 1. Obviously, Vova can't put bricks in such a way that its parts turn out to be off the borders (to the left of part $1$ of the wall or to the right of part $n$ of it).
+
+Note that Vova can't put bricks vertically.
+
+Vova is a perfectionist, so he considers the wall completed when:  all parts of the wall has the same height;  the wall has no empty spaces inside it. 
+
+Can Vova complete the wall using any amount of bricks (possibly zero)?
+
+
+-----Input-----
+
+The first line contains a single integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of parts in the wall.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$) — the initial heights of the parts of the wall.
+
+
+-----Output-----
+
+Print "YES" if Vova can complete the wall using any amount of bricks (possibly zero).
+
+Print "NO" otherwise.
+
+
+-----Examples-----
+Input
+5
+2 1 1 2 5
+
+Output
+YES
+
+Input
+3
+4 5 3
+
+Output
+NO
+
+Input
+2
+10 10
+
+Output
+YES
+
+
+
+-----Note-----
+
+In the first example Vova can put a brick on parts 2 and 3 to make the wall $[2, 2, 2, 2, 5]$ and then put 3 bricks on parts 1 and 2 and 3 bricks on parts 3 and 4 to make it $[5, 5, 5, 5, 5]$.
+
+In the second example Vova can put no bricks in the wall.
+
+In the third example the wall is already complete.
+"""
+2022-04-09 22:46:27.651244 --------------------------
+2022-04-09 22:46:53.648351 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nn = int(input())\na = list(map(int, input().split()))\n\nif len(set(a)) == 1:\n    print(\"YES\")\n    exit(0)\n\nif len(set(a)) == 2:\n    a_max = max(a)\n    a_min = min(a)\n    max_count = a.count(a_max)\n    min_count = a.count(a_min)\n    if a_max - a_min == 1:\n        if max_count == 1 and min_count == n-1:\n            print(\"YES\")\n            exit(0)\n        elif max_count == 2 and min_count == n-2:\n            print(\"YES\")\n            exit(0)\n        elif max_count == n-1 and min_count == 1:\n            print(\"YES\")\n            exit(0)\n        elif max_count == n-2 and min_count == 2:\n            print(\"YES\")\n            exit(0)\n    else:\n        print(\"NO\")\n        exit(0)\n\nprint(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\n# first part: check if there are any gaps\nfor i in range(1, n):\n    if a[i - 1] != a[i]:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n\n    # find the max height\n    max_height = max(a)\n\n    # find the number of parts at max height\n    max_parts = a.count(max_height)\n\n    # find the number of parts not at max height\n    not_max_parts = n - max_parts\n\n    # if the number of parts not at max height is even and not zero,\n    # then we can put bricks at max height\n    if not_max_parts % 2 == 0 and not_max_parts != 0:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nn = int(input())\na = list(map(int,input().split()))\n\nans = \"YES\"\n\nfor i in range(len(a)-1):\n    if a[i] != a[i+1]:\n        ans = \"NO\"\n        break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nn = int(input())\na = list(map(int, input().split()))\n\nif max(a) - min(a) > 1:\n    print(\"NO\")\nelse:\n    print(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nheights = list(map(int, input().split()))\n\nif n == 1:\n    print(\"YES\")\nelse:\n    # Find the max height\n    max_h = 0\n    for i in range(1, n):\n        if heights[i] > max_h:\n            max_h = heights[i]\n\n    # All heights must be equal to the max height\n    for i in range(1, n):\n        if heights[i] != max_h:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = [0] * (n - 1)\n    for i in range(n - 1):\n        b[i] = a[i + 1] - a[i]\n    if 1 in b or -1 in b:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    if len(set(a)) == 1:\n        print(\"YES\")\n        return\n    for i in range(1, n):\n        if a[i] != a[i - 1]:\n            print(\"NO\")\n            return\n    print(\"YES\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649558788,
+  "id": "cmpl-4vHsqT6cZqbWmLdfxEh74MW22HDB1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:46:53.648710 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nn = int(input())\na = list(map(int, input().split()))\n\nif len(set(a)) == 1:\n    print(\"YES\")\n    exit(0)\n\nif len(set(a)) == 2:\n    a_max = max(a)\n    a_min = min(a)\n    max_count = a.count(a_max)\n    min_count = a.count(a_min)\n    if a_max - a_min == 1:\n        if max_count == 1 and min_count == n-1:\n            print(\"YES\")\n            exit(0)\n        elif max_count == 2 and min_count == n-2:\n            print(\"YES\")\n            exit(0)\n        elif max_count == n-1 and min_count == 1:\n            print(\"YES\")\n            exit(0)\n        elif max_count == n-2 and min_count == 2:\n            print(\"YES\")\n            exit(0)\n    else:\n        print(\"NO\")\n        exit(0)\n\nprint(\"NO\")"
+}
+2022-04-09 22:46:53.648750 REASON stop
+2022-04-09 22:46:53.650645 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\n# first part: check if there are any gaps\nfor i in range(1, n):\n    if a[i - 1] != a[i]:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")"
+}
+2022-04-09 22:46:53.650770 REASON stop
+2022-04-09 22:46:53.651681 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n\n    # find the max height\n    max_height = max(a)\n\n    # find the number of parts at max height\n    max_parts = a.count(max_height)\n\n    # find the number of parts not at max height\n    not_max_parts = n - max_parts\n\n    # if the number of parts not at max height is even and not zero,\n    # then we can put bricks at max height\n    if not_max_parts % 2 == 0 and not_max_parts != 0:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:46:53.651789 REASON stop
+2022-04-09 22:46:53.652489 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nn = int(input())\na = list(map(int,input().split()))\n\nans = \"YES\"\n\nfor i in range(len(a)-1):\n    if a[i] != a[i+1]:\n        ans = \"NO\"\n        break\n\nprint(ans)"
+}
+2022-04-09 22:46:53.652596 REASON stop
+2022-04-09 22:46:53.653543 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nn = int(input())\na = list(map(int, input().split()))\n\nif max(a) - min(a) > 1:\n    print(\"NO\")\nelse:\n    print(\"YES\")"
+}
+2022-04-09 22:46:53.653645 REASON stop
+2022-04-09 22:46:53.654363 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nheights = list(map(int, input().split()))\n\nif n == 1:\n    print(\"YES\")\nelse:\n    # Find the max height\n    max_h = 0\n    for i in range(1, n):\n        if heights[i] > max_h:\n            max_h = heights[i]\n\n    # All heights must be equal to the max height\n    for i in range(1, n):\n        if heights[i] != max_h:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")"
+}
+2022-04-09 22:46:53.654463 REASON stop
+2022-04-09 22:46:53.655293 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = [0] * (n - 1)\n    for i in range(n - 1):\n        b[i] = a[i + 1] - a[i]\n    if 1 in b or -1 in b:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:46:53.655397 REASON stop
+2022-04-09 22:46:53.655873 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    if len(set(a)) == 1:\n        print(\"YES\")\n        return\n    for i in range(1, n):\n        if a[i] != a[i - 1]:\n            print(\"NO\")\n            return\n    print(\"YES\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:46:53.655935 REASON stop

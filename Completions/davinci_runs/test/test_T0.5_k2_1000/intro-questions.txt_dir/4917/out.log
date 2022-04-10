@@ -1,0 +1,142 @@
+2022-04-09 23:40:00.073972 """
+“A watched pot never boils”, as the saying goes. Chef Edward has been cooking for ages, and empirically the saying seems to be true in his kitchen – he has yet to see a pot actually start boiling. His wife Gunilla is a bit suspicious of Edward’s claim though. She knows how he often loses focus after a little while, and thinks that it is very likely Edward gets tired of watching after about the same period of time starting when he puts it on the stove.
+
+Being scientifically minded, Gunilla quickly designed an experiment which could help Edward gain more insight into the boiling of pots. Every time during the last week when Edward boiled a pot of water, he wrote down the intervals of time when he was not watching the pot. Now, he has a large log of these intervals, and wonders whether Gunilla is right (i.e. it may be the case Edward just happened to watch away every time the pot started boiling), or if his hypothesis is correct.
+
+Given this data, is it possible that the pot actually starts boiling after the same amount of time, every time?
+
+-----Input-----
+The first line of the input contains an integer $1 \le N \le 1000$, the number of times Edward boiled water in the last week. Then, $N$ descriptions of a boiling follow. Each description contains two numbers $0 \le a \le b \le 1000$. This means that Edward looked away during seconds $[a, b]$ (i.e. from the start of second $a$, to the end of second $b$), and that Edward first saw the pot boiling once he looked back.
+
+-----Output-----
+If it is impossible that all the pots actually started boiling at the same point in time, output edward is right. Otherwise, output gunilla has a point.
+
+-----Examples-----
+Sample Input:
+2
+1 7
+5 5
+Sample Output:
+gunilla has a point
+"""
+2022-04-09 23:40:00.074017 --------------------------
+2022-04-09 23:40:28.490271 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ntimes = []\nfor i in range(n):\n    times.append(list(map(int, input().split())))\n\nfor i in range(n):\n    if times[i][0] <= times[i][1]:\n        print(\"edward is right\")\n        quit()\n\nprint(\"gunilla has a point\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Read input\n    n = int(input())\n    intervals = []\n    for i in range(n):\n        intervals.append([int(i) for i in input().split(\" \")])\n\n    # Check for common time\n    times = []\n    for interval in intervals:\n        for time in range(interval[0], interval[1] + 1):\n            times.append(time)\n    if len(set(times)) == 1:\n        print(\"gunilla has a point\")\n    else:\n        print(\"edward is right\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(times):\n    # if any time is within another time, it is impossible\n    # otherwise, possible\n    for time in times:\n        for other_time in times:\n            if time != other_time and time[0] >= other_time[0] and time[1] <= other_time[1]:\n                return \"edward is right\"\n    return \"gunilla has a point\"\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    times = []\n    for _ in range(n):\n        times.append(tuple(map(int, sys.stdin.readline().strip().split())))\n    print(solve(times))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#cook your dish here\nN = int(input())\n\ndef check(b):\n    for i in range(N):\n        if a[i]<=b<=b[i]:\n            return False\n    return True\n\nfor i in range(N):\n    a,b = map(int,input().split())\n    if check(a):\n        print(\"gunilla has a point\")\n        break\nelse:\n    print(\"edward is right\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nintervals = []\nfor i in range(n):\n    a, b = map(int, input().split())\n    intervals.append((a, b))\n\nintervals.sort()\n\nfor i in range(n-1):\n    a, b = intervals[i]\n    a_next, b_next = intervals[i+1]\n    if b_next < a:\n        print(\"edward is right\")\n        exit(0)\n\nprint(\"gunilla has a point\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#program\n\nn = int(input())\n\nl = []\n\nfor i in range(n):\n    l.append(list(map(int,input().split())))\n\nl.sort(key=lambda x: x[1])\n\nif l[0][1] >= l[1][0]:\n    print(\"gunilla has a point\")\nelse:\n    print(\"edward is right\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().rstrip('\\n'))\n    intervals = []\n    for i in range(n):\n        a, b = [int(x) for x in sys.stdin.readline().rstrip('\\n').split()]\n        intervals.append([a, b])\n    intervals.sort()\n    intervals_in_common = []\n    for i in range(n-1):\n        start = max(intervals[i][0], intervals[i+1][0])\n        end = min(intervals[i][1], intervals[i+1][1])\n        if start <= end:\n            intervals_in_common.append([start, end])\n    if len(intervals_in_common) == 0:\n        print(\"edward is right\")\n    else:\n        print(\"gunilla has a point\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nnum_times = int(input())\n\ntimes = []\nfor i in range(num_times):\n    times.append([int(x) for x in input().split()])\n\n# Check if all times are the same\nfor i in range(num_times - 1):\n    if times[i][1] != times[i + 1][1]:\n        print(\"edward is right\")\n        exit()\n\nprint(\"gunilla has a point\")"
+    }
+  ],
+  "created": 1649562000,
+  "id": "cmpl-4vIieWvWC5jSsV8qAE9O96IMDxGcn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:40:28.490490 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ntimes = []\nfor i in range(n):\n    times.append(list(map(int, input().split())))\n\nfor i in range(n):\n    if times[i][0] <= times[i][1]:\n        print(\"edward is right\")\n        quit()\n\nprint(\"gunilla has a point\")"
+}
+2022-04-09 23:40:28.490509 REASON stop
+2022-04-09 23:40:28.491552 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.491580 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Read input\n    n = int(input())\n    intervals = []\n    for i in range(n):\n        intervals.append([int(i) for i in input().split(\" \")])\n\n    # Check for common time\n    times = []\n    for interval in intervals:\n        for time in range(interval[0], interval[1] + 1):\n            times.append(time)\n    if len(set(times)) == 1:\n        print(\"gunilla has a point\")\n    else:\n        print(\"edward is right\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:40:28.491633 REASON stop
+2022-04-09 23:40:28.492360 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.492394 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(times):\n    # if any time is within another time, it is impossible\n    # otherwise, possible\n    for time in times:\n        for other_time in times:\n            if time != other_time and time[0] >= other_time[0] and time[1] <= other_time[1]:\n                return \"edward is right\"\n    return \"gunilla has a point\"\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    times = []\n    for _ in range(n):\n        times.append(tuple(map(int, sys.stdin.readline().strip().split())))\n    print(solve(times))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:40:28.492478 REASON stop
+2022-04-09 23:40:28.493452 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.493560 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#cook your dish here\nN = int(input())\n\ndef check(b):\n    for i in range(N):\n        if a[i]<=b<=b[i]:\n            return False\n    return True\n\nfor i in range(N):\n    a,b = map(int,input().split())\n    if check(a):\n        print(\"gunilla has a point\")\n        break\nelse:\n    print(\"edward is right\")"
+}
+2022-04-09 23:40:28.493759 REASON stop
+2022-04-09 23:40:28.494771 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.494810 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nintervals = []\nfor i in range(n):\n    a, b = map(int, input().split())\n    intervals.append((a, b))\n\nintervals.sort()\n\nfor i in range(n-1):\n    a, b = intervals[i]\n    a_next, b_next = intervals[i+1]\n    if b_next < a:\n        print(\"edward is right\")\n        exit(0)\n\nprint(\"gunilla has a point\")"
+}
+2022-04-09 23:40:28.494893 REASON stop
+2022-04-09 23:40:28.495525 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.495560 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#program\n\nn = int(input())\n\nl = []\n\nfor i in range(n):\n    l.append(list(map(int,input().split())))\n\nl.sort(key=lambda x: x[1])\n\nif l[0][1] >= l[1][0]:\n    print(\"gunilla has a point\")\nelse:\n    print(\"edward is right\")"
+}
+2022-04-09 23:40:28.495644 REASON stop
+2022-04-09 23:40:28.496520 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.496551 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().rstrip('\\n'))\n    intervals = []\n    for i in range(n):\n        a, b = [int(x) for x in sys.stdin.readline().rstrip('\\n').split()]\n        intervals.append([a, b])\n    intervals.sort()\n    intervals_in_common = []\n    for i in range(n-1):\n        start = max(intervals[i][0], intervals[i+1][0])\n        end = min(intervals[i][1], intervals[i+1][1])\n        if start <= end:\n            intervals_in_common.append([start, end])\n    if len(intervals_in_common) == 0:\n        print(\"edward is right\")\n    else:\n        print(\"gunilla has a point\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:40:28.496606 REASON stop
+2022-04-09 23:40:28.497340 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'
+2022-04-09 23:40:28.497407 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nnum_times = int(input())\n\ntimes = []\nfor i in range(num_times):\n    times.append([int(x) for x in input().split()])\n\n# Check if all times are the same\nfor i in range(num_times - 1):\n    if times[i][1] != times[i + 1][1]:\n        print(\"edward is right\")\n        exit()\n\nprint(\"gunilla has a point\")"
+}
+2022-04-09 23:40:28.497509 REASON stop
+2022-04-09 23:40:28.498138 test/intro-questions.txt_dir/4917/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4917/solutions.json'

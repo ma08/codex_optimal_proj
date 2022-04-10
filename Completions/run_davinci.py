@@ -1,3 +1,4 @@
+import configparser
 import os
 import sys
 from numpy import promote_types
@@ -5,12 +6,42 @@ import openai
 import json
 import shutil
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+import random
+import time
+
+from datetime import datetime
+
+old_print = print
+
+def timestamped_print(*args, **kwargs):
+  old_print(datetime.now(), *args, **kwargs)
+
+print = timestamped_print
+
+
+config = configparser.ConfigParser()
+config.read('API_keys.config')
+
+API_KEYS = ["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", "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", "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"]
+def random_number():
+    return random.randint(0,2)
+
+def set_api_key_rand():
+    api_key_items = config.items( "keys" )
+    api_keys = [key for en, key in config.items("keys")]
+    openai.api_key = api_keys[random_number()]
+
+
+
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 
 TEMPERATURE = 0.5 #T
 N_SOLUTIONS = 2 #k
 ENGINE = "code-davinci-002"
 MAX_TOKENS=4096
+SLEEP_TIME_SECONDS = 5
 
 def run_davinci(path, out_dir):
     with open(path) as f:
@@ -20,6 +51,9 @@ def run_davinci(path, out_dir):
     print(input_prompt)
 
     print("--------------------------")
+
+    set_api_key_rand()
+
 
     response = openai.Completion.create(
         engine=ENGINE,
@@ -31,6 +65,7 @@ def run_davinci(path, out_dir):
         presence_penalty=0,
         n=N_SOLUTIONS
     )
+    time.sleep(SLEEP_TIME_SECONDS)
 
     print(response)
 

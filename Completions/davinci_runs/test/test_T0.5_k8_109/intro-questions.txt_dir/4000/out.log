@@ -1,0 +1,162 @@
+2022-04-09 22:21:09.782282 """
+You are given an unweighted tree with $n$ vertices. Recall that a tree is a connected undirected graph without cycles.
+
+Your task is to choose three distinct vertices $a, b, c$ on this tree such that the number of edges which belong to at least one of the simple paths between $a$ and $b$, $b$ and $c$, or $a$ and $c$ is the maximum possible. See the notes section for a better understanding.
+
+The simple path is the path that visits each vertex at most once.
+
+
+-----Input-----
+
+The first line contains one integer number $n$ ($3 \le n \le 2 \cdot 10^5$) — the number of vertices in the tree. 
+
+Next $n - 1$ lines describe the edges of the tree in form $a_i, b_i$ ($1 \le a_i$, $b_i \le n$, $a_i \ne b_i$). It is guaranteed that given graph is a tree.
+
+
+-----Output-----
+
+In the first line print one integer $res$ — the maximum number of edges which belong to at least one of the simple paths between $a$ and $b$, $b$ and $c$, or $a$ and $c$.
+
+In the second line print three integers $a, b, c$ such that $1 \le a, b, c \le n$ and $a \ne, b \ne c, a \ne c$.
+
+If there are several answers, you can print any.
+
+
+-----Example-----
+Input
+8
+1 2
+2 3
+3 4
+4 5
+4 6
+3 7
+3 8
+
+Output
+5
+1 8 6
+
+
+
+-----Note-----
+
+The picture corresponding to the first example (and another one correct answer):
+
+[Image]
+
+If you choose vertices $1, 5, 6$ then the path between $1$ and $5$ consists of edges $(1, 2), (2, 3), (3, 4), (4, 5)$, the path between $1$ and $6$ consists of edges $(1, 2), (2, 3), (3, 4), (4, 6)$ and the path between $5$ and $6$ consists of edges $(4, 5), (4, 6)$. The union of these paths is $(1, 2), (2, 3), (3, 4), (4, 5), (4, 6)$ so the answer is $5$. It can be shown that there is no better answer.
+"""
+2022-04-09 22:21:09.782304 --------------------------
+2022-04-09 22:22:25.087336 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_ints():\n    temp = input().split()\n    temp = [int(t) for t in temp]\n    return temp\n\ndef read_int():\n    temp = read_ints()\n    return temp[0]\n\nclass Node():\n    def __init__(self, val):\n        self.val = val\n        self.adj = []\n        self.visited = False\n        self.parent = None\n        self.children = []\n        self.depth = 0\n        self.subtree_size = 1\n        self.max_subtree_size = 0\n        self.max_subtree_size_node = self\n\n    def add_adj(self, node):\n        self.adj.append(node)\n\ndef dfs(root):\n    root.visited = True\n    for node in root.adj:\n        if not node.visited:\n            node.parent = root\n            node.depth = root.depth + 1\n            dfs(node)\n            root.subtree_size += node.subtree_size\n            if node.subtree_size > root.max_subtree_size:\n                root.max_subtree_size = node.subtree_size\n                root.max_subtree_size_node = node\n            elif node.max_subtree_size > root.max_subtree_size:\n                root.max_subtree_size = node.max_subtree_size\n                root.max_subtree_size_node = node.max_subtree_size_node\n\ndef get_max_subtree_size_node(root):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for node in root.adj:\n        if node.visited:\n            continue\n        if node.subtree_size > max_subtree_size:\n            max_subtree_size = node.subtree_size\n            max_subtree_size_node = node\n        elif node.max_subtree_size > max_subtree_size:\n            max_subtree_size = node.max_subtree_size\n            max_subtree_size_node = node.max_subtree_size_node\n    return max_subtree_size_node\n\ndef get_max_subtree_size(root):\n    max_subtree_size = 0\n    for node in root.adj:\n        if node.visited:\n            continue\n        if node.subtree_size > max_subtree_size:\n            max_subtree_size = node.subtree_size\n        elif node.max_subtree_size > max_subtree_size:\n            max_subtree_size = node.max_subtree_size\n    return max_subtree_size\n\ndef find_centroid(root):\n    dfs(root)\n    while True:\n        max_subtree_size_node = get_max_subtree_size_node(root)\n        max_subtree_size = get_max_subtree_size(root)\n        if max_subtree_size <= root.subtree_size // 2:\n            return root\n        root = max_subtree_size_node\n\ndef get_max_subtree_size_at_depth(node, depth):\n    max_subtree_size = 0\n    for child in node.children:\n        if child.depth == depth:\n            max_subtree_size = max(max_subtree_size, child.subtree_size)\n        else:\n            max_subtree_size = max(max_subtree_size, get_max_subtree_size_at_depth(child, depth))\n    return max_subtree_size\n\ndef find_max_subtree_size_at_depth(node, depth):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for child in node.children:\n        if child.depth == depth:\n            if child.subtree_size > max_subtree_size:\n                max_subtree_size = child.subtree_size\n                max_subtree_size_node = child\n        else:\n            subtree_size, subtree_size_node = find_max_subtree_size_at_depth(child, depth)\n            if subtree_size > max_subtree_size:\n                max_subtree_size = subtree_size\n                max_subtree_size_node = subtree_size_node\n    return max_subtree_size, max_subtree_size_node\n\ndef get_max_subtree_size_at_depth_from_subtree(node, depth):\n    max_subtree_size = 0\n    for child in node.children:\n        if child.depth == depth:\n            max_subtree_size = max(max_subtree_size, child.subtree_size)\n        else:\n            max_subtree_size = max(max_subtree_size, get_max_subtree_size_at_depth_from_subtree(child, depth))\n    return max_subtree_size\n\ndef find_max_subtree_size_at_depth_from_subtree(node, depth):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for child in node.children:\n        if child.depth == depth:\n            if child.subtree_size > max_subtree_size:\n                max_subtree_size = child.subtree_size\n                max_subtree_size_node = child\n        else:\n            subtree_size, subtree_size_node = find_max_subtree_size_at_depth_from_subtree(child, depth)\n            if subtree_size > max_subtree_size:\n                max_subtree_size = subtree_size\n                max_subtree_size_node = subtree_size_node\n    return max_subtree_size, max_subtree_size_node\n\ndef solve(root):\n    centroid = find_centroid(root)\n    centroid.visited = False\n    for node in centroid.adj:\n        if not node.visited:\n            node.parent = centroid\n            node.depth = centroid.depth + 1\n            centroid.children.append(node)\n    if len(centroid.children) == 0:\n        return 0, [centroid.val]\n    elif len(centroid.children) == 1:\n        return 1, [centroid.val, centroid.children[0].val]\n    else:\n        max_subtree_size_1, max_subtree_size_node_1 = find_max_subtree_size_at_depth(centroid, centroid.children[0].depth)\n        max_subtree_size_2, max_subtree_size_node_2 = find_max_subtree_size_at_depth(centroid, centroid.children[1].depth)\n        max_subtree_size_3, max_subtree_size_node_3 = find_max_subtree_size_at_depth_from_subtree(centroid, centroid.children[0].depth)\n        max_subtree_size_4, max_subtree_size_node_4 = find_max_subtree_size_at_depth_from_subtree(centroid, centroid.children[1].depth)\n        if max_subtree_size_1 + max_subtree_size_2 > max_subtree_size_3 + max_subtree_size_4:\n            return max_subtree_size_1 + max_subtree_size_2, [centroid.val, max_subtree_size_node_1.val, max_subtree_size_node_2.val]\n        else:\n            return max_subtree_size_3 + max_subtree_size_4, [centroid.val, max_subtree_size_node_3.val, max_subtree_size_node_4.val]\n\nn = read_int()\nnodes = [None] + [Node(i) for i in range(1, n + 1)]\nfor _ in range(n - 1):\n    a, b = read_ints()\n    nodes[a].add_adj(nodes[b])\n    nodes[b].add_adj(nodes[a])\nres, ans = solve(nodes[1])\nprint(res)\nprint(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport os\nimport math\nfrom collections import defaultdict\nimport heapq\n\nsys.setrecursionlimit(1000000)\n\ndef readString():\n    return sys.stdin.readline().strip()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \", n)\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [readIntegerSet(m) for _ in range(0, n)]\n\nINF = 1000000000\n\ndef dfs(v, prev):\n    for u in graph[v]:\n        if u != prev:\n            dfs(u, v)\n            subtree[v] += subtree[u]\n\ndef dfs2(v, prev, res):\n    for u in graph[v]:\n        if u != prev:\n            dfs2(u, v, res)\n            res[0] = max(res[0], subtree[u] * (n - subtree[u]))\n            res[1] = max(res[1], subtree[u] * (n - subtree[u]) + res[2])\n            res[2] = max(res[2], subtree[u] * (n - subtree[u]))\n\ndef solve(n, graph):\n    dfs(1, -1)\n    res = [0, 0, 0]\n    dfs2(1, -1, res)\n    return res[1]\n\nif __name__ == \"__main__\":\n    n = readInteger()\n    graph = defaultdict(list)\n    for i in range(0, n - 1):\n        a, b = readIntegerSet(2)\n        graph[a].append(b)\n        graph[b].append(a)\n    subtree = [1] * (n + 1)\n    print(solve(n, graph))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin, stdout\n\nclass Node:\n    def __init__(self, number):\n        self.number = number\n        self.adj = []\n        self.parent = None\n        self.depth = 0\n        self.size = 1\n        self.heavy_child = None\n\n\ndef dfs(node):\n    for child in node.adj:\n        if child.number != node.parent:\n            child.parent = node.number\n            child.depth = node.depth + 1\n            dfs(child)\n            node.size += child.size\n            if node.heavy_child is None or child.size > node.heavy_child.size:\n                node.heavy_child = child\n\n\ndef dfs2(node, chain_head):\n    node.head = chain_head\n    if node.heavy_child is not None:\n        dfs2(node.heavy_child, chain_head)\n    for child in node.adj:\n        if child.number != node.parent and child.number != node.heavy_child:\n            dfs2(child, child.number)\n\n\ndef get_lca(node1, node2):\n    while node1.head != node2.head:\n        if node1.depth > node2.depth:\n            node1 = nodes[node1.head]\n        else:\n            node2 = nodes[node2.head]\n    if node1.depth > node2.depth:\n        return node2.number\n    else:\n        return node1.number\n\n\ndef get_max_path(node1, node2):\n    ans = 0\n    while node1.head != node2.head:\n        if node1.depth > node2.depth:\n            ans = max(ans, node1.size - nodes[node1.head].size)\n            node1 = nodes[node1.head]\n        else:\n            ans = max(ans, node2.size - nodes[node2.head].size)\n            node2 = nodes[node2.head]\n    if node1.depth > node2.depth:\n        ans = max(ans, node2.size - node1.size)\n    else:\n        ans = max(ans, node1.size - node2.size)\n    return ans\n\n\nn = int(stdin.readline())\nnodes = [Node(i) for i in range(1, n + 1)]\nfor _ in range(n - 1):\n    a, b = map(int, stdin.readline().split())\n    nodes[a].adj.append(nodes[b])\n    nodes[b].adj.append(nodes[a])\n\ndfs(nodes[1])\ndfs2(nodes[1], 1)\n\nbest_ans = 0\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        lca = get_lca(nodes[i], nodes[j])\n        best_ans = max(best_ans, get_max_path(nodes[lca], nodes[i]) + get_max_path(nodes[lca], nodes[j]) + 1)\n\nstdout.write(f'{best_ans}\\n')\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        lca = get_lca(nodes[i], nodes[j])\n        if best_ans == get_max_path(nodes[lca], nodes[i]) + get_max_path(nodes[lca], nodes[j]) + 1:\n            stdout.write(f'{i} {j} {lca}\\n')\n            exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\nimport sys\nimport math\nimport heapq\nimport collections\nfrom collections import Counter, defaultdict\nfrom itertools import combinations, permutations\n\nsys.setrecursionlimit(1000000)\n\ndef read_list():\n    return [int(x) for x in sys.stdin.readline().strip().split(' ')]\n\ndef read_tuple():\n    return tuple(read_list())\n\ndef read_integer():\n    return int(sys.stdin.readline().strip())\n\ngraph = defaultdict(set)\n\ndef dfs(parent, current, depth):\n    graph[current] = depth\n    for child in graph[current]:\n        if child == parent:\n            continue\n        dfs(current, child, depth + 1)\n\ndef main():\n    n = read_integer()\n    for i in range(n - 1):\n        a, b = read_tuple()\n        graph[a].add(b)\n        graph[b].add(a)\n\n    dfs(None, 1, 0)\n\n    max_depth = max(graph.values())\n    max_vertices = [x[0] for x in graph.items() if x[1] == max_depth]\n\n    # print(max_vertices)\n\n    max_edges = 0\n    max_a = max_b = max_c = 0\n\n    for a in max_vertices:\n        for b in max_vertices:\n            if a == b:\n                continue\n            for c in max_vertices:\n                if a == c or b == c:\n                    continue\n                edges = graph[a] + graph[b] + graph[c] - 2 * max_depth\n                if edges > max_edges:\n                    max_a, max_b, max_c = a, b, c\n                    max_edges = edges\n\n    print(max_edges)\n    print(max_a, max_b, max_c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline())\n    edges = []\n    for i in range(N-1):\n        a, b = map(lambda x: int(x), sys.stdin.readline().split())\n        edges.append((a, b))\n        edges.append((b, a))\n    #print(edges)\n    max_path = 0\n    node_list = list(range(1, N+1))\n    for i in range(len(node_list)):\n        for j in range(i+1, len(node_list)):\n            for k in range(j+1, len(node_list)):\n                a, b, c = node_list[i], node_list[j], node_list[k]\n                #print(a, b, c)\n                ab = [a, b]\n                ac = [a, c]\n                bc = [b, c]\n                for e in edges:\n                    if e[0] in ab and e[1] in ab:\n                        ab.append(e[1])\n                        ab.append(e[0])\n                    if e[0] in ac and e[1] in ac:\n                        ac.append(e[1])\n                        ac.append(e[0])\n                    if e[0] in bc and e[1] in bc:\n                        bc.append(e[1])\n                        bc.append(e[0])\n                #print(ab, ac, bc)\n                ab_set = set(ab)\n                ac_set = set(ac)\n                bc_set = set(bc)\n                path_set = ab_set | ac_set | bc_set\n                path = len(path_set)\n                #print(path, path_set)\n                if path > max_path:\n                    max_path = path\n                    max_path_set = path_set\n                    max_a, max_b, max_c = a, b, c\n    print(max_path)\n    print(max_a, max_b, max_c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649557270,
+  "id": "cmpl-4vHUMSrNgoW36PLNlWOVziTscXfdA",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:22:25.087765 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_ints():\n    temp = input().split()\n    temp = [int(t) for t in temp]\n    return temp\n\ndef read_int():\n    temp = read_ints()\n    return temp[0]\n\nclass Node():\n    def __init__(self, val):\n        self.val = val\n        self.adj = []\n        self.visited = False\n        self.parent = None\n        self.children = []\n        self.depth = 0\n        self.subtree_size = 1\n        self.max_subtree_size = 0\n        self.max_subtree_size_node = self\n\n    def add_adj(self, node):\n        self.adj.append(node)\n\ndef dfs(root):\n    root.visited = True\n    for node in root.adj:\n        if not node.visited:\n            node.parent = root\n            node.depth = root.depth + 1\n            dfs(node)\n            root.subtree_size += node.subtree_size\n            if node.subtree_size > root.max_subtree_size:\n                root.max_subtree_size = node.subtree_size\n                root.max_subtree_size_node = node\n            elif node.max_subtree_size > root.max_subtree_size:\n                root.max_subtree_size = node.max_subtree_size\n                root.max_subtree_size_node = node.max_subtree_size_node\n\ndef get_max_subtree_size_node(root):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for node in root.adj:\n        if node.visited:\n            continue\n        if node.subtree_size > max_subtree_size:\n            max_subtree_size = node.subtree_size\n            max_subtree_size_node = node\n        elif node.max_subtree_size > max_subtree_size:\n            max_subtree_size = node.max_subtree_size\n            max_subtree_size_node = node.max_subtree_size_node\n    return max_subtree_size_node\n\ndef get_max_subtree_size(root):\n    max_subtree_size = 0\n    for node in root.adj:\n        if node.visited:\n            continue\n        if node.subtree_size > max_subtree_size:\n            max_subtree_size = node.subtree_size\n        elif node.max_subtree_size > max_subtree_size:\n            max_subtree_size = node.max_subtree_size\n    return max_subtree_size\n\ndef find_centroid(root):\n    dfs(root)\n    while True:\n        max_subtree_size_node = get_max_subtree_size_node(root)\n        max_subtree_size = get_max_subtree_size(root)\n        if max_subtree_size <= root.subtree_size // 2:\n            return root\n        root = max_subtree_size_node\n\ndef get_max_subtree_size_at_depth(node, depth):\n    max_subtree_size = 0\n    for child in node.children:\n        if child.depth == depth:\n            max_subtree_size = max(max_subtree_size, child.subtree_size)\n        else:\n            max_subtree_size = max(max_subtree_size, get_max_subtree_size_at_depth(child, depth))\n    return max_subtree_size\n\ndef find_max_subtree_size_at_depth(node, depth):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for child in node.children:\n        if child.depth == depth:\n            if child.subtree_size > max_subtree_size:\n                max_subtree_size = child.subtree_size\n                max_subtree_size_node = child\n        else:\n            subtree_size, subtree_size_node = find_max_subtree_size_at_depth(child, depth)\n            if subtree_size > max_subtree_size:\n                max_subtree_size = subtree_size\n                max_subtree_size_node = subtree_size_node\n    return max_subtree_size, max_subtree_size_node\n\ndef get_max_subtree_size_at_depth_from_subtree(node, depth):\n    max_subtree_size = 0\n    for child in node.children:\n        if child.depth == depth:\n            max_subtree_size = max(max_subtree_size, child.subtree_size)\n        else:\n            max_subtree_size = max(max_subtree_size, get_max_subtree_size_at_depth_from_subtree(child, depth))\n    return max_subtree_size\n\ndef find_max_subtree_size_at_depth_from_subtree(node, depth):\n    max_subtree_size = 0\n    max_subtree_size_node = None\n    for child in node.children:\n        if child.depth == depth:\n            if child.subtree_size > max_subtree_size:\n                max_subtree_size = child.subtree_size\n                max_subtree_size_node = child\n        else:\n            subtree_size, subtree_size_node = find_max_subtree_size_at_depth_from_subtree(child, depth)\n            if subtree_size > max_subtree_size:\n                max_subtree_size = subtree_size\n                max_subtree_size_node = subtree_size_node\n    return max_subtree_size, max_subtree_size_node\n\ndef solve(root):\n    centroid = find_centroid(root)\n    centroid.visited = False\n    for node in centroid.adj:\n        if not node.visited:\n            node.parent = centroid\n            node.depth = centroid.depth + 1\n            centroid.children.append(node)\n    if len(centroid.children) == 0:\n        return 0, [centroid.val]\n    elif len(centroid.children) == 1:\n        return 1, [centroid.val, centroid.children[0].val]\n    else:\n        max_subtree_size_1, max_subtree_size_node_1 = find_max_subtree_size_at_depth(centroid, centroid.children[0].depth)\n        max_subtree_size_2, max_subtree_size_node_2 = find_max_subtree_size_at_depth(centroid, centroid.children[1].depth)\n        max_subtree_size_3, max_subtree_size_node_3 = find_max_subtree_size_at_depth_from_subtree(centroid, centroid.children[0].depth)\n        max_subtree_size_4, max_subtree_size_node_4 = find_max_subtree_size_at_depth_from_subtree(centroid, centroid.children[1].depth)\n        if max_subtree_size_1 + max_subtree_size_2 > max_subtree_size_3 + max_subtree_size_4:\n            return max_subtree_size_1 + max_subtree_size_2, [centroid.val, max_subtree_size_node_1.val, max_subtree_size_node_2.val]\n        else:\n            return max_subtree_size_3 + max_subtree_size_4, [centroid.val, max_subtree_size_node_3.val, max_subtree_size_node_4.val]\n\nn = read_int()\nnodes = [None] + [Node(i) for i in range(1, n + 1)]\nfor _ in range(n - 1):\n    a, b = read_ints()\n    nodes[a].add_adj(nodes[b])\n    nodes[b].add_adj(nodes[a])\nres, ans = solve(nodes[1])\nprint(res)\nprint(*ans)"
+}
+2022-04-09 22:22:25.087833 REASON stop
+2022-04-09 22:22:25.100002 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport os\nimport math\nfrom collections import defaultdict\nimport heapq\n\nsys.setrecursionlimit(1000000)\n\ndef readString():\n    return sys.stdin.readline().strip()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \", n)\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [readIntegerSet(m) for _ in range(0, n)]\n\nINF = 1000000000\n\ndef dfs(v, prev):\n    for u in graph[v]:\n        if u != prev:\n            dfs(u, v)\n            subtree[v] += subtree[u]\n\ndef dfs2(v, prev, res):\n    for u in graph[v]:\n        if u != prev:\n            dfs2(u, v, res)\n            res[0] = max(res[0], subtree[u] * (n - subtree[u]))\n            res[1] = max(res[1], subtree[u] * (n - subtree[u]) + res[2])\n            res[2] = max(res[2], subtree[u] * (n - subtree[u]))\n\ndef solve(n, graph):\n    dfs(1, -1)\n    res = [0, 0, 0]\n    dfs2(1, -1, res)\n    return res[1]\n\nif __name__ == \"__main__\":\n    n = readInteger()\n    graph = defaultdict(list)\n    for i in range(0, n - 1):\n        a, b = readIntegerSet(2)\n        graph[a].append(b)\n        graph[b].append(a)\n    subtree = [1] * (n + 1)\n    print(solve(n, graph))"
+}
+2022-04-09 22:22:25.100122 REASON stop
+2022-04-09 22:22:25.101077 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:22:25.101192 REASON stop
+2022-04-09 22:22:25.101668 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin, stdout\n\nclass Node:\n    def __init__(self, number):\n        self.number = number\n        self.adj = []\n        self.parent = None\n        self.depth = 0\n        self.size = 1\n        self.heavy_child = None\n\n\ndef dfs(node):\n    for child in node.adj:\n        if child.number != node.parent:\n            child.parent = node.number\n            child.depth = node.depth + 1\n            dfs(child)\n            node.size += child.size\n            if node.heavy_child is None or child.size > node.heavy_child.size:\n                node.heavy_child = child\n\n\ndef dfs2(node, chain_head):\n    node.head = chain_head\n    if node.heavy_child is not None:\n        dfs2(node.heavy_child, chain_head)\n    for child in node.adj:\n        if child.number != node.parent and child.number != node.heavy_child:\n            dfs2(child, child.number)\n\n\ndef get_lca(node1, node2):\n    while node1.head != node2.head:\n        if node1.depth > node2.depth:\n            node1 = nodes[node1.head]\n        else:\n            node2 = nodes[node2.head]\n    if node1.depth > node2.depth:\n        return node2.number\n    else:\n        return node1.number\n\n\ndef get_max_path(node1, node2):\n    ans = 0\n    while node1.head != node2.head:\n        if node1.depth > node2.depth:\n            ans = max(ans, node1.size - nodes[node1.head].size)\n            node1 = nodes[node1.head]\n        else:\n            ans = max(ans, node2.size - nodes[node2.head].size)\n            node2 = nodes[node2.head]\n    if node1.depth > node2.depth:\n        ans = max(ans, node2.size - node1.size)\n    else:\n        ans = max(ans, node1.size - node2.size)\n    return ans\n\n\nn = int(stdin.readline())\nnodes = [Node(i) for i in range(1, n + 1)]\nfor _ in range(n - 1):\n    a, b = map(int, stdin.readline().split())\n    nodes[a].adj.append(nodes[b])\n    nodes[b].adj.append(nodes[a])\n\ndfs(nodes[1])\ndfs2(nodes[1], 1)\n\nbest_ans = 0\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        lca = get_lca(nodes[i], nodes[j])\n        best_ans = max(best_ans, get_max_path(nodes[lca], nodes[i]) + get_max_path(nodes[lca], nodes[j]) + 1)\n\nstdout.write(f'{best_ans}\\n')\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        lca = get_lca(nodes[i], nodes[j])\n        if best_ans == get_max_path(nodes[lca], nodes[i]) + get_max_path(nodes[lca], nodes[j]) + 1:\n            stdout.write(f'{i} {j} {lca}\\n')\n            exit()"
+}
+2022-04-09 22:22:25.101727 REASON stop
+2022-04-09 22:22:25.101917 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\nimport sys\nimport math\nimport heapq\nimport collections\nfrom collections import Counter, defaultdict\nfrom itertools import combinations, permutations\n\nsys.setrecursionlimit(1000000)\n\ndef read_list():\n    return [int(x) for x in sys.stdin.readline().strip().split(' ')]\n\ndef read_tuple():\n    return tuple(read_list())\n\ndef read_integer():\n    return int(sys.stdin.readline().strip())\n\ngraph = defaultdict(set)\n\ndef dfs(parent, current, depth):\n    graph[current] = depth\n    for child in graph[current]:\n        if child == parent:\n            continue\n        dfs(current, child, depth + 1)\n\ndef main():\n    n = read_integer()\n    for i in range(n - 1):\n        a, b = read_tuple()\n        graph[a].add(b)\n        graph[b].add(a)\n\n    dfs(None, 1, 0)\n\n    max_depth = max(graph.values())\n    max_vertices = [x[0] for x in graph.items() if x[1] == max_depth]\n\n    # print(max_vertices)\n\n    max_edges = 0\n    max_a = max_b = max_c = 0\n\n    for a in max_vertices:\n        for b in max_vertices:\n            if a == b:\n                continue\n            for c in max_vertices:\n                if a == c or b == c:\n                    continue\n                edges = graph[a] + graph[b] + graph[c] - 2 * max_depth\n                if edges > max_edges:\n                    max_a, max_b, max_c = a, b, c\n                    max_edges = edges\n\n    print(max_edges)\n    print(max_a, max_b, max_c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:22:25.101944 REASON stop
+2022-04-09 22:22:25.102137 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+}
+2022-04-09 22:22:25.102161 REASON stop
+2022-04-09 22:22:25.102342 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline())\n    edges = []\n    for i in range(N-1):\n        a, b = map(lambda x: int(x), sys.stdin.readline().split())\n        edges.append((a, b))\n        edges.append((b, a))\n    #print(edges)\n    max_path = 0\n    node_list = list(range(1, N+1))\n    for i in range(len(node_list)):\n        for j in range(i+1, len(node_list)):\n            for k in range(j+1, len(node_list)):\n                a, b, c = node_list[i], node_list[j], node_list[k]\n                #print(a, b, c)\n                ab = [a, b]\n                ac = [a, c]\n                bc = [b, c]\n                for e in edges:\n                    if e[0] in ab and e[1] in ab:\n                        ab.append(e[1])\n                        ab.append(e[0])\n                    if e[0] in ac and e[1] in ac:\n                        ac.append(e[1])\n                        ac.append(e[0])\n                    if e[0] in bc and e[1] in bc:\n                        bc.append(e[1])\n                        bc.append(e[0])\n                #print(ab, ac, bc)\n                ab_set = set(ab)\n                ac_set = set(ac)\n                bc_set = set(bc)\n                path_set = ab_set | ac_set | bc_set\n                path = len(path_set)\n                #print(path, path_set)\n                if path > max_path:\n                    max_path = path\n                    max_path_set = path_set\n                    max_a, max_b, max_c = a, b, c\n    print(max_path)\n    print(max_a, max_b, max_c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:22:25.102368 REASON stop
+2022-04-09 22:22:25.102641 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:22:25.102706 REASON stop

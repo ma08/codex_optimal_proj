@@ -1,0 +1,176 @@
+2022-04-09 22:25:02.500013 """
+The only difference between problems C1 and C2 is that all values in input of problem C1 are distinct (this condition may be false for problem C2).
+
+You are given a sequence $a$ consisting of $n$ integers.
+
+You are making a sequence of moves. During each move you must take either the leftmost element of the sequence or the rightmost element of the sequence, write it down and remove it from the sequence. Your task is to write down a strictly increasing sequence, and among all such sequences you should take the longest (the length of the sequence is the number of elements in it).
+
+For example, for the sequence $[1, 2, 4, 3, 2]$ the answer is $4$ (you take $1$ and the sequence becomes $[2, 4, 3, 2]$, then you take the rightmost element $2$ and the sequence becomes $[2, 4, 3]$, then you take $3$ and the sequence becomes $[2, 4]$ and then you take $4$ and the sequence becomes $[2]$, the obtained increasing sequence is $[1, 2, 3, 4]$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+In the first line of the output print $k$ — the maximum number of elements in a strictly increasing sequence you can obtain.
+
+In the second line print a string $s$ of length $k$, where the $j$-th character of this string $s_j$ should be 'L' if you take the leftmost element during the $j$-th move and 'R' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+1 2 4 3 2
+
+Output
+4
+LRRR
+
+Input
+7
+1 3 5 6 5 4 2
+
+Output
+6
+LRLRRR
+
+Input
+3
+2 2 2
+
+Output
+1
+R
+
+Input
+4
+1 2 4 3
+
+Output
+4
+LLRR
+
+
+
+-----Note-----
+
+The first example is described in the problem statement.
+"""
+2022-04-09 22:25:02.500032 --------------------------
+2022-04-09 22:25:50.252306 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    l = []\n    r = []\n    for i in range(n):\n        if i == 0:\n            l.append(1)\n        else:\n            if a[i] > a[i-1]:\n                l.append(l[i-1] + 1)\n            else:\n                l.append(1)\n        if i == n-1:\n            r.append(1)\n        else:\n            if a[n-i-1] > a[n-i]:\n                r.append(r[i-1] + 1)\n            else:\n                r.append(1)\n    r.reverse()\n    print(max(l[i]+r[i]-1 for i in range(n)))\n    for i in range(n):\n        if l[i] > r[i]:\n            print(\"L\", end=\"\")\n        else:\n            print(\"R\", end=\"\")\n    print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [[0, 0] for i in range(n)]\n\nfor i in range(n):\n    if i == 0:\n        dp[i][0] = 1\n        dp[i][1] = 1\n    else:\n        if a[i] > a[i - 1]:\n            dp[i][0] = dp[i - 1][0] + 1\n        else:\n            dp[i][0] = 1\n        if a[i] > a[i - 1]:\n            dp[i][1] = 1\n        else:\n            dp[i][1] = dp[i - 1][1] + 1\n\nmax_dp = max(dp[n - 1])\n\nif max_dp == 1:\n    print(1)\n    print(\"R\")\nelse:\n    print(max_dp)\n    ans = \"\"\n    i = n - 1\n    while i > 0:\n        if dp[i][0] == max_dp:\n            ans = \"L\" + ans\n            i -= 1\n            max_dp -= 1\n        else:\n            ans = \"R\" + ans\n            i -= 1\n            max_dp -= 1\n    if i == 0:\n        ans = \"L\" + ans\n    print(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----SOLUTION-----\n\nn = int(input())\na = list(map(int, input().split()))\n\n# We will first use a greedy approach to find the first L or R that can be added to our solution\n# If there is no L or R such that it can be added to our solution, then we can just add the last element to our solution\n\nans = []\nwhile a:\n    if not ans:\n        # If ans is empty, then we can just add the first element to our solution\n        ans.append(a[0])\n        a.pop(0)\n    elif len(a) == 1:\n        # If there is only one element left, then we can just add it to our solution\n        ans.append(a[0])\n        a.pop(0)\n    else:\n        # If the first element is greater than the last element in our solution, then we can add it to our solution\n        if a[0] > ans[-1]:\n            ans.append(a[0])\n            a.pop(0)\n        # If the last element is greater than the last element in our solution, then we can add it to our solution\n        elif a[-1] > ans[-1]:\n            ans.append(a[-1])\n            a.pop()\n        # If neither the first element nor the last element is greater than the last element in our solution, then we can just add the last element to our solution\n        else:\n            ans.append(a[-1])\n            a.pop()\n\n# Now we need to find the longest strictly increasing subsequence in ans\n\n# We will first use a greedy approach to find the first L or R that can be added to our solution\n# If there is no L or R such that it can be added to our solution, then we can just add the last element to our solution\n\nans2 = []\nwhile ans:\n    if not ans2:\n        # If ans is empty, then we can just add the first element to our solution\n        ans2.append(ans[0])\n        ans.pop(0)\n    elif len(ans) == 1:\n        # If there is only one element left, then we can just add it to our solution\n        ans2.append(ans[0])\n        ans.pop(0)\n    else:\n        # If the first element is greater than the last element in our solution, then we can add it to our solution\n        if ans[0] > ans2[-1]:\n            ans2.append(ans[0])\n            ans.pop(0)\n        # If the last element is greater than the last element in our solution, then we can add it to our solution\n        elif ans[-1] > ans2[-1]:\n            ans2.append(ans[-1])\n            ans.pop()\n        # If neither the first element nor the last element is greater than the last element in our solution, then we can just add the last element to our solution\n        else:\n            ans2.append(ans[-1])\n            ans.pop()\n\nprint(len(ans2))\nfor i in ans2:\n    if i == ans[0]:\n        print('L', end='')\n    else:\n        print('R', end='')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    # print(n, a)\n\n    # dp = [0] * n\n    # for i in range(n):\n    #     dp[i] = 1\n    #     for j in range(0, i):\n    #         if a[i] > a[j]:\n    #             dp[i] = max(dp[i], dp[j] + 1)\n    # print(dp)\n    # print(max(dp))\n\n    dp = [0] * n\n    for i in range(n):\n        dp[i] = 1\n        for j in range(i - 1, -1, -1):\n            if a[i] > a[j]:\n                dp[i] = max(dp[i], dp[j] + 1)\n    print(dp)\n    print(max(dp))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\ndef main():\n    n = int(input())\n    lst = list(map(int, input().split()))\n    lst = sorted(lst)\n    left = lst[:]\n    right = lst[:]\n    left_max = 0\n    right_max = 0\n    left_lst = []\n    right_lst = []\n    for i in range(n):\n        if left_max <= left[0]:\n            left_max = left[0]\n            left_lst.append(left[0])\n            del left[0]\n        else:\n            del left[0]\n        if right_max <= right[-1]:\n            right_max = right[-1]\n            right_lst.append(right[-1])\n            del right[-1]\n        else:\n            del right[-1]\n    if len(left_lst) > len(right_lst):\n        print(len(left_lst))\n        print('L' * len(left_lst))\n    else:\n        print(len(right_lst))\n        print('R' * len(right_lst))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    ans = []\n    i = 0\n    j = n - 1\n    while i < j:\n        if a[i] < a[j]:\n            ans.append(a[i])\n            i += 1\n        else:\n            ans.append(a[j])\n            j -= 1\n    ans.append(a[i])\n    i = 0\n    j = 0\n    k = 1\n    res = []\n    while i < len(ans):\n        if i == len(ans) - 1:\n            res.append(ans[i])\n            break\n        if ans[i] < ans[i + 1]:\n            res.append(ans[i])\n            i += 1\n        else:\n            res.append(ans[i + 1])\n            i += 2\n    print(len(res))\n    for i in res:\n        if i == a[j]:\n            print(\"L\", end=\"\")\n            j += 1\n        else:\n            print(\"R\", end=\"\")\n            j += 1\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    s = [int(i) for i in sys.stdin.readline().strip().split()]\n    l = r = 0\n    a = []\n    b = []\n    while l < n and r < n:\n        if s[l] < s[r]:\n            a.append(s[l])\n            l += 1\n        else:\n            b.append(s[r])\n            r += 1\n    a.extend(s[l:])\n    b.extend(s[r:])\n    a.reverse()\n    b.reverse()\n    #print(a, b)\n    m = min(len(a), len(b))\n    for i in range(m):\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n        else:\n            break\n    #print(a, b)\n    k = len(a) + len(b)\n    if k == 0:\n        print(\"1\")\n        print(\"R\")\n        return\n    print(k)\n    for i in range(len(a)):\n        print(\"L\", end=\"\")\n    for i in range(len(b)):\n        print(\"R\", end=\"\")\n    print()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    l = r = 0\n    res = \"\"\n    while l < n and r < n:\n        if a[l] < a[r]:\n            res += \"L\"\n            l += 1\n        else:\n            res += \"R\"\n            r += 1\n    print(len(res))\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649557502,
+  "id": "cmpl-4vHY6y7hQdF93el7f1ePWwEWjAPB6",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:25:50.252608 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    l = []\n    r = []\n    for i in range(n):\n        if i == 0:\n            l.append(1)\n        else:\n            if a[i] > a[i-1]:\n                l.append(l[i-1] + 1)\n            else:\n                l.append(1)\n        if i == n-1:\n            r.append(1)\n        else:\n            if a[n-i-1] > a[n-i]:\n                r.append(r[i-1] + 1)\n            else:\n                r.append(1)\n    r.reverse()\n    print(max(l[i]+r[i]-1 for i in range(n)))\n    for i in range(n):\n        if l[i] > r[i]:\n            print(\"L\", end=\"\")\n        else:\n            print(\"R\", end=\"\")\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:25:50.252632 REASON stop
+2022-04-09 22:25:50.254164 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [[0, 0] for i in range(n)]\n\nfor i in range(n):\n    if i == 0:\n        dp[i][0] = 1\n        dp[i][1] = 1\n    else:\n        if a[i] > a[i - 1]:\n            dp[i][0] = dp[i - 1][0] + 1\n        else:\n            dp[i][0] = 1\n        if a[i] > a[i - 1]:\n            dp[i][1] = 1\n        else:\n            dp[i][1] = dp[i - 1][1] + 1\n\nmax_dp = max(dp[n - 1])\n\nif max_dp == 1:\n    print(1)\n    print(\"R\")\nelse:\n    print(max_dp)\n    ans = \"\"\n    i = n - 1\n    while i > 0:\n        if dp[i][0] == max_dp:\n            ans = \"L\" + ans\n            i -= 1\n            max_dp -= 1\n        else:\n            ans = \"R\" + ans\n            i -= 1\n            max_dp -= 1\n    if i == 0:\n        ans = \"L\" + ans\n    print(ans)"
+}
+2022-04-09 22:25:50.254256 REASON stop
+2022-04-09 22:25:50.254959 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----SOLUTION-----\n\nn = int(input())\na = list(map(int, input().split()))\n\n# We will first use a greedy approach to find the first L or R that can be added to our solution\n# If there is no L or R such that it can be added to our solution, then we can just add the last element to our solution\n\nans = []\nwhile a:\n    if not ans:\n        # If ans is empty, then we can just add the first element to our solution\n        ans.append(a[0])\n        a.pop(0)\n    elif len(a) == 1:\n        # If there is only one element left, then we can just add it to our solution\n        ans.append(a[0])\n        a.pop(0)\n    else:\n        # If the first element is greater than the last element in our solution, then we can add it to our solution\n        if a[0] > ans[-1]:\n            ans.append(a[0])\n            a.pop(0)\n        # If the last element is greater than the last element in our solution, then we can add it to our solution\n        elif a[-1] > ans[-1]:\n            ans.append(a[-1])\n            a.pop()\n        # If neither the first element nor the last element is greater than the last element in our solution, then we can just add the last element to our solution\n        else:\n            ans.append(a[-1])\n            a.pop()\n\n# Now we need to find the longest strictly increasing subsequence in ans\n\n# We will first use a greedy approach to find the first L or R that can be added to our solution\n# If there is no L or R such that it can be added to our solution, then we can just add the last element to our solution\n\nans2 = []\nwhile ans:\n    if not ans2:\n        # If ans is empty, then we can just add the first element to our solution\n        ans2.append(ans[0])\n        ans.pop(0)\n    elif len(ans) == 1:\n        # If there is only one element left, then we can just add it to our solution\n        ans2.append(ans[0])\n        ans.pop(0)\n    else:\n        # If the first element is greater than the last element in our solution, then we can add it to our solution\n        if ans[0] > ans2[-1]:\n            ans2.append(ans[0])\n            ans.pop(0)\n        # If the last element is greater than the last element in our solution, then we can add it to our solution\n        elif ans[-1] > ans2[-1]:\n            ans2.append(ans[-1])\n            ans.pop()\n        # If neither the first element nor the last element is greater than the last element in our solution, then we can just add the last element to our solution\n        else:\n            ans2.append(ans[-1])\n            ans.pop()\n\nprint(len(ans2))\nfor i in ans2:\n    if i == ans[0]:\n        print('L', end='')\n    else:\n        print('R', end='')"
+}
+2022-04-09 22:25:50.255065 REASON stop
+2022-04-09 22:25:50.255564 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    # print(n, a)\n\n    # dp = [0] * n\n    # for i in range(n):\n    #     dp[i] = 1\n    #     for j in range(0, i):\n    #         if a[i] > a[j]:\n    #             dp[i] = max(dp[i], dp[j] + 1)\n    # print(dp)\n    # print(max(dp))\n\n    dp = [0] * n\n    for i in range(n):\n        dp[i] = 1\n        for j in range(i - 1, -1, -1):\n            if a[i] > a[j]:\n                dp[i] = max(dp[i], dp[j] + 1)\n    print(dp)\n    print(max(dp))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:25:50.255643 REASON stop
+2022-04-09 22:25:50.255882 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\ndef main():\n    n = int(input())\n    lst = list(map(int, input().split()))\n    lst = sorted(lst)\n    left = lst[:]\n    right = lst[:]\n    left_max = 0\n    right_max = 0\n    left_lst = []\n    right_lst = []\n    for i in range(n):\n        if left_max <= left[0]:\n            left_max = left[0]\n            left_lst.append(left[0])\n            del left[0]\n        else:\n            del left[0]\n        if right_max <= right[-1]:\n            right_max = right[-1]\n            right_lst.append(right[-1])\n            del right[-1]\n        else:\n            del right[-1]\n    if len(left_lst) > len(right_lst):\n        print(len(left_lst))\n        print('L' * len(left_lst))\n    else:\n        print(len(right_lst))\n        print('R' * len(right_lst))\n\nmain()"
+}
+2022-04-09 22:25:50.255915 REASON stop
+2022-04-09 22:25:50.256143 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    ans = []\n    i = 0\n    j = n - 1\n    while i < j:\n        if a[i] < a[j]:\n            ans.append(a[i])\n            i += 1\n        else:\n            ans.append(a[j])\n            j -= 1\n    ans.append(a[i])\n    i = 0\n    j = 0\n    k = 1\n    res = []\n    while i < len(ans):\n        if i == len(ans) - 1:\n            res.append(ans[i])\n            break\n        if ans[i] < ans[i + 1]:\n            res.append(ans[i])\n            i += 1\n        else:\n            res.append(ans[i + 1])\n            i += 2\n    print(len(res))\n    for i in res:\n        if i == a[j]:\n            print(\"L\", end=\"\")\n            j += 1\n        else:\n            print(\"R\", end=\"\")\n            j += 1\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:25:50.256169 REASON stop
+2022-04-09 22:25:50.256408 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    s = [int(i) for i in sys.stdin.readline().strip().split()]\n    l = r = 0\n    a = []\n    b = []\n    while l < n and r < n:\n        if s[l] < s[r]:\n            a.append(s[l])\n            l += 1\n        else:\n            b.append(s[r])\n            r += 1\n    a.extend(s[l:])\n    b.extend(s[r:])\n    a.reverse()\n    b.reverse()\n    #print(a, b)\n    m = min(len(a), len(b))\n    for i in range(m):\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n        else:\n            break\n    #print(a, b)\n    k = len(a) + len(b)\n    if k == 0:\n        print(\"1\")\n        print(\"R\")\n        return\n    print(k)\n    for i in range(len(a)):\n        print(\"L\", end=\"\")\n    for i in range(len(b)):\n        print(\"R\", end=\"\")\n    print()\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:25:50.256457 REASON stop
+2022-04-09 22:25:50.256717 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    l = r = 0\n    res = \"\"\n    while l < n and r < n:\n        if a[l] < a[r]:\n            res += \"L\"\n            l += 1\n        else:\n            res += \"R\"\n            r += 1\n    print(len(res))\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:25:50.256744 REASON stop

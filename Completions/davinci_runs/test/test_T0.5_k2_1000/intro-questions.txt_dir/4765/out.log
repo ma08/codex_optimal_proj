@@ -1,0 +1,152 @@
+2022-04-09 22:04:32.965736 """
+"Perket" is a widely known and delicious meal. For perket to be what it is, cooks must carefully choose the ingredients to get the fullest taste possible while keeping the meal traditional.
+
+You have $N$ ingredients at your disposal. For each we know its sourness $S$ and bitterness $B$. When using multiple ingredients, the total sourness is the product of sourness amounts of all ingredients, while the total bitterness is the sum of bitterness amounts of all ingredients.
+
+As everyone knows, perket is supposed to be neither sour nor bitter; we want to choose the ingredients so that the absolute difference between sourness and bitterness is the smallest.
+
+Also, it is necessary to use at least one ingredient; you can’t serve water as the main course.
+
+-----Input-----
+The first line contains the integer $N$ $(1 \leq N \leq 10)$, the number of ingredients at our disposal. Each of the next $N$ lines contains two integers separated by a space, the sourness and bitterness of each ingredient.
+
+The input data will be such that, if we make a meal with all ingredients, both the sourness and bitterness will be less than $1000000000$.
+
+-----Output-----
+Output the smallest possible difference between sourness and bitterness.
+
+-----Examples-----
+Sample Input 1:
+1
+3 10
+Sample Output 1:
+7
+
+Sample Input 2:
+2
+3 8
+5 8
+Sample Output 2:
+1
+"""
+2022-04-09 22:04:32.965766 --------------------------
+2022-04-09 22:05:21.361099 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef min_diff(s, b, n, index, curr_s, curr_b, diff):\n    if index == n:\n        return abs(curr_s - curr_b)\n    if diff < abs(curr_s - curr_b):\n        return diff\n    return min(min_diff(s, b, n, index + 1, curr_s, curr_b, diff),\n               min_diff(s, b, n, index + 1, curr_s * s[index], curr_b + b[index], diff))\n\nn = int(sys.stdin.readline())\ns = []\nb = []\nfor i in range(n):\n    s_i, b_i = [int(x) for x in sys.stdin.readline().split()]\n    s.append(s_i)\n    b.append(b_i)\nprint(min_diff(s, b, n, 0, 1, 0, 100000000))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\n\nsourness = []\nbitterness = []\n\nfor i in range(n):\n    line = sys.stdin.readline().split()\n    sourness.append(int(line[0]))\n    bitterness.append(int(line[1]))\n\nmin_diff = 1000000000\n\nfor i in range(2**n):\n    sour = 1\n    bitter = 0\n    for j in range(n):\n        if (i >> j) % 2 == 1:\n            sour *= sourness[j]\n            bitter += bitterness[j]\n    min_diff = min(min_diff, abs(sour - bitter))\n\nprint(min_diff)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    ingredients = []\n\n    for i in range(n):\n        ingredients.append([int(x) for x in input().split()])\n\n    ingredients.sort()\n\n    minDiff = abs(ingredients[0][0] - ingredients[0][1])\n    minDiffIngredient = ingredients[0]\n\n    for i in range(1, n):\n        if ingredients[i][0] > ingredients[i - 1][0]:\n            diff = abs(ingredients[i][0] - ingredients[i][1])\n            if diff < minDiff:\n                minDiff = diff\n                minDiffIngredient = ingredients[i]\n\n    print(minDiff)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nsourness = 1\nbitterness = 0\nfor i in range(N):\n    S, B = map(int, input().split())\n    sourness *= S\n    bitterness += B\n\nprint(abs(sourness-bitterness))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\n\ndef perket(n, a):\n    if n == 1:\n        return abs(a[0][0] - a[0][1])\n    m = 10**9\n    for i in range(n):\n        for j in range(i+1, n):\n            m = min(m, abs((a[i][0]*a[j][0]) - (a[i][1] + a[j][1])))\n    return m\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\nprint(perket(n, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom math import ceil\nfrom math import floor\n\ndef main(n, ingredients):\n    # if n == 1:\n    #     return ingredients[0][1] - ingredients[0][0]\n    # else:\n    #     s = ingredients[0][0]\n    #     b = ingredients[0][1]\n    #     for i in range(1,n):\n    #         s *= ingredients[i][0]\n    #         b += ingredients[i][1]\n    #     return abs(s - b)\n    s = 1\n    b = 0\n    for i in range(n):\n        s *= ingredients[i][0]\n        b += ingredients[i][1]\n    return min(abs(s-b), abs(ceil(s/ingredients[0][0])-b+ingredients[0][1]), abs(floor(s/ingredients[0][0])-b+ingredients[0][1]), abs(ceil(s/ingredients[1][0])-b+ingredients[1][1]), abs(floor(s/ingredients[1][0])-b+ingredients[1][1]), abs(ceil(s/ingredients[2][0])-b+ingredients[2][1]), abs(floor(s/ingredients[2][0])-b+ingredients[2][1]), abs(ceil(s/ingredients[3][0])-b+ingredients[3][1]), abs(floor(s/ingredients[3][0])-b+ingredients[3][1]), abs(ceil(s/ingredients[4][0])-b+ingredients[4][1]), abs(floor(s/ingredients[4][0])-b+ingredients[4][1]), abs(ceil(s/ingredients[5][0])-b+ingredients[5][1]), abs(floor(s/ingredients[5][0])-b+ingredients[5][1]), abs(ceil(s/ingredients[6][0])-b+ingredients[6][1]), abs(floor(s/ingredients[6][0])-b+ingredients[6][1]), abs(ceil(s/ingredients[7][0])-b+ingredients[7][1]), abs(floor(s/ingredients[7][0])-b+ingredients[7][1]), abs(ceil(s/ingredients[8][0])-b+ingredients[8][1]), abs(floor(s/ingredients[8][0])-b+ingredients[8][1]), abs(ceil(s/ingredients[9][0])-b+ingredients[9][1]), abs(floor(s/ingredients[9][0])-b+ingredients[9][1]))\n\nn = int(stdin.readline())\ningredients = []\nfor i in range(n):\n    s, b = map(int, stdin.readline().split())\n    ingredients.append([s, b])\nprint(main(n, ingredients))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tmeal = []\n\tfor line in sys.stdin:\n\t\tmeal.append([int(x) for x in line.split()])\n\tmeal.pop(0)\n\t\n\t# print(meal)\n\t\n\t# min_dif = 1000000000\n\t# for i in range(len(meal)):\n\t# \tfor j in range(i+1, len(meal)):\n\t# \t\ts = meal[i][0]*meal[j][0]\n\t# \t\tb = meal[i][1]+meal[j][1]\n\t# \t\tdif = abs(s-b)\n\t# \t\tif dif < min_dif:\n\t# \t\t\tmin_dif = dif\n\t# print(min_dif)\n\t\n\t# min_dif = 1000000000\n\t# for i in range(len(meal)):\n\t# \tfor j in range(i+1, len(meal)):\n\t# \t\tfor k in range(j+1, len(meal)):\n\t# \t\t\ts = meal[i][0]*meal[j][0]*meal[k][0]\n\t# \t\t\tb = meal[i][1]+meal[j][1]+meal[k][1]\n\t# \t\t\tdif = abs(s-b)\n\t# \t\t\tif dif < min_dif:\n\t# \t\t\t\tmin_dif = dif\n\t# print(min_dif)\n\t\n\tmin_dif = 1000000000\n\tfor i in range(len(meal)):\n\t\tfor j in range(i+1, len(meal)):\n\t\t\tfor k in range(j+1, len(meal)):\n\t\t\t\tfor l in range(k+1, len(meal)):\n\t\t\t\t\ts = meal[i][0]*meal[j][0]*meal[k][0]*meal[l][0]\n\t\t\t\t\tb = meal[i][1]+meal[j][1]+meal[k][1]+meal[l][1]\n\t\t\t\t\tdif = abs(s-b)\n\t\t\t\t\tif dif < min_dif:\n\t\t\t\t\t\tmin_dif = dif\n\tprint(min_dif)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport itertools\n\nn = int(input())\nperk_ingredients = []\n\nfor i in range(n):\n    s, b = [int(x) for x in input().split()]\n    perk_ingredients.append((s, b))\n\nperk_combinations = list(itertools.combinations(perk_ingredients, 1))\n\nfor i in range(2, n+1):\n    perk_combinations.extend(list(itertools.combinations(perk_ingredients, i)))\n\nperk_combinations = [list(x) for x in perk_combinations]\n\nmin_diff = float('inf')\n\nfor combo in perk_combinations:\n    s_sum = 1\n    b_sum = 0\n    for ing in combo:\n        s_sum *= ing[0]\n        b_sum += ing[1]\n    diff = abs(s_sum - b_sum)\n    if diff < min_diff:\n        min_diff = diff\n\nprint(min_diff)"
+    }
+  ],
+  "created": 1649556273,
+  "id": "cmpl-4vHEH4ivQrubmSsQTaVFYm8fbBPoV",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:05:21.361518 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef min_diff(s, b, n, index, curr_s, curr_b, diff):\n    if index == n:\n        return abs(curr_s - curr_b)\n    if diff < abs(curr_s - curr_b):\n        return diff\n    return min(min_diff(s, b, n, index + 1, curr_s, curr_b, diff),\n               min_diff(s, b, n, index + 1, curr_s * s[index], curr_b + b[index], diff))\n\nn = int(sys.stdin.readline())\ns = []\nb = []\nfor i in range(n):\n    s_i, b_i = [int(x) for x in sys.stdin.readline().split()]\n    s.append(s_i)\n    b.append(b_i)\nprint(min_diff(s, b, n, 0, 1, 0, 100000000))"
+}
+2022-04-09 22:05:21.361591 REASON stop
+2022-04-09 22:05:21.372754 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.372781 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\n\nsourness = []\nbitterness = []\n\nfor i in range(n):\n    line = sys.stdin.readline().split()\n    sourness.append(int(line[0]))\n    bitterness.append(int(line[1]))\n\nmin_diff = 1000000000\n\nfor i in range(2**n):\n    sour = 1\n    bitter = 0\n    for j in range(n):\n        if (i >> j) % 2 == 1:\n            sour *= sourness[j]\n            bitter += bitterness[j]\n    min_diff = min(min_diff, abs(sour - bitter))\n\nprint(min_diff)"
+}
+2022-04-09 22:05:21.372857 REASON stop
+2022-04-09 22:05:21.373304 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.373343 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    ingredients = []\n\n    for i in range(n):\n        ingredients.append([int(x) for x in input().split()])\n\n    ingredients.sort()\n\n    minDiff = abs(ingredients[0][0] - ingredients[0][1])\n    minDiffIngredient = ingredients[0]\n\n    for i in range(1, n):\n        if ingredients[i][0] > ingredients[i - 1][0]:\n            diff = abs(ingredients[i][0] - ingredients[i][1])\n            if diff < minDiff:\n                minDiff = diff\n                minDiffIngredient = ingredients[i]\n\n    print(minDiff)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:05:21.373418 REASON stop
+2022-04-09 22:05:21.373742 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.373755 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nsourness = 1\nbitterness = 0\nfor i in range(N):\n    S, B = map(int, input().split())\n    sourness *= S\n    bitterness += B\n\nprint(abs(sourness-bitterness))"
+}
+2022-04-09 22:05:21.373793 REASON stop
+2022-04-09 22:05:21.374012 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.374031 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\n\ndef perket(n, a):\n    if n == 1:\n        return abs(a[0][0] - a[0][1])\n    m = 10**9\n    for i in range(n):\n        for j in range(i+1, n):\n            m = min(m, abs((a[i][0]*a[j][0]) - (a[i][1] + a[j][1])))\n    return m\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\nprint(perket(n, a))"
+}
+2022-04-09 22:05:21.374069 REASON stop
+2022-04-09 22:05:21.374207 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.374213 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom math import ceil\nfrom math import floor\n\ndef main(n, ingredients):\n    # if n == 1:\n    #     return ingredients[0][1] - ingredients[0][0]\n    # else:\n    #     s = ingredients[0][0]\n    #     b = ingredients[0][1]\n    #     for i in range(1,n):\n    #         s *= ingredients[i][0]\n    #         b += ingredients[i][1]\n    #     return abs(s - b)\n    s = 1\n    b = 0\n    for i in range(n):\n        s *= ingredients[i][0]\n        b += ingredients[i][1]\n    return min(abs(s-b), abs(ceil(s/ingredients[0][0])-b+ingredients[0][1]), abs(floor(s/ingredients[0][0])-b+ingredients[0][1]), abs(ceil(s/ingredients[1][0])-b+ingredients[1][1]), abs(floor(s/ingredients[1][0])-b+ingredients[1][1]), abs(ceil(s/ingredients[2][0])-b+ingredients[2][1]), abs(floor(s/ingredients[2][0])-b+ingredients[2][1]), abs(ceil(s/ingredients[3][0])-b+ingredients[3][1]), abs(floor(s/ingredients[3][0])-b+ingredients[3][1]), abs(ceil(s/ingredients[4][0])-b+ingredients[4][1]), abs(floor(s/ingredients[4][0])-b+ingredients[4][1]), abs(ceil(s/ingredients[5][0])-b+ingredients[5][1]), abs(floor(s/ingredients[5][0])-b+ingredients[5][1]), abs(ceil(s/ingredients[6][0])-b+ingredients[6][1]), abs(floor(s/ingredients[6][0])-b+ingredients[6][1]), abs(ceil(s/ingredients[7][0])-b+ingredients[7][1]), abs(floor(s/ingredients[7][0])-b+ingredients[7][1]), abs(ceil(s/ingredients[8][0])-b+ingredients[8][1]), abs(floor(s/ingredients[8][0])-b+ingredients[8][1]), abs(ceil(s/ingredients[9][0])-b+ingredients[9][1]), abs(floor(s/ingredients[9][0])-b+ingredients[9][1]))\n\nn = int(stdin.readline())\ningredients = []\nfor i in range(n):\n    s, b = map(int, stdin.readline().split())\n    ingredients.append([s, b])\nprint(main(n, ingredients))"
+}
+2022-04-09 22:05:21.374239 REASON stop
+2022-04-09 22:05:21.374486 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.374507 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tmeal = []\n\tfor line in sys.stdin:\n\t\tmeal.append([int(x) for x in line.split()])\n\tmeal.pop(0)\n\t\n\t# print(meal)\n\t\n\t# min_dif = 1000000000\n\t# for i in range(len(meal)):\n\t# \tfor j in range(i+1, len(meal)):\n\t# \t\ts = meal[i][0]*meal[j][0]\n\t# \t\tb = meal[i][1]+meal[j][1]\n\t# \t\tdif = abs(s-b)\n\t# \t\tif dif < min_dif:\n\t# \t\t\tmin_dif = dif\n\t# print(min_dif)\n\t\n\t# min_dif = 1000000000\n\t# for i in range(len(meal)):\n\t# \tfor j in range(i+1, len(meal)):\n\t# \t\tfor k in range(j+1, len(meal)):\n\t# \t\t\ts = meal[i][0]*meal[j][0]*meal[k][0]\n\t# \t\t\tb = meal[i][1]+meal[j][1]+meal[k][1]\n\t# \t\t\tdif = abs(s-b)\n\t# \t\t\tif dif < min_dif:\n\t# \t\t\t\tmin_dif = dif\n\t# print(min_dif)\n\t\n\tmin_dif = 1000000000\n\tfor i in range(len(meal)):\n\t\tfor j in range(i+1, len(meal)):\n\t\t\tfor k in range(j+1, len(meal)):\n\t\t\t\tfor l in range(k+1, len(meal)):\n\t\t\t\t\ts = meal[i][0]*meal[j][0]*meal[k][0]*meal[l][0]\n\t\t\t\t\tb = meal[i][1]+meal[j][1]+meal[k][1]+meal[l][1]\n\t\t\t\t\tdif = abs(s-b)\n\t\t\t\t\tif dif < min_dif:\n\t\t\t\t\t\tmin_dif = dif\n\tprint(min_dif)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 22:05:21.374569 REASON stop
+2022-04-09 22:05:21.374849 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'
+2022-04-09 22:05:21.374876 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport itertools\n\nn = int(input())\nperk_ingredients = []\n\nfor i in range(n):\n    s, b = [int(x) for x in input().split()]\n    perk_ingredients.append((s, b))\n\nperk_combinations = list(itertools.combinations(perk_ingredients, 1))\n\nfor i in range(2, n+1):\n    perk_combinations.extend(list(itertools.combinations(perk_ingredients, i)))\n\nperk_combinations = [list(x) for x in perk_combinations]\n\nmin_diff = float('inf')\n\nfor combo in perk_combinations:\n    s_sum = 1\n    b_sum = 0\n    for ing in combo:\n        s_sum *= ing[0]\n        b_sum += ing[1]\n    diff = abs(s_sum - b_sum)\n    if diff < min_diff:\n        min_diff = diff\n\nprint(min_diff)"
+}
+2022-04-09 22:05:21.374930 REASON stop
+2022-04-09 22:05:21.375200 test/intro-questions.txt_dir/4765/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4765/solutions.json'

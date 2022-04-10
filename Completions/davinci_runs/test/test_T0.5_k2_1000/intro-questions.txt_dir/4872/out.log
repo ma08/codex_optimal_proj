@@ -1,0 +1,141 @@
+2022-04-09 23:12:27.072070 """
+The management of the software company JunkCode has recently found, much to their surprise and disappointment, that productivity has gone down since they implemented their enhanced set of coding guidelines. The idea was that all developers should make sure that every code change they push to the master branch of their software repository strictly follows the coding guidelines. After all, one of the developers, Perikles, has been doing this since long before these regulations became effective so how hard could it be? 
+
+Rather than investing a lot of time figuring out why this degradation in productivity occurred, the line manager suggests that they loosen their requirement: developers can push code that weakly violates the guidelines as long as they run cleanup phases on the code from time to time to make sure the repository is tidy.
+
+She suggests a metric where the “dirtiness” of a developer’s code is the sum of the pushes that violate the guidelines – so-called dirty pushes – made by that developer, each weighted by the number of days since it was pushed. The number of days since a dirty push is a step function that increases by one each midnight following the push. Hence, if a developer has made dirty pushes on days $1$, $2$, and $5$, the dirtiness on day $6$ is $5+4+1=10$. She suggests that a cleanup phase, completely fixing all violations of the coding guidelines, must be completed before the dirtiness reaches $20$. One of the developers, Petra, senses that this rule must be obeyed not only because it is a company policy. Breaking it will also result in awkward meetings with a lot of concerned managers who all want to know why she cannot be more like Perikles? Still, she wants to run the cleanup phase as seldomly as possible, and always postpones it until it is absolutely necessary. A cleanup phase is always run at the end of the day and fixes every dirty push done up to and including that day. Since all developers are shuffled to new projects at the start of each year, no dirtiness should be left after midnight at the end of new year’s eve.
+
+-----Input-----
+The first line of input contains an integer $n$ ($1 \leq n \leq 365$), the number of dirty pushes made by Petra during a year. The second line contains $n$ integers $d_1, d_2, \ldots , d_ n$ ($1 \leq d_ i \leq 365$ for each $1 \le i \le n$) giving the days when Petra made dirty pushes. You can assume that $d_ i < d_ j$ for $i < j$.
+
+-----Output-----
+Output the total number of cleanup phases needed for Petra to keep the dirtiness strictly below $20$ at all times.
+
+-----Examples-----
+Sample Input:
+5
+1 45 65 84 346
+Sample Output:
+4
+"""
+2022-04-09 23:12:27.072098 --------------------------
+2022-04-09 23:12:52.750542 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = [int(x) for x in sys.stdin.readline().split()]\n    days.append(366)\n    cleanups = 0\n    dirtiness = 0\n    for i in range(len(days)-1):\n        dirtiness += days[i] - days[i-1]\n        if dirtiness >= 20:\n            cleanups += 1\n            dirtiness = 0\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    dirtyPushes = [int(x) for x in sys.stdin.readline().split()]\n    totalDirtiness = 0\n    cleanupPhases = 0\n    for i in range(n):\n        totalDirtiness += (dirtyPushes[i] - i)\n        if totalDirtiness >= 20:\n            cleanupPhases += 1\n            totalDirtiness = 0\n    print(cleanupPhases)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\npushes = list(map(int, input().split()))\n\ncleanups = 0\ndirtiness = 0\n\nfor day in range(1, 367):\n    dirtiness += sum([max(0, day - push) for push in pushes if push <= day])\n    if dirtiness >= 20:\n        cleanups += 1\n        dirtiness = 0\n\nprint(cleanups)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    d = [int(x) for x in input().split()]\n    i = 1\n    cleanups = 0\n    while i < n:\n        if d[i] - d[i-1] > 20:\n            cleanups += 1\n            i += 1\n        elif i == n-1:\n            cleanups += 1\n            i += 1\n        else:\n            i += 1\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    dirty_pushes = [int(x) for x in sys.stdin.readline().split()]\n    #print(n)\n    #print(dirty_pushes)\n    current_dirtiness = 0\n    cleanup_counter = 0\n    for day in range(1, 366):\n        if day in dirty_pushes:\n            current_dirtiness += (day - dirty_pushes.index(day))\n        else:\n            current_dirtiness += 1\n        if current_dirtiness >= 20:\n            cleanup_counter += 1\n            current_dirtiness = 0\n    print(cleanup_counter)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = [int(x) for x in sys.stdin.readline().split()]\n    days.append(366)\n    curr_day = 1\n    cleanups = 0\n    for i in range(n):\n        while days[i] >= curr_day:\n            if days[i] - curr_day > 20:\n                cleanups += 1\n                curr_day = days[i] + 1\n            else:\n                curr_day = days[i] + 1\n                break\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nd = list(map(int, input().split()))\n\ncleanup = 0\ndirty = 0\nfor i in range(n):\n    while dirty >= 20:\n        cleanup += 1\n        dirty -= 20\n    dirty += (d[i] - 1)\n\nwhile dirty >= 20:\n    cleanup += 1\n    dirty -= 20\n\nprint(cleanup)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ndays = [int(x) for x in input().split()]\n\ncleanups = 0\ndirtiness = 0\n\nfor day in days:\n    dirtiness += day\n    if dirtiness >= 20:\n        cleanups += 1\n        dirtiness = 0\n\nprint(cleanups)"
+    }
+  ],
+  "created": 1649560347,
+  "id": "cmpl-4vIHzpR2AGWFpDSQnSskCx92KPvgN",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:12:52.750844 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = [int(x) for x in sys.stdin.readline().split()]\n    days.append(366)\n    cleanups = 0\n    dirtiness = 0\n    for i in range(len(days)-1):\n        dirtiness += days[i] - days[i-1]\n        if dirtiness >= 20:\n            cleanups += 1\n            dirtiness = 0\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:52.750880 REASON stop
+2022-04-09 23:12:52.762098 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.762164 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    dirtyPushes = [int(x) for x in sys.stdin.readline().split()]\n    totalDirtiness = 0\n    cleanupPhases = 0\n    for i in range(n):\n        totalDirtiness += (dirtyPushes[i] - i)\n        if totalDirtiness >= 20:\n            cleanupPhases += 1\n            totalDirtiness = 0\n    print(cleanupPhases)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:52.762276 REASON stop
+2022-04-09 23:12:52.762797 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.762893 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\npushes = list(map(int, input().split()))\n\ncleanups = 0\ndirtiness = 0\n\nfor day in range(1, 367):\n    dirtiness += sum([max(0, day - push) for push in pushes if push <= day])\n    if dirtiness >= 20:\n        cleanups += 1\n        dirtiness = 0\n\nprint(cleanups)"
+}
+2022-04-09 23:12:52.762963 REASON stop
+2022-04-09 23:12:52.763436 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.763467 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    d = [int(x) for x in input().split()]\n    i = 1\n    cleanups = 0\n    while i < n:\n        if d[i] - d[i-1] > 20:\n            cleanups += 1\n            i += 1\n        elif i == n-1:\n            cleanups += 1\n            i += 1\n        else:\n            i += 1\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:52.763529 REASON stop
+2022-04-09 23:12:52.763996 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.764029 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    dirty_pushes = [int(x) for x in sys.stdin.readline().split()]\n    #print(n)\n    #print(dirty_pushes)\n    current_dirtiness = 0\n    cleanup_counter = 0\n    for day in range(1, 366):\n        if day in dirty_pushes:\n            current_dirtiness += (day - dirty_pushes.index(day))\n        else:\n            current_dirtiness += 1\n        if current_dirtiness >= 20:\n            cleanup_counter += 1\n            current_dirtiness = 0\n    print(cleanup_counter)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:12:52.764104 REASON stop
+2022-04-09 23:12:52.764468 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.764494 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = [int(x) for x in sys.stdin.readline().split()]\n    days.append(366)\n    curr_day = 1\n    cleanups = 0\n    for i in range(n):\n        while days[i] >= curr_day:\n            if days[i] - curr_day > 20:\n                cleanups += 1\n                curr_day = days[i] + 1\n            else:\n                curr_day = days[i] + 1\n                break\n    print(cleanups)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:52.764544 REASON stop
+2022-04-09 23:12:52.764890 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.764916 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nd = list(map(int, input().split()))\n\ncleanup = 0\ndirty = 0\nfor i in range(n):\n    while dirty >= 20:\n        cleanup += 1\n        dirty -= 20\n    dirty += (d[i] - 1)\n\nwhile dirty >= 20:\n    cleanup += 1\n    dirty -= 20\n\nprint(cleanup)"
+}
+2022-04-09 23:12:52.764965 REASON stop
+2022-04-09 23:12:52.765120 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'
+2022-04-09 23:12:52.765126 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ndays = [int(x) for x in input().split()]\n\ncleanups = 0\ndirtiness = 0\n\nfor day in days:\n    dirtiness += day\n    if dirtiness >= 20:\n        cleanups += 1\n        dirtiness = 0\n\nprint(cleanups)"
+}
+2022-04-09 23:12:52.765145 REASON stop
+2022-04-09 23:12:52.765252 test/intro-questions.txt_dir/4872/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4872/solutions.json'

@@ -1,0 +1,139 @@
+2022-04-10 00:00:29.679690 """
+Farmer Jon has recently bought $n$ tree seedlings that he wants to plant in his yard. It takes $1$ day for Jon to plant a seedling1, and for each tree Jon knows exactly in how many days after planting it grows to full maturity. Jon would also like to throw a party for his farmer friends, but in order to impress them he would like to organize the party only after all the trees have grown. More precisely, the party can be organized at earliest on the next day after the last tree has grown up.
+
+Help Jon to find out when is the earliest day when the party can take place. Jon can choose the order of planting the trees as he likes, so he wants to plant the trees in such a way that the party will be as soon as possible.
+
+-----Input-----
+The input consists of two lines. The first line contains a single integer $N$ ($1\leq N \leq 100000$) denoting the number of seedlings. Then a line with $N$ integers $t_ i$ follows ($1\leq t_ i\leq 1000000$), where $t_ i$ denotes the number of days it takes for the $i$th tree to grow.
+
+-----Output-----
+You program should output exactly one line containing one integer, denoting the earliest day when the party can be organized. The days are numbered $1,2,3,\ldots $ beginning from the current moment.
+
+-----Examples-----
+Sample Input:
+4
+2 3 4 3
+Sample Output:
+7
+"""
+2022-04-10 00:00:29.679739 --------------------------
+2022-04-10 00:01:01.451482 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# TODO: fix algorithm - it doesn't work for some inputs\n\nn = int(input())\nt = list(map(int, input().split()))\n\n# sort trees by time required for them to grow\nt.sort()\n\n# find the earliest day when the party can be organized\nday = 0\nfor i in range(n):\n    if t[i] < day:\n        day += 1\n    else:\n        day += t[i]\n\nprint(day)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport heapq\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = map(int, sys.stdin.readline().split())\n    heap = []\n    for i in days:\n        heapq.heappush(heap, i)\n    time = 0\n    while heap:\n        time += heapq.heappop(heap)\n        if heap:\n            time += 1\n    print time\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    t = list(map(int, sys.stdin.readline().split()))\n    t.sort()\n    print(sum(t[i]*(n-i) for i in range(n)))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nif __name__ == \"__main__\":\n    n = int(sys.stdin.readline().strip())\n    trees = [int(x) for x in sys.stdin.readline().strip().split()]\n    count = 0\n    while n > 0:\n        n -= 1\n        count += trees[n]\n    print(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn = int(input())\nt = list(map(int, input().split()))\n\nt.sort()\n\nmax = t[0]\nfor i in range(1, n):\n    if max < t[i]:\n        max = t[i]\n    t[i] = max + t[i]\n\nprint(t[-1] + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n  n = int(sys.stdin.readline())\n  trees = [int(x) for x in sys.stdin.readline().split()]\n  trees.sort()\n  if n == 1:\n    print(trees[0])\n  else:\n    max_days = 0\n    for i in range(n):\n      max_days = max(max_days, trees[i] + n - i)\n    print(max_days)\n\nif __name__ == '__main__':\n  main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    num_seedlings = int(sys.stdin.readline().strip())\n    seedling_growth_times = [int(x) for x in sys.stdin.readline().strip().split()]\n    seedling_growth_times.sort()\n    max_time = seedling_growth_times[-1]\n    for i in range(len(seedling_growth_times)-2,-1,-1):\n        max_time += 1 + seedling_growth_times[i]\n    print(max_time)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport heapq\n\ndef party_planning(trees):\n    \"\"\"\n    The party can be organized at earliest on the next day after the last tree has grown up.\n    :param trees: list of ints representing the number of days it takes for each tree to grow\n    :return: earliest day when the party can be organized\n    \"\"\"\n    # sort the list of trees by growth time\n    heapq.heapify(trees)\n    # the first tree takes 1 day to plant\n    cur_day = 1\n    # the earliest day that the party can be organized is the next day after the last tree has grown\n    # so we need to keep track of the last day that a tree will finish growing\n    last_day = 0\n    while trees:\n        # plant the tree with the shortest growth time\n        cur_day += heapq.heappop(trees)\n        # if the current tree finishes growing after the previous tree, then the party can be organized\n        # on the same day as the current tree\n        if cur_day > last_day:\n            last_day = cur_day\n    return last_day\n\ndef main():\n    \"\"\"\n    Driver function\n    \"\"\"\n    trees = []\n    for line in sys.stdin:\n        trees.extend(map(int, line.split()))\n    print(party_planning(trees))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649563229,
+  "id": "cmpl-4vJ2T4IlsUdWLLQI9j2z1GysOg1rN",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:01:01.452061 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# TODO: fix algorithm - it doesn't work for some inputs\n\nn = int(input())\nt = list(map(int, input().split()))\n\n# sort trees by time required for them to grow\nt.sort()\n\n# find the earliest day when the party can be organized\nday = 0\nfor i in range(n):\n    if t[i] < day:\n        day += 1\n    else:\n        day += t[i]\n\nprint(day)"
+}
+2022-04-10 00:01:01.452086 REASON stop
+2022-04-10 00:01:01.464528 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.464612 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport heapq\n\ndef main():\n    n = int(sys.stdin.readline())\n    days = map(int, sys.stdin.readline().split())\n    heap = []\n    for i in days:\n        heapq.heappush(heap, i)\n    time = 0\n    while heap:\n        time += heapq.heappop(heap)\n        if heap:\n            time += 1\n    print time\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:01:01.464802 REASON stop
+2022-04-10 00:01:01.465672 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.465731 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    t = list(map(int, sys.stdin.readline().split()))\n    t.sort()\n    print(sum(t[i]*(n-i) for i in range(n)))\n\nmain()"
+}
+2022-04-10 00:01:01.465854 REASON stop
+2022-04-10 00:01:01.466569 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.466615 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nif __name__ == \"__main__\":\n    n = int(sys.stdin.readline().strip())\n    trees = [int(x) for x in sys.stdin.readline().strip().split()]\n    count = 0\n    while n > 0:\n        n -= 1\n        count += trees[n]\n    print(count)"
+}
+2022-04-10 00:01:01.466720 REASON stop
+2022-04-10 00:01:01.466994 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.467008 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn = int(input())\nt = list(map(int, input().split()))\n\nt.sort()\n\nmax = t[0]\nfor i in range(1, n):\n    if max < t[i]:\n        max = t[i]\n    t[i] = max + t[i]\n\nprint(t[-1] + 1)"
+}
+2022-04-10 00:01:01.467161 REASON stop
+2022-04-10 00:01:01.467465 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.467480 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n  n = int(sys.stdin.readline())\n  trees = [int(x) for x in sys.stdin.readline().split()]\n  trees.sort()\n  if n == 1:\n    print(trees[0])\n  else:\n    max_days = 0\n    for i in range(n):\n      max_days = max(max_days, trees[i] + n - i)\n    print(max_days)\n\nif __name__ == '__main__':\n  main()"
+}
+2022-04-10 00:01:01.467525 REASON stop
+2022-04-10 00:01:01.467787 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.467801 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    num_seedlings = int(sys.stdin.readline().strip())\n    seedling_growth_times = [int(x) for x in sys.stdin.readline().strip().split()]\n    seedling_growth_times.sort()\n    max_time = seedling_growth_times[-1]\n    for i in range(len(seedling_growth_times)-2,-1,-1):\n        max_time += 1 + seedling_growth_times[i]\n    print(max_time)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:01:01.467846 REASON stop
+2022-04-10 00:01:01.468089 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'
+2022-04-10 00:01:01.468102 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport heapq\n\ndef party_planning(trees):\n    \"\"\"\n    The party can be organized at earliest on the next day after the last tree has grown up.\n    :param trees: list of ints representing the number of days it takes for each tree to grow\n    :return: earliest day when the party can be organized\n    \"\"\"\n    # sort the list of trees by growth time\n    heapq.heapify(trees)\n    # the first tree takes 1 day to plant\n    cur_day = 1\n    # the earliest day that the party can be organized is the next day after the last tree has grown\n    # so we need to keep track of the last day that a tree will finish growing\n    last_day = 0\n    while trees:\n        # plant the tree with the shortest growth time\n        cur_day += heapq.heappop(trees)\n        # if the current tree finishes growing after the previous tree, then the party can be organized\n        # on the same day as the current tree\n        if cur_day > last_day:\n            last_day = cur_day\n    return last_day\n\ndef main():\n    \"\"\"\n    Driver function\n    \"\"\"\n    trees = []\n    for line in sys.stdin:\n        trees.extend(map(int, line.split()))\n    print(party_planning(trees))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:01:01.468165 REASON stop
+2022-04-10 00:01:01.468418 test/intro-questions.txt_dir/4942/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4942/solutions.json'

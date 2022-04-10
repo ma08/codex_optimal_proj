@@ -1,0 +1,151 @@
+2022-04-09 23:25:06.863618 """
+There is a staircase with N steps. Takahashi is now standing at the foot of the stairs, that is, on the 0-th step.
+He can climb up one or two steps at a time.
+However, the treads of the a_1-th, a_2-th, a_3-th, \ldots, a_M-th steps are broken, so it is dangerous to set foot on those steps.
+How many are there to climb up to the top step, that is, the N-th step, without setting foot on the broken steps?
+Find the count modulo 1\ 000\ 000\ 007.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^5
+ - 0 \leq M \leq N-1
+ - 1 \leq a_1 < a_2 <  ...  < a_M \leq N-1
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+a_1
+a_2
+ .
+ .
+ .
+a_M
+
+-----Output-----
+Print the number of ways to climb up the stairs under the condition, modulo 1\ 000\ 000\ 007.
+
+-----Sample Input-----
+6 1
+3
+
+-----Sample Output-----
+4
+
+There are four ways to climb up the stairs, as follows:
+ - 0 \to 1 \to 2 \to 4 \to 5 \to 6
+ - 0 \to 1 \to 2 \to 4 \to 6
+ - 0 \to 2 \to 4 \to 5 \to 6
+ - 0 \to 2 \to 4 \to 6
+"""
+2022-04-09 23:25:06.863641 --------------------------
+2022-04-09 23:25:41.587826 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# N: int\n# M: int\n# a: list[int]\nN, M = map(int, input().split())\na = [int(input()) for _ in range(M)]\n\n# dp[i]: int\n#   i: int\n#     0 <= i <= N\ndp = [0] * (N + 1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, N + 1):\n    # dp[i] = dp[i - 1] + dp[i - 2]\n    # - if i is not in a\n    if i not in a:\n        dp[i] = dp[i - 1] + dp[i - 2]\n    else:\n        # dp[i] = 0\n        # - if i is in a\n        dp[i] = 0\n    dp[i] %= 10 ** 9 + 7\n\nprint(dp[N])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\nbroken = [int(input()) for i in range(m)]\n\n# dp[i] = i\u756a\u76ee\u306e\u968e\u6bb5\u307e\u3067\u306e\u4e0a\u308a\u65b9\ndp = [0] * (n+1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, n+1):\n    if i in broken:\n        dp[i] = 0\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[n] % 1000000007)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# Read input\nN, M = map(int, input().split())\na = [int(input()) for _ in range(M)]\n\n# Initialize\ndp = [0] * N\ndp[0] = 1\n\n# DP\nfor i in range(N):\n    if i + 1 < N and (i + 1) not in a:\n        dp[i + 1] += dp[i]\n    if i + 2 < N and (i + 2) not in a:\n        dp[i + 2] += dp[i]\n\n# Output\nprint(dp[-1] % (10**9 + 7))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\nbroken_steps = list(map(int, [input() for _ in range(m)]))\n\ndp = [0 for _ in range(n+1)]\ndp[0] = 1\ndp[1] = 1\nfor i in range(2, n+1):\n    if i in broken_steps:\n        continue\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[n] % 1000000007)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\nbroken = [int(input()) for _ in range(M)]\n\ndp = [0] * (N + 1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, N + 1):\n    if i not in broken:\n        dp[i] = dp[i - 1] + dp[i - 2]\n\nprint(dp[N] % 1000000007)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\nbroken = [int(sys.stdin.readline()) for i in range(M)]\n\n# dp[i] = i\u756a\u76ee\u307e\u3067\u306e\u30b9\u30c6\u30c3\u30d7\u3092\u767b\u3063\u305f\u6642\u306e\u767b\u308a\u65b9\u306e\u7dcf\u6570\ndp = [0 for i in range(N+1)]\ndp[0] = 1\ndp[1] = 1\nfor i in range(2, N+1):\n    if i in broken:\n        dp[i] = 0\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[N] % 1000000007)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN, M = input().split()\nN = int(N)\nM = int(M)\n\nbroken_steps = []\nfor i in range(M):\n    broken_steps.append(int(input()))\nbroken_steps.sort()\n\nways = [0] * (N + 1)\nways[0] = 1\nways[1] = 1\n\nfor i in range(2, N + 1):\n    if i in broken_steps:\n        ways[i] = 0\n    else:\n        ways[i] = (ways[i - 1] + ways[i - 2]) % 1000000007\n\nprint(ways[N])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # \u968e\u6bb5\u306ba\u304c\u542b\u307e\u308c\u306a\u3044\u5834\u5408\n    if m == 0:\n        print(fib(n))\n        return\n\n    # \u968e\u6bb5\u306ba\u304c\u542b\u307e\u308c\u308b\u5834\u5408\n    # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\n    b = [0] * m\n    # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n    c = [0] * m\n    for i in range(m):\n        if a[i] == 1:\n            b[i] = a[i] - 1\n        else:\n            b[i] = a[i] - a[i - 1] - 1\n        c[i] = fib(b[i])\n\n    # \u5230\u9054\u3067\u304d\u308b\u968e\u6bb5\u306e\u6570\n    ans = 0\n    for i in range(m):\n        # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n        ans += c[i]\n        # a[i]\u306e\u4e00\u3064\u524d\u306e\u30b9\u30c6\u30c3\u30d7\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n        if i > 0:\n            ans += c[i - 1]\n    print(ans % 1000000007)\n\n\ndef fib(n):\n    if n <= 1:\n        return 1\n    a, b = 1, 1\n    for i in range(n - 1):\n        a, b = b, a + b\n    return b\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649561107,
+  "id": "cmpl-4vIUFKfgMEragAq4Na2E3EaKYBeTF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:25:41.588407 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# N: int\n# M: int\n# a: list[int]\nN, M = map(int, input().split())\na = [int(input()) for _ in range(M)]\n\n# dp[i]: int\n#   i: int\n#     0 <= i <= N\ndp = [0] * (N + 1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, N + 1):\n    # dp[i] = dp[i - 1] + dp[i - 2]\n    # - if i is not in a\n    if i not in a:\n        dp[i] = dp[i - 1] + dp[i - 2]\n    else:\n        # dp[i] = 0\n        # - if i is in a\n        dp[i] = 0\n    dp[i] %= 10 ** 9 + 7\n\nprint(dp[N])"
+}
+2022-04-09 23:25:41.588507 REASON stop
+2022-04-09 23:25:41.604135 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\nbroken = [int(input()) for i in range(m)]\n\n# dp[i] = i\u756a\u76ee\u306e\u968e\u6bb5\u307e\u3067\u306e\u4e0a\u308a\u65b9\ndp = [0] * (n+1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, n+1):\n    if i in broken:\n        dp[i] = 0\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[n] % 1000000007)"
+}
+2022-04-09 23:25:41.604219 REASON stop
+2022-04-09 23:25:41.609193 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# Read input\nN, M = map(int, input().split())\na = [int(input()) for _ in range(M)]\n\n# Initialize\ndp = [0] * N\ndp[0] = 1\n\n# DP\nfor i in range(N):\n    if i + 1 < N and (i + 1) not in a:\n        dp[i + 1] += dp[i]\n    if i + 2 < N and (i + 2) not in a:\n        dp[i + 2] += dp[i]\n\n# Output\nprint(dp[-1] % (10**9 + 7))"
+}
+2022-04-09 23:25:41.609315 REASON stop
+2022-04-09 23:25:41.614996 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\nbroken_steps = list(map(int, [input() for _ in range(m)]))\n\ndp = [0 for _ in range(n+1)]\ndp[0] = 1\ndp[1] = 1\nfor i in range(2, n+1):\n    if i in broken_steps:\n        continue\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[n] % 1000000007)"
+}
+2022-04-09 23:25:41.615125 REASON stop
+2022-04-09 23:25:41.620680 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\nbroken = [int(input()) for _ in range(M)]\n\ndp = [0] * (N + 1)\ndp[0] = 1\ndp[1] = 1\n\nfor i in range(2, N + 1):\n    if i not in broken:\n        dp[i] = dp[i - 1] + dp[i - 2]\n\nprint(dp[N] % 1000000007)"
+}
+2022-04-09 23:25:41.620847 REASON stop
+2022-04-09 23:25:41.626615 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\nbroken = [int(sys.stdin.readline()) for i in range(M)]\n\n# dp[i] = i\u756a\u76ee\u307e\u3067\u306e\u30b9\u30c6\u30c3\u30d7\u3092\u767b\u3063\u305f\u6642\u306e\u767b\u308a\u65b9\u306e\u7dcf\u6570\ndp = [0 for i in range(N+1)]\ndp[0] = 1\ndp[1] = 1\nfor i in range(2, N+1):\n    if i in broken:\n        dp[i] = 0\n    else:\n        dp[i] = dp[i-1] + dp[i-2]\n\nprint(dp[N] % 1000000007)"
+}
+2022-04-09 23:25:41.626744 REASON stop
+2022-04-09 23:25:41.632449 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN, M = input().split()\nN = int(N)\nM = int(M)\n\nbroken_steps = []\nfor i in range(M):\n    broken_steps.append(int(input()))\nbroken_steps.sort()\n\nways = [0] * (N + 1)\nways[0] = 1\nways[1] = 1\n\nfor i in range(2, N + 1):\n    if i in broken_steps:\n        ways[i] = 0\n    else:\n        ways[i] = (ways[i - 1] + ways[i - 2]) % 1000000007\n\nprint(ways[N])"
+}
+2022-04-09 23:25:41.632708 REASON stop
+2022-04-09 23:25:41.636286 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # \u968e\u6bb5\u306ba\u304c\u542b\u307e\u308c\u306a\u3044\u5834\u5408\n    if m == 0:\n        print(fib(n))\n        return\n\n    # \u968e\u6bb5\u306ba\u304c\u542b\u307e\u308c\u308b\u5834\u5408\n    # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\n    b = [0] * m\n    # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n    c = [0] * m\n    for i in range(m):\n        if a[i] == 1:\n            b[i] = a[i] - 1\n        else:\n            b[i] = a[i] - a[i - 1] - 1\n        c[i] = fib(b[i])\n\n    # \u5230\u9054\u3067\u304d\u308b\u968e\u6bb5\u306e\u6570\n    ans = 0\n    for i in range(m):\n        # a[i]\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n        ans += c[i]\n        # a[i]\u306e\u4e00\u3064\u524d\u306e\u30b9\u30c6\u30c3\u30d7\u3092\u9664\u3044\u305f\u968e\u6bb5\u306e\u6570\u306e\u30d5\u30a3\u30dc\u30ca\u30c3\u30c1\u6570\n        if i > 0:\n            ans += c[i - 1]\n    print(ans % 1000000007)\n\n\ndef fib(n):\n    if n <= 1:\n        return 1\n    a, b = 1, 1\n    for i in range(n - 1):\n        a, b = b, a + b\n    return b\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:25:41.636405 REASON stop

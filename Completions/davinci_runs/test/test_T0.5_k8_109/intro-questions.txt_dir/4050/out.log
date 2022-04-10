@@ -1,0 +1,168 @@
+2022-04-09 23:10:49.216939 """
+This problem is given in two editions, which differ exclusively in the constraints on the number $n$.
+
+You are given an array of integers $a[1], a[2], \dots, a[n].$ A block is a sequence of contiguous (consecutive) elements $a[l], a[l+1], \dots, a[r]$ ($1 \le l \le r \le n$). Thus, a block is defined by a pair of indices $(l, r)$.
+
+Find a set of blocks $(l_1, r_1), (l_2, r_2), \dots, (l_k, r_k)$ such that:
+
+  They do not intersect (i.e. they are disjoint). Formally, for each pair of blocks $(l_i, r_i)$ and $(l_j, r_j$) where $i \neq j$ either $r_i < l_j$ or $r_j < l_i$.  For each block the sum of its elements is the same. Formally, $$a[l_1]+a[l_1+1]+\dots+a[r_1]=a[l_2]+a[l_2+1]+\dots+a[r_2]=$$ $$\dots =$$ $$a[l_k]+a[l_k+1]+\dots+a[r_k].$$  The number of the blocks in the set is maximum. Formally, there does not exist a set of blocks $(l_1', r_1'), (l_2', r_2'), \dots, (l_{k'}', r_{k'}')$ satisfying the above two requirements with $k' > k$. 
+
+ $\left. \begin{array}{|l|l|l|l|l|l|} \hline 4 & {1} & {2} & {2} & {1} & {5} & {3} \\ \hline \end{array} \right.$ The picture corresponds to the first example. Blue boxes illustrate blocks. 
+
+Write a program to find such a set of blocks.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 50$) — the length of the given array. The second line contains the sequence of elements $a[1], a[2], \dots, a[n]$ ($-10^5 \le a_i \le 10^5$).
+
+
+-----Output-----
+
+In the first line print the integer $k$ ($1 \le k \le n$). The following $k$ lines should contain blocks, one per line. In each line print a pair of indices $l_i, r_i$ ($1 \le l_i \le r_i \le n$) — the bounds of the $i$-th block. You can print blocks in any order. If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+7
+4 1 2 2 1 5 3
+
+Output
+3
+7 7
+2 3
+4 5
+
+Input
+11
+-5 -4 -3 -2 -1 0 1 2 3 4 5
+
+Output
+2
+3 4
+1 1
+
+Input
+4
+1 1 1 1
+
+Output
+4
+4 4
+1 1
+2 2
+3 3
+"""
+2022-04-09 23:10:49.216970 --------------------------
+2022-04-09 23:11:51.642987 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = [0] * (n + 1)\nfor i in range(n):\n    s[i + 1] = s[i] + a[i]\n\nd = {}\nfor i in range(n + 1):\n    for j in range(i + 1, n + 1):\n        d[s[j] - s[i]] = d.get(s[j] - s[i], []) + [(i, j)]\n\nans = []\nfor i in range(n + 1):\n    for j in range(i + 1, n + 1):\n        if s[j] - s[i] in d:\n            for x in d[s[j] - s[i]]:\n                if x[1] <= i or x[0] >= j:\n                    ans.append((i, j))\nans = sorted(list(set(ans)))\nprint(len(ans))\nfor x in ans:\n    print(*x)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solve(arr):\n    n = len(arr)\n    dp = [0] * (n+1)\n    for i in range(1,n+1):\n        dp[i] = dp[i-1] + arr[i-1]\n    dp = set(dp)\n    # print(dp)\n    dp = list(dp)\n    dp.sort()\n    # print(dp)\n    dp2 = {}\n    for i in range(len(dp)):\n        dp2[dp[i]] = i\n    # print(dp2)\n    dp3 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp3[i] = dp2[dp3[i-1] + arr[i-1]]\n    # print(dp3)\n    dp4 = [0]*(n+1)\n    ans = []\n    for i in range(1,n+1):\n        dp4[i] = dp4[i-1]\n        if dp3[i] != dp3[i-1]:\n            dp4[i] += 1\n            ans.append([i,i])\n    # print(dp4)\n    # print(dp4[-1])\n    # print(ans)\n    dp5 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp5[i] = dp5[i-1]\n        if dp3[i] != dp3[i-1]:\n            dp5[i] += 1\n    # print(dp5)\n\n    dp6 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp6[i] = dp6[i-1]\n        if dp5[i] == dp4[i]:\n            dp6[i] += 1\n    # print(dp6)\n    # print(dp6[-1])\n    # print(ans)\n\n    dp7 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp7[i] = dp7[i-1]\n        if dp6[i] == dp6[i-1]:\n            dp7[i] += 1\n    # print(dp7)\n    # print(dp7[-1])\n    # print(ans)\n\n    print(dp7[-1])\n    for i in range(dp7[-1]):\n        print(ans[i][0],ans[i][1])\n\n\nn = int(input())\narr = list(map(int,input().split()))\nsolve(arr)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\nn = int(stdin.readline())\na = list(map(int, stdin.readline().split()))\n\ncnt = Counter(a)\n\nif len(cnt) == 1:\n    print(n)\n    for i in range(1, n+1):\n        print(i, i)\nelse:\n    print(1)\n    print(1, n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solution(n, a):\n    sum = 0\n    s = set()\n    for i in range(n):\n        sum += a[i]\n        s.add(sum)\n        if sum == 0:\n            return n\n    if sum % (n-1) == 0:\n        return n-1\n    return len(s)\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solution(n, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef maxBlock(n, a):\n    pass\n\n\nif __name__ == '__main__':\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    maxBlock(n, a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef find_blocks(a):\n    n = len(a)\n    k = 1\n    l = [1] * n\n    r = [1] * n\n    for i in range(1, n):\n        for j in range(0, i):\n            if a[i] == a[j] and l[i] < l[j] + 1:\n                l[i] = l[j] + 1\n                r[i] = j\n        if l[i] > l[k]:\n            k = i\n    print(l[k])\n    while k >= 0:\n        print(k+1, r[k]+1)\n        k = r[k]\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    find_blocks(a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp[i][i] = a[i - 1]\n\nfor i in range(1, n + 1):\n    for j in range(1, n + 1):\n        if i == j:\n            continue\n        dp[i][j] = dp[i][j - 1] + a[j - 1]\n\n# print(dp)\n\n# dp[i][j] = k\n# k - sum of elements from i to j\n# dp[i][j] = dp[i][j - 1] + a[j - 1]\n\ndp2 = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp2[i][i] = 1\n\nfor i in range(1, n + 1):\n    for j in range(1, n + 1):\n        if i == j:\n            continue\n        dp2[i][j] = dp2[i][j - 1]\n\n# print(dp2)\n\n# dp2[i][j] = k\n# k - number of blocks from i to j\n# dp2[i][j] = dp2[i][j - 1]\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        for k in range(i, j):\n            if dp[i][k] == dp[k + 1][j]:\n                dp2[i][j] = max(dp2[i][j], dp2[i][k] + dp2[k + 1][j])\n\n# print(dp2)\n\n# dp2[i][j] = k\n# k - max number of blocks from i to j\n# dp2[i][j] = max(dp2[i][j], dp2[i][k] + dp2[k + 1][j])\n\n# print(dp2)\n\nprint(dp2[1][n])\n\ndp3 = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp3[i][i] = 1\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        for k in range(i, j):\n            if dp[i][k] == dp[k + 1][j]:\n                if dp2[i][j] == dp2[i][k] + dp2[k + 1][j]:\n                    dp3[i][j] = max(dp3[i][j], dp3[i][k] + dp3[k + 1][j])\n\n# print(dp3)\n\n# dp3[i][j] = k\n# k - number of ways to get max number of blocks from i to j\n# dp3[i][j] = max(dp3[i][j], dp3[i][k] + dp3[k + 1][j])\n\n# print(dp3)\n\n# print(dp3)\n\ndef print_blocks(i, j):\n    if i == j:\n        print(i, i)\n        return\n    for k in range(i, j):\n        if dp[i][k] == dp[k + 1][j] and dp3[i][j] == dp3[i][k] + dp3[k + 1][j]:\n            print_blocks(i, k)\n            print_blocks(k + 1, j)\n            return\n\nprint_blocks(1, n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef solution(arr):\n    pass"
+    }
+  ],
+  "created": 1649560249,
+  "id": "cmpl-4vIGPwzTtX0GgxyBaj5ZNpUdIePM3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:11:51.643269 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = [0] * (n + 1)\nfor i in range(n):\n    s[i + 1] = s[i] + a[i]\n\nd = {}\nfor i in range(n + 1):\n    for j in range(i + 1, n + 1):\n        d[s[j] - s[i]] = d.get(s[j] - s[i], []) + [(i, j)]\n\nans = []\nfor i in range(n + 1):\n    for j in range(i + 1, n + 1):\n        if s[j] - s[i] in d:\n            for x in d[s[j] - s[i]]:\n                if x[1] <= i or x[0] >= j:\n                    ans.append((i, j))\nans = sorted(list(set(ans)))\nprint(len(ans))\nfor x in ans:\n    print(*x)"
+}
+2022-04-09 23:11:51.643376 REASON stop
+2022-04-09 23:11:51.644950 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solve(arr):\n    n = len(arr)\n    dp = [0] * (n+1)\n    for i in range(1,n+1):\n        dp[i] = dp[i-1] + arr[i-1]\n    dp = set(dp)\n    # print(dp)\n    dp = list(dp)\n    dp.sort()\n    # print(dp)\n    dp2 = {}\n    for i in range(len(dp)):\n        dp2[dp[i]] = i\n    # print(dp2)\n    dp3 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp3[i] = dp2[dp3[i-1] + arr[i-1]]\n    # print(dp3)\n    dp4 = [0]*(n+1)\n    ans = []\n    for i in range(1,n+1):\n        dp4[i] = dp4[i-1]\n        if dp3[i] != dp3[i-1]:\n            dp4[i] += 1\n            ans.append([i,i])\n    # print(dp4)\n    # print(dp4[-1])\n    # print(ans)\n    dp5 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp5[i] = dp5[i-1]\n        if dp3[i] != dp3[i-1]:\n            dp5[i] += 1\n    # print(dp5)\n\n    dp6 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp6[i] = dp6[i-1]\n        if dp5[i] == dp4[i]:\n            dp6[i] += 1\n    # print(dp6)\n    # print(dp6[-1])\n    # print(ans)\n\n    dp7 = [0]*(n+1)\n    for i in range(1,n+1):\n        dp7[i] = dp7[i-1]\n        if dp6[i] == dp6[i-1]:\n            dp7[i] += 1\n    # print(dp7)\n    # print(dp7[-1])\n    # print(ans)\n\n    print(dp7[-1])\n    for i in range(dp7[-1]):\n        print(ans[i][0],ans[i][1])\n\n\nn = int(input())\narr = list(map(int,input().split()))\nsolve(arr)"
+}
+2022-04-09 23:11:51.645075 REASON stop
+2022-04-09 23:11:51.645778 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\nn = int(stdin.readline())\na = list(map(int, stdin.readline().split()))\n\ncnt = Counter(a)\n\nif len(cnt) == 1:\n    print(n)\n    for i in range(1, n+1):\n        print(i, i)\nelse:\n    print(1)\n    print(1, n)"
+}
+2022-04-09 23:11:51.645873 REASON stop
+2022-04-09 23:11:51.646942 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solution(n, a):\n    sum = 0\n    s = set()\n    for i in range(n):\n        sum += a[i]\n        s.add(sum)\n        if sum == 0:\n            return n\n    if sum % (n-1) == 0:\n        return n-1\n    return len(s)\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solution(n, a))"
+}
+2022-04-09 23:11:51.647068 REASON stop
+2022-04-09 23:11:51.647897 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef maxBlock(n, a):\n    pass\n\n\nif __name__ == '__main__':\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    maxBlock(n, a)"
+}
+2022-04-09 23:11:51.647993 REASON stop
+2022-04-09 23:11:51.648743 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef find_blocks(a):\n    n = len(a)\n    k = 1\n    l = [1] * n\n    r = [1] * n\n    for i in range(1, n):\n        for j in range(0, i):\n            if a[i] == a[j] and l[i] < l[j] + 1:\n                l[i] = l[j] + 1\n                r[i] = j\n        if l[i] > l[k]:\n            k = i\n    print(l[k])\n    while k >= 0:\n        print(k+1, r[k]+1)\n        k = r[k]\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    find_blocks(a)"
+}
+2022-04-09 23:11:51.648837 REASON stop
+2022-04-09 23:11:51.649409 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp[i][i] = a[i - 1]\n\nfor i in range(1, n + 1):\n    for j in range(1, n + 1):\n        if i == j:\n            continue\n        dp[i][j] = dp[i][j - 1] + a[j - 1]\n\n# print(dp)\n\n# dp[i][j] = k\n# k - sum of elements from i to j\n# dp[i][j] = dp[i][j - 1] + a[j - 1]\n\ndp2 = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp2[i][i] = 1\n\nfor i in range(1, n + 1):\n    for j in range(1, n + 1):\n        if i == j:\n            continue\n        dp2[i][j] = dp2[i][j - 1]\n\n# print(dp2)\n\n# dp2[i][j] = k\n# k - number of blocks from i to j\n# dp2[i][j] = dp2[i][j - 1]\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        for k in range(i, j):\n            if dp[i][k] == dp[k + 1][j]:\n                dp2[i][j] = max(dp2[i][j], dp2[i][k] + dp2[k + 1][j])\n\n# print(dp2)\n\n# dp2[i][j] = k\n# k - max number of blocks from i to j\n# dp2[i][j] = max(dp2[i][j], dp2[i][k] + dp2[k + 1][j])\n\n# print(dp2)\n\nprint(dp2[1][n])\n\ndp3 = [[0] * (n + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    dp3[i][i] = 1\n\nfor i in range(1, n + 1):\n    for j in range(i + 1, n + 1):\n        for k in range(i, j):\n            if dp[i][k] == dp[k + 1][j]:\n                if dp2[i][j] == dp2[i][k] + dp2[k + 1][j]:\n                    dp3[i][j] = max(dp3[i][j], dp3[i][k] + dp3[k + 1][j])\n\n# print(dp3)\n\n# dp3[i][j] = k\n# k - number of ways to get max number of blocks from i to j\n# dp3[i][j] = max(dp3[i][j], dp3[i][k] + dp3[k + 1][j])\n\n# print(dp3)\n\n# print(dp3)\n\ndef print_blocks(i, j):\n    if i == j:\n        print(i, i)\n        return\n    for k in range(i, j):\n        if dp[i][k] == dp[k + 1][j] and dp3[i][j] == dp3[i][k] + dp3[k + 1][j]:\n            print_blocks(i, k)\n            print_blocks(k + 1, j)\n            return\n\nprint_blocks(1, n)"
+}
+2022-04-09 23:11:51.649506 REASON stop
+2022-04-09 23:11:51.650009 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef solution(arr):\n    pass"
+}
+2022-04-09 23:11:51.650116 REASON stop

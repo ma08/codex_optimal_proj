@@ -1,0 +1,175 @@
+2022-04-09 23:43:39.484567 """
+Polycarp is practicing his problem solving skill. He has a list of $n$ problems with difficulties $a_1, a_2, \dots, a_n$, respectively. His plan is to practice for exactly $k$ days. Each day he has to solve at least one problem from his list. Polycarp solves the problems in the order they are given in his list, he cannot skip any problem from his list. He has to solve all $n$ problems in exactly $k$ days.
+
+Thus, each day Polycarp solves a contiguous sequence of (consecutive) problems from the start of the list. He can't skip problems or solve them multiple times. As a result, in $k$ days he will solve all the $n$ problems.
+
+The profit of the $j$-th day of Polycarp's practice is the maximum among all the difficulties of problems Polycarp solves during the $j$-th day (i.e. if he solves problems with indices from $l$ to $r$ during a day, then the profit of the day is $\max\limits_{l \le i \le r}a_i$). The total profit of his practice is the sum of the profits over all $k$ days of his practice.
+
+You want to help Polycarp to get the maximum possible total profit over all valid ways to solve problems. Your task is to distribute all $n$ problems between $k$ days satisfying the conditions above in such a way, that the total profit is maximum.
+
+For example, if $n = 8, k = 3$ and $a = [5, 4, 2, 6, 5, 1, 9, 2]$, one of the possible distributions with maximum total profit is: $[5, 4, 2], [6, 5], [1, 9, 2]$. Here the total profit equals $5 + 6 + 9 = 20$.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 2000$) — the number of problems and the number of days, respectively.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2000$) — difficulties of problems in Polycarp's list, in the order they are placed in the list (i.e. in the order Polycarp will solve them).
+
+
+-----Output-----
+
+In the first line of the output print the maximum possible total profit.
+
+In the second line print exactly $k$ positive integers $t_1, t_2, \dots, t_k$ ($t_1 + t_2 + \dots + t_k$ must equal $n$), where $t_j$ means the number of problems Polycarp will solve during the $j$-th day in order to achieve the maximum possible total profit of his practice.
+
+If there are many possible answers, you may print any of them.
+
+
+-----Examples-----
+Input
+8 3
+5 4 2 6 5 1 9 2
+
+Output
+20
+3 2 3
+Input
+5 1
+1 1 1 1 1
+
+Output
+1
+5
+
+Input
+4 2
+1 2000 2000 2
+
+Output
+4000
+2 2
+
+
+
+-----Note-----
+
+The first example is described in the problem statement.
+
+In the second example there is only one possible distribution.
+
+In the third example the best answer is to distribute problems in the following way: $[1, 2000], [2000, 2]$. The total profit of this distribution is $2000 + 2000 = 4000$.
+"""
+2022-04-09 23:43:39.484598 --------------------------
+2022-04-09 23:44:40.643867 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    dp = [0 for _ in range(n+1)]\n    for i in range(n):\n        dp[i+1] = max(dp[i], a[i])\n    dp2 = [0 for _ in range(n+1)]\n    for i in range(n):\n        dp2[i+1] = max(dp2[i], a[n-1-i])\n    ans = 0\n    for i in range(k):\n        ans += dp[n-i]\n    for i in range(k):\n        ans += dp2[n-i]\n    print(ans)\n    t = [1]*k\n    t[0] = n-k+1\n    print(\" \".join(map(str, t)))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k == 1:\n    print(sum(a))\n    print(n)\nelse:\n    score = [0] * n\n    for i in range(n - k + 1):\n        score[i] = max(a[i:i + k])\n\n    s = [0] * (n + 1)\n    for i in range(n):\n        s[i + 1] = s[i] + score[i]\n\n    dp = [0] * (n + 1)\n    for i in range(2, k + 1):\n        for j in range(i, n + 1):\n            dp[j] = max(dp[j - 1], s[j] - s[j - i])\n\n    print(dp[n])\n    j = n\n    for i in range(k, 0, -1):\n        while j >= i and dp[j] == dp[j - 1]:\n            j -= 1\n        print(j - (n - j) + 1, end=' ')\n        j -= 1"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    f = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin\n    n, k = [int(x) for x in f.readline().split()]\n    a = [int(x) for x in f.readline().split()]\n    # TODO: solve the problem\n    # print(n, k)\n    # print(a)\n    \n    # TODO: output the result\n    # print(n, k)\n    # print(a)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0 for j in range(k+1)] for i in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, k+1):\n            if i >= j:\n                dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1])\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[n][k])\n    i = n\n    j = k\n    result = []\n    while i > 0 and j > 0:\n        if dp[i][j] == dp[i-1][j]:\n            i -= 1\n        else:\n            result.append(i-j+1)\n            i -= i-j+1\n            j -= 1\n    result.reverse()\n    print(' '.join(map(str, result)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    arr = list(map(int, sys.stdin.readline().split()))\n\n    dp = [[0 for _ in range(n+1)] for _ in range(k+1)]\n    for j in range(1, k+1):\n        for i in range(1, n+1):\n            if j == 1:\n                dp[j][i] = arr[i-1]\n            else:\n                max_val = -1\n                for l in range(i):\n                    max_val = max(max_val, dp[j-1][l] + max(arr[l:i]))\n                dp[j][i] = max_val\n\n    print(dp[k][n])\n    i = n\n    j = k\n    while j > 0:\n        while dp[j][i] == dp[j][i-1]:\n            i -= 1\n        print(i, end=' ')\n        j -= 1\n        i -= 1\n    print()\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = list(map(int, input().split()))\na = list(map(int, input().split()))\n\n# dp[i][j] = maximum total profit for problems [i, j]\ndp = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp[i][j] = max(dp[i][j - 1], dp[i + 1][j])\n        for m in range(i, j):\n            dp[i][j] = max(dp[i][j], dp[i][m] + dp[m + 1][j])\n\n# dp2[i][j] = maximum total profit for problems [i, j] and j - i + 1 days\ndp2 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp2[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp2[i][j] = max(dp2[i][j - 1], dp2[i + 1][j])\n        for m in range(i, j):\n            dp2[i][j] = max(dp2[i][j], dp2[i][m] + dp[m + 1][j])\n\nprint(dp2[0][n - 1])\n\n# dp3[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i\ndp3 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp3[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp3[i][j] = max(dp3[i][j - 1], dp3[i + 1][j])\n        for m in range(i, j):\n            dp3[i][j] = max(dp3[i][j], dp3[i][m] + dp[m + 1][j])\n\n# ans[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\nans = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    ans[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        ans[i][j] = max(ans[i][j - 1], ans[i + 1][j])\n        for m in range(i + 1, j + 1):\n            ans[i][j] = max(ans[i][j], dp3[i][m - 1] + ans[m][j])\n\nprint(ans[0][n - 1])\n\n# dp4[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\ndp4 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp4[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp4[i][j] = max(dp4[i][j - 1], dp4[i + 1][j])\n        for m in range(i, j):\n            dp4[i][j] = max(dp4[i][j], dp4[i][m] + dp[m + 1][j])\n\n# ans[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\nans = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    ans[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        ans[i][j] = max(ans[i][j - 1], ans[i + 1][j])\n        for m in range(i + 1, j + 1):\n            ans[i][j] = max(ans[i][j], dp4[i][m - 1] + ans[m][j])\n\nprint(ans[0][n - 1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [0] * (n+1)\n\nfor i in range(1, n+1):\n    dp[i] = max(dp[i-1], a[i-1])\n\nans = [0] * k\n\nfor i in range(k-1, 0, -1):\n    for j in range(i, n+1):\n        if dp[j] - dp[j-i] > dp[n] - dp[n-i]:\n            dp[j] = dp[j-i]\n            ans[i-1] = j - i\n            n = j\n            break\n\nprint(dp[n])\n\nfor i in range(k):\n    if i == 0:\n        print(ans[i]+1)\n    else:\n        print(ans[i]-ans[i-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [0] * n\ndp[0] = a[0]\nfor i in range(1, n):\n    dp[i] = max(dp[i-1] + a[i], a[i])\n\nprint(max(dp))\n\n# dp = [0] * n\n# dp[0] = a[0]\n# for i in range(1, n):\n#     dp[i] = max(dp[i-1] + a[i], a[i])\n\n# print(max(dp))\n\n# ans = [0] * k\n# i = n - 1\n# while i >= 0:\n#     if i == n - 1:\n#         ans[k-1] += 1\n#     else:\n#         if dp[i] == dp[i+1] + a[i]:\n#             ans[k-1] += 1\n#         else:\n#             j = i + 1\n#             while j < n and dp[j] == dp[j-1] + a[j]:\n#                 j += 1\n#             ans[k-1] += j - i\n#             i = j - 1\n#             k -= 1\n#     i -= 1\n\n# print(*ans)\n\n# # dp = [0] * n\n# # dp[0] = a[0]\n# # for i in range(1, n):\n# #     dp[i] = max(dp[i-1] + a[i], a[i])\n\n# # print(max(dp))\n\n# # ans = [0] * k\n# # i = n - 1\n# # while i >= 0:\n# #     if i == n - 1:\n# #         ans[k-1] += 1\n# #     else:\n# #         if dp[i] == dp[i+1] + a[i]:\n# #             ans[k-1] += 1\n# #         else:\n# #             j = i + 1\n# #             while j < n and dp[j] == dp[j-1] + a[j]:\n# #                 j += 1\n# #             ans[k-1] += j - i\n# #             i = j - 1\n# #             k -= 1\n# #     i -= 1\n\n# # print(*ans)"
+    }
+  ],
+  "created": 1649562219,
+  "id": "cmpl-4vImBAJ0oMy2IQQ2XSniJ1K2dv0JQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:44:40.644309 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    dp = [0 for _ in range(n+1)]\n    for i in range(n):\n        dp[i+1] = max(dp[i], a[i])\n    dp2 = [0 for _ in range(n+1)]\n    for i in range(n):\n        dp2[i+1] = max(dp2[i], a[n-1-i])\n    ans = 0\n    for i in range(k):\n        ans += dp[n-i]\n    for i in range(k):\n        ans += dp2[n-i]\n    print(ans)\n    t = [1]*k\n    t[0] = n-k+1\n    print(\" \".join(map(str, t)))\n\nmain()"
+}
+2022-04-09 23:44:40.644359 REASON stop
+2022-04-09 23:44:40.645964 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k == 1:\n    print(sum(a))\n    print(n)\nelse:\n    score = [0] * n\n    for i in range(n - k + 1):\n        score[i] = max(a[i:i + k])\n\n    s = [0] * (n + 1)\n    for i in range(n):\n        s[i + 1] = s[i] + score[i]\n\n    dp = [0] * (n + 1)\n    for i in range(2, k + 1):\n        for j in range(i, n + 1):\n            dp[j] = max(dp[j - 1], s[j] - s[j - i])\n\n    print(dp[n])\n    j = n\n    for i in range(k, 0, -1):\n        while j >= i and dp[j] == dp[j - 1]:\n            j -= 1\n        print(j - (n - j) + 1, end=' ')\n        j -= 1"
+}
+2022-04-09 23:44:40.646072 REASON stop
+2022-04-09 23:44:40.647222 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    f = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin\n    n, k = [int(x) for x in f.readline().split()]\n    a = [int(x) for x in f.readline().split()]\n    # TODO: solve the problem\n    # print(n, k)\n    # print(a)\n    \n    # TODO: output the result\n    # print(n, k)\n    # print(a)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:44:40.647415 REASON stop
+2022-04-09 23:44:40.648986 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0 for j in range(k+1)] for i in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, k+1):\n            if i >= j:\n                dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1])\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[n][k])\n    i = n\n    j = k\n    result = []\n    while i > 0 and j > 0:\n        if dp[i][j] == dp[i-1][j]:\n            i -= 1\n        else:\n            result.append(i-j+1)\n            i -= i-j+1\n            j -= 1\n    result.reverse()\n    print(' '.join(map(str, result)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:44:40.649085 REASON stop
+2022-04-09 23:44:40.649779 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    arr = list(map(int, sys.stdin.readline().split()))\n\n    dp = [[0 for _ in range(n+1)] for _ in range(k+1)]\n    for j in range(1, k+1):\n        for i in range(1, n+1):\n            if j == 1:\n                dp[j][i] = arr[i-1]\n            else:\n                max_val = -1\n                for l in range(i):\n                    max_val = max(max_val, dp[j-1][l] + max(arr[l:i]))\n                dp[j][i] = max_val\n\n    print(dp[k][n])\n    i = n\n    j = k\n    while j > 0:\n        while dp[j][i] == dp[j][i-1]:\n            i -= 1\n        print(i, end=' ')\n        j -= 1\n        i -= 1\n    print()\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:44:40.649868 REASON stop
+2022-04-09 23:44:40.650512 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = list(map(int, input().split()))\na = list(map(int, input().split()))\n\n# dp[i][j] = maximum total profit for problems [i, j]\ndp = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp[i][j] = max(dp[i][j - 1], dp[i + 1][j])\n        for m in range(i, j):\n            dp[i][j] = max(dp[i][j], dp[i][m] + dp[m + 1][j])\n\n# dp2[i][j] = maximum total profit for problems [i, j] and j - i + 1 days\ndp2 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp2[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp2[i][j] = max(dp2[i][j - 1], dp2[i + 1][j])\n        for m in range(i, j):\n            dp2[i][j] = max(dp2[i][j], dp2[i][m] + dp[m + 1][j])\n\nprint(dp2[0][n - 1])\n\n# dp3[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i\ndp3 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp3[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp3[i][j] = max(dp3[i][j - 1], dp3[i + 1][j])\n        for m in range(i, j):\n            dp3[i][j] = max(dp3[i][j], dp3[i][m] + dp[m + 1][j])\n\n# ans[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\nans = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    ans[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        ans[i][j] = max(ans[i][j - 1], ans[i + 1][j])\n        for m in range(i + 1, j + 1):\n            ans[i][j] = max(ans[i][j], dp3[i][m - 1] + ans[m][j])\n\nprint(ans[0][n - 1])\n\n# dp4[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\ndp4 = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    dp4[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        dp4[i][j] = max(dp4[i][j - 1], dp4[i + 1][j])\n        for m in range(i, j):\n            dp4[i][j] = max(dp4[i][j], dp4[i][m] + dp[m + 1][j])\n\n# ans[i][j] = maximum total profit for problems [i, j] and j - i + 1 days and last day is i and k days\nans = [[0 for i in range(n)] for j in range(n)]\n\nfor i in range(n):\n    ans[i][i] = a[i]\n\nfor l in range(2, n + 1):\n    for i in range(n - l + 1):\n        j = i + l - 1\n        ans[i][j] = max(ans[i][j - 1], ans[i + 1][j])\n        for m in range(i + 1, j + 1):\n            ans[i][j] = max(ans[i][j], dp4[i][m - 1] + ans[m][j])\n\nprint(ans[0][n - 1])"
+}
+2022-04-09 23:44:40.650603 REASON stop
+2022-04-09 23:44:40.651219 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [0] * (n+1)\n\nfor i in range(1, n+1):\n    dp[i] = max(dp[i-1], a[i-1])\n\nans = [0] * k\n\nfor i in range(k-1, 0, -1):\n    for j in range(i, n+1):\n        if dp[j] - dp[j-i] > dp[n] - dp[n-i]:\n            dp[j] = dp[j-i]\n            ans[i-1] = j - i\n            n = j\n            break\n\nprint(dp[n])\n\nfor i in range(k):\n    if i == 0:\n        print(ans[i]+1)\n    else:\n        print(ans[i]-ans[i-1])"
+}
+2022-04-09 23:44:40.651308 REASON stop
+2022-04-09 23:44:40.651798 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [0] * n\ndp[0] = a[0]\nfor i in range(1, n):\n    dp[i] = max(dp[i-1] + a[i], a[i])\n\nprint(max(dp))\n\n# dp = [0] * n\n# dp[0] = a[0]\n# for i in range(1, n):\n#     dp[i] = max(dp[i-1] + a[i], a[i])\n\n# print(max(dp))\n\n# ans = [0] * k\n# i = n - 1\n# while i >= 0:\n#     if i == n - 1:\n#         ans[k-1] += 1\n#     else:\n#         if dp[i] == dp[i+1] + a[i]:\n#             ans[k-1] += 1\n#         else:\n#             j = i + 1\n#             while j < n and dp[j] == dp[j-1] + a[j]:\n#                 j += 1\n#             ans[k-1] += j - i\n#             i = j - 1\n#             k -= 1\n#     i -= 1\n\n# print(*ans)\n\n# # dp = [0] * n\n# # dp[0] = a[0]\n# # for i in range(1, n):\n# #     dp[i] = max(dp[i-1] + a[i], a[i])\n\n# # print(max(dp))\n\n# # ans = [0] * k\n# # i = n - 1\n# # while i >= 0:\n# #     if i == n - 1:\n# #         ans[k-1] += 1\n# #     else:\n# #         if dp[i] == dp[i+1] + a[i]:\n# #             ans[k-1] += 1\n# #         else:\n# #             j = i + 1\n# #             while j < n and dp[j] == dp[j-1] + a[j]:\n# #                 j += 1\n# #             ans[k-1] += j - i\n# #             i = j - 1\n# #             k -= 1\n# #     i -= 1\n\n# # print(*ans)"
+}
+2022-04-09 23:44:40.651984 REASON stop

@@ -1,0 +1,173 @@
+2022-04-09 22:52:07.643990 """
+This is an easy version of the problem. The actual problems are different, but the easy version is almost a subtask of the hard version. Note that the constraints and the output format are different.
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+You have to color all its characters one of the two colors (each character to exactly one color, the same letters can be colored the same or different colors, i.e. you can choose exactly one color for each index in $s$).
+
+After coloring, you can swap any two neighboring characters of the string that are colored different colors. You can perform such an operation arbitrary (possibly, zero) number of times.
+
+The goal is to make the string sorted, i.e. all characters should be in alphabetical order.
+
+Your task is to say if it is possible to color the given string so that after coloring it can become sorted by some sequence of swaps. Note that you have to restore only coloring, not the sequence of swaps.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 200$) — the length of $s$.
+
+The second line of the input contains the string $s$ consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to color the given string so that after coloring it can become sorted by some sequence of swaps, print "NO" (without quotes) in the first line.
+
+Otherwise, print "YES" in the first line and any correct coloring in the second line (the coloring is the string consisting of $n$ characters, the $i$-th character should be '0' if the $i$-th character is colored the first color and '1' otherwise).
+
+
+-----Examples-----
+Input
+9
+abacbecfd
+
+Output
+YES
+001010101
+
+Input
+8
+aaabbcbb
+
+Output
+YES
+01011011
+
+Input
+7
+abcdedc
+
+Output
+NO
+
+Input
+5
+abcde
+
+Output
+YES
+00000
+"""
+2022-04-09 22:52:07.644018 --------------------------
+2022-04-09 22:53:08.191741 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    s = input()\n\n    # We'll keep track of the number of consecutive letters.\n    # Then, we'll iterate through the letters and assign the first color to the first letter of the current consecutive group\n    # and the second color to the last letter of the current consecutive group.\n    # If we encounter a consecutive group of 1 letter, we'll assign the first color.\n    # If we encounter a consecutive group of 2 letters, we'll assign the first color to the first letter and the second color to the second letter.\n    # If we encounter a consecutive group of 3 or more letters, we'll assign the first color to the first letter and the second color to the last letter.\n    # If we reach the end of the input string, we'll assign the first color to the last letter of the current consecutive group.\n\n    ans = [None] * n\n\n    i = 0\n    while i < n:\n        count = 1\n        for j in range(i + 1, n):\n            if s[j] != s[i]:\n                break\n            count += 1\n        if count == 1:\n            ans[i] = 0\n        elif count == 2:\n            ans[i] = 0\n            ans[j - 1] = 1\n        else:\n            ans[i] = 0\n            ans[j - 1] = 1\n        i += count\n\n    if ans[-1] is None:\n        ans[-1] = 0\n\n    print('YES')\n    print(''.join(map(str, ans)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef color_string(s):\n    n = len(s)\n    if n == 1:\n        return True, '0' * n\n    if n == 2:\n        return s[0] <= s[1], '0' + '1'\n    if n == 3:\n        return s[0] <= s[1] and s[1] <= s[2], '0' + '1' * (n - 2)\n    if s[0] > s[1]: return False, ''\n    if s[-2] > s[-1]: return False, ''\n    for i in range(1, n - 1):\n        if s[i - 1] > s[i] and s[i] > s[i + 1]: return False, ''\n    ans = ''\n    for i in range(n):\n        if s[i - 1] > s[i] and s[i] > s[i + 1]:\n            ans += '1'\n        else:\n            ans += '0'\n    return True, ans\n\nn = int(input())\ns = input()\n\nans = color_string(s)\nprint(ans[0])\nif ans[0]:\n    print(ans[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(\"YES\")\n    for i in range(n-1):\n        if s[i] != s[i+1]:\n            print(\"1\", end=\"\")\n        else:\n            print(\"0\", end=\"\")\n    print(0)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    result = \"YES\\n\"\n    for i in range(n):\n        if s[i] < s[i-1]:\n            result += \"1\"\n        else:\n            result += \"0\"\n    print(result)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\nfrom itertools import permutations\nfrom typing import List\n\nfrom utils.input_parsers import parse_single_line_string\n\n\ndef get_sorted_permutations(s: str) -> List[str]:\n    \"\"\"\n    Get all possible permutations of the given string, sorted by length.\n    \"\"\"\n    return sorted(set(permutations(s)), key=len)\n\n\ndef get_swaps(s: str, t: str) -> int:\n    \"\"\"\n    Get the number of swaps required to transform the string s into the string t.\n    \"\"\"\n    swaps = 0\n    for i in range(len(s)):\n        if s[i] != t[i]:\n            swaps += 1\n    return swaps\n\n\ndef is_sorted_by_swaps(s: str, t: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into the given string using swaps.\n    \"\"\"\n    return get_swaps(s, t) <= 1\n\n\ndef get_swap_pairs(s: str) -> List[str]:\n    \"\"\"\n    Get all possible pairs of characters that can be swapped.\n    \"\"\"\n    swap_pairs = []\n    for i in range(len(s) - 1):\n        swap_pairs.append(s[i:i + 2])\n    return swap_pairs\n\n\ndef get_swap_pair_counts(s: str) -> Counter:\n    \"\"\"\n    Get a counter of the number of times each pair of characters appears in the given string.\n    \"\"\"\n    return Counter(get_swap_pairs(s))\n\n\ndef get_swap_pair_counts_diff(s: str, t: str) -> Counter:\n    \"\"\"\n    Get a counter of the difference in the number of times each pair of characters appears in the given strings.\n    \"\"\"\n    return get_swap_pair_counts(s) - get_swap_pair_counts(t)\n\n\ndef get_swap_pair_counts_diff_sum(s: str, t: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given strings.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff(s, t).values())\n\n\ndef get_swap_pair_counts_diff_sum_permutations(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff_sum(s, t) for t in get_sorted_permutations(s))\n\n\ndef get_sorted_permutations_swap_pair_counts_diff_sum(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string, sorted by length.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff_sum(s, t) for t in get_sorted_permutations(s))\n\n\ndef is_sorted_by_swaps_permutations(s: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into any permutation of the given string using swaps.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) == 0\n\n\ndef is_sorted_by_swaps_permutations_coloring(s: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into any permutation of the given string using swaps and coloring.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) % 2 == 0\n\n\ndef get_sorted_permutations_swap_pair_counts_diff_sum_coloring(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string, sorted by length, if coloring is used.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) // 2\n\n\ndef get_coloring(s: str) -> str:\n    \"\"\"\n    Get a coloring of the given string.\n    \"\"\"\n    return ''.join(['0' if get_sorted_permutations_swap_pair_counts_diff_sum_coloring(s) % 2 == 0 else '1'] * len(s))\n\n\nif __name__ == '__main__':\n    n = int(input())\n    s = parse_single_line_string(input())\n\n    if is_sorted_by_swaps_permutations_coloring(s):\n        print('YES')\n        print(get_coloring(s))\n    else:\n        print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print('NO') if n == 1 or (n == 2 and s[0] > s[1]) else print('YES\\n' + '0' * n)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\nif s == ''.join(sorted(s)):\n    print('YES')\n    print('0'*n)\n    exit()\n\nif s == ''.join(sorted(s)[::-1]):\n    print('YES')\n    print('1'*n)\n    exit()\n\n# print(s)\n# print(''.join(sorted(s)))\n# print(''.join(sorted(s)[::-1]))\n\nfor i in range(1, n-1):\n    if s[i] == s[i-1]:\n        continue\n    if s[i] == s[i+1]:\n        continue\n    if s[i] < s[i-1]:\n        s = s[:i-1] + s[i] + s[i-1] + s[i+1:]\n        break\n    else:\n        s = s[:i] + s[i+1] + s[i] + s[i+2:]\n        break\n\n# print(s)\n# print(''.join(sorted(s)))\n# print(''.join(sorted(s)[::-1]))\n\nif s == ''.join(sorted(s)) or s == ''.join(sorted(s)[::-1]):\n    print('YES')\n    print('0'*(i-1) + '1' + '0'*(n-i-1))\nelse:\n    print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef test_easy():\n    assert solve_easy(\"abacbecfd\") == \"001010101\"\n    assert solve_easy(\"aaabbcbb\") == \"01011011\"\n    assert solve_easy(\"abcde\") == \"00000\"\n\n\ndef solve_easy(s):\n    # First, check if the string is already sorted\n    if sorted(s) == list(s):\n        return \"0\" * len(s)\n    # Second, check if the string is unsortable\n    if sorted(s) != list(s):\n        for i in range(len(s) - 1):\n            if s[i] == s[i + 1]:\n                return \"NO\"\n    # Otherwise, return the sortable string\n    s_list = list(s)\n    for i in range(len(s_list) - 1):\n        if s_list[i] > s_list[i + 1]:\n            s_list[i + 1] = s_list[i]\n    return \"\".join(str(x) for x in s_list)\n\n\nif __name__ == \"__main__\":\n    s = input()\n    print(solve_easy(s))"
+    }
+  ],
+  "created": 1649559128,
+  "id": "cmpl-4vHyKmctJORjrXwb3SzccsTu4OzeR",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:53:08.192046 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    s = input()\n\n    # We'll keep track of the number of consecutive letters.\n    # Then, we'll iterate through the letters and assign the first color to the first letter of the current consecutive group\n    # and the second color to the last letter of the current consecutive group.\n    # If we encounter a consecutive group of 1 letter, we'll assign the first color.\n    # If we encounter a consecutive group of 2 letters, we'll assign the first color to the first letter and the second color to the second letter.\n    # If we encounter a consecutive group of 3 or more letters, we'll assign the first color to the first letter and the second color to the last letter.\n    # If we reach the end of the input string, we'll assign the first color to the last letter of the current consecutive group.\n\n    ans = [None] * n\n\n    i = 0\n    while i < n:\n        count = 1\n        for j in range(i + 1, n):\n            if s[j] != s[i]:\n                break\n            count += 1\n        if count == 1:\n            ans[i] = 0\n        elif count == 2:\n            ans[i] = 0\n            ans[j - 1] = 1\n        else:\n            ans[i] = 0\n            ans[j - 1] = 1\n        i += count\n\n    if ans[-1] is None:\n        ans[-1] = 0\n\n    print('YES')\n    print(''.join(map(str, ans)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:53:08.192076 REASON stop
+2022-04-09 22:53:08.204232 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef color_string(s):\n    n = len(s)\n    if n == 1:\n        return True, '0' * n\n    if n == 2:\n        return s[0] <= s[1], '0' + '1'\n    if n == 3:\n        return s[0] <= s[1] and s[1] <= s[2], '0' + '1' * (n - 2)\n    if s[0] > s[1]: return False, ''\n    if s[-2] > s[-1]: return False, ''\n    for i in range(1, n - 1):\n        if s[i - 1] > s[i] and s[i] > s[i + 1]: return False, ''\n    ans = ''\n    for i in range(n):\n        if s[i - 1] > s[i] and s[i] > s[i + 1]:\n            ans += '1'\n        else:\n            ans += '0'\n    return True, ans\n\nn = int(input())\ns = input()\n\nans = color_string(s)\nprint(ans[0])\nif ans[0]:\n    print(ans[1])"
+}
+2022-04-09 22:53:08.204375 REASON stop
+2022-04-09 22:53:08.205194 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(\"YES\")\n    for i in range(n-1):\n        if s[i] != s[i+1]:\n            print(\"1\", end=\"\")\n        else:\n            print(\"0\", end=\"\")\n    print(0)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:53:08.205291 REASON stop
+2022-04-09 22:53:08.205998 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    result = \"YES\\n\"\n    for i in range(n):\n        if s[i] < s[i-1]:\n            result += \"1\"\n        else:\n            result += \"0\"\n    print(result)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:53:08.206085 REASON stop
+2022-04-09 22:53:08.206724 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\nfrom itertools import permutations\nfrom typing import List\n\nfrom utils.input_parsers import parse_single_line_string\n\n\ndef get_sorted_permutations(s: str) -> List[str]:\n    \"\"\"\n    Get all possible permutations of the given string, sorted by length.\n    \"\"\"\n    return sorted(set(permutations(s)), key=len)\n\n\ndef get_swaps(s: str, t: str) -> int:\n    \"\"\"\n    Get the number of swaps required to transform the string s into the string t.\n    \"\"\"\n    swaps = 0\n    for i in range(len(s)):\n        if s[i] != t[i]:\n            swaps += 1\n    return swaps\n\n\ndef is_sorted_by_swaps(s: str, t: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into the given string using swaps.\n    \"\"\"\n    return get_swaps(s, t) <= 1\n\n\ndef get_swap_pairs(s: str) -> List[str]:\n    \"\"\"\n    Get all possible pairs of characters that can be swapped.\n    \"\"\"\n    swap_pairs = []\n    for i in range(len(s) - 1):\n        swap_pairs.append(s[i:i + 2])\n    return swap_pairs\n\n\ndef get_swap_pair_counts(s: str) -> Counter:\n    \"\"\"\n    Get a counter of the number of times each pair of characters appears in the given string.\n    \"\"\"\n    return Counter(get_swap_pairs(s))\n\n\ndef get_swap_pair_counts_diff(s: str, t: str) -> Counter:\n    \"\"\"\n    Get a counter of the difference in the number of times each pair of characters appears in the given strings.\n    \"\"\"\n    return get_swap_pair_counts(s) - get_swap_pair_counts(t)\n\n\ndef get_swap_pair_counts_diff_sum(s: str, t: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given strings.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff(s, t).values())\n\n\ndef get_swap_pair_counts_diff_sum_permutations(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff_sum(s, t) for t in get_sorted_permutations(s))\n\n\ndef get_sorted_permutations_swap_pair_counts_diff_sum(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string, sorted by length.\n    \"\"\"\n    return sum(get_swap_pair_counts_diff_sum(s, t) for t in get_sorted_permutations(s))\n\n\ndef is_sorted_by_swaps_permutations(s: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into any permutation of the given string using swaps.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) == 0\n\n\ndef is_sorted_by_swaps_permutations_coloring(s: str) -> bool:\n    \"\"\"\n    Check if the given string can be transformed into any permutation of the given string using swaps and coloring.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) % 2 == 0\n\n\ndef get_sorted_permutations_swap_pair_counts_diff_sum_coloring(s: str) -> int:\n    \"\"\"\n    Get the sum of the difference in the number of times each pair of characters appears in the given string and each\n    permutation of the given string, sorted by length, if coloring is used.\n    \"\"\"\n    return get_sorted_permutations_swap_pair_counts_diff_sum(s) // 2\n\n\ndef get_coloring(s: str) -> str:\n    \"\"\"\n    Get a coloring of the given string.\n    \"\"\"\n    return ''.join(['0' if get_sorted_permutations_swap_pair_counts_diff_sum_coloring(s) % 2 == 0 else '1'] * len(s))\n\n\nif __name__ == '__main__':\n    n = int(input())\n    s = parse_single_line_string(input())\n\n    if is_sorted_by_swaps_permutations_coloring(s):\n        print('YES')\n        print(get_coloring(s))\n    else:\n        print('NO')"
+}
+2022-04-09 22:53:08.206826 REASON stop
+2022-04-09 22:53:08.207549 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print('NO') if n == 1 or (n == 2 and s[0] > s[1]) else print('YES\\n' + '0' * n)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:53:08.207628 REASON stop
+2022-04-09 22:53:08.207932 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\nif s == ''.join(sorted(s)):\n    print('YES')\n    print('0'*n)\n    exit()\n\nif s == ''.join(sorted(s)[::-1]):\n    print('YES')\n    print('1'*n)\n    exit()\n\n# print(s)\n# print(''.join(sorted(s)))\n# print(''.join(sorted(s)[::-1]))\n\nfor i in range(1, n-1):\n    if s[i] == s[i-1]:\n        continue\n    if s[i] == s[i+1]:\n        continue\n    if s[i] < s[i-1]:\n        s = s[:i-1] + s[i] + s[i-1] + s[i+1:]\n        break\n    else:\n        s = s[:i] + s[i+1] + s[i] + s[i+2:]\n        break\n\n# print(s)\n# print(''.join(sorted(s)))\n# print(''.join(sorted(s)[::-1]))\n\nif s == ''.join(sorted(s)) or s == ''.join(sorted(s)[::-1]):\n    print('YES')\n    print('0'*(i-1) + '1' + '0'*(n-i-1))\nelse:\n    print('NO')"
+}
+2022-04-09 22:53:08.207993 REASON stop
+2022-04-09 22:53:08.208281 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef test_easy():\n    assert solve_easy(\"abacbecfd\") == \"001010101\"\n    assert solve_easy(\"aaabbcbb\") == \"01011011\"\n    assert solve_easy(\"abcde\") == \"00000\"\n\n\ndef solve_easy(s):\n    # First, check if the string is already sorted\n    if sorted(s) == list(s):\n        return \"0\" * len(s)\n    # Second, check if the string is unsortable\n    if sorted(s) != list(s):\n        for i in range(len(s) - 1):\n            if s[i] == s[i + 1]:\n                return \"NO\"\n    # Otherwise, return the sortable string\n    s_list = list(s)\n    for i in range(len(s_list) - 1):\n        if s_list[i] > s_list[i + 1]:\n            s_list[i + 1] = s_list[i]\n    return \"\".join(str(x) for x in s_list)\n\n\nif __name__ == \"__main__\":\n    s = input()\n    print(solve_easy(s))"
+}
+2022-04-09 22:53:08.208384 REASON stop

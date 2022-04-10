@@ -1,0 +1,160 @@
+2022-04-09 23:11:52.025665 """
+Everybody knows of spaghetti sort. You decided to implement an analog sorting algorithm yourself, but as you survey your pantry you realize you're out of spaghetti! The only type of pasta you have is ravioli, but you are not going to let this stop you...
+
+You come up with the following algorithm. For each number in the array a_{i}, build a stack of a_{i} ravioli. The image shows the stack for a_{i} = 4.
+
+ [Image] 
+
+Arrange the stacks in one row in the order in which the corresponding numbers appear in the input array. Find the tallest one (if there are several stacks of maximal height, use the leftmost one). Remove it and add its height to the end of the output array. Shift the stacks in the row so that there is no gap between them. Repeat the procedure until all stacks have been removed.
+
+At first you are very happy with your algorithm, but as you try it on more inputs you realize that it doesn't always produce the right sorted array. Turns out when two stacks of ravioli are next to each other (at any step of the process) and differ in height by two or more, the top ravioli of the taller stack slides down on top of the lower stack.
+
+Given an input array, figure out whether the described algorithm will sort it correctly.
+
+
+-----Input-----
+
+The first line of input contains a single number n (1 ≤ n ≤ 10) — the size of the array.
+
+The second line of input contains n space-separated integers a_{i} (1 ≤ a_{i} ≤ 100) — the elements of the array.
+
+
+-----Output-----
+
+Output "YES" if the array can be sorted using the described procedure and "NO" if it can not.
+
+
+-----Examples-----
+Input
+3
+1 2 3
+
+Output
+YES
+
+Input
+3
+3 1 2
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the second example the array will change even before the tallest stack is chosen for the first time: ravioli from stack of height 3 will slide on the stack of height 1, and the algorithm will output an array {2, 2, 2}.
+"""
+2022-04-09 23:11:52.025690 --------------------------
+2022-04-09 23:12:35.673985 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef ravioli_sort(arr):\n\t# print(arr)\n\twhile len(arr) > 0:\n\t\tmax_height = max(arr)\n\t\tmax_index = arr.index(max_height)\n\t\tif max_index == len(arr)-1:\n\t\t\treturn \"NO\"\n\t\tif max_height - arr[max_index+1] >= 2:\n\t\t\treturn \"NO\"\n\t\tarr.pop(max_index)\n\treturn \"YES\"\n\nn = int(input())\narr = list(map(int, input().split()))\nprint(ravioli_sort(arr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\nThis is a simulation problem.\n\"\"\"\n\ndef is_sorted(arr):\n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i + 1]:\n            return False\n    return True\n\ndef simulate(arr):\n    stack_arr = [[x] for x in arr]\n    sorted_arr = []\n    while len(stack_arr) > 0:\n        # find the tallest stack\n        tallest_stack = stack_arr[0]\n        tallest_stack_idx = 0\n        for i in range(1, len(stack_arr)):\n            if len(stack_arr[i]) > len(tallest_stack):\n                tallest_stack = stack_arr[i]\n                tallest_stack_idx = i\n        # remove the tallest stack\n        sorted_arr.append(len(tallest_stack))\n        stack_arr.pop(tallest_stack_idx)\n        # shift the remaining stacks to the left\n        for i in range(len(stack_arr)):\n            if len(stack_arr[i]) > 0 and len(stack_arr[i]) < len(stack_arr[i - 1]):\n                stack_arr[i - 1].append(stack_arr[i].pop())\n    return sorted_arr\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    if is_sorted(simulate(arr)):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn = int(input())\n\ta = list(map(int, input().split()))\n\t\n\t# Initialize a list of lists, each sublist containing the number of raviolis in a stack\n\tstacks = []\n\tfor i in range(n):\n\t\tstacks.append([a[i]])\n\t\n\t# Sort the stacks in descending order\n\tstacks.sort(key = lambda x: x[0], reverse = True)\n\t\n\t# Check if the raviolis will slide down and make the sorting wrong\n\tfor i in range(len(stacks)-1):\n\t\tif stacks[i][0] - stacks[i+1][0] > 1:\n\t\t\tprint(\"NO\")\n\t\t\treturn\n\t\n\tprint(\"YES\")\n\treturn\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif a[0] < a[1]:\n    for i in range(1, n-1):\n        if a[i] < a[i+1]:\n            continue\n        elif a[i] == a[i+1]:\n            if a[i] <= a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i] - a[i+1] == 1 and a[i] >= a[i-1]:\n            continue\n        elif a[i] - a[i+1] > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\nelif a[0] > a[1]:\n    for i in range(1, n-1):\n        if a[i] > a[i+1]:\n            continue\n        elif a[i] == a[i+1]:\n            if a[i] >= a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i+1] - a[i] == 1 and a[i] <= a[i-1]:\n            continue\n        elif a[i+1] - a[i] > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\nelse:\n    for i in range(1, n-1):\n        if a[i] == a[i+1]:\n            if a[i] == a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i] < a[i+1]:\n            for j in range(i+1, n-1):\n                if a[j] < a[j+1]:\n                    continue\n                elif a[j] == a[j+1]:\n                    if a[j] <= a[j-1]:\n                        continue\n                    else:\n                        print(\"NO\")\n                        break\n                elif a[j] - a[j+1] == 1 and a[j] >= a[j-1]:\n                    continue\n                elif a[j] - a[j+1] > 1:\n                    print(\"NO\")\n                    break\n            else:\n                print(\"YES\")\n            break\n        elif a[i] > a[i+1]:\n            for j in range(i+1, n-1):\n                if a[j] > a[j+1]:\n                    continue\n                elif a[j] == a[j+1]:\n                    if a[j] >= a[j-1]:\n                        continue\n                    else:\n                        print(\"NO\")\n                        break\n                elif a[j+1] - a[j] == 1 and a[j] <= a[j-1]:\n                    continue\n                elif a[j+1] - a[j] > 1:\n                    print(\"NO\")\n                    break\n            else:\n                print(\"YES\")\n            break\n        else:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\nn = int(input())\na = [int(i) for i in input().split()]\n\nfor i in range(n):\n    if a[i] == a[i-1] + 1:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin\n    next(lines)\n    data = [int(x) for x in next(lines).split()]\n    if can_sort(data):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\ndef can_sort(data):\n    if len(data) <= 2:\n        return True\n    else:\n        max_index = index_max(data)\n        current_max = data[max_index]\n        data = data[:max_index] + data[max_index+1:]\n        if len(data) > 2:\n            if data[-1] == current_max - 1:\n                if data[-2] == current_max - 2:\n                    return can_sort(data[:-2] + [current_max - 1])\n                else:\n                    return can_sort(data[:-1] + [current_max - 1])\n            else:\n                return can_sort(data)\n        else:\n            return data[0] == current_max - 1\n\ndef index_max(data):\n    max_index = 0\n    for i in range(len(data)):\n        if data[i] > data[max_index]:\n            max_index = i\n    return max_index\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\nfrom collections import deque\n\ndef main():\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    d = deque()\n    for i in a:\n        d.append(i)\n\n    p = 0\n    l = []\n    while d:\n        i = d.popleft()\n        if len(l) > 0 and l[-1] > i + 1:\n            p = 1\n            break\n        l.append(i)\n    \n    if p == 1:\n        stdout.write(\"NO\")\n    else:\n        stdout.write(\"YES\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\n\nn = int(input())\na = list(map(int, input().split()))\n\nyes = True\n\nfor i in range(n-1):\n    if abs(a[i]-a[i+1]) >= 2:\n        yes = False\n        break\n\nif yes:\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+    }
+  ],
+  "created": 1649560312,
+  "id": "cmpl-4vIHQMwANMuzqvf989izhMcIhZxG2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:12:35.674334 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef ravioli_sort(arr):\n\t# print(arr)\n\twhile len(arr) > 0:\n\t\tmax_height = max(arr)\n\t\tmax_index = arr.index(max_height)\n\t\tif max_index == len(arr)-1:\n\t\t\treturn \"NO\"\n\t\tif max_height - arr[max_index+1] >= 2:\n\t\t\treturn \"NO\"\n\t\tarr.pop(max_index)\n\treturn \"YES\"\n\nn = int(input())\narr = list(map(int, input().split()))\nprint(ravioli_sort(arr))"
+}
+2022-04-09 23:12:35.674374 REASON stop
+2022-04-09 23:12:35.675778 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\nThis is a simulation problem.\n\"\"\"\n\ndef is_sorted(arr):\n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i + 1]:\n            return False\n    return True\n\ndef simulate(arr):\n    stack_arr = [[x] for x in arr]\n    sorted_arr = []\n    while len(stack_arr) > 0:\n        # find the tallest stack\n        tallest_stack = stack_arr[0]\n        tallest_stack_idx = 0\n        for i in range(1, len(stack_arr)):\n            if len(stack_arr[i]) > len(tallest_stack):\n                tallest_stack = stack_arr[i]\n                tallest_stack_idx = i\n        # remove the tallest stack\n        sorted_arr.append(len(tallest_stack))\n        stack_arr.pop(tallest_stack_idx)\n        # shift the remaining stacks to the left\n        for i in range(len(stack_arr)):\n            if len(stack_arr[i]) > 0 and len(stack_arr[i]) < len(stack_arr[i - 1]):\n                stack_arr[i - 1].append(stack_arr[i].pop())\n    return sorted_arr\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    if is_sorted(simulate(arr)):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:35.675932 REASON stop
+2022-04-09 23:12:35.676879 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn = int(input())\n\ta = list(map(int, input().split()))\n\t\n\t# Initialize a list of lists, each sublist containing the number of raviolis in a stack\n\tstacks = []\n\tfor i in range(n):\n\t\tstacks.append([a[i]])\n\t\n\t# Sort the stacks in descending order\n\tstacks.sort(key = lambda x: x[0], reverse = True)\n\t\n\t# Check if the raviolis will slide down and make the sorting wrong\n\tfor i in range(len(stacks)-1):\n\t\tif stacks[i][0] - stacks[i+1][0] > 1:\n\t\t\tprint(\"NO\")\n\t\t\treturn\n\t\n\tprint(\"YES\")\n\treturn\n\nmain()"
+}
+2022-04-09 23:12:35.677002 REASON stop
+2022-04-09 23:12:35.677374 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif a[0] < a[1]:\n    for i in range(1, n-1):\n        if a[i] < a[i+1]:\n            continue\n        elif a[i] == a[i+1]:\n            if a[i] <= a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i] - a[i+1] == 1 and a[i] >= a[i-1]:\n            continue\n        elif a[i] - a[i+1] > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\nelif a[0] > a[1]:\n    for i in range(1, n-1):\n        if a[i] > a[i+1]:\n            continue\n        elif a[i] == a[i+1]:\n            if a[i] >= a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i+1] - a[i] == 1 and a[i] <= a[i-1]:\n            continue\n        elif a[i+1] - a[i] > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\nelse:\n    for i in range(1, n-1):\n        if a[i] == a[i+1]:\n            if a[i] == a[i-1]:\n                continue\n            else:\n                print(\"NO\")\n                break\n        elif a[i] < a[i+1]:\n            for j in range(i+1, n-1):\n                if a[j] < a[j+1]:\n                    continue\n                elif a[j] == a[j+1]:\n                    if a[j] <= a[j-1]:\n                        continue\n                    else:\n                        print(\"NO\")\n                        break\n                elif a[j] - a[j+1] == 1 and a[j] >= a[j-1]:\n                    continue\n                elif a[j] - a[j+1] > 1:\n                    print(\"NO\")\n                    break\n            else:\n                print(\"YES\")\n            break\n        elif a[i] > a[i+1]:\n            for j in range(i+1, n-1):\n                if a[j] > a[j+1]:\n                    continue\n                elif a[j] == a[j+1]:\n                    if a[j] >= a[j-1]:\n                        continue\n                    else:\n                        print(\"NO\")\n                        break\n                elif a[j+1] - a[j] == 1 and a[j] <= a[j-1]:\n                    continue\n                elif a[j+1] - a[j] > 1:\n                    print(\"NO\")\n                    break\n            else:\n                print(\"YES\")\n            break\n        else:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")"
+}
+2022-04-09 23:12:35.677412 REASON stop
+2022-04-09 23:12:35.677620 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\nn = int(input())\na = [int(i) for i in input().split()]\n\nfor i in range(n):\n    if a[i] == a[i-1] + 1:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")"
+}
+2022-04-09 23:12:35.677653 REASON stop
+2022-04-09 23:12:35.677886 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin\n    next(lines)\n    data = [int(x) for x in next(lines).split()]\n    if can_sort(data):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\ndef can_sort(data):\n    if len(data) <= 2:\n        return True\n    else:\n        max_index = index_max(data)\n        current_max = data[max_index]\n        data = data[:max_index] + data[max_index+1:]\n        if len(data) > 2:\n            if data[-1] == current_max - 1:\n                if data[-2] == current_max - 2:\n                    return can_sort(data[:-2] + [current_max - 1])\n                else:\n                    return can_sort(data[:-1] + [current_max - 1])\n            else:\n                return can_sort(data)\n        else:\n            return data[0] == current_max - 1\n\ndef index_max(data):\n    max_index = 0\n    for i in range(len(data)):\n        if data[i] > data[max_index]:\n            max_index = i\n    return max_index\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:12:35.677958 REASON stop
+2022-04-09 23:12:35.679303 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\nfrom collections import deque\n\ndef main():\n    n = int(stdin.readline())\n    a = list(map(int, stdin.readline().split()))\n    d = deque()\n    for i in a:\n        d.append(i)\n\n    p = 0\n    l = []\n    while d:\n        i = d.popleft()\n        if len(l) > 0 and l[-1] > i + 1:\n            p = 1\n            break\n        l.append(i)\n    \n    if p == 1:\n        stdout.write(\"NO\")\n    else:\n        stdout.write(\"YES\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:12:35.679425 REASON stop
+2022-04-09 23:12:35.680509 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\n\nn = int(input())\na = list(map(int, input().split()))\n\nyes = True\n\nfor i in range(n-1):\n    if abs(a[i]-a[i+1]) >= 2:\n        yes = False\n        break\n\nif yes:\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+}
+2022-04-09 23:12:35.680632 REASON stop

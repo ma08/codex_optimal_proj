@@ -1,0 +1,157 @@
+2022-04-09 22:43:11.827321 """
+Polycarp is going to participate in the contest. It starts at $h_1:m_1$ and ends at $h_2:m_2$. It is guaranteed that the contest lasts an even number of minutes (i.e. $m_1 \% 2 = m_2 \% 2$, where $x \% y$ is $x$ modulo $y$). It is also guaranteed that the entire contest is held during a single day. And finally it is guaranteed that the contest lasts at least two minutes.
+
+Polycarp wants to know the time of the midpoint of the contest. For example, if the contest lasts from $10:00$ to $11:00$ then the answer is $10:30$, if the contest lasts from $11:10$ to $11:12$ then the answer is $11:11$.
+
+
+-----Input-----
+
+The first line of the input contains two integers $h_1$ and $m_1$ in the format hh:mm.
+
+The second line of the input contains two integers $h_2$ and $m_2$ in the same format (hh:mm).
+
+It is guaranteed that $0 \le h_1, h_2 \le 23$ and $0 \le m_1, m_2 \le 59$.
+
+It is guaranteed that the contest lasts an even number of minutes (i.e. $m_1 \% 2 = m_2 \% 2$, where $x \% y$ is $x$ modulo $y$). It is also guaranteed that the entire contest is held during a single day. And finally it is guaranteed that the contest lasts at least two minutes.
+
+
+-----Output-----
+
+Print two integers $h_3$ and $m_3$ ($0 \le h_3 \le 23, 0 \le m_3 \le 59$) corresponding to the midpoint of the contest in the format hh:mm. Print each number as exactly two digits (prepend a number with leading zero if needed), separate them with ':'.
+
+
+-----Examples-----
+Input
+10:00
+11:00
+
+Output
+10:30
+
+Input
+11:10
+11:12
+
+Output
+11:11
+
+Input
+01:02
+03:02
+
+Output
+02:02
+"""
+2022-04-09 22:43:11.827337 --------------------------
+2022-04-09 22:43:49.600398 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    inp = sys.stdin.read().splitlines()\n    h1, m1 = inp[0].split(\":\")\n    h2, m2 = inp[1].split(\":\")\n    h1 = int(h1)\n    m1 = int(m1)\n    h2 = int(h2)\n    m2 = int(m2)\n    if m1 % 2 == 0:\n        if m2 % 2 == 0:\n            m3 = (m1+m2)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n        else:\n            m3 = (m1+m2+1)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n    else:\n        if m2 % 2 == 0:\n            m3 = (m1+m2-1)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n        else:\n            m3 = (m1+m2)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n    if h3 < 10:\n        h3 = \"0\" + str(h3)\n    else:\n        h3 = str(h3)\n    if m3 < 10:\n        m3 = \"0\" + str(m3)\n    else:\n        m3 = str(m3)\n    print(h3 + \":\" + m3)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# get input\nstart = input().split(\":\")\nfinish = input().split(\":\")\n\n# convert input to ints\nstart = [int(x) for x in start]\nfinish = [int(x) for x in finish]\n\n# determine if the contest ends on the same day it starts\nif finish[0] < start[0]:\n    finish[0] += 24\n\n# determine the number of minutes the contest lasts\nif finish[1] < start[1]:\n    finish[1] += 60\n    finish[0] -= 1\n\nminutes = finish[0]*60 + finish[1] - start[0]*60 - start[1]\n\n# determine the number of minutes to add to the start time to get to the midpoint\nminutes = int(minutes/2)\n\n# determine the new hour and min\nhour = (start[0] + int(minutes/60))%24\nmin = (start[1] + minutes)%60\n\n# print the result\nprint(str(hour).zfill(2) + \":\" + str(min).zfill(2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef midpoint(h1, m1, h2, m2):\n\th = (h1 + h2) // 2\n\tm = (m1 + m2) // 2\n\tif (m1 + m2) % 2 == 1:\n\t\tif m == 60:\n\t\t\th += 1\n\t\t\tm = 0\n\t\telse:\n\t\t\tm += 1\n\treturn h, m\n\ndef main():\n\th1, m1 = map(int, input().split(':'))\n\th2, m2 = map(int, input().split(':'))\n\th, m = midpoint(h1, m1, h2, m2)\n\tprint('%02d:%02d' % (h, m))\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\ndef main():\n    h1,m1 = [int(x) for x in input().split(':')]\n    h2,m2 = [int(x) for x in input().split(':')]\n    minutes = (h2*60+m2) - (h1*60+m1)\n    h3 = h1 + int(minutes/120)\n    m3 = m1 + (minutes/2)%60\n    if m3 > 59:\n        m3 = m3 - 60\n        h3 = h3 + 1\n    if h3 > 23:\n        h3 = h3 - 24\n    print('{0:02}:{1:02}'.format(int(h3),int(m3)))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Worked\n\ndef main():\n    start = input()\n    end = input()\n\n    start = start.split(':')\n    end = end.split(':')\n\n    start = [int(x) for x in start]\n    end = [int(x) for x in end]\n\n    # print(start)\n    # print(end)\n\n    if start[1] == end[1]:\n        print('{}:{}'.format(start[0], start[1]))\n        return\n\n    if start[1] == 0:\n        start[1] = 60\n        start[0] -= 1\n\n    if end[1] == 0:\n        end[1] = 60\n        end[0] -= 1\n\n    if start[0] == end[0]:\n        if start[1] < end[1]:\n            print('{}:{}'.format(start[0], int((start[1] + end[1]) / 2)))\n        else:\n            print('{}:{}'.format(start[0], int((start[1] + end[1] - 60) / 2)))\n        return\n\n    if start[0] < end[0]:\n        print('{}:{}'.format(int((start[0] + end[0]) / 2), int((start[1] + end[1]) / 2)))\n    else:\n        print('{}:{}'.format(int((start[0] + end[0] - 24) / 2), int((start[1] + end[1]) / 2)))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nh1, m1 = map(int, input().split(':'))\nh2, m2 = map(int, input().split(':'))\n\nm_total = (h2 - h1) * 60 + m2 - m1\nm_mid = m_total / 2\n\nh_mid = h1 + m_mid // 60\nm_mid = m1 + m_mid % 60\n\nif m_mid >= 60:\n    h_mid += 1\n    m_mid -= 60\n\nprint(\"{:02d}:{:02d}\".format(int(h_mid), int(m_mid)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    h1, m1 = [int(x) for x in sys.stdin.readline().split(':')]\n    h2, m2 = [int(x) for x in sys.stdin.readline().split(':')]\n\n    m = (m1 + m2) / 2\n    h = (h1 + h2) / 2\n    if m == 60:\n        h += 1\n        m = 0\n\n    print '%02d:%02d' % (h, m)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nh1, m1 = input().split(':')\nh2, m2 = input().split(':')\n\nh1, h2, m1, m2 = int(h1), int(h2), int(m1), int(m2)\n\n# print(h1, m1)\n# print(h2, m2)\n\nif m1 == m2:\n    print(str(h1).zfill(2) + ':' + str(m1).zfill(2))\nelif m1 < m2:\n    if m1 % 2 == 0:\n        print(str(h1).zfill(2) + ':' + str(m1+1).zfill(2))\n    else:\n        print(str(h1).zfill(2) + ':' + str(m1-1).zfill(2))\nelif m1 > m2:\n    if m2 % 2 == 0:\n        print(str(h2).zfill(2) + ':' + str(m2+1).zfill(2))\n    else:\n        print(str(h2).zfill(2) + ':' + str(m2-1).zfill(2))"
+    }
+  ],
+  "created": 1649558592,
+  "id": "cmpl-4vHpgYvtUaU2aCbT9EbE6zIspyQfv",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:43:49.600737 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    inp = sys.stdin.read().splitlines()\n    h1, m1 = inp[0].split(\":\")\n    h2, m2 = inp[1].split(\":\")\n    h1 = int(h1)\n    m1 = int(m1)\n    h2 = int(h2)\n    m2 = int(m2)\n    if m1 % 2 == 0:\n        if m2 % 2 == 0:\n            m3 = (m1+m2)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n        else:\n            m3 = (m1+m2+1)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n    else:\n        if m2 % 2 == 0:\n            m3 = (m1+m2-1)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n        else:\n            m3 = (m1+m2)//2\n            if m3 == 60:\n                h3 = (h1+h2+1)//2\n                m3 = 0\n            else:\n                h3 = (h1+h2)//2\n    if h3 < 10:\n        h3 = \"0\" + str(h3)\n    else:\n        h3 = str(h3)\n    if m3 < 10:\n        m3 = \"0\" + str(m3)\n    else:\n        m3 = str(m3)\n    print(h3 + \":\" + m3)\n\nmain()"
+}
+2022-04-09 22:43:49.600866 REASON stop
+2022-04-09 22:43:49.601981 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# get input\nstart = input().split(\":\")\nfinish = input().split(\":\")\n\n# convert input to ints\nstart = [int(x) for x in start]\nfinish = [int(x) for x in finish]\n\n# determine if the contest ends on the same day it starts\nif finish[0] < start[0]:\n    finish[0] += 24\n\n# determine the number of minutes the contest lasts\nif finish[1] < start[1]:\n    finish[1] += 60\n    finish[0] -= 1\n\nminutes = finish[0]*60 + finish[1] - start[0]*60 - start[1]\n\n# determine the number of minutes to add to the start time to get to the midpoint\nminutes = int(minutes/2)\n\n# determine the new hour and min\nhour = (start[0] + int(minutes/60))%24\nmin = (start[1] + minutes)%60\n\n# print the result\nprint(str(hour).zfill(2) + \":\" + str(min).zfill(2))"
+}
+2022-04-09 22:43:49.602077 REASON stop
+2022-04-09 22:43:49.602768 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef midpoint(h1, m1, h2, m2):\n\th = (h1 + h2) // 2\n\tm = (m1 + m2) // 2\n\tif (m1 + m2) % 2 == 1:\n\t\tif m == 60:\n\t\t\th += 1\n\t\t\tm = 0\n\t\telse:\n\t\t\tm += 1\n\treturn h, m\n\ndef main():\n\th1, m1 = map(int, input().split(':'))\n\th2, m2 = map(int, input().split(':'))\n\th, m = midpoint(h1, m1, h2, m2)\n\tprint('%02d:%02d' % (h, m))\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 22:43:49.602881 REASON stop
+2022-04-09 22:43:49.603564 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\ndef main():\n    h1,m1 = [int(x) for x in input().split(':')]\n    h2,m2 = [int(x) for x in input().split(':')]\n    minutes = (h2*60+m2) - (h1*60+m1)\n    h3 = h1 + int(minutes/120)\n    m3 = m1 + (minutes/2)%60\n    if m3 > 59:\n        m3 = m3 - 60\n        h3 = h3 + 1\n    if h3 > 23:\n        h3 = h3 - 24\n    print('{0:02}:{1:02}'.format(int(h3),int(m3)))\n\nmain()"
+}
+2022-04-09 22:43:49.603655 REASON stop
+2022-04-09 22:43:49.604081 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Worked\n\ndef main():\n    start = input()\n    end = input()\n\n    start = start.split(':')\n    end = end.split(':')\n\n    start = [int(x) for x in start]\n    end = [int(x) for x in end]\n\n    # print(start)\n    # print(end)\n\n    if start[1] == end[1]:\n        print('{}:{}'.format(start[0], start[1]))\n        return\n\n    if start[1] == 0:\n        start[1] = 60\n        start[0] -= 1\n\n    if end[1] == 0:\n        end[1] = 60\n        end[0] -= 1\n\n    if start[0] == end[0]:\n        if start[1] < end[1]:\n            print('{}:{}'.format(start[0], int((start[1] + end[1]) / 2)))\n        else:\n            print('{}:{}'.format(start[0], int((start[1] + end[1] - 60) / 2)))\n        return\n\n    if start[0] < end[0]:\n        print('{}:{}'.format(int((start[0] + end[0]) / 2), int((start[1] + end[1]) / 2)))\n    else:\n        print('{}:{}'.format(int((start[0] + end[0] - 24) / 2), int((start[1] + end[1]) / 2)))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:43:49.604155 REASON stop
+2022-04-09 22:43:49.604843 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nh1, m1 = map(int, input().split(':'))\nh2, m2 = map(int, input().split(':'))\n\nm_total = (h2 - h1) * 60 + m2 - m1\nm_mid = m_total / 2\n\nh_mid = h1 + m_mid // 60\nm_mid = m1 + m_mid % 60\n\nif m_mid >= 60:\n    h_mid += 1\n    m_mid -= 60\n\nprint(\"{:02d}:{:02d}\".format(int(h_mid), int(m_mid)))"
+}
+2022-04-09 22:43:49.604935 REASON stop
+2022-04-09 22:43:49.605354 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    h1, m1 = [int(x) for x in sys.stdin.readline().split(':')]\n    h2, m2 = [int(x) for x in sys.stdin.readline().split(':')]\n\n    m = (m1 + m2) / 2\n    h = (h1 + h2) / 2\n    if m == 60:\n        h += 1\n        m = 0\n\n    print '%02d:%02d' % (h, m)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:43:49.605417 REASON stop
+2022-04-09 22:43:49.605935 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nh1, m1 = input().split(':')\nh2, m2 = input().split(':')\n\nh1, h2, m1, m2 = int(h1), int(h2), int(m1), int(m2)\n\n# print(h1, m1)\n# print(h2, m2)\n\nif m1 == m2:\n    print(str(h1).zfill(2) + ':' + str(m1).zfill(2))\nelif m1 < m2:\n    if m1 % 2 == 0:\n        print(str(h1).zfill(2) + ':' + str(m1+1).zfill(2))\n    else:\n        print(str(h1).zfill(2) + ':' + str(m1-1).zfill(2))\nelif m1 > m2:\n    if m2 % 2 == 0:\n        print(str(h2).zfill(2) + ':' + str(m2+1).zfill(2))\n    else:\n        print(str(h2).zfill(2) + ':' + str(m2-1).zfill(2))"
+}
+2022-04-09 22:43:49.606038 REASON stop

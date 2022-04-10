@@ -1,0 +1,143 @@
+2022-04-10 00:29:48.982607 """
+After acquiring a new integer and showing it off to other couples at a cocktail party, Alice and Bob headed home for a good night of sleep. As their integer was quite large, they were forced to carry it together. Then, on the Boole Boulevard, right by the Bayes Bay, disaster struck. History does not tell us which of our two protagonists stumbled first, but stumble they did, and their integer shattered into $n$ positive integral pieces on the pavement in front of them.
+
+The couple’s marriage, already under financial stress due to the expensive integer acquisition, did not survive this event, and Bob and Alice resolved to separate. Thus the question was raised on how to split the remnants of their integer. Bob and Alice decided to play a game with the remaining $n$ pieces: the two would repeatedly choose pieces in alternating turns until none were left.
+
+Bob and Alice, both very materialistic, seek to acquire the largest possible sum of integers possible. Compute the value of the integers each of them ends up with. Assume both players play optimally. Since A comes before B in the alphabet, Alice moves first.
+
+-----Input-----
+The input consists of two lines.
+ - A single integer $1 \leq n \leq 15$, the number of pieces.
+ - The values of the pieces $a_0, a_1, \dots , a_{n-1}$, space-separated. It is given that $1 \leq a_ i \leq 100$.
+
+-----Output-----
+Output a single line containing two integers, the combined value of Alice’s pieces, and the combined value of Bob’s pieces.
+
+-----Examples-----
+Sample Input:
+3
+3 1 2
+Sample Output:
+4 2
+"""
+2022-04-10 00:29:48.982635 --------------------------
+2022-04-10 00:30:27.968361 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    number_of_pieces = int(input())\n    pieces = [int(x) for x in input().split()]\n    print(max_sum(pieces))\n\ndef max_sum(pieces):\n    \"\"\"\n    Returns the maximum sum of integers that can be obtained by playing optimally\n    \"\"\"\n    return max_sum_recursive(pieces, 0, len(pieces) - 1)\n\ndef max_sum_recursive(pieces, left_index, right_index):\n    \"\"\"\n    Recursively computes the maximum sum of integers that can be obtained by playing optimally\n    \"\"\"\n    if left_index == right_index:\n        return pieces[left_index]\n    else:\n        return max(pieces[left_index] + min(max_sum_recursive(pieces, left_index + 2, right_index), max_sum_recursive(pieces, left_index + 1, right_index - 1)), pieces[right_index] + min(max_sum_recursive(pieces, left_index + 1, right_index - 1), max_sum_recursive(pieces, left_index, right_index - 2)))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\npieces = [int(x) for x in input().split()]\n\ndef play(n, pieces):\n    if n == 1:\n        return pieces[0], 0\n    elif n == 2:\n        return max(pieces[0], pieces[1]), min(pieces[0], pieces[1])\n    else:\n        if pieces[0] > pieces[-1]:\n            a, b = play(n-1, pieces[1:])\n            return pieces[0] + b, a\n        else:\n            a, b = play(n-1, pieces[:-1])\n            return a, pieces[-1] + b\n\na, b = play(n, pieces)\nprint(a, b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    a.sort()\n    a.reverse()\n    alice = 0\n    bob = 0\n    for i in range(n):\n        if i % 2 == 0:\n            alice += a[i]\n        else:\n            bob += a[i]\n    print(alice, bob)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main(pname):\n    sys.stdin = open(pname + '.in', 'r')\n    sys.stdout = open(pname + '.out', 'w')\n\n    n = int(input())\n    a = sorted(list(map(int, input().split())))\n    a.reverse()\n    alice = 0\n    bob = 0\n    for i in range(len(a)):\n        if i % 2 == 0:\n            alice += a[i]\n        else:\n            bob += a[i]\n    print(alice, bob)\n\nif __name__ == \"__main__\":\n    main('broken')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    pieces = [int(x) for x in sys.stdin.readline().split()]\n    pieces.sort()\n    alice = 0\n    bob = 0\n    for i in range(n):\n        if i % 2 == 0:\n            alice += pieces[n-i-1]\n        else:\n            bob += pieces[n-i-1]\n    print(alice, bob)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\na.sort()\n\nAlice = 0\nBob = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        Alice += a[n - i - 1]\n    else:\n        Bob += a[n - i - 1]\n\nprint(Alice, Bob)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    This function is the main function of this program.\n\n    This function reads the number of pieces and the values of the pieces from the input.\n    Then, it prints the total value of Alice's pieces and the total value of Bob's pieces.\n\n    This function uses the function choose_piece() to choose the piece to take.\n    \"\"\"\n    # Read the number of pieces.\n    n = int(input())\n\n    # Read the values of the pieces.\n    pieces = [int(a) for a in input().split()]\n\n    # Initialize the total value of Alice's pieces and the total value of Bob's pieces.\n    alice_total = 0\n    bob_total = 0\n\n    # Loop through all the pieces.\n    for i in range(n):\n        # Check if it is Alice's turn.\n        if i % 2 == 0:\n            # Choose the piece for Alice.\n            alice_piece = choose_piece(pieces)\n\n            # Add the value of Alice's piece to the total value of Alice's pieces.\n            alice_total += alice_piece\n\n            # Remove the chosen piece from the list of pieces.\n            pieces.remove(alice_piece)\n        # Check if it is Bob's turn.\n        else:\n            # Choose the piece for Bob.\n            bob_piece = choose_piece(pieces)\n\n            # Add the value of Bob's piece to the total value of Bob's pieces.\n            bob_total += bob_piece\n\n            # Remove the chosen piece from the list of pieces.\n            pieces.remove(bob_piece)\n\n    # Print the total value of Alice's pieces and the total value of Bob's pieces.\n    print(\"{} {}\".format(alice_total, bob_total))\n\ndef choose_piece(pieces):\n    \"\"\"\n    This function chooses a piece to take.\n\n    This function takes a list of pieces as the parameter.\n    It returns the value of the chosen piece.\n    \"\"\"\n    # Initialize the maximum value of the chosen piece.\n    max_piece = 0\n\n    # Loop through all the pieces.\n    for piece in pieces:\n        # Check if the value of the piece is greater than the maximum value of the chosen piece.\n        if piece > max_piece:\n            # Set the value of the piece as the new maximum value of the chosen piece.\n            max_piece = piece\n\n    # Return the maximum value of the chosen piece.\n    return max_piece\n\n# Call the main function.\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#Solution\nn = int(input())\na = [int(x) for x in input().split()]\na.sort()\n\nsuma = sum(a[::2])\nsumb = sum(a[1::2])\n\nprint(suma, sumb)"
+    }
+  ],
+  "created": 1649564989,
+  "id": "cmpl-4vJUrKVyY3JHYYGmH2GKnOHOw71zs",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:30:27.968772 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    number_of_pieces = int(input())\n    pieces = [int(x) for x in input().split()]\n    print(max_sum(pieces))\n\ndef max_sum(pieces):\n    \"\"\"\n    Returns the maximum sum of integers that can be obtained by playing optimally\n    \"\"\"\n    return max_sum_recursive(pieces, 0, len(pieces) - 1)\n\ndef max_sum_recursive(pieces, left_index, right_index):\n    \"\"\"\n    Recursively computes the maximum sum of integers that can be obtained by playing optimally\n    \"\"\"\n    if left_index == right_index:\n        return pieces[left_index]\n    else:\n        return max(pieces[left_index] + min(max_sum_recursive(pieces, left_index + 2, right_index), max_sum_recursive(pieces, left_index + 1, right_index - 1)), pieces[right_index] + min(max_sum_recursive(pieces, left_index + 1, right_index - 1), max_sum_recursive(pieces, left_index, right_index - 2)))\n\nmain()"
+}
+2022-04-10 00:30:27.968927 REASON stop
+2022-04-10 00:30:27.969819 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.969849 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\npieces = [int(x) for x in input().split()]\n\ndef play(n, pieces):\n    if n == 1:\n        return pieces[0], 0\n    elif n == 2:\n        return max(pieces[0], pieces[1]), min(pieces[0], pieces[1])\n    else:\n        if pieces[0] > pieces[-1]:\n            a, b = play(n-1, pieces[1:])\n            return pieces[0] + b, a\n        else:\n            a, b = play(n-1, pieces[:-1])\n            return a, pieces[-1] + b\n\na, b = play(n, pieces)\nprint(a, b)"
+}
+2022-04-10 00:30:27.969907 REASON stop
+2022-04-10 00:30:27.970310 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.970340 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    a.sort()\n    a.reverse()\n    alice = 0\n    bob = 0\n    for i in range(n):\n        if i % 2 == 0:\n            alice += a[i]\n        else:\n            bob += a[i]\n    print(alice, bob)\n\nmain()"
+}
+2022-04-10 00:30:27.970391 REASON stop
+2022-04-10 00:30:27.970711 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.970740 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main(pname):\n    sys.stdin = open(pname + '.in', 'r')\n    sys.stdout = open(pname + '.out', 'w')\n\n    n = int(input())\n    a = sorted(list(map(int, input().split())))\n    a.reverse()\n    alice = 0\n    bob = 0\n    for i in range(len(a)):\n        if i % 2 == 0:\n            alice += a[i]\n        else:\n            bob += a[i]\n    print(alice, bob)\n\nif __name__ == \"__main__\":\n    main('broken')"
+}
+2022-04-10 00:30:27.970790 REASON stop
+2022-04-10 00:30:27.971125 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.971154 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    pieces = [int(x) for x in sys.stdin.readline().split()]\n    pieces.sort()\n    alice = 0\n    bob = 0\n    for i in range(n):\n        if i % 2 == 0:\n            alice += pieces[n-i-1]\n        else:\n            bob += pieces[n-i-1]\n    print(alice, bob)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:30:27.971218 REASON stop
+2022-04-10 00:30:27.971446 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.971452 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\na.sort()\n\nAlice = 0\nBob = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        Alice += a[n - i - 1]\n    else:\n        Bob += a[n - i - 1]\n\nprint(Alice, Bob)"
+}
+2022-04-10 00:30:27.971473 REASON stop
+2022-04-10 00:30:27.971588 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.971594 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    This function is the main function of this program.\n\n    This function reads the number of pieces and the values of the pieces from the input.\n    Then, it prints the total value of Alice's pieces and the total value of Bob's pieces.\n\n    This function uses the function choose_piece() to choose the piece to take.\n    \"\"\"\n    # Read the number of pieces.\n    n = int(input())\n\n    # Read the values of the pieces.\n    pieces = [int(a) for a in input().split()]\n\n    # Initialize the total value of Alice's pieces and the total value of Bob's pieces.\n    alice_total = 0\n    bob_total = 0\n\n    # Loop through all the pieces.\n    for i in range(n):\n        # Check if it is Alice's turn.\n        if i % 2 == 0:\n            # Choose the piece for Alice.\n            alice_piece = choose_piece(pieces)\n\n            # Add the value of Alice's piece to the total value of Alice's pieces.\n            alice_total += alice_piece\n\n            # Remove the chosen piece from the list of pieces.\n            pieces.remove(alice_piece)\n        # Check if it is Bob's turn.\n        else:\n            # Choose the piece for Bob.\n            bob_piece = choose_piece(pieces)\n\n            # Add the value of Bob's piece to the total value of Bob's pieces.\n            bob_total += bob_piece\n\n            # Remove the chosen piece from the list of pieces.\n            pieces.remove(bob_piece)\n\n    # Print the total value of Alice's pieces and the total value of Bob's pieces.\n    print(\"{} {}\".format(alice_total, bob_total))\n\ndef choose_piece(pieces):\n    \"\"\"\n    This function chooses a piece to take.\n\n    This function takes a list of pieces as the parameter.\n    It returns the value of the chosen piece.\n    \"\"\"\n    # Initialize the maximum value of the chosen piece.\n    max_piece = 0\n\n    # Loop through all the pieces.\n    for piece in pieces:\n        # Check if the value of the piece is greater than the maximum value of the chosen piece.\n        if piece > max_piece:\n            # Set the value of the piece as the new maximum value of the chosen piece.\n            max_piece = piece\n\n    # Return the maximum value of the chosen piece.\n    return max_piece\n\n# Call the main function.\nmain()"
+}
+2022-04-10 00:30:27.971616 REASON stop
+2022-04-10 00:30:27.971730 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'
+2022-04-10 00:30:27.971736 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#Solution\nn = int(input())\na = [int(x) for x in input().split()]\na.sort()\n\nsuma = sum(a[::2])\nsumb = sum(a[1::2])\n\nprint(suma, sumb)"
+}
+2022-04-10 00:30:27.971756 REASON stop
+2022-04-10 00:30:27.971864 test/intro-questions.txt_dir/4989/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4989/solutions.json'

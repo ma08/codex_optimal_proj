@@ -1,0 +1,165 @@
+2022-04-09 23:29:49.389218 """
+You are given an integer sequence $a_1, a_2, \dots, a_n$.
+
+Find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of median of $a_l, a_{l+1}, \dots, a_r$ is exactly the given number $m$.
+
+The median of a sequence is the value of an element which is in the middle of the sequence after sorting it in non-decreasing order. If the length of the sequence is even, the left of two middle elements is used.
+
+For example, if $a=[4, 2, 7, 5]$ then its median is $4$ since after sorting the sequence, it will look like $[2, 4, 5, 7]$ and the left of two middle elements is equal to $4$. The median of $[7, 1, 2, 9, 6]$ equals $6$ since after sorting, the value $6$ will be in the middle of the sequence.
+
+Write a program to find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of median of $a_l, a_{l+1}, \dots, a_r$ is exactly the given number $m$.
+
+
+-----Input-----
+
+The first line contains integers $n$ and $m$ ($1 \le n,m \le 2\cdot10^5$) — the length of the given sequence and the required value of the median.
+
+The second line contains an integer sequence $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2\cdot10^5$).
+
+
+-----Output-----
+
+Print the required number.
+
+
+-----Examples-----
+Input
+5 4
+1 4 5 60 4
+
+Output
+8
+
+Input
+3 1
+1 1 1
+
+Output
+6
+
+Input
+15 2
+1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
+
+Output
+97
+
+
+
+-----Note-----
+
+In the first example, the suitable pairs of indices are: $(1, 3)$, $(1, 4)$, $(1, 5)$, $(2, 2)$, $(2, 3)$, $(2, 5)$, $(4, 5)$ and $(5, 5)$.
+"""
+2022-04-09 23:29:49.389239 --------------------------
+2022-04-09 23:30:42.415932 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn,m = map(int, input().split())\na = list(map(int, input().split()))\na.sort()\n\ncount = 0\n\nfor i in range(n):\n    if a[i] < m:\n        continue\n    else:\n        break\n\nfor j in range(n-1, -1, -1):\n    if a[j] > m:\n        continue\n    else:\n        break\n\nfor k in range(i, j+1):\n    count += k-i+1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    # dp[i][j] = number of pairs of indices (l, r) where l <= i and r <= j and median of a[l], a[l+1], ..., a[r] is exactly m\n    dp = [[0 for j in range(n)] for i in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                if a[i] == m:\n                    dp[i][j] = 1\n            else:\n                if a[i] == m or a[j] == m:\n                    dp[i][j] = dp[i+1][j] + dp[i][j-1] + 1\n                else:\n                    dp[i][j] = dp[i+1][j] + dp[i][j-1] - dp[i+1][j-1]\n    print(dp[0][n-1])\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n\n    # s = [0] * (n + 1)\n    # for i in range(n):\n    #     s[i + 1] = s[i] + a[i]\n\n    # print(s)\n\n    # d = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}\n    # for l in range(1, n + 1):\n    #     for r in range(l, n + 1):\n    #         # print(l, r)\n    #         if r - l + 1 == 2:\n    #             if a[l - 1] == m:\n    #                 d[2] += 1\n    #         elif r - l + 1 == 3:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[3] += 1\n    #         elif r - l + 1 == 4:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[4] += 1\n    #         elif r - l + 1 == 5:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[5] += 1\n    #         else:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[6] += 1\n\n    # print(d)\n\n    d = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}\n    for i in range(1, n + 1):\n        if a[i - 1] == m:\n            d[2] += i\n            d[3] += i * (i - 1) // 2\n            d[4] += i * (i - 1) * (i - 2) // 6\n            d[5] += i * (i - 1) * (i - 2) * (i - 3) // 24\n            d[6] += i * (i - 1) * (i - 2) * (i - 3) * (i - 4) // 120\n\n    print(d)\n    print(d[2] + d[3] + d[4] + d[5] + d[6])\n\n    # res = 0\n    # for l in range(1, n + 1):\n    #     for r in range(l, n + 1):\n    #         if r - l + 1 == 2:\n    #             if a[l - 1] == m:\n    #                 res += 1\n    #         elif r - l + 1 == 3:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         elif r - l + 1 == 4:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         elif r - l + 1 == 5:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         else:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n\n    # print(res)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    cnt = 0\n    for i in range(n):\n        for j in range(i, n):\n            med = median(arr[i:j+1])\n            if med == m:\n                cnt += 1\n    print(cnt)\n\ndef median(arr):\n    arr.sort()\n    n = len(arr)\n    if n % 2 == 0:\n        return arr[n//2 - 1]\n    return arr[n//2]\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef main():\n    n, m = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n\n    # counts[i] is the number of indices j such that a[j] <= i\n    counts = [0] * (max(a) + 1)\n    for i in range(n):\n        counts[a[i]] += 1\n\n    # partial_sums[i] is the number of indices j such that a[j] <= i\n    partial_sums = [0] * (max(a) + 1)\n    partial_sums[0] = counts[0]\n    for i in range(1, len(partial_sums)):\n        partial_sums[i] = partial_sums[i - 1] + counts[i]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    counts = [0] * (n + 1)\n\n    for i in range(n):\n        # We want to find the number of indices j such that a[j] <= m and a[j + i] >= m\n        # This is equivalent to the number of indices j such that a[j] <= m and a[j + i] <= m\n        # This is the number of indices j such that a[j] <= m\n        # minus the number of indices j such that a[j] <= m - 1\n        counts[i + 1] = partial_sums[m] - partial_sums[m - 1]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 1\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 2\n    # ...\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + i\n    for i in range(1, n + 1):\n        counts[i] += counts[i - 1]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 1\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 2\n    # ...\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + i\n    print(counts[n])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N, M = [int(x) for x in sys.stdin.readline().split()]\n    A = [int(x) for x in sys.stdin.readline().split()]\n    A.sort()\n    #print(A)\n    count = 0\n    for i in range(N):\n        if A[i] > M:\n            break\n        for j in range(i, N):\n            if A[j] > M:\n                break\n            if A[(i+j)//2] == M:\n                count += j-i+1\n            elif A[(i+j)//2] > M:\n                break\n    #print(count)\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# Create initial empty lists\nleft = []\nright = []\n\n# Create a list of all possible sums of two numbers in the given array\nfor i in range(n):\n    for j in range(i+1, n+1):\n        left.append(a[i])\n        right.append(a[j-1])\n\n# Create a new list with all possible sums of two numbers in the given array\nsums = [sum(x) for x in zip(left, right)]\n\n# Create a list of all possible medians in the given array\nmedians = []\nfor i in range(len(sums)):\n    if i % 2: # if the number of elements in the list is odd, the median is the middle element\n        medians.append(sums[i] // 2)\n    else: # if the number of elements in the list is even, the median is the average of the two middle elements\n        medians.append((sums[i] + sums[i+1]) // 2)\n\n# Print the number of times the given median occurs in the medians list\nprint(medians.count(m))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# Get the number of elements <= m\nl = [1 if x <= m else 0 for x in a]\n\n# Get the prefix sums\np = [0]\nfor i in l:\n    p.append(p[-1] + i)\n\n# Get the number of pairs of indices (l,r) where p[l] = p[r]\n# That is, the number of pairs of indices (l,r) such that\n# p[r] - p[l] = 0\n# p[r] - p[l] = 1\n# p[r] - p[l] = 2\n# ...\n# p[r] - p[l] = p[r]\n# The number of pairs of indices (l,r) such that p[r] - p[l] = i\n# is equal to the number of indices l such that p[l] = i\n# so we can simply count the number of indices l such that p[l] = i\n\n# Get the number of indices l such that p[l] = i\ncounts = [0] * (n + 1)\nfor i in p:\n    counts[i] += 1\n\n# Get the number of pairs of indices (l,r) where p[l] = p[r]\nans = 0\nfor i in counts:\n    ans += i * (i - 1) // 2\n\nprint(ans)"
+    }
+  ],
+  "created": 1649561389,
+  "id": "cmpl-4vIYnzdS2yeqIuwYiRj4zJ13qggog",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:30:42.416487 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn,m = map(int, input().split())\na = list(map(int, input().split()))\na.sort()\n\ncount = 0\n\nfor i in range(n):\n    if a[i] < m:\n        continue\n    else:\n        break\n\nfor j in range(n-1, -1, -1):\n    if a[j] > m:\n        continue\n    else:\n        break\n\nfor k in range(i, j+1):\n    count += k-i+1\n\nprint(count)"
+}
+2022-04-09 23:30:42.416578 REASON stop
+2022-04-09 23:30:42.418241 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    # dp[i][j] = number of pairs of indices (l, r) where l <= i and r <= j and median of a[l], a[l+1], ..., a[r] is exactly m\n    dp = [[0 for j in range(n)] for i in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                if a[i] == m:\n                    dp[i][j] = 1\n            else:\n                if a[i] == m or a[j] == m:\n                    dp[i][j] = dp[i+1][j] + dp[i][j-1] + 1\n                else:\n                    dp[i][j] = dp[i+1][j] + dp[i][j-1] - dp[i+1][j-1]\n    print(dp[0][n-1])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:30:42.418353 REASON stop
+2022-04-09 23:30:42.419053 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n\n    # s = [0] * (n + 1)\n    # for i in range(n):\n    #     s[i + 1] = s[i] + a[i]\n\n    # print(s)\n\n    # d = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}\n    # for l in range(1, n + 1):\n    #     for r in range(l, n + 1):\n    #         # print(l, r)\n    #         if r - l + 1 == 2:\n    #             if a[l - 1] == m:\n    #                 d[2] += 1\n    #         elif r - l + 1 == 3:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[3] += 1\n    #         elif r - l + 1 == 4:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[4] += 1\n    #         elif r - l + 1 == 5:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[5] += 1\n    #         else:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 d[6] += 1\n\n    # print(d)\n\n    d = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}\n    for i in range(1, n + 1):\n        if a[i - 1] == m:\n            d[2] += i\n            d[3] += i * (i - 1) // 2\n            d[4] += i * (i - 1) * (i - 2) // 6\n            d[5] += i * (i - 1) * (i - 2) * (i - 3) // 24\n            d[6] += i * (i - 1) * (i - 2) * (i - 3) * (i - 4) // 120\n\n    print(d)\n    print(d[2] + d[3] + d[4] + d[5] + d[6])\n\n    # res = 0\n    # for l in range(1, n + 1):\n    #     for r in range(l, n + 1):\n    #         if r - l + 1 == 2:\n    #             if a[l - 1] == m:\n    #                 res += 1\n    #         elif r - l + 1 == 3:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         elif r - l + 1 == 4:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         elif r - l + 1 == 5:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n    #         else:\n    #             if a[l - 1] == m or a[r - 1] == m or (a[l - 1] + a[r - 1]) // 2 == m:\n    #                 res += 1\n\n    # print(res)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:30:42.419155 REASON stop
+2022-04-09 23:30:42.419751 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    cnt = 0\n    for i in range(n):\n        for j in range(i, n):\n            med = median(arr[i:j+1])\n            if med == m:\n                cnt += 1\n    print(cnt)\n\ndef median(arr):\n    arr.sort()\n    n = len(arr)\n    if n % 2 == 0:\n        return arr[n//2 - 1]\n    return arr[n//2]\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:30:42.419824 REASON stop
+2022-04-09 23:30:42.420279 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef main():\n    n, m = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n\n    # counts[i] is the number of indices j such that a[j] <= i\n    counts = [0] * (max(a) + 1)\n    for i in range(n):\n        counts[a[i]] += 1\n\n    # partial_sums[i] is the number of indices j such that a[j] <= i\n    partial_sums = [0] * (max(a) + 1)\n    partial_sums[0] = counts[0]\n    for i in range(1, len(partial_sums)):\n        partial_sums[i] = partial_sums[i - 1] + counts[i]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    counts = [0] * (n + 1)\n\n    for i in range(n):\n        # We want to find the number of indices j such that a[j] <= m and a[j + i] >= m\n        # This is equivalent to the number of indices j such that a[j] <= m and a[j + i] <= m\n        # This is the number of indices j such that a[j] <= m\n        # minus the number of indices j such that a[j] <= m - 1\n        counts[i + 1] = partial_sums[m] - partial_sums[m - 1]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 1\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 2\n    # ...\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + i\n    for i in range(1, n + 1):\n        counts[i] += counts[i - 1]\n\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 1\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + 2\n    # ...\n    # counts[i] is the number of indices j such that median(a[j], a[j + 1], ..., a[j + i]) = m + i\n    print(counts[n])\n\nmain()"
+}
+2022-04-09 23:30:42.420359 REASON stop
+2022-04-09 23:30:42.420959 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N, M = [int(x) for x in sys.stdin.readline().split()]\n    A = [int(x) for x in sys.stdin.readline().split()]\n    A.sort()\n    #print(A)\n    count = 0\n    for i in range(N):\n        if A[i] > M:\n            break\n        for j in range(i, N):\n            if A[j] > M:\n                break\n            if A[(i+j)//2] == M:\n                count += j-i+1\n            elif A[(i+j)//2] > M:\n                break\n    #print(count)\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:30:42.421059 REASON stop
+2022-04-09 23:30:42.421590 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# Create initial empty lists\nleft = []\nright = []\n\n# Create a list of all possible sums of two numbers in the given array\nfor i in range(n):\n    for j in range(i+1, n+1):\n        left.append(a[i])\n        right.append(a[j-1])\n\n# Create a new list with all possible sums of two numbers in the given array\nsums = [sum(x) for x in zip(left, right)]\n\n# Create a list of all possible medians in the given array\nmedians = []\nfor i in range(len(sums)):\n    if i % 2: # if the number of elements in the list is odd, the median is the middle element\n        medians.append(sums[i] // 2)\n    else: # if the number of elements in the list is even, the median is the average of the two middle elements\n        medians.append((sums[i] + sums[i+1]) // 2)\n\n# Print the number of times the given median occurs in the medians list\nprint(medians.count(m))"
+}
+2022-04-09 23:30:42.421706 REASON stop
+2022-04-09 23:30:42.422031 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\n# Get the number of elements <= m\nl = [1 if x <= m else 0 for x in a]\n\n# Get the prefix sums\np = [0]\nfor i in l:\n    p.append(p[-1] + i)\n\n# Get the number of pairs of indices (l,r) where p[l] = p[r]\n# That is, the number of pairs of indices (l,r) such that\n# p[r] - p[l] = 0\n# p[r] - p[l] = 1\n# p[r] - p[l] = 2\n# ...\n# p[r] - p[l] = p[r]\n# The number of pairs of indices (l,r) such that p[r] - p[l] = i\n# is equal to the number of indices l such that p[l] = i\n# so we can simply count the number of indices l such that p[l] = i\n\n# Get the number of indices l such that p[l] = i\ncounts = [0] * (n + 1)\nfor i in p:\n    counts[i] += 1\n\n# Get the number of pairs of indices (l,r) where p[l] = p[r]\nans = 0\nfor i in counts:\n    ans += i * (i - 1) // 2\n\nprint(ans)"
+}
+2022-04-09 23:30:42.422090 REASON stop

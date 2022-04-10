@@ -1,0 +1,162 @@
+2022-04-09 22:53:38.387104 """
+Polycarp has to solve exactly $n$ problems to improve his programming skill before an important programming competition. But this competition will be held very soon, most precisely, it will start in $k$ days. It means that Polycarp has exactly $k$ days for training!
+
+Polycarp doesn't want to procrastinate, so he wants to solve at least one problem during each of $k$ days. He also doesn't want to overwork, so if he solves $x$ problems during some day, he should solve no more than $2x$ problems during the next day. And, at last, he wants to improve his skill, so if he solves $x$ problems during some day, he should solve at least $x+1$ problem during the next day.
+
+More formally: let $[a_1, a_2, \dots, a_k]$ be the array of numbers of problems solved by Polycarp. The $i$-th element of this array is the number of problems Polycarp solves during the $i$-th day of his training. Then the following conditions must be satisfied:   sum of all $a_i$ for $i$ from $1$ to $k$ should be $n$;  $a_i$ should be greater than zero for each $i$ from $1$ to $k$;  the condition $a_i < a_{i + 1} \le 2 a_i$ should be satisfied for each $i$ from $1$ to $k-1$. 
+
+Your problem is to find any array $a$ of length $k$ satisfying the conditions above or say that it is impossible to do it.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n \le 10^9, 1 \le k \le 10^5$) — the number of problems Polycarp wants to solve and the number of days Polycarp wants to train.
+
+
+-----Output-----
+
+If it is impossible to find any array $a$ of length $k$ satisfying Polycarp's rules of training, print "NO" in the first line.
+
+Otherwise print "YES" in the first line, then print $k$ integers $a_1, a_2, \dots, a_k$ in the second line, where $a_i$ should be the number of problems Polycarp should solve during the $i$-th day. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+26 6
+
+Output
+YES
+1 2 4 5 6 8 
+
+Input
+8 3
+
+Output
+NO
+
+Input
+1 1
+
+Output
+YES
+1 
+
+Input
+9 4
+
+Output
+NO
+"""
+2022-04-09 22:53:38.387136 --------------------------
+2022-04-09 22:54:16.920547 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif n < k or n > k*2:\n    print(\"NO\")\n    exit()\n\na = [1]*k\n\nn -= k\n\nfor i in range(k-1, -1, -1):\n    if n >= (2*k-i):\n        a[i] += 2*k-i\n        n -= 2*k-i\n    else:\n        a[i] += n\n        n = 0\n\nif n > 0:\n    print(\"NO\")\n    exit()\n\nprint(\"YES\")\nprint(*a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# First, I want to find a way to generate the numbers\n# I will use the following algorithm:\n# 1. Start with the number 1\n# 2. For each number, generate the next number by multiplying by 2 and adding 1\n# 3. If the number is greater than n, then stop\n# 4. If the number is less than n, then subtract it from n\n# 5. Repeat until n is 0\n\n# This algorithm is pretty simple.\n# To prove that it works, I will prove that it satisfies the three conditions\n# 1. sum of all $a_i$ for $i$ from $1$ to $k$ should be $n$\n# This is satisfied because the sum of all $a_i$ will be the sum of all numbers $x$ such that $x$ is less than or equal to $n$\n# 2. $a_i$ should be greater than zero for each $i$ from $1$ to $k$\n# This is satisfied because the algorithm does not generate 0\n# 3. the condition $a_i < a_{i + 1} \\le 2 a_i$ should be satisfied for each $i$ from $1$ to $k-1$.\n# This is satisfied because the algorithm generates the numbers $a_i$ in increasing order\n\n# Now, I will implement the algorithm\nn, k = map(int, input().split())\n\n# If n is 0, then there is no solution\nif n == 0:\n    print(\"NO\")\n    exit()\n\n# If k is 1, then there is a solution\nif k == 1:\n    print(\"YES\")\n    print(n)\n    exit()\n\n# Generate the numbers\na = []\nwhile n > 0:\n    a.append(n)\n    n = n // 2\n\n# If the number of numbers is less than k, then there is no solution\nif len(a) < k:\n    print(\"NO\")\n    exit()\n\n# If the number of numbers is equal to k, then there is a solution\nif len(a) == k:\n    print(\"YES\")\n    print(*a)\n    exit()\n\n# If the number of numbers is greater than k, then there is a solution\nif len(a) > k:\n    # First, I will generate the numbers that will be used\n    # I will do that by splitting the numbers into chunks of length k\n    # I will then add the first element of each chunk to the last element of the previous chunk\n    # For example, if a = [1, 2, 3, 4, 5, 6, 7, 8, 9] and k = 3, then the numbers will be [1, 2, 3] + [4, 5, 6] + [7, 8, 9] = [1, 2, 3, 5, 7, 10]\n    # I will do that by first splitting the numbers into chunks of length k\n    chunks = [a[i:i + k] for i in range(0, len(a), k)]\n    # Then, I will add the first element of each chunk to the last element of the previous chunk\n    # First, I will add the first element of the first chunk to the last element of the previous chunk\n    chunks[1][0] += chunks[0][-1]\n    # Then, I will add the first element of each of the other chunks to the last element of the previous chunk\n    for i in range(2, len(chunks)):\n        chunks[i][0] += chunks[i - 1][-1]\n    # Then, I will flatten the list of chunks\n    a = [item for sublist in chunks for item in sublist]\n    # Then, I will print the answer\n    print(\"YES\")\n    print(*a)\n    exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn,k = map(int,input().split())\n\nif k==1:\n    print(\"YES\")\n    print(n)\nelif n<k:\n    print(\"NO\")\nelif n==k:\n    print(\"YES\")\n    print(\" \".join([str(1) for i in range(k)]))\nelse:\n    l=[1]\n    for i in range(1,k):\n        l.append(2*l[i-1])\n        if sum(l)>n:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\n        print(\" \".join([str(i) for i in l]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif n < k:\n    print(\"NO\")\nelse:\n    a = [1] * k\n    while sum(a) != n:\n        for i in range(k):\n            a[i] += 1\n            if sum(a) == n:\n                break\n    if max(a) > 2 * min(a):\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(\" \".join(map(str, a)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef check(a,n,k):\n    if sum(a) != n:\n        return False\n    for i in a:\n        if i == 0:\n            return False\n    for i in range(k-1):\n        if a[i+1] > 2*a[i] or a[i+1] == a[i]:\n            return False\n    return True\n\nn,k = [int(x) for x in input().split()]\n\nif n == 1:\n    print(\"YES\\n1\")\nelif k == 1:\n    print(\"NO\")\nelif k == 2:\n    if n % 2 == 0:\n        print(\"YES\\n{} {}\".format(n//2,n//2))\n    else:\n        print(\"NO\")\nelif k == 3:\n    if n % 3 == 0:\n        print(\"YES\\n{} {} {}\".format(n//3,n//3,n//3))\n    else:\n        print(\"NO\")\nelif k == 4:\n    if n % 4 == 0:\n        print(\"YES\\n{} {} {} {}\".format(n//4,n//4,n//4,n//4))\n    elif n % 4 == 1:\n        print(\"YES\\n1 {} {} {}\".format(n//4,n//4,n//4+1))\n    elif n % 4 == 2:\n        print(\"YES\\n1 1 {} {}\".format(n//4,n//4+1))\n    elif n % 4 == 3:\n        print(\"YES\\n1 2 {} {}\".format(n//4,n//4+1))\nelse:\n    a = [1]*k\n    for i in range(k):\n        a[i] = i+1\n        if check(a,n,k):\n            break\n        a[i] = i+2\n        if check(a,n,k):\n            break\n    if check(a,n,k):\n        print(\"YES\")\n        print(*a)\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn, k = map(int, input().split())\n\nif n >= k:\n    print(\"YES\")\n    for i in range(k):\n        print(1, end=' ')\n    print()\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn,k = [int(x) for x in input().split()]\n\nif n<k:\n    print(\"NO\")\nelif n==k:\n    print(\"YES\")\n    print(*[1 for _ in range(k)])\nelse:\n    print(\"YES\")\n    for i in range(k):\n        if i==k-1:\n            print(n,end=\" \")\n            break\n        if i==0:\n            print(1,end=\" \")\n            n-=1\n        else:\n            print(min(2*(i+1),n),end=\" \")\n            n-=min(2*(i+1),n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif (n-k) >= 0:\n    print(\"YES\")\n    for i in range(k):\n        if (n-k) >= 0:\n            print(1, end=\" \")\n            n -= 1\n            k -= 1\n        else:\n            print(n, end=\" \")\n            n -= n\n            k -= 1\nelse:\n    print(\"NO\")"
+    }
+  ],
+  "created": 1649559218,
+  "id": "cmpl-4vHzmrEzrky1YHoRG0qvYA1aFKwL4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:54:16.920924 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif n < k or n > k*2:\n    print(\"NO\")\n    exit()\n\na = [1]*k\n\nn -= k\n\nfor i in range(k-1, -1, -1):\n    if n >= (2*k-i):\n        a[i] += 2*k-i\n        n -= 2*k-i\n    else:\n        a[i] += n\n        n = 0\n\nif n > 0:\n    print(\"NO\")\n    exit()\n\nprint(\"YES\")\nprint(*a)"
+}
+2022-04-09 22:54:16.920955 REASON stop
+2022-04-09 22:54:16.932810 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# First, I want to find a way to generate the numbers\n# I will use the following algorithm:\n# 1. Start with the number 1\n# 2. For each number, generate the next number by multiplying by 2 and adding 1\n# 3. If the number is greater than n, then stop\n# 4. If the number is less than n, then subtract it from n\n# 5. Repeat until n is 0\n\n# This algorithm is pretty simple.\n# To prove that it works, I will prove that it satisfies the three conditions\n# 1. sum of all $a_i$ for $i$ from $1$ to $k$ should be $n$\n# This is satisfied because the sum of all $a_i$ will be the sum of all numbers $x$ such that $x$ is less than or equal to $n$\n# 2. $a_i$ should be greater than zero for each $i$ from $1$ to $k$\n# This is satisfied because the algorithm does not generate 0\n# 3. the condition $a_i < a_{i + 1} \\le 2 a_i$ should be satisfied for each $i$ from $1$ to $k-1$.\n# This is satisfied because the algorithm generates the numbers $a_i$ in increasing order\n\n# Now, I will implement the algorithm\nn, k = map(int, input().split())\n\n# If n is 0, then there is no solution\nif n == 0:\n    print(\"NO\")\n    exit()\n\n# If k is 1, then there is a solution\nif k == 1:\n    print(\"YES\")\n    print(n)\n    exit()\n\n# Generate the numbers\na = []\nwhile n > 0:\n    a.append(n)\n    n = n // 2\n\n# If the number of numbers is less than k, then there is no solution\nif len(a) < k:\n    print(\"NO\")\n    exit()\n\n# If the number of numbers is equal to k, then there is a solution\nif len(a) == k:\n    print(\"YES\")\n    print(*a)\n    exit()\n\n# If the number of numbers is greater than k, then there is a solution\nif len(a) > k:\n    # First, I will generate the numbers that will be used\n    # I will do that by splitting the numbers into chunks of length k\n    # I will then add the first element of each chunk to the last element of the previous chunk\n    # For example, if a = [1, 2, 3, 4, 5, 6, 7, 8, 9] and k = 3, then the numbers will be [1, 2, 3] + [4, 5, 6] + [7, 8, 9] = [1, 2, 3, 5, 7, 10]\n    # I will do that by first splitting the numbers into chunks of length k\n    chunks = [a[i:i + k] for i in range(0, len(a), k)]\n    # Then, I will add the first element of each chunk to the last element of the previous chunk\n    # First, I will add the first element of the first chunk to the last element of the previous chunk\n    chunks[1][0] += chunks[0][-1]\n    # Then, I will add the first element of each of the other chunks to the last element of the previous chunk\n    for i in range(2, len(chunks)):\n        chunks[i][0] += chunks[i - 1][-1]\n    # Then, I will flatten the list of chunks\n    a = [item for sublist in chunks for item in sublist]\n    # Then, I will print the answer\n    print(\"YES\")\n    print(*a)\n    exit()"
+}
+2022-04-09 22:54:16.932994 REASON stop
+2022-04-09 22:54:16.933785 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn,k = map(int,input().split())\n\nif k==1:\n    print(\"YES\")\n    print(n)\nelif n<k:\n    print(\"NO\")\nelif n==k:\n    print(\"YES\")\n    print(\" \".join([str(1) for i in range(k)]))\nelse:\n    l=[1]\n    for i in range(1,k):\n        l.append(2*l[i-1])\n        if sum(l)>n:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\n        print(\" \".join([str(i) for i in l]))"
+}
+2022-04-09 22:54:16.933889 REASON stop
+2022-04-09 22:54:16.934555 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif n < k:\n    print(\"NO\")\nelse:\n    a = [1] * k\n    while sum(a) != n:\n        for i in range(k):\n            a[i] += 1\n            if sum(a) == n:\n                break\n    if max(a) > 2 * min(a):\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(\" \".join(map(str, a)))"
+}
+2022-04-09 22:54:16.934650 REASON stop
+2022-04-09 22:54:16.935309 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef check(a,n,k):\n    if sum(a) != n:\n        return False\n    for i in a:\n        if i == 0:\n            return False\n    for i in range(k-1):\n        if a[i+1] > 2*a[i] or a[i+1] == a[i]:\n            return False\n    return True\n\nn,k = [int(x) for x in input().split()]\n\nif n == 1:\n    print(\"YES\\n1\")\nelif k == 1:\n    print(\"NO\")\nelif k == 2:\n    if n % 2 == 0:\n        print(\"YES\\n{} {}\".format(n//2,n//2))\n    else:\n        print(\"NO\")\nelif k == 3:\n    if n % 3 == 0:\n        print(\"YES\\n{} {} {}\".format(n//3,n//3,n//3))\n    else:\n        print(\"NO\")\nelif k == 4:\n    if n % 4 == 0:\n        print(\"YES\\n{} {} {} {}\".format(n//4,n//4,n//4,n//4))\n    elif n % 4 == 1:\n        print(\"YES\\n1 {} {} {}\".format(n//4,n//4,n//4+1))\n    elif n % 4 == 2:\n        print(\"YES\\n1 1 {} {}\".format(n//4,n//4+1))\n    elif n % 4 == 3:\n        print(\"YES\\n1 2 {} {}\".format(n//4,n//4+1))\nelse:\n    a = [1]*k\n    for i in range(k):\n        a[i] = i+1\n        if check(a,n,k):\n            break\n        a[i] = i+2\n        if check(a,n,k):\n            break\n    if check(a,n,k):\n        print(\"YES\")\n        print(*a)\n    else:\n        print(\"NO\")"
+}
+2022-04-09 22:54:16.935397 REASON stop
+2022-04-09 22:54:16.935776 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn, k = map(int, input().split())\n\nif n >= k:\n    print(\"YES\")\n    for i in range(k):\n        print(1, end=' ')\n    print()\nelse:\n    print(\"NO\")"
+}
+2022-04-09 22:54:16.935848 REASON stop
+2022-04-09 22:54:16.936066 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn,k = [int(x) for x in input().split()]\n\nif n<k:\n    print(\"NO\")\nelif n==k:\n    print(\"YES\")\n    print(*[1 for _ in range(k)])\nelse:\n    print(\"YES\")\n    for i in range(k):\n        if i==k-1:\n            print(n,end=\" \")\n            break\n        if i==0:\n            print(1,end=\" \")\n            n-=1\n        else:\n            print(min(2*(i+1),n),end=\" \")\n            n-=min(2*(i+1),n)"
+}
+2022-04-09 22:54:16.936093 REASON stop
+2022-04-09 22:54:16.936301 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif (n-k) >= 0:\n    print(\"YES\")\n    for i in range(k):\n        if (n-k) >= 0:\n            print(1, end=\" \")\n            n -= 1\n            k -= 1\n        else:\n            print(n, end=\" \")\n            n -= n\n            k -= 1\nelse:\n    print(\"NO\")"
+}
+2022-04-09 22:54:16.936328 REASON stop

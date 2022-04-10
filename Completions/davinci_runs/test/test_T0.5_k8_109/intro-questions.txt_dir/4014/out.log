@@ -1,0 +1,177 @@
+2022-04-09 22:38:02.408939 """
+Petya studies at university. The current academic year finishes with $n$ special days. Petya needs to pass $m$ exams in those special days. The special days in this problem are numbered from $1$ to $n$.
+
+There are three values about each exam:  $s_i$ — the day, when questions for the $i$-th exam will be published,  $d_i$ — the day of the $i$-th exam ($s_i < d_i$),  $c_i$ — number of days Petya needs to prepare for the $i$-th exam. For the $i$-th exam Petya should prepare in days between $s_i$ and $d_i-1$, inclusive. 
+
+There are three types of activities for Petya in each day: to spend a day doing nothing (taking a rest), to spend a day passing exactly one exam or to spend a day preparing for exactly one exam. So he can't pass/prepare for multiple exams in a day. He can't mix his activities in a day. If he is preparing for the $i$-th exam in day $j$, then $s_i \le j < d_i$.
+
+It is allowed to have breaks in a preparation to an exam and to alternate preparations for different exams in consecutive days. So preparation for an exam is not required to be done in consecutive days.
+
+Find the schedule for Petya to prepare for all exams and pass them, or report that it is impossible.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ $(2 \le n \le 100, 1 \le m \le n)$ — the number of days and the number of exams.
+
+Each of the following $m$ lines contains three integers $s_i$, $d_i$, $c_i$ $(1 \le s_i < d_i \le n, 1 \le c_i \le n)$ — the day, when questions for the $i$-th exam will be given, the day of the $i$-th exam, number of days Petya needs to prepare for the $i$-th exam. 
+
+Guaranteed, that all the exams will be in different days. Questions for different exams can be given in the same day. It is possible that, in the day of some exam, the questions for other exams are given.
+
+
+-----Output-----
+
+If Petya can not prepare and pass all the exams, print -1. In case of positive answer, print $n$ integers, where the $j$-th number is:  $(m + 1)$, if the $j$-th day is a day of some exam (recall that in each day no more than one exam is conducted),  zero, if in the $j$-th day Petya will have a rest,  $i$ ($1 \le i \le m$), if Petya will prepare for the $i$-th exam in the day $j$ (the total number of days Petya prepares for each exam should be strictly equal to the number of days needed to prepare for it).
+
+Assume that the exams are numbered in order of appearing in the input, starting from $1$.
+
+If there are multiple schedules, print any of them.
+
+
+-----Examples-----
+Input
+5 2
+1 3 1
+1 5 1
+
+Output
+1 2 3 0 3 
+
+Input
+3 2
+1 3 1
+1 2 1
+
+Output
+-1
+
+Input
+10 3
+4 7 2
+1 10 3
+8 9 1
+
+Output
+2 2 2 1 1 0 4 3 4 4 
+
+
+
+-----Note-----
+
+In the first example Petya can, for example, prepare for exam $1$ in the first day, prepare for exam $2$ in the second day, pass exam $1$ in the third day, relax in the fourth day, and pass exam $2$ in the fifth day. So, he can prepare and pass all exams.
+
+In the second example, there are three days and two exams. So, Petya can prepare in only one day (because in two other days he should pass exams). Then Petya can not prepare and pass all exams.
+"""
+2022-04-09 22:38:02.408960 --------------------------
+2022-04-09 22:38:48.148086 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = [int(i) for i in input().split()]\n    exams = []\n    for i in range(m):\n        exams.append([int(i) for i in input().split()])\n    exams.sort()\n    days = [0] * n\n    for i in range(len(exams)):\n        s, d, c = exams[i]\n        if days[s-1] == 0:\n            days[s-1] = i+1\n            c -= 1\n        if c > 0:\n            for j in range(s, d):\n                if days[j] == 0:\n                    days[j] = i+1\n                    c -= 1\n                if c == 0:\n                    break\n        if c > 0:\n            print(\"-1\")\n            return\n    for i in range(len(days)):\n        if days[i] != 0:\n            days[i] = m+1\n    print(\" \".join([str(i) for i in days]))\n    return\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef exam_schedule(n, m, s, d, c):\n    \"\"\"\n    >>> exam_schedule(5, 2, [1, 1], [3, 5], [1, 1])\n    [1, 2, 3, 0, 3]\n    >>> exam_schedule(3, 2, [1, 1], [3, 2], [1, 1])\n    [-1]\n    >>> exam_schedule(10, 3, [4, 1, 8], [7, 10, 9], [2, 3, 1])\n    [2, 2, 2, 1, 1, 0, 4, 3, 4, 4]\n    \"\"\"\n    # TODO: write your code here\n    return []\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    s, d, c = [], [], []\n    for i in range(m):\n        si, di, ci = map(int, input().split())\n        s.append(si)\n        d.append(di)\n        c.append(ci)\n    \n    res = [-1] * n\n    for i in range(m):\n        if s[i] > 1:\n            res[s[i] - 2] = 0\n        for j in range(c[i]):\n            res[s[i] + j - 1] = i + 1\n        res[d[i] - 1] = m + 1\n    if -1 in res:\n        print(-1)\n    else:\n        print(' '.join(map(str, res)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom collections import deque\n\ndef topological_sort(graph):\n    # Kahn's Algorithm\n    # https://www.geeksforgeeks.org/topological-sorting/\n    # Create a dictionary to store indegrees of all\n    # vertices. This dictionary is used to store indegrees\n    # of current vertices\n    in_degree = {u: 0 for u in graph}\n    # Traverse adjacency list to fill indegrees of\n    # vertices. This step takes O(V+E) time\n    for u in graph:\n        for v in graph[u]:\n            in_degree[v] += 1\n    # Create an queue and enqueue all vertices with\n    # indegree 0\n    queue = deque()\n    for u in in_degree:\n        if in_degree[u] == 0:\n            queue.appendleft(u)\n    # Initialize count of visited vertices\n    cnt = 0\n    top_order = []\n    # One by one dequeue vertices from queue and enqueue\n    # adjacents if indegree of adjacent becomes 0\n    while queue:\n        u = queue.pop()\n        top_order.append(u)\n        for v in graph[u]:\n            in_degree[v] -= 1\n            # If in-degree becomes zero, add it to queue\n            if in_degree[v] == 0:\n                queue.appendleft(v)\n        cnt += 1\n    # Check if there was a cycle\n    if cnt != len(graph):\n        return None\n    else:\n        return top_order\n\ndef main():\n    n, m = map(int, input().strip().split())\n    graph = defaultdict(list)\n    for i in range(m):\n        s, d, c = map(int, input().strip().split())\n        for j in range(s, d):\n            graph[j].append(d)\n    top_order = topological_sort(graph)\n    if top_order is None:\n        print(-1)\n    else:\n        print(top_order)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\nThis problem is a variant of Interval Scheduling problem.\n\nInterval Scheduling problem is a problem of finding the maximum number of mutually compatible jobs. The jobs are specified by their start and finish times. Two jobs are compatible if they don't overlap.\n\nThis problem is solved by sorting the jobs by their finish times and then selecting the jobs greedily.\n\nIn this problem, we have to schedule $m$ exams and $n$ days. This can be done by creating $m$ jobs, where the start time of each job is the date when the questions are given and the end time is the date of the exam.\n\nIf the exam is passed in the same day when the questions are given, then the start and the end time of that job is the same.\n\nThe number of days required to prepare for the exam is not used in the solution.\n\nWe can sort the jobs by their end time and then select the jobs greedily. But it is not possible to select the jobs greedily in this problem.\n\nFor example, consider the following input.\n\n4 2\n1 4 2\n2 3 1\n\nThe first job can be started in the first day and the second job can be started in the second day. So, the first job has to be completed in the third day, and the second job has to be completed in the fourth day.\n\nBut if the first job is completed in the third day, then the second job can not be completed in the fourth day because the first job ends in the third day and the second job starts in the third day.\n\nSo, we have to select the jobs in such a way that the jobs with earlier end times are selected first.\n\nThe jobs can be sorted by their end times in $O(m \\log m)$ time.\n\nThe jobs can be selected in $O(m)$ time.\n\nSo, the overall time complexity of the solution is $O(m \\log m)$.\n\"\"\"\n\ndef main():\n    n, m = map(int, input().split())\n    jobs = []\n    for _ in range(m):\n        s, d, c = map(int, input().split())\n        jobs.append((s, d, c))\n    jobs.sort(key=lambda x: x[1])\n\n    schedule = [0] * n\n    for s, d, c in jobs:\n        if not schedule[s - 1]:\n            schedule[s - 1] = d\n        else:\n            for i in range(s, min(d, n)):\n                if not schedule[i]:\n                    schedule[i] = d\n                    break\n            else:\n                print(-1)\n                return\n\n    for i, d in enumerate(schedule):\n        if d:\n            schedule[i] = d - i\n    print(*schedule)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn,m = map(int,input().split())\ns = [0]*n\nd = [0]*n\nc = [0]*n\nfor i in range(m):\n\ts[i],d[i],c[i] = map(int,input().split())\n\ts[i] -= 1\n\td[i] -= 1\n\tc[i] -= 1\n\nfor i in range(m):\n\tif c[i] > d[i] - s[i]:\n\t\tprint(-1)\n\t\texit()\n\na = [0]*n\nfor i in range(m):\n\tif c[i] == 0:\n\t\ta[d[i]] = i+1\n\t\tcontinue\n\tfor j in range(s[i],d[i]):\n\t\tif a[j] != 0:\n\t\t\tprint(-1)\n\t\t\texit()\n\ta[s[i]] = i+1\n\ta[d[i]] = i+1\n\tc[i] -= 1\n\tfor j in range(s[i]+1,d[i]):\n\t\tif c[i] == 0:\n\t\t\tbreak\n\t\tif a[j] != 0:\n\t\t\tprint(-1)\n\t\t\texit()\n\t\ta[j] = i+1\n\t\tc[i] -= 1\n\tif c[i] != 0:\n\t\tprint(-1)\n\t\texit()\n\nfor i in range(n):\n\tif a[i] == 0:\n\t\ta[i] = m+1\n\nprint(*a)"
+    }
+  ],
+  "created": 1649558282,
+  "id": "cmpl-4vHkg6lLQxbP59wppukY8U3wmIFtq",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:38:48.148429 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:38:48.148466 REASON stop
+2022-04-09 22:38:48.149914 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-09 22:38:48.150022 REASON stop
+2022-04-09 22:38:48.150916 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = [int(i) for i in input().split()]\n    exams = []\n    for i in range(m):\n        exams.append([int(i) for i in input().split()])\n    exams.sort()\n    days = [0] * n\n    for i in range(len(exams)):\n        s, d, c = exams[i]\n        if days[s-1] == 0:\n            days[s-1] = i+1\n            c -= 1\n        if c > 0:\n            for j in range(s, d):\n                if days[j] == 0:\n                    days[j] = i+1\n                    c -= 1\n                if c == 0:\n                    break\n        if c > 0:\n            print(\"-1\")\n            return\n    for i in range(len(days)):\n        if days[i] != 0:\n            days[i] = m+1\n    print(\" \".join([str(i) for i in days]))\n    return\n\nmain()"
+}
+2022-04-09 22:38:48.151110 REASON stop
+2022-04-09 22:38:48.152520 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef exam_schedule(n, m, s, d, c):\n    \"\"\"\n    >>> exam_schedule(5, 2, [1, 1], [3, 5], [1, 1])\n    [1, 2, 3, 0, 3]\n    >>> exam_schedule(3, 2, [1, 1], [3, 2], [1, 1])\n    [-1]\n    >>> exam_schedule(10, 3, [4, 1, 8], [7, 10, 9], [2, 3, 1])\n    [2, 2, 2, 1, 1, 0, 4, 3, 4, 4]\n    \"\"\"\n    # TODO: write your code here\n    return []\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+}
+2022-04-09 22:38:48.152634 REASON stop
+2022-04-09 22:38:48.153518 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    s, d, c = [], [], []\n    for i in range(m):\n        si, di, ci = map(int, input().split())\n        s.append(si)\n        d.append(di)\n        c.append(ci)\n    \n    res = [-1] * n\n    for i in range(m):\n        if s[i] > 1:\n            res[s[i] - 2] = 0\n        for j in range(c[i]):\n            res[s[i] + j - 1] = i + 1\n        res[d[i] - 1] = m + 1\n    if -1 in res:\n        print(-1)\n    else:\n        print(' '.join(map(str, res)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:38:48.153654 REASON stop
+2022-04-09 22:38:48.154443 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom collections import deque\n\ndef topological_sort(graph):\n    # Kahn's Algorithm\n    # https://www.geeksforgeeks.org/topological-sorting/\n    # Create a dictionary to store indegrees of all\n    # vertices. This dictionary is used to store indegrees\n    # of current vertices\n    in_degree = {u: 0 for u in graph}\n    # Traverse adjacency list to fill indegrees of\n    # vertices. This step takes O(V+E) time\n    for u in graph:\n        for v in graph[u]:\n            in_degree[v] += 1\n    # Create an queue and enqueue all vertices with\n    # indegree 0\n    queue = deque()\n    for u in in_degree:\n        if in_degree[u] == 0:\n            queue.appendleft(u)\n    # Initialize count of visited vertices\n    cnt = 0\n    top_order = []\n    # One by one dequeue vertices from queue and enqueue\n    # adjacents if indegree of adjacent becomes 0\n    while queue:\n        u = queue.pop()\n        top_order.append(u)\n        for v in graph[u]:\n            in_degree[v] -= 1\n            # If in-degree becomes zero, add it to queue\n            if in_degree[v] == 0:\n                queue.appendleft(v)\n        cnt += 1\n    # Check if there was a cycle\n    if cnt != len(graph):\n        return None\n    else:\n        return top_order\n\ndef main():\n    n, m = map(int, input().strip().split())\n    graph = defaultdict(list)\n    for i in range(m):\n        s, d, c = map(int, input().strip().split())\n        for j in range(s, d):\n            graph[j].append(d)\n    top_order = topological_sort(graph)\n    if top_order is None:\n        print(-1)\n    else:\n        print(top_order)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:38:48.154540 REASON stop
+2022-04-09 22:38:48.155141 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\nThis problem is a variant of Interval Scheduling problem.\n\nInterval Scheduling problem is a problem of finding the maximum number of mutually compatible jobs. The jobs are specified by their start and finish times. Two jobs are compatible if they don't overlap.\n\nThis problem is solved by sorting the jobs by their finish times and then selecting the jobs greedily.\n\nIn this problem, we have to schedule $m$ exams and $n$ days. This can be done by creating $m$ jobs, where the start time of each job is the date when the questions are given and the end time is the date of the exam.\n\nIf the exam is passed in the same day when the questions are given, then the start and the end time of that job is the same.\n\nThe number of days required to prepare for the exam is not used in the solution.\n\nWe can sort the jobs by their end time and then select the jobs greedily. But it is not possible to select the jobs greedily in this problem.\n\nFor example, consider the following input.\n\n4 2\n1 4 2\n2 3 1\n\nThe first job can be started in the first day and the second job can be started in the second day. So, the first job has to be completed in the third day, and the second job has to be completed in the fourth day.\n\nBut if the first job is completed in the third day, then the second job can not be completed in the fourth day because the first job ends in the third day and the second job starts in the third day.\n\nSo, we have to select the jobs in such a way that the jobs with earlier end times are selected first.\n\nThe jobs can be sorted by their end times in $O(m \\log m)$ time.\n\nThe jobs can be selected in $O(m)$ time.\n\nSo, the overall time complexity of the solution is $O(m \\log m)$.\n\"\"\"\n\ndef main():\n    n, m = map(int, input().split())\n    jobs = []\n    for _ in range(m):\n        s, d, c = map(int, input().split())\n        jobs.append((s, d, c))\n    jobs.sort(key=lambda x: x[1])\n\n    schedule = [0] * n\n    for s, d, c in jobs:\n        if not schedule[s - 1]:\n            schedule[s - 1] = d\n        else:\n            for i in range(s, min(d, n)):\n                if not schedule[i]:\n                    schedule[i] = d\n                    break\n            else:\n                print(-1)\n                return\n\n    for i, d in enumerate(schedule):\n        if d:\n            schedule[i] = d - i\n    print(*schedule)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:38:48.155253 REASON stop
+2022-04-09 22:38:48.155922 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn,m = map(int,input().split())\ns = [0]*n\nd = [0]*n\nc = [0]*n\nfor i in range(m):\n\ts[i],d[i],c[i] = map(int,input().split())\n\ts[i] -= 1\n\td[i] -= 1\n\tc[i] -= 1\n\nfor i in range(m):\n\tif c[i] > d[i] - s[i]:\n\t\tprint(-1)\n\t\texit()\n\na = [0]*n\nfor i in range(m):\n\tif c[i] == 0:\n\t\ta[d[i]] = i+1\n\t\tcontinue\n\tfor j in range(s[i],d[i]):\n\t\tif a[j] != 0:\n\t\t\tprint(-1)\n\t\t\texit()\n\ta[s[i]] = i+1\n\ta[d[i]] = i+1\n\tc[i] -= 1\n\tfor j in range(s[i]+1,d[i]):\n\t\tif c[i] == 0:\n\t\t\tbreak\n\t\tif a[j] != 0:\n\t\t\tprint(-1)\n\t\t\texit()\n\t\ta[j] = i+1\n\t\tc[i] -= 1\n\tif c[i] != 0:\n\t\tprint(-1)\n\t\texit()\n\nfor i in range(n):\n\tif a[i] == 0:\n\t\ta[i] = m+1\n\nprint(*a)"
+}
+2022-04-09 22:38:48.156022 REASON stop

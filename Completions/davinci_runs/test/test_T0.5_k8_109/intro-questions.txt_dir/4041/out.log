@@ -1,0 +1,170 @@
+2022-04-09 22:59:24.250339 """
+The only difference between easy and hard versions is the length of the string.
+
+You are given a string $s$ and a string $t$, both consisting only of lowercase Latin letters. It is guaranteed that $t$ can be obtained from $s$ by removing some (possibly, zero) number of characters (not necessary contiguous) from $s$ without changing order of remaining characters (in other words, it is guaranteed that $t$ is a subsequence of $s$).
+
+For example, the strings "test", "tst", "tt", "et" and "" are subsequences of the string "test". But the strings "tset", "se", "contest" are not subsequences of the string "test".
+
+You want to remove some substring (contiguous subsequence) from $s$ of maximum possible length such that after removing this substring $t$ will remain a subsequence of $s$.
+
+If you want to remove the substring $s[l;r]$ then the string $s$ will be transformed to $s_1 s_2 \dots s_{l-1} s_{r+1} s_{r+2} \dots s_{|s|-1} s_{|s|}$ (where $|s|$ is the length of $s$).
+
+Your task is to find the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Input-----
+
+The first line of the input contains one string $s$ consisting of at least $1$ and at most $200$ lowercase Latin letters.
+
+The second line of the input contains one string $t$ consisting of at least $1$ and at most $200$ lowercase Latin letters.
+
+It is guaranteed that $t$ is a subsequence of $s$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Examples-----
+Input
+bbaba
+bb
+
+Output
+3
+
+Input
+baaba
+ab
+
+Output
+2
+
+Input
+abcde
+abcde
+
+Output
+0
+
+Input
+asdfasdf
+fasd
+
+Output
+3
+"""
+2022-04-09 22:59:24.250359 --------------------------
+2022-04-09 22:59:50.064480 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    t = input()\n\n    dp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\n    for i in range(len(s) - 1, -1, -1):\n        for j in range(len(t) - 1, -1, -1):\n            if s[i] == t[j]:\n                dp[i][j] = 1 + dp[i + 1][j + 1]\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j + 1])\n\n    print(len(s) - dp[0][0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    t = input()\n    s_len = len(s)\n    t_len = len(t)\n    dp = [0] * (s_len + 1)\n    for i in range(t_len):\n        dp[i] = i\n    for i in range(t_len, s_len):\n        dp[i] = t_len\n    for i in range(t_len - 1, -1, -1):\n        for j in range(s_len - 1, -1, -1):\n            if s[j] == t[i]:\n                dp[j] = min(dp[j], dp[j + 1] + 1)\n    print(s_len - dp[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve(s, t):\n    \"\"\"\n    >>> solve(\"bbaba\", \"bb\")\n    3\n    >>> solve(\"baaba\", \"ab\")\n    2\n    >>> solve(\"abcde\", \"abcde\")\n    0\n    >>> solve(\"asdfasdf\", \"fasd\")\n    3\n    \"\"\"\n    for i in range(len(s), 0, -1):\n        for j in range(len(s) - i + 1):\n            if t in s[j:j+i]:\n                return i\n\nif __name__ == \"__main__\":\n    print(solve(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# TODO:\n# - This solution is not very efficient.\n# - Need to find a better solution.\n\ns = input()\nt = input()\n\nsubstring_length = 0\n\nfor i in range(len(s)):\n    if s[i] in t:\n        substring_length = 0\n        if t == s[i:]:\n            break\n        else:\n            t = t[1:]\n    else:\n        substring_length += 1\n\nprint(substring_length)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport re\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(len(s) - len(re.sub(f'[^{t}]', '', s)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    _ = input()\n    t = input()\n    ans = 0\n    i = 0\n    j = 0\n    while i < len(t):\n        if j == len(t):\n            break\n        if t[i] == t[j]:\n            i += 1\n        j += 1\n    ans = len(t) - i\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(s: str, t: str) -> int:\n    i, j = 0, 0\n    while i < len(s) and j < len(t):\n        if s[i] == t[j]:\n            j += 1\n        i += 1\n    return len(s) - j\n\n\nif __name__ == '__main__':\n    s = input()\n    t = input()\n    print(solve(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    s_i = 0\n    t_i = 0\n    res = 0\n    while s_i < len(s) and t_i < len(t):\n        if s[s_i] == t[t_i]:\n            s_i += 1\n            t_i += 1\n        else:\n            res += 1\n            s_i += 1\n    res += len(s) - s_i\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649559564,
+  "id": "cmpl-4vI5MywUSmMOo75KiEzaOhRt3gyaF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:59:50.064864 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    t = input()\n\n    dp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\n    for i in range(len(s) - 1, -1, -1):\n        for j in range(len(t) - 1, -1, -1):\n            if s[i] == t[j]:\n                dp[i][j] = 1 + dp[i + 1][j + 1]\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j + 1])\n\n    print(len(s) - dp[0][0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:50.064916 REASON stop
+2022-04-09 22:59:50.077113 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    t = input()\n    s_len = len(s)\n    t_len = len(t)\n    dp = [0] * (s_len + 1)\n    for i in range(t_len):\n        dp[i] = i\n    for i in range(t_len, s_len):\n        dp[i] = t_len\n    for i in range(t_len - 1, -1, -1):\n        for j in range(s_len - 1, -1, -1):\n            if s[j] == t[i]:\n                dp[j] = min(dp[j], dp[j + 1] + 1)\n    print(s_len - dp[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:50.077247 REASON stop
+2022-04-09 22:59:50.078326 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve(s, t):\n    \"\"\"\n    >>> solve(\"bbaba\", \"bb\")\n    3\n    >>> solve(\"baaba\", \"ab\")\n    2\n    >>> solve(\"abcde\", \"abcde\")\n    0\n    >>> solve(\"asdfasdf\", \"fasd\")\n    3\n    \"\"\"\n    for i in range(len(s), 0, -1):\n        for j in range(len(s) - i + 1):\n            if t in s[j:j+i]:\n                return i\n\nif __name__ == \"__main__\":\n    print(solve(input(), input()))"
+}
+2022-04-09 22:59:50.078443 REASON stop
+2022-04-09 22:59:50.079414 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# TODO:\n# - This solution is not very efficient.\n# - Need to find a better solution.\n\ns = input()\nt = input()\n\nsubstring_length = 0\n\nfor i in range(len(s)):\n    if s[i] in t:\n        substring_length = 0\n        if t == s[i:]:\n            break\n        else:\n            t = t[1:]\n    else:\n        substring_length += 1\n\nprint(substring_length)"
+}
+2022-04-09 22:59:50.079538 REASON stop
+2022-04-09 22:59:50.079956 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport re\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(len(s) - len(re.sub(f'[^{t}]', '', s)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:50.080023 REASON stop
+2022-04-09 22:59:50.080249 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    _ = input()\n    t = input()\n    ans = 0\n    i = 0\n    j = 0\n    while i < len(t):\n        if j == len(t):\n            break\n        if t[i] == t[j]:\n            i += 1\n        j += 1\n    ans = len(t) - i\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:50.080289 REASON stop
+2022-04-09 22:59:50.081110 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(s: str, t: str) -> int:\n    i, j = 0, 0\n    while i < len(s) and j < len(t):\n        if s[i] == t[j]:\n            j += 1\n        i += 1\n    return len(s) - j\n\n\nif __name__ == '__main__':\n    s = input()\n    t = input()\n    print(solve(s, t))"
+}
+2022-04-09 22:59:50.081193 REASON stop
+2022-04-09 22:59:50.082203 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    s_i = 0\n    t_i = 0\n    res = 0\n    while s_i < len(s) and t_i < len(t):\n        if s[s_i] == t[t_i]:\n            s_i += 1\n            t_i += 1\n        else:\n            res += 1\n            s_i += 1\n    res += len(s) - s_i\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:59:50.082333 REASON stop

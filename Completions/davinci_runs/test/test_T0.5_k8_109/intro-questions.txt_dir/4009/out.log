@@ -1,0 +1,156 @@
+2022-04-09 22:31:48.655984 """
+You are given a huge decimal number consisting of $n$ digits. It is guaranteed that this number has no leading zeros. Each digit of this number is either 0 or 1.
+
+You may perform several (possibly zero) operations with this number. During each operation you are allowed to change any digit of your number; you may change 0 to 1 or 1 to 0. It is possible that after some operation you can obtain a number with leading zeroes, but it does not matter for this problem.
+
+You are also given two integers $0 \le y < x < n$. Your task is to calculate the minimum number of operations you should perform to obtain the number that has remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, x, y$ ($0 \le y < x < n \le 2 \cdot 10^5$) — the length of the number and the integers $x$ and $y$, respectively.
+
+The second line of the input contains one decimal number consisting of $n$ digits, each digit of this number is either 0 or 1. It is guaranteed that the first digit of the number is 1.
+
+
+-----Output-----
+
+Print one integer — the minimum number of operations you should perform to obtain the number having remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Examples-----
+Input
+11 5 2
+11010100101
+
+Output
+1
+
+Input
+11 5 1
+11010100101
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the number will be $11010100100$ after performing one operation. It has remainder $100$ modulo $100000$.
+
+In the second example the number will be $11010100010$ after performing three operations. It has remainder $10$ modulo $100000$.
+"""
+2022-04-09 22:31:48.656008 --------------------------
+2022-04-09 22:32:19.216362 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, x, y = [int(i) for i in sys.stdin.readline().split()]\n    num = sys.stdin.readline().strip()\n    #print(n, x, y)\n    #print(num)\n    #print(num[y:x])\n    #print(num[y:x].count('0'))\n    print(num[y:x].count('0'))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif s[:x] == '1' + '0'*(x-1):\n    print(0)\nelse:\n    if s[:x] == '0'*x:\n        print(1)\n    else:\n        if s[:y] == '1' + '0'*(y-1):\n            print(x-y)\n        else:\n            print(x-y+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\ndef get_number(number, x, y):\n    #number = [int(i) for i in number]\n    #print(number)\n    number = [int(i) for i in number]\n    #print(number)\n    answer = 0\n    for i in range(len(number) - 1, -1, -1):\n        if i >= x:\n            if number[i] == 1:\n                answer += 1\n                number[i] = 0\n        elif i >= y:\n            if number[i] == 0:\n                answer += 1\n                number[i] = 1\n        else:\n            if number[i] == 1:\n                answer += 1\n                number[i] = 0\n    return answer\n\nn, x, y = input().split()\nn, x, y = int(n), int(x), int(y)\nnumber = input()\n\nprint(get_number(number, x, y))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, x, y = [int(i) for i in sys.stdin.readline().split()]\n    number = sys.stdin.readline().strip()\n    print(min_operations_to_get_remainder(number, x, y))\n\n\ndef min_operations_to_get_remainder(number, x, y):\n    \"\"\"\n    :param number: decimal number without leading zeros, only 0 or 1 digits\n    :param x: x\n    :param y: y\n    :return: minimum number of operations required to get the number having remainder 10^y modulo 10^x\n    \"\"\"\n    remainder = int(number[-x:], 2)\n    remainder_to_get = 10 ** y\n    if remainder == remainder_to_get:\n        return 0\n    elif remainder < remainder_to_get:\n        if remainder_to_get - remainder < remainder_to_get // 2:\n            return remainder_to_get - remainder\n        else:\n            return remainder_to_get - remainder - remainder_to_get // 2\n    else:\n        if remainder - remainder_to_get < remainder_to_get // 2:\n            return remainder - remainder_to_get\n        else:\n            return remainder - remainder_to_get - remainder_to_get // 2\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    num = list(map(int, input()))\n\n    # find the first digit that is not 1\n    i = 0\n    while num[i] == 1:\n        i += 1\n\n    # now i is the first digit that is not 1\n    # we need to change i+y digits to make the number % 10^x == 10^y\n    # the first digit that is not changed is the (i+y)-th digit\n    # so we need to change i+y-1 digits\n    # we can change the first digit to 0 and change the rest of the digits to 1\n    # so we need to change i+y-1-i = y-1 digits\n    # if y-1 < 0, then the number is already satisfy the condition\n    if y-1 < 0:\n        print(0)\n    else:\n        print(y-1)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    a = list(map(int, input()))\n    if a[y] == a[x]:\n        a[x] = 1 - a[x]\n    print(sum(a))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,x,y = map(int,input().split())\n    num = input()\n    num = list(num)\n    ans = 0\n    for i in range(n-1,x-1,-1):\n        if num[i] != '1':\n            ans += 1\n        else:\n            break\n    for i in range(x-1,y-1,-1):\n        if num[i] != '0':\n            ans += 1\n        else:\n            break\n    print(ans)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = input()\n    ans = 0\n    for i in range(n-1, max(n-x-1, 0), -1):\n        if s[i] == \"0\":\n            ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649557909,
+  "id": "cmpl-4vHefvDysyU3y3Adje7T1pP0qgUkg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:32:19.216670 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, x, y = [int(i) for i in sys.stdin.readline().split()]\n    num = sys.stdin.readline().strip()\n    #print(n, x, y)\n    #print(num)\n    #print(num[y:x])\n    #print(num[y:x].count('0'))\n    print(num[y:x].count('0'))\n\nmain()"
+}
+2022-04-09 22:32:19.216725 REASON stop
+2022-04-09 22:32:19.217353 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif s[:x] == '1' + '0'*(x-1):\n    print(0)\nelse:\n    if s[:x] == '0'*x:\n        print(1)\n    else:\n        if s[:y] == '1' + '0'*(y-1):\n            print(x-y)\n        else:\n            print(x-y+1)"
+}
+2022-04-09 22:32:19.217423 REASON stop
+2022-04-09 22:32:19.217654 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\ndef get_number(number, x, y):\n    #number = [int(i) for i in number]\n    #print(number)\n    number = [int(i) for i in number]\n    #print(number)\n    answer = 0\n    for i in range(len(number) - 1, -1, -1):\n        if i >= x:\n            if number[i] == 1:\n                answer += 1\n                number[i] = 0\n        elif i >= y:\n            if number[i] == 0:\n                answer += 1\n                number[i] = 1\n        else:\n            if number[i] == 1:\n                answer += 1\n                number[i] = 0\n    return answer\n\nn, x, y = input().split()\nn, x, y = int(n), int(x), int(y)\nnumber = input()\n\nprint(get_number(number, x, y))"
+}
+2022-04-09 22:32:19.217699 REASON stop
+2022-04-09 22:32:19.229450 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, x, y = [int(i) for i in sys.stdin.readline().split()]\n    number = sys.stdin.readline().strip()\n    print(min_operations_to_get_remainder(number, x, y))\n\n\ndef min_operations_to_get_remainder(number, x, y):\n    \"\"\"\n    :param number: decimal number without leading zeros, only 0 or 1 digits\n    :param x: x\n    :param y: y\n    :return: minimum number of operations required to get the number having remainder 10^y modulo 10^x\n    \"\"\"\n    remainder = int(number[-x:], 2)\n    remainder_to_get = 10 ** y\n    if remainder == remainder_to_get:\n        return 0\n    elif remainder < remainder_to_get:\n        if remainder_to_get - remainder < remainder_to_get // 2:\n            return remainder_to_get - remainder\n        else:\n            return remainder_to_get - remainder - remainder_to_get // 2\n    else:\n        if remainder - remainder_to_get < remainder_to_get // 2:\n            return remainder - remainder_to_get\n        else:\n            return remainder - remainder_to_get - remainder_to_get // 2\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:32:19.229580 REASON stop
+2022-04-09 22:32:19.230297 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    num = list(map(int, input()))\n\n    # find the first digit that is not 1\n    i = 0\n    while num[i] == 1:\n        i += 1\n\n    # now i is the first digit that is not 1\n    # we need to change i+y digits to make the number % 10^x == 10^y\n    # the first digit that is not changed is the (i+y)-th digit\n    # so we need to change i+y-1 digits\n    # we can change the first digit to 0 and change the rest of the digits to 1\n    # so we need to change i+y-1-i = y-1 digits\n    # if y-1 < 0, then the number is already satisfy the condition\n    if y-1 < 0:\n        print(0)\n    else:\n        print(y-1)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:32:19.230411 REASON stop
+2022-04-09 22:32:19.231144 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    a = list(map(int, input()))\n    if a[y] == a[x]:\n        a[x] = 1 - a[x]\n    print(sum(a))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:32:19.231236 REASON stop
+2022-04-09 22:32:19.231655 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,x,y = map(int,input().split())\n    num = input()\n    num = list(num)\n    ans = 0\n    for i in range(n-1,x-1,-1):\n        if num[i] != '1':\n            ans += 1\n        else:\n            break\n    for i in range(x-1,y-1,-1):\n        if num[i] != '0':\n            ans += 1\n        else:\n            break\n    print(ans)\n\nmain()"
+}
+2022-04-09 22:32:19.231706 REASON stop
+2022-04-09 22:32:19.232099 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = input()\n    ans = 0\n    for i in range(n-1, max(n-x-1, 0), -1):\n        if s[i] == \"0\":\n            ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:32:19.232150 REASON stop

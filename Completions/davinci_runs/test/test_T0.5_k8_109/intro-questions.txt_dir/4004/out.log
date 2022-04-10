@@ -1,0 +1,172 @@
+2022-04-09 22:25:50.642938 """
+You are given a sequence $a_1, a_2, \dots, a_n$ consisting of $n$ integers.
+
+You can choose any non-negative integer $D$ (i.e. $D \ge 0$), and for each $a_i$ you can:
+
+  add $D$ (only once), i. e. perform $a_i := a_i + D$, or  subtract $D$ (only once), i. e. perform $a_i := a_i - D$, or  leave the value of $a_i$ unchanged. 
+
+It is possible that after an operation the value $a_i$ becomes negative.
+
+Your goal is to choose such minimum non-negative integer $D$ and perform changes in such a way, that all $a_i$ are equal (i.e. $a_1=a_2=\dots=a_n$).
+
+Print the required $D$ or, if it is impossible to choose such value $D$, print -1.
+
+For example, for array $[2, 8]$ the value $D=3$ is minimum possible because you can obtain the array $[5, 5]$ if you will add $D$ to $2$ and subtract $D$ from $8$. And for array $[1, 4, 7, 7]$ the value $D=3$ is also minimum possible. You can add it to $1$ and subtract it from $7$ and obtain the array $[4, 4, 4, 4]$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 100$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 100$) — the sequence $a$.
+
+
+-----Output-----
+
+Print one integer — the minimum non-negative integer value $D$ such that if you add this value to some $a_i$, subtract this value from some $a_i$ and leave some $a_i$ without changes, all obtained values become equal.
+
+If it is impossible to choose such value $D$, print -1.
+
+
+-----Examples-----
+Input
+6
+1 4 4 7 4 1
+
+Output
+3
+
+Input
+5
+2 2 5 2 5
+
+Output
+3
+
+Input
+4
+1 3 3 7
+
+Output
+-1
+
+Input
+2
+2 8
+
+Output
+3
+"""
+2022-04-09 22:25:50.642957 --------------------------
+2022-04-09 22:26:15.824636 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solution():\n    n = int(input())\n    a = list(map(int,input().split()))\n    a.sort()\n    if n == 1:\n        print(0)\n    elif n == 2 and a[0] == a[1]:\n        print(0)\n    elif n == 2 and a[0] != a[1]:\n        print(a[1]-a[0])\n    elif n > 2:\n        if a[0] == a[1]:\n            print(0)\n        else:\n            d = a[1]-a[0]\n            for i in range(2,n):\n                if a[i] - a[i-1] != d:\n                    print(-1)\n                    sys.exit()\n            print(d)\n\nsolution()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif n == 1:\n    print(a[0])\nelif a[0] == a[-1]:\n    print(0)\nelif a[0] + 1 == a[-1]:\n    print(1)\nelif a[0] + 2 == a[-1]:\n    print(2)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve(a):\n    if len(a) == 1:\n        return 0\n\n    min_val, max_val = min(a), max(a)\n    if min_val == max_val:\n        return 0\n\n    if min_val + 1 == max_val:\n        return 1\n\n    return -1\n\nif __name__ == '__main__':\n    n = int(raw_input())\n    a = [int(x) for x in raw_input().split()]\n    print solve(a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif len(set(a)) == 1:\n    print(0)\nelif max_a - min_a < 3:\n    print(-1)\nelse:\n    print(max_a - min_a - 2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\nif n == 2:\n    print(abs(a[0] - a[1]))\nelse:\n    max_a = max(a)\n    min_a = min(a)\n    if max_a == min_a:\n        print(0)\n    else:\n        if max_a % min_a == 0:\n            print(max_a - min_a)\n        else:\n            print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\na.sort()\n\nif n % 2 == 1:\n    median = a[n//2]\nelse:\n    median = (a[n//2] + a[n//2 - 1]) // 2\n\nans = 0\nfor x in a:\n    ans += abs(x - median)\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef get_min_diff(arr):\n    arr = sorted(arr)\n    n = len(arr)\n    min_diff = float('inf')\n    for i in range(n-1):\n        min_diff = min(min_diff, arr[i+1] - arr[i])\n    return min_diff\n\nn = int(input())\narr = list(map(int, input().split()))\nmin_diff = get_min_diff(arr)\n\nif min_diff == 0:\n    print(0)\nelif min_diff == 1:\n    print(-1)\nelse:\n    print(min_diff - 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif n == 1:\n    print(0)\n    exit()\n\nif (a[0] + a[-1]) % 2 == 0:\n    print((a[0] + a[-1]) // 2)\nelse:\n    print(-1)"
+    }
+  ],
+  "created": 1649557550,
+  "id": "cmpl-4vHYszLwcUX1FDY7RAh8Etg4S5krD",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:26:15.824987 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solution():\n    n = int(input())\n    a = list(map(int,input().split()))\n    a.sort()\n    if n == 1:\n        print(0)\n    elif n == 2 and a[0] == a[1]:\n        print(0)\n    elif n == 2 and a[0] != a[1]:\n        print(a[1]-a[0])\n    elif n > 2:\n        if a[0] == a[1]:\n            print(0)\n        else:\n            d = a[1]-a[0]\n            for i in range(2,n):\n                if a[i] - a[i-1] != d:\n                    print(-1)\n                    sys.exit()\n            print(d)\n\nsolution()"
+}
+2022-04-09 22:26:15.825031 REASON stop
+2022-04-09 22:26:15.825648 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif n == 1:\n    print(a[0])\nelif a[0] == a[-1]:\n    print(0)\nelif a[0] + 1 == a[-1]:\n    print(1)\nelif a[0] + 2 == a[-1]:\n    print(2)\nelse:\n    print(-1)"
+}
+2022-04-09 22:26:15.825760 REASON stop
+2022-04-09 22:26:15.826528 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve(a):\n    if len(a) == 1:\n        return 0\n\n    min_val, max_val = min(a), max(a)\n    if min_val == max_val:\n        return 0\n\n    if min_val + 1 == max_val:\n        return 1\n\n    return -1\n\nif __name__ == '__main__':\n    n = int(raw_input())\n    a = [int(x) for x in raw_input().split()]\n    print solve(a)"
+}
+2022-04-09 22:26:15.826618 REASON stop
+2022-04-09 22:26:15.827041 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif len(set(a)) == 1:\n    print(0)\nelif max_a - min_a < 3:\n    print(-1)\nelse:\n    print(max_a - min_a - 2)"
+}
+2022-04-09 22:26:15.827117 REASON stop
+2022-04-09 22:26:15.827723 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\nif n == 2:\n    print(abs(a[0] - a[1]))\nelse:\n    max_a = max(a)\n    min_a = min(a)\n    if max_a == min_a:\n        print(0)\n    else:\n        if max_a % min_a == 0:\n            print(max_a - min_a)\n        else:\n            print(-1)"
+}
+2022-04-09 22:26:15.827890 REASON stop
+2022-04-09 22:26:15.828914 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\na.sort()\n\nif n % 2 == 1:\n    median = a[n//2]\nelse:\n    median = (a[n//2] + a[n//2 - 1]) // 2\n\nans = 0\nfor x in a:\n    ans += abs(x - median)\nprint(ans)"
+}
+2022-04-09 22:26:15.829052 REASON stop
+2022-04-09 22:26:15.830029 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef get_min_diff(arr):\n    arr = sorted(arr)\n    n = len(arr)\n    min_diff = float('inf')\n    for i in range(n-1):\n        min_diff = min(min_diff, arr[i+1] - arr[i])\n    return min_diff\n\nn = int(input())\narr = list(map(int, input().split()))\nmin_diff = get_min_diff(arr)\n\nif min_diff == 0:\n    print(0)\nelif min_diff == 1:\n    print(-1)\nelse:\n    print(min_diff - 1)"
+}
+2022-04-09 22:26:15.830233 REASON stop
+2022-04-09 22:26:15.831076 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif n == 1:\n    print(0)\n    exit()\n\nif (a[0] + a[-1]) % 2 == 0:\n    print((a[0] + a[-1]) // 2)\nelse:\n    print(-1)"
+}
+2022-04-09 22:26:15.831196 REASON stop
