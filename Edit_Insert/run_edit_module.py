@@ -6,6 +6,7 @@ import datetime
 from datetime import datetime
 import random
 import time
+import configparser
 
 old_print = print
 
@@ -14,8 +15,19 @@ def timestamped_print(*args, **kwargs):
 
 print = timestamped_print
 
+config = configparser.ConfigParser()
+config.read('API_keys.config')
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+def random_number():
+    return random.randint(0,2)
+
+def set_api_key_rand():
+    api_key_items = config.items( "keys" )
+    api_keys = [key for en, key in config.items("keys")]
+    openai.api_key = api_keys[random_number()]
+
+
+#openai.api_key = os.getenv("OPENAI_API_KEY")
 
 """
 API_KEYS = ["key1", "key2", "key3"]
@@ -33,6 +45,7 @@ N_SOLUTIONS = 2
 
 # EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax error", "cleanup code"]
 EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax errors"]
+SLEEP_TIME_SECONDS = 4
 
 
 """
@@ -45,7 +58,7 @@ output_codes: list of strings containing the code after application of operation
 """
 def run_edit(input_code, operation):
 
-    # set_api_key_rand()
+    set_api_key_rand()
 
     response = openai.Edit.create(
         engine= EDIT_ENGINE,
@@ -54,7 +67,7 @@ def run_edit(input_code, operation):
         temperature=TEMPERATURE,
         n=N_SOLUTIONS
     )
-    time.sleep(2)
+    time.sleep(SLEEP_TIME_SECONDS)
 
     print(operation, response)
 
@@ -164,6 +177,7 @@ if __name__ == "__main__":
     #python3 run_edit_module.py example_output.json
     input_file_name = sys.argv[1]
     out_dir = os.path.dirname(input_file_name)
+    out_dir = sys.argv[2]
 
     #The following code is to save the example prompt and outputs
     """
