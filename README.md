@@ -7,5 +7,5 @@ In the following we illustrate the evaluation pipeline used for the experiments 
 
 
 - OpenAI Completion: `./Completions`.  
-- OpenAI Edir: `./Edit_Insert`.  
+- OpenAI Edit: `./Edit_Insert`.  
 - Eval: `./Evaluation`.  
