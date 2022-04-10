@@ -24,7 +24,6 @@ print = timestamped_print
 config = configparser.ConfigParser()
 config.read('API_keys.config')
 
-API_KEYS = ["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", "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", "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"]
 def random_number():
     return random.randint(0,2)
 
