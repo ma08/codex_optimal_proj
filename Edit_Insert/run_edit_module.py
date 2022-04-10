@@ -157,7 +157,7 @@ def run(file_name,out_dir=".",n_itr):
             # json_output = json.dumps(output)
 
             # File naming format: <edit params><completion params>_codex_solutions.json
-            pref = 'edit_' + str(TEMPERATURE) + 'T_' + str(N_SOLUTIONS) + 'k_init_'
+            pref = str(TEMPERATURE) + 'T2_' + str(N_SOLUTIONS) + 'k2_'
             if not os.path.exists(f"{out_dir}/{pref}{file_name}"):
                 with open(f'{out_dir}/{pref}{file_name}', 'w') as outfile:
                     json.dump(output["solutions"], outfile)

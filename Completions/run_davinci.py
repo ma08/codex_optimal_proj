@@ -72,7 +72,7 @@ def run_davinci(path, out_dir, n_itr):
         output["solutions"].extend(solution_set)
 
 
-        pref = str(TEMPERATURE) + 'T_' + str(N_SOLUTIONS) + 'k_'
+        pref = str(TEMPERATURE) + 'T1_' + str(N_SOLUTIONS) + 'k1_'
         if not os.path.exists(f"{out_dir}/{pref}codex_solutions.json"):
             with open(f'{out_dir}/{pref}codex_solutions.json', 'w') as outfile:
                 json.dump(output["solutions"], outfile)
