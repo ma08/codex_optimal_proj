@@ -4,6 +4,3 @@
   - test_T0.5_k8_109 :  only first stage done
   - test_T0.5_k2_1000 : only first stage done
   - test_T0.5_k2_109 :  Both stages done (completion and edit)
-
-- train
-  - T=0.5 k=2 interrupted due to key error, will resume later
