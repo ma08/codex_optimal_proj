@@ -2,7 +2,7 @@
 input_dir="davinci_runs/test/intro-questions.txt_dir"
 COUNTER=$(( 0 ))
 LIMIT=$(( 200 ))
-for question in $input_dir/*/codex_solutions.json; do
+for question in $input_dir/*/*codex_solutions.json; do
     echo $question
     python3 run_edit_module.py $question 2>&1 
     (( COUNTER++ ))
