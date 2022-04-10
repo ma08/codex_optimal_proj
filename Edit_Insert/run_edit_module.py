@@ -6,6 +6,7 @@ import datetime
 from datetime import datetime
 import random
 import time
+import numpy as np
 
 old_print = print
 
@@ -28,11 +29,11 @@ def set_api_key_rand():
 
 EDIT_ENGINE = "code-davinci-edit-001"
 
-TEMPERATURE = 0.3
-N_SOLUTIONS = 2
+# TEMPERATURE = 0.3
+# N_SOLUTIONS = 2
 
 # EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax error", "cleanup code"]
-EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax errors"]
+EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax errors"] # PROBABLY NEED TO AUTOMATE THIS PART AS WELL, BUT NEED TO DISCUSS PROCESS IN MORE DETAIL...
 
 
 """
@@ -43,7 +44,7 @@ returns output_codes
 
 output_codes: list of strings containing the code after application of operation
 """
-def run_edit(input_code, operation):
+def run_edit(input_code, operation, temp, k):
 
     # set_api_key_rand()
 
@@ -51,8 +52,8 @@ def run_edit(input_code, operation):
         engine= EDIT_ENGINE,
         input=input_code,
         instruction=operation,
-        temperature=TEMPERATURE,
-        n=N_SOLUTIONS
+        temperature=temp,
+        n=k
     )
     time.sleep(2)
 
@@ -91,7 +92,7 @@ final_outputs: states of code after application of last operation
 Should we save intermediary states?
 
 """
-def run_edit_multiple_op(input_code, operations):
+def run_edit_multiple_op(input_code, operations, temp, k):
 
     states = [input_code]
     num_operations = 0
@@ -103,7 +104,7 @@ def run_edit_multiple_op(input_code, operations):
 
         print(f"size on input set {len(current_input_set)}")
         for code in current_input_set:
-            gen_codes = run_edit(code, operation)
+            gen_codes = run_edit(code, operation, temp, k)
             print(operation, len(gen_codes), gen_codes)
             current_output_set.update(gen_codes)
 
@@ -134,26 +135,35 @@ file_name: file name of json file that is output of codex-davinci-002 with natur
 They are multiple outputs for a single input depending upon k
 The file has outputs for multiple prompts
 """
-def run(file_name,out_dir="."):
+def run(file_name,out_dir=".",n_itr):
     with open(file_name,"r") as input_fp:
         data = json.load(input_fp)
 
-        output = {"solutions":[]}
+        for itr in n_itr:
+            # can later change values of TEMPERATURE and N_SOLUTIONS
+            TEMPERATURE = np.random.randint(0, 10)/10
+            N_SOLUTIONS = np.random.randint(1, 100)
+            # would sample different edit operations here (ultimately put in array format) as well, but need to discuss further on automating selection of edit operations, as mentioned in beginning of file
 
-        total_output_set = set()
-        for solution in data:
-            outputs = run_edit_multiple_op(solution, EDIT_OPERATIONS)
-            total_output_set.update(outputs)
+            output = {"solutions":[]}
 
-        output["solutions"].extend(total_output_set)
+            total_output_set = set()
+            for solution in data:
+                outputs = run_edit_multiple_op(solution, EDIT_OPERATIONS, TEMPERATURE, N_SOLUTIONS)
+                total_output_set.update(outputs)
 
-        # json_output = json.dumps(output)
+            output["solutions"].extend(total_output_set)
 
+            # json_output = json.dumps(output)
 
-        with open(f'{out_dir}/codex_edit_solutions.json', 'w') as outfile:
-            json.dump(output["solutions"], outfile)
-        
-        save_strings_to_py_file(output["solutions"], f"{out_dir}/edit_sol_pys")
+            # File naming format: <edit params><completion params>_codex_solutions.json
+            pref = 'edit_' + str(TEMPERATURE) + 'T_' + str(N_SOLUTIONS) + 'k_init_'
+            if not os.path.exists(f"{out_dir}/{pref}{file_name}"):
+                with open(f'{out_dir}/{pref}{file_name}', 'w') as outfile:
+                    json.dump(output["solutions"], outfile)
+            
+                fold_name = pref + file_name[:-4] + "_pys" # removes .json extension
+                save_strings_to_py_file(output["solutions"], f"{out_dir}/{fold_name}")
 
 
 
@@ -161,9 +171,10 @@ def run(file_name,out_dir="."):
 
 if __name__ == "__main__":
 
-    #python3 run_edit_module.py example_output.json
+    #python3 run_edit_module.py example_output.json 100
     input_file_name = sys.argv[1]
     out_dir = os.path.dirname(input_file_name)
+    n_itr = sys.argv[2]
 
     #The following code is to save the example prompt and outputs
     """
@@ -181,12 +192,6 @@ if __name__ == "__main__":
         
 
     sys.stdout = open(f'{out_dir}/edit_out.log', 'w')
-    run(input_file_name,out_dir=out_dir)
+    run(input_file_name,out_dir=out_dir,n_itr)
     sys.stdout.close()
-
-
-
-
-
-
 
