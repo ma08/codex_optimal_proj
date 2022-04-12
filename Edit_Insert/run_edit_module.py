@@ -179,6 +179,10 @@ if __name__ == "__main__":
     out_dir = os.path.dirname(input_file_name)
     out_dir = sys.argv[2]
 
+    TEMPERATURE = float(sys.argv[3])
+    N_SOLUTIONS = int(sys.argv[4])
+    SLEEP_TIME_SECONDS = float(sys.argv[5])
+    print(f"run_edit_module.py {input_file_name} {out_dir} {TEMPERATURE} {N_SOLUTIONS} {SLEEP_TIME_SECONDS}")
     #The following code is to save the example prompt and outputs
     """
     with open(input_file_name,"r") as input_fp:
