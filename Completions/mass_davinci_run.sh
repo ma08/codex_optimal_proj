@@ -11,13 +11,13 @@ LIMIT=$(( 2640 ))
 CONTINUE_FROM=$(( 0 ))
 
 # input_set=train/intro-questions.txt
-input_set="$1"
+input_dir="$1"
 
 temp="$2"
 k="$3"
 sleep_time="$4"
 
-input_dir="$input_set"_dir
+# input_dir="$input_set"_dir
 echo_ts "Runnin completion API (first stage) for "
 echo_ts "input directory $input_dir"
 echo_ts "temperature  T1 $temp"
