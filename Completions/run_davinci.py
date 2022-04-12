@@ -24,13 +24,13 @@ print = timestamped_print
 config = configparser.ConfigParser()
 config.read('API_keys.config')
 
-def random_number():
-    return random.randint(0,2)
+def random_number(tot_num):
+    return random.randint(0,tot_num-1)
 
 def set_api_key_rand():
     api_key_items = config.items( "keys" )
     api_keys = [key for en, key in config.items("keys")]
-    openai.api_key = api_keys[random_number()]
+    openai.api_key = api_keys[random_number(len(api_keys))]
 
 
 
@@ -111,6 +111,11 @@ if __name__ == "__main__":
     #Example: python3 ./test/0179/question.txt
     path = sys.argv[1] #test/sort-questions.txt_dir/4997/question.txt
     out_dir = sys.argv[2] #davinci_runs/test/sort-questions.txt_dir
+    TEMPERATURE = float(sys.argv[3])
+    N_SOLUTIONS = int(sys.argv[4])
+    SLEEP_TIME_SECONDS = float(sys.argv[5])
+
+    print(f"run_davinci.py {path} {out_dir} {TEMPERATURE} {N_SOLUTIONS}")
 
     # split_parts = prompt_file_path.split('/')
     # num = split_parts[2]
