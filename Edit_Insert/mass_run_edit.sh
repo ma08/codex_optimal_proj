@@ -32,7 +32,7 @@ for question in $input_dir/*/codex_solutions.json; do
     out_dir=$input_dir/$num
     echo_ts "$num  $out_dir"
     # echo_ts $question
-    python3 run_edit_module.py $question $out_dir $temp $k $sleep_time 2>&1 
+    python3 -u run_edit_module.py $question $out_dir $temp $k $sleep_time 2>&1 
     (( COUNTER++ ))
     echo_ts "completed: $COUNTER, completed question: $question"
     # echo $question $out_dir $num $COUNTER
