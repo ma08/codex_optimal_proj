@@ -1,0 +1,17 @@
+
+
+import sys
+
+def main():
+    cans = int(sys.stdin.readline()) # number of cans
+    duras = [int(x) for x in sys.stdin.readline().split()] # durations of cans
+    shot = 0
+    shotList = [i+1 for i in range(cans)]
+    shotList.sort(key=lambda x: duras[x-1]) # sort by duration
+    for i in range(cans):
+        shot += (duras[shotList[i]-1]*i+1) # add duration*index+1
+    print(shot)
+    print(*shotList)
+
+if __name__ == "__main__":
+    main()

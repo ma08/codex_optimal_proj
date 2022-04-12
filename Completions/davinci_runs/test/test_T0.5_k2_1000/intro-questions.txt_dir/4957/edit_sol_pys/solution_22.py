@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import sys
+
+def main():
+    n, m = map(int, input().split())
+    grid = []
+    for i in range(n):
+        grid.append(input().strip())
+
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] == '.':
+                grid[i] = grid[i][:j] + 'E' + grid[i][j+1:]
+                if i > 0 and grid[i-1][j] == '.':
+                    grid[i-1] = grid[i-1][:j] + 'E' + grid[i-1][j+1:]
+                if j > 0 and grid[i][j-1] == '.':
+                    grid[i] = grid[i][:j-1] + 'E' + grid[i][j:]
+                if i < n-1 and grid[i+1][j] == '.':
+                    grid[i+1] = grid[i+1][:j] + 'E' + grid[i+1][j+1:]
+                if j < m-1 and grid[i][j+1] == '.':
+                    grid[i] = grid[i][:j+1] + 'E' + grid[i][j+2:]
+    for row in grid:
+        print(row)
+
+main()

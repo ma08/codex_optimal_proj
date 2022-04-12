@@ -1,0 +1,396 @@
+2022-04-12 00:38:04.530248 num operations 2
+2022-04-12 00:38:04.530275 size on input set 1
+2022-04-12 00:38:39.842439 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf(\"usage: %s <IPaddress>\\n\", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {\n        printf(\"create socket error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {\n        printf(\"inet_pton error for %s\\n\", argv[1]);\n        exit(1);\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {\n        printf(\"connect error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf(\"send msg to server: \\n\");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf(\"send msg error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n"
+    },
+    {
+      "index": 1,
+      "text": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\n\n# \u5217\u51fa\u76ee\u5f55\nprint(os.listdir('.'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u6587\u4ef6\nprint(os.path.isfile('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u76ee\u5f55\nprint(os.path.isdir('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u7edd\u5bf9\u8def\u5f84\nprint(os.path.isabs('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u540d\nprint(os.path.basename('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u6240\u5728\u76ee\u5f55\nprint(os.path.dirname('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5927\u5c0f\nprint(os.path.getsize('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\nprint(os.path.abspath('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\uff0c\u5e76\u5206\u5272\u6210\u76ee\u5f55\u4e0e\u6587\u4ef6\u540d\nprint(os.path.split(os.path.abspath('file.py')))\n\n# \u5206\u5272\u8def\u5f84\uff0c\u8fd4\u56de\u8def\u5f84\u5404\u90e8\u5206\u7684\u5143\u7ec4\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# \u5206\u5272\u6587\u4ef6\u540d\u4e0e\u6269\u5c55\u540d\uff0c\u8fd4\u56de(fname, fextension)\u5143\u7ec4\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# \u83b7\u53d6\u8def\u5f84\u5206\u9694\u7b26\nprint(os.path.sep)\n\n# \u83b7\u53d6\u5f53\u524d\u76ee\u5f55\nprint(os.getcwd())\n\n# \u5207\u6362\u5f53\u524d\u76ee\u5f55\nos.chdir('/Users/michael/testdir')\n\n# \u521b\u5efa\u76ee\u5f55\nos.mkdir('testdir')\n\n# \u5220\u9664\u76ee\u5f55\nos.rmdir('testdir')\n\n# \u5220\u9664\u6587\u4ef6\nos.remove('test.txt')\n\n# \u521b\u5efa\u591a\u7ea7\u76ee\u5f55\nos.makedirs('testdir/testdir2')\n\n# \u5220\u9664\u591a\u7ea7\u76ee\u5f55\nos.removedirs('testdir/testdir2')\n\n# \u6539\u53d8\u6587\u4ef6\u6743\u9650\u4e0e\u65f6\u95f4\u6233\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# \u91cd\u547d\u540d\u6587\u4ef6\nos.rename('test.txt', 'test.py')\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mode)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ino)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_dev)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_nlink)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_uid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_gid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blksize)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blocks)\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709\u76ee\u5f55\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709.py\u6587\u4ef6\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1]=='.py'])\n"
+    }
+  ],
+  "created": 1649738284,
+  "object": "edit"
+}
+2022-04-12 00:38:39.842566 fix spelling mistakes 2 ['#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf("usage: %s <IPaddress>\\n", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {\n        printf("create socket error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {\n        printf("inet_pton error for %s\\n", argv[1]);\n        exit(1);\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {\n        printf("connect error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf("send msg to server: \\n");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf("send msg error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n', "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\n\n# 列出目录\nprint(os.listdir('.'))\n\n# 判断是否是文件\nprint(os.path.isfile('file.py'))\n\n# 判断是否是目录\nprint(os.path.isdir('file.py'))\n\n# 判断是否是绝对路径\nprint(os.path.isabs('file.py'))\n\n# 获取文件名\nprint(os.path.basename('file.py'))\n\n# 获取文件所在目录\nprint(os.path.dirname('file.py'))\n\n# 获取文件大小\nprint(os.path.getsize('file.py'))\n\n# 获取文件绝对路径\nprint(os.path.abspath('file.py'))\n\n# 获取文件绝对路径，并分割成目录与文件名\nprint(os.path.split(os.path.abspath('file.py')))\n\n# 分割路径，返回路径各部分的元组\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# 分割文件名与扩展名，返回(fname, fextension)元组\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# 获取路径分隔符\nprint(os.path.sep)\n\n# 获取当前目录\nprint(os.getcwd())\n\n# 切换当前目录\nos.chdir('/Users/michael/testdir')\n\n# 创建目录\nos.mkdir('testdir')\n\n# 删除目录\nos.rmdir('testdir')\n\n# 删除文件\nos.remove('test.txt')\n\n# 创建多级目录\nos.makedirs('testdir/testdir2')\n\n# 删除多级目录\nos.removedirs('testdir/testdir2')\n\n# 改变文件权限与时间戳\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# 重命名文件\nos.rename('test.txt', 'test.py')\n\n# 获取文件属性\nprint(os.stat('test.py'))\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mode)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ino)\n\n# 获取文件属性\nprint(os.stat('test.py').st_dev)\n\n# 获取文件属性\nprint(os.stat('test.py').st_nlink)\n\n# 获取文件属性\nprint(os.stat('test.py').st_uid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_gid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blksize)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blocks)\n\n# 列出当前目录下所有目录，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# 列出当前目录下所有.py文件，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1]=='.py'])\n"]
+2022-04-12 00:38:39.853481 size on output set 2
+2022-04-12 00:38:39.853525 size on input set 2
+2022-04-12 00:38:44.490233 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\nimport stat\n\n# \u5217\u51fa\u76ee\u5f55\nprint(os.listdir('.'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u6587\u4ef6\nprint(os.path.isfile('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u76ee\u5f55\nprint(os.path.isdir('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u7edd\u5bf9\u8def\u5f84\nprint(os.path.isabs('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u540d\nprint(os.path.basename('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u6240\u5728\u76ee\u5f55\nprint(os.path.dirname('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5927\u5c0f\nprint(os.path.getsize('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\nprint(os.path.abspath('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\uff0c\u5e76\u5206\u5272\u6210\u76ee\u5f55\u4e0e\u6587\u4ef6\u540d\nprint(os.path.split(os.path.abspath('file.py')))\n\n# \u5206\u5272\u8def\u5f84\uff0c\u8fd4\u56de\u8def\u5f84\u5404\u90e8\u5206\u7684\u5143\u7ec4\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# \u5206\u5272\u6587\u4ef6\u540d\u4e0e\u6269\u5c55\u540d\uff0c\u8fd4\u56de(fname, fextension)\u5143\u7ec4\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# \u83b7\u53d6\u8def\u5f84\u5206\u9694\u7b26\nprint(os.path.sep)\n\n# \u83b7\u53d6\u5f53\u524d\u76ee\u5f55\nprint(os.getcwd())\n\n# \u5207\u6362\u5f53\u524d\u76ee\u5f55\nos.chdir('/Users/michael/testdir')\n\n# \u521b\u5efa\u76ee\u5f55\nos.mkdir('testdir')\n\n# \u5220\u9664\u76ee\u5f55\nos.rmdir('testdir')\n\n# \u5220\u9664\u6587\u4ef6\nos.remove('test.txt')\n\n# \u521b\u5efa\u591a\u7ea7\u76ee\u5f55\nos.makedirs('testdir/testdir2')\n\n# \u5220\u9664\u591a\u7ea7\u76ee\u5f55\nos.removedirs('testdir/testdir2')\n\n# \u6539\u53d8\u6587\u4ef6\u6743\u9650\u4e0e\u65f6\u95f4\u6233\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# \u91cd\u547d\u540d\u6587\u4ef6\nos.rename('test.txt', 'test.py')\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mode)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ino)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_dev)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_nlink)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_uid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_gid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blksize)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blocks)\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709\u76ee\u5f55\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709.py\u6587\u4ef6\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1]=='.py'])\n"
+    },
+    {
+      "index": 1,
+      "text": "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\n\n# \u5217\u51fa\u76ee\u5f55\nprint(os.listdir('.'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u6587\u4ef6\nprint(os.path.isfile('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u76ee\u5f55\nprint(os.path.isdir('file.py'))\n\n# \u5224\u65ad\u662f\u5426\u662f\u7edd\u5bf9\u8def\u5f84\nprint(os.path.isabs('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u540d\nprint(os.path.basename('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u6240\u5728\u76ee\u5f55\nprint(os.path.dirname('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5927\u5c0f\nprint(os.path.getsize('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\nprint(os.path.abspath('file.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u7edd\u5bf9\u8def\u5f84\uff0c\u5e76\u5206\u5272\u6210\u76ee\u5f55\u4e0e\u6587\u4ef6\u540d\nprint(os.path.split(os.path.abspath('file.py')))\n\n# \u5206\u5272\u8def\u5f84\uff0c\u8fd4\u56de\u8def\u5f84\u5404\u90e8\u5206\u7684\u5143\u7ec4\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# \u5206\u5272\u6587\u4ef6\u540d\u4e0e\u6269\u5c55\u540d\uff0c\u8fd4\u56de(fname, fextension)\u5143\u7ec4\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# \u83b7\u53d6\u8def\u5f84\u5206\u9694\u7b26\nprint(os.path.sep)\n\n# \u83b7\u53d6\u5f53\u524d\u76ee\u5f55\nprint(os.getcwd())\n\n# \u5207\u6362\u5f53\u524d\u76ee\u5f55\nos.chdir('/Users/michael/testdir')\n\n# \u521b\u5efa\u76ee\u5f55\nos.mkdir('testdir')\n\n# \u5220\u9664\u76ee\u5f55\nos.rmdir('testdir')\n\n# \u5220\u9664\u6587\u4ef6\nos.remove('test.txt')\n\n# \u521b\u5efa\u591a\u7ea7\u76ee\u5f55\nos.makedirs('testdir/testdir2')\n\n# \u5220\u9664\u591a\u7ea7\u76ee\u5f55\nos.removedirs('testdir/testdir2')\n\n# \u6539\u53d8\u6587\u4ef6\u6743\u9650\u4e0e\u65f6\u95f4\u6233\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# \u91cd\u547d\u540d\u6587\u4ef6\nos.rename('test.txt', 'test.py')\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py'))\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mode)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ino)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_dev)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_nlink)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_uid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_gid)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_size)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_atime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_mtime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_ctime)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blksize)\n\n# \u83b7\u53d6\u6587\u4ef6\u5c5e\u6027\nprint(os.stat('test.py').st_blocks)\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709\u76ee\u5f55\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# \u5217\u51fa\u5f53\u524d\u76ee\u5f55\u4e0b\u6240\u6709.py\u6587\u4ef6\uff0c\u7ed3\u679c\u4ee5\u5217\u8868\u5f62\u5f0f\u6253\u5370\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1] == '.py'])\n"
+    }
+  ],
+  "created": 1649738320,
+  "object": "edit"
+}
+2022-04-12 00:38:44.491025 fix syntax errors 2 ["#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\nimport stat\n\n# 列出目录\nprint(os.listdir('.'))\n\n# 判断是否是文件\nprint(os.path.isfile('file.py'))\n\n# 判断是否是目录\nprint(os.path.isdir('file.py'))\n\n# 判断是否是绝对路径\nprint(os.path.isabs('file.py'))\n\n# 获取文件名\nprint(os.path.basename('file.py'))\n\n# 获取文件所在目录\nprint(os.path.dirname('file.py'))\n\n# 获取文件大小\nprint(os.path.getsize('file.py'))\n\n# 获取文件绝对路径\nprint(os.path.abspath('file.py'))\n\n# 获取文件绝对路径，并分割成目录与文件名\nprint(os.path.split(os.path.abspath('file.py')))\n\n# 分割路径，返回路径各部分的元组\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# 分割文件名与扩展名，返回(fname, fextension)元组\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# 获取路径分隔符\nprint(os.path.sep)\n\n# 获取当前目录\nprint(os.getcwd())\n\n# 切换当前目录\nos.chdir('/Users/michael/testdir')\n\n# 创建目录\nos.mkdir('testdir')\n\n# 删除目录\nos.rmdir('testdir')\n\n# 删除文件\nos.remove('test.txt')\n\n# 创建多级目录\nos.makedirs('testdir/testdir2')\n\n# 删除多级目录\nos.removedirs('testdir/testdir2')\n\n# 改变文件权限与时间戳\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# 重命名文件\nos.rename('test.txt', 'test.py')\n\n# 获取文件属性\nprint(os.stat('test.py'))\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mode)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ino)\n\n# 获取文件属性\nprint(os.stat('test.py').st_dev)\n\n# 获取文件属性\nprint(os.stat('test.py').st_nlink)\n\n# 获取文件属性\nprint(os.stat('test.py').st_uid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_gid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blksize)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blocks)\n\n# 列出当前目录下所有目录，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# 列出当前目录下所有.py文件，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1]=='.py'])\n", "#!/usr/bin/env python\n# -*- coding: utf-8 -*-\n\nimport os\n\n# 列出目录\nprint(os.listdir('.'))\n\n# 判断是否是文件\nprint(os.path.isfile('file.py'))\n\n# 判断是否是目录\nprint(os.path.isdir('file.py'))\n\n# 判断是否是绝对路径\nprint(os.path.isabs('file.py'))\n\n# 获取文件名\nprint(os.path.basename('file.py'))\n\n# 获取文件所在目录\nprint(os.path.dirname('file.py'))\n\n# 获取文件大小\nprint(os.path.getsize('file.py'))\n\n# 获取文件绝对路径\nprint(os.path.abspath('file.py'))\n\n# 获取文件绝对路径，并分割成目录与文件名\nprint(os.path.split(os.path.abspath('file.py')))\n\n# 分割路径，返回路径各部分的元组\nprint(os.path.splitdrive(os.path.abspath('file.py')))\n\n# 分割文件名与扩展名，返回(fname, fextension)元组\nprint(os.path.splitext(os.path.abspath('file.py')))\n\n# 获取路径分隔符\nprint(os.path.sep)\n\n# 获取当前目录\nprint(os.getcwd())\n\n# 切换当前目录\nos.chdir('/Users/michael/testdir')\n\n# 创建目录\nos.mkdir('testdir')\n\n# 删除目录\nos.rmdir('testdir')\n\n# 删除文件\nos.remove('test.txt')\n\n# 创建多级目录\nos.makedirs('testdir/testdir2')\n\n# 删除多级目录\nos.removedirs('testdir/testdir2')\n\n# 改变文件权限与时间戳\nos.chmod('test.py', stat.S_IRWXU)\nos.utime('test.py', (1525746400, 1525746400))\n\n# 重命名文件\nos.rename('test.txt', 'test.py')\n\n# 获取文件属性\nprint(os.stat('test.py'))\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mode)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ino)\n\n# 获取文件属性\nprint(os.stat('test.py').st_dev)\n\n# 获取文件属性\nprint(os.stat('test.py').st_nlink)\n\n# 获取文件属性\nprint(os.stat('test.py').st_uid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_gid)\n\n# 获取文件属性\nprint(os.stat('test.py').st_size)\n\n# 获取文件属性\nprint(os.stat('test.py').st_atime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_mtime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_ctime)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blksize)\n\n# 获取文件属性\nprint(os.stat('test.py').st_blocks)\n\n# 列出当前目录下所有目录，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isdir(x)])\n\n# 列出当前目录下所有.py文件，结果以列表形式打印\nprint([x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1] == '.py'])\n"]
+2022-04-12 00:38:55.794729 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n#include <errno.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf(\"usage: %s <IPaddress>\\n\", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {\n        printf(\"create socket error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {\n        printf(\"inet_pton error for %s\\n\", argv[1]);\n        exit(1);\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {\n        printf(\"connect error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf(\"send msg to server: \\n\");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf(\"send msg error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n"
+    },
+    {
+      "index": 1,
+      "text": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf(\"usage: %s <IPaddress>\\n\", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)\n    {\n        printf(\"create socket error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0)\n    {\n        printf(\"inet_pton error for %s\\n\", argv[1]);\n        exit(1);\n    }\n\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)\n    {\n        printf(\"connect error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf(\"send msg to server: \\n\");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf(\"send msg error: %s(errno: %d)\\n\", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n"
+    }
+  ],
+  "created": 1649738324,
+  "object": "edit"
+}
+2022-04-12 00:38:55.794902 fix syntax errors 2 ['#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n#include <errno.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf("usage: %s <IPaddress>\\n", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {\n        printf("create socket error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {\n        printf("inet_pton error for %s\\n", argv[1]);\n        exit(1);\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {\n        printf("connect error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf("send msg to server: \\n");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf("send msg error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n', '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/types.h>\n#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>\n\n#define PORT 8080\n#define BUFSIZE 1024\n\nint main(int argc, char *argv[])\n{\n    int sockfd;\n    struct sockaddr_in servaddr;\n    char sendline[BUFSIZE], recvline[BUFSIZE];\n\n    if (argc != 2) {\n        printf("usage: %s <IPaddress>\\n", argv[0]);\n        exit(1);\n    }\n\n    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)\n    {\n        printf("create socket error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0)\n    {\n        printf("inet_pton error for %s\\n", argv[1]);\n        exit(1);\n    }\n\n    }\n\n    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)\n    {\n        printf("connect error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    printf("send msg to server: \\n");\n    fgets(sendline, BUFSIZE, stdin);\n    if (send(sockfd, sendline, strlen(sendline), 0) < 0) {\n        printf("send msg error: %s(errno: %d)\\n", strerror(errno), errno);\n        exit(1);\n    }\n\n    close(sockfd);\n    exit(0);\n}\n']
+2022-04-12 00:38:55.794924 size on output set 4
+2022-04-12 00:38:55.794939 num operations 2
+2022-04-12 00:38:55.794942 size on input set 1
+2022-04-12 00:38:58.333123 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winners!\")\nelse:\n    for winner in winners:\n        print(winner + \" wins\")\n"
+    },
+    {
+      "index": 1,
+      "text": "\n#\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winner!\")\nelse:\n    for winner in winners:\n        print(winner + \" wins!\")\n"
+    }
+  ],
+  "created": 1649738335,
+  "object": "edit"
+}
+2022-04-12 00:38:58.333459 fix spelling mistakes 2 ['\n\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winners!")\nelse:\n    for winner in winners:\n        print(winner + " wins")\n', '\n#\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winner!")\nelse:\n    for winner in winners:\n        print(winner + " wins!")\n']
+2022-04-12 00:38:58.333499 size on output set 2
+2022-04-12 00:38:58.333510 size on input set 2
+2022-04-12 00:39:00.494740 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n# \nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winner!\")\nelse:\n    for winner in winners:\n        print(winner + \" wins!\")\n"
+    },
+    {
+      "index": 1,
+      "text": "\n# \nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winner!\")\nelse:\n    for winner in winners:\n        print(winner + \" wins!\")\n"
+    }
+  ],
+  "created": 1649738338,
+  "object": "edit"
+}
+2022-04-12 00:39:00.495293 fix syntax errors 2 ['\n# \nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winner!")\nelse:\n    for winner in winners:\n        print(winner + " wins!")\n', '\n# \nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winner!")\nelse:\n    for winner in winners:\n        print(winner + " wins!")\n']
+2022-04-12 00:39:04.701494 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport os\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0 \n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score) \n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winners!\") \nelse:\n    for winner in winners:\n        print(winner + \" wins\") \n"
+    },
+    {
+      "index": 1,
+      "text": "\n\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print(\"No winners!\")\n    winners.sort()\nelse:\n    for winner in winners:\n        print(winner + \" wins\")\n"
+    }
+  ],
+  "created": 1649738340,
+  "object": "edit"
+}
+2022-04-12 00:39:04.701597 fix syntax errors 2 ['\nimport os\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0 \n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score) \n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winners!") \nelse:\n    for winner in winners:\n        print(winner + " wins") \n', '\n\nfrom sys import stdin\n\nn, p, m = [int(x) for x in stdin.readline().split()]\n\nplayers = {}\nfor i in range(n):\n    players[stdin.readline().rstrip()] = 0\n\nfor i in range(m):\n    name, score = stdin.readline().split()\n    players[name] += int(score)\n\nwinners = [name for name in players.keys() if players[name] >= p]\n\nif len(winners) == 0:\n    print("No winners!")\n    winners.sort()\nelse:\n    for winner in winners:\n        print(winner + " wins")\n']
+2022-04-12 00:39:04.701612 size on output set 3
+2022-04-12 00:39:04.701624 num operations 2
+2022-04-12 00:39:04.701627 size on input set 1
+2022-04-12 00:39:06.818108 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\n\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get inputs\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, \"wins!\")\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get input\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, \"wins!\")\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1649738344,
+  "object": "edit"
+}
+2022-04-12 00:39:06.818256 fix spelling mistakes 2 ['\n\n\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get inputs\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, "wins!")\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n', '\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get input\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, "wins!")\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-12 00:39:06.818285 size on output set 2
+2022-04-12 00:39:06.818293 size on input set 2
+2022-04-12 00:39:11.378709 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get inputs\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, \"wins!\")\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get inputs\n    n, p, m = map(int, input().split())  # n: number of players, p: points to win, m: number of games\n    players = {}\n    for i in range(n):\n        players[input()] = 0  # input() is the name of the player\n    for i in range(m):\n        player, points = input().split()  # input() is the name of the player and points earned\n        players[player] += int(points)  # add points to the player's score\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, \"wins!\")\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1649738347,
+  "object": "edit"
+}
+2022-04-12 00:39:11.379033 fix syntax errors 2 ['\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get inputs\n    n, p, m = map(int, input().split())\n    players = {}\n    for i in range(n):\n        players[input()] = 0\n    for i in range(m):\n        player, points = input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, "wins!")\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n', '\n\n\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get inputs\n    n, p, m = map(int, input().split())  # n: number of players, p: points to win, m: number of games\n    players = {}\n    for i in range(n):\n        players[input()] = 0  # input() is the name of the player\n    for i in range(m):\n        player, points = input().split()  # input() is the name of the player and points earned\n        players[player] += int(points)  # add points to the player\'s score\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, "wins!")\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-12 00:39:19.805351 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get input\n    n, p, m = map(int, raw_input().split())\n    players = {}\n    for i in range(n):\n        players[raw_input()] = 0\n    for i in range(m):\n        player, points = raw_input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, \"wins!\")\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    \"\"\"\n    Main function that runs the program.\n    \"\"\"\n    # Get input\n    n, p, m = map(int, input().split())  # pylint: disable=invalid-name\n    players = {}\n    for i in range(n):\n        players[input()] = 0  # pylint: disable=invalid-name\n    for i in range(m):\n        player, points = input().split()  # pylint: disable=invalid-name\n        players[player] += int(points)  # pylint: disable=invalid-name\n\n    # Check if there are any winners\n    winners = []\n    for player in players:  # pylint: disable=invalid-name\n        if players[player] >= p:  # pylint: disable=invalid-name\n            winners.append(player)  # pylint: disable=invalid-name\n    if len(winners) > 0:\n        for winner in winners:  # pylint: disable=invalid-name\n            print(winner, \"wins!\")  # pylint: disable=invalid-name\n    else:\n        print(\"No winner!\")\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1649738351,
+  "object": "edit"
+}
+2022-04-12 00:39:19.805623 fix syntax errors 2 ['\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get input\n    n, p, m = map(int, raw_input().split())\n    players = {}\n    for i in range(n):\n        players[raw_input()] = 0\n    for i in range(m):\n        player, points = raw_input().split()\n        players[player] += int(points)\n\n    # Check if there are any winners\n    winners = []\n    for player in players:\n        if players[player] >= p:\n            winners.append(player)\n    if len(winners) > 0:\n        for winner in winners:\n            print(winner, "wins!")\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n', '\ndef main():\n    """\n    Main function that runs the program.\n    """\n    # Get input\n    n, p, m = map(int, input().split())  # pylint: disable=invalid-name\n    players = {}\n    for i in range(n):\n        players[input()] = 0  # pylint: disable=invalid-name\n    for i in range(m):\n        player, points = input().split()  # pylint: disable=invalid-name\n        players[player] += int(points)  # pylint: disable=invalid-name\n\n    # Check if there are any winners\n    winners = []\n    for player in players:  # pylint: disable=invalid-name\n        if players[player] >= p:  # pylint: disable=invalid-name\n            winners.append(player)  # pylint: disable=invalid-name\n    if len(winners) > 0:\n        for winner in winners:  # pylint: disable=invalid-name\n            print(winner, "wins!")  # pylint: disable=invalid-name\n    else:\n        print("No winner!")\n\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-12 00:39:19.805654 size on output set 4
+2022-04-12 00:39:19.805667 num operations 2
+2022-04-12 00:39:19.805672 size on input set 1
+2022-04-12 00:39:24.990762 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split()\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split() for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.in\", \"r\") as input_file:\n        main(input_file)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores]]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.txt\", \"r\") as input_file:\n        main(input_file)\n"
+    }
+  ],
+  "created": 1649738360,
+  "object": "edit"
+}
+2022-04-12 00:39:24.991010 fix spelling mistakes 2 ['\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split()\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split() for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.in", "r") as input_file:\n        main(input_file)\n', '\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores]]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.txt", "r") as input_file:\n        main(input_file)\n']
+2022-04-12 00:39:24.991034 size on output set 2
+2022-04-12 00:39:24.991040 size on input set 2
+2022-04-12 00:39:29.472974 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores] if name in players]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.txt\", \"r\") as input_file:\n        main(input_file)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1 + n]\n    scores = lines[1 + n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores]]\n    scores = sorted(scores, key=lambda x: x[1])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.txt\", \"r\") as input_file:\n        main(input_file)\n"
+    }
+  ],
+  "created": 1649738365,
+  "object": "edit"
+}
+2022-04-12 00:39:29.473253 fix syntax errors 2 ['\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores] if name in players]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.txt", "r") as input_file:\n        main(input_file)\n', '\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = [int(x) for x in lines[0].strip().split()]\n    players = lines[1:1 + n]\n    scores = lines[1 + n:]\n    scores = [(name, int(score)) for name, score in [line.strip().split() for line in scores]]\n    scores = sorted(scores, key=lambda x: x[1])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.txt", "r") as input_file:\n        main(input_file)\n']
+2022-04-12 00:39:33.485463 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split(\" \")\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split(\" \") for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.in\", \"r\") as input_file:\n        main(input_file)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split(\" \")\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split(\" \") for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + \" wins!\")\n    if all(points[name] < p for name in points):\n        print(\"No winner!\")\n\nif __name__ == \"__main__\":\n    with open(\"inputs/arcade_basketball.in\", \"r\") as input_file:\n        main(input_file)\n"
+    }
+  ],
+  "created": 1649738369,
+  "object": "edit"
+}
+2022-04-12 00:39:33.485649 fix syntax errors 2 ['\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split(" ")\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split(" ") for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.in", "r") as input_file:\n        main(input_file)\n', '\n\ndef main(input_file):\n    lines = input_file.readlines()\n    n, p, m = lines[0].strip().split(" ")\n    n, p, m = int(n), int(p), int(m)\n    players = lines[1:1+n]\n    scores = lines[1+n:]\n    scores = [line.strip().split(" ") for line in scores]\n    scores = [(name, int(score)) for name, score in scores]\n    scores = sorted(scores, key=lambda x: x[0])\n    points = {name: 0 for name in players}\n    for name, score in scores:\n        points[name] += score\n        if points[name] >= p:\n            print(name + " wins!")\n    if all(points[name] < p for name in points):\n        print("No winner!")\n\nif __name__ == "__main__":\n    with open("inputs/arcade_basketball.in", "r") as input_file:\n        main(input_file)\n']
+2022-04-12 00:39:33.485719 size on output set 3
+2022-04-12 00:39:33.485730 num operations 2
+2022-04-12 00:39:33.485733 size on input set 1
+2022-04-12 00:39:36.197460 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"
+    }
+  ],
+  "created": 1649738373,
+  "object": "edit"
+}
+2022-04-12 00:39:36.197627 fix spelling mistakes 2 ["\n\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n", "\n\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"]
+2022-04-12 00:39:36.197646 size on output set 2
+2022-04-12 00:39:36.197651 size on input set 2
+2022-04-12 00:39:39.931745 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print('\\n'.join(winners))\nelse:\n    print('No winner!')\n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint('\\n'.join(winners)) if winners else print('No winner!')\n"
+    },
+    {
+      "index": 1,
+      "text": "\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!') \n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"
+    }
+  ],
+  "created": 1649738376,
+  "object": "edit"
+}
+2022-04-12 00:39:39.932175 fix syntax errors 2 ["\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print('\\n'.join(winners))\nelse:\n    print('No winner!')\n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint('\\n'.join(winners)) if winners else print('No winner!')\n", "\n# Solution 1 (long)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!') \n\n# Solution 2 (short)\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"]
+2022-04-12 00:39:42.090704 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"
+    },
+    {
+      "index": 1,
+      "text": "\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"
+    }
+  ],
+  "created": 1649738380,
+  "object": "edit"
+}
+2022-04-12 00:39:42.090841 fix syntax errors 2 ["\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n", "\n# Solution 1:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nif winners:\n    print(*winners, sep='\\n')\nelse:\n    print('No winner!')\n\n# Solution 2:\nn, p, m = map(int, input().split())\nnames = [input() for _ in range(n)]\nwinners = []\nfor _ in range(m):\n    name, points = input().split()\n    points = int(points)\n    if name in names:\n        p -= points\n        if p <= 0:\n            winners.append(name)\n            p = 10\nprint(*winners, sep='\\n') if winners else print('No winner!')\n"]
+2022-04-12 00:39:42.090864 size on output set 4
+2022-04-12 00:39:42.090870 num operations 2
+2022-04-12 00:39:42.090874 size on input set 1
+2022-04-12 00:39:44.841253 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    },
+    {
+      "index": 1,
+      "text": "\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1]) \n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    }
+  ],
+  "created": 1649738382,
+  "object": "edit"
+}
+2022-04-12 00:39:44.841442 fix spelling mistakes 2 ['\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n', '\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1]) \n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n']
+2022-04-12 00:39:44.841480 size on output set 2
+2022-04-12 00:39:44.841490 size on input set 2
+2022-04-12 00:39:48.350822 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip()) # strip() removes the newline character\n\nscores = {x: 0 for x in players} # dictionary comprehension\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    },
+    {
+      "index": 1,
+      "text": "import sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    }
+  ],
+  "created": 1649738385,
+  "object": "edit"
+}
+2022-04-12 00:39:48.351230 fix syntax errors 2 ['\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip()) # strip() removes the newline character\n\nscores = {x: 0 for x in players} # dictionary comprehension\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n', 'import sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n']
+2022-04-12 00:39:51.478695 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "import sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1]) \n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    },
+    {
+      "index": 1,
+      "text": "\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + \" wins!\")\nelse:\n    print(\"No winner!\")\n"
+    }
+  ],
+  "created": 1649738388,
+  "object": "edit"
+}
+2022-04-12 00:39:51.478894 fix syntax errors 2 ['import sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1]) \n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n', '\nimport sys\n\nn, p, m = [int(x) for x in sys.stdin.readline().split()]\nplayers = []\nfor i in range(n):\n    players.append(sys.stdin.readline().strip())\n\nscores = {x: 0 for x in players}\n\nfor i in range(m):\n    line = sys.stdin.readline().strip().split()\n    scores[line[0]] += int(line[1])\n\nwinners = []\nfor player in players:\n    if scores[player] >= p:\n        winners.append(player)\n\nif len(winners) > 0:\n    for winner in winners:\n        print(winner + " wins!")\nelse:\n    print("No winner!")\n']
+2022-04-12 00:39:51.478925 size on output set 4
+2022-04-12 00:39:51.478934 num operations 2
+2022-04-12 00:39:51.478938 size on input set 1
+2022-04-12 00:39:55.038601 fix spelling mistakes {
+  "choices": [
+    {
+      "error": {
+        "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+        "type": "invalid_edit"
+      },
+      "index": 0
+    },
+    {
+      "index": 1,
+      "text": "\nn, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input()] = 0\n\nfor i in range(m):\n    player, points = input().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + \" wins!\")\n        break\nelse:\n    print(\"No winner!\")\n"
+    }
+  ],
+  "created": 1649738391,
+  "object": "edit"
+}
+2022-04-12 00:39:55.038817 NO RESULT
+2022-04-12 00:39:55.038827 {
+  "error": {
+    "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+    "type": "invalid_edit"
+  },
+  "index": 0
+}
+2022-04-12 00:39:55.038900 fix spelling mistakes 1 ['\nn, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input()] = 0\n\nfor i in range(m):\n    player, points = input().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + " wins!")\n        break\nelse:\n    print("No winner!")\n']
+2022-04-12 00:39:55.038927 size on output set 1
+2022-04-12 00:39:55.038938 size on input set 1
+2022-04-12 00:39:58.218818 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "n, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input().strip()] = 0\n\nfor i in range(m):\n    player, points = input().strip().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + \" wins!\")\n        break\nelse:\n    print(\"No winner!\")\n"
+    },
+    {
+      "index": 1,
+      "text": "n, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input()] = 0\n\nfor i in range(m):\n    player, points = input().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + \" wins!\")\n        break\nelse:\n    print(\"No winner!\")\n"
+    }
+  ],
+  "created": 1649738395,
+  "object": "edit"
+}
+2022-04-12 00:39:58.219210 fix syntax errors 2 ['n, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input().strip()] = 0\n\nfor i in range(m):\n    player, points = input().strip().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + " wins!")\n        break\nelse:\n    print("No winner!")\n', 'n, p, m = [int(x) for x in input().split()]\nplayers = {}\n\nfor i in range(n):\n    players[input()] = 0\n\nfor i in range(m):\n    player, points = input().split()\n    players[player] += int(points)\n    if players[player] >= p:\n        print(player + " wins!")\n        break\nelse:\n    print("No winner!")\n']
+2022-04-12 00:39:58.219303 size on output set 2
+2022-04-12 00:39:58.219318 num operations 2
+2022-04-12 00:39:58.219323 size on input set 1
+2022-04-12 00:40:01.122091 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name:0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, \"wins\")\n            return\n    print(\"No winner\")\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name:0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, \"wins!\")\n            return\n    print(\"No winner!\")\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649738398,
+  "object": "edit"
+}
+2022-04-12 00:40:01.122250 fix spelling mistakes 2 ['\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name:0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, "wins")\n            return\n    print("No winner")\n\nif __name__ == \'__main__\':\n    main()\n', '\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name:0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, "wins!")\n            return\n    print("No winner!")\n\nif __name__ == \'__main__\':\n    main()\n']
+2022-04-12 00:40:01.122265 size on output set 2
+2022-04-12 00:40:01.122269 size on input set 2
+2022-04-12 00:40:05.647360 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score) \n        if scores[name] >= p: \n            print(name, \"wins!\")\n            return\n    print(\"No winner!\")\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649738401,
+  "object": "edit"
+}
+2022-04-12 00:40:05.647541 fix syntax errors 2 ["\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()\n", '\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score) \n        if scores[name] >= p: \n            print(name, "wins!")\n            return\n    print("No winner!")\n\nif __name__ == \'__main__\':\n    main()\n']
+2022-04-12 00:40:08.706762 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, \"wins\")\n            return\n    print(\"No winner\")\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name + \" wins\")\n            return\n    print(\"No winner\")\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649738405,
+  "object": "edit"
+}
+2022-04-12 00:40:08.707121 fix syntax errors 2 ['\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name, "wins")\n            return\n    print("No winner")\n\nif __name__ == \'__main__\':\n    main()\n', '\n\ndef main():\n    n, p, m = [int(x) for x in input().split()]\n    names = [input() for _ in range(n)]\n    scores = {name: 0 for name in names}\n    for _ in range(m):\n        name, score = input().split()\n        scores[name] += int(score)\n        if scores[name] >= p:\n            print(name + " wins")\n            return\n    print("No winner")\n\nif __name__ == \'__main__\':\n    main()\n']
+2022-04-12 00:40:08.707171 size on output set 4

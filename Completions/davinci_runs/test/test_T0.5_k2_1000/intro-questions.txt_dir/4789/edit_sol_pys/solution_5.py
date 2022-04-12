@@ -1,0 +1,17 @@
+
+
+def main():
+    K = int(input())
+    desks = list(map(int, input().split()))
+    pos = 1
+    passes = 0
+    while pos <= K:
+        for i in range(pos, K):
+            if desks[i] == i+1:
+                break
+                pos += 1
+        passes += 1
+    print(passes)
+
+if __name__ == '__main__':
+    main()

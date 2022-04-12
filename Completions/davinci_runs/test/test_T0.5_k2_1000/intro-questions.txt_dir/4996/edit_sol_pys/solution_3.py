@@ -1,0 +1,12 @@
+
+
+def encrypt(message, key):
+    encrypted = ""
+    for i in range(len(message)):
+        if i % 2 == 0:
+            encrypted = encrypted + chr((ord(message[i]) + ord(key[i % len(key)]) + 26) % 26 + ord('A'))
+        else:
+            encrypted = encrypted + chr((ord(message[i]) + ord(key[i % len(key)]) - 26) % 26 + ord('A'))
+    return encrypted
+
+print(encrypt(input(), input()))

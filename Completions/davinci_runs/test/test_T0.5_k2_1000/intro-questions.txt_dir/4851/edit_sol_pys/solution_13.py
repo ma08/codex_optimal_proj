@@ -1,0 +1,17 @@
+
+
+def main():
+    n = int(input())
+
+    while n % sum_digits(n) != 0:
+        n += 1
+
+    print(n)
+
+
+def sum_digits(n):
+    return sum(map(int, str(n)))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,1 @@
+{{Infobox_Company | company_name = | company_type = | company_slogan = | company_logo = | foundation = | location = | key_people = | num_employees = | industry = | products = | revenue = | operating_income = | net_income = | assets = | equity = | homepage = | footnotes = }}

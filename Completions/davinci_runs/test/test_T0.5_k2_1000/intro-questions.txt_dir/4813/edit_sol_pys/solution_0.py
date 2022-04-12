@@ -1,0 +1,23 @@
+
+import sys
+import random
+
+def main():
+    hangman = sys.stdin.readline().strip()
+    alphabet = sys.stdin.readline().strip()
+    guessed = set()
+    components = 0
+    while components < 10:
+        guess = random.choice(alphabet)
+        alphabet = alphabet.replace(guess, "")
+        if guess not in guessed:
+            guessed.add(guess)
+            if guess not in hangman:
+                components += 1
+            elif all(letter in guessed for letter in hangman):
+                print("WIN")
+                return
+    print("LOSE")
+
+if __name__ == "__main__":
+    main()

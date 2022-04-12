@@ -1,0 +1,28 @@
+import sys
+
+def main():
+    encoding = sys.stdin.readline().strip().split() # read input
+    if encoding[0] == "E":
+        print(encode(encoding[1])) # encode
+    else:
+        print(decode(encoding[1])) # decode
+
+def encode(string):
+    encoded = ""
+    count = 0
+    for i in range(len(string)):
+        count += 1
+        if i == len(string)-1 or string[i] != string[i+1]: # if last character or next character is different
+            encoded += string[i] + str(count)
+            count = 0
+    return encoded
+
+def decode(string):
+    decoded = ""
+    for i in range(len(string)):
+        if i % 2 == 0:
+            decoded += string[i] * int(string[i+1])
+    return decoded
+
+if __name__ == "__main__":
+    main()

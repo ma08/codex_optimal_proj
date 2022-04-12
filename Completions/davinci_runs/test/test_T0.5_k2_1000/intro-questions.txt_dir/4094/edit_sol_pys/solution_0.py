@@ -1,0 +1,14 @@
+
+def main():
+    k = int(input())
+    x = 7 % k
+    i = 1
+    while True:
+        if x == 0:
+            print(i)
+            return
+        x = (x * 10 + 7) % k
+        i += 1
+
+if __name__ == '__main__':
+    main()
