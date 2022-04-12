@@ -6,11 +6,18 @@ function echo_ts
 }
 input_dir="$1"
 COUNTER=$(( 0 ))
-LIMIT=$(( 112 ))
+LIMIT=$(( 1001 ))
+# CONTINUE_FROM=$(( 0 ))
+CONTINUE_FROM=$(( 4112 ))
+echo "---continuing----"
 for question in $input_dir/*/codex_solutions.json; do
-    echo_ts "completed: $COUNTER, next question: $question"
     arrIN=(${question//\// })
     num=${arrIN[-2]} 
+    num_question=$(expr $num+0)
+    if (( num_question < CONTINUE_FROM )); then
+        continue 
+    fi
+    echo_ts "completed: $COUNTER, next question: $question"
     out_dir=$input_dir/$num
     echo_ts "$num  $out_dir"
     # echo_ts $question

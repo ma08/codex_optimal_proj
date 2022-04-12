@@ -18,13 +18,13 @@ print = timestamped_print
 config = configparser.ConfigParser()
 config.read('API_keys.config')
 
-def random_number():
-    return random.randint(0,2)
+def random_number(tot_num):
+    return random.randint(0,tot_num-1)
 
 def set_api_key_rand():
     api_key_items = config.items( "keys" )
     api_keys = [key for en, key in config.items("keys")]
-    openai.api_key = api_keys[random_number()]
+    openai.api_key = api_keys[random_number(len(api_keys))]
 
 
 #openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -45,7 +45,7 @@ N_SOLUTIONS = 2
 
 # EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax error", "cleanup code"]
 EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax errors"]
-SLEEP_TIME_SECONDS = 4
+SLEEP_TIME_SECONDS = 1.5
 
 
 """
