@@ -5,5 +5,6 @@ input_dir="$1"
 for question in $input_dir/*/; do
     echo $question
     rm -rf $question/edit_sol_pys
+    rm -rf $question/edit_out.log
     rm -rf $question/codex_edit_solutions.json
 done
