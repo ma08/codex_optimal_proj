@@ -1,0 +1,11 @@
+
+# import sys
+
+# def main():
+#     n = int(sys.stdin.readline())
+#     print(int(bin(n)[:1:-1], 2))
+
+# if __name__ == "__main__":
+#     main()
+
+print(int(bin(int(input()))[:1:-1], 2))

@@ -1,0 +1,82 @@
+2022-04-09 20:40:45.253913 """
+There are $n$ points on a coordinate axis $OX$. The $i$-th point is located at the integer point $x_i$ and has a speed $v_i$. It is guaranteed that no two points occupy the same coordinate. All $n$ points move with the constant speed, the coordinate of the $i$-th point at the moment $t$ ($t$ can be non-integer) is calculated as $x_i + t \cdot v_i$.
+
+Consider two points $i$ and $j$. Let $d(i, j)$ be the minimum possible distance between these two points over any possible moments of time (even non-integer). It means that if two points $i$ and $j$ coincide at some moment, the value $d(i, j)$ will be $0$.
+
+Your task is to calculate the value $\sum\limits_{1 \le i < j \le n}$ $d(i, j)$ (the sum of minimum distances over all pairs of points).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of points.
+
+The second line of the input contains $n$ integers $x_1, x_2, \dots, x_n$ ($1 \le x_i \le 10^8$), where $x_i$ is the initial coordinate of the $i$-th point. It is guaranteed that all $x_i$ are distinct.
+
+The third line of the input contains $n$ integers $v_1, v_2, \dots, v_n$ ($-10^8 \le v_i \le 10^8$), where $v_i$ is the speed of the $i$-th point.
+
+
+-----Output-----
+
+Print one integer — the value $\sum\limits_{1 \le i < j \le n}$ $d(i, j)$ (the sum of minimum distances over all pairs of points).
+
+
+-----Examples-----
+Input
+3
+1 3 2
+-100 2 3
+
+Output
+3
+
+Input
+5
+2 1 4 3 5
+2 2 2 3 4
+
+Output
+19
+
+Input
+2
+2 1
+-3 0
+
+Output
+0
+"""
+2022-04-09 20:40:45.253936 --------------------------
+2022-04-09 20:41:31.587442 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int, input().split()))\nv = list(map(int, input().split()))\n\nx = [x[i] + v[i] for i in range(n)]\n\nx.sort()\n\nd = 0\nfor i in range(n - 1):\n    d += x[i + 1] - x[i]\n\nprint(d)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\nv = list(map(int, input().split()))\n\n# Sort by coordinate\nx_sorted = sorted(zip(x, v), key=lambda x: x[0])\n# Sort by speed\nv_sorted = sorted(zip(x, v), key=lambda x: x[1])\n\n# Get coordinate of first point\nfirst_x = x_sorted[0][0]\n# Get coordinate of last point\nlast_x = x_sorted[-1][0]\n\n# Get speed of first point\nfirst_v = x_sorted[0][1]\n# Get speed of last point\nlast_v = x_sorted[-1][1]\n\n# Get time when first point will overtake last point\nt = (last_x - first_x) / (first_v - last_v)\n\n# Get coordinate of first point at time t\nfirst_t = first_x + t * first_v\n# Get coordinate of last point at time t\nlast_t = last_x + t * last_v\n\n# Sum of minimum distances over all pairs of points\ns = 0\n\n# If first point overtakes last point, then minimum distance\n# between 1st and 2nd point is 0\nif first_t < last_t:\n\ts += 0\n# Otherwise, minimum distance between 1st and 2nd point\n# is distance between 1st and 2nd point at time t\nelse:\n\ts += (x_sorted[1][0] - x_sorted[0][0]) - (x_sorted[1][1] - x_sorted[0][1]) * t\n\n# If last point overtakes first point, then minimum distance\n# between n-1th and nth point is 0\nif last_t < first_t:\n\ts += 0\n# Otherwise, minimum distance between n-1th and nth point\n# is distance between n-1th and nth point at time t\nelse:\n\ts += (x_sorted[-1][0] - x_sorted[-2][0]) - (x_sorted[-1][1] - x_sorted[-2][1]) * t\n\n# Get number of points between 1st and 2nd point\nn1 = -1\nfor i in range(1, n):\n\tif x_sorted[i][0] < first_t:\n\t\tn1 += 1\n\telse:\n\t\tbreak\n\n# Get number of points between n-1th and nth point\nn2 = -1\nfor i in range(1, n):\n\tif x_sorted[-i][0] > last_t:\n\t\tn2 += 1\n\telse:\n\t\tbreak\n\n# Get number of points between 2nd and n-1th point\nn3 = n - n1 - n2 - 2\n\n# Add distances between points in the first group\nfor i in range(n1):\n\ts += (x_sorted[i+1][0] - x_sorted[i][0]) - (x_sorted[i+1][1] - x_sorted[i][1]) * t\n\n# Add distances between points in the second group\nfor i in range(n2):\n\ts += (x_sorted[-i-1][0] - x_sorted[-i-2][0]) - (x_sorted[-i-1][1] - x_sorted[-i-2][1]) * t\n\n# Add distances between points in the third group\nfor i in range(n3):\n\ts += (x_sorted[n1+i+2][0] - x_sorted[n1+i+1][0]) - (x_sorted[n1+i+2][1] - x_sorted[n1+i+1][1]) * t\n\n# Add distances between points in the first and second group\nfor i in range(n1):\n\tfor j in range(n2):\n\t\ts += abs(x_sorted[i+1][0] - x_sorted[-j-1][0]) - abs(x_sorted[i+1][1] - x_sorted[-j-1][1]) * t\n\n# Add distances between points in the first and third group\nfor i in range(n1):\n\tfor j in range(n3):\n\t\ts += abs(x_sorted[i+1][0] - x_sorted[n1+j+2][0]) - abs(x_sorted[i+1][1] - x_sorted[n1+j+2][1]) * t\n\n# Add distances between points in the second and third group\nfor i in range(n2):\n\tfor j in range(n3):\n\t\ts += abs(x_sorted[-i-1][0] - x_sorted[n1+j+2][0]) - abs(x_sorted[-i-1][1] - x_sorted[n1+j+2][1]) * t\n\n# Print sum\nprint(int(s))"
+    }
+  ],
+  "created": 1649551245,
+  "id": "cmpl-4vFvBbaTpZyCCYnKrQiIkZcutJiha",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:41:31.587674 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int, input().split()))\nv = list(map(int, input().split()))\n\nx = [x[i] + v[i] for i in range(n)]\n\nx.sort()\n\nd = 0\nfor i in range(n - 1):\n    d += x[i + 1] - x[i]\n\nprint(d)"
+}
+2022-04-09 20:41:31.587722 REASON stop
+2022-04-09 20:41:31.599495 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\nv = list(map(int, input().split()))\n\n# Sort by coordinate\nx_sorted = sorted(zip(x, v), key=lambda x: x[0])\n# Sort by speed\nv_sorted = sorted(zip(x, v), key=lambda x: x[1])\n\n# Get coordinate of first point\nfirst_x = x_sorted[0][0]\n# Get coordinate of last point\nlast_x = x_sorted[-1][0]\n\n# Get speed of first point\nfirst_v = x_sorted[0][1]\n# Get speed of last point\nlast_v = x_sorted[-1][1]\n\n# Get time when first point will overtake last point\nt = (last_x - first_x) / (first_v - last_v)\n\n# Get coordinate of first point at time t\nfirst_t = first_x + t * first_v\n# Get coordinate of last point at time t\nlast_t = last_x + t * last_v\n\n# Sum of minimum distances over all pairs of points\ns = 0\n\n# If first point overtakes last point, then minimum distance\n# between 1st and 2nd point is 0\nif first_t < last_t:\n\ts += 0\n# Otherwise, minimum distance between 1st and 2nd point\n# is distance between 1st and 2nd point at time t\nelse:\n\ts += (x_sorted[1][0] - x_sorted[0][0]) - (x_sorted[1][1] - x_sorted[0][1]) * t\n\n# If last point overtakes first point, then minimum distance\n# between n-1th and nth point is 0\nif last_t < first_t:\n\ts += 0\n# Otherwise, minimum distance between n-1th and nth point\n# is distance between n-1th and nth point at time t\nelse:\n\ts += (x_sorted[-1][0] - x_sorted[-2][0]) - (x_sorted[-1][1] - x_sorted[-2][1]) * t\n\n# Get number of points between 1st and 2nd point\nn1 = -1\nfor i in range(1, n):\n\tif x_sorted[i][0] < first_t:\n\t\tn1 += 1\n\telse:\n\t\tbreak\n\n# Get number of points between n-1th and nth point\nn2 = -1\nfor i in range(1, n):\n\tif x_sorted[-i][0] > last_t:\n\t\tn2 += 1\n\telse:\n\t\tbreak\n\n# Get number of points between 2nd and n-1th point\nn3 = n - n1 - n2 - 2\n\n# Add distances between points in the first group\nfor i in range(n1):\n\ts += (x_sorted[i+1][0] - x_sorted[i][0]) - (x_sorted[i+1][1] - x_sorted[i][1]) * t\n\n# Add distances between points in the second group\nfor i in range(n2):\n\ts += (x_sorted[-i-1][0] - x_sorted[-i-2][0]) - (x_sorted[-i-1][1] - x_sorted[-i-2][1]) * t\n\n# Add distances between points in the third group\nfor i in range(n3):\n\ts += (x_sorted[n1+i+2][0] - x_sorted[n1+i+1][0]) - (x_sorted[n1+i+2][1] - x_sorted[n1+i+1][1]) * t\n\n# Add distances between points in the first and second group\nfor i in range(n1):\n\tfor j in range(n2):\n\t\ts += abs(x_sorted[i+1][0] - x_sorted[-j-1][0]) - abs(x_sorted[i+1][1] - x_sorted[-j-1][1]) * t\n\n# Add distances between points in the first and third group\nfor i in range(n1):\n\tfor j in range(n3):\n\t\ts += abs(x_sorted[i+1][0] - x_sorted[n1+j+2][0]) - abs(x_sorted[i+1][1] - x_sorted[n1+j+2][1]) * t\n\n# Add distances between points in the second and third group\nfor i in range(n2):\n\tfor j in range(n3):\n\t\ts += abs(x_sorted[-i-1][0] - x_sorted[n1+j+2][0]) - abs(x_sorted[-i-1][1] - x_sorted[n1+j+2][1]) * t\n\n# Print sum\nprint(int(s))"
+}
+2022-04-09 20:41:31.599646 REASON stop

@@ -1,0 +1,83 @@
+2022-04-09 18:34:43.765811 """
+The only difference between easy and hard versions is the constraints.
+
+Vova likes pictures with kittens. The news feed in the social network he uses can be represented as an array of $n$ consecutive pictures (with kittens, of course). Vova likes all these pictures, but some are more beautiful than the others: the $i$-th picture has beauty $a_i$.
+
+Vova wants to repost exactly $x$ pictures in such a way that:   each segment of the news feed of at least $k$ consecutive pictures has at least one picture reposted by Vova;  the sum of beauty values of reposted pictures is maximum possible. 
+
+For example, if $k=1$ then Vova has to repost all the pictures in the news feed. If $k=2$ then Vova can skip some pictures, but between every pair of consecutive pictures Vova has to repost at least one of them.
+
+Your task is to calculate the maximum possible sum of values of reposted pictures if Vova follows conditions described above, or say that there is no way to satisfy all conditions.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, k$ and $x$ ($1 \le k, x \le n \le 200$) — the number of pictures in the news feed, the minimum length of segment with at least one repost in it and the number of pictures Vova is ready to repost.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the beauty of the $i$-th picture.
+
+
+-----Output-----
+
+Print -1 if there is no way to repost some pictures to satisfy all the conditions in the problem statement.
+
+Otherwise print one integer — the maximum sum of values of reposted pictures if Vova follows conditions described in the problem statement.
+
+
+-----Examples-----
+Input
+5 2 3
+5 1 3 10 1
+
+Output
+18
+
+Input
+6 1 5
+10 30 30 70 10 10
+
+Output
+-1
+
+Input
+4 3 1
+1 100 1 1
+
+Output
+100
+"""
+2022-04-09 18:34:43.765887 --------------------------
+2022-04-09 18:35:17.597023 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# Let's solve this problem using dynamic programming.\n# We will store the answer in the following array:\n#   dp[i][j] is the maximum possible sum of values of reposted pictures if we are at the end of the $i$-th segment of length $k$ and we have reposted $j$ pictures.\n# The answer to our problem is dp[n][x].\n#\n# Now let's consider the following cases:\n#   1. If $i < k$ then we have not yet reached the first segment of length $k$.\n#      In this case we can only repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#   2. If $i = k$ then we have reached the first segment of length $k$.\n#      In this case we have two options:\n#        a. We can repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#        b. We can not repost the current picture and the answer is dp[i][j] = dp[i - k][j].\n#   3. If $i > k$ then we are in the middle of some segment of length $k$.\n#      In this case we have two options:\n#        a. We can repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#        b. We can not repost the current picture and the answer is dp[i][j] = dp[i - 1][j].\n#\n# We can calculate the answer for all values of $i$ and $j$ using these three cases.\n# The answer to our problem is dp[n][x].\n#\n# Time Complexity: O(n * x)\n# Space Complexity: O(n * x)\n\nimport sys\nreadline = sys.stdin.readline\n\nn, k, x = map(int, readline().split())\na = list(map(int, readline().split()))\n\ndp = [[0 for _ in range(x + 1)] for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, min(i, x) + 1):\n        if i < k:\n            dp[i][j] = dp[i - 1][j - 1] + a[i - 1]\n        elif i == k:\n            dp[i][j] = max(dp[i - 1][j - 1] + a[i - 1], dp[i - k][j])\n        else:\n            dp[i][j] = max(dp[i - 1][j - 1] + a[i - 1], dp[i - 1][j])\n\nif dp[n][x] == 0:\n    print(-1)\nelse:\n    print(dp[n][x])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom itertools import accumulate\n\ndef solve(n, k, x, a):\n    if x < k:\n        return -1\n    elif k == 1:\n        return sum(a)\n    else:\n        acc = list(accumulate(a))\n        prefix = [0] + acc[:n-k+1]\n        suffix = acc[k-1:] + [0]\n        max_suffix = [0]\n        for i in range(n-k, -1, -1):\n            max_suffix.append(max(max_suffix[-1], suffix[i]))\n        max_suffix = max_suffix[::-1]\n        res = 0\n        for i in range(n-k+1):\n            res = max(res, prefix[i]+max_suffix[i+1])\n        return res\n\ndef main():\n    n, k, x = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(n, k, x, a))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649543684,
+  "id": "cmpl-4vDxEMoqj0vdJRxjxfmExf9FWQStm",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:35:17.597392 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# Let's solve this problem using dynamic programming.\n# We will store the answer in the following array:\n#   dp[i][j] is the maximum possible sum of values of reposted pictures if we are at the end of the $i$-th segment of length $k$ and we have reposted $j$ pictures.\n# The answer to our problem is dp[n][x].\n#\n# Now let's consider the following cases:\n#   1. If $i < k$ then we have not yet reached the first segment of length $k$.\n#      In this case we can only repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#   2. If $i = k$ then we have reached the first segment of length $k$.\n#      In this case we have two options:\n#        a. We can repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#        b. We can not repost the current picture and the answer is dp[i][j] = dp[i - k][j].\n#   3. If $i > k$ then we are in the middle of some segment of length $k$.\n#      In this case we have two options:\n#        a. We can repost the current picture and the answer is dp[i][j] = dp[i - 1][j - 1] + a_i.\n#        b. We can not repost the current picture and the answer is dp[i][j] = dp[i - 1][j].\n#\n# We can calculate the answer for all values of $i$ and $j$ using these three cases.\n# The answer to our problem is dp[n][x].\n#\n# Time Complexity: O(n * x)\n# Space Complexity: O(n * x)\n\nimport sys\nreadline = sys.stdin.readline\n\nn, k, x = map(int, readline().split())\na = list(map(int, readline().split()))\n\ndp = [[0 for _ in range(x + 1)] for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, min(i, x) + 1):\n        if i < k:\n            dp[i][j] = dp[i - 1][j - 1] + a[i - 1]\n        elif i == k:\n            dp[i][j] = max(dp[i - 1][j - 1] + a[i - 1], dp[i - k][j])\n        else:\n            dp[i][j] = max(dp[i - 1][j - 1] + a[i - 1], dp[i - 1][j])\n\nif dp[n][x] == 0:\n    print(-1)\nelse:\n    print(dp[n][x])"
+}
+2022-04-09 18:35:17.597468 REASON stop
+2022-04-09 18:35:17.599789 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom itertools import accumulate\n\ndef solve(n, k, x, a):\n    if x < k:\n        return -1\n    elif k == 1:\n        return sum(a)\n    else:\n        acc = list(accumulate(a))\n        prefix = [0] + acc[:n-k+1]\n        suffix = acc[k-1:] + [0]\n        max_suffix = [0]\n        for i in range(n-k, -1, -1):\n            max_suffix.append(max(max_suffix[-1], suffix[i]))\n        max_suffix = max_suffix[::-1]\n        res = 0\n        for i in range(n-k+1):\n            res = max(res, prefix[i]+max_suffix[i+1])\n        return res\n\ndef main():\n    n, k, x = map(int, stdin.readline().split())\n    a = list(map(int, stdin.readline().split()))\n    print(solve(n, k, x, a))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:35:17.600027 REASON stop

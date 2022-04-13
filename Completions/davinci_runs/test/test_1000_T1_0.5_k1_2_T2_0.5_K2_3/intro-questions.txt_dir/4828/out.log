@@ -1,0 +1,217 @@
+2022-04-09 22:52:45.194295 """
+Mirko purchased a new microprocessor. Unfortunately, he soon learned that many of his programs that he wrote for his old processor didn’t work on the new processor.
+
+Deep inside the technical documentation for both processors, he found an explanation. In order to work faster, the new processor imposes certain constraints on the machine code of programs, constraints that never existed on the previous model.
+
+The machine code of a processor consists of instructions that are executed sequentially. Each instruction uses a byte of memory. Also, instructions can have zero or more parameters, each of which uses an additional byte of memory. In machine code, parameters immediately follow an instruction.
+
+When formatted as text, machine code instructions are uppercase letters, while parameters are lowercase letters. For example:
+
+A
+
+b
+
+c
+
+b
+
+B
+
+c
+
+c
+
+C
+
+D
+
+e
+
+f
+
+g
+
+h
+
+This program consists of four instructions; the first takes three parameters, the second two, the third none and the fourth takes four parameters. The program uses $13$ bytes of memory.
+
+The new processor model fetches memory in four-byte chunks so each instruction must start at a memory address that is divisible by four (the first byte in memory is address $0$). To achieve that, we can insert NOP (no operation) instructions into the old program, instructions that do nothing and are not limited to memory locations divisible by four. The above program, adapted to run on the new processor, can look like this:
+
+A
+
+b
+
+c
+
+b
+
+B
+
+c
+
+c
+
+NOP
+
+C
+
+NOP
+
+NOP
+
+NOP
+
+D
+
+e
+
+f
+
+g
+
+h
+
+The instructions A, B, C and D are now at memory locations $0$, $4$, $8$ and $12$, which satisfies the processor’s constraints.
+
+Write a program that determines the smallest number of NOP instructions that need to be inserted for the given program to work on the new processor model.
+
+-----Input-----
+The input contains the machine code of the program written for the old processor model. The program will consist of at most $200$ English letters.
+
+The program will always start in an instruction, i.e., the first letter in the machine code will be uppercase. If an instruction appears more than once in the machine code, it will always take the same number of parameters.
+
+-----Output-----
+Output the smallest number of NOP instructions needed to adapt the program for the new processor.
+
+-----Examples-----
+Sample Input 1:
+Abcd
+Sample Output 1:
+0
+
+Sample Input 2:
+EaEbFabG
+Sample Output 2:
+5
+"""
+2022-04-09 22:52:45.194315 --------------------------
+2022-04-09 22:53:12.400445 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    code = input()\n    nop_count = 0\n    for index in range(len(code)):\n        if code[index].isupper():\n            if index % 4 != 0:\n                nop_count += 4 - (index % 4)\n    print(nop_count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    input = sys.stdin.readline().strip()\n    instructions = list(input)\n    parameters = []\n    for i in range(len(instructions)):\n        if instructions[i].isupper():\n            parameters.append(instructions[i+1:i+1+math.ceil(ord(instructions[i])/4)].count('a'))\n    print(math.ceil(max(parameters)/4))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    program = sys.stdin.read().strip()\n    nop_needed = 0\n    while len(program) > 0:\n        if len(program) % 4 == 0:\n            program = program[4:]\n        else:\n            program = program[1:]\n            nop_needed += 1\n    print(nop_needed)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    program = input()\n    num_nop = 0\n    for i in range(len(program)):\n        if i % 4 == 0 and program[i].isupper():\n            pass\n        elif i % 4 == 0 and program[i].islower():\n            num_nop += 1\n        elif i % 4 == 1 and program[i].isupper():\n            num_nop += 1\n        elif i % 4 == 1 and program[i].islower():\n            pass\n        elif i % 4 == 2 and program[i].isupper():\n            num_nop += 2\n        elif i % 4 == 2 and program[i].islower():\n            pass\n        elif i % 4 == 3 and program[i].isupper():\n            num_nop += 3\n        elif i % 4 == 3 and program[i].islower():\n            pass\n    print(num_nop)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef main():\n    code = stdin.readline().strip()\n    n = len(code)\n    dp = [0] * (n + 4)\n    dp[0] = 0\n    dp[1] = 0\n    dp[2] = 0\n    dp[3] = 0\n    for i in range(4, n + 1):\n        dp[i] = min(dp[i - 1], dp[i - 2], dp[i - 3], dp[i - 4]) + (1 if code[i - 1].isupper() else 0)\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef nop(inp):\n    n = len(inp)\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1]\n        if inp[i - 1].isupper():\n            if i % 4 != 0:\n                dp[i] = min(dp[i], dp[i - 1] + (4 - i % 4))\n    return dp[n]\n\ndef main():\n    inp = list(input())\n    print(nop(inp))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    #n = int(input())\n    #for i in range(n):\n    #    print(i)\n    #    print(input())\n    #    print(\"\")\n    #return\n\n    #s = input()\n    #print(s)\n    #return\n\n    s = input()\n    n = 0\n    for i in range(len(s)):\n        if (i % 4 == 0) and (s[i].isupper()):\n            pass\n        else:\n            n += 1\n    print(n)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef get_instructions(code):\n    instructions = []\n    instruction_count = 0\n    for index, char in enumerate(code):\n        if char.isupper():\n            instructions.append((char, index))\n            instruction_count += 1\n    return instructions, instruction_count\n\ndef get_parameters(code):\n    parameters = []\n    for index, char in enumerate(code):\n        if char.islower():\n            parameters.append((char, index))\n    return parameters\n\ndef get_nop_count(instructions, parameters):\n    nop_count = 0\n    for inst in instructions:\n        if inst[1] % 4 != 0:\n            nop_count += 4 - inst[1] % 4\n    return nop_count\n\ncode = input()\ninstructions, instruction_count = get_instructions(code)\nparameters = get_parameters(code)\nnop_count = get_nop_count(instructions, parameters)\nprint(nop_count)"
+    }
+  ],
+  "created": 1649559165,
+  "id": "cmpl-4vHyvJIh06z0Fpa2AbCAEPWuHAoOL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:53:12.400760 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    code = input()\n    nop_count = 0\n    for index in range(len(code)):\n        if code[index].isupper():\n            if index % 4 != 0:\n                nop_count += 4 - (index % 4)\n    print(nop_count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:53:12.400797 REASON stop
+2022-04-09 22:53:12.401619 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.401654 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    input = sys.stdin.readline().strip()\n    instructions = list(input)\n    parameters = []\n    for i in range(len(instructions)):\n        if instructions[i].isupper():\n            parameters.append(instructions[i+1:i+1+math.ceil(ord(instructions[i])/4)].count('a'))\n    print(math.ceil(max(parameters)/4))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:53:12.401786 REASON stop
+2022-04-09 22:53:12.402336 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.402366 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    program = sys.stdin.read().strip()\n    nop_needed = 0\n    while len(program) > 0:\n        if len(program) % 4 == 0:\n            program = program[4:]\n        else:\n            program = program[1:]\n            nop_needed += 1\n    print(nop_needed)\n\nmain()"
+}
+2022-04-09 22:53:12.402438 REASON stop
+2022-04-09 22:53:12.402862 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.402892 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    program = input()\n    num_nop = 0\n    for i in range(len(program)):\n        if i % 4 == 0 and program[i].isupper():\n            pass\n        elif i % 4 == 0 and program[i].islower():\n            num_nop += 1\n        elif i % 4 == 1 and program[i].isupper():\n            num_nop += 1\n        elif i % 4 == 1 and program[i].islower():\n            pass\n        elif i % 4 == 2 and program[i].isupper():\n            num_nop += 2\n        elif i % 4 == 2 and program[i].islower():\n            pass\n        elif i % 4 == 3 and program[i].isupper():\n            num_nop += 3\n        elif i % 4 == 3 and program[i].islower():\n            pass\n    print(num_nop)\n\nmain()"
+}
+2022-04-09 22:53:12.402956 REASON stop
+2022-04-09 22:53:12.403344 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.403372 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef main():\n    code = stdin.readline().strip()\n    n = len(code)\n    dp = [0] * (n + 4)\n    dp[0] = 0\n    dp[1] = 0\n    dp[2] = 0\n    dp[3] = 0\n    for i in range(4, n + 1):\n        dp[i] = min(dp[i - 1], dp[i - 2], dp[i - 3], dp[i - 4]) + (1 if code[i - 1].isupper() else 0)\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:53:12.403438 REASON stop
+2022-04-09 22:53:12.403677 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.403690 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef nop(inp):\n    n = len(inp)\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1]\n        if inp[i - 1].isupper():\n            if i % 4 != 0:\n                dp[i] = min(dp[i], dp[i - 1] + (4 - i % 4))\n    return dp[n]\n\ndef main():\n    inp = list(input())\n    print(nop(inp))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:53:12.403728 REASON stop
+2022-04-09 22:53:12.403958 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.403971 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    #n = int(input())\n    #for i in range(n):\n    #    print(i)\n    #    print(input())\n    #    print(\"\")\n    #return\n\n    #s = input()\n    #print(s)\n    #return\n\n    s = input()\n    n = 0\n    for i in range(len(s)):\n        if (i % 4 == 0) and (s[i].isupper()):\n            pass\n        else:\n            n += 1\n    print(n)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:53:12.404012 REASON stop
+2022-04-09 22:53:12.404246 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'
+2022-04-09 22:53:12.404259 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef get_instructions(code):\n    instructions = []\n    instruction_count = 0\n    for index, char in enumerate(code):\n        if char.isupper():\n            instructions.append((char, index))\n            instruction_count += 1\n    return instructions, instruction_count\n\ndef get_parameters(code):\n    parameters = []\n    for index, char in enumerate(code):\n        if char.islower():\n            parameters.append((char, index))\n    return parameters\n\ndef get_nop_count(instructions, parameters):\n    nop_count = 0\n    for inst in instructions:\n        if inst[1] % 4 != 0:\n            nop_count += 4 - inst[1] % 4\n    return nop_count\n\ncode = input()\ninstructions, instruction_count = get_instructions(code)\nparameters = get_parameters(code)\nnop_count = get_nop_count(instructions, parameters)\nprint(nop_count)"
+}
+2022-04-09 22:53:12.404319 REASON stop
+2022-04-09 22:53:12.404555 test/intro-questions.txt_dir/4828/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4828/solutions.json'

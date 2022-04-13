@@ -1,0 +1,51 @@
+import heapq
+
+
+def get_median(l, heap_low, heap_high):
+    if len(heap_low) == 0:
+        return heap_high[0]
+    elif len(heap_high) == 0:
+        return -heap_low[0]
+    if len(heap_low) > len(heap_high):
+        return -heap_low[0]
+    elif len(heap_low) < len(heap_high):
+        return heap_high[0]
+    else:
+        return (heap_high[0] - heap_low[0]) // 2
+
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    for i in range(n):
+        a[i] = int(a[i])
+    heap_low = []
+    heap_high = []
+    b = []
+    for i in range(n):
+        median = get_median(n, heap_low, heap_high)
+        if a[i] > median:
+            heapq.heappush(heap_high, a[i])
+        else:
+            heapq.heappush(heap_low, -a[i])
+        if len(heap_low) < len(heap_high):
+            heapq.heappush(heap_low, -heapq.heappop(heap_high))
+        elif len(heap_low) > len(heap_high) + 1:
+            heapq.heappush(heap_high, -heapq.heappop(heap_low))
+        b.append(get_median(n, heap_low, heap_high))
+    for i in range(n):
+        median = get_median(n, heap_low, heap_high)
+        if a[i] > median:
+            heapq.heappush(heap_high, a[i])
+        else:
+            heapq.heappush(heap_low, -a[i])
+        if len(heap_low) < len(heap_high):
+            heapq.heappush(heap_low, -heapq.heappop(heap_high))
+        elif len(heap_low) > len(heap_high) + 1:
+            heapq.heappush(heap_high, -heapq.heappop(heap_low))
+        b.append(get_median(n, heap_low, heap_high))
+    print(*b)
+
+
+if __name__ == "__main__":
+    main()

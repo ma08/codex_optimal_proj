@@ -1,0 +1,2 @@
+
+print(decrypt(input(), input()))

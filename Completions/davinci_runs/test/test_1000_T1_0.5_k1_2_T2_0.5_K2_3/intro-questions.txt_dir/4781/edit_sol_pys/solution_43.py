@@ -1,0 +1,20 @@
+
+k, n = map(int, input().split())
+players = [False for i in range(8)]
+players[k-1] = True
+for i in range(n):
+    time, ans = map(str, input().split())
+    time = int(time)
+    if ans == 'T':
+        print(players.index(True)+1)
+    elif ans == 'N':
+        players = [False for i in range(8)]
+    elif ans == 'P':
+        players = [False for i in range(8)]
+        players[(k-1+1)%8] = True
+    if time >= 210:
+        print(players.index(True)+1) # index of the player who is playing at the end
+        break
+    else:
+        players = [False for i in range(8)]
+        players[(players.index(True)+1)%8] = True

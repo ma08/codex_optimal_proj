@@ -1,0 +1,168 @@
+2022-04-09 23:07:29.213340 """
+“Our high speed camera failed at the most inappropriate moment,” said the director of the ZOO. “This sequence with the falcon hurtling towards the ground at $250\mathrm{km}/\mathrm{h}$ is absolutely stunning. I had hopes that we could use the last frame as a promotion picture, it would look great with the autumn trees in the background. But the falcon is too high, even in this very last frame caught by the camera before it broke.”
+
+“Cut out the falcon from the picture in Photoshop and just move it downwards,” said the falconer. “It’s a routine photo manipulation.”
+
+“That would be unnatural,” objected the director. “We cannot show the public such obviously doctored pictures.”
+
+“On the contrary, that would be quite natural,” replied the falconer. “Look, the falcon in such speed does not change its orientation so much, its shape in the picture remains virtually the same in a few consecutive frames. So if you move it down artificially it would still be a very good approximation of the natural situation which really occurred during the filming.”
+
+After some hesitation, the director agreed with the proposition.
+
+You are given two last frames of the camera with the silhouette of the falcon in both frames. The background in the frames is identical, only the silhouette of the falcon is at a different position in both frames. The falcon is moving at a constant speed and the time between consecutive camera frames is also constant. Your task is to reconstruct the missing next frame in which the position of the falcon silhouette is changed according to its speed and to the speed of the camera. The background in the new frame should be the same as the background in the previous two frames.
+
+-----Input-----
+Each test case starts with a line containing two integers $M$, $N$ ($2 \leq M, N \leq 1000$) and a printable ASCII character $C$ enclosed in single quotes. The values on the line are separated by spaces. Next, there are $M$ lines, one empty line, and other $M$ lines. The first $M$ lines represent the first frame, the last $M$ lines represent the second frame. Each nonempty line contains string of exactly $N$ printable ASCII characters. Each character represents one pixel of the original frame. Each frame contains a complete silhouette of the falcon. In both frames all silhouette pixels are represented by the character $C$ and all pixels which do not belong to the silhouette are represented by characters other than $C$. The pixels of the silhouettes in both frames do not overlap even partially, in other words, no coordinates of a pixel of the silhouette in the first frame are the same as the coordinates of any pixel of the silhouette in the second frame. The shapes of the silhouettes in both frames are identical. The silhouette in any frame can be shifted by some number of pixels horizontally and/or vertically so that its position exactly matches the position of the silhouette in the other frame. The silhouettes do not rotate. For various technical reasons the silhouette image might not be connected, it may comprise of more disconnected regions in the frame.
+
+A printable ASCII character is an element of the subset of ASCII characters starting with the exclamation mark character (’!’, ASCII code $33$ in decimal) and ending with the tilde character (’~’, ASCII code $126$ in decimal).
+
+-----Output-----
+For each test case, print a picture frame consisting of $M$ lines with $N$ characters each. The frame should represent the result of exact extrapolation of the falcon’s movement based on the two input frames. If the silhouette image in the second input frame is shifted horizontally and vertically by some number of pixels relatively to the first input frame then the silhouette image in the result frame should be shifted horizontally and vertically by the same number of pixels relatively to the second frame. It is possible that the falcon’s silhouette might appear in the frame picture only partially or it may not appear there at all. Print one empty line after each case.
+
+-----Examples-----
+Sample Input 1:
+2 2 'X'
+X^
+--
+
+.X
+--
+Sample Output 1:
+.^
+--
+
+Sample Input 2:
+3 12 'A'
+ABABABABABAC
+BABABABABABB
+ABABABABABAB
+
+BABABABABABA
+BBABABABABAB
+BABABABABABA
+Sample Output 2:
+BBABABABABAC
+BBBABABABABA
+BBABABABABAB
+"""
+2022-04-09 23:07:29.213370 --------------------------
+2022-04-09 23:08:26.172674 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # read input\n    n, m, char = sys.stdin.readline().split()\n    n = int(n)\n    m = int(m)\n    char = char[1]\n    image = ['']*n\n    for i in range(n):\n        image[i] = sys.stdin.readline().rstrip()\n    sys.stdin.readline() # empty line\n    for i in range(n):\n        image[i] += sys.stdin.readline().rstrip()\n\n    # find the falcon\n    falcon = []\n    for i in range(n):\n        for j in range(m*2):\n            if image[i][j] == char:\n                falcon.append((i,j))\n\n    # find the leftmost and rightmost points\n    # the points are needed to be able to calculate the center of the falcon\n    left = falcon[0]\n    right = falcon[0]\n    for i in range(1, len(falcon)):\n        if falcon[i][1] < left[1]:\n            left = falcon[i]\n        if falcon[i][1] > right[1]:\n            right = falcon[i]\n\n    # calculate the center of the falcon\n    center = (left[0], left[1] + (right[1] - left[1])//2)\n\n    # find the topmost and bottommost points\n    # the points are needed to be able to calculate the vertical shift\n    top = falcon[0]\n    bottom = falcon[0]\n    for i in range(1, len(falcon)):\n        if falcon[i][0] < top[0]:\n            top = falcon[i]\n        if falcon[i][0] > bottom[0]:\n            bottom = falcon[i]\n\n    # calculate the vertical shift\n    shift = (bottom[0] - top[0])//2\n\n    # create the result image\n    result = ['']*n\n    for i in range(n):\n        result[i] = image[i][:m]\n\n    # shift the falcon vertically\n    for i in range(len(falcon)):\n        result[falcon[i][0]][falcon[i][1]-m] = char\n\n    # shift the falcon horizontally\n    for i in range(len(falcon)):\n        result[falcon[i][0]][falcon[i][1]-m+1] = char\n\n    # print the result\n    for i in range(n):\n        print(result[i])\n    print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    m, n, c = input().split()\n    m, n = int(m), int(n)\n    frame1 = [input().rstrip() for _ in range(m)]\n    input()\n    frame2 = [input().rstrip() for _ in range(m)]\n\n    frame3 = []\n    for i in range(m):\n        frame3.append(\"\")\n        for j in range(n):\n            if frame1[i][j] == frame2[i][j]:\n                frame3[i] += frame2[i][j]\n            elif frame1[i][j] == c:\n                frame3[i] += frame1[i][j]\n            else:\n                frame3[i] += frame2[i][j]\n\n    for line in frame3:\n        print(line)\n    print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nM, N, C = input().split()\nM = int(M)\nN = int(N)\n\nframe1 = [input() for i in range(M)]\ninput()\nframe2 = [input() for i in range(M)]\n\ndef findFalcon(frame, C):\n    for i in range(M):\n        for j in range(N):\n            if frame[i][j] == C:\n                return i, j\n\ndef shift(frame1, frame2, C):\n    x1, y1 = findFalcon(frame1, C)\n    x2, y2 = findFalcon(frame2, C)\n    return x1 - x2, y1 - y2\n\ndef shiftFrame(frame, dx, dy):\n    return [frame[i][:dy] + ' '*(N - dy) for i in range(M - dx)] + ['']*dx\n\ndef solve(frame1, frame2, C):\n    dx, dy = shift(frame1, frame2, C)\n    shiftedFrame1 = shiftFrame(frame1, dx, dy)\n    shiftedFrame2 = shiftFrame(frame2, dx, dy)\n    for i in range(M):\n        for j in range(N):\n            if frame2[i][j] == C:\n                shiftedFrame1[i] = shiftedFrame1[i][:j] + C + shiftedFrame1[i][j+1:]\n    return shiftedFrame1\n\nprint('\\n'.join(solve(frame1, frame2, C)))\nprint()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        m, n, c = line.split()\n        m = int(m)\n        n = int(n)\n        \n        frame1 = []\n        for i in range(m):\n            frame1.append(sys.stdin.readline().strip())\n        \n        sys.stdin.readline()\n        \n        frame2 = []\n        for i in range(m):\n            frame2.append(sys.stdin.readline().strip())\n        \n        frame3 = []\n        for i in range(m):\n            frame3.append('')\n            for j in range(n):\n                if frame1[i][j] == c:\n                    frame3[i] += c\n                elif frame2[i][j] == c:\n                    frame3[i] += c\n                else:\n                    frame3[i] += '.'\n        \n        for i in range(m):\n            print(frame3[i])\n        \n        print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    while True:\n        line = sys.stdin.readline()\n        if line == \"\":\n            break\n        M, N, C = line.split()\n        M = int(M)\n        N = int(N)\n        first = []\n        for i in range(M):\n            first.append(sys.stdin.readline())\n        sys.stdin.readline()\n        second = []\n        for i in range(M):\n            second.append(sys.stdin.readline())\n        for i in range(M):\n            for j in range(N):\n                if second[i][j] == C:\n                    sys.stdout.write(first[i][j])\n                else:\n                    sys.stdout.write(second[i][j])\n            sys.stdout.write(\"\\n\")\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    M, N, C = input().split()\n    M = int(M)\n    N = int(N)\n\n    frame1 = []\n    frame2 = []\n    for i in range(M):\n        frame1.append(input())\n    input()\n    for i in range(M):\n        frame2.append(input())\n\n    #print(frame1)\n    #print(frame2)\n\n    # find the falcon in the first frame\n    #falcon1 = []\n    #for i in range(M):\n    #    for j in range(N):\n    #        if frame1[i][j] == C:\n    #            falcon1.append((i, j))\n    #print(falcon1)\n\n    # find the falcon in the second frame\n    #falcon2 = []\n    #for i in range(M):\n    #    for j in range(N):\n    #        if frame2[i][j] == C:\n    #            falcon2.append((i, j))\n    #print(falcon2)\n\n    # find the falcon in the first frame\n    falcon1 = []\n    for i in range(M):\n        for j in range(N):\n            if frame1[i][j] == C:\n                falcon1.append((i, j))\n\n    # find the falcon in the second frame\n    falcon2 = []\n    for i in range(M):\n        for j in range(N):\n            if frame2[i][j] == C:\n                falcon2.append((i, j))\n\n    # find the centroid of the falcon in the first frame\n    cx1 = 0\n    cy1 = 0\n    for point in falcon1:\n        cx1 += point[0]\n        cy1 += point[1]\n    cx1 = int(cx1/len(falcon1))\n    cy1 = int(cy1/len(falcon1))\n    #print(cx1, cy1)\n\n    # find the centroid of the falcon in the second frame\n    cx2 = 0\n    cy2 = 0\n    for point in falcon2:\n        cx2 += point[0]\n        cy2 += point[1]\n    cx2 = int(cx2/len(falcon2))\n    cy2 = int(cy2/len(falcon2))\n    #print(cx2, cy2)\n\n    # find the distance between the centroids\n    distance = ((cx1-cx2)**2 + (cy1-cy2)**2)**0.5\n    #print(distance)\n\n    # find the direction of the falcon\n    direction = [cx2-cx1, cy2-cy1]\n    #print(direction)\n\n    # find the movement of the falcon\n    movement = [int(direction[0]/distance), int(direction[1]/distance)]\n    #print(movement)\n\n    # find the new position of the falcon\n    cx3 = cx2 + movement[0]\n    cy3 = cy2 + movement[1]\n    #print(cx3, cy3)\n\n    # create the new frame\n    frame3 = []\n    for i in range(M):\n        frame3.append(frame2[i])\n\n    # move the falcon\n    for point in falcon2:\n        frame3[point[0]][point[1]] = '.'\n        frame3[point[0]+movement[0]][point[1]+movement[1]] = C\n\n    #print(frame3)\n    for line in frame3:\n        print(line)\n    print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_input(path):\n    with open(path) as f:\n        lines = [line.strip() for line in f.readlines()]\n    return lines\n\ndef write_output(path, output):\n    with open(path, 'w') as f:\n        f.write(output)\n\ndef solve(lines):\n    M, N, C = lines[0].split()\n    M, N = int(M), int(N)\n    # print(M, N, C)\n    # print(lines[1:M+1])\n    # print(lines[M+1:3*M+1])\n    first_frame = lines[1:M+1]\n    second_frame = lines[M+1:3*M+1]\n    result = []\n    for i in range(M):\n        result.append('')\n        for j in range(N):\n            if first_frame[i][j] == C:\n                if second_frame[i][j] == C:\n                    result[i] += C\n                else:\n                    result[i] += second_frame[i][j]\n            else:\n                result[i] += first_frame[i][j]\n    return '\\n'.join(result)\n\ndef main():\n    lines = read_input(sys.argv[1])\n    output = solve(lines)\n    write_output(sys.argv[2], output)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    M, N, C = input().split()\n    M = int(M)\n    N = int(N)\n    first = []\n    second = []\n    for i in range(M):\n        first.append(list(input()))\n    for i in range(M):\n        second.append(list(input()))\n    for i in range(M):\n        for j in range(N):\n            if first[i][j] != C:\n                first[i][j] = '.'\n            else:\n                first[i][j] = 'X'\n            if second[i][j] != C:\n                second[i][j] = '.'\n            else:\n                second[i][j] = 'X'\n    for i in range(M):\n        for j in range(N):\n            if second[i][j] == 'X' and first[i][j] != 'X':\n                second[i][j] = '^'\n    for i in range(M):\n        for j in range(N):\n            if second[i][j] == '^':\n                second[i][j] = '.'\n            if second[i][j] == 'X':\n                second[i][j] = C\n    for i in range(M):\n        print(''.join(second[i]))\n    print()\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649560049,
+  "id": "cmpl-4vIDB4a4yKjPYW62kkk0nYsARTP1Z",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:08:26.173095 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # read input\n    n, m, char = sys.stdin.readline().split()\n    n = int(n)\n    m = int(m)\n    char = char[1]\n    image = ['']*n\n    for i in range(n):\n        image[i] = sys.stdin.readline().rstrip()\n    sys.stdin.readline() # empty line\n    for i in range(n):\n        image[i] += sys.stdin.readline().rstrip()\n\n    # find the falcon\n    falcon = []\n    for i in range(n):\n        for j in range(m*2):\n            if image[i][j] == char:\n                falcon.append((i,j))\n\n    # find the leftmost and rightmost points\n    # the points are needed to be able to calculate the center of the falcon\n    left = falcon[0]\n    right = falcon[0]\n    for i in range(1, len(falcon)):\n        if falcon[i][1] < left[1]:\n            left = falcon[i]\n        if falcon[i][1] > right[1]:\n            right = falcon[i]\n\n    # calculate the center of the falcon\n    center = (left[0], left[1] + (right[1] - left[1])//2)\n\n    # find the topmost and bottommost points\n    # the points are needed to be able to calculate the vertical shift\n    top = falcon[0]\n    bottom = falcon[0]\n    for i in range(1, len(falcon)):\n        if falcon[i][0] < top[0]:\n            top = falcon[i]\n        if falcon[i][0] > bottom[0]:\n            bottom = falcon[i]\n\n    # calculate the vertical shift\n    shift = (bottom[0] - top[0])//2\n\n    # create the result image\n    result = ['']*n\n    for i in range(n):\n        result[i] = image[i][:m]\n\n    # shift the falcon vertically\n    for i in range(len(falcon)):\n        result[falcon[i][0]][falcon[i][1]-m] = char\n\n    # shift the falcon horizontally\n    for i in range(len(falcon)):\n        result[falcon[i][0]][falcon[i][1]-m+1] = char\n\n    # print the result\n    for i in range(n):\n        print(result[i])\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.173144 REASON stop
+2022-04-09 23:08:26.173868 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.173888 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    m, n, c = input().split()\n    m, n = int(m), int(n)\n    frame1 = [input().rstrip() for _ in range(m)]\n    input()\n    frame2 = [input().rstrip() for _ in range(m)]\n\n    frame3 = []\n    for i in range(m):\n        frame3.append(\"\")\n        for j in range(n):\n            if frame1[i][j] == frame2[i][j]:\n                frame3[i] += frame2[i][j]\n            elif frame1[i][j] == c:\n                frame3[i] += frame1[i][j]\n            else:\n                frame3[i] += frame2[i][j]\n\n    for line in frame3:\n        print(line)\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.173940 REASON stop
+2022-04-09 23:08:26.174326 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.174361 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nM, N, C = input().split()\nM = int(M)\nN = int(N)\n\nframe1 = [input() for i in range(M)]\ninput()\nframe2 = [input() for i in range(M)]\n\ndef findFalcon(frame, C):\n    for i in range(M):\n        for j in range(N):\n            if frame[i][j] == C:\n                return i, j\n\ndef shift(frame1, frame2, C):\n    x1, y1 = findFalcon(frame1, C)\n    x2, y2 = findFalcon(frame2, C)\n    return x1 - x2, y1 - y2\n\ndef shiftFrame(frame, dx, dy):\n    return [frame[i][:dy] + ' '*(N - dy) for i in range(M - dx)] + ['']*dx\n\ndef solve(frame1, frame2, C):\n    dx, dy = shift(frame1, frame2, C)\n    shiftedFrame1 = shiftFrame(frame1, dx, dy)\n    shiftedFrame2 = shiftFrame(frame2, dx, dy)\n    for i in range(M):\n        for j in range(N):\n            if frame2[i][j] == C:\n                shiftedFrame1[i] = shiftedFrame1[i][:j] + C + shiftedFrame1[i][j+1:]\n    return shiftedFrame1\n\nprint('\\n'.join(solve(frame1, frame2, C)))\nprint()"
+}
+2022-04-09 23:08:26.174446 REASON stop
+2022-04-09 23:08:26.174886 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.174924 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        m, n, c = line.split()\n        m = int(m)\n        n = int(n)\n        \n        frame1 = []\n        for i in range(m):\n            frame1.append(sys.stdin.readline().strip())\n        \n        sys.stdin.readline()\n        \n        frame2 = []\n        for i in range(m):\n            frame2.append(sys.stdin.readline().strip())\n        \n        frame3 = []\n        for i in range(m):\n            frame3.append('')\n            for j in range(n):\n                if frame1[i][j] == c:\n                    frame3[i] += c\n                elif frame2[i][j] == c:\n                    frame3[i] += c\n                else:\n                    frame3[i] += '.'\n        \n        for i in range(m):\n            print(frame3[i])\n        \n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.174997 REASON stop
+2022-04-09 23:08:26.175417 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.175455 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    while True:\n        line = sys.stdin.readline()\n        if line == \"\":\n            break\n        M, N, C = line.split()\n        M = int(M)\n        N = int(N)\n        first = []\n        for i in range(M):\n            first.append(sys.stdin.readline())\n        sys.stdin.readline()\n        second = []\n        for i in range(M):\n            second.append(sys.stdin.readline())\n        for i in range(M):\n            for j in range(N):\n                if second[i][j] == C:\n                    sys.stdout.write(first[i][j])\n                else:\n                    sys.stdout.write(second[i][j])\n            sys.stdout.write(\"\\n\")\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:08:26.175527 REASON stop
+2022-04-09 23:08:26.175949 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.175989 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    M, N, C = input().split()\n    M = int(M)\n    N = int(N)\n\n    frame1 = []\n    frame2 = []\n    for i in range(M):\n        frame1.append(input())\n    input()\n    for i in range(M):\n        frame2.append(input())\n\n    #print(frame1)\n    #print(frame2)\n\n    # find the falcon in the first frame\n    #falcon1 = []\n    #for i in range(M):\n    #    for j in range(N):\n    #        if frame1[i][j] == C:\n    #            falcon1.append((i, j))\n    #print(falcon1)\n\n    # find the falcon in the second frame\n    #falcon2 = []\n    #for i in range(M):\n    #    for j in range(N):\n    #        if frame2[i][j] == C:\n    #            falcon2.append((i, j))\n    #print(falcon2)\n\n    # find the falcon in the first frame\n    falcon1 = []\n    for i in range(M):\n        for j in range(N):\n            if frame1[i][j] == C:\n                falcon1.append((i, j))\n\n    # find the falcon in the second frame\n    falcon2 = []\n    for i in range(M):\n        for j in range(N):\n            if frame2[i][j] == C:\n                falcon2.append((i, j))\n\n    # find the centroid of the falcon in the first frame\n    cx1 = 0\n    cy1 = 0\n    for point in falcon1:\n        cx1 += point[0]\n        cy1 += point[1]\n    cx1 = int(cx1/len(falcon1))\n    cy1 = int(cy1/len(falcon1))\n    #print(cx1, cy1)\n\n    # find the centroid of the falcon in the second frame\n    cx2 = 0\n    cy2 = 0\n    for point in falcon2:\n        cx2 += point[0]\n        cy2 += point[1]\n    cx2 = int(cx2/len(falcon2))\n    cy2 = int(cy2/len(falcon2))\n    #print(cx2, cy2)\n\n    # find the distance between the centroids\n    distance = ((cx1-cx2)**2 + (cy1-cy2)**2)**0.5\n    #print(distance)\n\n    # find the direction of the falcon\n    direction = [cx2-cx1, cy2-cy1]\n    #print(direction)\n\n    # find the movement of the falcon\n    movement = [int(direction[0]/distance), int(direction[1]/distance)]\n    #print(movement)\n\n    # find the new position of the falcon\n    cx3 = cx2 + movement[0]\n    cy3 = cy2 + movement[1]\n    #print(cx3, cy3)\n\n    # create the new frame\n    frame3 = []\n    for i in range(M):\n        frame3.append(frame2[i])\n\n    # move the falcon\n    for point in falcon2:\n        frame3[point[0]][point[1]] = '.'\n        frame3[point[0]+movement[0]][point[1]+movement[1]] = C\n\n    #print(frame3)\n    for line in frame3:\n        print(line)\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.176117 REASON stop
+2022-04-09 23:08:26.176540 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.176580 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_input(path):\n    with open(path) as f:\n        lines = [line.strip() for line in f.readlines()]\n    return lines\n\ndef write_output(path, output):\n    with open(path, 'w') as f:\n        f.write(output)\n\ndef solve(lines):\n    M, N, C = lines[0].split()\n    M, N = int(M), int(N)\n    # print(M, N, C)\n    # print(lines[1:M+1])\n    # print(lines[M+1:3*M+1])\n    first_frame = lines[1:M+1]\n    second_frame = lines[M+1:3*M+1]\n    result = []\n    for i in range(M):\n        result.append('')\n        for j in range(N):\n            if first_frame[i][j] == C:\n                if second_frame[i][j] == C:\n                    result[i] += C\n                else:\n                    result[i] += second_frame[i][j]\n            else:\n                result[i] += first_frame[i][j]\n    return '\\n'.join(result)\n\ndef main():\n    lines = read_input(sys.argv[1])\n    output = solve(lines)\n    write_output(sys.argv[2], output)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.176675 REASON stop
+2022-04-09 23:08:26.177145 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-09 23:08:26.177181 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    M, N, C = input().split()\n    M = int(M)\n    N = int(N)\n    first = []\n    second = []\n    for i in range(M):\n        first.append(list(input()))\n    for i in range(M):\n        second.append(list(input()))\n    for i in range(M):\n        for j in range(N):\n            if first[i][j] != C:\n                first[i][j] = '.'\n            else:\n                first[i][j] = 'X'\n            if second[i][j] != C:\n                second[i][j] = '.'\n            else:\n                second[i][j] = 'X'\n    for i in range(M):\n        for j in range(N):\n            if second[i][j] == 'X' and first[i][j] != 'X':\n                second[i][j] = '^'\n    for i in range(M):\n        for j in range(N):\n            if second[i][j] == '^':\n                second[i][j] = '.'\n            if second[i][j] == 'X':\n                second[i][j] = C\n    for i in range(M):\n        print(''.join(second[i]))\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:08:26.177261 REASON stop
+2022-04-09 23:08:26.177694 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'

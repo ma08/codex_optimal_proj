@@ -1,0 +1,158 @@
+2022-04-09 21:51:22.523764 """
+The Nordic Company of Passing Carriages is losing money at an alarming rate because most of their trains are empty. However, on some lines the passengers are complaining that they cannot fit in the cars and have to wait for the next train!
+
+The authorities want to fix this situation. They asked their station masters to write down, for a given train, how many people left the train at their station, how many went in, and how many had to wait. Then they hired your company of highly paid consultants to assign properly sized trains to their routes.
+
+You just received the measurements for a train, but before feeding them to your optimisation algorithm you remembered that they were collected on a snowy day, so any sensible station master would have preferred to stay inside their cabin and make up the numbers instead of going outside and counting.
+
+Verify your hunch by checking whether the input is inconsistent, i.e., at every time the number of people in the train did not exceed the capacity nor was below $0$ and no passenger waited in vain (i.e., waited on the station when there was room in the train). The train should start and finish the journey empty, in particular passengers should not wait for the train at the last station.
+
+-----Input-----
+The first line contains two integers $C$ and $n$ ($1 \leq C \leq 10^9$, $2 \leq n \leq 100$), the total capacity and the number of stations the train stops in. The next $n$ lines contain three integers each, the number of people that left the train, entered the train, and had to stay at a station. Lines are given in the same order as the train visits each station. All integers are between $0$ and $10^9$ inclusive.
+
+-----Output-----
+One line containing one word: possible if the measurements are consistent, impossible otherwise.
+
+-----Examples-----
+Sample Input 1:
+1 2
+0 1 1
+1 0 0
+Sample Output 1:
+possible
+
+Sample Input 2:
+1 2
+1 0 0
+0 1 0
+Sample Output 2:
+impossible
+
+Sample Input 3:
+1 2
+0 1 0
+1 0 1
+Sample Output 3:
+impossible
+"""
+2022-04-09 21:51:22.523782 --------------------------
+2022-04-09 21:51:53.665121 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#C: capacity of train\n#n: number of stations\n#s: number of people that left the train\n#e: number of people that entered the train\n#w: number of people that had to stay at a station\nC, n = [int(x) for x in input().split()]\n\nfor i in range(n):\n    s, e, w = [int(x) for x in input().split()]\n    if i == 0:\n        #first station\n        if s > 0 or e > C or w > C or (w > 0 and e > 0):\n            print(\"impossible\")\n            exit(0)\n        else:\n            C -= e\n            continue\n    if i == n-1:\n        #last station\n        if s > C or e > 0 or w > 0:\n            print(\"impossible\")\n            exit(0)\n        else:\n            C += s\n            continue\n    else:\n        #middle station\n        if s > C or e > C or w > C or (w > 0 and e > 0):\n            print(\"impossible\")\n            exit(0)\n        else:\n            C += s\n            C -= e\n            continue\n\nprint(\"possible\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#!/usr/bin/python\nimport sys\n\ndef main():\n    inp = sys.stdin.read().splitlines()\n    cap, n = [int(x) for x in inp[0].split()]\n    nums = [[int(x) for x in x.split()] for x in inp[1:]]\n    curr = 0\n    for i in range(len(nums)):\n        curr -= nums[i][0]\n        if curr < 0 or curr + nums[i][1] > cap or (curr + nums[i][1] < cap and nums[i][2] != 0) or (i == len(nums) - 1 and nums[i][2] != 0):\n            print(\"impossible\")\n            return\n        curr += nums[i][1]\n    print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    capacity, num_stations = map(int, input().split())\n    passengers = [0]\n    for i in range(num_stations):\n        left, entered, waited = map(int, input().split())\n        passengers.append(passengers[-1] + entered - left)\n    if passengers[-1] != 0 or max(passengers) > capacity or min(passengers) < 0:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef possible(C, n, stations):\n    \"\"\"\n    >>> possible(1, 2, [[0, 1, 1], [1, 0, 0]])\n    possible\n    >>> possible(1, 2, [[1, 0, 0], [0, 1, 0]])\n    impossible\n    >>> possible(1, 2, [[0, 1, 0], [1, 0, 1]])\n    impossible\n    >>> possible(2, 4, [[0, 1, 0], [0, 1, 0], [1, 0, 0], [0, 0, 0]])\n    possible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [1, 0, 0]])\n    possible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 1], [1, 0, 0]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [1, 0, 1], [1, 0, 0]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [1, 0, 1]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [0, 0, 1]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [0, 1, 1]])\n    impossible\n    \"\"\"\n    for i in range(n):\n        if stations[i][2] > 0 and stations[i][1] > 0:\n            return \"impossible\"\n        if stations[i][0] > C:\n            return \"impossible\"\n        if stations[i][2] > 0 and stations[i][0] + stations[i][1] < C:\n            return \"impossible\"\n    return \"possible\"\n\nif __name__ == \"__main__\":\n    C, n = map(int, sys.stdin.readline().split())\n    stations = [list(map(int, sys.stdin.readline().split())) for i in range(n)]\n    print(possible(C, n, stations))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    cap, _ = map(int, input().split())\n    for _ in range(int(input())):\n        left, entered, waited = map(int, input().split())\n        cap += left\n        cap -= entered\n        if cap < 0 or waited > 0 and cap == 0:\n            print(\"impossible\")\n            return\n    print(\"possible\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    C, n = map(int, input().split())\n    passengers = [0]\n    for _ in range(n):\n        left, entered, waited = map(int, input().split())\n        passengers.append(passengers[-1] + entered - left + waited)\n    print(\"possible\" if all([0 <= x <= C for x in passengers]) else \"impossible\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    capacity, num_stations = map(int, sys.stdin.readline().split())\n    for i in range(num_stations):\n        left, entered, waiting = map(int, sys.stdin.readline().split())\n        if i == 0:\n            people = left\n        else:\n            people += entered - left\n            if people < 0 or people > capacity or (waiting > 0 and people == capacity):\n                print(\"impossible\")\n                return\n    if people > 0:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"Train\"\"\"\n    cap, sta = map(int, input().split())\n    flag = 0\n    for _ in range(sta):\n        lft, ent, wait = map(int, input().split())\n        if cap - lft + ent < 0 or cap - lft + ent - wait < 0:\n            flag = 1\n            break\n        cap = cap - lft + ent - wait\n    if flag == 1:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649555482,
+  "id": "cmpl-4vH1WRhBdBEQhqhRn2TxFw40lvDz1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:51:53.665481 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#C: capacity of train\n#n: number of stations\n#s: number of people that left the train\n#e: number of people that entered the train\n#w: number of people that had to stay at a station\nC, n = [int(x) for x in input().split()]\n\nfor i in range(n):\n    s, e, w = [int(x) for x in input().split()]\n    if i == 0:\n        #first station\n        if s > 0 or e > C or w > C or (w > 0 and e > 0):\n            print(\"impossible\")\n            exit(0)\n        else:\n            C -= e\n            continue\n    if i == n-1:\n        #last station\n        if s > C or e > 0 or w > 0:\n            print(\"impossible\")\n            exit(0)\n        else:\n            C += s\n            continue\n    else:\n        #middle station\n        if s > C or e > C or w > C or (w > 0 and e > 0):\n            print(\"impossible\")\n            exit(0)\n        else:\n            C += s\n            C -= e\n            continue\n\nprint(\"possible\")"
+}
+2022-04-09 21:51:53.665597 REASON stop
+2022-04-09 21:51:53.666315 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.666330 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#!/usr/bin/python\nimport sys\n\ndef main():\n    inp = sys.stdin.read().splitlines()\n    cap, n = [int(x) for x in inp[0].split()]\n    nums = [[int(x) for x in x.split()] for x in inp[1:]]\n    curr = 0\n    for i in range(len(nums)):\n        curr -= nums[i][0]\n        if curr < 0 or curr + nums[i][1] > cap or (curr + nums[i][1] < cap and nums[i][2] != 0) or (i == len(nums) - 1 and nums[i][2] != 0):\n            print(\"impossible\")\n            return\n        curr += nums[i][1]\n    print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:53.666374 REASON stop
+2022-04-09 21:51:53.666689 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.666724 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    capacity, num_stations = map(int, input().split())\n    passengers = [0]\n    for i in range(num_stations):\n        left, entered, waited = map(int, input().split())\n        passengers.append(passengers[-1] + entered - left)\n    if passengers[-1] != 0 or max(passengers) > capacity or min(passengers) < 0:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:53.666784 REASON stop
+2022-04-09 21:51:53.667182 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.667214 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef possible(C, n, stations):\n    \"\"\"\n    >>> possible(1, 2, [[0, 1, 1], [1, 0, 0]])\n    possible\n    >>> possible(1, 2, [[1, 0, 0], [0, 1, 0]])\n    impossible\n    >>> possible(1, 2, [[0, 1, 0], [1, 0, 1]])\n    impossible\n    >>> possible(2, 4, [[0, 1, 0], [0, 1, 0], [1, 0, 0], [0, 0, 0]])\n    possible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [1, 0, 0]])\n    possible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 1], [1, 0, 0]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [1, 0, 1], [1, 0, 0]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [1, 0, 1]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [0, 0, 1]])\n    impossible\n    >>> possible(1, 3, [[0, 1, 0], [0, 1, 0], [0, 1, 1]])\n    impossible\n    \"\"\"\n    for i in range(n):\n        if stations[i][2] > 0 and stations[i][1] > 0:\n            return \"impossible\"\n        if stations[i][0] > C:\n            return \"impossible\"\n        if stations[i][2] > 0 and stations[i][0] + stations[i][1] < C:\n            return \"impossible\"\n    return \"possible\"\n\nif __name__ == \"__main__\":\n    C, n = map(int, sys.stdin.readline().split())\n    stations = [list(map(int, sys.stdin.readline().split())) for i in range(n)]\n    print(possible(C, n, stations))"
+}
+2022-04-09 21:51:53.667284 REASON stop
+2022-04-09 21:51:53.667675 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.667698 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    cap, _ = map(int, input().split())\n    for _ in range(int(input())):\n        left, entered, waited = map(int, input().split())\n        cap += left\n        cap -= entered\n        if cap < 0 or waited > 0 and cap == 0:\n            print(\"impossible\")\n            return\n    print(\"possible\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:51:53.667747 REASON stop
+2022-04-09 21:51:53.667956 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.667970 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    C, n = map(int, input().split())\n    passengers = [0]\n    for _ in range(n):\n        left, entered, waited = map(int, input().split())\n        passengers.append(passengers[-1] + entered - left + waited)\n    print(\"possible\" if all([0 <= x <= C for x in passengers]) else \"impossible\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:53.668021 REASON stop
+2022-04-09 21:51:53.668269 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.668280 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    capacity, num_stations = map(int, sys.stdin.readline().split())\n    for i in range(num_stations):\n        left, entered, waiting = map(int, sys.stdin.readline().split())\n        if i == 0:\n            people = left\n        else:\n            people += entered - left\n            if people < 0 or people > capacity or (waiting > 0 and people == capacity):\n                print(\"impossible\")\n                return\n    if people > 0:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:53.668305 REASON stop
+2022-04-09 21:51:53.668408 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'
+2022-04-09 21:51:53.668418 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"Train\"\"\"\n    cap, sta = map(int, input().split())\n    flag = 0\n    for _ in range(sta):\n        lft, ent, wait = map(int, input().split())\n        if cap - lft + ent < 0 or cap - lft + ent - wait < 0:\n            flag = 1\n            break\n        cap = cap - lft + ent - wait\n    if flag == 1:\n        print(\"impossible\")\n    else:\n        print(\"possible\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:51:53.668438 REASON stop
+2022-04-09 21:51:53.668540 test/intro-questions.txt_dir/4746/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4746/solutions.json'

@@ -1,0 +1,147 @@
+2022-04-09 23:51:19.397622 """
+In a nearby village, the postman, milkman and garbage man face the same problem morning after morning: house 18. House 18 is guarded by two dogs that often cause problems. What they don’t know is that the dogs’ behaviour is completely predictable.
+
+When the day starts, one dog is aggressive for $A$ minutes and is then calm for $B$ minutes. Similarly, the other dog is aggressive for $C$ minutes, then calm for $D$ minutes. Both dogs repeat their behaviours indefinitely, starting a new aggressive period after the calm period, then another calm period etc.
+
+Given the arrival times of the postman, milkman and garbage man, determine how many dogs (none, one or both) attack each of them.
+
+-----Input-----
+The first line of input contains the integers $A$, $B$, $C$ and $D$.
+
+The second line contains the integer $P$, $M$ and $G$, the minute in the day during which the postman, milkman and garbage man arrive at house 18. For example, if $P$ is 3, it should be interpreted as "the postman arrived sometime during the third minute in the day".
+
+All numbers in the input will be between 1 and 999.
+
+-----Output-----
+Output should consist of three lines; each containing ’both’, ’one’ or ’none’, depending on how many dogs attack each of our heroes.
+
+-----Examples-----
+Sample Input:
+2 2 3 3
+1 3 4
+Sample Output:
+both
+one
+none
+"""
+2022-04-09 23:51:19.397661 --------------------------
+2022-04-09 23:52:06.156180 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n    aggressiveA = A\n    aggressiveC = C\n    for i in [P, M, G]:\n        if i <= aggressiveA:\n            print(\"both\")\n        elif i <= aggressiveA + B:\n            print(\"one\")\n        elif i <= aggressiveA + B + aggressiveC:\n            print(\"both\")\n        elif i <= aggressiveA + B + aggressiveC + D:\n            print(\"one\")\n        else:\n            print(\"none\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nimport sys\nimport math\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n    if A + B > C + D:\n        A, B, C, D = C, D, A, B\n    a = P % (A + B)\n    b = M % (A + B)\n    c = G % (A + B)\n    if a <= A:\n        print('both')\n    elif a > A:\n        print('one')\n    if b <= A:\n        print('both')\n    elif b > A:\n        print('one')\n    if c <= A:\n        print('both')\n    elif c > A:\n        print('one')\n    \nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nA, B, C, D = map(int, input().split())\nP, M, G = map(int, input().split())\n\ndef get_dog_status(A, B, C, D, t):\n    t = (t - 1) % (A + B + C + D)\n    if t < A:\n        return \"A\"\n    elif t < A + B:\n        return \"B\"\n    elif t < A + B + C:\n        return \"C\"\n    else:\n        return \"D\"\n\ndef get_dog_status_at_time(A, B, C, D, t):\n    if get_dog_status(A, B, C, D, t) == \"A\" or get_dog_status(A, B, C, D, t) == \"C\":\n        return \"aggressive\"\n    else:\n        return \"calm\"\n\ndef get_num_dogs_attacking(A, B, C, D, P):\n    dog1 = get_dog_status_at_time(A, B, C, D, P)\n    dog2 = get_dog_status_at_time(A, B, C, D, P)\n    if dog1 == \"aggressive\" and dog2 == \"aggressive\":\n        return \"both\"\n    elif dog1 == \"aggressive\" or dog2 == \"aggressive\":\n        return \"one\"\n    else:\n        return \"none\"\n\nprint(get_num_dogs_attacking(A, B, C, D, P))\nprint(get_num_dogs_attacking(A, B, C, D, M))\nprint(get_num_dogs_attacking(A, B, C, D, G))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b, c, d = map(int, sys.stdin.readline().split())\n    p, m, g = map(int, sys.stdin.readline().split())\n\n    for i in [p, m, g]:\n        if i > a:\n            if (i - a) % (b + a) < a:\n                print('both')\n            else:\n                print('one')\n        else:\n            print('both')\n\n        if i > c:\n            if (i - c) % (c + d) < c:\n                print('both')\n            else:\n                print('one')\n        else:\n            print('both')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    aggr, calm, aggr2, calm2 = [int(n) for n in sys.stdin.readline().split()]\n    p, m, g = [int(n) for n in sys.stdin.readline().split()]\n    if (p - 1) % (aggr + calm) < aggr and (p - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (p - 1) % (aggr + calm) < aggr or (p - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n    if (m - 1) % (aggr + calm) < aggr and (m - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (m - 1) % (aggr + calm) < aggr or (m - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n    if (g - 1) % (aggr + calm) < aggr and (g - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (g - 1) % (aggr + calm) < aggr or (g - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n\n    def get_dog_status(time, aggressive, calm):\n        if time == 0:\n            return 'aggressive'\n        time -= 1\n        if time < aggressive:\n            return 'aggressive'\n        time -= aggressive\n        if time < calm:\n            return 'calm'\n        time -= calm\n        return get_dog_status(time, aggressive, calm)\n\n    def get_dog_attack(time):\n        if get_dog_status(time, A, B) == 'aggressive' and get_dog_status(time, C, D) == 'aggressive':\n            return 'both'\n        elif get_dog_status(time, A, B) == 'aggressive' or get_dog_status(time, C, D) == 'aggressive':\n            return 'one'\n        else:\n            return 'none'\n\n    print(get_dog_attack(P))\n    print(get_dog_attack(M))\n    print(get_dog_attack(G))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Read the input and output the expected result.\n    \"\"\"\n    a, b, c, d = [int(i) for i in input().split()]\n    p, m, g = [int(i) for i in input().split()]\n    #print(a, b, c, d, p, m, g)\n\n    # Aggressive dog 1\n    aggressive_dog_1_start = 0\n    aggressive_dog_1_end = a\n    # Aggressive dog 2\n    aggressive_dog_2_start = c\n    aggressive_dog_2_end = c + d\n    #print(aggressive_dog_1_start, aggressive_dog_1_end, aggressive_dog_2_start, aggressive_dog_2_end)\n\n    # Check if the postman is attacked by both dogs\n    if (p >= aggressive_dog_1_start and p <= aggressive_dog_1_end) and (p >= aggressive_dog_2_start and p <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the postman is attacked by one dog\n    elif (p >= aggressive_dog_1_start and p <= aggressive_dog_1_end) or (p >= aggressive_dog_2_start and p <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the postman is attacked by none of the dogs\n    else:\n        print(\"none\")\n\n    # Check if the milkman is attacked by both dogs\n    if (m >= aggressive_dog_1_start and m <= aggressive_dog_1_end) and (m >= aggressive_dog_2_start and m <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the milkman is attacked by one dog\n    elif (m >= aggressive_dog_1_start and m <= aggressive_dog_1_end) or (m >= aggressive_dog_2_start and m <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the milkman is attacked by none of the dogs\n    else:\n        print(\"none\")\n\n    # Check if the garbage man is attacked by both dogs\n    if (g >= aggressive_dog_1_start and g <= aggressive_dog_1_end) and (g >= aggressive_dog_2_start and g <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the garbage man is attacked by one dog\n    elif (g >= aggressive_dog_1_start and g <= aggressive_dog_1_end) or (g >= aggressive_dog_2_start and g <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the garbage man is attacked by none of the dogs\n    else:\n        print(\"none\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b, c, d = [int(x) for x in sys.stdin.readline().split()]\n    p, m, g = [int(x) for x in sys.stdin.readline().split()]\n    for time in [p, m, g]:\n        dogs = 0\n        if (time - 1) % (a + b) < a:\n            dogs += 1\n        if (time - 1) % (c + d) < c:\n            dogs += 1\n        if dogs == 2:\n            print(\"both\")\n        elif dogs == 1:\n            print(\"one\")\n        else:\n            print(\"none\")\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649562680,
+  "id": "cmpl-4vItc7hr3Fx0NbfIyYDALAqruBIxO",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:52:06.156518 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n    aggressiveA = A\n    aggressiveC = C\n    for i in [P, M, G]:\n        if i <= aggressiveA:\n            print(\"both\")\n        elif i <= aggressiveA + B:\n            print(\"one\")\n        elif i <= aggressiveA + B + aggressiveC:\n            print(\"both\")\n        elif i <= aggressiveA + B + aggressiveC + D:\n            print(\"one\")\n        else:\n            print(\"none\")\n\nmain()"
+}
+2022-04-09 23:52:06.156643 REASON stop
+2022-04-09 23:52:06.167972 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.168007 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nimport sys\nimport math\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n    if A + B > C + D:\n        A, B, C, D = C, D, A, B\n    a = P % (A + B)\n    b = M % (A + B)\n    c = G % (A + B)\n    if a <= A:\n        print('both')\n    elif a > A:\n        print('one')\n    if b <= A:\n        print('both')\n    elif b > A:\n        print('one')\n    if c <= A:\n        print('both')\n    elif c > A:\n        print('one')\n    \nmain()"
+}
+2022-04-09 23:52:06.168087 REASON stop
+2022-04-09 23:52:06.168616 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.168647 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nA, B, C, D = map(int, input().split())\nP, M, G = map(int, input().split())\n\ndef get_dog_status(A, B, C, D, t):\n    t = (t - 1) % (A + B + C + D)\n    if t < A:\n        return \"A\"\n    elif t < A + B:\n        return \"B\"\n    elif t < A + B + C:\n        return \"C\"\n    else:\n        return \"D\"\n\ndef get_dog_status_at_time(A, B, C, D, t):\n    if get_dog_status(A, B, C, D, t) == \"A\" or get_dog_status(A, B, C, D, t) == \"C\":\n        return \"aggressive\"\n    else:\n        return \"calm\"\n\ndef get_num_dogs_attacking(A, B, C, D, P):\n    dog1 = get_dog_status_at_time(A, B, C, D, P)\n    dog2 = get_dog_status_at_time(A, B, C, D, P)\n    if dog1 == \"aggressive\" and dog2 == \"aggressive\":\n        return \"both\"\n    elif dog1 == \"aggressive\" or dog2 == \"aggressive\":\n        return \"one\"\n    else:\n        return \"none\"\n\nprint(get_num_dogs_attacking(A, B, C, D, P))\nprint(get_num_dogs_attacking(A, B, C, D, M))\nprint(get_num_dogs_attacking(A, B, C, D, G))"
+}
+2022-04-09 23:52:06.168723 REASON stop
+2022-04-09 23:52:06.169193 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.169233 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    a, b, c, d = map(int, sys.stdin.readline().split())\n    p, m, g = map(int, sys.stdin.readline().split())\n\n    for i in [p, m, g]:\n        if i > a:\n            if (i - a) % (b + a) < a:\n                print('both')\n            else:\n                print('one')\n        else:\n            print('both')\n\n        if i > c:\n            if (i - c) % (c + d) < c:\n                print('both')\n            else:\n                print('one')\n        else:\n            print('both')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:52:06.169314 REASON stop
+2022-04-09 23:52:06.169786 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.169820 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    aggr, calm, aggr2, calm2 = [int(n) for n in sys.stdin.readline().split()]\n    p, m, g = [int(n) for n in sys.stdin.readline().split()]\n    if (p - 1) % (aggr + calm) < aggr and (p - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (p - 1) % (aggr + calm) < aggr or (p - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n    if (m - 1) % (aggr + calm) < aggr and (m - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (m - 1) % (aggr + calm) < aggr or (m - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n    if (g - 1) % (aggr + calm) < aggr and (g - 1) % (aggr2 + calm2) < aggr2:\n        print(\"both\")\n    elif (g - 1) % (aggr + calm) < aggr or (g - 1) % (aggr2 + calm2) < aggr2:\n        print(\"one\")\n    else:\n        print(\"none\")\n\nmain()"
+}
+2022-04-09 23:52:06.169892 REASON stop
+2022-04-09 23:52:06.170403 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.170440 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    A, B, C, D = map(int, sys.stdin.readline().split())\n    P, M, G = map(int, sys.stdin.readline().split())\n\n    def get_dog_status(time, aggressive, calm):\n        if time == 0:\n            return 'aggressive'\n        time -= 1\n        if time < aggressive:\n            return 'aggressive'\n        time -= aggressive\n        if time < calm:\n            return 'calm'\n        time -= calm\n        return get_dog_status(time, aggressive, calm)\n\n    def get_dog_attack(time):\n        if get_dog_status(time, A, B) == 'aggressive' and get_dog_status(time, C, D) == 'aggressive':\n            return 'both'\n        elif get_dog_status(time, A, B) == 'aggressive' or get_dog_status(time, C, D) == 'aggressive':\n            return 'one'\n        else:\n            return 'none'\n\n    print(get_dog_attack(P))\n    print(get_dog_attack(M))\n    print(get_dog_attack(G))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:52:06.170513 REASON stop
+2022-04-09 23:52:06.171000 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.171037 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Read the input and output the expected result.\n    \"\"\"\n    a, b, c, d = [int(i) for i in input().split()]\n    p, m, g = [int(i) for i in input().split()]\n    #print(a, b, c, d, p, m, g)\n\n    # Aggressive dog 1\n    aggressive_dog_1_start = 0\n    aggressive_dog_1_end = a\n    # Aggressive dog 2\n    aggressive_dog_2_start = c\n    aggressive_dog_2_end = c + d\n    #print(aggressive_dog_1_start, aggressive_dog_1_end, aggressive_dog_2_start, aggressive_dog_2_end)\n\n    # Check if the postman is attacked by both dogs\n    if (p >= aggressive_dog_1_start and p <= aggressive_dog_1_end) and (p >= aggressive_dog_2_start and p <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the postman is attacked by one dog\n    elif (p >= aggressive_dog_1_start and p <= aggressive_dog_1_end) or (p >= aggressive_dog_2_start and p <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the postman is attacked by none of the dogs\n    else:\n        print(\"none\")\n\n    # Check if the milkman is attacked by both dogs\n    if (m >= aggressive_dog_1_start and m <= aggressive_dog_1_end) and (m >= aggressive_dog_2_start and m <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the milkman is attacked by one dog\n    elif (m >= aggressive_dog_1_start and m <= aggressive_dog_1_end) or (m >= aggressive_dog_2_start and m <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the milkman is attacked by none of the dogs\n    else:\n        print(\"none\")\n\n    # Check if the garbage man is attacked by both dogs\n    if (g >= aggressive_dog_1_start and g <= aggressive_dog_1_end) and (g >= aggressive_dog_2_start and g <= aggressive_dog_2_end):\n        print(\"both\")\n    # Check if the garbage man is attacked by one dog\n    elif (g >= aggressive_dog_1_start and g <= aggressive_dog_1_end) or (g >= aggressive_dog_2_start and g <= aggressive_dog_2_end):\n        print(\"one\")\n    # Check if the garbage man is attacked by none of the dogs\n    else:\n        print(\"none\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:52:06.171159 REASON stop
+2022-04-09 23:52:06.171468 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'
+2022-04-09 23:52:06.171482 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    a, b, c, d = [int(x) for x in sys.stdin.readline().split()]\n    p, m, g = [int(x) for x in sys.stdin.readline().split()]\n    for time in [p, m, g]:\n        dogs = 0\n        if (time - 1) % (a + b) < a:\n            dogs += 1\n        if (time - 1) % (c + d) < c:\n            dogs += 1\n        if dogs == 2:\n            print(\"both\")\n        elif dogs == 1:\n            print(\"one\")\n        else:\n            print(\"none\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:52:06.171529 REASON stop
+2022-04-09 23:52:06.171765 test/intro-questions.txt_dir/4932/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4932/solutions.json'

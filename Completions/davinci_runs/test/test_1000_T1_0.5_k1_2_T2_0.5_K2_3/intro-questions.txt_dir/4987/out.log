@@ -1,0 +1,141 @@
+2022-04-10 00:28:57.734862 """
+Having discolored his white socks in a rather beige shade (as seen on the picture), Luktas Svettocek realised he can’t just throw all his laundry into one machine and expect it to retain its original colors. However, he is also too lazy to do his laundry in several rounds. He would much rather buy more laundry machines!
+
+Each of Luktas’ socks have a color $D_ i$ which has a number between $0$ and $10^9$ assigned to it. After some experimentation, he found that he could wash any socks with a maximum absolute color difference of $K$ in the same machine without any discoloring. The color difference of two socks $i$ and $j$ is $|D_ i - D_ j|$.
+
+Luktas now needs to know how many washing machines he needs to wash his $S$ socks, given that each machine can take at most $C$ socks a time.
+
+-----Input-----
+The first line consists of three integers $1 \le S, C \le 10^5$ and $0 \le K \le 10^9$, the number of socks, the capacity of a laundry machine and the maximum color difference, respectively. Then follow one line with $S$ integers; these are the color values $D_ i$ of every sock.
+
+-----Output-----
+Output a single integer; the number of machines Luktas needs to wash all his socks.
+
+-----Examples-----
+Sample Input:
+5 3 0
+0 0 1 1 2
+Sample Output:
+3
+"""
+2022-04-10 00:28:57.734883 --------------------------
+2022-04-10 00:29:23.048302 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ns, c, k = [int(x) for x in raw_input().split()]\nd = [int(x) for x in raw_input().split()]\n\nd.sort()\n\nnumMachines = 0\n\nwhile len(d) > 0:\n    numMachines += 1\n    currentMachine = [d.pop(0)]\n    for i in range(len(d)):\n        if abs(d[i] - currentMachine[-1]) <= k:\n            currentMachine.append(d.pop(i))\n            i -= 1\n\n    if len(currentMachine) > c:\n        print(\"Too many socks for machine.\")\n        sys.exit(0)\n\nprint(\"Number of machines: \" + str(numMachines))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ns, c, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd.sort()\n\nmachines = 0\nmachine_load = 0\n\nfor i in range(s):\n    if machine_load >= c or (machine_load > 0 and d[i] - d[i-1] > k):\n        machine_load = 0\n        machines += 1\n    machine_load += 1\n\nif machine_load > 0:\n    machines += 1\n\nprint(machines)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nS, C, K = map(int, input().split())\nsocks = list(map(int, input().split()))\n# print(socks)\nsocks.sort()\n\nmachines = 0\n\nwhile len(socks) > 0:\n    current_machine = []\n    current_machine.append(socks.pop(0))\n    while len(current_machine) < C and len(socks) > 0:\n        if abs(current_machine[-1] - socks[0]) <= K:\n            current_machine.append(socks.pop(0))\n        else:\n            break\n    machines += 1\n\nprint(machines)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    socks, capacity, color_diff = [int(x) for x in input().split()]\n    colors = [int(x) for x in input().split()]\n    colors.sort()\n    machines = 0\n    i = 0\n    while i < socks:\n        machines += 1\n        j = i + 1\n        while j < socks and colors[j] - colors[i] <= color_diff:\n            j += 1\n        i = j\n    print(machines)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    socks, capacity, color_diff = [int(x) for x in input().split()]\n    colors = [int(x) for x in input().split()]\n    colors.sort()\n    num_machines = 0\n    current_machine = []\n    for color in colors:\n        if not current_machine:\n            current_machine.append(color)\n            num_machines += 1\n        elif abs(current_machine[-1] - color) <= color_diff and len(current_machine) < capacity:\n            current_machine.append(color)\n        else:\n            current_machine = [color]\n            num_machines += 1\n    print(num_machines)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    S, C, K = [int(i) for i in sys.stdin.readline().split()]\n    D = [int(i) for i in sys.stdin.readline().split()]\n    D.sort()\n    i = 0\n    count = 0\n    while i < S:\n        count += 1\n        j = i + 1\n        while j < S and D[j] - D[i] <= K:\n            j += 1\n        i = j\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nsocks, capacity, colorDiff = [int(x) for x in input().split()]\ncolors = [int(x) for x in input().split()]\n\ncolors.sort()\n\ncount = 0\n\nfor i in range(socks):\n    if i == 0 or colors[i] - colors[i - 1] > colorDiff:\n        count += 1\n\nif count % capacity == 0:\n    print(count // capacity)\nelse:\n    print(count // capacity + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nS, C, K = map(int, stdin.readline().split())\nD = list(map(int, stdin.readline().split()))\n\nD.sort()\n\nmachine_count = 0\n\nfor i in range(0, S, C):\n    machine_count += 1\n\n    if K == 0:\n        continue\n\n    for j in range(i, i + C - 1):\n        if abs(D[j] - D[j + 1]) > K:\n            machine_count += 1\n            break\n\nprint(machine_count)"
+    }
+  ],
+  "created": 1649564938,
+  "id": "cmpl-4vJU2gP7XgYcjCE7sfQmv58bMEy0Q",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:29:23.048584 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ns, c, k = [int(x) for x in raw_input().split()]\nd = [int(x) for x in raw_input().split()]\n\nd.sort()\n\nnumMachines = 0\n\nwhile len(d) > 0:\n    numMachines += 1\n    currentMachine = [d.pop(0)]\n    for i in range(len(d)):\n        if abs(d[i] - currentMachine[-1]) <= k:\n            currentMachine.append(d.pop(i))\n            i -= 1\n\n    if len(currentMachine) > c:\n        print(\"Too many socks for machine.\")\n        sys.exit(0)\n\nprint(\"Number of machines: \" + str(numMachines))"
+}
+2022-04-10 00:29:23.048638 REASON stop
+2022-04-10 00:29:23.060217 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.060300 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ns, c, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd.sort()\n\nmachines = 0\nmachine_load = 0\n\nfor i in range(s):\n    if machine_load >= c or (machine_load > 0 and d[i] - d[i-1] > k):\n        machine_load = 0\n        machines += 1\n    machine_load += 1\n\nif machine_load > 0:\n    machines += 1\n\nprint(machines)"
+}
+2022-04-10 00:29:23.060400 REASON stop
+2022-04-10 00:29:23.061061 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.061113 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nS, C, K = map(int, input().split())\nsocks = list(map(int, input().split()))\n# print(socks)\nsocks.sort()\n\nmachines = 0\n\nwhile len(socks) > 0:\n    current_machine = []\n    current_machine.append(socks.pop(0))\n    while len(current_machine) < C and len(socks) > 0:\n        if abs(current_machine[-1] - socks[0]) <= K:\n            current_machine.append(socks.pop(0))\n        else:\n            break\n    machines += 1\n\nprint(machines)"
+}
+2022-04-10 00:29:23.061205 REASON stop
+2022-04-10 00:29:23.061795 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.061840 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    socks, capacity, color_diff = [int(x) for x in input().split()]\n    colors = [int(x) for x in input().split()]\n    colors.sort()\n    machines = 0\n    i = 0\n    while i < socks:\n        machines += 1\n        j = i + 1\n        while j < socks and colors[j] - colors[i] <= color_diff:\n            j += 1\n        i = j\n    print(machines)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:29:23.062012 REASON stop
+2022-04-10 00:29:23.062576 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.062622 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    socks, capacity, color_diff = [int(x) for x in input().split()]\n    colors = [int(x) for x in input().split()]\n    colors.sort()\n    num_machines = 0\n    current_machine = []\n    for color in colors:\n        if not current_machine:\n            current_machine.append(color)\n            num_machines += 1\n        elif abs(current_machine[-1] - color) <= color_diff and len(current_machine) < capacity:\n            current_machine.append(color)\n        else:\n            current_machine = [color]\n            num_machines += 1\n    print(num_machines)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:29:23.062716 REASON stop
+2022-04-10 00:29:23.063214 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.063250 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    S, C, K = [int(i) for i in sys.stdin.readline().split()]\n    D = [int(i) for i in sys.stdin.readline().split()]\n    D.sort()\n    i = 0\n    count = 0\n    while i < S:\n        count += 1\n        j = i + 1\n        while j < S and D[j] - D[i] <= K:\n            j += 1\n        i = j\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:29:23.063315 REASON stop
+2022-04-10 00:29:23.063656 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.063671 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nsocks, capacity, colorDiff = [int(x) for x in input().split()]\ncolors = [int(x) for x in input().split()]\n\ncolors.sort()\n\ncount = 0\n\nfor i in range(socks):\n    if i == 0 or colors[i] - colors[i - 1] > colorDiff:\n        count += 1\n\nif count % capacity == 0:\n    print(count // capacity)\nelse:\n    print(count // capacity + 1)"
+}
+2022-04-10 00:29:23.063713 REASON stop
+2022-04-10 00:29:23.064000 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'
+2022-04-10 00:29:23.064014 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nS, C, K = map(int, stdin.readline().split())\nD = list(map(int, stdin.readline().split()))\n\nD.sort()\n\nmachine_count = 0\n\nfor i in range(0, S, C):\n    machine_count += 1\n\n    if K == 0:\n        continue\n\n    for j in range(i, i + C - 1):\n        if abs(D[j] - D[j + 1]) > K:\n            machine_count += 1\n            break\n\nprint(machine_count)"
+}
+2022-04-10 00:29:23.064065 REASON stop
+2022-04-10 00:29:23.064532 test/intro-questions.txt_dir/4987/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4987/solutions.json'

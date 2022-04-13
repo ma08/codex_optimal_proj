@@ -1,0 +1,3 @@
+
+word = input()
+permutation = input()

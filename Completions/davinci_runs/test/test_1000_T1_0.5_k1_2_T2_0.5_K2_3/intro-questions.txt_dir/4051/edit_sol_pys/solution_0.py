@@ -1,0 +1,24 @@
+
+
+n = int(input())
+arr = list(map(int, input().split()))
+
+def sort_stacks(arr):
+    sorted_array = []
+    stacks = []
+    for i in range(len(arr)):
+        stacks.append(arr[i])
+    while len(stacks) > 0:
+        tallest_stack = max(stacks)
+        tallest_stack_index = stacks.index(tallest_stack)
+        sorted_array.append(tallest_stack)
+        del stacks[tallest_stack_index]
+    return sorted_array
+
+def check_stacks_sort(arr):
+    if sort_stacks(arr) == sorted(arr):
+        return "YES"
+    else:
+        return "NO"
+
+print(check_stacks_sort(arr))

@@ -1,0 +1,19 @@
+
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    d = {}
+    for i in range(n):
+        d[a[i]] = d.get(a[i], 0) + 1
+    d = sorted(d.items(), key=lambda x: x[1], reverse=True)
+    mod = 10**9+7
+    ans = 1
+    ans = (ans * pow(2, d[0][1], mod)) % mod
+    for i in range(1, len(d)):
+        ans = (ans * d[i][1]) % mod
+    print(ans)
+
+
+if __name__ == "__main__":
+    main()

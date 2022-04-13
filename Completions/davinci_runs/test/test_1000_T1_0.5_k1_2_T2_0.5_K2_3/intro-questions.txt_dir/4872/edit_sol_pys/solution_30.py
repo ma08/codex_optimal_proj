@@ -1,0 +1,19 @@
+
+
+import sys
+
+def main():
+    n = int(sys.stdin.readline())  # number of days
+    days = [int(x) for x in sys.stdin.readline().split()]
+    days.append(365)  # end of year
+    cleanups = 0
+    dirtiness = 0  # amount of dirtiness
+    for i in range(1, len(days)):
+        dirtiness += days[i] - days[i - 1]
+        if dirtiness >= 20:
+            cleanups += 1
+            dirtiness = 0
+    print(cleanups)
+
+if __name__ == "__main__":
+    main()

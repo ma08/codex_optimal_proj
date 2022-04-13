@@ -1,0 +1,6 @@
+
+
+def solve():
+    pass
+
+solve()

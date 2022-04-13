@@ -1,0 +1,149 @@
+2022-04-09 22:42:59.058727 """
+Hangman is a (somewhat macabre) word-guessing game that can be played by two people. Player $1$ thinks of a word consisting of $n$ letters, and draws a row of $n$ dashes on a piece of paper. These dashes correspond to the letters of the word, in the same order. Player $2$ then attempts to discover the word by making a sequence of letter guesses. For each letter guessed by Player $2$:
+ - If the letter occurs one or more times in the word, Player $1$ writes the letter above each corresponding dash.
+ - If the letter does not occur in the word, Player $1$ adds one component to a drawing of a stick-figure man hanging on a gallows. The drawing (initially empty) has $10$ possible components: base, vertical beam, horizontal beam, rope, head, torso, right leg, left leg, right arm, left arm.
+
+If Player $2$ guesses all the letters in the word before the drawing of the hanging man is complete, then Player $2$ wins (and Player $1$ loses). Otherwise, Player $2$ loses (and Player $1$ wins).
+
+Ned loves playing hangman, especially as Player $2$, but he finds that he is not a very good letter guesser. To improve his chances, he decides to adopt a new strategy. For each word selected by Player $1$, Ned chooses a random permutation of the letters of the alphabet, and then simply guesses letters in that order until he either wins or loses. Given the word and Ned’s permutation of the alphabet, determine the outcome of the game.
+
+-----Input-----
+The input consists of two lines representing a single game of Hangman. The first line contains the word to be guessed, a non-empty string of uppercase English alphabet letters (A–Z) of maximum length $16$. The second line contains a permutation of the $26$ letters of the English alphabet, also uppercase.
+
+-----Output-----
+If Ned wins the game by guessing letters in the order given by the permutation (proceeding from left to right), output “WIN”. Otherwise, output “LOSE”.
+
+-----Examples-----
+Sample Input 1:
+HANGMAN
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Sample Output 1:
+WIN
+
+Sample Input 2:
+BANANA
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+Sample Output 2:
+LOSE
+"""
+2022-04-09 22:42:59.058762 --------------------------
+2022-04-09 22:43:28.888383 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    word = sys.stdin.readline().strip()\n    perm = sys.stdin.readline().strip()\n\n    # check if Ned wins\n    for i in range(len(word)):\n        if word[i] not in perm[:i+1]:\n            print('LOSE')\n            return\n\n    print('WIN')\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nword = input()\nletters = input()\n\n# create a dictionary of letters and their positions\nletter_dict = {}\nfor i in range(len(word)):\n    if word[i] in letter_dict:\n        letter_dict[word[i]].append(i)\n    else:\n        letter_dict[word[i]] = [i]\n\n# check if Ned wins\nwin = True\nfor letter in letters:\n    if letter in letter_dict:\n        del letter_dict[letter]\n        if not letter_dict:\n            break\n    else:\n        win = False\n        break\n\n# print output\nif win:\n    print(\"WIN\")\nelse:\n    print(\"LOSE\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport random\n\nword = input()\npermutation = input()\n\n# Check if Ned wins\ndef is_win(word, permutation):\n    # Check if word contains letters from permutation\n    for letter in permutation:\n        if letter in word:\n            return True\n    return False\n\n# Check if Ned loses\ndef is_lose(word, permutation):\n    # Check if word contains letters not in permutation\n    for letter in word:\n        if letter not in permutation:\n            return True\n    return False\n\n# Print result\nif is_win(word, permutation):\n    print(\"WIN\")\nelif is_lose(word, permutation):\n    print(\"LOSE\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nword = input()\nperm = input()\n\n# word = \"HANGMAN\"\n# perm = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\n\nletters = {\n    \"A\": 0,\n    \"B\": 0,\n    \"C\": 0,\n    \"D\": 0,\n    \"E\": 0,\n    \"F\": 0,\n    \"G\": 0,\n    \"H\": 0,\n    \"I\": 0,\n    \"J\": 0,\n    \"K\": 0,\n    \"L\": 0,\n    \"M\": 0,\n    \"N\": 0,\n    \"O\": 0,\n    \"P\": 0,\n    \"Q\": 0,\n    \"R\": 0,\n    \"S\": 0,\n    \"T\": 0,\n    \"U\": 0,\n    \"V\": 0,\n    \"W\": 0,\n    \"X\": 0,\n    \"Y\": 0,\n    \"Z\": 0,\n    }\n\nfor i in word:\n    letters[i] += 1\n\nfor i in perm:\n    if letters[i] > 0:\n        letters[i] -= 1\n    else:\n        print(\"LOSE\")\n        break\nelse:\n    print(\"WIN\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport random\n\ndef main():\n    hangman = sys.stdin.readline().strip()\n    alphabet = sys.stdin.readline().strip()\n    guessed = set()\n    components = 0\n    while components < 10:\n        guess = alphabet[0]\n        alphabet = alphabet[1:]\n        if guess not in guessed:\n            guessed.add(guess)\n            if guess not in hangman:\n                components += 1\n            elif all(letter in guessed for letter in hangman):\n                print(\"WIN\")\n                return\n    print(\"LOSE\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    word = input()\n    perm = input()\n    word_set = set(word)\n    perm_set = set(perm)\n    if len(word_set) > len(perm_set):\n        print(\"LOSE\")\n    else:\n        print(\"WIN\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nword = input()\npermutation = input()\n\nword_dict = {}\nfor letter in word:\n    if letter not in word_dict:\n        word_dict[letter] = 1\n    else:\n        word_dict[letter] += 1\n\nguesses_left = 10\nfor letter in permutation:\n    if letter in word_dict:\n        word_dict[letter] -= 1\n        if word_dict[letter] == 0:\n            word_dict.pop(letter)\n            if len(word_dict) == 0:\n                print('WIN')\n                break\n    else:\n        guesses_left -= 1\n        if guesses_left == 0:\n            print('LOSE')\n            break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nword = input()\nperm = input()\n\nprint(\"WIN\" if all(map(lambda x: x in perm, word)) else \"LOSE\")"
+    }
+  ],
+  "created": 1649558579,
+  "id": "cmpl-4vHpT9Fg7xaqNGq0DOys5FQdLFekg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:43:28.888691 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    word = sys.stdin.readline().strip()\n    perm = sys.stdin.readline().strip()\n\n    # check if Ned wins\n    for i in range(len(word)):\n        if word[i] not in perm[:i+1]:\n            print('LOSE')\n            return\n\n    print('WIN')\n\nmain()"
+}
+2022-04-09 22:43:28.888727 REASON stop
+2022-04-09 22:43:28.900119 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.900147 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nword = input()\nletters = input()\n\n# create a dictionary of letters and their positions\nletter_dict = {}\nfor i in range(len(word)):\n    if word[i] in letter_dict:\n        letter_dict[word[i]].append(i)\n    else:\n        letter_dict[word[i]] = [i]\n\n# check if Ned wins\nwin = True\nfor letter in letters:\n    if letter in letter_dict:\n        del letter_dict[letter]\n        if not letter_dict:\n            break\n    else:\n        win = False\n        break\n\n# print output\nif win:\n    print(\"WIN\")\nelse:\n    print(\"LOSE\")"
+}
+2022-04-09 22:43:28.900203 REASON stop
+2022-04-09 22:43:28.900711 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.900821 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport random\n\nword = input()\npermutation = input()\n\n# Check if Ned wins\ndef is_win(word, permutation):\n    # Check if word contains letters from permutation\n    for letter in permutation:\n        if letter in word:\n            return True\n    return False\n\n# Check if Ned loses\ndef is_lose(word, permutation):\n    # Check if word contains letters not in permutation\n    for letter in word:\n        if letter not in permutation:\n            return True\n    return False\n\n# Print result\nif is_win(word, permutation):\n    print(\"WIN\")\nelif is_lose(word, permutation):\n    print(\"LOSE\")"
+}
+2022-04-09 22:43:28.900911 REASON stop
+2022-04-09 22:43:28.901377 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.901396 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nword = input()\nperm = input()\n\n# word = \"HANGMAN\"\n# perm = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\n\nletters = {\n    \"A\": 0,\n    \"B\": 0,\n    \"C\": 0,\n    \"D\": 0,\n    \"E\": 0,\n    \"F\": 0,\n    \"G\": 0,\n    \"H\": 0,\n    \"I\": 0,\n    \"J\": 0,\n    \"K\": 0,\n    \"L\": 0,\n    \"M\": 0,\n    \"N\": 0,\n    \"O\": 0,\n    \"P\": 0,\n    \"Q\": 0,\n    \"R\": 0,\n    \"S\": 0,\n    \"T\": 0,\n    \"U\": 0,\n    \"V\": 0,\n    \"W\": 0,\n    \"X\": 0,\n    \"Y\": 0,\n    \"Z\": 0,\n    }\n\nfor i in word:\n    letters[i] += 1\n\nfor i in perm:\n    if letters[i] > 0:\n        letters[i] -= 1\n    else:\n        print(\"LOSE\")\n        break\nelse:\n    print(\"WIN\")"
+}
+2022-04-09 22:43:28.901463 REASON stop
+2022-04-09 22:43:28.901699 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.901712 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport random\n\ndef main():\n    hangman = sys.stdin.readline().strip()\n    alphabet = sys.stdin.readline().strip()\n    guessed = set()\n    components = 0\n    while components < 10:\n        guess = alphabet[0]\n        alphabet = alphabet[1:]\n        if guess not in guessed:\n            guessed.add(guess)\n            if guess not in hangman:\n                components += 1\n            elif all(letter in guessed for letter in hangman):\n                print(\"WIN\")\n                return\n    print(\"LOSE\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:43:28.901759 REASON stop
+2022-04-09 22:43:28.901999 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.902012 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    word = input()\n    perm = input()\n    word_set = set(word)\n    perm_set = set(perm)\n    if len(word_set) > len(perm_set):\n        print(\"LOSE\")\n    else:\n        print(\"WIN\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:43:28.902051 REASON stop
+2022-04-09 22:43:28.902438 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.902470 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nword = input()\npermutation = input()\n\nword_dict = {}\nfor letter in word:\n    if letter not in word_dict:\n        word_dict[letter] = 1\n    else:\n        word_dict[letter] += 1\n\nguesses_left = 10\nfor letter in permutation:\n    if letter in word_dict:\n        word_dict[letter] -= 1\n        if word_dict[letter] == 0:\n            word_dict.pop(letter)\n            if len(word_dict) == 0:\n                print('WIN')\n                break\n    else:\n        guesses_left -= 1\n        if guesses_left == 0:\n            print('LOSE')\n            break"
+}
+2022-04-09 22:43:28.902535 REASON stop
+2022-04-09 22:43:28.902827 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'
+2022-04-09 22:43:28.902853 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nword = input()\nperm = input()\n\nprint(\"WIN\" if all(map(lambda x: x in perm, word)) else \"LOSE\")"
+}
+2022-04-09 22:43:28.902901 REASON stop
+2022-04-09 22:43:28.903162 test/intro-questions.txt_dir/4813/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4813/solutions.json'

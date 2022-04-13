@@ -1,0 +1,9 @@
+
+def main():
+    a, b, k = map(int, input().split())
+    x = list(range(a, b+1))
+    print(x[:k])
+    print(x[-k:])
+
+if __name__ == '__main__':
+    main()

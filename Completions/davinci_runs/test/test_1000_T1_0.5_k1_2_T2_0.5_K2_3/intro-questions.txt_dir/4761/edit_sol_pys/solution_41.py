@@ -1,0 +1,26 @@
+import fileinput
+
+
+
+def is_valid_combination(combination):
+    combination = [int(i) for i in list(combination)]
+    if len(combination) != 6:
+        return False
+    if len(set(combination)) != 6:
+        return False
+    for i in combination:
+        if combination[0] % i != 0:
+            return False
+    return True
+
+def main():
+    for line in fileinput.input():
+        l, h = [int(i) for i in line.split()]
+        count = 0
+        for i in range(l, h + 1):
+            if is_valid_combination(str(i)):
+                count += 1
+        print(count)
+
+if __name__ == '__main__':
+    main()

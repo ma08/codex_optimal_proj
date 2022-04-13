@@ -1,0 +1,30 @@
+
+
+# Solution by Andrew Xing, 2019-2020
+# Problem: https://open.kattis.com/problems/xor
+
+def main():
+
+  n, m, k = [int(x) for x in input().split()] # n = rows, m = columns, k = xor value
+  grid = [[int(x) for x in input().split()] for i in range(n)] # input grid of values
+  
+  # iterate through table
+  dp = [[[0 for x in range(k+1)] for y in range(m+1)] for z in range(n+1)] # dp table
+  dp[1][1][grid[0][0]] = 1 # initial value
+  
+  for i in range(1, n+1):
+    for j in range(1, m+1):
+        # if not in first row, add from above
+      if i == 1 and j == 1:
+        continue
+      for x in range(k+1):
+        if i > 1:
+          dp[i][j][x^grid[i-1][j-1]] += dp[i-1][j][x]
+        # if not in first column, add from left
+        if j > 1:
+          dp[i][j][x^grid[i-1][j-1]] += dp[i][j-1][x]
+  
+  print(dp[n][m][k]) # print result
+
+if __name__ == "__main__":
+  main()

@@ -1,0 +1,34 @@
+
+
+import heapq
+    a = list(map(int, a))
+    b = list(map(int, b))
+
+
+def read_books(k, a, b):
+    heapq.heapify(a)
+    heapq.heapify(b)
+    cnt = 0
+    while k > 0:
+        if a and b:
+            if a[0] < b[0]:
+                k -= heapq.heappop(a)
+            else:
+                k -= heapq.heappop(b)
+        elif a:
+            k -= heapq.heappop(a)
+        elif b:
+            k -= heapq.heappop(b)
+        else:
+            return cnt
+        cnt += 1
+    return cnt
+
+
+def main():
+    n, a, b = map(int, input().split())
+    print(read_books(n, a, b))
+
+
+if __name__ == '__main__':
+    main()

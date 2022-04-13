@@ -1,0 +1,18 @@
+
+
+import sys
+import math
+
+lines = []
+for line in sys.stdin:
+    lines.append(line)
+
+words = []
+for line in lines:
+    words.append(line.split())
+
+for line in words:
+    for i in range(len(line) - 1):
+        if line[i] in line[i + 1:]:
+            line[i] = "." 
+    print(" ".join(line))

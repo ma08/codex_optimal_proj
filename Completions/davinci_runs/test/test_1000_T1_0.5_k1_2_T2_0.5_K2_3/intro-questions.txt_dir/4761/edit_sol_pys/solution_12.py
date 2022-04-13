@@ -1,0 +1,27 @@
+
+import fileinput
+
+def is_valid_combination(combination):
+    combination = [int(i) for i in combination]
+    if len(combination) != 6:
+        return False
+    if len(set(combination)) != 6:
+        return False
+    for i in combination:
+        if combination[0] % i != 0 or i == 0:
+            return False
+    return True
+
+def main():
+    for line in fileinput.input():
+        line = line.split()
+        l = int(line[0])
+        h = int(line[1])
+        count = 0
+        for i in range(l, h + 1):
+            if is_valid_combination(list(str(i))):
+                count += 1
+        print(count)
+
+if __name__ == '__main__':
+    main()
