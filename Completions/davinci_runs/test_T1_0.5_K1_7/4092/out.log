@@ -1,0 +1,159 @@
+2022-04-13 18:12:55.379284 """
+Kolya got an integer array $a_1, a_2, \dots, a_n$. The array can contain both positive and negative integers, but Kolya doesn't like $0$, so the array doesn't contain any zeros.
+
+Kolya doesn't like that the sum of some subsegments of his array can be $0$. The subsegment is some consecutive segment of elements of the array. 
+
+You have to help Kolya and change his array in such a way that it doesn't contain any subsegments with the sum $0$. To reach this goal, you can insert any integers between any pair of adjacent elements of the array (integers can be really any: positive, negative, $0$, any by absolute value, even such a huge that they can't be represented in most standard programming languages).
+
+Your task is to find the minimum number of integers you have to insert into Kolya's array in such a way that the resulting array doesn't contain any subsegments with the sum $0$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 200\,000$) — the number of elements in Kolya's array.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($-10^{9} \le a_i \le 10^{9}, a_i \neq 0$) — the description of Kolya's array.
+
+
+-----Output-----
+
+Print the minimum number of integers you have to insert into Kolya's array in such a way that the resulting array doesn't contain any subsegments with the sum $0$.
+
+
+-----Examples-----
+Input
+4
+1 -5 3 2
+
+Output
+1
+
+Input
+5
+4 -2 3 -9 2
+
+Output
+0
+
+Input
+9
+-1 1 -1 1 -1 1 1 -1 -1
+
+Output
+6
+
+Input
+8
+16 -5 -11 -15 10 5 4 -4
+
+Output
+3
+
+
+
+-----Note-----
+
+Consider the first example. There is only one subsegment with the sum $0$. It starts in the second element and ends in the fourth element. It's enough to insert one element so the array doesn't contain any subsegments with the sum equal to zero. For example, it is possible to insert the integer $1$ between second and third elements of the array.
+
+There are no subsegments having sum $0$ in the second example so you don't need to do anything.
+"""
+2022-04-13 18:12:55.379303 --------------------------
+2022-04-13 18:13:58.538464 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    \n    # dp[i][j] = minimum number of elements to insert to make the sum of a[i:j] non-zero\n    dp = [[0]*n for _ in range(n)]\n    \n    # Base case: dp[i][i] = 0 for all i\n    \n    for i in range(n-1):\n        dp[i][i+1] = 2 if a[i] == -a[i+1] else 0\n    \n    for i in range(n-2, -1, -1):\n        for j in range(i+2, n):\n            # If the sum of a[i:j] is not zero, we can make the sum of a[i:j] non-zero by inserting 0 elements\n            if a[i:j].count(0) == 0 and sum(a[i:j]) != 0:\n                dp[i][j] = 0\n            # Otherwise, we have to insert at least one element\n            else:\n                dp[i][j] = 1 + min(dp[i][k] + dp[k+1][j] for k in range(i, j))\n    \n    print(dp[0][n-1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    >>> main()\n    1\n    0\n    6\n    3\n    \"\"\"\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # The prefix sum array.\n    p = [0] * (n + 1)\n    for i in range(n):\n        p[i + 1] = p[i] + a[i]\n\n    # The hash map.\n    #\n    # key: the prefix sum value\n    # value: the index of the prefix sum value in the prefix sum array\n    #\n    # Example:\n    # p = [0, 1, -4, -1, 1, 0, 1, 2, 1, 0]\n    # m = {\n    #     0: [0, 5, 9],\n    #     1: [1, 6, 7],\n    #     -4: [2],\n    #     -1: [3],\n    #     -1: [4],\n    #     2: [8],\n    # }\n    m = {}\n    for i in range(n + 1):\n        m.setdefault(p[i], []).append(i)\n\n    # The number of subsegments with the sum 0.\n    ans = 0\n    for i in m.values():\n        # The number of subsegments in the array.\n        #\n        # The number of subsegments in the array of length $k$ is $(k - 1) + (k - 2) + \\dots + 1 = (1 + k - 1) \\times (k - 1) / 2 = k \\times (k - 1) / 2$.\n        #\n        # The number of subsegments in the array of length $k_1, k_2, \\dots, k_l$ is $k_1 \\times (k_1 - 1) / 2 + k_2 \\times (k_2 - 1) / 2 + \\dots + k_l \\times (k_l - 1) / 2$.\n        ans += (len(i) - 1) * len(i) // 2\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main(n, arr):\n    s = 0\n    count = 0\n    for i in range(n):\n        s += arr[i]\n        if s == 0:\n            count += 1\n            s = 1\n    return count\n\nn = int(input())\narr = [int(x) for x in input().split()]\nprint(main(n, arr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Uses python3\nimport sys\nimport random\n\ndef partition3(a, l, r):\n    x = a[l]\n    j = l\n    k = l\n    for i in range(l + 1, r + 1):\n        if a[i] == x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n        elif a[i] < x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n            j += 1\n            a[j], a[k] = a[k], a[j]\n    a[l], a[j] = a[j], a[l]\n    return j, k\n\n\ndef partition2(a, l, r):\n    x = a[l]\n    j = l\n    for i in range(l + 1, r + 1):\n        if a[i] <= x:\n            j += 1\n            a[i], a[j] = a[j], a[i]\n    a[l], a[j] = a[j], a[l]\n    return j\n\n\ndef randomized_quick_sort(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition3(a, l, r)\n    randomized_quick_sort(a, l, m - 1);\n    randomized_quick_sort(a, n + 1, r);\n\n\ndef partition(a, l, r):\n    x = a[l]\n    j = l\n    for i in range(l + 1, r + 1):\n        if a[i] <= x:\n            j += 1\n            a[i], a[j] = a[j], a[i]\n    a[l], a[j] = a[j], a[l]\n    return j\n\ndef partition_2(a, l, r):\n    x = a[l]\n    j = l\n    k = l\n    for i in range(l + 1, r + 1):\n        if a[i] == x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n        elif a[i] < x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n            j += 1\n            a[j], a[k] = a[k], a[j]\n    a[l], a[j] = a[j], a[l]\n    return j, k\n\ndef randomized_quick_sort_2(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_2(a, l, m - 1);\n    randomized_quick_sort_2(a, n + 1, r);\n\ndef randomized_quick_sort_3(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_3(a, l, m - 1);\n    randomized_quick_sort_3(a, n + 1, r);\n\ndef randomized_quick_sort_4(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_4(a, l, m - 1);\n    randomized_quick_sort_4(a, n + 1, r);\n\ndef randomized_quick_sort_5(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_5(a, l, m - 1);\n    randomized_quick_sort_5(a, n + 1, r);\n\ndef randomized_quick_sort_6(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_6(a, l, m - 1);\n    randomized_quick_sort_6(a, n + 1, r);\n\ndef randomized_quick_sort_7(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_7(a, l, m - 1);\n    randomized_quick_sort_7(a, n + 1, r);\n\ndef randomized_quick_sort_8(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_8(a, l, m - 1);\n    randomized_quick_sort_8(a, n + 1, r);\n\nif __name__ == '__main__':\n    input = sys.stdin.read()\n    n, *a = list(map(int, input.split()))\n    randomized_quick_sort(a, 0, n - 1)\n    randomized_quick_sort_2(a, 0, n - 1)\n    randomized_quick_sort_3(a, 0, n - 1)\n    randomized_quick_sort_4(a, 0, n - 1)\n    randomized_quick_sort_5(a, 0, n - 1)\n    randomized_quick_sort_6(a, 0, n - 1)\n    randomized_quick_sort_7(a, 0, n - 1)\n    randomized_quick_sort_8(a, 0, n - 1)\n    for x in a:\n        print(x, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef find_zero_subsegments(arr):\n    \"\"\"\n    First, we initialize a dictionary to store the sum of the subsegment from the beginning of the array to the current index.\n    Then, we iterate through the array and check if the current sum is already in the dictionary. If so, it means that there is a subsegment from the location of this sum to the current index that sums to zero.\n    Otherwise, we add the current sum to the dictionary.\n    Finally, we return the number of zero subsegments.\n    \"\"\"\n    subsegment_sum = {0: -1}\n    sum = 0\n    count = 0\n    for i in range(len(arr)):\n        sum += arr[i]\n        if sum in subsegment_sum:\n            count += 1\n        else:\n            subsegment_sum[sum] = i\n    return count\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    print(find_zero_subsegments(arr))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = 0\n    d = {}\n    for i in range(n):\n        s += a[i]\n        if s == 0:\n            print(i+1)\n            return\n        if s not in d:\n            d[s] = i\n        else:\n            print(i - d[s])\n            return\n    print(0)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    s = [arr[0]]\n    for i in range(1, n):\n        s.append(s[-1]+arr[i])\n    res = 0\n    cache = set()\n    for i in range(n):\n        if s[i] in cache:\n            res += 1\n            cache = set()\n        else:\n            cache.add(s[i])\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649873575,
+  "id": "cmpl-4wbm3MeYqtPy8u1bTVsfYoSHYhB99",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:13:58.538830 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    \n    # dp[i][j] = minimum number of elements to insert to make the sum of a[i:j] non-zero\n    dp = [[0]*n for _ in range(n)]\n    \n    # Base case: dp[i][i] = 0 for all i\n    \n    for i in range(n-1):\n        dp[i][i+1] = 2 if a[i] == -a[i+1] else 0\n    \n    for i in range(n-2, -1, -1):\n        for j in range(i+2, n):\n            # If the sum of a[i:j] is not zero, we can make the sum of a[i:j] non-zero by inserting 0 elements\n            if a[i:j].count(0) == 0 and sum(a[i:j]) != 0:\n                dp[i][j] = 0\n            # Otherwise, we have to insert at least one element\n            else:\n                dp[i][j] = 1 + min(dp[i][k] + dp[k+1][j] for k in range(i, j))\n    \n    print(dp[0][n-1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:13:58.538869 REASON stop
+2022-04-13 18:13:58.539277 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    >>> main()\n    1\n    0\n    6\n    3\n    \"\"\"\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # The prefix sum array.\n    p = [0] * (n + 1)\n    for i in range(n):\n        p[i + 1] = p[i] + a[i]\n\n    # The hash map.\n    #\n    # key: the prefix sum value\n    # value: the index of the prefix sum value in the prefix sum array\n    #\n    # Example:\n    # p = [0, 1, -4, -1, 1, 0, 1, 2, 1, 0]\n    # m = {\n    #     0: [0, 5, 9],\n    #     1: [1, 6, 7],\n    #     -4: [2],\n    #     -1: [3],\n    #     -1: [4],\n    #     2: [8],\n    # }\n    m = {}\n    for i in range(n + 1):\n        m.setdefault(p[i], []).append(i)\n\n    # The number of subsegments with the sum 0.\n    ans = 0\n    for i in m.values():\n        # The number of subsegments in the array.\n        #\n        # The number of subsegments in the array of length $k$ is $(k - 1) + (k - 2) + \\dots + 1 = (1 + k - 1) \\times (k - 1) / 2 = k \\times (k - 1) / 2$.\n        #\n        # The number of subsegments in the array of length $k_1, k_2, \\dots, k_l$ is $k_1 \\times (k_1 - 1) / 2 + k_2 \\times (k_2 - 1) / 2 + \\dots + k_l \\times (k_l - 1) / 2$.\n        ans += (len(i) - 1) * len(i) // 2\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:13:58.539400 REASON stop
+2022-04-13 18:13:58.539784 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main(n, arr):\n    s = 0\n    count = 0\n    for i in range(n):\n        s += arr[i]\n        if s == 0:\n            count += 1\n            s = 1\n    return count\n\nn = int(input())\narr = [int(x) for x in input().split()]\nprint(main(n, arr))"
+}
+2022-04-13 18:13:58.539833 REASON stop
+2022-04-13 18:13:58.559038 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Uses python3\nimport sys\nimport random\n\ndef partition3(a, l, r):\n    x = a[l]\n    j = l\n    k = l\n    for i in range(l + 1, r + 1):\n        if a[i] == x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n        elif a[i] < x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n            j += 1\n            a[j], a[k] = a[k], a[j]\n    a[l], a[j] = a[j], a[l]\n    return j, k\n\n\ndef partition2(a, l, r):\n    x = a[l]\n    j = l\n    for i in range(l + 1, r + 1):\n        if a[i] <= x:\n            j += 1\n            a[i], a[j] = a[j], a[i]\n    a[l], a[j] = a[j], a[l]\n    return j\n\n\ndef randomized_quick_sort(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition3(a, l, r)\n    randomized_quick_sort(a, l, m - 1);\n    randomized_quick_sort(a, n + 1, r);\n\n\ndef partition(a, l, r):\n    x = a[l]\n    j = l\n    for i in range(l + 1, r + 1):\n        if a[i] <= x:\n            j += 1\n            a[i], a[j] = a[j], a[i]\n    a[l], a[j] = a[j], a[l]\n    return j\n\ndef partition_2(a, l, r):\n    x = a[l]\n    j = l\n    k = l\n    for i in range(l + 1, r + 1):\n        if a[i] == x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n        elif a[i] < x:\n            k += 1\n            a[i], a[k] = a[k], a[i]\n            j += 1\n            a[j], a[k] = a[k], a[j]\n    a[l], a[j] = a[j], a[l]\n    return j, k\n\ndef randomized_quick_sort_2(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_2(a, l, m - 1);\n    randomized_quick_sort_2(a, n + 1, r);\n\ndef randomized_quick_sort_3(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_3(a, l, m - 1);\n    randomized_quick_sort_3(a, n + 1, r);\n\ndef randomized_quick_sort_4(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_4(a, l, m - 1);\n    randomized_quick_sort_4(a, n + 1, r);\n\ndef randomized_quick_sort_5(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_5(a, l, m - 1);\n    randomized_quick_sort_5(a, n + 1, r);\n\ndef randomized_quick_sort_6(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_6(a, l, m - 1);\n    randomized_quick_sort_6(a, n + 1, r);\n\ndef randomized_quick_sort_7(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_7(a, l, m - 1);\n    randomized_quick_sort_7(a, n + 1, r);\n\ndef randomized_quick_sort_8(a, l, r):\n    if l >= r:\n        return\n    k = random.randint(l, r)\n    a[l], a[k] = a[k], a[l]\n    #use partition3\n    m,n = partition_2(a, l, r)\n    randomized_quick_sort_8(a, l, m - 1);\n    randomized_quick_sort_8(a, n + 1, r);\n\nif __name__ == '__main__':\n    input = sys.stdin.read()\n    n, *a = list(map(int, input.split()))\n    randomized_quick_sort(a, 0, n - 1)\n    randomized_quick_sort_2(a, 0, n - 1)\n    randomized_quick_sort_3(a, 0, n - 1)\n    randomized_quick_sort_4(a, 0, n - 1)\n    randomized_quick_sort_5(a, 0, n - 1)\n    randomized_quick_sort_6(a, 0, n - 1)\n    randomized_quick_sort_7(a, 0, n - 1)\n    randomized_quick_sort_8(a, 0, n - 1)\n    for x in a:\n        print(x, end=' ')"
+}
+2022-04-13 18:13:58.559154 REASON stop
+2022-04-13 18:13:58.591228 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef find_zero_subsegments(arr):\n    \"\"\"\n    First, we initialize a dictionary to store the sum of the subsegment from the beginning of the array to the current index.\n    Then, we iterate through the array and check if the current sum is already in the dictionary. If so, it means that there is a subsegment from the location of this sum to the current index that sums to zero.\n    Otherwise, we add the current sum to the dictionary.\n    Finally, we return the number of zero subsegments.\n    \"\"\"\n    subsegment_sum = {0: -1}\n    sum = 0\n    count = 0\n    for i in range(len(arr)):\n        sum += arr[i]\n        if sum in subsegment_sum:\n            count += 1\n        else:\n            subsegment_sum[sum] = i\n    return count\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    print(find_zero_subsegments(arr))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:13:58.591344 REASON stop
+2022-04-13 18:13:58.592283 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = 0\n    d = {}\n    for i in range(n):\n        s += a[i]\n        if s == 0:\n            print(i+1)\n            return\n        if s not in d:\n            d[s] = i\n        else:\n            print(i - d[s])\n            return\n    print(0)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:13:58.592376 REASON stop
+2022-04-13 18:13:58.593242 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    s = [arr[0]]\n    for i in range(1, n):\n        s.append(s[-1]+arr[i])\n    res = 0\n    cache = set()\n    for i in range(n):\n        if s[i] in cache:\n            res += 1\n            cache = set()\n        else:\n            cache.add(s[i])\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:13:58.593326 REASON stop

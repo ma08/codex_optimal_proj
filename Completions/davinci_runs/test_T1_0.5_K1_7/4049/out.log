@@ -1,0 +1,179 @@
+2022-04-13 17:46:50.356135 """
+Alice and Bob have decided to play the game "Rock, Paper, Scissors". 
+
+The game consists of several rounds, each round is independent of each other. In each round, both players show one of the following things at the same time: rock, paper or scissors. If both players showed the same things then the round outcome is a draw. Otherwise, the following rules applied:
+
+  if one player showed rock and the other one showed scissors, then the player who showed rock is considered the winner and the other one is considered the loser;  if one player showed scissors and the other one showed paper, then the player who showed scissors is considered the winner and the other one is considered the loser;  if one player showed paper and the other one showed rock, then the player who showed paper is considered the winner and the other one is considered the loser. 
+
+Alice and Bob decided to play exactly $n$ rounds of the game described above. Alice decided to show rock $a_1$ times, show scissors $a_2$ times and show paper $a_3$ times. Bob decided to show rock $b_1$ times, show scissors $b_2$ times and show paper $b_3$ times. Though, both Alice and Bob did not choose the sequence in which they show things. It is guaranteed that $a_1 + a_2 + a_3 = n$ and $b_1 + b_2 + b_3 = n$.
+
+Your task is to find two numbers:
+
+  the minimum number of round Alice can win;  the maximum number of rounds Alice can win. 
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 10^{9}$) — the number of rounds.
+
+The second line of the input contains three integers $a_1, a_2, a_3$ ($0 \le a_i \le n$) — the number of times Alice will show rock, scissors and paper, respectively. It is guaranteed that $a_1 + a_2 + a_3 = n$.
+
+The third line of the input contains three integers $b_1, b_2, b_3$ ($0 \le b_j \le n$) — the number of times Bob will show rock, scissors and paper, respectively. It is guaranteed that $b_1 + b_2 + b_3 = n$.
+
+
+-----Output-----
+
+Print two integers: the minimum and the maximum number of rounds Alice can win.
+
+
+-----Examples-----
+Input
+2
+0 1 1
+1 1 0
+
+Output
+0 1
+
+Input
+15
+5 5 5
+5 5 5
+
+Output
+0 15
+
+Input
+3
+0 0 3
+3 0 0
+
+Output
+3 3
+
+Input
+686
+479 178 29
+11 145 530
+
+Output
+22 334
+
+Input
+319
+10 53 256
+182 103 34
+
+Output
+119 226
+
+
+
+-----Note-----
+
+In the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.
+
+In the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.
+
+In the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.
+"""
+2022-04-13 17:46:50.356152 --------------------------
+2022-04-13 17:48:48.928942 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\na1, a2, a3 = [int(x) for x in sys.stdin.readline().split()]\nb1, b2, b3 = [int(x) for x in sys.stdin.readline().split()]\n\n# \n# In the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.\n# \n# In the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.\n# \n# In the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.\n# \n\n# In the worst case, Alice will win as many rounds as she shows rock, and Bob shows scissors.\n# In the best case, Alice will win as many rounds as she shows scissors, and Bob shows paper.\n# In the best case, Alice will win as many rounds as she shows paper, and Bob shows rock.\n\nprint(a2*b3 + a3*b1)\nprint(a1*b2 + a3*b3 + a2*b1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na_win = 0\nfor i in range(len(a)):\n    for j in range(len(b)):\n        if j == i:\n            a_win += min(a[i], b[j])\n        else:\n            a_win += min(a[i], b[j])\n\na_win = a_win // 2\n\nprint(a_win, n-a_win)"
+    },
+    {
+      "finish_reason": "length",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\nb = [int(x) for x in input().split()]\n\n# a[0] = rock, a[1] = scissors, a[2] = paper\n# b[0] = rock, b[1] = scissors, b[2] = paper\n\n# rock beats scissors\n# scissors beats paper\n# paper beats rock\n\n# a[0] beats b[1]\n# a[1] beats b[2]\n# a[2] beats b[0]\n\n# b[0] beats a[1]\n# b[1] beats a[2]\n# b[2] beats a[0]\n\n# rock beats scissors = a[0] beats b[1] = a[0] + b[1]\n# scissors beats paper = a[1] beats b[2] = a[1] + b[2]\n# paper beats rock = a[2] beats b[0] = a[2] + b[0]\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0]"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    a_wins = 0\n    b_wins = 0\n    for i in range(n):\n        if a[i % 3] > b[i % 3]:\n            a_wins += 1\n        elif a[i % 3] < b[i % 3]:\n            b_wins += 1\n    print(a_wins, b_wins)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # get the number of rounds\n    n = int(input())\n\n    # get the number of times Alice will show rock, scissors and paper, respectively\n    a1, a2, a3 = map(int, input().split())\n\n    # get the number of times Bob will show rock, scissors and paper, respectively\n    b1, b2, b3 = map(int, input().split())\n\n    # calculate the minimum number of rounds Alice can win\n    min_wins = min(a2, b3) + min(a3, b1) + min(a1, b2)\n\n    # calculate the maximum number of rounds Alice can win\n    max_wins = min(a1, b1) + min(a2, b2) + min(a3, b3)\n\n    # print the minimum and maximum number of rounds Alice can win\n    print(min_wins, max_wins)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    alice = list(map(int, input().split()))\n    bob = list(map(int, input().split()))\n    print(min(alice[2], bob[0]), max(alice[2], bob[0]))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom math import gcd\nfrom functools import reduce\n\ndef lcm(a,b):\n    return a * b // gcd(a,b)\n\ndef main():\n    n = int(input())\n    a1,a2,a3 = map(int,input().split())\n    b1,b2,b3 = map(int,input().split())\n    l = lcm(lcm(a1+a2,a2+a3),a3+a1)\n    m = reduce(gcd, (b1+b2,b2+b3,b3+b1))\n    print(l-m, n-m)\n\nmain()"
+    }
+  ],
+  "created": 1649872010,
+  "id": "cmpl-4wbMosSII7KPD0BnIfu5SSAOAdzBT",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:48:48.929404 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\na1, a2, a3 = [int(x) for x in sys.stdin.readline().split()]\nb1, b2, b3 = [int(x) for x in sys.stdin.readline().split()]\n\n# \n# In the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.\n# \n# In the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.\n# \n# In the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.\n# \n\n# In the worst case, Alice will win as many rounds as she shows rock, and Bob shows scissors.\n# In the best case, Alice will win as many rounds as she shows scissors, and Bob shows paper.\n# In the best case, Alice will win as many rounds as she shows paper, and Bob shows rock.\n\nprint(a2*b3 + a3*b1)\nprint(a1*b2 + a3*b3 + a2*b1)"
+}
+2022-04-13 17:48:48.929468 REASON stop
+2022-04-13 17:48:48.929871 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na_win = 0\nfor i in range(len(a)):\n    for j in range(len(b)):\n        if j == i:\n            a_win += min(a[i], b[j])\n        else:\n            a_win += min(a[i], b[j])\n\na_win = a_win // 2\n\nprint(a_win, n-a_win)"
+}
+2022-04-13 17:48:48.929979 REASON stop
+2022-04-13 17:48:48.930358 2 {
+  "finish_reason": "length",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\nb = [int(x) for x in input().split()]\n\n# a[0] = rock, a[1] = scissors, a[2] = paper\n# b[0] = rock, b[1] = scissors, b[2] = paper\n\n# rock beats scissors\n# scissors beats paper\n# paper beats rock\n\n# a[0] beats b[1]\n# a[1] beats b[2]\n# a[2] beats b[0]\n\n# b[0] beats a[1]\n# b[1] beats a[2]\n# b[2] beats a[0]\n\n# rock beats scissors = a[0] beats b[1] = a[0] + b[1]\n# scissors beats paper = a[1] beats b[2] = a[1] + b[2]\n# paper beats rock = a[2] beats b[0] = a[2] + b[0]\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0] = n\n# a[0] + a[1] + a[2] + b[0] + b[1] + b[2] = n\n\n# a[0] + b[1] + a[1] + b[2] + a[2] + b[0]"
+}
+2022-04-13 17:48:48.930424 REASON length
+2022-04-13 17:48:48.930430 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    a_wins = 0\n    b_wins = 0\n    for i in range(n):\n        if a[i % 3] > b[i % 3]:\n            a_wins += 1\n        elif a[i % 3] < b[i % 3]:\n            b_wins += 1\n    print(a_wins, b_wins)\n\nmain()"
+}
+2022-04-13 17:48:48.930474 REASON stop
+2022-04-13 17:48:48.948018 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # get the number of rounds\n    n = int(input())\n\n    # get the number of times Alice will show rock, scissors and paper, respectively\n    a1, a2, a3 = map(int, input().split())\n\n    # get the number of times Bob will show rock, scissors and paper, respectively\n    b1, b2, b3 = map(int, input().split())\n\n    # calculate the minimum number of rounds Alice can win\n    min_wins = min(a2, b3) + min(a3, b1) + min(a1, b2)\n\n    # calculate the maximum number of rounds Alice can win\n    max_wins = min(a1, b1) + min(a2, b2) + min(a3, b3)\n\n    # print the minimum and maximum number of rounds Alice can win\n    print(min_wins, max_wins)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:48:48.948146 REASON stop
+2022-04-13 17:48:48.972325 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    alice = list(map(int, input().split()))\n    bob = list(map(int, input().split()))\n    print(min(alice[2], bob[0]), max(alice[2], bob[0]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:48:48.972447 REASON stop
+2022-04-13 17:48:48.973479 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom math import gcd\nfrom functools import reduce\n\ndef lcm(a,b):\n    return a * b // gcd(a,b)\n\ndef main():\n    n = int(input())\n    a1,a2,a3 = map(int,input().split())\n    b1,b2,b3 = map(int,input().split())\n    l = lcm(lcm(a1+a2,a2+a3),a3+a1)\n    m = reduce(gcd, (b1+b2,b2+b3,b3+b1))\n    print(l-m, n-m)\n\nmain()"
+}
+2022-04-13 17:48:48.973555 REASON stop

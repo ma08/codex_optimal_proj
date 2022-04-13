@@ -1,0 +1,155 @@
+2022-04-13 17:58:16.385632 """
+You are given a string $s$ consisting of exactly $n$ characters, and each character is either '0', '1' or '2'. Such strings are called ternary strings.
+
+Your task is to replace minimum number of characters in this string with other characters to obtain a balanced ternary string (balanced ternary string is a ternary string such that the number of characters '0' in this string is equal to the number of characters '1', and the number of characters '1' (and '0' obviously) is equal to the number of characters '2').
+
+Among all possible balanced ternary strings you have to obtain the lexicographically (alphabetically) smallest.
+
+Note that you can neither remove characters from the string nor add characters to the string. Also note that you can replace the given characters only with characters '0', '1' and '2'.
+
+It is guaranteed that the answer exists.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($3 \le n \le 3 \cdot 10^5$, $n$ is divisible by $3$) — the number of characters in $s$.
+
+The second line contains the string $s$ consisting of exactly $n$ characters '0', '1' and '2'.
+
+
+-----Output-----
+
+Print one string — the lexicographically (alphabetically) smallest balanced ternary string which can be obtained from the given one with minimum number of replacements.
+
+Because $n$ is divisible by $3$ it is obvious that the answer exists. And it is obvious that there is only one possible answer.
+
+
+-----Examples-----
+Input
+3
+121
+
+Output
+021
+
+Input
+6
+000000
+
+Output
+001122
+
+Input
+6
+211200
+
+Output
+211200
+
+Input
+6
+120110
+
+Output
+120120
+"""
+2022-04-13 17:58:16.385646 --------------------------
+2022-04-13 17:58:52.200912 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\na = [0] * 3\nfor i in range(n):\n    a[int(s[i])] += 1\n\nfor i in range(n):\n    if a[0] > a[1]:\n        print(0, end='')\n        a[0] -= 1\n    elif a[1] > a[2]:\n        print(1, end='')\n        a[1] -= 1\n    else:\n        print(2, end='')\n        a[2] -= 1"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve(s):\n    zeros = s.count('0')\n    ones = s.count('1')\n    twos = s.count('2')\n    if zeros > ones:\n        return s.replace('2', '1', zeros - ones)\n    elif ones > zeros:\n        return s.replace('1', '0', ones - zeros)\n    else:\n        return s\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    print(solve(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# TODO: pass tests\n\ndef solve(s):\n    zeroes = s.count('0')\n    ones = s.count('1')\n    twos = s.count('2')\n    if zeroes == ones == twos:\n        return s\n    if zeroes > ones:\n        s = s.replace('0', '1', 1)\n    elif ones > twos:\n        s = s.replace('1', '2', 1)\n    else:\n        s = s.replace('2', '0', 1)\n    return solve(s)\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    print(solve(s))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nS = input()\n\ncnt = [0]*3\n\nfor i in range(N):\n    cnt[int(S[i])] += 1\n\nans = ['0']*N\n\n# print(cnt)\n\n# if cnt[0] < cnt[1]:\n#     for i in range(N):\n#         if S[i] == '2':\n#             ans[i] = '0'\n#             cnt[0] += 1\n#             cnt[2] -= 1\n#             break\n#     for i in range(N):\n#         if S[i] == '1':\n#             ans[i] = '2'\n#             cnt[2] += 1\n#             cnt[1] -= 1\n#             break\n# elif cnt[0] > cnt[1]:\n#     for i in range(N):\n#         if S[i] == '2':\n#             ans[i] = '1'\n#             cnt[1] += 1\n#             cnt[2] -= 1\n#             break\n#     for i in range(N):\n#         if S[i] == '0':\n#             ans[i] = '2'\n#             cnt[2] += 1\n#             cnt[0] -= 1\n#             break\n\n# print(cnt)\n# print(ans)\n\nfor i in range(N):\n    if S[i] == '0':\n        if cnt[0] > cnt[1]:\n            ans[i] = '1'\n            cnt[1] += 1\n            cnt[0] -= 1\n        elif cnt[0] < cnt[2]:\n            ans[i] = '2'\n            cnt[2] += 1\n            cnt[0] -= 1\n    elif S[i] == '1':\n        if cnt[1] > cnt[0]:\n            ans[i] = '0'\n            cnt[0] += 1\n            cnt[1] -= 1\n        elif cnt[1] < cnt[2]:\n            ans[i] = '2'\n            cnt[2] += 1\n            cnt[1] -= 1\n    elif S[i] == '2':\n        if cnt[2] > cnt[0]:\n            ans[i] = '0'\n            cnt[0] += 1\n            cnt[2] -= 1\n        elif cnt[2] > cnt[1]:\n            ans[i] = '1'\n            cnt[1] += 1\n            cnt[2] -= 1\n\nprint(''.join(ans))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int( input() )\ns = input()\n\ndef solve(n,s):\n    ones = s.count('1')\n    zeros = s.count('0')\n    twos = s.count('2')\n    if ones == zeros and zeros == twos:\n        return s\n    # print(ones, zeros, twos)\n    if ones < zeros:\n        s = s.replace('2','0',1)\n    elif ones > zeros:\n        s = s.replace('2','1',1)\n    else:\n        s = s.replace('2','0',1)\n\n    return s\n\nprint(solve(n,s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline()\n    c = [0, 0, 0]\n    for i in s:\n        c[int(i)] += 1\n    c[1] += c[2] - c[1]\n    c[2] = c[1]\n    c[0] = c[1]\n    print(''.join(map(lambda x: str(x), c)))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649872696,
+  "id": "cmpl-4wbXsuAWlPMCXB61G5mgYtDqu02QS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:58:52.201197 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:58:52.201235 REASON stop
+2022-04-13 17:58:52.201765 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\na = [0] * 3\nfor i in range(n):\n    a[int(s[i])] += 1\n\nfor i in range(n):\n    if a[0] > a[1]:\n        print(0, end='')\n        a[0] -= 1\n    elif a[1] > a[2]:\n        print(1, end='')\n        a[1] -= 1\n    else:\n        print(2, end='')\n        a[2] -= 1"
+}
+2022-04-13 17:58:52.201879 REASON stop
+2022-04-13 17:58:52.202263 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve(s):\n    zeros = s.count('0')\n    ones = s.count('1')\n    twos = s.count('2')\n    if zeros > ones:\n        return s.replace('2', '1', zeros - ones)\n    elif ones > zeros:\n        return s.replace('1', '0', ones - zeros)\n    else:\n        return s\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    print(solve(s))"
+}
+2022-04-13 17:58:52.202309 REASON stop
+2022-04-13 17:58:52.203461 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# TODO: pass tests\n\ndef solve(s):\n    zeroes = s.count('0')\n    ones = s.count('1')\n    twos = s.count('2')\n    if zeroes == ones == twos:\n        return s\n    if zeroes > ones:\n        s = s.replace('0', '1', 1)\n    elif ones > twos:\n        s = s.replace('1', '2', 1)\n    else:\n        s = s.replace('2', '0', 1)\n    return solve(s)\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    print(solve(s))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:58:52.203512 REASON stop
+2022-04-13 17:58:52.239200 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nS = input()\n\ncnt = [0]*3\n\nfor i in range(N):\n    cnt[int(S[i])] += 1\n\nans = ['0']*N\n\n# print(cnt)\n\n# if cnt[0] < cnt[1]:\n#     for i in range(N):\n#         if S[i] == '2':\n#             ans[i] = '0'\n#             cnt[0] += 1\n#             cnt[2] -= 1\n#             break\n#     for i in range(N):\n#         if S[i] == '1':\n#             ans[i] = '2'\n#             cnt[2] += 1\n#             cnt[1] -= 1\n#             break\n# elif cnt[0] > cnt[1]:\n#     for i in range(N):\n#         if S[i] == '2':\n#             ans[i] = '1'\n#             cnt[1] += 1\n#             cnt[2] -= 1\n#             break\n#     for i in range(N):\n#         if S[i] == '0':\n#             ans[i] = '2'\n#             cnt[2] += 1\n#             cnt[0] -= 1\n#             break\n\n# print(cnt)\n# print(ans)\n\nfor i in range(N):\n    if S[i] == '0':\n        if cnt[0] > cnt[1]:\n            ans[i] = '1'\n            cnt[1] += 1\n            cnt[0] -= 1\n        elif cnt[0] < cnt[2]:\n            ans[i] = '2'\n            cnt[2] += 1\n            cnt[0] -= 1\n    elif S[i] == '1':\n        if cnt[1] > cnt[0]:\n            ans[i] = '0'\n            cnt[0] += 1\n            cnt[1] -= 1\n        elif cnt[1] < cnt[2]:\n            ans[i] = '2'\n            cnt[2] += 1\n            cnt[1] -= 1\n    elif S[i] == '2':\n        if cnt[2] > cnt[0]:\n            ans[i] = '0'\n            cnt[0] += 1\n            cnt[2] -= 1\n        elif cnt[2] > cnt[1]:\n            ans[i] = '1'\n            cnt[1] += 1\n            cnt[2] -= 1\n\nprint(''.join(ans))"
+}
+2022-04-13 17:58:52.239357 REASON stop
+2022-04-13 17:58:52.241605 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int( input() )\ns = input()\n\ndef solve(n,s):\n    ones = s.count('1')\n    zeros = s.count('0')\n    twos = s.count('2')\n    if ones == zeros and zeros == twos:\n        return s\n    # print(ones, zeros, twos)\n    if ones < zeros:\n        s = s.replace('2','0',1)\n    elif ones > zeros:\n        s = s.replace('2','1',1)\n    else:\n        s = s.replace('2','0',1)\n\n    return s\n\nprint(solve(n,s))"
+}
+2022-04-13 17:58:52.241678 REASON stop
+2022-04-13 17:58:52.269939 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline()\n    c = [0, 0, 0]\n    for i in s:\n        c[int(i)] += 1\n    c[1] += c[2] - c[1]\n    c[2] = c[1]\n    c[0] = c[1]\n    print(''.join(map(lambda x: str(x), c)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:58:52.270042 REASON stop

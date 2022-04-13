@@ -1,0 +1,154 @@
+2022-04-13 17:21:26.935286 """
+You are given an array $a$ consisting of $n$ integer numbers.
+
+You have to color this array in $k$ colors in such a way that:   Each element of the array should be colored in some color;  For each $i$ from $1$ to $k$ there should be at least one element colored in the $i$-th color in the array;  For each $i$ from $1$ to $k$ all elements colored in the $i$-th color should be distinct. 
+
+Obviously, such coloring might be impossible. In this case, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions above. If there are multiple answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the length of the array $a$ and the number of colors, respectively.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 5000$) — elements of the array $a$.
+
+
+-----Output-----
+
+If there is no answer, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions described in the problem statement. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+4 2
+1 2 2 3
+
+Output
+YES
+1 1 2 2
+
+Input
+5 2
+3 2 1 2 3
+
+Output
+YES
+2 1 1 2 1
+
+Input
+5 2
+2 1 1 2 1
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the first example the answer $2~ 1~ 2~ 1$ is also acceptable.
+
+In the second example the answer $1~ 1~ 1~ 2~ 2$ is also acceptable.
+
+There exist other acceptable answers for both examples.
+"""
+2022-04-13 17:21:26.935302 --------------------------
+2022-04-13 17:21:47.119110 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn,k = map(int,input().split())\na = list(map(int,input().split()))\n\nd = {}\nfor i in range(n):\n    if a[i] in d:\n        d[a[i]] += 1\n    else:\n        d[a[i]] = 1\n\nif len(d) > k:\n    print(\"NO\")\nelse:\n    res = []\n    for i in range(n):\n        if d[a[i]] > 0:\n            res.append(d[a[i]])\n            d[a[i]] -= 1\n        else:\n            res.append(1)\n    print(\"YES\")\n    print(*res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, k, a):\n    if n < k:\n        return False\n    c = [0] * n\n    for i in range(n):\n        c[i] = min(k, a[i])\n        for j in range(i):\n            if a[i] == a[j]:\n                c[i] = c[j]\n                break\n        k -= c[i]\n    return k == 0\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    if not solve(n, k, a):\n        print(\"NO\")\n        return\n    print(\"YES\")\n    c = [0] * n\n    for i in range(n):\n        c[i] = min(k, a[i])\n        for j in range(i):\n            if a[i] == a[j]:\n                c[i] = c[j]\n                break\n        k -= c[i]\n    print(*c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tn, k = [int(x) for x in sys.stdin.readline().split()]\n\tarr = [int(x) for x in sys.stdin.readline().split()]\n\tmax_num = max(arr)\n\tif max_num > k:\n\t\tprint(\"NO\")\n\t\treturn\n\tres = [0] * n\n\tfor i in range(n):\n\t\tif arr[i] == 1:\n\t\t\tres[i] = 1\n\t\telse:\n\t\t\tres[i] = res[i-1]\n\t\t\tif res[i] == k:\n\t\t\t\tres[i] = 1\n\t\t\telse:\n\t\t\t\tres[i] += 1\n\tprint(\"YES\")\n\tprint(\" \".join([str(x) for x in res]))\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int,input().split())\n    arr = list(map(int,input().split()))\n    arr_set = set(arr)\n    if len(arr_set) < k:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        arr_set = list(arr_set)\n        arr_set_len = len(arr_set)\n        i = 0\n        for a in arr:\n            if i < arr_set_len:\n                print(arr_set.index(a)+1,end=\" \")\n            else:\n                print(arr_set.index(arr_set[i%arr_set_len])+1,end=\" \")\n            i += 1\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    if max(a) > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    for i in a:\n        print(i, end = \" \")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    colors = [0] * n\n    for i in range(n):\n        colors[i] = a[i] % k + 1\n    print('YES')\n    print(' '.join(map(str, colors)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649870487,
+  "id": "cmpl-4wayF3qg530feksbIwhy9D8DSO8Eg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:21:47.119399 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn,k = map(int,input().split())\na = list(map(int,input().split()))\n\nd = {}\nfor i in range(n):\n    if a[i] in d:\n        d[a[i]] += 1\n    else:\n        d[a[i]] = 1\n\nif len(d) > k:\n    print(\"NO\")\nelse:\n    res = []\n    for i in range(n):\n        if d[a[i]] > 0:\n            res.append(d[a[i]])\n            d[a[i]] -= 1\n        else:\n            res.append(1)\n    print(\"YES\")\n    print(*res)"
+}
+2022-04-13 17:21:47.119433 REASON stop
+2022-04-13 17:21:47.119852 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, k, a):\n    if n < k:\n        return False\n    c = [0] * n\n    for i in range(n):\n        c[i] = min(k, a[i])\n        for j in range(i):\n            if a[i] == a[j]:\n                c[i] = c[j]\n                break\n        k -= c[i]\n    return k == 0\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    if not solve(n, k, a):\n        print(\"NO\")\n        return\n    print(\"YES\")\n    c = [0] * n\n    for i in range(n):\n        c[i] = min(k, a[i])\n        for j in range(i):\n            if a[i] == a[j]:\n                c[i] = c[j]\n                break\n        k -= c[i]\n    print(*c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:21:47.119966 REASON stop
+2022-04-13 17:21:47.120353 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tn, k = [int(x) for x in sys.stdin.readline().split()]\n\tarr = [int(x) for x in sys.stdin.readline().split()]\n\tmax_num = max(arr)\n\tif max_num > k:\n\t\tprint(\"NO\")\n\t\treturn\n\tres = [0] * n\n\tfor i in range(n):\n\t\tif arr[i] == 1:\n\t\t\tres[i] = 1\n\t\telse:\n\t\t\tres[i] = res[i-1]\n\t\t\tif res[i] == k:\n\t\t\t\tres[i] = 1\n\t\t\telse:\n\t\t\t\tres[i] += 1\n\tprint(\"YES\")\n\tprint(\" \".join([str(x) for x in res]))\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 17:21:47.120423 REASON stop
+2022-04-13 17:21:47.121711 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int,input().split())\n    arr = list(map(int,input().split()))\n    arr_set = set(arr)\n    if len(arr_set) < k:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        arr_set = list(arr_set)\n        arr_set_len = len(arr_set)\n        i = 0\n        for a in arr:\n            if i < arr_set_len:\n                print(arr_set.index(a)+1,end=\" \")\n            else:\n                print(arr_set.index(arr_set[i%arr_set_len])+1,end=\" \")\n            i += 1\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:21:47.121765 REASON stop
+2022-04-13 17:21:47.130998 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 17:21:47.131107 REASON stop
+2022-04-13 17:21:47.131801 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    if max(a) > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    for i in a:\n        print(i, end = \" \")\n\nmain()"
+}
+2022-04-13 17:21:47.131880 REASON stop
+2022-04-13 17:21:47.151937 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    colors = [0] * n\n    for i in range(n):\n        colors[i] = a[i] % k + 1\n    print('YES')\n    print(' '.join(map(str, colors)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:21:47.152062 REASON stop

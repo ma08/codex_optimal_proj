@@ -1,0 +1,154 @@
+2022-04-13 17:33:26.223461 """
+Mishka started participating in a programming contest. There are $n$ problems in the contest. Mishka's problem-solving skill is equal to $k$.
+
+Mishka arranges all problems from the contest into a list. Because of his weird principles, Mishka only solves problems from one of the ends of the list. Every time, he chooses which end (left or right) he will solve the next problem from. Thus, each problem Mishka solves is either the leftmost or the rightmost problem in the list.
+
+Mishka cannot solve a problem with difficulty greater than $k$. When Mishka solves the problem, it disappears from the list, so the length of the list decreases by $1$. Mishka stops when he is unable to solve any problem from any end of the list.
+
+How many problems can Mishka solve?
+
+
+-----Input-----
+
+The first line of input contains two integers $n$ and $k$ ($1 \le n, k \le 100$) — the number of problems in the contest and Mishka's problem-solving skill.
+
+The second line of input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 100$), where $a_i$ is the difficulty of the $i$-th problem. The problems are given in order from the leftmost to the rightmost in the list.
+
+
+-----Output-----
+
+Print one integer — the maximum number of problems Mishka can solve.
+
+
+-----Examples-----
+Input
+8 4
+4 2 3 1 5 1 6 4
+
+Output
+5
+
+Input
+5 2
+3 1 2 1 3
+
+Output
+0
+
+Input
+5 100
+12 34 55 43 21
+
+Output
+5
+
+
+
+-----Note-----
+
+In the first example, Mishka can solve problems in the following order: $[4, 2, 3, 1, 5, 1, 6, 4] \rightarrow [2, 3, 1, 5, 1, 6, 4] \rightarrow [2, 3, 1, 5, 1, 6] \rightarrow [3, 1, 5, 1, 6] \rightarrow [1, 5, 1, 6] \rightarrow [5, 1, 6]$, so the number of solved problems will be equal to $5$.
+
+In the second example, Mishka can't solve any problem because the difficulties of problems from both ends are greater than $k$.
+
+In the third example, Mishka's solving skill is so amazing that he can solve all the problems.
+"""
+2022-04-13 17:33:26.223479 --------------------------
+2022-04-13 17:33:44.562961 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ni, j = 0, n-1\nans = 0\nwhile i <= j:\n    if a[i] <= k and a[j] <= k:\n        if a[i] <= a[j]:\n            i += 1\n        else:\n            j -= 1\n        ans += 1\n    elif a[i] <= k:\n        i += 1\n        ans += 1\n    elif a[j] <= k:\n        j -= 1\n        ans += 1\n    else:\n        break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nleft = 0\nright = n - 1\nans = 0\n\nwhile left <= right:\n    if a[left] <= k:\n        left += 1\n        ans += 1\n    elif a[right] <= k:\n        right -= 1\n        ans += 1\n    else:\n        break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, raw_input().split())\na = map(int, raw_input().split())\n\nans = 0\nleft = 0\nright = n - 1\nwhile left <= right:\n    if a[left] <= k:\n        ans += 1\n        left += 1\n    elif a[right] <= k:\n        ans += 1\n        right -= 1\n    else:\n        break\n\nprint ans"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Solution 1\n# Read input\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# Solve\nsolved = 0\nwhile len(a) > 0 and min(a[0], a[-1]) <= k:\n    solved += 1\n    if a[0] <= k:\n        a.pop(0)\n    else:\n        a.pop()\n\n# Print output\nprint(solved)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    left, right = 0, n-1\n    count = 0\n    while left <= right:\n        if a[left] <= k:\n            left += 1\n            count += 1\n        elif a[right] <= k:\n            right -= 1\n            count += 1\n        else:\n            break\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\ndef solve(n, k, problems):\n    problems = deque(problems)\n    solved = 0\n    while problems and (k >= problems[0] or k >= problems[-1]):\n        if k >= problems[0]:\n            problems.popleft()\n        elif k >= problems[-1]:\n            problems.pop()\n        solved += 1\n    return solved\n\ndef main():\n    n, k = map(int, input().split())\n    problems = list(map(int, input().split()))\n    print(solve(n, k, problems))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    problems = [int(x) for x in input().split()]\n    l = 0\n    r = n - 1\n    solved = 0\n    while l <= r:\n        if problems[l] <= k:\n            solved += 1\n            l += 1\n        elif problems[r] <= k:\n            solved += 1\n            r -= 1\n        else:\n            break\n    print(solved)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649871206,
+  "id": "cmpl-4wb9qQEeeV217G2vKZpBiFI4tRDw4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:33:44.563250 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ni, j = 0, n-1\nans = 0\nwhile i <= j:\n    if a[i] <= k and a[j] <= k:\n        if a[i] <= a[j]:\n            i += 1\n        else:\n            j -= 1\n        ans += 1\n    elif a[i] <= k:\n        i += 1\n        ans += 1\n    elif a[j] <= k:\n        j -= 1\n        ans += 1\n    else:\n        break\n\nprint(ans)"
+}
+2022-04-13 17:33:44.563288 REASON stop
+2022-04-13 17:33:44.563727 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nleft = 0\nright = n - 1\nans = 0\n\nwhile left <= right:\n    if a[left] <= k:\n        left += 1\n        ans += 1\n    elif a[right] <= k:\n        right -= 1\n        ans += 1\n    else:\n        break\n\nprint(ans)"
+}
+2022-04-13 17:33:44.563875 REASON stop
+2022-04-13 17:33:44.564223 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, raw_input().split())\na = map(int, raw_input().split())\n\nans = 0\nleft = 0\nright = n - 1\nwhile left <= right:\n    if a[left] <= k:\n        ans += 1\n        left += 1\n    elif a[right] <= k:\n        ans += 1\n        right -= 1\n    else:\n        break\n\nprint ans"
+}
+2022-04-13 17:33:44.564267 REASON stop
+2022-04-13 17:33:44.575251 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Solution 1\n# Read input\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# Solve\nsolved = 0\nwhile len(a) > 0 and min(a[0], a[-1]) <= k:\n    solved += 1\n    if a[0] <= k:\n        a.pop(0)\n    else:\n        a.pop()\n\n# Print output\nprint(solved)"
+}
+2022-04-13 17:33:44.575379 REASON stop
+2022-04-13 17:33:44.593066 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    left, right = 0, n-1\n    count = 0\n    while left <= right:\n        if a[left] <= k:\n            left += 1\n            count += 1\n        elif a[right] <= k:\n            right -= 1\n            count += 1\n        else:\n            break\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:33:44.593184 REASON stop
+2022-04-13 17:33:44.617678 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\ndef solve(n, k, problems):\n    problems = deque(problems)\n    solved = 0\n    while problems and (k >= problems[0] or k >= problems[-1]):\n        if k >= problems[0]:\n            problems.popleft()\n        elif k >= problems[-1]:\n            problems.pop()\n        solved += 1\n    return solved\n\ndef main():\n    n, k = map(int, input().split())\n    problems = list(map(int, input().split()))\n    print(solve(n, k, problems))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:33:44.617827 REASON stop
+2022-04-13 17:33:44.618757 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    problems = [int(x) for x in input().split()]\n    l = 0\n    r = n - 1\n    solved = 0\n    while l <= r:\n        if problems[l] <= k:\n            solved += 1\n            l += 1\n        elif problems[r] <= k:\n            solved += 1\n            r -= 1\n        else:\n            break\n    print(solved)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:33:44.618850 REASON stop
