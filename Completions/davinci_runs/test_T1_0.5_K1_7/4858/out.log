@@ -1,0 +1,154 @@
+2022-04-13 23:45:39.039517 """
+“Our high speed camera failed at the most inappropriate moment,” said the director of the ZOO. “This sequence with the falcon hurtling towards the ground at $250\mathrm{km}/\mathrm{h}$ is absolutely stunning. I had hopes that we could use the last frame as a promotion picture, it would look great with the autumn trees in the background. But the falcon is too high, even in this very last frame caught by the camera before it broke.”
+
+“Cut out the falcon from the picture in Photoshop and just move it downwards,” said the falconer. “It’s a routine photo manipulation.”
+
+“That would be unnatural,” objected the director. “We cannot show the public such obviously doctored pictures.”
+
+“On the contrary, that would be quite natural,” replied the falconer. “Look, the falcon in such speed does not change its orientation so much, its shape in the picture remains virtually the same in a few consecutive frames. So if you move it down artificially it would still be a very good approximation of the natural situation which really occurred during the filming.”
+
+After some hesitation, the director agreed with the proposition.
+
+You are given two last frames of the camera with the silhouette of the falcon in both frames. The background in the frames is identical, only the silhouette of the falcon is at a different position in both frames. The falcon is moving at a constant speed and the time between consecutive camera frames is also constant. Your task is to reconstruct the missing next frame in which the position of the falcon silhouette is changed according to its speed and to the speed of the camera. The background in the new frame should be the same as the background in the previous two frames.
+
+-----Input-----
+Each test case starts with a line containing two integers $M$, $N$ ($2 \leq M, N \leq 1000$) and a printable ASCII character $C$ enclosed in single quotes. The values on the line are separated by spaces. Next, there are $M$ lines, one empty line, and other $M$ lines. The first $M$ lines represent the first frame, the last $M$ lines represent the second frame. Each nonempty line contains string of exactly $N$ printable ASCII characters. Each character represents one pixel of the original frame. Each frame contains a complete silhouette of the falcon. In both frames all silhouette pixels are represented by the character $C$ and all pixels which do not belong to the silhouette are represented by characters other than $C$. The pixels of the silhouettes in both frames do not overlap even partially, in other words, no coordinates of a pixel of the silhouette in the first frame are the same as the coordinates of any pixel of the silhouette in the second frame. The shapes of the silhouettes in both frames are identical. The silhouette in any frame can be shifted by some number of pixels horizontally and/or vertically so that its position exactly matches the position of the silhouette in the other frame. The silhouettes do not rotate. For various technical reasons the silhouette image might not be connected, it may comprise of more disconnected regions in the frame.
+
+A printable ASCII character is an element of the subset of ASCII characters starting with the exclamation mark character (’!’, ASCII code $33$ in decimal) and ending with the tilde character (’~’, ASCII code $126$ in decimal).
+
+-----Output-----
+For each test case, print a picture frame consisting of $M$ lines with $N$ characters each. The frame should represent the result of exact extrapolation of the falcon’s movement based on the two input frames. If the silhouette image in the second input frame is shifted horizontally and vertically by some number of pixels relatively to the first input frame then the silhouette image in the result frame should be shifted horizontally and vertically by the same number of pixels relatively to the second frame. It is possible that the falcon’s silhouette might appear in the frame picture only partially or it may not appear there at all. Print one empty line after each case.
+
+-----Examples-----
+Sample Input 1:
+2 2 'X'
+X^
+--
+
+.X
+--
+Sample Output 1:
+.^
+--
+
+Sample Input 2:
+3 12 'A'
+ABABABABABAC
+BABABABABABB
+ABABABABABAB
+
+BABABABABABA
+BBABABABABAB
+BABABABABABA
+Sample Output 2:
+BBABABABABAC
+BBBABABABABA
+BBABABABABAB
+"""
+2022-04-13 23:45:39.039535 --------------------------
+2022-04-13 23:46:33.154475 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read input\n    inp = sys.stdin.read().splitlines()\n    lines = []\n    while inp:\n        try:\n            m, n, c = inp.pop(0).split()\n            m = int(m)\n            n = int(n)\n            c = c[1] # Get rid of the single quotes\n        except:\n            break\n        lines.append(inp[:m])\n        inp = inp[m+1:]\n\n    for i in range(len(lines)):\n        # Get the two frames\n        frame1 = lines[i][:m]\n        frame2 = lines[i][m:]\n\n        # Find the delta between the two frames\n        delta = [0, 0]\n        for x in range(m):\n            for y in range(n):\n                if frame1[x][y] == c and frame2[x][y] != c:\n                    delta[0] = x\n                    delta[1] = y\n                    break\n            if delta[0] != 0:\n                break\n\n        # Generate the third frame\n        frame3 = []\n        for x in range(m):\n            frame3.append([])\n            for y in range(n):\n                if frame2[x][y] == c:\n                    frame3[x].append(frame2[x][y])\n                else:\n                    frame3[x].append(frame1[x-delta[0]][y-delta[1]])\n\n        # Print the result\n        for x in range(m):\n            print(''.join(frame3[x]))\n        print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        line = line.strip()\n        if line == \"\":\n            break\n        m, n, c = line.split()\n        m = int(m)\n        n = int(n)\n        c = c[1]\n        for i in range(m):\n            sys.stdin.readline()\n        for i in range(m):\n            sys.stdin.readline()\n        for i in range(m):\n            sys.stdin.readline()\n        print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    M, N, C = sys.stdin.readline().split()\n    M = int(M)\n    N = int(N)\n    C = C[1]\n    first_frame = []\n    second_frame = []\n    for _ in range(M):\n        first_frame.append(list(sys.stdin.readline().strip()))\n    sys.stdin.readline()\n    for _ in range(M):\n        second_frame.append(list(sys.stdin.readline().strip()))\n    for i in range(M):\n        for j in range(N):\n            if first_frame[i][j] == C:\n                print(second_frame[i][j], end='')\n            else:\n                print(first_frame[i][j], end='')\n        print()\n    print()\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        line = line.split()\n        M = int(line[0])\n        N = int(line[1])\n        C = line[2][1]\n        frame1 = []\n        frame2 = []\n        for i in range(M):\n            frame1.append(input())\n        input()\n        for i in range(M):\n            frame2.append(input())\n        #print(frame1)\n        #print(frame2)\n        frame_out = []\n        for i in range(M):\n            frame_out.append('')\n        for i in range(M):\n            for j in range(N):\n                if frame1[i][j] == C:\n                    frame_out[i] += frame2[i][j]\n                else:\n                    frame_out[i] += frame1[i][j]\n        for i in frame_out:\n            print(i)\n        print()\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\nSolution outline:\n\t1. Find connected components in the first frame\n\t2. For each connected component,\n\t\t2.1 Find its bounding box, bb\n\t\t2.2 Find all pixels in the second frame that are inside bb, and are 'C'\n\t\t2.3 Find the median of all these pixels, this is the new position of the component in the second frame\n\t\t2.4 Find the median of the new position and the old position\n\t\t2.5 This is the position of the component in the second frame\n\t\t2.6 The position of the component in the third frame is the median of the new position and the old position\n\t3. Draw the third frame\n\"\"\"\nfrom collections import namedtuple\nimport numpy as np\n\nPoint = namedtuple('Point', ['x', 'y'])\n\ndef find_connected_components(frame, component_id=1):\n\t\"\"\"\n\t\tFind connected components in the frame\n\t\tReturn a list of (component_id, list of pixels in the component)\n\t\"\"\"\n\tM, N = frame.shape\n\tcomponents = []\n\tfor i in xrange(M):\n\t\tfor j in xrange(N):\n\t\t\tif frame[i][j] != 'C':\n\t\t\t\tcontinue\n\n\t\t\t# New component\n\t\t\tcomponent = []\n\t\t\tcomponent.append(Point(i, j))\n\t\t\tframe[i][j] = component_id\n\n\t\t\twhile component:\n\t\t\t\tp = component.pop()\n\t\t\t\t# Check all 4 neighbours of p\n\t\t\t\tfor x,y in [(p.x+1, p.y), (p.x-1, p.y), (p.x, p.y+1), (p.x, p.y-1)]:\n\t\t\t\t\tif 0 <= x < M and 0 <= y < N:\n\t\t\t\t\t\tif frame[x][y] == 'C':\n\t\t\t\t\t\t\tcomponent.append(Point(x, y))\n\t\t\t\t\t\t\tframe[x][y] = component_id\n\n\t\t\tcomponents.append((component_id, component))\n\t\t\tcomponent_id += 1\n\n\treturn components\n\n\ndef find_bounding_box(points):\n\tmin_x = min_y = np.inf\n\tmax_x = max_y = -np.inf\n\n\tfor p in points:\n\t\tmin_x = min(min_x, p.x)\n\t\tmax_x = max(max_x, p.x)\n\t\tmin_y = min(min_y, p.y)\n\t\tmax_y = max(max_y, p.y)\n\n\treturn (min_x, max_x, min_y, max_y)\n\n\ndef median_of_points(points):\n\tx = [p.x for p in points]\n\ty = [p.y for p in points]\n\treturn Point(np.median(x), np.median(y))\n\n\ndef generate_median_frame(frame1, frame2):\n\tM, N = frame1.shape\n\tmedian_frame = np.zeros(frame1.shape, dtype=np.int8)\n\tmedian_frame.fill('.')\n\n\tcomponents = find_connected_components(frame1)\n\tfor cid, points in components:\n\t\t# Find bounding box of the component\n\t\tmin_x, max_x, min_y, max_y = find_bounding_box(points)\n\n\t\t# Find all points inside the bounding box that are also 'C' in frame2\n\t\t# These are the points that are part of the component in frame2\n\t\tcomponent_points_in_frame2 = []\n\t\tfor i in xrange(min_x, max_x+1):\n\t\t\tfor j in xrange(min_y, max_y+1):\n\t\t\t\tif frame2[i][j] == 'C':\n\t\t\t\t\tcomponent_points_in_frame2.append(Point(i, j))\n\n\t\t# Find the median of all these points\n\t\tnew_component_position = median_of_points(component_points_in_frame2)\n\n\t\t# Find the median of the old position and new position\n\t\t# This is the position of the component in the median frame\n\t\told_component_position = median_of_points(points)\n\t\tmedian_component_position = median_of_points([old_component_position, new_component_position])\n\n\t\t# Draw the median point in the median frame\n\t\tmedian_frame[median_component_position.x][median_component_position.y] = 'C'\n\n\treturn median_frame\n\n\n\nif __name__ == '__main__':\n\tM, N, C = raw_input().split()\n\tM, N = int(M), int(N)\n\tframe1 = np.zeros((M, N), dtype=np.int8)\n\tframe2 = np.zeros((M, N), dtype=np.int8)\n\n\tfor i in xrange(M):\n\t\tframe1[i] = raw_input()\n\n\traw_input() # empty line\n\tfor i in xrange(M):\n\t\tframe2[i] = raw_input()\n\n\tmedian_frame = generate_median_frame(frame1, frame2)\n\tfor i in xrange(M):\n\t\tprint ''.join(median_frame[i])\n\n\tprint"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    lines = [line.strip() for line in lines]\n    lines = lines[1:]\n    while lines:\n        m, n, c = lines[0].split()\n        m, n = int(m), int(n)\n        lines = lines[1:]\n        first_frame = lines[:m]\n        lines = lines[m+1:]\n        second_frame = lines[:m]\n        lines = lines[m+1:]\n\n        for i in range(m):\n            for j in range(n):\n                if first_frame[i][j] == c:\n                    first_frame[i] = first_frame[i][:j] + '.' + first_frame[i][j+1:]\n                if second_frame[i][j] == c:\n                    second_frame[i] = second_frame[i][:j] + '.' + second_frame[i][j+1:]\n\n        for i in range(m):\n            for j in range(n):\n                if first_frame[i][j] != second_frame[i][j]:\n                    first_frame[i] = first_frame[i][:j] + c + first_frame[i][j+1:]\n        print('\\n'.join(first_frame))\n        print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef get_input():\n    for line in sys.stdin:\n        if line == '\\n':\n            break\n        M, N, C = line.split()\n        M = int(M)\n        N = int(N)\n        C = C[1:-1]\n        first_frame = []\n        second_frame = []\n        for i in range(M):\n            first_frame.append(sys.stdin.readline()[:-1])\n        sys.stdin.readline()\n        for i in range(M):\n            second_frame.append(sys.stdin.readline()[:-1])\n        yield M, N, C, first_frame, second_frame\n\ndef get_falcon_center(falcon):\n    x_sum = 0\n    y_sum = 0\n    total = 0\n    for y, row in enumerate(falcon):\n        for x, pixel in enumerate(row):\n            if pixel == 'X':\n                x_sum += x\n                y_sum += y\n                total += 1\n    return x_sum / total, y_sum / total\n\ndef get_falcon_distance(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)\n\ndef get_falcon(frame, C):\n    falcon = []\n    for row in frame:\n        falcon.append([pixel if pixel == C else '.' for pixel in row])\n    return falcon\n\ndef get_falcon_shift(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return x2 - x1, y2 - y1\n\ndef get_falcon_movement(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return x2 - x1, y2 - y1\n\ndef get_new_frame(M, N, C, first_frame, second_frame):\n    falcon1 = get_falcon(first_frame, C)\n    falcon2 = get_falcon(second_frame, C)\n    x_shift, y_shift = get_falcon_shift(falcon1, falcon2)\n    x_move, y_move = get_falcon_movement(falcon1, falcon2)\n    new_falcon = []\n    for y, row in enumerate(falcon1):\n        new_row = []\n        for x, pixel in enumerate(row):\n            if pixel == C:\n                new_x = x + x_shift + x_move\n                new_y = y + y_shift + y_move\n                if 0 <= new_x < N and 0 <= new_y < M:\n                    new_row.append(C)\n                else:\n                    new_row.append('.')\n            else:\n                new_row.append('.')\n        new_falcon.append(new_row)\n    return new_falcon\n\ndef print_frame(frame):\n    for row in frame:\n        print(''.join(row))\n\ndef main():\n    for M, N, C, first_frame, second_frame in get_input():\n        new_frame = get_new_frame(M, N, C, first_frame, second_frame)\n        print_frame(new_frame)\n        print()\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649893539,
+  "id": "cmpl-4wgy3zvh2IoMJwL5ay6fr1kMUV9Co",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:46:33.154853 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Read input\n    inp = sys.stdin.read().splitlines()\n    lines = []\n    while inp:\n        try:\n            m, n, c = inp.pop(0).split()\n            m = int(m)\n            n = int(n)\n            c = c[1] # Get rid of the single quotes\n        except:\n            break\n        lines.append(inp[:m])\n        inp = inp[m+1:]\n\n    for i in range(len(lines)):\n        # Get the two frames\n        frame1 = lines[i][:m]\n        frame2 = lines[i][m:]\n\n        # Find the delta between the two frames\n        delta = [0, 0]\n        for x in range(m):\n            for y in range(n):\n                if frame1[x][y] == c and frame2[x][y] != c:\n                    delta[0] = x\n                    delta[1] = y\n                    break\n            if delta[0] != 0:\n                break\n\n        # Generate the third frame\n        frame3 = []\n        for x in range(m):\n            frame3.append([])\n            for y in range(n):\n                if frame2[x][y] == c:\n                    frame3[x].append(frame2[x][y])\n                else:\n                    frame3[x].append(frame1[x-delta[0]][y-delta[1]])\n\n        # Print the result\n        for x in range(m):\n            print(''.join(frame3[x]))\n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:33.154908 REASON stop
+2022-04-13 23:46:33.155214 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.155230 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        line = line.strip()\n        if line == \"\":\n            break\n        m, n, c = line.split()\n        m = int(m)\n        n = int(n)\n        c = c[1]\n        for i in range(m):\n            sys.stdin.readline()\n        for i in range(m):\n            sys.stdin.readline()\n        for i in range(m):\n            sys.stdin.readline()\n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:33.155336 REASON stop
+2022-04-13 23:46:33.155574 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.155585 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    M, N, C = sys.stdin.readline().split()\n    M = int(M)\n    N = int(N)\n    C = C[1]\n    first_frame = []\n    second_frame = []\n    for _ in range(M):\n        first_frame.append(list(sys.stdin.readline().strip()))\n    sys.stdin.readline()\n    for _ in range(M):\n        second_frame.append(list(sys.stdin.readline().strip()))\n    for i in range(M):\n        for j in range(N):\n            if first_frame[i][j] == C:\n                print(second_frame[i][j], end='')\n            else:\n                print(first_frame[i][j], end='')\n        print()\n    print()\n\nmain()"
+}
+2022-04-13 23:46:33.155625 REASON stop
+2022-04-13 23:46:33.166940 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.166971 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    for line in sys.stdin:\n        line = line.split()\n        M = int(line[0])\n        N = int(line[1])\n        C = line[2][1]\n        frame1 = []\n        frame2 = []\n        for i in range(M):\n            frame1.append(input())\n        input()\n        for i in range(M):\n            frame2.append(input())\n        #print(frame1)\n        #print(frame2)\n        frame_out = []\n        for i in range(M):\n            frame_out.append('')\n        for i in range(M):\n            for j in range(N):\n                if frame1[i][j] == C:\n                    frame_out[i] += frame2[i][j]\n                else:\n                    frame_out[i] += frame1[i][j]\n        for i in frame_out:\n            print(i)\n        print()\nmain()"
+}
+2022-04-13 23:46:33.167037 REASON stop
+2022-04-13 23:46:33.196384 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.196415 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\nSolution outline:\n\t1. Find connected components in the first frame\n\t2. For each connected component,\n\t\t2.1 Find its bounding box, bb\n\t\t2.2 Find all pixels in the second frame that are inside bb, and are 'C'\n\t\t2.3 Find the median of all these pixels, this is the new position of the component in the second frame\n\t\t2.4 Find the median of the new position and the old position\n\t\t2.5 This is the position of the component in the second frame\n\t\t2.6 The position of the component in the third frame is the median of the new position and the old position\n\t3. Draw the third frame\n\"\"\"\nfrom collections import namedtuple\nimport numpy as np\n\nPoint = namedtuple('Point', ['x', 'y'])\n\ndef find_connected_components(frame, component_id=1):\n\t\"\"\"\n\t\tFind connected components in the frame\n\t\tReturn a list of (component_id, list of pixels in the component)\n\t\"\"\"\n\tM, N = frame.shape\n\tcomponents = []\n\tfor i in xrange(M):\n\t\tfor j in xrange(N):\n\t\t\tif frame[i][j] != 'C':\n\t\t\t\tcontinue\n\n\t\t\t# New component\n\t\t\tcomponent = []\n\t\t\tcomponent.append(Point(i, j))\n\t\t\tframe[i][j] = component_id\n\n\t\t\twhile component:\n\t\t\t\tp = component.pop()\n\t\t\t\t# Check all 4 neighbours of p\n\t\t\t\tfor x,y in [(p.x+1, p.y), (p.x-1, p.y), (p.x, p.y+1), (p.x, p.y-1)]:\n\t\t\t\t\tif 0 <= x < M and 0 <= y < N:\n\t\t\t\t\t\tif frame[x][y] == 'C':\n\t\t\t\t\t\t\tcomponent.append(Point(x, y))\n\t\t\t\t\t\t\tframe[x][y] = component_id\n\n\t\t\tcomponents.append((component_id, component))\n\t\t\tcomponent_id += 1\n\n\treturn components\n\n\ndef find_bounding_box(points):\n\tmin_x = min_y = np.inf\n\tmax_x = max_y = -np.inf\n\n\tfor p in points:\n\t\tmin_x = min(min_x, p.x)\n\t\tmax_x = max(max_x, p.x)\n\t\tmin_y = min(min_y, p.y)\n\t\tmax_y = max(max_y, p.y)\n\n\treturn (min_x, max_x, min_y, max_y)\n\n\ndef median_of_points(points):\n\tx = [p.x for p in points]\n\ty = [p.y for p in points]\n\treturn Point(np.median(x), np.median(y))\n\n\ndef generate_median_frame(frame1, frame2):\n\tM, N = frame1.shape\n\tmedian_frame = np.zeros(frame1.shape, dtype=np.int8)\n\tmedian_frame.fill('.')\n\n\tcomponents = find_connected_components(frame1)\n\tfor cid, points in components:\n\t\t# Find bounding box of the component\n\t\tmin_x, max_x, min_y, max_y = find_bounding_box(points)\n\n\t\t# Find all points inside the bounding box that are also 'C' in frame2\n\t\t# These are the points that are part of the component in frame2\n\t\tcomponent_points_in_frame2 = []\n\t\tfor i in xrange(min_x, max_x+1):\n\t\t\tfor j in xrange(min_y, max_y+1):\n\t\t\t\tif frame2[i][j] == 'C':\n\t\t\t\t\tcomponent_points_in_frame2.append(Point(i, j))\n\n\t\t# Find the median of all these points\n\t\tnew_component_position = median_of_points(component_points_in_frame2)\n\n\t\t# Find the median of the old position and new position\n\t\t# This is the position of the component in the median frame\n\t\told_component_position = median_of_points(points)\n\t\tmedian_component_position = median_of_points([old_component_position, new_component_position])\n\n\t\t# Draw the median point in the median frame\n\t\tmedian_frame[median_component_position.x][median_component_position.y] = 'C'\n\n\treturn median_frame\n\n\n\nif __name__ == '__main__':\n\tM, N, C = raw_input().split()\n\tM, N = int(M), int(N)\n\tframe1 = np.zeros((M, N), dtype=np.int8)\n\tframe2 = np.zeros((M, N), dtype=np.int8)\n\n\tfor i in xrange(M):\n\t\tframe1[i] = raw_input()\n\n\traw_input() # empty line\n\tfor i in xrange(M):\n\t\tframe2[i] = raw_input()\n\n\tmedian_frame = generate_median_frame(frame1, frame2)\n\tfor i in xrange(M):\n\t\tprint ''.join(median_frame[i])\n\n\tprint"
+}
+2022-04-13 23:46:33.196530 REASON stop
+2022-04-13 23:46:33.197089 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.197105 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    lines = [line.strip() for line in lines]\n    lines = lines[1:]\n    while lines:\n        m, n, c = lines[0].split()\n        m, n = int(m), int(n)\n        lines = lines[1:]\n        first_frame = lines[:m]\n        lines = lines[m+1:]\n        second_frame = lines[:m]\n        lines = lines[m+1:]\n\n        for i in range(m):\n            for j in range(n):\n                if first_frame[i][j] == c:\n                    first_frame[i] = first_frame[i][:j] + '.' + first_frame[i][j+1:]\n                if second_frame[i][j] == c:\n                    second_frame[i] = second_frame[i][:j] + '.' + second_frame[i][j+1:]\n\n        for i in range(m):\n            for j in range(n):\n                if first_frame[i][j] != second_frame[i][j]:\n                    first_frame[i] = first_frame[i][:j] + c + first_frame[i][j+1:]\n        print('\\n'.join(first_frame))\n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:33.197165 REASON stop
+2022-04-13 23:46:33.213490 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'
+2022-04-13 23:46:33.213531 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef get_input():\n    for line in sys.stdin:\n        if line == '\\n':\n            break\n        M, N, C = line.split()\n        M = int(M)\n        N = int(N)\n        C = C[1:-1]\n        first_frame = []\n        second_frame = []\n        for i in range(M):\n            first_frame.append(sys.stdin.readline()[:-1])\n        sys.stdin.readline()\n        for i in range(M):\n            second_frame.append(sys.stdin.readline()[:-1])\n        yield M, N, C, first_frame, second_frame\n\ndef get_falcon_center(falcon):\n    x_sum = 0\n    y_sum = 0\n    total = 0\n    for y, row in enumerate(falcon):\n        for x, pixel in enumerate(row):\n            if pixel == 'X':\n                x_sum += x\n                y_sum += y\n                total += 1\n    return x_sum / total, y_sum / total\n\ndef get_falcon_distance(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)\n\ndef get_falcon(frame, C):\n    falcon = []\n    for row in frame:\n        falcon.append([pixel if pixel == C else '.' for pixel in row])\n    return falcon\n\ndef get_falcon_shift(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return x2 - x1, y2 - y1\n\ndef get_falcon_movement(falcon1, falcon2):\n    x1, y1 = get_falcon_center(falcon1)\n    x2, y2 = get_falcon_center(falcon2)\n    return x2 - x1, y2 - y1\n\ndef get_new_frame(M, N, C, first_frame, second_frame):\n    falcon1 = get_falcon(first_frame, C)\n    falcon2 = get_falcon(second_frame, C)\n    x_shift, y_shift = get_falcon_shift(falcon1, falcon2)\n    x_move, y_move = get_falcon_movement(falcon1, falcon2)\n    new_falcon = []\n    for y, row in enumerate(falcon1):\n        new_row = []\n        for x, pixel in enumerate(row):\n            if pixel == C:\n                new_x = x + x_shift + x_move\n                new_y = y + y_shift + y_move\n                if 0 <= new_x < N and 0 <= new_y < M:\n                    new_row.append(C)\n                else:\n                    new_row.append('.')\n            else:\n                new_row.append('.')\n        new_falcon.append(new_row)\n    return new_falcon\n\ndef print_frame(frame):\n    for row in frame:\n        print(''.join(row))\n\ndef main():\n    for M, N, C, first_frame, second_frame in get_input():\n        new_frame = get_new_frame(M, N, C, first_frame, second_frame)\n        print_frame(new_frame)\n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:33.213627 REASON stop
+2022-04-13 23:46:33.227400 test/intro-questions.txt_dir/4858/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4858/solutions.json'

@@ -1,0 +1,139 @@
+2022-04-13 19:42:11.111658 """
+Takahashi went to an all-you-can-eat buffet with N kinds of dishes and ate all of them (Dish 1, Dish 2, \ldots, Dish N) once.
+The i-th dish (1 \leq i \leq N) he ate was Dish A_i.
+When he eats Dish i (1 \leq i \leq N), he gains B_i satisfaction points.
+Additionally, when he eats Dish i+1 just after eating Dish i (1 \leq i \leq N - 1), he gains C_i more satisfaction points.
+Find the sum of the satisfaction points he gained.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 20
+ - 1 \leq A_i \leq N
+ - A_1, A_2, ..., A_N are all different.
+ - 1 \leq B_i \leq 50
+ - 1 \leq C_i \leq 50
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_N
+B_1 B_2 ... B_N
+C_1 C_2 ... C_{N-1}
+
+-----Output-----
+Print the sum of the satisfaction points Takahashi gained, as an integer.
+
+-----Sample Input-----
+3
+3 1 2
+2 5 4
+3 6
+
+-----Sample Output-----
+14
+
+Takahashi gained 14 satisfaction points in total, as follows:
+ - First, he ate Dish 3 and gained 4 satisfaction points.
+ - Next, he ate Dish 1 and gained 2 satisfaction points.
+ - Lastly, he ate Dish 2 and gained 5 + 3 = 8 satisfaction points.
+"""
+2022-04-13 19:42:11.111666 --------------------------
+2022-04-13 19:42:29.629076 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += b[a[i] - 1]\n        if i == 0:\n            continue\n        if a[i - 1] + 1 == a[i]:\n            ans += c[a[i - 1] - 1]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\nC = list(map(int, input().split()))\n\n# ???????\nscore = 0\nfor i in range(N-1):\n    if A[i+1] == A[i]+1:\n        score += C[A[i]-1]\n    score += B[A[i]-1]\nscore += B[A[N-1]-1]\n\nprint(score)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    C = list(map(int, input().split()))\n    ans = 0\n    for i in range(N):\n        ans += B[A[i] - 1]\n        if i > 0 and A[i] - A[i-1] == 1:\n            ans += C[A[i-1] - 1]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Get Input\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\nc = list(map(int, input().split()))\n\n# Initialize variables\nsum = 0\n\n# Add satisfaction points for each dish\nfor i in range(n):\n    sum += b[a[i]-1]\n    if i != 0 and a[i-1] == a[i]-1:\n        sum += c[a[i]-2]\n\n# Output result\nprint(sum)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = list(map(int, input().split()))\n\n    ans = 0\n    for i in range(n):\n        ans += b[a[i] - 1]\n        if i != 0 and a[i] == a[i-1] + 1:\n            ans += c[a[i] - 2]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    num_dishes = int(sys.stdin.readline())\n    dish_order = [int(x) for x in sys.stdin.readline().split()]\n    dish_satisfaction = [int(x) for x in sys.stdin.readline().split()]\n    dish_bonus = [int(x) for x in sys.stdin.readline().split()]\n\n    satisfaction = 0\n    for i in range(num_dishes):\n        dish_idx = dish_order[i] - 1\n        satisfaction += dish_satisfaction[dish_idx]\n        if i > 0:\n            prev_dish_idx = dish_order[i - 1] - 1\n            if prev_dish_idx == dish_idx - 1:\n                satisfaction += dish_bonus[prev_dish_idx]\n    print(satisfaction)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Input\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\nC = list(map(int, input().split()))\n\n# Initialize\ndish_satisfaction = [0] * (N + 1)\nfor i in range(N):\n    dish_satisfaction[A[i]] = B[i]\n\n# Main\nfor i in range(N - 1):\n    dish_satisfaction[A[i + 1]] += C[i]\n\nprint(sum(dish_satisfaction))"
+    }
+  ],
+  "created": 1649878931,
+  "id": "cmpl-4wdAR3HkuUH7ZsN0zJuBAmgTfkv1g",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:42:29.629347 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += b[a[i] - 1]\n        if i == 0:\n            continue\n        if a[i - 1] + 1 == a[i]:\n            ans += c[a[i - 1] - 1]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:29.629436 REASON stop
+2022-04-13 19:42:29.629856 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\nC = list(map(int, input().split()))\n\n# ???????\nscore = 0\nfor i in range(N-1):\n    if A[i+1] == A[i]+1:\n        score += C[A[i]-1]\n    score += B[A[i]-1]\nscore += B[A[N-1]-1]\n\nprint(score)"
+}
+2022-04-13 19:42:29.629967 REASON stop
+2022-04-13 19:42:29.630343 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    C = list(map(int, input().split()))\n    ans = 0\n    for i in range(N):\n        ans += B[A[i] - 1]\n        if i > 0 and A[i] - A[i-1] == 1:\n            ans += C[A[i-1] - 1]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:29.630393 REASON stop
+2022-04-13 19:42:29.631720 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Get Input\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\nc = list(map(int, input().split()))\n\n# Initialize variables\nsum = 0\n\n# Add satisfaction points for each dish\nfor i in range(n):\n    sum += b[a[i]-1]\n    if i != 0 and a[i-1] == a[i]-1:\n        sum += c[a[i]-2]\n\n# Output result\nprint(sum)"
+}
+2022-04-13 19:42:29.631773 REASON stop
+2022-04-13 19:42:29.652747 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = list(map(int, input().split()))\n\n    ans = 0\n    for i in range(n):\n        ans += b[a[i] - 1]\n        if i != 0 and a[i] == a[i-1] + 1:\n            ans += c[a[i] - 2]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:29.652832 REASON stop
+2022-04-13 19:42:29.653731 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    num_dishes = int(sys.stdin.readline())\n    dish_order = [int(x) for x in sys.stdin.readline().split()]\n    dish_satisfaction = [int(x) for x in sys.stdin.readline().split()]\n    dish_bonus = [int(x) for x in sys.stdin.readline().split()]\n\n    satisfaction = 0\n    for i in range(num_dishes):\n        dish_idx = dish_order[i] - 1\n        satisfaction += dish_satisfaction[dish_idx]\n        if i > 0:\n            prev_dish_idx = dish_order[i - 1] - 1\n            if prev_dish_idx == dish_idx - 1:\n                satisfaction += dish_bonus[prev_dish_idx]\n    print(satisfaction)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:29.653818 REASON stop
+2022-04-13 19:42:29.654503 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Input\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\nC = list(map(int, input().split()))\n\n# Initialize\ndish_satisfaction = [0] * (N + 1)\nfor i in range(N):\n    dish_satisfaction[A[i]] = B[i]\n\n# Main\nfor i in range(N - 1):\n    dish_satisfaction[A[i + 1]] += C[i]\n\nprint(sum(dish_satisfaction))"
+}
+2022-04-13 19:42:29.654561 REASON stop

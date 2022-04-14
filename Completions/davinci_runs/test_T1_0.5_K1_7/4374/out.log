@@ -1,0 +1,167 @@
+2022-04-13 20:22:23.238001 """
+You are given a forest — an undirected graph with $n$ vertices such that each its connected component is a tree.
+
+The diameter (aka "longest shortest path") of a connected undirected graph is the maximum number of edges in the shortest path between any pair of its vertices.
+
+You task is to add some edges (possibly zero) to the graph so that it becomes a tree and the diameter of the tree is minimal possible.
+
+If there are multiple correct answers, print any of them.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ ($1 \le n \le 1000$, $0 \le m \le n - 1$) — the number of vertices of the graph and the number of edges, respectively.
+
+Each of the next $m$ lines contains two integers $v$ and $u$ ($1 \le v, u \le n$, $v \ne u$) — the descriptions of the edges.
+
+It is guaranteed that the given graph is a forest.
+
+
+-----Output-----
+
+In the first line print the diameter of the resulting tree.
+
+Each of the next $(n - 1) - m$ lines should contain two integers $v$ and $u$ ($1 \le v, u \le n$, $v \ne u$) — the descriptions of the added edges.
+
+The resulting graph should be a tree and its diameter should be minimal possible.
+
+For $m = n - 1$ no edges are added, thus the output consists of a single integer — diameter of the given tree.
+
+If there are multiple correct answers, print any of them.
+
+
+-----Examples-----
+Input
+4 2
+1 2
+2 3
+
+Output
+2
+4 2
+
+Input
+2 0
+
+Output
+1
+1 2
+
+Input
+3 2
+1 3
+2 3
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example adding edges (1, 4) or (3, 4) will lead to a total diameter of 3. Adding edge (2, 4), however, will make it 2.
+
+Edge (1, 2) is the only option you have for the second example. The diameter is 1.
+
+You can't add any edges in the third example. The diameter is already 2.
+"""
+2022-04-13 20:22:23.238017 --------------------------
+2022-04-13 20:23:16.022140 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport os\nimport heapq\n\ndef solve(n, m, edges):\n    if m == n - 1:\n        return 0\n    else:\n        graph = [[] for i in range(n + 1)]\n        for u, v in edges:\n            graph[u].append(v)\n            graph[v].append(u)\n\n        visited = [False] * (n + 1)\n        q = [(0, 1)]\n        while q:\n            d, v = heapq.heappop(q)\n            if visited[v]:\n                continue\n            visited[v] = True\n            for u in graph[v]:\n                if not visited[u]:\n                    heapq.heappush(q, (d + 1, u))\n\n        return d\n\n\nif __name__ == \"__main__\":\n    #sys.stdin = open(\"input.txt\", \"r\")\n    n, m = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for i in range(m)]\n    print(solve(n, m, edges))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    edges = []\n    for i in range(m):\n        edges.append([int(x) for x in sys.stdin.readline().split()])\n    print(1)\n    print(1, n)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\n\ndef diameter(graph, n):\n    queue = deque([0])\n    visited = [False] * n\n    visited[0] = True\n    distances = [0] * n\n\n    while queue:\n        current = queue.popleft()\n\n        for neighbour in graph[current]:\n            if not visited[neighbour]:\n                visited[neighbour] = True\n                distances[neighbour] = distances[current] + 1\n                queue.append(neighbour)\n\n    return max(distances)\n\n\ndef main():\n    n, m = map(int, input().split())\n\n    graph = [[] for _ in range(n)]\n\n    for _ in range(m):\n        v, u = map(int, input().split())\n        graph[v - 1].append(u - 1)\n        graph[u - 1].append(v - 1)\n\n    print(diameter(graph, n))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\nfrom typing import List, Tuple\n\ndef main():\n    n, m = [int(x) for x in stdin.readline().split()]\n    edges = [tuple(int(x) for x in stdin.readline().split()) for _ in range(m)]\n    print(minimal_tree_diameter(n, m, edges))\n\ndef minimal_tree_diameter(n: int, m: int, edges: List[Tuple[int, int]]) -> int:\n    tree = defaultdict(set)\n    for edge in edges:\n        tree[edge[0]].add(edge[1])\n        tree[edge[1]].add(edge[0])\n    diameter_tree = defaultdict(set)\n    for i in range(1, n + 1):\n        diameter_tree[i] = tree[i]\n        for j in tree[i]:\n            diameter_tree[i].update(tree[j])\n        diameter_tree[i].remove(i)\n    diameter = max(len(diameter_tree[i]) for i in range(1, n + 1))\n    if diameter == n - 1:\n        return diameter\n    added_edges = []\n    for i in range(1, n + 1):\n        for j in range(i + 1, n + 1):\n            if j in diameter_tree[i]:\n                continue\n            tree[i].add(j)\n            tree[j].add(i)\n            diameter_tree[i].add(j)\n            diameter_tree[j].add(i)\n            new_diameter = max(len(diameter_tree[k]) for k in range(1, n + 1))\n            if new_diameter == diameter:\n                added_edges.append((i, j))\n                diameter = new_diameter\n                break\n            tree[i].remove(j)\n            tree[j].remove(i)\n            diameter_tree[i].remove(j)\n            diameter_tree[j].remove(i)\n    return '\\n'.join([str(diameter)] + list(map(lambda x: ' '.join(map(str, x)), added_edges)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass Edge:\n    def __init__(self, v1, v2, weight):\n        self.v1 = v1\n        self.v2 = v2\n        self.weight = weight\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.adj = [[] for i in range(n)]\n\n    def add_edge(self, v1, v2, weight):\n        self.adj[v1].append(Edge(v1, v2, weight))\n        self.adj[v2].append(Edge(v2, v1, weight))\n\n    def find_min_edge(self, visited):\n        min_edge = None\n        for v in range(self.n):\n            if not visited[v]:\n                for edge in self.adj[v]:\n                    if not visited[edge.v2]:\n                        if not min_edge or edge.weight < min_edge.weight:\n                            min_edge = edge\n        return min_edge\n\n    def prim(self):\n        visited = [False] * self.n\n        mst = Graph(self.n)\n        visited[0] = True\n        for i in range(self.n - 1):\n            min_edge = self.find_min_edge(visited)\n            visited[min_edge.v2] = True\n            mst.add_edge(min_edge.v1, min_edge.v2, min_edge.weight)\n        return mst\n\n\nclass Node:\n    def __init__(self, v):\n        self.v = v\n        self.parent = None\n        self.children = []\n        self.height = 0\n\n    def add_child(self, child):\n        self.children.append(child)\n        child.parent = self\n        self.update_height()\n\n    def update_height(self):\n        max_height = -1\n        for child in self.children:\n            if child.height > max_height:\n                max_height = child.height\n        self.height = max_height + 1\n\n    def update_all_heights(self):\n        self.update_height()\n        if self.parent:\n            self.parent.update_all_heights()\n\n\nclass Tree:\n    def __init__(self, n):\n        self.n = n\n        self.nodes = [Node(i) for i in range(n)]\n\n    def add_edge(self, v1, v2):\n        self.nodes[v1].add_child(self.nodes[v2])\n\n    def get_diameter(self):\n        max_height = -1\n        for node in self.nodes:\n            if node.height > max_height:\n                max_height = node.height\n        return max_height\n\n    def get_height(self, v):\n        return self.nodes[v].height\n\n\ndef get_input():\n    n, m = map(int, sys.stdin.readline().split())\n    graph = Graph(n)\n    for i in range(m):\n        v1, v2 = map(int, sys.stdin.readline().split())\n        graph.add_edge(v1 - 1, v2 - 1, 1)\n    return graph\n\ndef main():\n    graph = get_input()\n    mst = graph.prim()\n    tree = Tree(graph.n)\n    for v in range(graph.n):\n        for edge in mst.adj[v]:\n            tree.add_edge(edge.v1, edge.v2)\n    diameter = tree.get_diameter()\n    print(diameter)\n    for v in range(graph.n):\n        for edge in graph.adj[v]:\n            if tree.get_height(edge.v1) + tree.get_height(edge.v2) + 1 == diameter:\n                print(edge.v1 + 1, edge.v2 + 1)\n                break\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom typing import List\n\n\ndef solve(n: int, edges: List[List[int]]) -> List[List[int]]:\n    # TODO\n    pass\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    edges = [list(map(int, input().split())) for _ in range(m)]\n    result = solve(n, edges)\n    print(len(result))\n    for edge in result:\n        print(edge[0], edge[1])"
+    }
+  ],
+  "created": 1649881343,
+  "id": "cmpl-4wdnLj9gUybJsvDss9Y0zsTdmSbEF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:23:16.022519 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport os\nimport heapq\n\ndef solve(n, m, edges):\n    if m == n - 1:\n        return 0\n    else:\n        graph = [[] for i in range(n + 1)]\n        for u, v in edges:\n            graph[u].append(v)\n            graph[v].append(u)\n\n        visited = [False] * (n + 1)\n        q = [(0, 1)]\n        while q:\n            d, v = heapq.heappop(q)\n            if visited[v]:\n                continue\n            visited[v] = True\n            for u in graph[v]:\n                if not visited[u]:\n                    heapq.heappush(q, (d + 1, u))\n\n        return d\n\n\nif __name__ == \"__main__\":\n    #sys.stdin = open(\"input.txt\", \"r\")\n    n, m = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for i in range(m)]\n    print(solve(n, m, edges))"
+}
+2022-04-13 20:23:16.022568 REASON stop
+2022-04-13 20:23:16.022951 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    edges = []\n    for i in range(m):\n        edges.append([int(x) for x in sys.stdin.readline().split()])\n    print(1)\n    print(1, n)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:23:16.023053 REASON stop
+2022-04-13 20:23:16.023574 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\n\ndef diameter(graph, n):\n    queue = deque([0])\n    visited = [False] * n\n    visited[0] = True\n    distances = [0] * n\n\n    while queue:\n        current = queue.popleft()\n\n        for neighbour in graph[current]:\n            if not visited[neighbour]:\n                visited[neighbour] = True\n                distances[neighbour] = distances[current] + 1\n                queue.append(neighbour)\n\n    return max(distances)\n\n\ndef main():\n    n, m = map(int, input().split())\n\n    graph = [[] for _ in range(n)]\n\n    for _ in range(m):\n        v, u = map(int, input().split())\n        graph[v - 1].append(u - 1)\n        graph[u - 1].append(v - 1)\n\n    print(diameter(graph, n))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:23:16.023638 REASON stop
+2022-04-13 20:23:16.043827 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 20:23:16.043958 REASON stop
+2022-04-13 20:23:16.045147 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\nfrom typing import List, Tuple\n\ndef main():\n    n, m = [int(x) for x in stdin.readline().split()]\n    edges = [tuple(int(x) for x in stdin.readline().split()) for _ in range(m)]\n    print(minimal_tree_diameter(n, m, edges))\n\ndef minimal_tree_diameter(n: int, m: int, edges: List[Tuple[int, int]]) -> int:\n    tree = defaultdict(set)\n    for edge in edges:\n        tree[edge[0]].add(edge[1])\n        tree[edge[1]].add(edge[0])\n    diameter_tree = defaultdict(set)\n    for i in range(1, n + 1):\n        diameter_tree[i] = tree[i]\n        for j in tree[i]:\n            diameter_tree[i].update(tree[j])\n        diameter_tree[i].remove(i)\n    diameter = max(len(diameter_tree[i]) for i in range(1, n + 1))\n    if diameter == n - 1:\n        return diameter\n    added_edges = []\n    for i in range(1, n + 1):\n        for j in range(i + 1, n + 1):\n            if j in diameter_tree[i]:\n                continue\n            tree[i].add(j)\n            tree[j].add(i)\n            diameter_tree[i].add(j)\n            diameter_tree[j].add(i)\n            new_diameter = max(len(diameter_tree[k]) for k in range(1, n + 1))\n            if new_diameter == diameter:\n                added_edges.append((i, j))\n                diameter = new_diameter\n                break\n            tree[i].remove(j)\n            tree[j].remove(i)\n            diameter_tree[i].remove(j)\n            diameter_tree[j].remove(i)\n    return '\\n'.join([str(diameter)] + list(map(lambda x: ' '.join(map(str, x)), added_edges)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:23:16.045221 REASON stop
+2022-04-13 20:23:16.058471 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass Edge:\n    def __init__(self, v1, v2, weight):\n        self.v1 = v1\n        self.v2 = v2\n        self.weight = weight\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.adj = [[] for i in range(n)]\n\n    def add_edge(self, v1, v2, weight):\n        self.adj[v1].append(Edge(v1, v2, weight))\n        self.adj[v2].append(Edge(v2, v1, weight))\n\n    def find_min_edge(self, visited):\n        min_edge = None\n        for v in range(self.n):\n            if not visited[v]:\n                for edge in self.adj[v]:\n                    if not visited[edge.v2]:\n                        if not min_edge or edge.weight < min_edge.weight:\n                            min_edge = edge\n        return min_edge\n\n    def prim(self):\n        visited = [False] * self.n\n        mst = Graph(self.n)\n        visited[0] = True\n        for i in range(self.n - 1):\n            min_edge = self.find_min_edge(visited)\n            visited[min_edge.v2] = True\n            mst.add_edge(min_edge.v1, min_edge.v2, min_edge.weight)\n        return mst\n\n\nclass Node:\n    def __init__(self, v):\n        self.v = v\n        self.parent = None\n        self.children = []\n        self.height = 0\n\n    def add_child(self, child):\n        self.children.append(child)\n        child.parent = self\n        self.update_height()\n\n    def update_height(self):\n        max_height = -1\n        for child in self.children:\n            if child.height > max_height:\n                max_height = child.height\n        self.height = max_height + 1\n\n    def update_all_heights(self):\n        self.update_height()\n        if self.parent:\n            self.parent.update_all_heights()\n\n\nclass Tree:\n    def __init__(self, n):\n        self.n = n\n        self.nodes = [Node(i) for i in range(n)]\n\n    def add_edge(self, v1, v2):\n        self.nodes[v1].add_child(self.nodes[v2])\n\n    def get_diameter(self):\n        max_height = -1\n        for node in self.nodes:\n            if node.height > max_height:\n                max_height = node.height\n        return max_height\n\n    def get_height(self, v):\n        return self.nodes[v].height\n\n\ndef get_input():\n    n, m = map(int, sys.stdin.readline().split())\n    graph = Graph(n)\n    for i in range(m):\n        v1, v2 = map(int, sys.stdin.readline().split())\n        graph.add_edge(v1 - 1, v2 - 1, 1)\n    return graph\n\ndef main():\n    graph = get_input()\n    mst = graph.prim()\n    tree = Tree(graph.n)\n    for v in range(graph.n):\n        for edge in mst.adj[v]:\n            tree.add_edge(edge.v1, edge.v2)\n    diameter = tree.get_diameter()\n    print(diameter)\n    for v in range(graph.n):\n        for edge in graph.adj[v]:\n            if tree.get_height(edge.v1) + tree.get_height(edge.v2) + 1 == diameter:\n                print(edge.v1 + 1, edge.v2 + 1)\n                break\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:23:16.058567 REASON stop
+2022-04-13 20:23:16.059343 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom typing import List\n\n\ndef solve(n: int, edges: List[List[int]]) -> List[List[int]]:\n    # TODO\n    pass\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    edges = [list(map(int, input().split())) for _ in range(m)]\n    result = solve(n, edges)\n    print(len(result))\n    for edge in result:\n        print(edge[0], edge[1])"
+}
+2022-04-13 20:23:16.059408 REASON stop

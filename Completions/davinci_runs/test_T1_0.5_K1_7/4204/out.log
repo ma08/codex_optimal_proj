@@ -1,0 +1,133 @@
+2022-04-13 19:13:01.369976 """
+Mr. Infinity has a string S consisting of digits from 1 to 9. Each time the date changes, this string changes as follows:
+ - Each occurrence of 2 in S is replaced with 22. Similarly, each 3 becomes 333, 4 becomes 4444, 5 becomes 55555, 6 becomes 666666, 7 becomes 7777777, 8 becomes 88888888 and 9 becomes 999999999. 1 remains as 1.
+For example, if S is 1324, it becomes 1333224444 the next day, and it becomes 133333333322224444444444444444 the day after next.
+You are interested in what the string looks like after 5 \times 10^{15} days. What is the K-th character from the left in the string after 5 \times 10^{15} days?
+
+-----Constraints-----
+ - S is a string of length between 1 and 100 (inclusive).
+ - K is an integer between 1 and 10^{18} (inclusive).
+ - The length of the string after 5 \times 10^{15} days is at least K.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+S
+K
+
+-----Output-----
+Print the K-th character from the left in Mr. Infinity's string after 5 \times 10^{15} days.
+
+-----Sample Input-----
+1214
+4
+
+-----Sample Output-----
+2
+
+The string S changes as follows:  
+ - Now: 1214
+ - After one day: 12214444
+ - After two days: 1222214444444444444444
+ - After three days: 12222222214444444444444444444444444444444444444444444444444444444444444444
+The first five characters in the string after 5 \times 10^{15} days is 12222. As K=4, we should print the fourth character, 2.
+"""
+2022-04-13 19:13:01.369984 --------------------------
+2022-04-13 19:13:32.773468 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#----input----\nS = list(input())\nK = int(input())\n\n#----main----\ndef main(S, K):\n    count = [0] * 10\n    # count[i] : \u6570\u5b57i\u304cS\u306b\u542b\u307e\u308c\u308b\u500b\u6570\n    for s in S:\n        count[int(s)] += 1\n\n    # \u5404\u6570\u5b57\u3092\u6841\u6570\u304c\u5897\u3048\u308b\u524d\u3068\u5897\u3048\u305f\u5f8c\u3067\u8a08\u7b97\u3059\u308b\n    before = [0] * 10\n    after = [0] * 10\n    for i in range(1, 10):\n        before[i] = count[i]\n        after[i] = count[i] * (i+1)\n    \n    # \u5404\u6570\u5b57\u304c\u5897\u3048\u308b\u524d\u3068\u5897\u3048\u305f\u5f8c\u3067\u3001\u5404\u6841\u6570\u304cK\u3092\u8d85\u3048\u308b\u307e\u3067\u8a08\u7b97\u3059\u308b\n    while sum(after) < K:\n        for i in range(1, 10):\n            before[i] = after[i]\n            after[i] = before[i] * (i+1)\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u308b\u307e\u3067\u8a08\u7b97\u3057\u305f\u4e2d\u3067\u3001K\u3092\u8d85\u3048\u3066\u3044\u308b\u6570\u5b57\u3092\u30ea\u30b9\u30c8\u306b\u683c\u7d0d\n    over = []\n    for i in range(1, 10):\n        if before[i] >= K:\n            over.append(i)\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u3066\u3044\u308b\u5834\u5408\u3001\u305d\u306e\u6570\u5b57\u3092\u8fd4\u3059\n    if len(over) == 1:\n        return over[0]\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u3066\u3044\u308b\u5834\u5408\u3001\u305d\u306e\u6570\u5b57\u306e\u4e2d\u3067K\u3092\u8d85\u3048\u308b\u6570\u5b57\u3092\u8fd4\u3059\n    else:\n        for i in range(1, 10):\n            if before[i] < K:\n                K -= before[i]\n            else:\n                return i\n\nresult = main(S, K)\nprint(result)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(s, k):\n    k -= 1\n    for i in range(15):\n        k = k // 2\n        if k == 0:\n            return s[0]\n        s = s.replace('2', '22')\n        s = s.replace('3', '33')\n        s = s.replace('4', '44')\n        s = s.replace('5', '55')\n        s = s.replace('6', '66')\n        s = s.replace('7', '77')\n        s = s.replace('8', '88')\n        s = s.replace('9', '99')\n    return s[k]\n\n\nif __name__ == '__main__':\n    s = input()\n    k = int(input())\n    print(solve(s, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#S = input()\n#K = int(input())\nS = \"1214\"\nK = 4\n\ndef change_S(S):\n    S_new = \"\"\n    for s in S:\n        S_new += s*int(s)\n    return S_new\n\nfor i in range(15):\n    S = change_S(S)\n\nprint(S[K-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().rstrip()\n    k = int(sys.stdin.readline())\n    length = len(s)\n    days = 5 * 10 ** 15\n\n    total = 0\n    for i in range(length):\n        if s[i] == \"1\":\n            total += days\n        elif s[i] == \"2\":\n            total += days * 2\n        elif s[i] == \"3\":\n            total += days * 3\n        elif s[i] == \"4\":\n            total += days * 4\n        elif s[i] == \"5\":\n            total += days * 5\n        elif s[i] == \"6\":\n            total += days * 6\n        elif s[i] == \"7\":\n            total += days * 7\n        elif s[i] == \"8\":\n            total += days * 8\n        elif s[i] == \"9\":\n            total += days * 9\n\n        if total >= k:\n            print(s[i])\n            break\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    k = int(sys.stdin.readline())\n\n    for i in range(15):\n        new_s = \"\"\n        for char in s:\n            new_s += char * int(char)\n        s = new_s\n\n    print(s[k-1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ns = sys.stdin.readline().rstrip()\nk = int(sys.stdin.readline())\n\na = []\nfor c in s:\n    a.append(int(c))\n\nfor i in range(1, 16):\n    b = []\n    for j in range(len(a)):\n        for k in range(a[j]):\n            b.append(a[j])\n    a = b\n\nprint(a[k-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    k = int(input())\n\n    for i in range(16):\n        s = s.replace(\"2\", \"22\")\n        s = s.replace(\"3\", \"333\")\n        s = s.replace(\"4\", \"4444\")\n        s = s.replace(\"5\", \"55555\")\n        s = s.replace(\"6\", \"666666\")\n        s = s.replace(\"7\", \"7777777\")\n        s = s.replace(\"8\", \"88888888\")\n        s = s.replace(\"9\", \"999999999\")\n    print(s[k-1])\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649877181,
+  "id": "cmpl-4wciDHbNe3H21oJooJQcLWtDw1fse",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:13:32.773752 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#----input----\nS = list(input())\nK = int(input())\n\n#----main----\ndef main(S, K):\n    count = [0] * 10\n    # count[i] : \u6570\u5b57i\u304cS\u306b\u542b\u307e\u308c\u308b\u500b\u6570\n    for s in S:\n        count[int(s)] += 1\n\n    # \u5404\u6570\u5b57\u3092\u6841\u6570\u304c\u5897\u3048\u308b\u524d\u3068\u5897\u3048\u305f\u5f8c\u3067\u8a08\u7b97\u3059\u308b\n    before = [0] * 10\n    after = [0] * 10\n    for i in range(1, 10):\n        before[i] = count[i]\n        after[i] = count[i] * (i+1)\n    \n    # \u5404\u6570\u5b57\u304c\u5897\u3048\u308b\u524d\u3068\u5897\u3048\u305f\u5f8c\u3067\u3001\u5404\u6841\u6570\u304cK\u3092\u8d85\u3048\u308b\u307e\u3067\u8a08\u7b97\u3059\u308b\n    while sum(after) < K:\n        for i in range(1, 10):\n            before[i] = after[i]\n            after[i] = before[i] * (i+1)\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u308b\u307e\u3067\u8a08\u7b97\u3057\u305f\u4e2d\u3067\u3001K\u3092\u8d85\u3048\u3066\u3044\u308b\u6570\u5b57\u3092\u30ea\u30b9\u30c8\u306b\u683c\u7d0d\n    over = []\n    for i in range(1, 10):\n        if before[i] >= K:\n            over.append(i)\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u3066\u3044\u308b\u5834\u5408\u3001\u305d\u306e\u6570\u5b57\u3092\u8fd4\u3059\n    if len(over) == 1:\n        return over[0]\n\n    # \u5404\u6570\u5b57\u304cK\u3092\u8d85\u3048\u3066\u3044\u308b\u5834\u5408\u3001\u305d\u306e\u6570\u5b57\u306e\u4e2d\u3067K\u3092\u8d85\u3048\u308b\u6570\u5b57\u3092\u8fd4\u3059\n    else:\n        for i in range(1, 10):\n            if before[i] < K:\n                K -= before[i]\n            else:\n                return i\n\nresult = main(S, K)\nprint(result)"
+}
+2022-04-13 19:13:32.773861 REASON stop
+2022-04-13 19:13:32.774400 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(s, k):\n    k -= 1\n    for i in range(15):\n        k = k // 2\n        if k == 0:\n            return s[0]\n        s = s.replace('2', '22')\n        s = s.replace('3', '33')\n        s = s.replace('4', '44')\n        s = s.replace('5', '55')\n        s = s.replace('6', '66')\n        s = s.replace('7', '77')\n        s = s.replace('8', '88')\n        s = s.replace('9', '99')\n    return s[k]\n\n\nif __name__ == '__main__':\n    s = input()\n    k = int(input())\n    print(solve(s, k))"
+}
+2022-04-13 19:13:32.774523 REASON stop
+2022-04-13 19:13:32.775006 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#S = input()\n#K = int(input())\nS = \"1214\"\nK = 4\n\ndef change_S(S):\n    S_new = \"\"\n    for s in S:\n        S_new += s*int(s)\n    return S_new\n\nfor i in range(15):\n    S = change_S(S)\n\nprint(S[K-1])"
+}
+2022-04-13 19:13:32.775054 REASON stop
+2022-04-13 19:13:32.776344 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().rstrip()\n    k = int(sys.stdin.readline())\n    length = len(s)\n    days = 5 * 10 ** 15\n\n    total = 0\n    for i in range(length):\n        if s[i] == \"1\":\n            total += days\n        elif s[i] == \"2\":\n            total += days * 2\n        elif s[i] == \"3\":\n            total += days * 3\n        elif s[i] == \"4\":\n            total += days * 4\n        elif s[i] == \"5\":\n            total += days * 5\n        elif s[i] == \"6\":\n            total += days * 6\n        elif s[i] == \"7\":\n            total += days * 7\n        elif s[i] == \"8\":\n            total += days * 8\n        elif s[i] == \"9\":\n            total += days * 9\n\n        if total >= k:\n            print(s[i])\n            break\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:13:32.776414 REASON stop
+2022-04-13 19:13:32.786870 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    k = int(sys.stdin.readline())\n\n    for i in range(15):\n        new_s = \"\"\n        for char in s:\n            new_s += char * int(char)\n        s = new_s\n\n    print(s[k-1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:13:32.786957 REASON stop
+2022-04-13 19:13:32.810313 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ns = sys.stdin.readline().rstrip()\nk = int(sys.stdin.readline())\n\na = []\nfor c in s:\n    a.append(int(c))\n\nfor i in range(1, 16):\n    b = []\n    for j in range(len(a)):\n        for k in range(a[j]):\n            b.append(a[j])\n    a = b\n\nprint(a[k-1])"
+}
+2022-04-13 19:13:32.810423 REASON stop
+2022-04-13 19:13:32.811064 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    k = int(input())\n\n    for i in range(16):\n        s = s.replace(\"2\", \"22\")\n        s = s.replace(\"3\", \"333\")\n        s = s.replace(\"4\", \"4444\")\n        s = s.replace(\"5\", \"55555\")\n        s = s.replace(\"6\", \"666666\")\n        s = s.replace(\"7\", \"7777777\")\n        s = s.replace(\"8\", \"88888888\")\n        s = s.replace(\"9\", \"999999999\")\n    print(s[k-1])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:13:32.811131 REASON stop

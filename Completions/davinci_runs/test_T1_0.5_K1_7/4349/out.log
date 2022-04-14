@@ -1,0 +1,154 @@
+2022-04-13 20:16:40.835437 """
+The only difference between easy and hard versions is constraints.
+
+Ivan plays a computer game that contains some microtransactions to make characters look cooler. Since Ivan wants his character to be really cool, he wants to use some of these microtransactions — and he won't start playing until he gets all of them.
+
+Each day (during the morning) Ivan earns exactly one burle.
+
+There are $n$ types of microtransactions in the game. Each microtransaction costs $2$ burles usually and $1$ burle if it is on sale. Ivan has to order exactly $k_i$ microtransactions of the $i$-th type (he orders microtransactions during the evening).
+
+Ivan can order any (possibly zero) number of microtransactions of any types during any day (of course, if he has enough money to do it). If the microtransaction he wants to order is on sale then he can buy it for $1$ burle and otherwise he can buy it for $2$ burles.
+
+There are also $m$ special offers in the game shop. The $j$-th offer $(d_j, t_j)$ means that microtransactions of the $t_j$-th type are on sale during the $d_j$-th day.
+
+Ivan wants to order all microtransactions as soon as possible. Your task is to calculate the minimum day when he can buy all microtransactions he want and actually start playing.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 2 \cdot 10^5$) — the number of types of microtransactions and the number of special offers in the game shop.
+
+The second line of the input contains $n$ integers $k_1, k_2, \dots, k_n$ ($0 \le k_i \le 2 \cdot 10^5$), where $k_i$ is the number of copies of microtransaction of the $i$-th type Ivan has to order. It is guaranteed that sum of all $k_i$ is not less than $1$ and not greater than $2 \cdot 10^5$.
+
+The next $m$ lines contain special offers. The $j$-th of these lines contains the $j$-th special offer. It is given as a pair of integers $(d_j, t_j)$ ($1 \le d_j \le 2 \cdot 10^5, 1 \le t_j \le n$) and means that microtransactions of the $t_j$-th type are on sale during the $d_j$-th day.
+
+
+-----Output-----
+
+Print one integer — the minimum day when Ivan can order all microtransactions he wants and actually start playing.
+
+
+-----Examples-----
+Input
+5 6
+1 2 0 2 0
+2 4
+3 3
+1 5
+1 2
+1 5
+2 3
+
+Output
+8
+
+Input
+5 3
+4 2 1 3 2
+3 5
+4 2
+2 5
+
+Output
+20
+"""
+2022-04-13 20:16:40.835451 --------------------------
+2022-04-13 20:17:08.630096 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# n, m = map(int, input().split())\n# k = list(map(int, input().split()))\n#\n# d, t = [], []\n# for i in range(m):\n#     d_t = list(map(int, input().split()))\n#     d.append(d_t[0])\n#     t.append(d_t[1])\n#\n# day = 0\n# while True:\n#     if sum(k) == 0:\n#         break\n#\n#     if day in d:\n#         index = d.index(day)\n#         t_index = t[index]\n#         if k[t_index-1] > 0:\n#             k[t_index-1] -= 1\n#\n#     for i in range(len(k)):\n#         if k[i] > 0:\n#             k[i] -= 1\n#\n#     day += 1\n#\n# print(day)\n\n# \uc815\ub2f5\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\nd, t = [], []\nfor i in range(m):\n    d_t = list(map(int, input().split()))\n    d.append(d_t[0])\n    t.append(d_t[1])\n\nday = 0\nwhile True:\n    if sum(k) == 0:\n        break\n\n    if day in d:\n        index = d.index(day)\n        t_index = t[index]\n        if k[t_index-1] > 0:\n            k[t_index-1] -= 1\n\n    for i in range(len(k)):\n        if k[i] > 0:\n            k[i] -= 1\n\n    day += 1\n\nprint(day)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\n# Requests\nrequests = []\nfor i in range(m):\n    d, t = map(int, input().split())\n    requests.append((d, t))\n\n# Sort requests\nrequests.sort()\n\n# Calculate the minimum number of days needed for each type of microtransaction\ndays = [0] * n\nfor i in range(n):\n    if k[i] == 0:\n        continue\n\n    # Calculate the minimum number of days needed for each sale\n    sales = []\n    for j in range(m):\n        if requests[j][1] == i + 1:\n            sales.append(requests[j][0])\n\n    if len(sales) == 0:\n        days[i] = 2 * k[i]\n        continue\n\n    # Calculate the minimum number of days needed for each sale\n    sales_days = [0] * len(sales)\n    for j in range(len(sales)):\n        sales_days[j] = 2 * (sales[j] - 1)\n        if j > 0:\n            sales_days[j] += sales_days[j - 1]\n        if j > 1:\n            sales_days[j] += sales_days[j - 2]\n\n    # Calculate the minimum number of days needed for each type of microtransaction\n    days[i] = 2 * sales[0] - 1\n    if len(sales) > 1:\n        days[i] += sales_days[-1]\n\n# Calculate the minimum number of days needed for all microtransactions\ndays_total = max(days)\nprint(days_total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nimport sys\nfrom collections import defaultdict\nread = sys.stdin.readline\n\nn, m = map(int, read().split())\nk = list(map(int, read().split()))\n\nsales = defaultdict(int)\nfor i in range(m):\n    d, t = map(int, read().split())\n    sales[d] += k[t-1]\n\n# print(sales)\n\ndays = 0\nfor d in sorted(sales.keys()):\n    if sales[d] == 0:\n        continue\n    days += 1\n    for i in range(d, max(sales.keys())+1):\n        sales[i] -= sales[d]\n    sales[d] = 0\n\n# print(sales)\n\ndays += sum(sales.values())//2 + sum(sales.values())%2\n\nprint(days)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\nmin_day = 0\nfor i in range(m):\n    day, type = map(int, input().split())\n    min_day = max(min_day, day + (k[type - 1] - 1) // 2)\n\nprint(min_day + sum(k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    k = list(map(int, input().split()))\n    d = [0] * (max(n, m) + 1)\n    for i in range(m):\n        d_i, t_i = map(int, input().split())\n        d[t_i] = max(d[t_i], d_i)\n    ans = 0\n    for i in range(1, n + 1):\n        ans = max(ans, (k[i - 1] + 1) // 2 + d[i])\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef readLine():\n\treturn stdin.readline().strip()\n\ndef readInts():\n\treturn list(map(int, readLine().split()))\n\ndef main():\n\tn, m = readInts()\n\tk = readInts()\n\ts = [0] * (n + 1)\n\tfor i in range(m):\n\t\td, t = readInts()\n\t\ts[t] = max(s[t], d)\n\tans = 0\n\tfor i in range(1, n + 1):\n\t\tans += (k[i - 1] + 1) // 2\n\t\tif k[i - 1] % 2 == 1:\n\t\t\tans = max(ans, s[i] + 1)\n\tprint(ans)\n\nif __name__ == '__main__':\n\tmain()"
+    }
+  ],
+  "created": 1649881001,
+  "id": "cmpl-4wdhpI7NgaObvfVafQExOPa8UrK1q",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:17:08.630404 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# n, m = map(int, input().split())\n# k = list(map(int, input().split()))\n#\n# d, t = [], []\n# for i in range(m):\n#     d_t = list(map(int, input().split()))\n#     d.append(d_t[0])\n#     t.append(d_t[1])\n#\n# day = 0\n# while True:\n#     if sum(k) == 0:\n#         break\n#\n#     if day in d:\n#         index = d.index(day)\n#         t_index = t[index]\n#         if k[t_index-1] > 0:\n#             k[t_index-1] -= 1\n#\n#     for i in range(len(k)):\n#         if k[i] > 0:\n#             k[i] -= 1\n#\n#     day += 1\n#\n# print(day)\n\n# \uc815\ub2f5\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\nd, t = [], []\nfor i in range(m):\n    d_t = list(map(int, input().split()))\n    d.append(d_t[0])\n    t.append(d_t[1])\n\nday = 0\nwhile True:\n    if sum(k) == 0:\n        break\n\n    if day in d:\n        index = d.index(day)\n        t_index = t[index]\n        if k[t_index-1] > 0:\n            k[t_index-1] -= 1\n\n    for i in range(len(k)):\n        if k[i] > 0:\n            k[i] -= 1\n\n    day += 1\n\nprint(day)"
+}
+2022-04-13 20:17:08.630511 REASON stop
+2022-04-13 20:17:08.630890 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\n# Requests\nrequests = []\nfor i in range(m):\n    d, t = map(int, input().split())\n    requests.append((d, t))\n\n# Sort requests\nrequests.sort()\n\n# Calculate the minimum number of days needed for each type of microtransaction\ndays = [0] * n\nfor i in range(n):\n    if k[i] == 0:\n        continue\n\n    # Calculate the minimum number of days needed for each sale\n    sales = []\n    for j in range(m):\n        if requests[j][1] == i + 1:\n            sales.append(requests[j][0])\n\n    if len(sales) == 0:\n        days[i] = 2 * k[i]\n        continue\n\n    # Calculate the minimum number of days needed for each sale\n    sales_days = [0] * len(sales)\n    for j in range(len(sales)):\n        sales_days[j] = 2 * (sales[j] - 1)\n        if j > 0:\n            sales_days[j] += sales_days[j - 1]\n        if j > 1:\n            sales_days[j] += sales_days[j - 2]\n\n    # Calculate the minimum number of days needed for each type of microtransaction\n    days[i] = 2 * sales[0] - 1\n    if len(sales) > 1:\n        days[i] += sales_days[-1]\n\n# Calculate the minimum number of days needed for all microtransactions\ndays_total = max(days)\nprint(days_total)"
+}
+2022-04-13 20:17:08.631005 REASON stop
+2022-04-13 20:17:08.631356 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nimport sys\nfrom collections import defaultdict\nread = sys.stdin.readline\n\nn, m = map(int, read().split())\nk = list(map(int, read().split()))\n\nsales = defaultdict(int)\nfor i in range(m):\n    d, t = map(int, read().split())\n    sales[d] += k[t-1]\n\n# print(sales)\n\ndays = 0\nfor d in sorted(sales.keys()):\n    if sales[d] == 0:\n        continue\n    days += 1\n    for i in range(d, max(sales.keys())+1):\n        sales[i] -= sales[d]\n    sales[d] = 0\n\n# print(sales)\n\ndays += sum(sales.values())//2 + sum(sales.values())%2\n\nprint(days)"
+}
+2022-04-13 20:17:08.631402 REASON stop
+2022-04-13 20:17:08.657433 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\nk = list(map(int, input().split()))\n\nmin_day = 0\nfor i in range(m):\n    day, type = map(int, input().split())\n    min_day = max(min_day, day + (k[type - 1] - 1) // 2)\n\nprint(min_day + sum(k))"
+}
+2022-04-13 20:17:08.657535 REASON stop
+2022-04-13 20:17:08.665774 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 20:17:08.665847 REASON stop
+2022-04-13 20:17:08.666591 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    k = list(map(int, input().split()))\n    d = [0] * (max(n, m) + 1)\n    for i in range(m):\n        d_i, t_i = map(int, input().split())\n        d[t_i] = max(d[t_i], d_i)\n    ans = 0\n    for i in range(1, n + 1):\n        ans = max(ans, (k[i - 1] + 1) // 2 + d[i])\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:17:08.666641 REASON stop
+2022-04-13 20:17:08.667283 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef readLine():\n\treturn stdin.readline().strip()\n\ndef readInts():\n\treturn list(map(int, readLine().split()))\n\ndef main():\n\tn, m = readInts()\n\tk = readInts()\n\ts = [0] * (n + 1)\n\tfor i in range(m):\n\t\td, t = readInts()\n\t\ts[t] = max(s[t], d)\n\tans = 0\n\tfor i in range(1, n + 1):\n\t\tans += (k[i - 1] + 1) // 2\n\t\tif k[i - 1] % 2 == 1:\n\t\t\tans = max(ans, s[i] + 1)\n\tprint(ans)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 20:17:08.667342 REASON stop

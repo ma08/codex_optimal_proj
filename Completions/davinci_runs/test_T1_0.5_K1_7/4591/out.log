@@ -1,0 +1,124 @@
+2022-04-13 21:54:32.529218 """
+"Pizza At", a fast food chain, offers three kinds of pizza: "A-pizza", "B-pizza" and "AB-pizza". A-pizza and B-pizza are completely different pizzas, and AB-pizza is one half of A-pizza and one half of B-pizza combined together. The prices of one A-pizza, B-pizza and AB-pizza are A yen, B yen and C yen (yen is the currency of Japan), respectively.
+Nakahashi needs to prepare X A-pizzas and Y B-pizzas for a party tonight. He can only obtain these pizzas by directly buying A-pizzas and B-pizzas, or buying two AB-pizzas and then rearrange them into one A-pizza and one B-pizza. At least how much money does he need for this? It is fine to have more pizzas than necessary by rearranging pizzas.
+
+-----Constraints-----
+ - 1 ≤ A, B, C ≤ 5000
+ - 1 ≤ X, Y ≤ 10^5
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A B C X Y
+
+-----Output-----
+Print the minimum amount of money required to prepare X A-pizzas and Y B-pizzas.
+
+-----Sample Input-----
+1500 2000 1600 3 2
+
+-----Sample Output-----
+7900
+
+It is optimal to buy four AB-pizzas and rearrange them into two A-pizzas and two B-pizzas, then buy additional one A-pizza.
+"""
+2022-04-13 21:54:32.529227 --------------------------
+2022-04-13 21:54:47.392596 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    a, b, c, x, y = map(int, input().split())\n\n    if c >= (a+b)/2:\n        print(a*x + b*y)\n    else:\n        print(min(a*x + b*y, c*(x+y) + (x+y)%2*min(a, b)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nA, B, C, X, Y = map(int, input().split())\n\nmin_cost = 10**9\n\nfor i in range(10**5+1):\n  cost = A*max(0, X-i) + B*max(0, Y-i) + C*2*i\n  min_cost = min(min_cost, cost)\n\nprint(min_cost)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b, c, x, y = map(int, sys.stdin.readline().split())\n    cost = 0\n    if a < c and b < c:\n        cost = a * x + b * y\n    else:\n        if x >= y:\n            cost += b * 2 * y\n            x -= y\n            if a < c:\n                cost += a * x\n            else:\n                cost += c * x\n        else:\n            cost += a * 2 * x\n            y -= x\n            if b < c:\n                cost += b * y\n            else:\n                cost += c * y\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# A-pizza, B-pizza, AB-pizza, X, Y\na, b, c, x, y = map(int, input().split())\n\n# (A-pizza price) * X + (B-pizza price) * Y\nans = a * x + b * y\n\n# (AB-pizza price) * X + (AB-pizza price) * Y\nans = min(ans, 2 * c * max(x, y))\n\n# (AB-pizza price) * X + (AB-pizza price) * Y - (B-pizza price) * (Y - X)\nans = min(ans, 2 * c * max(x, y) - b * max(0, y - x))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    A, B, C, X, Y = map(int, sys.stdin.readline().split())\n    if A + B <= 2 * C:\n        print(A * X + B * Y)\n    else:\n        if X < Y:\n            X, Y = Y, X\n            A, B = B, A\n        if A > 2 * C:\n            print(2 * C * X + min(2 * C, B) * (Y - X))\n        else:\n            print(A * X + min(2 * C, B) * (Y - X))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#input\na, b, c, x, y = map(int, input().split())\n\n#initialize\nans = 0\n\n#main\nif a + b > 2 * c:\n    ans = c * max(x, y) + min(a, b) * abs(x - y)\nelse:\n    ans = a * x + b * y\n\n#output\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    A, B, C, X, Y = map(int, input().split())\n    if A + B > C * 2:\n        if X > Y:\n            print(min(A * X, Y * B + (X - Y) * A, C * 2 * X))\n        else:\n            print(min(A * X + (Y - X) * B, B * Y, C * 2 * Y))\n    else:\n        print(A * X + B * Y)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649886872,
+  "id": "cmpl-4wfEWYpcqYm3ivXq8Ad92BV6nfq53",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:54:47.392844 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    a, b, c, x, y = map(int, input().split())\n\n    if c >= (a+b)/2:\n        print(a*x + b*y)\n    else:\n        print(min(a*x + b*y, c*(x+y) + (x+y)%2*min(a, b)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:54:47.392877 REASON stop
+2022-04-13 21:54:47.393392 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nA, B, C, X, Y = map(int, input().split())\n\nmin_cost = 10**9\n\nfor i in range(10**5+1):\n  cost = A*max(0, X-i) + B*max(0, Y-i) + C*2*i\n  min_cost = min(min_cost, cost)\n\nprint(min_cost)"
+}
+2022-04-13 21:54:47.393532 REASON stop
+2022-04-13 21:54:47.393919 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    a, b, c, x, y = map(int, sys.stdin.readline().split())\n    cost = 0\n    if a < c and b < c:\n        cost = a * x + b * y\n    else:\n        if x >= y:\n            cost += b * 2 * y\n            x -= y\n            if a < c:\n                cost += a * x\n            else:\n                cost += c * x\n        else:\n            cost += a * 2 * x\n            y -= x\n            if b < c:\n                cost += b * y\n            else:\n                cost += c * y\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:54:47.393973 REASON stop
+2022-04-13 21:54:47.407764 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# A-pizza, B-pizza, AB-pizza, X, Y\na, b, c, x, y = map(int, input().split())\n\n# (A-pizza price) * X + (B-pizza price) * Y\nans = a * x + b * y\n\n# (AB-pizza price) * X + (AB-pizza price) * Y\nans = min(ans, 2 * c * max(x, y))\n\n# (AB-pizza price) * X + (AB-pizza price) * Y - (B-pizza price) * (Y - X)\nans = min(ans, 2 * c * max(x, y) - b * max(0, y - x))\n\nprint(ans)"
+}
+2022-04-13 21:54:47.407875 REASON stop
+2022-04-13 21:54:47.417272 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    A, B, C, X, Y = map(int, sys.stdin.readline().split())\n    if A + B <= 2 * C:\n        print(A * X + B * Y)\n    else:\n        if X < Y:\n            X, Y = Y, X\n            A, B = B, A\n        if A > 2 * C:\n            print(2 * C * X + min(2 * C, B) * (Y - X))\n        else:\n            print(A * X + min(2 * C, B) * (Y - X))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:54:47.417396 REASON stop
+2022-04-13 21:54:47.421134 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#input\na, b, c, x, y = map(int, input().split())\n\n#initialize\nans = 0\n\n#main\nif a + b > 2 * c:\n    ans = c * max(x, y) + min(a, b) * abs(x - y)\nelse:\n    ans = a * x + b * y\n\n#output\nprint(ans)"
+}
+2022-04-13 21:54:47.421203 REASON stop
+2022-04-13 21:54:47.422200 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    A, B, C, X, Y = map(int, input().split())\n    if A + B > C * 2:\n        if X > Y:\n            print(min(A * X, Y * B + (X - Y) * A, C * 2 * X))\n        else:\n            print(min(A * X + (Y - X) * B, B * Y, C * 2 * Y))\n    else:\n        print(A * X + B * Y)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:54:47.422272 REASON stop

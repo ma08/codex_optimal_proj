@@ -1,0 +1,132 @@
+2022-04-13 22:41:14.019947 """
+There are three positive integers A, B and C written on a blackboard. E869120 performs the following operation K times:
+ - Choose one integer written on the blackboard and let the chosen integer be n. Replace the chosen integer with 2n.
+What is the largest possible sum of the integers written on the blackboard after K operations?
+
+-----Constraints-----
+ - A, B and C are integers between 1 and 50 (inclusive).
+ - K is an integer between 1 and 10 (inclusive).
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A B C
+K
+
+-----Output-----
+Print the largest possible sum of the integers written on the blackboard after K operations by E869220.
+
+-----Sample Input-----
+5 3 11
+1
+
+-----Sample Output-----
+30
+
+In this sample, 5, 3, 11 are initially written on the blackboard, and E869120 can perform the operation once.
+
+There are three choices:  
+ - Double 5: The integers written on the board after the operation are 10, 3, 11.
+ - Double 3: The integers written on the board after the operation are 5, 6, 11.
+ - Double 11: The integers written on the board after the operation are 5, 3, 22.
+If he chooses 3., the sum of the integers written on the board afterwards is 5 + 3 + 22 = 30, which is the largest among 1. through 3.
+"""
+2022-04-13 22:41:14.019954 --------------------------
+2022-04-13 22:41:33.043181 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport numpy as np\n\n# read inputs\na, b, c = map(int, sys.stdin.readline().split())\nk = int(sys.stdin.readline())\n\n# initialize\nboard = np.array([a, b, c])\n\n# loop\nfor i in range(k):\n    # get max value\n    max_value = np.amax(board)\n    # double it\n    board[np.where(board == max_value)] *= 2\n\n# get sum\nprint(np.sum(board))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef largest_sum(a,b,c,k):\n    largest = a+b+c\n    for i in range(k):\n        if a >= b and a >= c:\n            a *= 2\n        elif b >= a and b >= c:\n            b *= 2\n        else:\n            c *= 2\n        largest = max(a+b+c, largest)\n    return largest\n\na,b,c = map(int, input().split())\nk = int(input())\nprint(largest_sum(a,b,c,k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\na, b, c = map(int, input().split())\nk = int(input())\n\nif k % 2 == 0:\n    print(a + b + c)\nelse:\n    print(a * 2 + b + c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nA, B, C = map(int, input().split())\nK = int(input())\n\nif A >= B and A >= C:\n    if B >= C:\n        a = A\n        b = B\n        c = C\n    else:\n        a = A\n        b = C\n        c = B\nelif B >= A and B >= C:\n    if A >= C:\n        a = B\n        b = A\n        c = C\n    else:\n        a = B\n        b = C\n        c = A\nelse:\n    if A >= B:\n        a = C\n        b = A\n        c = B\n    else:\n        a = C\n        b = B\n        c = A\n\nif K == 1:\n    print(a + b + c)\nelse:\n    if K % 2 == 0:\n        print(a + b + c)\n    else:\n        if a % 2 == 0:\n            print(a + a // 2 + b + c)\n        else:\n            print(a + a // 2 + a % 2 + b + c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    args = sys.stdin.readlines()\n    args = list(map(int, args[0].split()))\n    k = int(args[-1])\n    args = args[:-1]\n    args = sorted(args)\n    while k > 0:\n        if args[0] * 2 < args[1]:\n            args[0] *= 2\n        else:\n            args[1] *= 2\n        args = sorted(args)\n        k -= 1\n    print(sum(args))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# sys.stdin = open(\"input.txt\", \"r\")\n\na, b, c = map(int, sys.stdin.readline().split())\nk = int(sys.stdin.readline())\n\ndef main():\n    max_val = max(a, b, c)\n    if k == 1:\n        print(a + b + c)\n    else:\n        print(3 * max_val * (2 ** (k - 1)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# === Using numpy ===\nimport numpy as np\n\na, b, c = [int(x) for x in input().split()]\nk = int(input())\n\n# === Without numpy ===\n# a, b, c = [int(x) for x in input().split()]\n# k = int(input())\n#\n# if k == 0:\n#     print(a + b + c)\n# else:\n#     print(max(a * (2 ** k) + b + c, a + b * (2 ** k) + c, a + b + c * (2 ** k)))\n\nprint(np.max([a, b, c]) * (2 ** k) + np.sum([a, b, c]) - np.max([a, b, c]))"
+    }
+  ],
+  "created": 1649889674,
+  "id": "cmpl-4wfxifWNTFmUbhqeXNiOXiBo28UaH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:41:33.043468 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport numpy as np\n\n# read inputs\na, b, c = map(int, sys.stdin.readline().split())\nk = int(sys.stdin.readline())\n\n# initialize\nboard = np.array([a, b, c])\n\n# loop\nfor i in range(k):\n    # get max value\n    max_value = np.amax(board)\n    # double it\n    board[np.where(board == max_value)] *= 2\n\n# get sum\nprint(np.sum(board))"
+}
+2022-04-13 22:41:33.043506 REASON stop
+2022-04-13 22:41:33.043966 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef largest_sum(a,b,c,k):\n    largest = a+b+c\n    for i in range(k):\n        if a >= b and a >= c:\n            a *= 2\n        elif b >= a and b >= c:\n            b *= 2\n        else:\n            c *= 2\n        largest = max(a+b+c, largest)\n    return largest\n\na,b,c = map(int, input().split())\nk = int(input())\nprint(largest_sum(a,b,c,k))"
+}
+2022-04-13 22:41:33.044081 REASON stop
+2022-04-13 22:41:33.044460 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\na, b, c = map(int, input().split())\nk = int(input())\n\nif k % 2 == 0:\n    print(a + b + c)\nelse:\n    print(a * 2 + b + c)"
+}
+2022-04-13 22:41:33.044506 REASON stop
+2022-04-13 22:41:33.057927 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nA, B, C = map(int, input().split())\nK = int(input())\n\nif A >= B and A >= C:\n    if B >= C:\n        a = A\n        b = B\n        c = C\n    else:\n        a = A\n        b = C\n        c = B\nelif B >= A and B >= C:\n    if A >= C:\n        a = B\n        b = A\n        c = C\n    else:\n        a = B\n        b = C\n        c = A\nelse:\n    if A >= B:\n        a = C\n        b = A\n        c = B\n    else:\n        a = C\n        b = B\n        c = A\n\nif K == 1:\n    print(a + b + c)\nelse:\n    if K % 2 == 0:\n        print(a + b + c)\n    else:\n        if a % 2 == 0:\n            print(a + a // 2 + b + c)\n        else:\n            print(a + a // 2 + a % 2 + b + c)"
+}
+2022-04-13 22:41:33.058019 REASON stop
+2022-04-13 22:41:33.082291 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    args = sys.stdin.readlines()\n    args = list(map(int, args[0].split()))\n    k = int(args[-1])\n    args = args[:-1]\n    args = sorted(args)\n    while k > 0:\n        if args[0] * 2 < args[1]:\n            args[0] *= 2\n        else:\n            args[1] *= 2\n        args = sorted(args)\n        k -= 1\n    print(sum(args))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:41:33.082402 REASON stop
+2022-04-13 22:41:33.082894 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# sys.stdin = open(\"input.txt\", \"r\")\n\na, b, c = map(int, sys.stdin.readline().split())\nk = int(sys.stdin.readline())\n\ndef main():\n    max_val = max(a, b, c)\n    if k == 1:\n        print(a + b + c)\n    else:\n        print(3 * max_val * (2 ** (k - 1)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:33.082954 REASON stop
+2022-04-13 22:41:33.083574 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# === Using numpy ===\nimport numpy as np\n\na, b, c = [int(x) for x in input().split()]\nk = int(input())\n\n# === Without numpy ===\n# a, b, c = [int(x) for x in input().split()]\n# k = int(input())\n#\n# if k == 0:\n#     print(a + b + c)\n# else:\n#     print(max(a * (2 ** k) + b + c, a + b * (2 ** k) + c, a + b + c * (2 ** k)))\n\nprint(np.max([a, b, c]) * (2 ** k) + np.sum([a, b, c]) - np.max([a, b, c]))"
+}
+2022-04-13 22:41:33.083654 REASON stop

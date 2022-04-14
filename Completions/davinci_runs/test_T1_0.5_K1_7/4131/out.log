@@ -1,0 +1,143 @@
+2022-04-13 18:35:20.940077 """
+In Republic of Atcoder, there are N prefectures, and a total of M cities that belong to those prefectures.
+City i is established in year Y_i and belongs to Prefecture P_i.
+You can assume that there are no multiple cities that are established in the same year.
+It is decided to allocate a 12-digit ID number to each city.
+If City i is the x-th established city among the cities that belong to Prefecture i, the first six digits of the ID number of City i is P_i, and the last six digits of the ID number is x.
+Here, if P_i or x (or both) has less than six digits, zeros are added to the left until it has six digits.
+Find the ID numbers for all the cities.
+Note that there can be a prefecture with no cities.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^5
+ - 1 \leq M \leq 10^5
+ - 1 \leq P_i \leq N
+ - 1 \leq Y_i \leq 10^9
+ - Y_i are all different.
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+P_1 Y_1
+:
+P_M Y_M
+
+-----Output-----
+Print the ID numbers for all the cities, in ascending order of indices (City 1, City 2, ...).
+
+-----Sample Input-----
+2 3
+1 32
+2 63
+1 12
+
+-----Sample Output-----
+000001000002
+000002000001
+000001000001
+
+ - As City 1 is the second established city among the cities that belong to Prefecture 1, its ID number is 000001000002.
+ - As City 2 is the first established city among the cities that belong to Prefecture 2, its ID number is 000002000001.
+ - As City 3 is the first established city among the cities that belong to Prefecture 1, its ID number is 000001000001.
+"""
+2022-04-13 18:35:20.940085 --------------------------
+2022-04-13 18:35:37.527080 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport heapq\n\nn, m = map(int, sys.stdin.readline().rstrip().split())\npref_dict = {}\nfor _ in range(m):\n    p, y = map(int, sys.stdin.readline().rstrip().split())\n    if p in pref_dict:\n        pref_dict[p].append(y)\n    else:\n        pref_dict[p] = [y]\n\nfor p in pref_dict:\n    pref_dict[p].sort()\n\nfor p in pref_dict:\n    for i in range(len(pref_dict[p])):\n        print('{:06d}{:06d}'.format(p, i+1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\nC = [[] for _ in range(N)]\nfor _ in range(M):\n    P, Y = map(int, input().split())\n    C[P-1].append(Y)\n\nfor i in range(N):\n    C[i].sort()\n    for j in range(len(C[i])):\n        print('{0:06d}{1:06d}'.format(i+1, j+1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    p_y = []\n    for i in range(m):\n        p, y = map(int, input().split())\n        p_y.append((p, y))\n    p_y.sort(key=lambda x: x[1])\n    count = [1 for _ in range(n+1)]\n    for p, y in p_y:\n        print(\"%06d%06d\" % (p, count[p]))\n        count[p] += 1\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\ndict_p = {}\nfor i in range(m):\n    p, y = map(int, input().split())\n    if p in dict_p:\n        dict_p[p].append(y)\n    else:\n        dict_p[p] = [y]\n\nfor k, v in dict_p.items():\n    v.sort()\n\nfor i in range(m):\n    p, y = map(int, input().split())\n    print('%06d%06d' % (p, dict_p[p].index(y) + 1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefectures = [0] * n\n    cities = []\n    for i in range(m):\n        p, y = map(int, sys.stdin.readline().split())\n        prefectures[p - 1] += 1\n        cities.append((p, y, prefectures[p - 1]))\n    for p, y, c in cities:\n        print('{:06}{:06}'.format(p, c))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N, M = map(int, input().split())\n    PY = [list(map(int, input().split())) for _ in range(M)]\n    PY.sort(key=lambda x:x[1])\n    city_cnt = [0 for _ in range(N+1)]\n    for p, y in PY:\n        city_cnt[p] += 1\n    ans = []\n    for p, y in PY:\n        ans.append(str(p).zfill(6)+str(city_cnt[p]).zfill(6))\n    print(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# N: number of prefectures\n# M: number of cities\n# P_i: prefecture of city i\n# Y_i: year city i was established\nN, M = map(int, input().split())\n\n# cities[p] is a list of years that the cities in prefecture p were established\ncities = [[] for _ in range(N+1)]\nfor _ in range(M):\n    p, y = map(int, input().split())\n    cities[p].append(y)\n\nfor p in range(1, N+1):\n    # Sort the years the cities in prefecture p were established\n    cities[p].sort()\n\nfor p in range(1, N+1):\n    # For each city in prefecture p\n    for i, y in enumerate(cities[p]):\n        # Print the ID number of city i in prefecture p\n        print(\"0\"*(6-len(str(p))) + str(p) + \"0\"*(6-len(str(i+1))) + str(i+1))"
+    }
+  ],
+  "created": 1649874921,
+  "id": "cmpl-4wc7lzRqvjEm0Mx0QzCZNcxd9Rj19",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:35:37.527363 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport heapq\n\nn, m = map(int, sys.stdin.readline().rstrip().split())\npref_dict = {}\nfor _ in range(m):\n    p, y = map(int, sys.stdin.readline().rstrip().split())\n    if p in pref_dict:\n        pref_dict[p].append(y)\n    else:\n        pref_dict[p] = [y]\n\nfor p in pref_dict:\n    pref_dict[p].sort()\n\nfor p in pref_dict:\n    for i in range(len(pref_dict[p])):\n        print('{:06d}{:06d}'.format(p, i+1))"
+}
+2022-04-13 18:35:37.527395 REASON stop
+2022-04-13 18:35:37.568175 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\nC = [[] for _ in range(N)]\nfor _ in range(M):\n    P, Y = map(int, input().split())\n    C[P-1].append(Y)\n\nfor i in range(N):\n    C[i].sort()\n    for j in range(len(C[i])):\n        print('{0:06d}{1:06d}'.format(i+1, j+1))"
+}
+2022-04-13 18:35:37.568356 REASON stop
+2022-04-13 18:35:37.801992 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    p_y = []\n    for i in range(m):\n        p, y = map(int, input().split())\n        p_y.append((p, y))\n    p_y.sort(key=lambda x: x[1])\n    count = [1 for _ in range(n+1)]\n    for p, y in p_y:\n        print(\"%06d%06d\" % (p, count[p]))\n        count[p] += 1\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:35:37.802106 REASON stop
+2022-04-13 18:35:37.984426 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\ndict_p = {}\nfor i in range(m):\n    p, y = map(int, input().split())\n    if p in dict_p:\n        dict_p[p].append(y)\n    else:\n        dict_p[p] = [y]\n\nfor k, v in dict_p.items():\n    v.sort()\n\nfor i in range(m):\n    p, y = map(int, input().split())\n    print('%06d%06d' % (p, dict_p[p].index(y) + 1))"
+}
+2022-04-13 18:35:37.984546 REASON stop
+2022-04-13 18:35:38.386223 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefectures = [0] * n\n    cities = []\n    for i in range(m):\n        p, y = map(int, sys.stdin.readline().split())\n        prefectures[p - 1] += 1\n        cities.append((p, y, prefectures[p - 1]))\n    for p, y, c in cities:\n        print('{:06}{:06}'.format(p, c))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:35:38.386361 REASON stop
+2022-04-13 18:35:38.744865 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N, M = map(int, input().split())\n    PY = [list(map(int, input().split())) for _ in range(M)]\n    PY.sort(key=lambda x:x[1])\n    city_cnt = [0 for _ in range(N+1)]\n    for p, y in PY:\n        city_cnt[p] += 1\n    ans = []\n    for p, y in PY:\n        ans.append(str(p).zfill(6)+str(city_cnt[p]).zfill(6))\n    print(\"\\n\".join(ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:35:38.745029 REASON stop
+2022-04-13 18:35:39.099163 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# N: number of prefectures\n# M: number of cities\n# P_i: prefecture of city i\n# Y_i: year city i was established\nN, M = map(int, input().split())\n\n# cities[p] is a list of years that the cities in prefecture p were established\ncities = [[] for _ in range(N+1)]\nfor _ in range(M):\n    p, y = map(int, input().split())\n    cities[p].append(y)\n\nfor p in range(1, N+1):\n    # Sort the years the cities in prefecture p were established\n    cities[p].sort()\n\nfor p in range(1, N+1):\n    # For each city in prefecture p\n    for i, y in enumerate(cities[p]):\n        # Print the ID number of city i in prefecture p\n        print(\"0\"*(6-len(str(p))) + str(p) + \"0\"*(6-len(str(i+1))) + str(i+1))"
+}
+2022-04-13 18:35:39.099290 REASON stop

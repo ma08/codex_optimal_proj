@@ -1,0 +1,140 @@
+2022-04-13 23:04:45.250126 """
+After the festive opening of your new store, the Boutique store for Alternative Paramedicine and Cwakhsahlvereigh, to your disappointment you find out that you are not making as many sales as you had hoped. To remedy this, you decide to run a special offer: you will mark some subset of the $n$ items for sale in your store as participating in the offer, and if people buy exactly two of these items, and the cost of these items is strictly more than $X$ euros, you will give them a free complimentary unicorn horn!
+
+Since you recently found out all your unicorn horns are really narwhal tusks, you decide to rig the offer by picking the participating items in such a way that no one can earn a horn anyway.
+
+To make sure no one becomes suspicious, you want to mark as many items as possible as participating in the offer.
+
+-----Input-----
+ - On the first line are two integers, $1 \leq n \leq 10^5$, the number of items for sale in your store, and $1\leq X \leq 10^9$, the minimum cost specified in the statement.
+ - On the second line are $n$ positive integers, each at most $10^9$. These are the prices of the items in the store.
+
+-----Output-----
+Print the maximum number of items you can mark as part of your special offer, without anyone actually being able to receive a horn.
+
+-----Examples-----
+Sample Input 1:
+5 6
+1 2 3 4 5
+Sample Output 1:
+3
+
+Sample Input 2:
+5 10
+4 8 1 9 7
+Sample Output 2:
+2
+
+Sample Input 3:
+4 10
+1 3 1 7
+Sample Output 3:
+4
+"""
+2022-04-13 23:04:45.250134 --------------------------
+2022-04-13 23:05:02.149415 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom bisect import bisect_left, bisect_right\n\ndef main():\n    n, x = map(int, input().split())\n    prices = list(map(int, input().split()))\n    prices.sort()\n    d = defaultdict(list)\n    for i in range(n):\n        d[prices[i]].append(i)\n    ans = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if prices[i] + prices[j] > x:\n                ans = max(ans, 2 + len(d[prices[i]]) + len(d[prices[j]]))\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, X = map(int, sys.stdin.readline().split())\n    prices = list(map(int, sys.stdin.readline().split()))\n    prices.sort()\n\n    count = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if prices[i] + prices[j] > X:\n                count = max(count, i+1)\n                break\n\n    print(count)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, X = map(int, input().split())\n    prices = list(map(int, input().split()))\n\n    prices.sort()\n\n    count = 0\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if prices[i] + prices[j] > X:\n                count += 1\n                break\n\n    print(count)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, X = map(int,input().split())\nprices = list(map(int,input().split()))\nprices.sort()\n\ni = 0\nj = n-1\n\ncount = 0\nwhile i < j:\n    if prices[i] + prices[j] > X:\n        j -= 1\n        count += 1\n    else:\n        i += 1\n        j -= 1\n        count += 2\n\nif i == j:\n    count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, x = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\nif a[0] + a[1] > x:\n    print(1)\nelse:\n    for i in range(2, n):\n        if a[i-2] + a[i-1] + a[i] > x:\n            print(i)\n            break\n    else:\n        print(n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, X = map(int, sys.stdin.readline().split())\nprices = list(map(int, sys.stdin.readline().split()))\n\nprices.sort()\n\n#print(n, X)\n#print(prices)\n\ni = 0\nj = n - 1\n\ncount = 0\n\nwhile i < j:\n    if prices[i] + prices[j] > X:\n        count += 2\n        i += 1\n        j -= 1\n    else:\n        if prices[i] + prices[i + 1] > X:\n            count += 1\n            i += 1\n        if prices[j] + prices[j - 1] > X:\n            count += 1\n            j -= 1\n        if prices[i] + prices[i + 1] <= X and prices[j] + prices[j - 1] <= X:\n            break\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#import sys\n#input = sys.stdin.readline\n\ndef main():\n    n, X = map(int,input().split())\n    prices = sorted(map(int,input().split()))\n    max_price = prices[-1]\n    if max_price >= X:\n        print(n)\n    else:\n        i = 0\n        while prices[i] < X and i < n:\n            i += 1\n        if i == n:\n            print(n)\n        else:\n            print(n-i)\n\nmain()"
+    }
+  ],
+  "created": 1649891085,
+  "id": "cmpl-4wgKTFZOBUt251flLKjbDtT1emEUL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:05:02.149746 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom bisect import bisect_left, bisect_right\n\ndef main():\n    n, x = map(int, input().split())\n    prices = list(map(int, input().split()))\n    prices.sort()\n    d = defaultdict(list)\n    for i in range(n):\n        d[prices[i]].append(i)\n    ans = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if prices[i] + prices[j] > x:\n                ans = max(ans, 2 + len(d[prices[i]]) + len(d[prices[j]]))\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:05:02.149805 REASON stop
+2022-04-13 23:05:02.150182 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.150206 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, X = map(int, sys.stdin.readline().split())\n    prices = list(map(int, sys.stdin.readline().split()))\n    prices.sort()\n\n    count = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if prices[i] + prices[j] > X:\n                count = max(count, i+1)\n                break\n\n    print(count)\n\nmain()"
+}
+2022-04-13 23:05:02.150351 REASON stop
+2022-04-13 23:05:02.150732 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.150752 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, X = map(int, input().split())\n    prices = list(map(int, input().split()))\n\n    prices.sort()\n\n    count = 0\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if prices[i] + prices[j] > X:\n                count += 1\n                break\n\n    print(count)\n\nmain()"
+}
+2022-04-13 23:05:02.150810 REASON stop
+2022-04-13 23:05:02.151908 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.151929 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, X = map(int,input().split())\nprices = list(map(int,input().split()))\nprices.sort()\n\ni = 0\nj = n-1\n\ncount = 0\nwhile i < j:\n    if prices[i] + prices[j] > X:\n        j -= 1\n        count += 1\n    else:\n        i += 1\n        j -= 1\n        count += 2\n\nif i == j:\n    count += 1\n\nprint(count)"
+}
+2022-04-13 23:05:02.151986 REASON stop
+2022-04-13 23:05:02.168655 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.168692 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, x = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\nif a[0] + a[1] > x:\n    print(1)\nelse:\n    for i in range(2, n):\n        if a[i-2] + a[i-1] + a[i] > x:\n            print(i)\n            break\n    else:\n        print(n)"
+}
+2022-04-13 23:05:02.168843 REASON stop
+2022-04-13 23:05:02.169568 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.169592 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, X = map(int, sys.stdin.readline().split())\nprices = list(map(int, sys.stdin.readline().split()))\n\nprices.sort()\n\n#print(n, X)\n#print(prices)\n\ni = 0\nj = n - 1\n\ncount = 0\n\nwhile i < j:\n    if prices[i] + prices[j] > X:\n        count += 2\n        i += 1\n        j -= 1\n    else:\n        if prices[i] + prices[i + 1] > X:\n            count += 1\n            i += 1\n        if prices[j] + prices[j - 1] > X:\n            count += 1\n            j -= 1\n        if prices[i] + prices[i + 1] <= X and prices[j] + prices[j - 1] <= X:\n            break\n\nprint(count)"
+}
+2022-04-13 23:05:02.169664 REASON stop
+2022-04-13 23:05:02.189018 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-13 23:05:02.189055 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#import sys\n#input = sys.stdin.readline\n\ndef main():\n    n, X = map(int,input().split())\n    prices = sorted(map(int,input().split()))\n    max_price = prices[-1]\n    if max_price >= X:\n        print(n)\n    else:\n        i = 0\n        while prices[i] < X and i < n:\n            i += 1\n        if i == n:\n            print(n)\n        else:\n            print(n-i)\n\nmain()"
+}
+2022-04-13 23:05:02.189146 REASON stop
+2022-04-13 23:05:02.189944 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'

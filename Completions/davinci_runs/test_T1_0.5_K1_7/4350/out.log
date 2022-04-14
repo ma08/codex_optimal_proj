@@ -1,0 +1,190 @@
+2022-04-13 20:17:09.021000 """
+A star is a figure of the following type: an asterisk character '*' in the center of the figure and four rays (to the left, right, top, bottom) of the same positive length. The size of a star is the length of its rays. The size of a star must be a positive number (i.e. rays of length $0$ are not allowed).
+
+Let's consider empty cells are denoted by '.', then the following figures are stars:
+
+ [Image] The leftmost figure is a star of size $1$, the middle figure is a star of size $2$ and the rightmost figure is a star of size $3$. 
+
+You are given a rectangular grid of size $n \times m$ consisting only of asterisks '*' and periods (dots) '.'. Rows are numbered from $1$ to $n$, columns are numbered from $1$ to $m$. Your task is to draw this grid using any number of stars or find out that it is impossible. Stars can intersect, overlap or even coincide with each other. The number of stars in the output can't exceed $n \cdot m$. Each star should be completely inside the grid. You can use stars of same and arbitrary sizes.
+
+In this problem, you do not need to minimize the number of stars. Just find any way to draw the given grid with at most $n \cdot m$ stars.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($3 \le n, m \le 1000$) — the sizes of the given grid.
+
+The next $n$ lines contains $m$ characters each, the $i$-th line describes the $i$-th row of the grid. It is guaranteed that grid consists of characters '*' and '.' only.
+
+
+-----Output-----
+
+If it is impossible to draw the given grid using stars only, print "-1".
+
+Otherwise in the first line print one integer $k$ ($0 \le k \le n \cdot m$) — the number of stars needed to draw the given grid. The next $k$ lines should contain three integers each — $x_j$, $y_j$ and $s_j$, where $x_j$ is the row index of the central star character, $y_j$ is the column index of the central star character and $s_j$ is the size of the star. Each star should be completely inside the grid.
+
+
+-----Examples-----
+Input
+6 8
+....*...
+...**...
+..*****.
+...**...
+....*...
+........
+
+Output
+3
+3 4 1
+3 5 2
+3 5 1
+
+Input
+5 5
+.*...
+****.
+.****
+..**.
+.....
+
+Output
+3
+2 2 1
+3 3 1
+3 4 1
+
+Input
+5 5
+.*...
+***..
+.*...
+.*...
+.....
+
+Output
+-1
+
+Input
+3 3
+*.*
+.*.
+*.*
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the output 2
+
+3 4 1
+
+3 5 2
+
+
+
+is also correct.
+"""
+2022-04-13 20:17:09.021014 --------------------------
+2022-04-13 20:19:09.749046 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef is_valid(grid, x, y, size):\n    if x - size < 0 or x + size >= len(grid):\n        return False\n    if y - size < 0 or y + size >= len(grid[0]):\n        return False\n\n    for i in range(size):\n        if grid[x - i][y - i] == '.':\n            return False\n        if grid[x + i][y + i] == '.':\n            return False\n        if grid[x - i][y + i] == '.':\n            return False\n        if grid[x + i][y - i] == '.':\n            return False\n\n    return True\n\ndef draw_star(grid, x, y, size):\n    for i in range(size):\n        grid[x - i][y - i] = '.'\n        grid[x + i][y + i] = '.'\n        grid[x - i][y + i] = '.'\n        grid[x + i][y - i] = '.'\n\ndef remove_star(grid, x, y, size):\n    for i in range(size):\n        grid[x - i][y - i] = '*'\n        grid[x + i][y + i] = '*'\n        grid[x - i][y + i] = '*'\n        grid[x + i][y - i] = '*'\n\ndef is_empty(grid):\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                return False\n    return True\n\ndef solve(grid):\n    sol = []\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                size = 1\n                while is_valid(grid, i, j, size):\n                    size += 1\n                size -= 1\n                if size > 0:\n                    sol.append((i, j, size))\n                    draw_star(grid, i, j, size)\n\n    if is_empty(grid):\n        print(len(sol))\n        for i, j, size in sol:\n            print(i + 1, j + 1, size)\n    else:\n        print(-1)\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n\n    solve(grid)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    result = []\n    for star in stars:\n        for size in range(1, n + m):\n            if check(grid, star, size):\n                result.append((star[0] + 1, star[1] + 1, size))\n                break\n    if len(result) == len(stars):\n        print(len(result))\n        for res in result:\n            print(*res)\n    else:\n        print(-1)\n\ndef check(grid, star, size):\n    if star[0] - size < 0 or star[0] + size >= len(grid):\n        return False\n    if star[1] - size < 0 or star[1] + size >= len(grid[0]):\n        return False\n    for i in range(1, size + 1):\n        if grid[star[0] - i][star[1]] != '*':\n            return False\n        if grid[star[0] + i][star[1]] != '*':\n            return False\n        if grid[star[0]][star[1] - i] != '*':\n            return False\n        if grid[star[0]][star[1] + i] != '*':\n            return False\n    return True\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    row_col = input().split()\n    row = int(row_col[0])\n    col = int(row_col[1])\n    grid = []\n    for i in range(row):\n        grid.append(list(input()))\n    star_list = []\n    for i in range(row):\n        for j in range(col):\n            if grid[i][j] == '*':\n                star_list.append((i, j))\n    star_list.sort()\n    star_list = list(star_list for star_list,_ in itertools.groupby(star_list))\n    star_size_list = []\n    for star in star_list:\n        star_size_list.append(find_size(star, grid))\n    star_size_list.sort()\n    star_size_list = list(star_size_list for star_size_list,_ in itertools.groupby(star_size_list))\n    if star_size_list.count(1) == row*col:\n        print(row*col)\n        for i in range(row):\n            for j in range(col):\n                print(i+1, j+1, 1)\n    else:\n        print(-1)\n\ndef find_size(star, grid):\n    \"\"\"\n    Finds the size of the star in the grid.\n    \"\"\"\n    size = 1\n    while True:\n        if star[0] - size < 0 or star[1] - size < 0 or star[0] + size >= len(grid) or star[1] + size >= len(grid[0]):\n            break\n        for i in range(star[0] - size, star[0] + size + 1):\n            if grid[i][star[1] - size] != '*' or grid[i][star[1] + size] != '*':\n                return size\n        for j in range(star[1] - size, star[1] + size + 1):\n            if grid[star[0] - size][j] != '*' or grid[star[0] + size][j] != '*':\n                return size\n        size += 1\n    return size\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef read_data():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        row = input()\n        grid.append(row)\n    return n, m, grid\n\ndef solve_task(n, m, grid):\n    grid_size = n * m\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    star_count = len(stars)\n    if star_count == 0:\n        return '-1'\n    if star_count == 1:\n        return '1\\n%d %d 1' % (stars[0][0] + 1, stars[0][1] + 1)\n    if star_count == 2:\n        return '-1'\n    if star_count == 3:\n        a, b, c = stars\n        if a[0] == b[0] and b[0] == c[0]:\n            if a[1] == b[1] and b[1] == c[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or b[1] == c[1]:\n                    return '-1'\n                else:\n                    return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1]:\n            if a[0] == b[0] and b[0] == c[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or b[0] == c[0]:\n                    return '-1'\n                else:\n                    return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or b[0] == c[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or b[1] == c[1]:\n                return '-1'\n            return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n    if star_count == 4:\n        a, b, c, d = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or b[1] == c[1] or b[1] == d[1] or c[1] == d[1]:\n                    return '-1'\n                else:\n                    return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or b[0] == c[0] or b[0] == d[0] or c[0] == d[0]:\n                    return '-1'\n                else:\n                    return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or b[0] == c[0] or b[0] == d[0] or c[0] == d[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or b[1] == c[1] or b[1] == d[1] or c[1] == d[1]:\n                return '-1'\n            return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n    if star_count == 5:\n        a, b, c, d, e = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or c[1] == d[1] or c[1] == e[1] or d[1] == e[1]:\n                    return '-1'\n                else:\n                    return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or c[0] == d[0] or c[0] == e[0] or d[0] == e[0]:\n                    return '-1'\n                else:\n                    return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or c[0] == d[0] or c[0] == e[0] or d[0] == e[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or c[1] == d[1] or c[1] == e[1] or d[1] == e[1]:\n                return '-1'\n            return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n    if star_count == 6:\n        a, b, c, d, e, f = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or d[1] == e[1] or d[1] == f[1] or e[1] == f[1]:\n                    return '-1'\n                else:\n                    return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or a[0] == f[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or b[0] == f[0] or c[0] == d[0] or c[0] == e[0] or c[0] == f[0] or d[0] == e[0] or d[0] == f[0] or e[0] == f[0]:\n                    return '-1'\n                else:\n                    return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or a[0] == f[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or b[0] == f[0] or c[0] == d[0] or c[0] == e[0] or c[0] == f[0] or d[0] == e[0] or d[0] == f[0] or e[0] == f[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or d[1] == e[1] or d[1] == f[1] or e[1] == f[1]:\n                return '-1'\n            return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n    if star_count == 7:\n        a, b, c, d, e, f, g = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0] and f[0] == g[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1] and f[1] == g[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or a[1] == g[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or b[1] == g[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or c[1] == g[1] or d[1] == e[1] or d[1] == f[1] or"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function\n    :return: None\n    \"\"\"\n    n, m = [int(i) for i in input().split()]\n    grid = []\n    for _ in range(n):\n        grid.append(input())\n    print(n, m)\n    print(grid)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    grid = []\n    for i in range(n):\n        grid.append(sys.stdin.readline().strip())\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                star_size = 1\n                while i + star_size < n and j + star_size < m:\n                    if all([grid[i + star_size][j] == '*', grid[i + star_size][j + star_size] == '*', grid[i][j + star_size] == '*']):\n                        star_size += 1\n                    else:\n                        break\n                stars.append((i, j, star_size))\n    if len(stars) == 0:\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(*star)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649881029,
+  "id": "cmpl-4wdiH8lEKHjoHDTZpB3pJR9nNM9cH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:19:09.749493 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef is_valid(grid, x, y, size):\n    if x - size < 0 or x + size >= len(grid):\n        return False\n    if y - size < 0 or y + size >= len(grid[0]):\n        return False\n\n    for i in range(size):\n        if grid[x - i][y - i] == '.':\n            return False\n        if grid[x + i][y + i] == '.':\n            return False\n        if grid[x - i][y + i] == '.':\n            return False\n        if grid[x + i][y - i] == '.':\n            return False\n\n    return True\n\ndef draw_star(grid, x, y, size):\n    for i in range(size):\n        grid[x - i][y - i] = '.'\n        grid[x + i][y + i] = '.'\n        grid[x - i][y + i] = '.'\n        grid[x + i][y - i] = '.'\n\ndef remove_star(grid, x, y, size):\n    for i in range(size):\n        grid[x - i][y - i] = '*'\n        grid[x + i][y + i] = '*'\n        grid[x - i][y + i] = '*'\n        grid[x + i][y - i] = '*'\n\ndef is_empty(grid):\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                return False\n    return True\n\ndef solve(grid):\n    sol = []\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                size = 1\n                while is_valid(grid, i, j, size):\n                    size += 1\n                size -= 1\n                if size > 0:\n                    sol.append((i, j, size))\n                    draw_star(grid, i, j, size)\n\n    if is_empty(grid):\n        print(len(sol))\n        for i, j, size in sol:\n            print(i + 1, j + 1, size)\n    else:\n        print(-1)\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n\n    solve(grid)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:19:09.749551 REASON stop
+2022-04-13 20:19:09.749933 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    result = []\n    for star in stars:\n        for size in range(1, n + m):\n            if check(grid, star, size):\n                result.append((star[0] + 1, star[1] + 1, size))\n                break\n    if len(result) == len(stars):\n        print(len(result))\n        for res in result:\n            print(*res)\n    else:\n        print(-1)\n\ndef check(grid, star, size):\n    if star[0] - size < 0 or star[0] + size >= len(grid):\n        return False\n    if star[1] - size < 0 or star[1] + size >= len(grid[0]):\n        return False\n    for i in range(1, size + 1):\n        if grid[star[0] - i][star[1]] != '*':\n            return False\n        if grid[star[0] + i][star[1]] != '*':\n            return False\n        if grid[star[0]][star[1] - i] != '*':\n            return False\n        if grid[star[0]][star[1] + i] != '*':\n            return False\n    return True\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:19:09.750040 REASON stop
+2022-04-13 20:19:09.750424 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    row_col = input().split()\n    row = int(row_col[0])\n    col = int(row_col[1])\n    grid = []\n    for i in range(row):\n        grid.append(list(input()))\n    star_list = []\n    for i in range(row):\n        for j in range(col):\n            if grid[i][j] == '*':\n                star_list.append((i, j))\n    star_list.sort()\n    star_list = list(star_list for star_list,_ in itertools.groupby(star_list))\n    star_size_list = []\n    for star in star_list:\n        star_size_list.append(find_size(star, grid))\n    star_size_list.sort()\n    star_size_list = list(star_size_list for star_size_list,_ in itertools.groupby(star_size_list))\n    if star_size_list.count(1) == row*col:\n        print(row*col)\n        for i in range(row):\n            for j in range(col):\n                print(i+1, j+1, 1)\n    else:\n        print(-1)\n\ndef find_size(star, grid):\n    \"\"\"\n    Finds the size of the star in the grid.\n    \"\"\"\n    size = 1\n    while True:\n        if star[0] - size < 0 or star[1] - size < 0 or star[0] + size >= len(grid) or star[1] + size >= len(grid[0]):\n            break\n        for i in range(star[0] - size, star[0] + size + 1):\n            if grid[i][star[1] - size] != '*' or grid[i][star[1] + size] != '*':\n                return size\n        for j in range(star[1] - size, star[1] + size + 1):\n            if grid[star[0] - size][j] != '*' or grid[star[0] + size][j] != '*':\n                return size\n        size += 1\n    return size\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:19:09.750477 REASON stop
+2022-04-13 20:19:09.765179 3 {
+  "finish_reason": "length",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef read_data():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        row = input()\n        grid.append(row)\n    return n, m, grid\n\ndef solve_task(n, m, grid):\n    grid_size = n * m\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    star_count = len(stars)\n    if star_count == 0:\n        return '-1'\n    if star_count == 1:\n        return '1\\n%d %d 1' % (stars[0][0] + 1, stars[0][1] + 1)\n    if star_count == 2:\n        return '-1'\n    if star_count == 3:\n        a, b, c = stars\n        if a[0] == b[0] and b[0] == c[0]:\n            if a[1] == b[1] and b[1] == c[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or b[1] == c[1]:\n                    return '-1'\n                else:\n                    return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1]:\n            if a[0] == b[0] and b[0] == c[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or b[0] == c[0]:\n                    return '-1'\n                else:\n                    return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or b[0] == c[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or b[1] == c[1]:\n                return '-1'\n            return '3\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1)\n    if star_count == 4:\n        a, b, c, d = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or b[1] == c[1] or b[1] == d[1] or c[1] == d[1]:\n                    return '-1'\n                else:\n                    return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or b[0] == c[0] or b[0] == d[0] or c[0] == d[0]:\n                    return '-1'\n                else:\n                    return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or b[0] == c[0] or b[0] == d[0] or c[0] == d[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or b[1] == c[1] or b[1] == d[1] or c[1] == d[1]:\n                return '-1'\n            return '4\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1)\n    if star_count == 5:\n        a, b, c, d, e = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or c[1] == d[1] or c[1] == e[1] or d[1] == e[1]:\n                    return '-1'\n                else:\n                    return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or c[0] == d[0] or c[0] == e[0] or d[0] == e[0]:\n                    return '-1'\n                else:\n                    return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or c[0] == d[0] or c[0] == e[0] or d[0] == e[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or c[1] == d[1] or c[1] == e[1] or d[1] == e[1]:\n                return '-1'\n            return '5\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1)\n    if star_count == 6:\n        a, b, c, d, e, f = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or d[1] == e[1] or d[1] == f[1] or e[1] == f[1]:\n                    return '-1'\n                else:\n                    return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n        elif a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1]:\n            if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0]:\n                return '-1'\n            else:\n                if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or a[0] == f[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or b[0] == f[0] or c[0] == d[0] or c[0] == e[0] or c[0] == f[0] or d[0] == e[0] or d[0] == f[0] or e[0] == f[0]:\n                    return '-1'\n                else:\n                    return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n        else:\n            if a[0] == b[0] or a[0] == c[0] or a[0] == d[0] or a[0] == e[0] or a[0] == f[0] or b[0] == c[0] or b[0] == d[0] or b[0] == e[0] or b[0] == f[0] or c[0] == d[0] or c[0] == e[0] or c[0] == f[0] or d[0] == e[0] or d[0] == f[0] or e[0] == f[0]:\n                return '-1'\n            if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or d[1] == e[1] or d[1] == f[1] or e[1] == f[1]:\n                return '-1'\n            return '6\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1\\n%d %d 1' % (a[0] + 1, a[1] + 1, b[0] + 1, b[1] + 1, c[0] + 1, c[1] + 1, d[0] + 1, d[1] + 1, e[0] + 1, e[1] + 1, f[0] + 1, f[1] + 1)\n    if star_count == 7:\n        a, b, c, d, e, f, g = stars\n        if a[0] == b[0] and b[0] == c[0] and c[0] == d[0] and d[0] == e[0] and e[0] == f[0] and f[0] == g[0]:\n            if a[1] == b[1] and b[1] == c[1] and c[1] == d[1] and d[1] == e[1] and e[1] == f[1] and f[1] == g[1]:\n                return '-1'\n            else:\n                if a[1] == b[1] or a[1] == c[1] or a[1] == d[1] or a[1] == e[1] or a[1] == f[1] or a[1] == g[1] or b[1] == c[1] or b[1] == d[1] or b[1] == e[1] or b[1] == f[1] or b[1] == g[1] or c[1] == d[1] or c[1] == e[1] or c[1] == f[1] or c[1] == g[1] or d[1] == e[1] or d[1] == f[1] or"
+}
+2022-04-13 20:19:09.765330 REASON length
+2022-04-13 20:19:09.765339 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:19:09.765397 REASON stop
+2022-04-13 20:19:09.792341 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function\n    :return: None\n    \"\"\"\n    n, m = [int(i) for i in input().split()]\n    grid = []\n    for _ in range(n):\n        grid.append(input())\n    print(n, m)\n    print(grid)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:19:09.792445 REASON stop
+2022-04-13 20:19:09.793483 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    grid = []\n    for i in range(n):\n        grid.append(sys.stdin.readline().strip())\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                star_size = 1\n                while i + star_size < n and j + star_size < m:\n                    if all([grid[i + star_size][j] == '*', grid[i + star_size][j + star_size] == '*', grid[i][j + star_size] == '*']):\n                        star_size += 1\n                    else:\n                        break\n                stars.append((i, j, star_size))\n    if len(stars) == 0:\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(*star)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:19:09.793561 REASON stop

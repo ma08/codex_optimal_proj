@@ -1,0 +1,153 @@
+2022-04-13 20:12:07.036434 """
+You are given two strings $s$ and $t$, both consisting of exactly $k$ lowercase Latin letters, $s$ is lexicographically less than $t$.
+
+Let's consider list of all strings consisting of exactly $k$ lowercase Latin letters, lexicographically not less than $s$ and not greater than $t$ (including $s$ and $t$) in lexicographical order. For example, for $k=2$, $s=$"az" and $t=$"bf" the list will be ["az", "ba", "bb", "bc", "bd", "be", "bf"].
+
+Your task is to print the median (the middle element) of this list. For the example above this will be "bc".
+
+It is guaranteed that there is an odd number of strings lexicographically not less than $s$ and not greater than $t$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $k$ ($1 \le k \le 2 \cdot 10^5$) — the length of strings.
+
+The second line of the input contains one string $s$ consisting of exactly $k$ lowercase Latin letters.
+
+The third line of the input contains one string $t$ consisting of exactly $k$ lowercase Latin letters.
+
+It is guaranteed that $s$ is lexicographically less than $t$.
+
+It is guaranteed that there is an odd number of strings lexicographically not less than $s$ and not greater than $t$.
+
+
+-----Output-----
+
+Print one string consisting exactly of $k$ lowercase Latin letters — the median (the middle element) of list of strings of length $k$ lexicographically not less than $s$ and not greater than $t$.
+
+
+-----Examples-----
+Input
+2
+az
+bf
+
+Output
+bc
+
+Input
+5
+afogk
+asdji
+
+Output
+alvuw
+
+Input
+6
+nijfvj
+tvqhwp
+
+Output
+qoztvz
+"""
+2022-04-13 20:12:07.036448 --------------------------
+2022-04-13 20:13:14.167063 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n    l = []\n    while s != t:\n        l.append(s)\n        s = chr(ord(s[-1]) + 1) + s[:-1]\n    l.append(s)\n    print(l[len(l) // 2])\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n\n    ans = list(s)\n    med = (k - 1) // 2\n    for i in range(med, -1, -1):\n        if ord(ans[i]) < ord(t[i]):\n            ans[i] = chr(ord(ans[i]) + 1)\n            break\n\n    for i in range(i + 1, k):\n        ans[i] = 'a'\n\n    print(''.join(ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef next_string(s):\n    if s[-1] == 'z':\n        return next_string(s[:-1]) + 'a'\n    else:\n        return s[:-1] + chr(ord(s[-1]) + 1)\n\ndef median(s, t):\n    mid = s\n    while next_string(mid) != t:\n        mid = next_string(mid)\n        t = next_string(t)\n    return mid\n\ndef main():\n    k = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(median(s, t))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\ns = input()\nt = input()\n\nans = \"\"\nfor i in range(k):\n    if s[i] == t[i]:\n        ans += s[i]\n    else:\n        ans += chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2)\n        break\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\ns = input()\nt = input()\n\n# make the list\nl = []\nfor i in range(k):\n    for j in range(k):\n        l.append(s[:i] + t[i:])\n\nl.sort()\n\n# find the median\nm = len(l) // 2\nprint(l[m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(s)\n        return\n    if k == 1:\n        print(chr(ord(s) + (ord(t) - ord(s)) // 2))\n        return\n    for i in range(k):\n        if s[i] == t[i]:\n            print(s[:i], end=\"\")\n            continue\n        if s[i] == 'z':\n            print(s[:i] + chr(ord(t[i]) - (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n            continue\n        if t[i] == 'a':\n            print(chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n            continue\n        print(chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n        break\n    print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n\n    # print(s, t)\n    # print(k)\n\n    # print(s[0:k-1], ord(s[k-1]))\n    # print(t[0:k-1], ord(t[k-1]))\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n    # print(t[0:k-1] + chr(ord(t[k-1])-1))\n\n    # print(ord('a'), ord('z'))\n\n    # print(sum([ord(c) for c in s]))\n    # print(sum([ord(c) for c in t]))\n\n    # print(ord(s[k-1]) - ord(s[0]) + 1)\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n    # print(t[0:k-1] + chr(ord(t[k-1])-1))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]))\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]))\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1)\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1)\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1)\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1)\n    # print((sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1) // 2)\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1])\n\n    # print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1])\n\n    # print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1] + chr(ord(s[k-1])+1))\n\n    print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1] + chr(ord(s[k-1])+1))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649880727,
+  "id": "cmpl-4wddPFLdXEXjcorFQQqVmO0NB9y25",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:13:14.167377 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n    l = []\n    while s != t:\n        l.append(s)\n        s = chr(ord(s[-1]) + 1) + s[:-1]\n    l.append(s)\n    print(l[len(l) // 2])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:13:14.167487 REASON stop
+2022-04-13 20:13:14.167914 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n\n    ans = list(s)\n    med = (k - 1) // 2\n    for i in range(med, -1, -1):\n        if ord(ans[i]) < ord(t[i]):\n            ans[i] = chr(ord(ans[i]) + 1)\n            break\n\n    for i in range(i + 1, k):\n        ans[i] = 'a'\n\n    print(''.join(ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:13:14.168038 REASON stop
+2022-04-13 20:13:14.168395 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef next_string(s):\n    if s[-1] == 'z':\n        return next_string(s[:-1]) + 'a'\n    else:\n        return s[:-1] + chr(ord(s[-1]) + 1)\n\ndef median(s, t):\n    mid = s\n    while next_string(mid) != t:\n        mid = next_string(mid)\n        t = next_string(t)\n    return mid\n\ndef main():\n    k = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(median(s, t))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:13:14.168440 REASON stop
+2022-04-13 20:13:14.179249 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\ns = input()\nt = input()\n\nans = \"\"\nfor i in range(k):\n    if s[i] == t[i]:\n        ans += s[i]\n    else:\n        ans += chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2)\n        break\nprint(ans)"
+}
+2022-04-13 20:13:14.179327 REASON stop
+2022-04-13 20:13:14.197310 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\ns = input()\nt = input()\n\n# make the list\nl = []\nfor i in range(k):\n    for j in range(k):\n        l.append(s[:i] + t[i:])\n\nl.sort()\n\n# find the median\nm = len(l) // 2\nprint(l[m])"
+}
+2022-04-13 20:13:14.197428 REASON stop
+2022-04-13 20:13:14.198207 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(s)\n        return\n    if k == 1:\n        print(chr(ord(s) + (ord(t) - ord(s)) // 2))\n        return\n    for i in range(k):\n        if s[i] == t[i]:\n            print(s[:i], end=\"\")\n            continue\n        if s[i] == 'z':\n            print(s[:i] + chr(ord(t[i]) - (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n            continue\n        if t[i] == 'a':\n            print(chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n            continue\n        print(chr(ord(s[i]) + (ord(t[i]) - ord(s[i])) // 2), end=\"\")\n        break\n    print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:13:14.198276 REASON stop
+2022-04-13 20:13:14.211080 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    k = int(input())\n    s = input()\n    t = input()\n\n    # print(s, t)\n    # print(k)\n\n    # print(s[0:k-1], ord(s[k-1]))\n    # print(t[0:k-1], ord(t[k-1]))\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n    # print(t[0:k-1] + chr(ord(t[k-1])-1))\n\n    # print(ord('a'), ord('z'))\n\n    # print(sum([ord(c) for c in s]))\n    # print(sum([ord(c) for c in t]))\n\n    # print(ord(s[k-1]) - ord(s[0]) + 1)\n\n    # print(s[0:k-1] + chr(ord(s[k-1])+1))\n    # print(t[0:k-1] + chr(ord(t[k-1])-1))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]))\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]))\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]))\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1)\n    # print(sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1)\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1)\n\n    # print(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1)\n    # print((sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1) // 2)\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])))\n\n    # print(chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1])\n\n    # print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1])\n\n    # print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1] + chr(ord(s[k-1])+1))\n\n    print(s[0] + chr(sum([ord(c) for c in s[0:k-1] + chr(ord(s[k-1])+1)]) - sum([ord(c) for c in s]) + 1 + sum([ord(c) for c in t[0:k-1] + chr(ord(t[k-1])-1)]) - sum([ord(c) for c in t]) - 1 + 1 + ord(s[0])) + s[1:k-1] + chr(ord(s[k-1])+1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:13:14.211192 REASON stop

@@ -1,0 +1,158 @@
+2022-04-13 22:28:49.734616 """
+You are given a permutation of length $n$. Recall that the permutation is an array consisting of $n$ distinct integers from $1$ to $n$ in arbitrary order. For example, $[2, 3, 1, 5, 4]$ is a permutation, but $[1, 2, 2]$ is not a permutation ($2$ appears twice in the array) and $[1, 3, 4]$ is also not a permutation ($n=3$ but there is $4$ in the array).
+
+You can perform at most $n-1$ operations with the given permutation (it is possible that you don't perform any operations at all). The $i$-th operation allows you to swap elements of the given permutation on positions $i$ and $i+1$. Each operation can be performed at most once. The operations can be performed in arbitrary order.
+
+Your task is to find the lexicographically minimum possible permutation obtained by performing some of the given operations in some order.
+
+You can see the definition of the lexicographical order in the notes section.
+
+You have to answer $q$ independent test cases.
+
+For example, let's consider the permutation $[5, 4, 1, 3, 2]$. The minimum possible permutation we can obtain is $[1, 5, 2, 4, 3]$ and we can do it in the following way:
+
+  perform the second operation (swap the second and the third elements) and obtain the permutation $[5, 1, 4, 3, 2]$;  perform the fourth operation (swap the fourth and the fifth elements) and obtain the permutation $[5, 1, 4, 2, 3]$;  perform the third operation (swap the third and the fourth elements) and obtain the permutation $[5, 1, 2, 4, 3]$.  perform the first operation (swap the first and the second elements) and obtain the permutation $[1, 5, 2, 4, 3]$; 
+
+Another example is $[1, 2, 4, 3]$. The minimum possible permutation we can obtain is $[1, 2, 3, 4]$ by performing the third operation (swap the third and the fourth elements).
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 100$) — the number of test cases. Then $q$ test cases follow.
+
+The first line of the test case contains one integer $n$ ($1 \le n \le 100$) — the number of elements in the permutation.
+
+The second line of the test case contains $n$ distinct integers from $1$ to $n$ — the given permutation.
+
+
+-----Output-----
+
+For each test case, print the answer on it — the lexicograhically minimum possible permutation obtained by performing some of the given operations in some order.
+
+
+-----Example-----
+Input
+4
+5
+5 4 1 3 2
+4
+1 2 4 3
+1
+1
+4
+4 3 2 1
+
+Output
+1 5 2 4 3 
+1 2 3 4 
+1 
+1 4 3 2 
+
+
+
+-----Note-----
+
+Recall that the permutation $p$ of length $n$ is lexicographically less than the permutation $q$ of length $n$ if there is such index $i \le n$ that for all $j$ from $1$ to $i - 1$ the condition $p_j = q_j$ is satisfied, and $p_i < q_i$. For example:
+
+  $p = [1, 3, 5, 2, 4]$ is less than $q = [1, 3, 5, 4, 2]$ (such $i=4$ exists, that $p_i < q_i$ and for each $j < i$ holds $p_j = q_j$),  $p = [1, 2]$ is less than $q = [2, 1]$ (such $i=1$ exists, that $p_i < q_i$ and for each $j < i$ holds $p_j = q_j$).
+"""
+2022-04-13 22:28:49.734632 --------------------------
+2022-04-13 22:29:27.522590 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef min_permutation(n, permutation):\n    \"\"\"\n    >>> min_permutation(5, [5, 4, 1, 3, 2])\n    [1, 5, 2, 4, 3]\n    >>> min_permutation(4, [1, 2, 4, 3])\n    [1, 2, 3, 4]\n    >>> min_permutation(1, [1])\n    [1]\n    >>> min_permutation(4, [4, 3, 2, 1])\n    [1, 4, 3, 2]\n    \"\"\"\n    permutation = list(permutation)\n    for i in range(n-1):\n        if permutation[i] > permutation[i+1]:\n            permutation[i], permutation[i+1] = permutation[i+1], permutation[i]\n    return permutation\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(\" \".join(map(str, min_permutation(n, permutation))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int,input().split()))\n    for i in range(n-1):\n        if a[i] > a[i+1]:\n            a[i],a[i+1] = a[i+1],a[i]\n    print(*a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef find_min_permutation(permutation):\n    n = len(permutation)\n    for i in range(n):\n        if i == n - 1:\n            break\n        if permutation[i] > permutation[i + 1]:\n            permutation[i], permutation[i + 1] = permutation[i + 1], permutation[i]\n    return permutation\n\n\nif __name__ == \"__main__\":\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(*find_min_permutation(permutation))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Solution 1\n\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = sorted(a)\n    ans = ['1'] * n\n    for i in range(n):\n        if a[i] == b[i]:\n            ans[i] = '0'\n    print(''.join(ans))\n\n# Solution 2\n\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = sorted(a)\n    ans = ['1'] * n\n    for i in range(n):\n        if a[i] == b[i]:\n            ans[i] = '0'\n    print(''.join(ans))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        p = [int(x) for x in input().split()]\n        ans = [0] * n\n        for i in range(n):\n            for j in range(i + 1, n):\n                if p[i] > p[j]:\n                    ans[i] = 1\n                else:\n                    ans[j] = 1\n        for i in range(n):\n            if i > 0:\n                sys.stdout.write(\" \")\n            sys.stdout.write(str(p[i] + ans[i]))\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(permutation):\n    swap_count = 0\n    for i in range(len(permutation) - 1):\n        if permutation[i] > permutation[i + 1]:\n            permutation[i], permutation[i + 1] = permutation[i + 1], permutation[i]\n            swap_count += 1\n    return swap_count\n\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(*permutation)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom copy import deepcopy\nfrom heapq import heappop, heappush\n\nclass Node:\n    def __init__(self, state, parent, op):\n        self.state = state\n        self.parent = parent\n        self.op = op\n\ndef swap(state, i):\n    state[i], state[i + 1] = state[i + 1], state[i]\n    return state\n\ndef get_children(parent):\n    children = []\n    for i in range(len(parent.state) - 1):\n        if parent.op is None or i > parent.op:\n            new_state = deepcopy(parent.state)\n            new_state = swap(new_state, i)\n            children.append(Node(new_state, parent, i))\n    return children\n\ndef bfs(start):\n    frontier = [start]\n    visited = [start]\n    while frontier:\n        current = frontier.pop(0)\n        if current.state == sorted(current.state):\n            return current\n        for child in get_children(current):\n            if child not in visited:\n                frontier.append(child)\n                visited.append(child)\n\ndef ucs(start):\n    frontier = [(0, start)]\n    visited = []\n    while frontier:\n        cost, current = heappop(frontier)\n        if current.state == sorted(current.state):\n            return current\n        visited.append(current)\n        for child in get_children(current):\n            if child not in visited:\n                heappush(frontier, (cost + 1, child))\n\ndef dfs(start):\n    frontier = [start]\n    visited = [start]\n    while frontier:\n        current = frontier.pop()\n        if current.state == sorted(current.state):\n            return current\n        for child in get_children(current):\n            if child not in visited:\n                frontier.append(child)\n                visited.append(child)\n\ndef get_path(node):\n    path = []\n    while node:\n        path.append(node.state)\n        node = node.parent\n    return path[::-1]\n\ndef main():\n    n = int(input())\n    for _ in range(n):\n        _ = input()\n        start = Node(list(map(int, input().split())), None, None)\n        # solution = bfs(start)\n        # solution = dfs(start)\n        solution = ucs(start)\n        print(\" \".join(map(str, solution.state)))\n\nif __name__ == '__main__':\n    sys.setrecursionlimit(100000)\n    main()"
+    }
+  ],
+  "created": 1649888929,
+  "id": "cmpl-4wflh0KbCkHwl77aPVCVWGbQfgU8O",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:29:27.522960 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef min_permutation(n, permutation):\n    \"\"\"\n    >>> min_permutation(5, [5, 4, 1, 3, 2])\n    [1, 5, 2, 4, 3]\n    >>> min_permutation(4, [1, 2, 4, 3])\n    [1, 2, 3, 4]\n    >>> min_permutation(1, [1])\n    [1]\n    >>> min_permutation(4, [4, 3, 2, 1])\n    [1, 4, 3, 2]\n    \"\"\"\n    permutation = list(permutation)\n    for i in range(n-1):\n        if permutation[i] > permutation[i+1]:\n            permutation[i], permutation[i+1] = permutation[i+1], permutation[i]\n    return permutation\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(\" \".join(map(str, min_permutation(n, permutation))))"
+}
+2022-04-13 22:29:27.523004 REASON stop
+2022-04-13 22:29:27.523393 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int,input().split()))\n    for i in range(n-1):\n        if a[i] > a[i+1]:\n            a[i],a[i+1] = a[i+1],a[i]\n    print(*a)"
+}
+2022-04-13 22:29:27.523497 REASON stop
+2022-04-13 22:29:27.523884 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef find_min_permutation(permutation):\n    n = len(permutation)\n    for i in range(n):\n        if i == n - 1:\n            break\n        if permutation[i] > permutation[i + 1]:\n            permutation[i], permutation[i + 1] = permutation[i + 1], permutation[i]\n    return permutation\n\n\nif __name__ == \"__main__\":\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(*find_min_permutation(permutation))"
+}
+2022-04-13 22:29:27.523931 REASON stop
+2022-04-13 22:29:27.539116 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Solution 1\n\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = sorted(a)\n    ans = ['1'] * n\n    for i in range(n):\n        if a[i] == b[i]:\n            ans[i] = '0'\n    print(''.join(ans))\n\n# Solution 2\n\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = sorted(a)\n    ans = ['1'] * n\n    for i in range(n):\n        if a[i] == b[i]:\n            ans[i] = '0'\n    print(''.join(ans))"
+}
+2022-04-13 22:29:27.539211 REASON stop
+2022-04-13 22:29:27.556439 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        p = [int(x) for x in input().split()]\n        ans = [0] * n\n        for i in range(n):\n            for j in range(i + 1, n):\n                if p[i] > p[j]:\n                    ans[i] = 1\n                else:\n                    ans[j] = 1\n        for i in range(n):\n            if i > 0:\n                sys.stdout.write(\" \")\n            sys.stdout.write(str(p[i] + ans[i]))\n        sys.stdout.write(\"\\n\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:29:27.556549 REASON stop
+2022-04-13 22:29:27.557393 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(permutation):\n    swap_count = 0\n    for i in range(len(permutation) - 1):\n        if permutation[i] > permutation[i + 1]:\n            permutation[i], permutation[i + 1] = permutation[i + 1], permutation[i]\n            swap_count += 1\n    return swap_count\n\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        permutation = list(map(int, input().split()))\n        print(*permutation)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:29:27.557483 REASON stop
+2022-04-13 22:29:27.558132 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom copy import deepcopy\nfrom heapq import heappop, heappush\n\nclass Node:\n    def __init__(self, state, parent, op):\n        self.state = state\n        self.parent = parent\n        self.op = op\n\ndef swap(state, i):\n    state[i], state[i + 1] = state[i + 1], state[i]\n    return state\n\ndef get_children(parent):\n    children = []\n    for i in range(len(parent.state) - 1):\n        if parent.op is None or i > parent.op:\n            new_state = deepcopy(parent.state)\n            new_state = swap(new_state, i)\n            children.append(Node(new_state, parent, i))\n    return children\n\ndef bfs(start):\n    frontier = [start]\n    visited = [start]\n    while frontier:\n        current = frontier.pop(0)\n        if current.state == sorted(current.state):\n            return current\n        for child in get_children(current):\n            if child not in visited:\n                frontier.append(child)\n                visited.append(child)\n\ndef ucs(start):\n    frontier = [(0, start)]\n    visited = []\n    while frontier:\n        cost, current = heappop(frontier)\n        if current.state == sorted(current.state):\n            return current\n        visited.append(current)\n        for child in get_children(current):\n            if child not in visited:\n                heappush(frontier, (cost + 1, child))\n\ndef dfs(start):\n    frontier = [start]\n    visited = [start]\n    while frontier:\n        current = frontier.pop()\n        if current.state == sorted(current.state):\n            return current\n        for child in get_children(current):\n            if child not in visited:\n                frontier.append(child)\n                visited.append(child)\n\ndef get_path(node):\n    path = []\n    while node:\n        path.append(node.state)\n        node = node.parent\n    return path[::-1]\n\ndef main():\n    n = int(input())\n    for _ in range(n):\n        _ = input()\n        start = Node(list(map(int, input().split())), None, None)\n        # solution = bfs(start)\n        # solution = dfs(start)\n        solution = ucs(start)\n        print(\" \".join(map(str, solution.state)))\n\nif __name__ == '__main__':\n    sys.setrecursionlimit(100000)\n    main()"
+}
+2022-04-13 22:29:27.558202 REASON stop

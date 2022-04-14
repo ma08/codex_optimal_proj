@@ -1,0 +1,128 @@
+2022-04-13 19:20:15.469585 """
+You have N apples, called Apple 1, Apple 2, Apple 3, ..., Apple N. The flavor of Apple i is L+i-1, which can be negative.
+You can make an apple pie using one or more of the apples. The flavor of the apple pie will be the sum of the flavors of the apples used.
+You planned to make an apple pie using all of the apples, but being hungry tempts you to eat one of them, which can no longer be used to make the apple pie.
+You want to make an apple pie that is as similar as possible to the one that you planned to make. Thus, you will choose the apple to eat so that the flavor of the apple pie made of the remaining N-1 apples will have the smallest possible absolute difference from the flavor of the apple pie made of all the N apples.
+Find the flavor of the apple pie made of the remaining N-1 apples when you choose the apple to eat as above.
+We can prove that this value is uniquely determined.
+
+-----Constraints-----
+ - 2 \leq N \leq 200
+ - -100 \leq L \leq 100
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N L
+
+-----Output-----
+Find the flavor of the apple pie made of the remaining N-1 apples when you optimally choose the apple to eat.
+
+-----Sample Input-----
+5 2
+
+-----Sample Output-----
+18
+
+The flavors of Apple 1, 2, 3, 4, and 5 are 2, 3, 4, 5, and 6, respectively. The optimal choice is to eat Apple 1, so the answer is 3+4+5+6=18.
+"""
+2022-04-13 19:20:15.469593 --------------------------
+2022-04-13 19:20:51.582090 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, l = map(int, input().split())\n    apples = [l+i for i in range(n)]\n    print(sum(apples)-min(apples)-max(apples))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# A.\n# \u5165\u529b\nn, l = map(int, input().split())\n# \u914d\u5217\na = []\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u3092\u8db3\u3057\u305f\u5024\nall_sum = 0\n# \u5404\u30ea\u30f3\u30b4\u306e\u5024\u3092\u8db3\u3057\u3066\u3044\u304f\nfor i in range(n):\n    a.append(l+i)\n    all_sum += l+i\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u5024\u304c\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u8a08\u7b97\u3059\u308b\nmin_index = abs(all_sum - (all_sum - a[0]))\nmin_i = 0\nfor i in range(n):\n    if min_index > abs(all_sum - (all_sum - a[i])):\n        min_index = abs(all_sum - (all_sum - a[i]))\n        min_i = i\n\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u5f15\u3044\u305f\u5024\u3092\u51fa\u529b\u3059\u308b\nprint(all_sum - a[min_i])\n\n# B.\n# \u5165\u529b\nn, l = map(int, input().split())\n# \u914d\u5217\na = []\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u3092\u8db3\u3057\u305f\u5024\nall_sum = 0\n# \u5404\u30ea\u30f3\u30b4\u306e\u5024\u3092\u8db3\u3057\u3066\u3044\u304f\nfor i in range(n):\n    a.append(l+i)\n    all_sum += l+i\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u5024\u304c\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u8a08\u7b97\u3059\u308b\nmin_index = abs(all_sum - (all_sum - a[0]))\nmin_i = 0\nfor i in range(n):\n    if min_index > abs(all_sum - (all_sum - a[i])):\n        min_index = abs(all_sum - (all_sum - a[i]))\n        min_i = i\n\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u5f15\u3044\u305f\u5024\u3092\u51fa\u529b\u3059\u308b\nprint(all_sum - a[min_i])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Get input\n    N, L = map(int, sys.stdin.readline().split())\n    # Get the sum of all the N apples\n    sumAll = sum(L+i for i in range(N))\n    # Get the sum of all the N-1 apples\n    sumN = sum(L+i for i in range(N-1))\n    # Get the sum of the Nth apple\n    sumNth = sumAll - sumN\n    # Get the difference between the sum of all the N apples and the sum of all the N-1 apples\n    diff = sumAll - 2*sumN\n    # If the difference is negative, then the Nth apple is the one with the least absolute difference\n    # Otherwise, the one with the least absolute difference is the one with the smallest flavor\n    if diff < 0:\n        print(sumAll - abs(sumNth))\n    else:\n        print(sumAll - abs(L))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, l = map(int, input().split())\n\napple_flavors = []\nfor i in range(n):\n    apple_flavors.append(l+i)\n\napple_flavors.sort()\n\ntotal_flavor = 0\nfor x in apple_flavors:\n    total_flavor += x\n\neaten_flavor = total_flavor - apple_flavors[0]\n\nprint(eaten_flavor)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, l = map(int, input().split())\n    a = [l + i for i in range(n)]\n    print(sum(a) - min(a, key=lambda x: abs(x - sum(a) / 2)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Write your code here.\nn, l = map(int, input().split())\ns = sum([i for i in range(l, l+n)])\nprint(s - (n+l-1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN, L = map(int, input().split())\n\nsum_of_apples = sum(range(L, L+N))\nabs_diff = sum([abs(sum_of_apples - (sum_of_apples - x)) for x in range(L, L+N)])\n\nprint(abs_diff)"
+    }
+  ],
+  "created": 1649877615,
+  "id": "cmpl-4wcpDpHLb6qwvaaiq3MW0phnwjjTB",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:20:51.582399 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, l = map(int, input().split())\n    apples = [l+i for i in range(n)]\n    print(sum(apples)-min(apples)-max(apples))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:20:51.582430 REASON stop
+2022-04-13 19:20:51.601082 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# A.\n# \u5165\u529b\nn, l = map(int, input().split())\n# \u914d\u5217\na = []\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u3092\u8db3\u3057\u305f\u5024\nall_sum = 0\n# \u5404\u30ea\u30f3\u30b4\u306e\u5024\u3092\u8db3\u3057\u3066\u3044\u304f\nfor i in range(n):\n    a.append(l+i)\n    all_sum += l+i\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u5024\u304c\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u8a08\u7b97\u3059\u308b\nmin_index = abs(all_sum - (all_sum - a[0]))\nmin_i = 0\nfor i in range(n):\n    if min_index > abs(all_sum - (all_sum - a[i])):\n        min_index = abs(all_sum - (all_sum - a[i]))\n        min_i = i\n\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u5f15\u3044\u305f\u5024\u3092\u51fa\u529b\u3059\u308b\nprint(all_sum - a[min_i])\n\n# B.\n# \u5165\u529b\nn, l = map(int, input().split())\n# \u914d\u5217\na = []\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u3092\u8db3\u3057\u305f\u5024\nall_sum = 0\n# \u5404\u30ea\u30f3\u30b4\u306e\u5024\u3092\u8db3\u3057\u3066\u3044\u304f\nfor i in range(n):\n    a.append(l+i)\n    all_sum += l+i\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u5024\u304c\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u8a08\u7b97\u3059\u308b\nmin_index = abs(all_sum - (all_sum - a[0]))\nmin_i = 0\nfor i in range(n):\n    if min_index > abs(all_sum - (all_sum - a[i])):\n        min_index = abs(all_sum - (all_sum - a[i]))\n        min_i = i\n\n# \u5168\u3066\u306e\u30ea\u30f3\u30b4\u306e\u5024\u306e\u5408\u8a08\u304b\u3089\u4e00\u756a\u8fd1\u304f\u306a\u308b\u30ea\u30f3\u30b4\u3092\u5f15\u3044\u305f\u5024\u3092\u51fa\u529b\u3059\u308b\nprint(all_sum - a[min_i])"
+}
+2022-04-13 19:20:51.601282 REASON stop
+2022-04-13 19:20:51.601772 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Get input\n    N, L = map(int, sys.stdin.readline().split())\n    # Get the sum of all the N apples\n    sumAll = sum(L+i for i in range(N))\n    # Get the sum of all the N-1 apples\n    sumN = sum(L+i for i in range(N-1))\n    # Get the sum of the Nth apple\n    sumNth = sumAll - sumN\n    # Get the difference between the sum of all the N apples and the sum of all the N-1 apples\n    diff = sumAll - 2*sumN\n    # If the difference is negative, then the Nth apple is the one with the least absolute difference\n    # Otherwise, the one with the least absolute difference is the one with the smallest flavor\n    if diff < 0:\n        print(sumAll - abs(sumNth))\n    else:\n        print(sumAll - abs(L))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:20:51.601836 REASON stop
+2022-04-13 19:20:51.627272 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, l = map(int, input().split())\n\napple_flavors = []\nfor i in range(n):\n    apple_flavors.append(l+i)\n\napple_flavors.sort()\n\ntotal_flavor = 0\nfor x in apple_flavors:\n    total_flavor += x\n\neaten_flavor = total_flavor - apple_flavors[0]\n\nprint(eaten_flavor)"
+}
+2022-04-13 19:20:51.627378 REASON stop
+2022-04-13 19:20:51.646735 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, l = map(int, input().split())\n    a = [l + i for i in range(n)]\n    print(sum(a) - min(a, key=lambda x: abs(x - sum(a) / 2)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:20:51.646850 REASON stop
+2022-04-13 19:20:51.647514 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Write your code here.\nn, l = map(int, input().split())\ns = sum([i for i in range(l, l+n)])\nprint(s - (n+l-1))"
+}
+2022-04-13 19:20:51.647594 REASON stop
+2022-04-13 19:20:51.648335 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN, L = map(int, input().split())\n\nsum_of_apples = sum(range(L, L+N))\nabs_diff = sum([abs(sum_of_apples - (sum_of_apples - x)) for x in range(L, L+N)])\n\nprint(abs_diff)"
+}
+2022-04-13 19:20:51.648409 REASON stop

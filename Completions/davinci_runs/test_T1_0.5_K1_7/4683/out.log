@@ -1,0 +1,126 @@
+2022-04-13 22:40:29.424923 """
+Given are N integers A_1,\ldots,A_N.
+Find the sum of A_i \times A_j over all pairs (i,j) such that 1\leq i < j \leq N, modulo (10^9+7).
+
+-----Constraints-----
+ - 2 \leq N \leq 2\times 10^5
+ - 0 \leq A_i \leq 10^9
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 \ldots A_N
+
+-----Output-----
+Print \sum_{i=1}^{N-1}\sum_{j=i+1}^{N} A_i A_j, modulo (10^9+7).
+
+-----Sample Input-----
+3
+1 2 3
+
+-----Sample Output-----
+11
+
+We have 1 \times 2 + 1 \times 3 + 2 \times 3 = 11.
+"""
+2022-04-13 22:40:29.424931 --------------------------
+2022-04-13 22:41:00.081120 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1. Read the input\n    2. Compute the sum of all A_i \\times A_j for all pairs (i,j)\n    3. Print the result, modulo (10^9 + 7)\n    \"\"\"\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(sum(a[i] * a[j] for i in range(n) for j in range(i + 1, n)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    res = 0\n    for i in range(n-1):\n        res += sum(a[i+1:]) * a[i]\n    print(res % (10**9 + 7))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\nA.sort()\nsum = 0\nfor i in range(N-1):\n    sum += A[i] * A[i+1]\n    sum %= 10**9 + 7\n\nprint(sum)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# A_i * A_j = A_i * (A_1 + ... + A_i-1 + A_i+1 + ... + A_N)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_i+1 + ... + A_N)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_1 + ... + A_i-1 + A_i + A_i+1 + ... + A_N) - A_i * (A_1 + ... + A_i-1)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_1 + ... + A_N) - A_i * (A_1 + ... + A_i-1)\n#           = A_i * (A_1 + ... + A_N)\n# => \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j = (A_1 + ... + A_N) * (A_1 + ... + A_N)\n\n# A_1 + ... + A_N = (A_1 + ... + A_N)^2 - \\sum_{i=1}^{N} A_i^2\n# => (A_1 + ... + A_N)^2 = \\sum_{i=1}^{N} A_i^2 + 2 \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j\n# => \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j = \\frac{(A_1 + ... + A_N)^2 - \\sum_{i=1}^{N} A_i^2}{2}\n\nprint((sum(A)**2 - sum([i**2 for i in A])) // 2 % (10**9+7))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    a.sort()\n    a_sum = sum(a)\n    a_square_sum = sum(map(lambda x: x * x, a))\n    ans = 0\n\n    for i in range(n - 1):\n        a_sum -= a[i]\n        a_square_sum -= a[i] * a[i]\n        ans += a[i] * a_sum + a_square_sum\n\n    print(ans % 1000000007)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    A = [int(i) for i in input().split()]\n    sum = 0\n    for i in range(N-1):\n        sum += A[i] * sum(A[i+1:])\n    print(sum % (10**9+7))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += a[i] * (a[i] + 1) // 2\n    for i in range(n - 1):\n        ans += a[i] * a[i + 1]\n    print(ans % (10 ** 9 + 7))\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649889629,
+  "id": "cmpl-4wfwzhqeA6hnIUpJ0b6EhXKHenWN3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:41:00.081549 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1. Read the input\n    2. Compute the sum of all A_i \\times A_j for all pairs (i,j)\n    3. Print the result, modulo (10^9 + 7)\n    \"\"\"\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(sum(a[i] * a[j] for i in range(n) for j in range(i + 1, n)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:00.081615 REASON stop
+2022-04-13 22:41:00.082176 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    res = 0\n    for i in range(n-1):\n        res += sum(a[i+1:]) * a[i]\n    print(res % (10**9 + 7))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:00.082291 REASON stop
+2022-04-13 22:41:00.082756 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\nA.sort()\nsum = 0\nfor i in range(N-1):\n    sum += A[i] * A[i+1]\n    sum %= 10**9 + 7\n\nprint(sum)"
+}
+2022-04-13 22:41:00.082807 REASON stop
+2022-04-13 22:41:00.106750 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# A_i * A_j = A_i * (A_1 + ... + A_i-1 + A_i+1 + ... + A_N)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_i+1 + ... + A_N)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_1 + ... + A_i-1 + A_i + A_i+1 + ... + A_N) - A_i * (A_1 + ... + A_i-1)\n#           = A_i * (A_1 + ... + A_i-1) + A_i * (A_1 + ... + A_N) - A_i * (A_1 + ... + A_i-1)\n#           = A_i * (A_1 + ... + A_N)\n# => \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j = (A_1 + ... + A_N) * (A_1 + ... + A_N)\n\n# A_1 + ... + A_N = (A_1 + ... + A_N)^2 - \\sum_{i=1}^{N} A_i^2\n# => (A_1 + ... + A_N)^2 = \\sum_{i=1}^{N} A_i^2 + 2 \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j\n# => \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j = \\frac{(A_1 + ... + A_N)^2 - \\sum_{i=1}^{N} A_i^2}{2}\n\nprint((sum(A)**2 - sum([i**2 for i in A])) // 2 % (10**9+7))"
+}
+2022-04-13 22:41:00.106843 REASON stop
+2022-04-13 22:41:00.114458 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    a.sort()\n    a_sum = sum(a)\n    a_square_sum = sum(map(lambda x: x * x, a))\n    ans = 0\n\n    for i in range(n - 1):\n        a_sum -= a[i]\n        a_square_sum -= a[i] * a[i]\n        ans += a[i] * a_sum + a_square_sum\n\n    print(ans % 1000000007)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:00.114537 REASON stop
+2022-04-13 22:41:00.115071 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    A = [int(i) for i in input().split()]\n    sum = 0\n    for i in range(N-1):\n        sum += A[i] * sum(A[i+1:])\n    print(sum % (10**9+7))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:00.115134 REASON stop
+2022-04-13 22:41:00.115967 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += a[i] * (a[i] + 1) // 2\n    for i in range(n - 1):\n        ans += a[i] * a[i + 1]\n    print(ans % (10 ** 9 + 7))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:41:00.116023 REASON stop

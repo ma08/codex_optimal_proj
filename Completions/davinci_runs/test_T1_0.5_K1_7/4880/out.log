@@ -1,0 +1,133 @@
+2022-04-13 23:54:05.707573 """
+John likes simple ciphers. He had been using the “Caesar” cipher to encrypt his diary until recently, when he learned a hard lesson about its strength by catching his sister Mary browsing through the diary without any problems.
+
+Rapidly searching for an alternative, John found a solution: the famous “Autokey” cipher. He uses a version that takes the $26$ lower-case letters ‘a’–‘z’ and internally translates them in alphabetical order to the numbers $0$ to $25$.
+
+The encryption key $k$ begins with a secret prefix of $n$ letters. Each of the remaining letters of the key is copied from the letters of the plaintext $a$, so that $k_{n+i} = a_{i}$ for $i \geq 1$. Encryption of the plaintext $a$ to the ciphertext $b$ follows the formula $b_ i = a_ i + k_ i \bmod 26$.
+
+Mary is not easily discouraged. She was able to get a peek at the last $n$ letters John typed into his diary on the family computer before he noticed her, quickly encrypted the text document with a click, and left. This could be her chance.
+
+-----Input-----
+The input consists of:
+ - One line with two integers $n$ and $m$ ($1 \le n \le 30$, $n + 1 \le m \le 100$), where $n$ is the length of the keyword as well as the number of letters Mary saw, and $m$ is the length of the text.
+ - One line with $n$ lower-case letters, the last $n$ letters of the plaintext.
+ - One line with $m$ lower-case letters, the whole ciphertext.
+
+-----Output-----
+Output the plaintext of John’s diary.
+
+-----Examples-----
+Sample Input:
+5 16
+again
+pirpumsemoystoal
+Sample Output:
+marywasnosyagain
+"""
+2022-04-13 23:54:05.707586 --------------------------
+2022-04-13 23:54:25.969174 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    data = sys.stdin.readlines()\n    data = [i.strip() for i in data]\n    n, m = [int(i) for i in data[0].split()]\n    a = [ord(i) - 97 for i in data[1]]\n    b = [ord(i) - 97 for i in data[2]]\n    a.reverse()\n    b.reverse()\n    k = [None for i in range(n)]\n    k[0] = a[0]\n    for i in range(1, n):\n        k[i] = a[i] - a[i-1]\n        if k[i] < 0:\n            k[i] += 26\n    for i in range(n, m):\n        k.append(b[i] - a[i])\n        if k[i] < 0:\n            k[i] += 26\n    a = b[:n]\n    for i in range(n, m):\n        a.append((a[i-1] + k[i]) % 26)\n    a = a[::-1]\n    a = [chr(i + 97) for i in a]\n    print(''.join(a))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    last_n_letters = input()\n    ciphertext = input()\n\n    plaintext = \"\"\n\n    for i in range(m):\n        letter = ciphertext[i]\n        if i < n:\n            plaintext += last_n_letters[i]\n        else:\n            plaintext += chr(97 + (ord(letter) - ord(plaintext[i-n])) % 26)\n\n    print(plaintext)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef autokey(n, m, plain, cipher):\n    key = plain\n    for i in range(n, m):\n        key += chr((ord(cipher[i]) - ord(key[i]) + 26) % 26 + 97)\n    return key\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    plain = sys.stdin.readline().rstrip()\n    cipher = sys.stdin.readline().rstrip()\n    print(autokey(n, m, plain, cipher))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefix = sys.stdin.readline().strip()\n    ciphertext = sys.stdin.readline().strip()\n    key = \"\"\n    for i in range(n):\n        key += chr(ord('a') + i)\n    for i in range(n, m):\n        key += ciphertext[i - n]\n    plaintext = \"\"\n    for i in range(m):\n        plaintext += chr((ord(ciphertext[i]) - ord(key[i]) + 26) % 26 + ord('a'))\n    sys.stdout.write(plaintext)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nn, m = map(int, input().split())\nm_letters = input()\nciphertext = input()\n\nkey = ['a']*m\nkey[-n:] = m_letters\n\nfor i in range(m-n-1, -1, -1):\n    key[i] = chr((ord(ciphertext[i]) - ord(key[i+n])) % 26 + ord('a'))\n\nprint(''.join(key))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef decrypt(key, cipher):\n    plain = \"\"\n    for i in range(len(cipher)):\n        plain += chr((ord(cipher[i]) - ord(key[i]))%26 + 97)\n    return plain\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    key = sys.stdin.readline().strip()\n    cipher = sys.stdin.readline().strip()\n    for i in range(n, m):\n        key += cipher[i-1]\n    print(decrypt(key, cipher))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    last_n = sys.stdin.readline().strip()\n    cipher = sys.stdin.readline().strip()\n    plaintext = \"\"\n    for i in range(m):\n        plaintext += chr((ord(cipher[i]) - ord(last_n[i % n]) + 26) % 26 + ord('a'))\n    print(plaintext)\n\nmain()"
+    }
+  ],
+  "created": 1649894045,
+  "id": "cmpl-4wh6DNtu93lWrL5xvTJR1tZYHN2rz",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:54:25.969536 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    data = sys.stdin.readlines()\n    data = [i.strip() for i in data]\n    n, m = [int(i) for i in data[0].split()]\n    a = [ord(i) - 97 for i in data[1]]\n    b = [ord(i) - 97 for i in data[2]]\n    a.reverse()\n    b.reverse()\n    k = [None for i in range(n)]\n    k[0] = a[0]\n    for i in range(1, n):\n        k[i] = a[i] - a[i-1]\n        if k[i] < 0:\n            k[i] += 26\n    for i in range(n, m):\n        k.append(b[i] - a[i])\n        if k[i] < 0:\n            k[i] += 26\n    a = b[:n]\n    for i in range(n, m):\n        a.append((a[i-1] + k[i]) % 26)\n    a = a[::-1]\n    a = [chr(i + 97) for i in a]\n    print(''.join(a))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:54:25.969591 REASON stop
+2022-04-13 23:54:25.969920 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:25.969933 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    last_n_letters = input()\n    ciphertext = input()\n\n    plaintext = \"\"\n\n    for i in range(m):\n        letter = ciphertext[i]\n        if i < n:\n            plaintext += last_n_letters[i]\n        else:\n            plaintext += chr(97 + (ord(letter) - ord(plaintext[i-n])) % 26)\n\n    print(plaintext)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:54:25.970032 REASON stop
+2022-04-13 23:54:25.970283 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:25.970295 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef autokey(n, m, plain, cipher):\n    key = plain\n    for i in range(n, m):\n        key += chr((ord(cipher[i]) - ord(key[i]) + 26) % 26 + 97)\n    return key\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    plain = sys.stdin.readline().rstrip()\n    cipher = sys.stdin.readline().rstrip()\n    print(autokey(n, m, plain, cipher))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:54:25.970333 REASON stop
+2022-04-13 23:54:25.981442 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:25.981464 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefix = sys.stdin.readline().strip()\n    ciphertext = sys.stdin.readline().strip()\n    key = \"\"\n    for i in range(n):\n        key += chr(ord('a') + i)\n    for i in range(n, m):\n        key += ciphertext[i - n]\n    plaintext = \"\"\n    for i in range(m):\n        plaintext += chr((ord(ciphertext[i]) - ord(key[i]) + 26) % 26 + ord('a'))\n    sys.stdout.write(plaintext)\n\nmain()"
+}
+2022-04-13 23:54:25.981544 REASON stop
+2022-04-13 23:54:25.999174 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:25.999203 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nn, m = map(int, input().split())\nm_letters = input()\nciphertext = input()\n\nkey = ['a']*m\nkey[-n:] = m_letters\n\nfor i in range(m-n-1, -1, -1):\n    key[i] = chr((ord(ciphertext[i]) - ord(key[i+n])) % 26 + ord('a'))\n\nprint(''.join(key))"
+}
+2022-04-13 23:54:25.999281 REASON stop
+2022-04-13 23:54:25.999972 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:25.999993 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef decrypt(key, cipher):\n    plain = \"\"\n    for i in range(len(cipher)):\n        plain += chr((ord(cipher[i]) - ord(key[i]))%26 + 97)\n    return plain\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    key = sys.stdin.readline().strip()\n    cipher = sys.stdin.readline().strip()\n    for i in range(n, m):\n        key += cipher[i-1]\n    print(decrypt(key, cipher))\n\nmain()"
+}
+2022-04-13 23:54:26.000052 REASON stop
+2022-04-13 23:54:26.016385 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'
+2022-04-13 23:54:26.016413 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    last_n = sys.stdin.readline().strip()\n    cipher = sys.stdin.readline().strip()\n    plaintext = \"\"\n    for i in range(m):\n        plaintext += chr((ord(cipher[i]) - ord(last_n[i % n]) + 26) % 26 + ord('a'))\n    print(plaintext)\n\nmain()"
+}
+2022-04-13 23:54:26.016484 REASON stop
+2022-04-13 23:54:26.017624 test/intro-questions.txt_dir/4880/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4880/solutions.json'

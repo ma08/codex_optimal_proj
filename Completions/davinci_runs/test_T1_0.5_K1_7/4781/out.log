@@ -1,0 +1,143 @@
+2022-04-13 23:21:03.095052 """
+Croatia’s national television programme is broadcasting an entertainment show titled “I Love Croatia”, modeled on the licensed format I love my country. In this show two teams of celebrities and public figures play various games which require knowledge about Croatia. One of the games is Happy Birthday, which will be used in this task, although somewhat altered.
+
+Eight players numbered one through eight are seated in a circle (see picture). One of them is holding a box which will explode after 3 minutes and 30 seconds from the beginning of the game when some colorful confetti will be blown out. The game begins with a question to the player holding the box. If the players answers incorrectly or skips the question, he is immediately given the next question. If the player answers correctly, he passes the box to the first player seated on his left and then that player gets the next question.
+
+You are given the numbered label of the player who has the box in the beginning and the outcomes of the first $N$ questions asked. Determine the numbered label of the player who had the box when it finally exploded. The question outcome is described with the following data - time passed from the beginning of the question being asked to the moment an answer was given and whether the answer was true (“T”), false (“N”) or skipped (“P”). The time between giving the answer and asking the next question shouldn’t be taken into consideration, as well as time necessary for the box to be passed to the next player. The box will surely explode on a player’s turn.
+
+-----Input-----
+The first line of input contains a positive integer $K$ ($1 \leq K \leq 8$), the numbered label of the player who has the box initially. The second line of input contains a positive integer $N$ ($1 \leq N \leq 100$), the number of questions asked during the game. Each of the following $N$ lines contains a positive integer $T$ ($1 \leq T \leq 100$), time passed from the beginning of the $i$-th question being asked to the moment an answer was given, measured in seconds, and a single character $Z$ (“T”, “N” or “P”), the type of answer given.
+
+-----Output-----
+The first and only line of output must contain the numbered label of the player who had the box when it finally exploded.
+
+-----Examples-----
+Sample Input 1:
+1
+5
+20 T
+50 T
+80 T
+50 T
+30 T
+Sample Output 1:
+5
+
+Sample Input 2:
+3
+5
+100 T
+100 N
+100 T
+100 T
+100 N
+Sample Output 2:
+4
+"""
+2022-04-13 23:21:03.095074 --------------------------
+2022-04-13 23:21:22.288284 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t, z = int(t), z\n    if t <= 210:\n        if z == 'T':\n            k = k % 8 + 1\n        elif z == 'N':\n            k = k % 8 - 1\n    else:\n        break\n\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nK = int(input())\nN = int(input())\n\n# Box is passed to the left\nfor i in range(N):\n    T, Z = input().split()\n    T = int(T)\n    if Z == 'T':\n        K -= 1\n        if K == 0:\n            K = 8\n    elif Z == 'N':\n        continue\n    else: # Z == 'P'\n        K -= 1\n        if K == 0:\n            K = 8\n\nprint(K)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if z == \"T\":\n        k = k % 8 + 1\n    elif z == \"N\":\n        pass\n    else:\n        k = k % 8 + 2\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nk, n = int(input()), int(input())\n\ntime = 0\nfor i in range(n):\n    t, z = input().split()\n    t, z = int(t), z\n    time += t\n    if time >= 210:\n        break\n    if z == \"T\":\n        k = (k % 8) + 1\n    elif z == \"N\":\n        k = (k + 7) % 8\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nk, n = map(int, input().split())\n\nfor i in range(n):\n    t, z = input().split()\n    if z == \"T\":\n        k += 1\n    else:\n        k -= 1\n    if k == 0:\n        k = 8\n    elif k == 9:\n        k = 1\n\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef happy_birthday(k, n, t, z):\n    \"\"\"\n    >>> happy_birthday(1, 5, [20, 50, 80, 50, 30], ['T', 'T', 'T', 'T', 'T'])\n    5\n    >>> happy_birthday(3, 5, [100, 100, 100, 100, 100], ['T', 'N', 'T', 'T', 'N'])\n    4\n    \"\"\"\n    p = k\n    for i in range(n):\n        if z[i] == 'T':\n            p = (p + t[i]//30) % 8\n            if p == 0:\n                p = 8\n        elif z[i] == 'N':\n            p = (p + t[i]//30) % 8\n            if p == 0:\n                p = 8\n    return p\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if z == 'T':\n        k = k - 1 if k > 1 else 8\n    elif z == 'N':\n        pass\n    else:\n        k = k - 1 if k > 1 else 8\n        k = k - 1 if k > 1 else 8\n    if t > 210:\n        break\n\nprint(k)"
+    }
+  ],
+  "created": 1649892063,
+  "id": "cmpl-4wgaF6O0CMdP47rtaqvyyADMZUXLe",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:21:22.288567 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t, z = int(t), z\n    if t <= 210:\n        if z == 'T':\n            k = k % 8 + 1\n        elif z == 'N':\n            k = k % 8 - 1\n    else:\n        break\n\nprint(k)"
+}
+2022-04-13 23:21:22.288610 REASON stop
+2022-04-13 23:21:22.288962 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.288977 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nK = int(input())\nN = int(input())\n\n# Box is passed to the left\nfor i in range(N):\n    T, Z = input().split()\n    T = int(T)\n    if Z == 'T':\n        K -= 1\n        if K == 0:\n            K = 8\n    elif Z == 'N':\n        continue\n    else: # Z == 'P'\n        K -= 1\n        if K == 0:\n            K = 8\n\nprint(K)"
+}
+2022-04-13 23:21:22.289110 REASON stop
+2022-04-13 23:21:22.289339 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.289349 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if z == \"T\":\n        k = k % 8 + 1\n    elif z == \"N\":\n        pass\n    else:\n        k = k % 8 + 2\nprint(k)"
+}
+2022-04-13 23:21:22.289433 REASON stop
+2022-04-13 23:21:22.303672 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.303703 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nk, n = int(input()), int(input())\n\ntime = 0\nfor i in range(n):\n    t, z = input().split()\n    t, z = int(t), z\n    time += t\n    if time >= 210:\n        break\n    if z == \"T\":\n        k = (k % 8) + 1\n    elif z == \"N\":\n        k = (k + 7) % 8\nprint(k)"
+}
+2022-04-13 23:21:22.303771 REASON stop
+2022-04-13 23:21:22.321698 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.321742 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nk, n = map(int, input().split())\n\nfor i in range(n):\n    t, z = input().split()\n    if z == \"T\":\n        k += 1\n    else:\n        k -= 1\n    if k == 0:\n        k = 8\n    elif k == 9:\n        k = 1\n\nprint(k)"
+}
+2022-04-13 23:21:22.321861 REASON stop
+2022-04-13 23:21:22.322360 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.322378 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef happy_birthday(k, n, t, z):\n    \"\"\"\n    >>> happy_birthday(1, 5, [20, 50, 80, 50, 30], ['T', 'T', 'T', 'T', 'T'])\n    5\n    >>> happy_birthday(3, 5, [100, 100, 100, 100, 100], ['T', 'N', 'T', 'T', 'N'])\n    4\n    \"\"\"\n    p = k\n    for i in range(n):\n        if z[i] == 'T':\n            p = (p + t[i]//30) % 8\n            if p == 0:\n                p = 8\n        elif z[i] == 'N':\n            p = (p + t[i]//30) % 8\n            if p == 0:\n                p = 8\n    return p\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+}
+2022-04-13 23:21:22.322431 REASON stop
+2022-04-13 23:21:22.338750 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-13 23:21:22.338782 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if z == 'T':\n        k = k - 1 if k > 1 else 8\n    elif z == 'N':\n        pass\n    else:\n        k = k - 1 if k > 1 else 8\n        k = k - 1 if k > 1 else 8\n    if t > 210:\n        break\n\nprint(k)"
+}
+2022-04-13 23:21:22.338867 REASON stop
+2022-04-13 23:21:22.339606 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'

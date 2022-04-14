@@ -1,0 +1,152 @@
+2022-04-13 21:38:08.671516 """
+You have $n$ students under your control and you have to compose exactly two teams consisting of some subset of your students. Each student had his own skill, the $i$-th student skill is denoted by an integer $a_i$ (different students can have the same skills).
+
+So, about the teams. Firstly, these two teams should have the same size. Two more constraints:  The first team should consist of students with distinct skills (i.e. all skills in the first team are unique).  The second team should consist of students with the same skills (i.e. all skills in the second team are equal). 
+
+Note that it is permissible that some student of the first team has the same skill as a student of the second team.
+
+Consider some examples (skills are given):  $[1, 2, 3]$, $[4, 4]$ is not a good pair of teams because sizes should be the same;  $[1, 1, 2]$, $[3, 3, 3]$ is not a good pair of teams because the first team should not contain students with the same skills;  $[1, 2, 3]$, $[3, 4, 4]$ is not a good pair of teams because the second team should contain students with the same skills;  $[1, 2, 3]$, $[3, 3, 3]$ is a good pair of teams;  $[5]$, $[6]$ is a good pair of teams. 
+
+Your task is to find the maximum possible size $x$ for which it is possible to compose a valid pair of teams, where each team size is $x$ (skills in the first team needed to be unique, skills in the second team should be the same between them). A student cannot be part of more than one team.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 10^4$) — the number of test cases. Then $t$ test cases follow.
+
+The first line of the test case contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of students. The second line of the test case contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le n$), where $a_i$ is the skill of the $i$-th student. Different students can have the same skills.
+
+It is guaranteed that the sum of $n$ over all test cases does not exceed $2 \cdot 10^5$ ($\sum n \le 2 \cdot 10^5$).
+
+
+-----Output-----
+
+For each test case, print the answer — the maximum possible size $x$ for which it is possible to compose a valid pair of teams, where each team size is $x$.
+
+
+-----Example-----
+Input
+4
+7
+4 2 4 1 4 3 4
+5
+2 1 5 4 3
+1
+1
+4
+1 1 1 3
+
+Output
+3
+1
+0
+2
+
+
+
+-----Note-----
+
+In the first test case of the example, it is possible to construct two teams of size $3$: the first team is $[1, 2, 4]$ and the second team is $[4, 4, 4]$. Note, that there are some other ways to construct two valid teams of size $3$.
+"""
+2022-04-13 21:38:08.671529 --------------------------
+2022-04-13 21:38:35.022103 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print(solve(a, n))\n\ndef solve(a, n):\n    a.sort()\n    i = 0\n    while i < n-1 and a[i] == a[i+1]:\n        i += 1\n    if i == n-1:\n        return 0\n    j = n-1\n    while j > 0 and a[j] == a[j-1]:\n        j -= 1\n    if j == 0:\n        return 0\n    if i == j:\n        return 1\n    return min(i+1, n-j)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        num_students = int(input())\n        skills = [int(skill) for skill in input().split()]\n        first_team = set()\n        second_team = set()\n        for skill in skills:\n            if skill not in first_team:\n                first_team.add(skill)\n            else:\n                second_team.add(skill)\n        print(min(len(first_team), len(second_team)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int,input().split()))\n    c = {}\n    for i in a:\n        c[i] = c.get(i,0)+1\n    c = list(c.values())\n    print(max(min(c),len(c)-1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print(solve(n, a))\n\ndef solve(n, a):\n    a = list(set(a))\n    n = len(a)\n    if n < 2:\n        return 0\n    a.sort()\n    if n == 2:\n        if a[0] == a[1]:\n            return 1\n        else:\n            return 0\n    if n == 3:\n        if a[0] == a[1] and a[1] == a[2]:\n            return 2\n        elif a[0] != a[1] and a[1] != a[2] and a[0] != a[2]:\n            return 1\n        else:\n            return 0\n    if a[0] == a[n-1]:\n        return n\n    if a[0] == a[1] and a[n-2] == a[n-1]:\n        return 2\n    if a[0] == a[1]:\n        return 1\n    if a[n-2] == a[n-1]:\n        return 1\n    return 0\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        d = {}\n        for j in range(n):\n            if a[j] not in d:\n                d[a[j]] = 1\n            else:\n                d[a[j]] += 1\n        max_key = max(d, key=d.get)\n        max_value = d[max_key]\n        d.pop(max_key)\n        max_value_2 = 0\n        for key, value in d.items():\n            if value > max_value_2:\n                max_value_2 = value\n        print(max_value + max_value_2)\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.append(0)\n    ans = 0\n    cur = 0\n    for j in range(n):\n        if a[j] != a[j+1]:\n            cur = 1\n        else:\n            cur += 1\n            ans = max(ans, cur)\n    print(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The problem can be solved using a greedy approach.\n# Let's sort the skills in descending order.\n# Then, we can greedily construct the first team (with unique skills)\n# and then, greedily construct the second team (with the same skill)\n# The answer is the sum of the sizes of the two teams.\n# The problem can also be solved using a DP approach.\n# The idea is to use a DP state where we keep the current index,\n# the last skill used, and the number of times that skill has already been used.\n# The state transition is:\n# - If we are at the last skill, we can only use the last skill\n# - If we are not at the last skill, then we can either use the last skill or the current skill\n# The answer is the maximum value (size of the team) using the last skill.\n\n# Time complexity: O(n log n)\n# Space complexity: O(n)\n\ndef solve(n, skills):\n    # Sort the skills in descending order\n    skills.sort(reverse=True)\n\n    # Greedily construct the first team\n    team1 = []\n    last_skill = None\n    for skill in skills:\n        if skill != last_skill:\n            team1.append(skill)\n            last_skill = skill\n\n    # Greedily construct the second team\n    team2 = []\n    last_skill = None\n    for skill in skills:\n        if skill == last_skill:\n            team2.append(skill)\n        else:\n            last_skill = skill\n\n    # Return the sum of the sizes of the teams\n    return len(team1) + len(team2)\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        skills = list(map(int, input().split()))\n        print(solve(n, skills))"
+    }
+  ],
+  "created": 1649885888,
+  "id": "cmpl-4weyerBXsrjVEXBnskokaeiQrfSz2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:38:35.022381 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print(solve(a, n))\n\ndef solve(a, n):\n    a.sort()\n    i = 0\n    while i < n-1 and a[i] == a[i+1]:\n        i += 1\n    if i == n-1:\n        return 0\n    j = n-1\n    while j > 0 and a[j] == a[j-1]:\n        j -= 1\n    if j == 0:\n        return 0\n    if i == j:\n        return 1\n    return min(i+1, n-j)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:38:35.022484 REASON stop
+2022-04-13 21:38:35.022829 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        num_students = int(input())\n        skills = [int(skill) for skill in input().split()]\n        first_team = set()\n        second_team = set()\n        for skill in skills:\n            if skill not in first_team:\n                first_team.add(skill)\n            else:\n                second_team.add(skill)\n        print(min(len(first_team), len(second_team)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:38:35.022935 REASON stop
+2022-04-13 21:38:35.023300 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nfor _ in range(int(input())):\n    n = int(input())\n    a = list(map(int,input().split()))\n    c = {}\n    for i in a:\n        c[i] = c.get(i,0)+1\n    c = list(c.values())\n    print(max(min(c),len(c)-1))"
+}
+2022-04-13 21:38:35.023354 REASON stop
+2022-04-13 21:38:35.038858 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print(solve(n, a))\n\ndef solve(n, a):\n    a = list(set(a))\n    n = len(a)\n    if n < 2:\n        return 0\n    a.sort()\n    if n == 2:\n        if a[0] == a[1]:\n            return 1\n        else:\n            return 0\n    if n == 3:\n        if a[0] == a[1] and a[1] == a[2]:\n            return 2\n        elif a[0] != a[1] and a[1] != a[2] and a[0] != a[2]:\n            return 1\n        else:\n            return 0\n    if a[0] == a[n-1]:\n        return n\n    if a[0] == a[1] and a[n-2] == a[n-1]:\n        return 2\n    if a[0] == a[1]:\n        return 1\n    if a[n-2] == a[n-1]:\n        return 1\n    return 0\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:38:35.038934 REASON stop
+2022-04-13 21:38:35.044642 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        d = {}\n        for j in range(n):\n            if a[j] not in d:\n                d[a[j]] = 1\n            else:\n                d[a[j]] += 1\n        max_key = max(d, key=d.get)\n        max_value = d[max_key]\n        d.pop(max_key)\n        max_value_2 = 0\n        for key, value in d.items():\n            if value > max_value_2:\n                max_value_2 = value\n        print(max_value + max_value_2)\nmain()"
+}
+2022-04-13 21:38:35.044708 REASON stop
+2022-04-13 21:38:35.045386 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.append(0)\n    ans = 0\n    cur = 0\n    for j in range(n):\n        if a[j] != a[j+1]:\n            cur = 1\n        else:\n            cur += 1\n            ans = max(ans, cur)\n    print(ans)"
+}
+2022-04-13 21:38:35.045437 REASON stop
+2022-04-13 21:38:35.046597 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The problem can be solved using a greedy approach.\n# Let's sort the skills in descending order.\n# Then, we can greedily construct the first team (with unique skills)\n# and then, greedily construct the second team (with the same skill)\n# The answer is the sum of the sizes of the two teams.\n# The problem can also be solved using a DP approach.\n# The idea is to use a DP state where we keep the current index,\n# the last skill used, and the number of times that skill has already been used.\n# The state transition is:\n# - If we are at the last skill, we can only use the last skill\n# - If we are not at the last skill, then we can either use the last skill or the current skill\n# The answer is the maximum value (size of the team) using the last skill.\n\n# Time complexity: O(n log n)\n# Space complexity: O(n)\n\ndef solve(n, skills):\n    # Sort the skills in descending order\n    skills.sort(reverse=True)\n\n    # Greedily construct the first team\n    team1 = []\n    last_skill = None\n    for skill in skills:\n        if skill != last_skill:\n            team1.append(skill)\n            last_skill = skill\n\n    # Greedily construct the second team\n    team2 = []\n    last_skill = None\n    for skill in skills:\n        if skill == last_skill:\n            team2.append(skill)\n        else:\n            last_skill = skill\n\n    # Return the sum of the sizes of the teams\n    return len(team1) + len(team2)\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        skills = list(map(int, input().split()))\n        print(solve(n, skills))"
+}
+2022-04-13 21:38:35.046654 REASON stop

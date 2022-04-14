@@ -1,0 +1,152 @@
+2022-04-13 23:03:08.892721 """
+In the past century, a new style of music composition has emerged. Unlike more traditional methods based on keys and chords, the technique known as dodecaphony focuses on using all twelve notes equally. As a quick reminder, the twelve notes, in ascending order are,\[ C, C\sharp , D, D\sharp , E, F, F\sharp , G, G\sharp , A, A\sharp , B \]
+
+The sequence then wraps around so that the next note after $B$ is $C$ and so on. For this problem, we’ll ignore equivalent notations that use flats, double sharps, or double flats.
+
+Each successive note above is considered one semitone away from the next. Now in our simplified version of dodecaphony, a melody is a permutation of the previous melody by one of three relations.
+
+First, we have transposition, where each note has been shifted up by $n$ semitones. A retrograde is when the notes have their order reversed. Finally we have inversion about the first note of the melody. With inversions, the first note doesn’t change, but the rest of the notes are inverted such that the the interval (number of semitones) between that note and the first note is negated.
+
+For example, if $F$ is our first note, and we want to invert an $A\sharp $, which is $5$ semitones higher, the inverted note would be a $C$, which is $5$ semitones lower. Note that the first note in an inverted melody is always just the first note of the original melody.
+
+Given two melodies, can you tell what relation the second has to the first?
+
+-----Input-----
+The first line contains a single integer $2 \leq l \leq 50$, the number of notes in each melody.
+
+The next two lines each contain $l$ space separated notes. It is guaranteed that each note will be one of the twelve listed above.
+
+-----Output-----
+Output on a single line “Transposition” if the second melody is a transposition of the first, “Retrograde” if the second melody is the first melody reversed, “Inversion” if the second melody is an inversion of the first melody, else “Nonsense” if it is none of the other cases.
+
+If the second melody satisfies more than one relation, output the first valid relation in the order of “Transposition”, then “Retrograde”, then “Inversion”.
+
+-----Examples-----
+Sample Input 1:
+3
+C E G
+D F# A
+Sample Output 1:
+Transposition
+
+Sample Input 2:
+7
+C C G G A A G
+C C F F D# D# F
+Sample Output 2:
+Inversion
+
+Sample Input 3:
+7
+A B C D E F G
+G F E D C B A
+Sample Output 3:
+Retrograde
+"""
+2022-04-13 23:03:08.892735 --------------------------
+2022-04-13 23:03:33.255190 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# get the notes as a list\nnotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n\ndef get_note_index(note):\n    return notes.index(note)\n\ndef get_note_value(index):\n    return notes[index]\n\n# get the first melody\nn = int(input())\nmelody1 = input().split()\n\n# get the second melody\nmelody2 = input().split()\n\n# create a list of the differences between the notes of the first melody\nmelody1_diff = []\nfor i in range(len(melody1) - 1):\n    melody1_diff.append(get_note_index(melody1[i + 1]) - get_note_index(melody1[i]))\n\n# create a list of the differences between the notes of the second melody\nmelody2_diff = []\nfor i in range(len(melody2) - 1):\n    melody2_diff.append(get_note_index(melody2[i + 1]) - get_note_index(melody2[i]))\n\n# check if the second melody is a transposition\nif melody1_diff == melody2_diff:\n    print(\"Transposition\")\n\n# check if the second melody is a retrograde\nelif melody1_diff == melody2_diff[::-1]:\n    print(\"Retrograde\")\n\n# check if the second melody is an inversion\nelif melody1_diff[0] == melody2_diff[0]:\n    # create a list of the inversions of the second melody\n    melody2_inv = [melody2_diff[0]]\n    for i in range(1, len(melody2_diff)):\n        melody2_inv.append(melody2_diff[0] - melody2_diff[i])\n\n    if melody1_diff == melody2_inv:\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\n# none of the above\nelse:\n    print(\"Nonsense\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    l = int(input())\n    melody1 = input().split()\n    melody2 = input().split()\n    notes = [\"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\", \"A\", \"A#\", \"B\"]\n    semitones = [notes[i:] + notes[:i] for i in range(12)]\n    if melody2 == melody1[::-1]:\n        print(\"Retrograde\")\n    elif melody2 == [semitones[notes.index(melody1[0])][notes.index(melody1[i])] for i in range(l)]:\n        print(\"Inversion\")\n    elif melody2 == [semitones[notes.index(melody1[0])][notes.index(melody1[0]) + i] for i in range(1, l + 1)]:\n        print(\"Transposition\")\n    else:\n        print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef isTransposition(melody1, melody2):\n    if melody1[0] == melody2[0]:\n        return True\n    return False\n\ndef isRetrograde(melody1, melody2):\n    if melody1 == melody2[::-1]:\n        return True\n    return False\n\ndef isInversion(melody1, melody2):\n    if melody1[0] == melody2[0]:\n        return True\n    return False\n\ndef main():\n    l = int(input())\n    melody1 = input().split()\n    melody2 = input().split()\n\n    if isTransposition(melody1, melody2):\n        print(\"Transposition\")\n    elif isRetrograde(melody1, melody2):\n        print(\"Retrograde\")\n    elif isInversion(melody1, melody2):\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n    n = int(lines[0])\n    m1 = lines[1].split()\n    m2 = lines[2].split()\n    trans = True\n    ret = True\n    inv = True\n    for i in range(n):\n        if m1[i] != m2[i]:\n            trans = False\n        if m1[i] != m2[n-i-1]:\n            ret = False\n        if notes.index(m1[0]) + notes.index(m2[i]) != 11:\n            inv = False\n    if trans:\n        print(\"Transposition\")\n    elif ret:\n        print(\"Retrograde\")\n    elif inv:\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    note = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n    note_num = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]\n    note_dict = dict(zip(note, note_num))\n    _ = int(input())\n    note_1 = input().split()\n    note_2 = input().split()\n    if note_1 == note_2[::-1]:\n        print(\"Retrograde\")\n    elif note_1[0] == note_2[0]:\n        if note_dict[note_1[1]] + note_dict[note_2[1]] == 11:\n            print(\"Inversion\")\n        else:\n            print(\"Nonsense\")\n    else:\n        if note_dict[note_1[0]] + note_dict[note_2[0]] == 11:\n            print(\"Transposition\")\n        else:\n            print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef is_transposition(melody1, melody2):\n    \"\"\" Returns if melody2 is a transposition of melody1. \"\"\"\n    return melody1[1:] == melody2[1:]\n\n\ndef is_retrograde(melody1, melody2):\n    \"\"\" Returns if melody2 is a retrograde of melody1. \"\"\"\n    return melody1 == melody2[::-1]\n\n\ndef is_inversion(melody1, melody2):\n    \"\"\" Returns if melody2 is an inversion of melody1. \"\"\"\n    return melody1 == melody2 or melody1[0] == melody2[0]\n\n\ndef main():\n    \"\"\" Returns whether a melody is a transposition, retrograde, inversion, or nonsense. \"\"\"\n    num_notes = int(input())\n    melody1 = input().split(' ')\n    melody2 = input().split(' ')\n\n    if is_transposition(melody1, melody2):\n        print('Transposition')\n    elif is_retrograde(melody1, melody2):\n        print('Retrograde')\n    elif is_inversion(melody1, melody2):\n        print('Inversion')\n    else:\n        print('Nonsense')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    first = sys.stdin.readline().split(\" \")\n    second = sys.stdin.readline().split(\" \")\n    notes = [\"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\", \"A\", \"A#\", \"B\"]\n    # Check if it is a transposition\n    transposition = True\n    for i in range(n):\n        if notes.index(first[i]) + 1 != notes.index(second[i]):\n            transposition = False\n            break\n    if transposition:\n        print(\"Transposition\")\n        return\n    # Check if it is a retrograde\n    retrograde = True\n    for i in range(n):\n        if first[i] != second[n - 1 - i]:\n            retrograde = False\n            break\n    if retrograde:\n        print(\"Retrograde\")\n        return\n    # Check if it is an inversion\n    inversion = True\n    for i in range(1, n):\n        if notes.index(first[i]) - notes.index(first[0]) != notes.index(second[i]) - notes.index(second[0]):\n            inversion = False\n            break\n    if inversion:\n        print(\"Inversion\")\n        return\n    # If it is none of the above\n    print(\"Nonsense\")\n\nmain()"
+    }
+  ],
+  "created": 1649890989,
+  "id": "cmpl-4wgIv8sjyOERZgQACHczMENLvn0Md",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:03:33.255544 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# get the notes as a list\nnotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n\ndef get_note_index(note):\n    return notes.index(note)\n\ndef get_note_value(index):\n    return notes[index]\n\n# get the first melody\nn = int(input())\nmelody1 = input().split()\n\n# get the second melody\nmelody2 = input().split()\n\n# create a list of the differences between the notes of the first melody\nmelody1_diff = []\nfor i in range(len(melody1) - 1):\n    melody1_diff.append(get_note_index(melody1[i + 1]) - get_note_index(melody1[i]))\n\n# create a list of the differences between the notes of the second melody\nmelody2_diff = []\nfor i in range(len(melody2) - 1):\n    melody2_diff.append(get_note_index(melody2[i + 1]) - get_note_index(melody2[i]))\n\n# check if the second melody is a transposition\nif melody1_diff == melody2_diff:\n    print(\"Transposition\")\n\n# check if the second melody is a retrograde\nelif melody1_diff == melody2_diff[::-1]:\n    print(\"Retrograde\")\n\n# check if the second melody is an inversion\nelif melody1_diff[0] == melody2_diff[0]:\n    # create a list of the inversions of the second melody\n    melody2_inv = [melody2_diff[0]]\n    for i in range(1, len(melody2_diff)):\n        melody2_inv.append(melody2_diff[0] - melody2_diff[i])\n\n    if melody1_diff == melody2_inv:\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\n# none of the above\nelse:\n    print(\"Nonsense\")"
+}
+2022-04-13 23:03:33.255587 REASON stop
+2022-04-13 23:03:33.255868 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.255880 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    l = int(input())\n    melody1 = input().split()\n    melody2 = input().split()\n    notes = [\"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\", \"A\", \"A#\", \"B\"]\n    semitones = [notes[i:] + notes[:i] for i in range(12)]\n    if melody2 == melody1[::-1]:\n        print(\"Retrograde\")\n    elif melody2 == [semitones[notes.index(melody1[0])][notes.index(melody1[i])] for i in range(l)]:\n        print(\"Inversion\")\n    elif melody2 == [semitones[notes.index(melody1[0])][notes.index(melody1[0]) + i] for i in range(1, l + 1)]:\n        print(\"Transposition\")\n    else:\n        print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:03:33.255985 REASON stop
+2022-04-13 23:03:33.256223 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.256235 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef isTransposition(melody1, melody2):\n    if melody1[0] == melody2[0]:\n        return True\n    return False\n\ndef isRetrograde(melody1, melody2):\n    if melody1 == melody2[::-1]:\n        return True\n    return False\n\ndef isInversion(melody1, melody2):\n    if melody1[0] == melody2[0]:\n        return True\n    return False\n\ndef main():\n    l = int(input())\n    melody1 = input().split()\n    melody2 = input().split()\n\n    if isTransposition(melody1, melody2):\n        print(\"Transposition\")\n    elif isRetrograde(melody1, melody2):\n        print(\"Retrograde\")\n    elif isInversion(melody1, melody2):\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:03:33.256278 REASON stop
+2022-04-13 23:03:33.257650 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.257666 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n    n = int(lines[0])\n    m1 = lines[1].split()\n    m2 = lines[2].split()\n    trans = True\n    ret = True\n    inv = True\n    for i in range(n):\n        if m1[i] != m2[i]:\n            trans = False\n        if m1[i] != m2[n-i-1]:\n            ret = False\n        if notes.index(m1[0]) + notes.index(m2[i]) != 11:\n            inv = False\n    if trans:\n        print(\"Transposition\")\n    elif ret:\n        print(\"Retrograde\")\n    elif inv:\n        print(\"Inversion\")\n    else:\n        print(\"Nonsense\")\n\nmain()"
+}
+2022-04-13 23:03:33.257714 REASON stop
+2022-04-13 23:03:33.268804 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.268834 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    note = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']\n    note_num = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]\n    note_dict = dict(zip(note, note_num))\n    _ = int(input())\n    note_1 = input().split()\n    note_2 = input().split()\n    if note_1 == note_2[::-1]:\n        print(\"Retrograde\")\n    elif note_1[0] == note_2[0]:\n        if note_dict[note_1[1]] + note_dict[note_2[1]] == 11:\n            print(\"Inversion\")\n        else:\n            print(\"Nonsense\")\n    else:\n        if note_dict[note_1[0]] + note_dict[note_2[0]] == 11:\n            print(\"Transposition\")\n        else:\n            print(\"Nonsense\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:03:33.268913 REASON stop
+2022-04-13 23:03:33.270093 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.270112 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef is_transposition(melody1, melody2):\n    \"\"\" Returns if melody2 is a transposition of melody1. \"\"\"\n    return melody1[1:] == melody2[1:]\n\n\ndef is_retrograde(melody1, melody2):\n    \"\"\" Returns if melody2 is a retrograde of melody1. \"\"\"\n    return melody1 == melody2[::-1]\n\n\ndef is_inversion(melody1, melody2):\n    \"\"\" Returns if melody2 is an inversion of melody1. \"\"\"\n    return melody1 == melody2 or melody1[0] == melody2[0]\n\n\ndef main():\n    \"\"\" Returns whether a melody is a transposition, retrograde, inversion, or nonsense. \"\"\"\n    num_notes = int(input())\n    melody1 = input().split(' ')\n    melody2 = input().split(' ')\n\n    if is_transposition(melody1, melody2):\n        print('Transposition')\n    elif is_retrograde(melody1, melody2):\n        print('Retrograde')\n    elif is_inversion(melody1, melody2):\n        print('Inversion')\n    else:\n        print('Nonsense')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:03:33.270172 REASON stop
+2022-04-13 23:03:33.294710 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
+2022-04-13 23:03:33.294742 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    first = sys.stdin.readline().split(\" \")\n    second = sys.stdin.readline().split(\" \")\n    notes = [\"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\", \"A\", \"A#\", \"B\"]\n    # Check if it is a transposition\n    transposition = True\n    for i in range(n):\n        if notes.index(first[i]) + 1 != notes.index(second[i]):\n            transposition = False\n            break\n    if transposition:\n        print(\"Transposition\")\n        return\n    # Check if it is a retrograde\n    retrograde = True\n    for i in range(n):\n        if first[i] != second[n - 1 - i]:\n            retrograde = False\n            break\n    if retrograde:\n        print(\"Retrograde\")\n        return\n    # Check if it is an inversion\n    inversion = True\n    for i in range(1, n):\n        if notes.index(first[i]) - notes.index(first[0]) != notes.index(second[i]) - notes.index(second[0]):\n            inversion = False\n            break\n    if inversion:\n        print(\"Inversion\")\n        return\n    # If it is none of the above\n    print(\"Nonsense\")\n\nmain()"
+}
+2022-04-13 23:03:33.294853 REASON stop
+2022-04-13 23:03:33.295545 test/intro-questions.txt_dir/4742/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4742/solutions.json'
