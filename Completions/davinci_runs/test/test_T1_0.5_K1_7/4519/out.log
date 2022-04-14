@@ -1,0 +1,149 @@
+2022-04-13 21:28:53.410336 """
+You are given a binary string of length $n$ (i. e. a string consisting of $n$ characters '0' and '1').
+
+In one move you can swap two adjacent characters of the string. What is the lexicographically minimum possible string you can obtain from the given one if you can perform no more than $k$ moves? It is possible that you do not perform any moves at all.
+
+Note that you can swap the same pair of adjacent characters with indices $i$ and $i+1$ arbitrary (possibly, zero) number of times. Each such swap is considered a separate move.
+
+You have to answer $q$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 10^4$) — the number of test cases.
+
+The first line of the test case contains two integers $n$ and $k$ ($1 \le n \le 10^6, 1 \le k \le n^2$) — the length of the string and the number of moves you can perform.
+
+The second line of the test case contains one string consisting of $n$ characters '0' and '1'.
+
+It is guaranteed that the sum of $n$ over all test cases does not exceed $10^6$ ($\sum n \le 10^6$).
+
+
+-----Output-----
+
+For each test case, print the answer on it: the lexicographically minimum possible string of length $n$ you can obtain from the given one if you can perform no more than $k$ moves.
+
+
+-----Example-----
+Input
+3
+8 5
+11011010
+7 9
+1111100
+7 11
+1111100
+
+Output
+01011110
+0101111
+0011111
+
+
+
+-----Note-----
+
+In the first example, you can change the string as follows: $1\underline{10}11010 \rightarrow \underline{10}111010 \rightarrow 0111\underline{10}10 \rightarrow 011\underline{10}110 \rightarrow 01\underline{10}1110 \rightarrow 01011110$. 
+
+In the third example, there are enough operations to make the string sorted.
+"""
+2022-04-13 21:28:53.410351 --------------------------
+2022-04-13 21:29:18.953833 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\nq = int(input())\n\nfor _ in range(q):\n    n, k = map(int, input().split())\n    s = input()\n    s = list(s)\n\n    # check if only 1s in the string\n    if s.count('1') == n:\n        print(''.join(s))\n        continue\n\n    # check if only 0s in the string\n    if s.count('0') == n:\n        print(''.join(s))\n        continue\n\n    # check if the string is already sorted\n    sorted_s = sorted(s)\n    if s == sorted_s:\n        print(''.join(s))\n        continue\n\n    # check if the string can be sorted with the given number of moves\n    if k >= n - 1:\n        print(''.join(sorted_s))\n        continue\n\n    # check if the string can be sorted with a number of moves less than the given number of moves\n    for i in range(n - 1):\n        if s[i] > s[i + 1]:\n            s[i], s[i + 1] = s[i + 1], s[i]\n            k -= 1\n            if k == 0:\n                break\n    print(''.join(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    #read input\n    q = int(input())\n    for i in range(q):\n        n, k = map(int, input().split())\n        s = input()\n        #initialize variables\n        l = 0\n        r = k\n        #loop through string\n        for j in range(n):\n            #check if there are enough operations left to move the current character to the end of the string\n            if r >= n - j:\n                #check if the current character is a one\n                if s[j] == \"1\":\n                    #if so, move it to the end of the string\n                    s = s[:j] + s[j+1:] + \"1\"\n                    #update operation count\n                    r -= n - j\n                else:\n                    #if not, move the next one to the end of the string\n                    s = s[:j] + s[j+1:] + \"1\"\n                    #update operation count\n                    r -= n - j - 1\n            #check if there are enough operations left to move the current character to the beginning of the string\n            if l <= j:\n                #check if the current character is a zero\n                if s[j] == \"0\":\n                    #if so, move it to the beginning of the string\n                    s = \"0\" + s[:j] + s[j+1:]\n                    #update operation count\n                    l += j\n                else:\n                    #if not, move the next one to the beginning of the string\n                    s = \"0\" + s[:j] + s[j+1:]\n                    #update operation count\n                    l += j + 1\n        #print output\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nimport sys\nimport math\ndef main():\n    t = int(input())\n    while t:\n        t-=1\n        n,k = map(int,input().split())\n        s = input()\n        k -= n\n        if k < 0:\n            print(s)\n        else:\n            i = 0\n            while i < n:\n                if s[i] == '1':\n                    if k > 0:\n                        s = s[:i] + '0' + s[i+1:]\n                        k -= 1\n                    else:\n                        break\n                i += 1\n            print(s)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# There are two cases:\n# 1) if k >= n-1, then the answer is the sorted string\n# 2) if k < n-1, then the answer is the sorted string without the last character\n\nq = int(input())\n\nfor _ in range(q):\n    n, k = map(int, input().split())\n    s = input()\n    \n    if k >= n-1:\n        print(''.join(sorted(s)))\n    else:\n        print(''.join(sorted(s))[:-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nT = int(input())\nfor t in range(T):\n    n, k = map(int, input().split())\n    s = list(input())\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            k -= 1\n            s[i], s[i+1] = s[i+1], s[i]\n            if k <= 0:\n                break\n    print(\"\".join(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\n# cook your dish here\nt=int(input())\nfor _ in range(t):\n    n,k=map(int,input().split())\n    s=input()\n    s=list(s)\n    for i in range(n-1):\n        if s[i]=='0':\n            if k>0:\n                s[i]='1'\n                k-=1\n    for i in range(n-1,0,-1):\n        if s[i]=='1':\n            if k>0:\n                s[i]='0'\n                k-=1\n    print(''.join(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef swap(s, i):\n    \"\"\"Swap two adjacent characters at index i in s.\"\"\"\n    t = list(s)\n    t[i], t[i+1] = t[i+1], t[i]\n    return \"\".join(t)\n\ndef get_min_string(s, k):\n    \"\"\"Return the lexicographically minimum string that can be obtained from s by performing no more than k moves.\"\"\"\n    n = len(s)\n    if k >= n-1:\n        return \"\".join(sorted(s))\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            s = swap(s, i)\n            k -= 1\n            if k == 0:\n                return s\n    return s\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n, k = map(int, input().split())\n        s = input()\n        print(get_min_string(s, k))\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+    }
+  ],
+  "created": 1649885333,
+  "id": "cmpl-4wephuOizQLtFZrtHVtk9TpR5uIwL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:29:18.954130 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\nq = int(input())\n\nfor _ in range(q):\n    n, k = map(int, input().split())\n    s = input()\n    s = list(s)\n\n    # check if only 1s in the string\n    if s.count('1') == n:\n        print(''.join(s))\n        continue\n\n    # check if only 0s in the string\n    if s.count('0') == n:\n        print(''.join(s))\n        continue\n\n    # check if the string is already sorted\n    sorted_s = sorted(s)\n    if s == sorted_s:\n        print(''.join(s))\n        continue\n\n    # check if the string can be sorted with the given number of moves\n    if k >= n - 1:\n        print(''.join(sorted_s))\n        continue\n\n    # check if the string can be sorted with a number of moves less than the given number of moves\n    for i in range(n - 1):\n        if s[i] > s[i + 1]:\n            s[i], s[i + 1] = s[i + 1], s[i]\n            k -= 1\n            if k == 0:\n                break\n    print(''.join(s))"
+}
+2022-04-13 21:29:18.954236 REASON stop
+2022-04-13 21:29:18.954624 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    #read input\n    q = int(input())\n    for i in range(q):\n        n, k = map(int, input().split())\n        s = input()\n        #initialize variables\n        l = 0\n        r = k\n        #loop through string\n        for j in range(n):\n            #check if there are enough operations left to move the current character to the end of the string\n            if r >= n - j:\n                #check if the current character is a one\n                if s[j] == \"1\":\n                    #if so, move it to the end of the string\n                    s = s[:j] + s[j+1:] + \"1\"\n                    #update operation count\n                    r -= n - j\n                else:\n                    #if not, move the next one to the end of the string\n                    s = s[:j] + s[j+1:] + \"1\"\n                    #update operation count\n                    r -= n - j - 1\n            #check if there are enough operations left to move the current character to the beginning of the string\n            if l <= j:\n                #check if the current character is a zero\n                if s[j] == \"0\":\n                    #if so, move it to the beginning of the string\n                    s = \"0\" + s[:j] + s[j+1:]\n                    #update operation count\n                    l += j\n                else:\n                    #if not, move the next one to the beginning of the string\n                    s = \"0\" + s[:j] + s[j+1:]\n                    #update operation count\n                    l += j + 1\n        #print output\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:29:18.954744 REASON stop
+2022-04-13 21:29:18.955098 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nimport sys\nimport math\ndef main():\n    t = int(input())\n    while t:\n        t-=1\n        n,k = map(int,input().split())\n        s = input()\n        k -= n\n        if k < 0:\n            print(s)\n        else:\n            i = 0\n            while i < n:\n                if s[i] == '1':\n                    if k > 0:\n                        s = s[:i] + '0' + s[i+1:]\n                        k -= 1\n                    else:\n                        break\n                i += 1\n            print(s)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:29:18.955146 REASON stop
+2022-04-13 21:29:18.969819 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# There are two cases:\n# 1) if k >= n-1, then the answer is the sorted string\n# 2) if k < n-1, then the answer is the sorted string without the last character\n\nq = int(input())\n\nfor _ in range(q):\n    n, k = map(int, input().split())\n    s = input()\n    \n    if k >= n-1:\n        print(''.join(sorted(s)))\n    else:\n        print(''.join(sorted(s))[:-1])"
+}
+2022-04-13 21:29:18.969928 REASON stop
+2022-04-13 21:29:18.970807 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nT = int(input())\nfor t in range(T):\n    n, k = map(int, input().split())\n    s = list(input())\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            k -= 1\n            s[i], s[i+1] = s[i+1], s[i]\n            if k <= 0:\n                break\n    print(\"\".join(s))"
+}
+2022-04-13 21:29:18.970884 REASON stop
+2022-04-13 21:29:18.971619 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\n# cook your dish here\nt=int(input())\nfor _ in range(t):\n    n,k=map(int,input().split())\n    s=input()\n    s=list(s)\n    for i in range(n-1):\n        if s[i]=='0':\n            if k>0:\n                s[i]='1'\n                k-=1\n    for i in range(n-1,0,-1):\n        if s[i]=='1':\n            if k>0:\n                s[i]='0'\n                k-=1\n    print(''.join(s))"
+}
+2022-04-13 21:29:18.971680 REASON stop
+2022-04-13 21:29:18.972336 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef swap(s, i):\n    \"\"\"Swap two adjacent characters at index i in s.\"\"\"\n    t = list(s)\n    t[i], t[i+1] = t[i+1], t[i]\n    return \"\".join(t)\n\ndef get_min_string(s, k):\n    \"\"\"Return the lexicographically minimum string that can be obtained from s by performing no more than k moves.\"\"\"\n    n = len(s)\n    if k >= n-1:\n        return \"\".join(sorted(s))\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            s = swap(s, i)\n            k -= 1\n            if k == 0:\n                return s\n    return s\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n, k = map(int, input().split())\n        s = input()\n        print(get_min_string(s, k))\n\nif __name__ == \"__main__\":\n    sys.exit(main())"
+}
+2022-04-13 21:29:18.972409 REASON stop

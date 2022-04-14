@@ -1,0 +1,140 @@
+2022-04-13 23:06:59.954213 """
+Recently your town has been infested by swindlers who convince unknowing tourists to play a simple dice game with them for money. The game works as follows: given is an $n$-sided die, whose sides have $1, 2, \ldots , n$ pips, and a positive integer $k$. You then roll the die, and then have to make a choice. Option $1$ is to stop rolling. Option $2$ is to reroll the die, with the limitation that the die can only be rolled $k$ times in total. Your score is the number of pips showing on your final roll.
+
+Obviously the swindlers are better at this game than the tourists are. You, proud supporter of the Battle Against Probabilistic Catastrophes, decide to fight this problem not by banning the swindlers but by arming the tourists with information.
+
+You create pamphlets on which tourists can find the maximum expected score for many values of $n$ and $k$. You are sure that the swindlers will soon stop their swindling if the tourists are better prepared than they are!
+
+The layout of the flyers is done, and you have distribution channels set up. All that is left to do is to calculate the numbers to put on the pamphlet.
+
+Given the number of sides of the die and the number of times you are allowed to roll, calculate the expected (that is, average) score when the game is played optimally.
+
+-----Input-----
+ - A single line with two integers $1\leq n\leq 100$, the number of sides of the die, and $1\leq k\leq 100$, the number of times the die may be rolled.
+
+-----Output-----
+Output the expected score when playing optimally. Your answer should have an absolute or relative error of at most $10^{-7}$.
+
+-----Examples-----
+Sample Input 1:
+1 1
+Sample Output 1:
+1
+
+Sample Input 2:
+2 3
+Sample Output 2:
+1.875
+
+Sample Input 3:
+6 2
+Sample Output 3:
+4.25
+"""
+2022-04-13 23:06:59.954223 --------------------------
+2022-04-13 23:07:23.415604 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    memo = {}\n    print(solve(n, k, memo))\n\ndef solve(n, k, memo):\n    if k == 1:\n        return n / 2\n    if (n, k) in memo:\n        return memo[(n, k)]\n    else:\n        result = 0\n        for i in range(1, n + 1):\n            if i == n:\n                result += 1 / n * (i + solve(n, k - 1, memo))\n            else:\n                result += 1 / n * (i + solve(n, k, memo))\n        memo[(n, k)] = result\n        return result\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline().split()\n    n = int(input[0])\n    k = int(input[1])\n\n    # There are two cases:\n    # 1. We get a 1 on the first roll\n    # 2. We get anything else on the first roll\n\n    # Case 1: We get a 1 on the first roll\n    # The expected value is 1\n    case1 = 1\n\n    # Case 2: We get anything else on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case2 = (n-1)/n * expected(n, k-1)\n\n    # The expected value is the average of these two cases\n    print(case1 + case2)\n\n\n# Calculate the expected value of rolling an n-sided die k times\ndef expected(n, k):\n    # Base case: if k = 0, return the average of the sides\n    if k == 0:\n        return (n+1)/2\n\n    # Otherwise, we have two cases:\n    # 1. We get a 1 on the first roll\n    # 2. We get anything else on the first roll\n\n    # Case 1: We get a 1 on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case1 = 1/n * expected(n, k-1)\n\n    # Case 2: We get anything else on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case2 = (n-1)/n * expected(n, k-1)\n\n    # The expected value is the average of these two cases\n    return case1 + case2\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# Use dynamic programming to store the expected value of each number of rolls.\n# For each roll, sum the expected values for each die roll and divide by the number of sides.\n# The expected value for each roll is the expected value for the next roll plus the expected value for the current roll.\n\n# Get user input\nn, k = map(int, input().split())\n\n# Set up the array for storing values\nvalues = [[0 for i in range(k+1)] for j in range(n+1)]\n\n# Fill in the array\nfor i in range(1, n+1):\n\tvalues[i][1] = i\n\nfor i in range(1, k+1):\n\tfor j in range(1, n+1):\n\t\tvalues[j][i] = (sum(values[1:j+1]) + j) / n\n\n# Print the expected value\nprint(values[-1][-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef expected_value(n, k):\n    if n == 1:\n        return 1\n    else:\n        return float(n + 1) / 2 + expected_value(n, k - 1) * (1 - float(n + 1) / 2)\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    print expected_value(n, k)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    #get input\n    n, k = map(int, sys.stdin.readline().split())\n\n    #solve\n    print(solve(n, k))\n\ndef solve(n, k):\n    #base cases\n    if k == 1:\n        return (n + 1) / 2\n    if k == 2:\n        return (n + 1) / 2 + n / 2\n\n    #calculate expectation\n    expectation = 0\n    for i in range(1, n + 1):\n        expectation += solve(n, k - 1) * i / n\n\n    return expectation\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n    # The expected value for a single roll is the average of all possible rolls.\n    expect = sum(range(1, n + 1)) / n\n    # The expected value for the total is the expected value of the first roll\n    # plus the expected value of the remaining rolls.\n    # The expected value of the remaining rolls is the expected value of the\n    # first roll times the probability of rolling again.\n    # The probability of rolling again is 1 minus the probability of stopping\n    # on the first roll, or the probability of rolling anything other than the\n    # highest number.\n    # The probability of rolling anything other than the highest number is the\n    # sum of all probabilities of rolling each number other than the highest.\n    # The probability of rolling each number is 1 over the number of sides.\n    # The sum of all probabilities of rolling each number other than the highest\n    # is the number of sides minus 1 times the probability of rolling each number.\n    expect += (n - 1) * expect * (1 / n) ** k\n    print(expect)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    \"\"\"The main function.\"\"\"\n    # Get input\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n\n    # Calculate expected value\n    expected = 0\n    for i in range(1, n+1):\n        expected += i * (1 / n)\n\n    for _ in range(k-1):\n        temp = 0\n        for i in range(1, n+1):\n            temp += i * (1 / n)\n        expected = (expected + temp) / n\n\n    # Print result\n    print(expected)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649891220,
+  "id": "cmpl-4wgMeOGSgFH4wchaEePNxALYRS4sY",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:07:23.415905 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    memo = {}\n    print(solve(n, k, memo))\n\ndef solve(n, k, memo):\n    if k == 1:\n        return n / 2\n    if (n, k) in memo:\n        return memo[(n, k)]\n    else:\n        result = 0\n        for i in range(1, n + 1):\n            if i == n:\n                result += 1 / n * (i + solve(n, k - 1, memo))\n            else:\n                result += 1 / n * (i + solve(n, k, memo))\n        memo[(n, k)] = result\n        return result\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:07:23.416013 REASON stop
+2022-04-13 23:07:23.416353 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.416367 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline().split()\n    n = int(input[0])\n    k = int(input[1])\n\n    # There are two cases:\n    # 1. We get a 1 on the first roll\n    # 2. We get anything else on the first roll\n\n    # Case 1: We get a 1 on the first roll\n    # The expected value is 1\n    case1 = 1\n\n    # Case 2: We get anything else on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case2 = (n-1)/n * expected(n, k-1)\n\n    # The expected value is the average of these two cases\n    print(case1 + case2)\n\n\n# Calculate the expected value of rolling an n-sided die k times\ndef expected(n, k):\n    # Base case: if k = 0, return the average of the sides\n    if k == 0:\n        return (n+1)/2\n\n    # Otherwise, we have two cases:\n    # 1. We get a 1 on the first roll\n    # 2. We get anything else on the first roll\n\n    # Case 1: We get a 1 on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case1 = 1/n * expected(n, k-1)\n\n    # Case 2: We get anything else on the first roll\n    # The expected value is the expected value of the remaining rolls\n    case2 = (n-1)/n * expected(n, k-1)\n\n    # The expected value is the average of these two cases\n    return case1 + case2\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:07:23.416477 REASON stop
+2022-04-13 23:07:23.416717 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.416729 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# Use dynamic programming to store the expected value of each number of rolls.\n# For each roll, sum the expected values for each die roll and divide by the number of sides.\n# The expected value for each roll is the expected value for the next roll plus the expected value for the current roll.\n\n# Get user input\nn, k = map(int, input().split())\n\n# Set up the array for storing values\nvalues = [[0 for i in range(k+1)] for j in range(n+1)]\n\n# Fill in the array\nfor i in range(1, n+1):\n\tvalues[i][1] = i\n\nfor i in range(1, k+1):\n\tfor j in range(1, n+1):\n\t\tvalues[j][i] = (sum(values[1:j+1]) + j) / n\n\n# Print the expected value\nprint(values[-1][-1])"
+}
+2022-04-13 23:07:23.416767 REASON stop
+2022-04-13 23:07:23.430857 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.430885 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef expected_value(n, k):\n    if n == 1:\n        return 1\n    else:\n        return float(n + 1) / 2 + expected_value(n, k - 1) * (1 - float(n + 1) / 2)\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    print expected_value(n, k)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:07:23.430945 REASON stop
+2022-04-13 23:07:23.445505 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.445540 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    #get input\n    n, k = map(int, sys.stdin.readline().split())\n\n    #solve\n    print(solve(n, k))\n\ndef solve(n, k):\n    #base cases\n    if k == 1:\n        return (n + 1) / 2\n    if k == 2:\n        return (n + 1) / 2 + n / 2\n\n    #calculate expectation\n    expectation = 0\n    for i in range(1, n + 1):\n        expectation += solve(n, k - 1) * i / n\n\n    return expectation\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:07:23.445617 REASON stop
+2022-04-13 23:07:23.446237 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.446252 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n    # The expected value for a single roll is the average of all possible rolls.\n    expect = sum(range(1, n + 1)) / n\n    # The expected value for the total is the expected value of the first roll\n    # plus the expected value of the remaining rolls.\n    # The expected value of the remaining rolls is the expected value of the\n    # first roll times the probability of rolling again.\n    # The probability of rolling again is 1 minus the probability of stopping\n    # on the first roll, or the probability of rolling anything other than the\n    # highest number.\n    # The probability of rolling anything other than the highest number is the\n    # sum of all probabilities of rolling each number other than the highest.\n    # The probability of rolling each number is 1 over the number of sides.\n    # The sum of all probabilities of rolling each number other than the highest\n    # is the number of sides minus 1 times the probability of rolling each number.\n    expect += (n - 1) * expect * (1 / n) ** k\n    print(expect)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:07:23.446299 REASON stop
+2022-04-13 23:07:23.471458 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'
+2022-04-13 23:07:23.471493 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    \"\"\"The main function.\"\"\"\n    # Get input\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n\n    # Calculate expected value\n    expected = 0\n    for i in range(1, n+1):\n        expected += i * (1 / n)\n\n    for _ in range(k-1):\n        temp = 0\n        for i in range(1, n+1):\n            temp += i * (1 / n)\n        expected = (expected + temp) / n\n\n    # Print result\n    print(expected)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:07:23.471566 REASON stop
+2022-04-13 23:07:23.472154 test/intro-questions.txt_dir/4747/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4747/solutions.json'

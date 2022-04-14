@@ -1,0 +1,154 @@
+2022-04-13 20:32:39.281841 """
+Polycarp has prepared $n$ competitive programming problems. The topic of the $i$-th problem is $a_i$, and some problems' topics may coincide.
+
+Polycarp has to host several thematic contests. All problems in each contest should have the same topic, and all contests should have pairwise distinct topics. He may not use all the problems. It is possible that there are no contests for some topics.
+
+Polycarp wants to host competitions on consecutive days, one contest per day. Polycarp wants to host a set of contests in such a way that:  number of problems in each contest is exactly twice as much as in the previous contest (one day ago), the first contest can contain arbitrary number of problems;  the total number of problems in all the contests should be maximized. 
+
+Your task is to calculate the maximum number of problems in the set of thematic contests. Note, that you should not maximize the number of contests.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of problems Polycarp has prepared.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$) where $a_i$ is the topic of the $i$-th problem.
+
+
+-----Output-----
+
+Print one integer — the maximum number of problems in the set of thematic contests.
+
+
+-----Examples-----
+Input
+18
+2 1 2 10 2 10 10 2 2 1 10 10 10 10 1 1 10 10
+
+Output
+14
+
+Input
+10
+6 6 6 3 6 1000000000 3 3 6 6
+
+Output
+9
+
+Input
+3
+1337 1337 1337
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the optimal sequence of contests is: $2$ problems of the topic $1$, $4$ problems of the topic $2$, $8$ problems of the topic $10$.
+
+In the second example the optimal sequence of contests is: $3$ problems of the topic $3$, $6$ problems of the topic $6$.
+
+In the third example you can take all the problems with the topic $1337$ (the number of such problems is $3$ so the answer is $3$) and host a single contest.
+"""
+2022-04-13 20:32:39.281858 --------------------------
+2022-04-13 20:33:00.336943 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    #print(n, a)\n    d = dict()\n    for i in range(n):\n        if a[i] in d:\n            d[a[i]] += 1\n        else:\n            d[a[i]] = 1\n    #print(d)\n    d = dict(sorted(d.items(), key=lambda x: x[1], reverse=True))\n    #print(d)\n    res = 0\n    for k, v in d.items():\n        res += v\n        if v > 1:\n            d[k] = v // 2\n        else:\n            del d[k]\n    #print(d)\n    while len(d) > 0:\n        new_d = dict()\n        for k, v in d.items():\n            if v > 1:\n                new_d[k] = v // 2\n        d = new_d\n        res += len(d)\n    print(res)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport collections\n\nn = int(input())\na = list(map(int, input().split()))\n\ncnt = collections.Counter(a)\n\n# sort the topics by the number of problems with them\ntopics = sorted(cnt.keys(), key=lambda x: cnt[x], reverse=True)\n\n# the number of problems in the current contest\ncur_cnt = 0\n\n# the number of problems in the optimal set of contests\nans = 0\n\nfor t in topics:\n    # the number of problems with the topic t\n    n = cnt[t]\n\n    # the optimal number of problems with the topic t to include in the current contest\n    # is the maximum number of problems with the topic t such that the number of problems\n    # in the current contest is exactly twice as much as in the previous contest\n    cur_cnt = max(cur_cnt, min(n, 2 * cur_cnt))\n\n    # update the answer\n    ans += cur_cnt\n\n    # the number of problems with the topic t is decreased\n    cnt[t] -= cur_cnt\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solve():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # count = collections.Counter(a)\n    # res = 0\n    # for i in range(1, n+1):\n    #     res += count[i] // 2\n    # return res\n\n    count = collections.Counter(a)\n    res = 0\n    for i in range(1, n+1):\n        res += count[i] // 2\n    return res\n\nprint(solve())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # remove duplicates\n    a = set(a)\n\n    # count occurences\n    cnt = {}\n    for i in a:\n        if i not in cnt:\n            cnt[i] = 0\n        cnt[i] += 1\n\n    # sort by number of occurences\n    cnt = sorted(cnt.items(), key=lambda x: x[1], reverse=True)\n\n    # count answer\n    ans = 0\n    for i in range(len(cnt)):\n        ans += cnt[i][1]\n        if i != 0:\n            if cnt[i][1] > cnt[i-1][1] * 2:\n                ans -= cnt[i][1] - cnt[i-1][1] * 2\n            else:\n                break\n    print(ans)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef solve(problems, topics):\n\tcontests = []\n\tfor topic in topics:\n\t\tcontests.append(problems.count(topic))\n\tcontests.sort()\n\tcontests.reverse()\n\tfor i in range(len(contests)):\n\t\tcontests[i] = contests[i] / (2 ** i)\n\treturn int(sum(contests))\n\nn = int(raw_input())\nproblems = [int(x) for x in raw_input().split()]\ntopics = list(set(problems))\nprint solve(problems, topics)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\nn = int(input())\na = list(map(int,input().split()))\n\nd = {}\nfor i in range(n):\n    if a[i] not in d:\n        d[a[i]] = 0\n    d[a[i]] += 1\n\nans = 0\nfor v in d.values():\n    ans += v\n    if v >= 2:\n        v -= 2\n        ans += v//4*4\n        v %= 4\n        if v:\n            ans += 2\nprint(ans)"
+    }
+  ],
+  "created": 1649881959,
+  "id": "cmpl-4wdxH91Zd0BCNXL229zX5fxIcvuuc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:33:00.337223 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    #print(n, a)\n    d = dict()\n    for i in range(n):\n        if a[i] in d:\n            d[a[i]] += 1\n        else:\n            d[a[i]] = 1\n    #print(d)\n    d = dict(sorted(d.items(), key=lambda x: x[1], reverse=True))\n    #print(d)\n    res = 0\n    for k, v in d.items():\n        res += v\n        if v > 1:\n            d[k] = v // 2\n        else:\n            del d[k]\n    #print(d)\n    while len(d) > 0:\n        new_d = dict()\n        for k, v in d.items():\n            if v > 1:\n                new_d[k] = v // 2\n        d = new_d\n        res += len(d)\n    print(res)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:33:00.337265 REASON stop
+2022-04-13 20:33:00.337773 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 20:33:00.337879 REASON stop
+2022-04-13 20:33:00.338216 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport collections\n\nn = int(input())\na = list(map(int, input().split()))\n\ncnt = collections.Counter(a)\n\n# sort the topics by the number of problems with them\ntopics = sorted(cnt.keys(), key=lambda x: cnt[x], reverse=True)\n\n# the number of problems in the current contest\ncur_cnt = 0\n\n# the number of problems in the optimal set of contests\nans = 0\n\nfor t in topics:\n    # the number of problems with the topic t\n    n = cnt[t]\n\n    # the optimal number of problems with the topic t to include in the current contest\n    # is the maximum number of problems with the topic t such that the number of problems\n    # in the current contest is exactly twice as much as in the previous contest\n    cur_cnt = max(cur_cnt, min(n, 2 * cur_cnt))\n\n    # update the answer\n    ans += cur_cnt\n\n    # the number of problems with the topic t is decreased\n    cnt[t] -= cur_cnt\n\nprint(ans)"
+}
+2022-04-13 20:33:00.338287 REASON stop
+2022-04-13 20:33:00.356831 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solve():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # count = collections.Counter(a)\n    # res = 0\n    # for i in range(1, n+1):\n    #     res += count[i] // 2\n    # return res\n\n    count = collections.Counter(a)\n    res = 0\n    for i in range(1, n+1):\n        res += count[i] // 2\n    return res\n\nprint(solve())"
+}
+2022-04-13 20:33:00.356921 REASON stop
+2022-04-13 20:33:00.370820 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # remove duplicates\n    a = set(a)\n\n    # count occurences\n    cnt = {}\n    for i in a:\n        if i not in cnt:\n            cnt[i] = 0\n        cnt[i] += 1\n\n    # sort by number of occurences\n    cnt = sorted(cnt.items(), key=lambda x: x[1], reverse=True)\n\n    # count answer\n    ans = 0\n    for i in range(len(cnt)):\n        ans += cnt[i][1]\n        if i != 0:\n            if cnt[i][1] > cnt[i-1][1] * 2:\n                ans -= cnt[i][1] - cnt[i-1][1] * 2\n            else:\n                break\n    print(ans)\n\nmain()"
+}
+2022-04-13 20:33:00.370919 REASON stop
+2022-04-13 20:33:00.371750 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef solve(problems, topics):\n\tcontests = []\n\tfor topic in topics:\n\t\tcontests.append(problems.count(topic))\n\tcontests.sort()\n\tcontests.reverse()\n\tfor i in range(len(contests)):\n\t\tcontests[i] = contests[i] / (2 ** i)\n\treturn int(sum(contests))\n\nn = int(raw_input())\nproblems = [int(x) for x in raw_input().split()]\ntopics = list(set(problems))\nprint solve(problems, topics)"
+}
+2022-04-13 20:33:00.371814 REASON stop
+2022-04-13 20:33:00.372902 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\nn = int(input())\na = list(map(int,input().split()))\n\nd = {}\nfor i in range(n):\n    if a[i] not in d:\n        d[a[i]] = 0\n    d[a[i]] += 1\n\nans = 0\nfor v in d.values():\n    ans += v\n    if v >= 2:\n        v -= 2\n        ans += v//4*4\n        v %= 4\n        if v:\n            ans += 2\nprint(ans)"
+}
+2022-04-13 20:33:00.372962 REASON stop

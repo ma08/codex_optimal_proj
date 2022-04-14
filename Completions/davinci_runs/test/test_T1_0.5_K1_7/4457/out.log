@@ -1,0 +1,163 @@
+2022-04-13 21:00:53.317623 """
+Recently Vasya decided to improve his pistol shooting skills. Today his coach offered him the following exercise. He placed $n$ cans in a row on a table. Cans are numbered from left to right from $1$ to $n$. Vasya has to knock down each can exactly once to finish the exercise. He is allowed to choose the order in which he will knock the cans down.
+
+Vasya knows that the durability of the $i$-th can is $a_i$. It means that if Vasya has already knocked $x$ cans down and is now about to start shooting the $i$-th one, he will need $(a_i \cdot x + 1)$ shots to knock it down. You can assume that if Vasya starts shooting the $i$-th can, he will be shooting it until he knocks it down.
+
+Your task is to choose such an order of shooting so that the number of shots required to knock each of the $n$ given cans down exactly once is minimum possible.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ $(2 \le n \le 1\,000)$ — the number of cans.
+
+The second line of the input contains the sequence $a_1, a_2, \dots, a_n$ $(1 \le a_i \le 1\,000)$, where $a_i$ is the durability of the $i$-th can.
+
+
+-----Output-----
+
+In the first line print the minimum number of shots required to knock each of the $n$ given cans down exactly once.
+
+In the second line print the sequence consisting of $n$ distinct integers from $1$ to $n$ — the order of indices of cans that minimizes the number of shots required. If there are several answers, you can print any of them.
+
+
+-----Examples-----
+Input
+3
+20 10 20
+
+Output
+43
+1 3 2 
+
+Input
+4
+10 10 10 10
+
+Output
+64
+2 1 4 3 
+
+Input
+6
+5 4 5 4 4 5
+
+Output
+69
+6 1 3 5 2 4 
+
+Input
+2
+1 4
+
+Output
+3
+2 1 
+
+
+
+-----Note-----
+
+In the first example Vasya can start shooting from the first can. He knocks it down with the first shot because he haven't knocked any other cans down before. After that he has to shoot the third can. To knock it down he shoots $20 \cdot 1 + 1 = 21$ times. After that only second can remains. To knock it down Vasya shoots $10 \cdot 2 + 1 = 21$ times. So the total number of shots is $1 + 21 + 21 = 43$.
+
+In the second example the order of shooting does not matter because all cans have the same durability.
+"""
+2022-04-13 21:00:53.317638 --------------------------
+2022-04-13 21:01:23.751202 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_ints():\n    return list(map(int, sys.stdin.readline().strip().split(' ')))\n\ndef read_int():\n    return int(sys.stdin.readline().strip())\n\ndef read_str():\n    return sys.stdin.readline().strip()\n\ndef read_strs():\n    return sys.stdin.readline().strip().split(' ')\n\ndef main():\n    n = read_int()\n    a = read_ints()\n    a.sort()\n    cans = [(a[i], i+1) for i in range(n)]\n    cans.sort(reverse=True)\n    ans = 0\n    for i in range(n):\n        ans += (i+1)*cans[i][0]\n    print(ans)\n    print(' '.join([str(c[1]) for c in cans]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    a.sort()\n    dp = [a[0] + 1] * n\n    for i in range(1, n):\n        dp[i] = a[i] * (i + 1) + 1\n        for j in range(i):\n            dp[i] = min(dp[i], max(dp[j], a[i] * (i - j) + 1))\n    print(dp[n - 1])\n    for i in range(n):\n        for j in range(i + 1, n):\n            if dp[j] == max(dp[i], a[j] * (j - i) + 1):\n                print(j + 1, end = ' ')\n                break\n    for i in range(n - 1, -1, -1):\n        if dp[i] == a[i] * (i + 1) + 1:\n            print(i + 1, end = ' ')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    f = sys.stdin\n    n = int(f.readline())\n    cans = [int(x) for x in f.readline().split()]\n    cans = sorted(enumerate(cans), key=lambda x: x[1])\n\n    ans = 0\n    order = []\n    for i in range(n):\n        ans += cans[i][1] * i + 1\n        order.append(cans[i][0] + 1)\n\n    print(ans)\n    print(' '.join(map(str, order)))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    assert len(a) == n\n    assert all(1 <= x <= 1000 for x in a)\n\n    total = 0\n    output = []\n    for i in range(n):\n        min_value = min(a)\n        min_index = a.index(min_value)\n        output.append(min_index + 1)\n        total += (min_value * i) + 1\n        a[min_index] = 1000\n\n    print(total)\n    print(*output)\n\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\ndur = list(map(int, input().split()))\n\nans = [0] * N\n\n# first, find the can with the smallest durability\nmin_dur = min(dur)\n\n# the largest number of shots required is the sum of the durabilities\nmax_shots = sum(dur)\n\n# now, we can iterate through the cans, starting with the smallest\n# and calculate the number of shots required for each can\nfor i in range(N):\n    # if the can is the smallest, we only need 1 shot\n    if dur[i] == min_dur:\n        ans[i] = 1\n        continue\n\n    # otherwise, we need to add the number of shots required to knock down\n    # the previous can to the number of shots required to knock down\n    # the current can\n    ans[i] = ans[i - 1] + dur[i]\n\n# now, we can iterate through the cans, starting with the largest\n# and calculate the number of shots required for each can\nfor i in range(N - 1, -1, -1):\n    # if the can is the largest, we only need 1 shot\n    if dur[i] == max_shots:\n        ans[i] = 1\n        continue\n\n    # otherwise, we need to add the number of shots required to knock down\n    # the next can to the number of shots required to knock down\n    # the current can\n    ans[i] = ans[i + 1] + dur[i]\n\n# now, we can iterate through the cans and find the minimum number of shots\n# required to knock down each can\nmin_shots = min(ans)\n\n# now, we can iterate through the cans and find the order that minimizes\n# the number of shots\norder = []\nfor i in range(N):\n    if ans[i] == min_shots:\n        order.append(i + 1)\n        min_shots += dur[i]\n\nprint(min_shots - 1)\nprint(*order)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tn = int(raw_input())\n\ta = map(int, raw_input().split())\n\tprint solve(n, a)\n\ndef solve(n, a):\n\tshots = 0\n\torder = []\n\tfor i in xrange(n):\n\t\tif i == 0:\n\t\t\torder.append(a.index(min(a))+1)\n\t\t\tdel a[a.index(min(a))]\n\t\telse:\n\t\t\torder.append(a.index(min(a))+1)\n\t\t\tdel a[a.index(min(a))]\n\t\t\tshots += a[order[-2]-1]*(i)\n\t\t\t#print shots\n\t\t\t#print a\n\t\t\t#print order\n\tshots += a[order[-1]-1]*(n-1)\n\treturn str(shots+n) + '\\n' + ' '.join(map(str, order))\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [0] * n\ndp[0] = a[0]\n\nfor i in range(1, n):\n    dp[i] = a[i] * (i + 1) + 1\n\nfor i in range(n):\n    for j in range(i):\n        dp[i] = min(dp[i], dp[j] + a[i] * (i - j) + 1)\n\nprint(dp[n - 1])\n\nans = [0] * n\nans[0] = 1\n\nfor i in range(1, n):\n    for j in range(i):\n        if dp[i] == dp[j] + a[i] * (i - j) + 1:\n            ans[i] = j + 1\n            break\n\nprint(*ans)"
+    }
+  ],
+  "created": 1649883653,
+  "id": "cmpl-4weObsLAcehStEVIDTzlf7WKiPMiz",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:01:23.751517 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_ints():\n    return list(map(int, sys.stdin.readline().strip().split(' ')))\n\ndef read_int():\n    return int(sys.stdin.readline().strip())\n\ndef read_str():\n    return sys.stdin.readline().strip()\n\ndef read_strs():\n    return sys.stdin.readline().strip().split(' ')\n\ndef main():\n    n = read_int()\n    a = read_ints()\n    a.sort()\n    cans = [(a[i], i+1) for i in range(n)]\n    cans.sort(reverse=True)\n    ans = 0\n    for i in range(n):\n        ans += (i+1)*cans[i][0]\n    print(ans)\n    print(' '.join([str(c[1]) for c in cans]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:01:23.751625 REASON stop
+2022-04-13 21:01:23.752066 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    a.sort()\n    dp = [a[0] + 1] * n\n    for i in range(1, n):\n        dp[i] = a[i] * (i + 1) + 1\n        for j in range(i):\n            dp[i] = min(dp[i], max(dp[j], a[i] * (i - j) + 1))\n    print(dp[n - 1])\n    for i in range(n):\n        for j in range(i + 1, n):\n            if dp[j] == max(dp[i], a[j] * (j - i) + 1):\n                print(j + 1, end = ' ')\n                break\n    for i in range(n - 1, -1, -1):\n        if dp[i] == a[i] * (i + 1) + 1:\n            print(i + 1, end = ' ')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:01:23.752197 REASON stop
+2022-04-13 21:01:23.752549 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    f = sys.stdin\n    n = int(f.readline())\n    cans = [int(x) for x in f.readline().split()]\n    cans = sorted(enumerate(cans), key=lambda x: x[1])\n\n    ans = 0\n    order = []\n    for i in range(n):\n        ans += cans[i][1] * i + 1\n        order.append(cans[i][0] + 1)\n\n    print(ans)\n    print(' '.join(map(str, order)))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:01:23.752596 REASON stop
+2022-04-13 21:01:23.780890 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    assert len(a) == n\n    assert all(1 <= x <= 1000 for x in a)\n\n    total = 0\n    output = []\n    for i in range(n):\n        min_value = min(a)\n        min_index = a.index(min_value)\n        output.append(min_index + 1)\n        total += (min_value * i) + 1\n        a[min_index] = 1000\n\n    print(total)\n    print(*output)\n\n\nmain()"
+}
+2022-04-13 21:01:23.780981 REASON stop
+2022-04-13 21:01:23.798796 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\ndur = list(map(int, input().split()))\n\nans = [0] * N\n\n# first, find the can with the smallest durability\nmin_dur = min(dur)\n\n# the largest number of shots required is the sum of the durabilities\nmax_shots = sum(dur)\n\n# now, we can iterate through the cans, starting with the smallest\n# and calculate the number of shots required for each can\nfor i in range(N):\n    # if the can is the smallest, we only need 1 shot\n    if dur[i] == min_dur:\n        ans[i] = 1\n        continue\n\n    # otherwise, we need to add the number of shots required to knock down\n    # the previous can to the number of shots required to knock down\n    # the current can\n    ans[i] = ans[i - 1] + dur[i]\n\n# now, we can iterate through the cans, starting with the largest\n# and calculate the number of shots required for each can\nfor i in range(N - 1, -1, -1):\n    # if the can is the largest, we only need 1 shot\n    if dur[i] == max_shots:\n        ans[i] = 1\n        continue\n\n    # otherwise, we need to add the number of shots required to knock down\n    # the next can to the number of shots required to knock down\n    # the current can\n    ans[i] = ans[i + 1] + dur[i]\n\n# now, we can iterate through the cans and find the minimum number of shots\n# required to knock down each can\nmin_shots = min(ans)\n\n# now, we can iterate through the cans and find the order that minimizes\n# the number of shots\norder = []\nfor i in range(N):\n    if ans[i] == min_shots:\n        order.append(i + 1)\n        min_shots += dur[i]\n\nprint(min_shots - 1)\nprint(*order)"
+}
+2022-04-13 21:01:23.798922 REASON stop
+2022-04-13 21:01:23.799635 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tn = int(raw_input())\n\ta = map(int, raw_input().split())\n\tprint solve(n, a)\n\ndef solve(n, a):\n\tshots = 0\n\torder = []\n\tfor i in xrange(n):\n\t\tif i == 0:\n\t\t\torder.append(a.index(min(a))+1)\n\t\t\tdel a[a.index(min(a))]\n\t\telse:\n\t\t\torder.append(a.index(min(a))+1)\n\t\t\tdel a[a.index(min(a))]\n\t\t\tshots += a[order[-2]-1]*(i)\n\t\t\t#print shots\n\t\t\t#print a\n\t\t\t#print order\n\tshots += a[order[-1]-1]*(n-1)\n\treturn str(shots+n) + '\\n' + ' '.join(map(str, order))\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 21:01:23.799703 REASON stop
+2022-04-13 21:01:23.800877 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [0] * n\ndp[0] = a[0]\n\nfor i in range(1, n):\n    dp[i] = a[i] * (i + 1) + 1\n\nfor i in range(n):\n    for j in range(i):\n        dp[i] = min(dp[i], dp[j] + a[i] * (i - j) + 1)\n\nprint(dp[n - 1])\n\nans = [0] * n\nans[0] = 1\n\nfor i in range(1, n):\n    for j in range(i):\n        if dp[i] == dp[j] + a[i] * (i - j) + 1:\n            ans[i] = j + 1\n            break\n\nprint(*ans)"
+}
+2022-04-13 21:01:23.800937 REASON stop

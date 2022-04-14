@@ -1,0 +1,153 @@
+2022-04-13 18:16:04.635292 """
+You are given a binary matrix $a$ of size $n \times m$. A binary matrix is a matrix where each element is either $0$ or $1$.
+
+You may perform some (possibly zero) operations with this matrix. During each operation you can inverse the row of this matrix or a column of this matrix. Formally, inverting a row is changing all values in this row to the opposite ($0$ to $1$, $1$ to $0$). Inverting a column is changing all values in this column to the opposite.
+
+Your task is to sort the initial matrix by some sequence of such operations. The matrix is considered sorted if the array $[a_{1, 1}, a_{1, 2}, \dots, a_{1, m}, a_{2, 1}, a_{2, 2}, \dots, a_{2, m}, \dots, a_{n, m - 1}, a_{n, m}]$ is sorted in non-descending order.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 200$) — the number of rows and the number of columns in the matrix.
+
+The next $n$ lines contain $m$ integers each. The $j$-th element in the $i$-th line is $a_{i, j}$ ($0 \le a_{i, j} \le 1$) — the element of $a$ at position $(i, j)$.
+
+
+-----Output-----
+
+If it is impossible to obtain a sorted matrix, print "NO" in the first line.
+
+Otherwise print "YES" in the first line. In the second line print a string $r$ of length $n$. The $i$-th character $r_i$ of this string should be '1' if the $i$-th row of the matrix is inverted and '0' otherwise. In the third line print a string $c$ of length $m$. The $j$-th character $c_j$ of this string should be '1' if the $j$-th column of the matrix is inverted and '0' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+2 2
+1 1
+0 1
+
+Output
+YES
+00
+10
+
+Input
+3 4
+0 0 0 1
+0 0 0 0
+1 1 1 1
+
+Output
+YES
+010
+0000
+
+Input
+3 3
+0 0 0
+1 0 1
+1 1 0
+
+Output
+NO
+"""
+2022-04-13 18:16:04.635305 --------------------------
+2022-04-13 18:16:34.717029 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m = [int(x) for x in input().split()]\na = [[int(x) for x in input().split()] for i in range(n)]\n\ndef solve(a):\n    n, m = len(a), len(a[0])\n    r, c = [0] * n, [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                if r[i] == 0 and c[j] == 0:\n                    return False, []\n    return True, [r, c]\n\nans, sol = solve(a)\nif ans:\n    print(\"YES\")\n    print(\"\".join(map(str, sol[0])))\n    print(\"\".join(map(str, sol[1])))\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,m = map(int,input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int,input().split())))\n\nans = []\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 0:\n            ans.append([i,j])\n\nif len(ans) == 0:\n    print(\"YES\")\n    print(\"0\"*n)\n    print(\"0\"*m)\n    exit()\n\nans1 = []\nans2 = []\n\nfor i in range(n):\n    if i%2 == 0:\n        ans1.append(ans[i//2][0])\n        ans2.append(ans[i//2][1])\n    else:\n        ans1.append(ans[-(i//2+1)][0])\n        ans2.append(ans[-(i//2+1)][1])\n\nans1 = set(ans1)\nans2 = set(ans2)\n\nfor i in range(n):\n    for j in range(m):\n        if i in ans1 and j in ans2:\n            if a[i][j] == 1:\n                print(\"NO\")\n                exit()\n        elif i in ans1 or j in ans2:\n            if a[i][j] == 0:\n                print(\"NO\")\n                exit()\n        else:\n            if a[i][j] == 1:\n                print(\"NO\")\n                exit()\n\nprint(\"YES\")\nfor i in range(n):\n    if i in ans1:\n        print(\"1\",end=\"\")\n    else:\n        print(\"0\",end=\"\")\nprint()\nfor i in range(m):\n    if i in ans2:\n        print(\"1\",end=\"\")\n    else:\n        print(\"0\",end=\"\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\na = []\n\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\na_flat = [a[i][j] for i in range(n) for j in range(m)]\n\na_flat_sorted = sorted(a_flat)\n\nif a_flat == a_flat_sorted:\n    print(\"YES\")\n    print(\"0\" * n)\n    print(\"0\" * m)\n    exit(0)\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n    a_flat = [a[i][j] for i in range(n) for j in range(m)]\n    if a_flat == a_flat_sorted:\n        print(\"YES\")\n        print(\"1\" + \"0\" * (n - 1))\n        print(\"0\" * m)\n        exit(0)\n    for j in range(m):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n\nfor j in range(m):\n    for i in range(n):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n    a_flat = [a[i][j] for i in range(n) for j in range(m)]\n    if a_flat == a_flat_sorted:\n        print(\"YES\")\n        print(\"0\" * n)\n        print(\"1\" + \"0\" * (m - 1))\n        exit(0)\n    for i in range(n):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n\nprint(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn,m = map(int,input().split())\na = [[int(i) for i in input().split()] for j in range(n)]\n\ndef invert(matrix):\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            matrix[i][j] = 1 - matrix[i][j]\n    return matrix\n\ndef matrix_to_list(matrix):\n    res = []\n    for i in matrix:\n        res += i\n    return res\n\ndef is_sorted(matrix):\n    res = matrix_to_list(matrix)\n    for i in range(1,len(res)):\n        if res[i] < res[i-1]:\n            return False\n    return True\n\ndef re_matrix(matrix):\n    res = []\n    for i in range(len(matrix[0])):\n        res.append([])\n        for j in range(len(matrix)):\n            res[i].append(matrix[j][i])\n    return res\n\ndef find_min(matrix):\n    min_row = 0\n    min_col = 0\n    min_val = matrix[0][0]\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            if matrix[i][j] < min_val:\n                min_val = matrix[i][j]\n                min_row = i\n                min_col = j\n    return min_row,min_col\n\ndef do_invert(matrix):\n    row,col = find_min(matrix)\n    #print(row,col)\n    if row == 0 and col == 0:\n        return False\n    elif row == 0:\n        matrix = invert(re_matrix(matrix))\n        return True,matrix\n    elif col == 0:\n        matrix = invert(matrix)\n        return True,matrix\n    else:\n        matrix = invert(re_matrix(matrix))\n        return True,matrix\n\ndef sort_matrix(matrix):\n    res = []\n    while not is_sorted(matrix):\n        flag,matrix = do_invert(matrix)\n        #print(matrix)\n        if not flag:\n            return False\n        res.append(flag)\n    return res\n\nres = sort_matrix(a)\nif not res:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    print(\"0\"*n)\n    print(\"0\"*m)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The idea is to use the following observation:\n# If we have a matrix of 0s and 1s, then the matrix is sorted if and only if\n# the number of 1s in every row and column is at most 1.\n\n# The algorithm is as follows:\n# We iterate through each row and column and count the number of 1s.\n# If the number of 1s is 0, we do nothing.\n# If the number of 1s is 1, we invert the row/column.\n# If the number of 1s is more than 1, we return \"NO\" because it is impossible to sort the matrix.\n\n# NOTE: The input is a list of lists, but the output is a string.\n\n# FUNCTIONS\ndef isSorted(matrix):\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            if i > 0 and matrix[i][j] < matrix[i-1][j]:\n                return False\n            if j > 0 and matrix[i][j] < matrix[i][j-1]:\n                return False\n    return True\n\ndef sortMatrix(matrix):\n    row = [0] * len(matrix)\n    col = [0] * len(matrix[0])\n    \n    for i in range(len(matrix)):\n        count = 0\n        for j in range(len(matrix[0])):\n            if matrix[i][j] == 1:\n                count += 1\n        if count == 0:\n            continue\n        if count == 1:\n            row[i] = 1\n            continue\n        return \"NO\"\n    \n    for j in range(len(matrix[0])):\n        count = 0\n        for i in range(len(matrix)):\n            if matrix[i][j] == 1:\n                count += 1\n        if count == 0:\n            continue\n        if count == 1:\n            col[j] = 1\n            continue\n        return \"NO\"\n    \n    return \"YES\\n\" + \"\".join(map(str, row)) + \"\\n\" + \"\".join(map(str, col))\n\n# MAIN\nn, m = [int(i) for i in input().split()]\nmatrix = []\nfor i in range(n):\n    matrix.append([int(i) for i in input().split()])\n\nprint(sortMatrix(matrix))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef is_sorted(matrix):\n    for i in range(len(matrix) - 1):\n        if matrix[i] > matrix[i + 1]:\n            return False\n    return True\n\n\ndef is_sorted_matrix(matrix):\n    rows = [row for row in matrix]\n    cols = [row[i] for row in matrix for i in range(len(row))]\n    return is_sorted(rows) and is_sorted(cols)\n\n\ndef inverse_row(matrix, row):\n    for i in range(len(matrix[row])):\n        matrix[row][i] = 1 - matrix[row][i]\n\n\ndef inverse_col(matrix, col):\n    for i in range(len(matrix)):\n        matrix[i][col] = 1 - matrix[i][col]\n\n\ndef solve(matrix):\n    if is_sorted_matrix(matrix):\n        print(\"YES\")\n        print(\"0\" * len(matrix))\n        print(\"0\" * len(matrix[0]))\n        return\n    for i in range(len(matrix)):\n        inverse_row(matrix, i)\n        if is_sorted_matrix(matrix):\n            print(\"YES\")\n            print(\"0\" * i + \"1\" + \"0\" * (len(matrix) - i - 1))\n            print(\"0\" * len(matrix[0]))\n            return\n        inverse_row(matrix, i)\n    for i in range(len(matrix[0])):\n        inverse_col(matrix, i)\n        if is_sorted_matrix(matrix):\n            print(\"YES\")\n            print(\"0\" * len(matrix))\n            print(\"0\" * i + \"1\" + \"0\" * (len(matrix[0]) - i - 1))\n            return\n        inverse_col(matrix, i)\n    print(\"NO\")\n\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append([int(x) for x in input().split()])\n    solve(matrix)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n\n    a = []\n    for _ in range(n):\n        a.append(list(map(int, input().split())))\n\n    r = [0] * n\n    c = [0] * m\n\n    for i in range(n):\n        if a[i].count(1) % 2 == 1:\n            r[i] = 1\n\n    for j in range(m):\n        if sum(a[i][j] for i in range(n)) % 2 == 1:\n            c[j] = 1\n\n    if sum(r) % 2 == 1:\n        sorted = False\n        for i in range(n):\n            if a[i].count(1) % 2 == 0:\n                r[i] = 1\n                sorted = True\n                break\n        if not sorted:\n            print(\"NO\")\n            return\n\n    if sum(c) % 2 == 1:\n        sorted = False\n        for j in range(m):\n            if sum(a[i][j] for i in range(n)) % 2 == 0:\n                c[j] = 1\n                sorted = True\n                break\n        if not sorted:\n            print(\"NO\")\n            return\n\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nmain()"
+    }
+  ],
+  "created": 1649873764,
+  "id": "cmpl-4wbp6RviwDgtYpVWlL8j9DTR5MSkD",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:16:34.717493 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m = [int(x) for x in input().split()]\na = [[int(x) for x in input().split()] for i in range(n)]\n\ndef solve(a):\n    n, m = len(a), len(a[0])\n    r, c = [0] * n, [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                if r[i] == 0 and c[j] == 0:\n                    return False, []\n    return True, [r, c]\n\nans, sol = solve(a)\nif ans:\n    print(\"YES\")\n    print(\"\".join(map(str, sol[0])))\n    print(\"\".join(map(str, sol[1])))\nelse:\n    print(\"NO\")"
+}
+2022-04-13 18:16:34.717537 REASON stop
+2022-04-13 18:16:34.717912 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,m = map(int,input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int,input().split())))\n\nans = []\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 0:\n            ans.append([i,j])\n\nif len(ans) == 0:\n    print(\"YES\")\n    print(\"0\"*n)\n    print(\"0\"*m)\n    exit()\n\nans1 = []\nans2 = []\n\nfor i in range(n):\n    if i%2 == 0:\n        ans1.append(ans[i//2][0])\n        ans2.append(ans[i//2][1])\n    else:\n        ans1.append(ans[-(i//2+1)][0])\n        ans2.append(ans[-(i//2+1)][1])\n\nans1 = set(ans1)\nans2 = set(ans2)\n\nfor i in range(n):\n    for j in range(m):\n        if i in ans1 and j in ans2:\n            if a[i][j] == 1:\n                print(\"NO\")\n                exit()\n        elif i in ans1 or j in ans2:\n            if a[i][j] == 0:\n                print(\"NO\")\n                exit()\n        else:\n            if a[i][j] == 1:\n                print(\"NO\")\n                exit()\n\nprint(\"YES\")\nfor i in range(n):\n    if i in ans1:\n        print(\"1\",end=\"\")\n    else:\n        print(\"0\",end=\"\")\nprint()\nfor i in range(m):\n    if i in ans2:\n        print(\"1\",end=\"\")\n    else:\n        print(\"0\",end=\"\")"
+}
+2022-04-13 18:16:34.718054 REASON stop
+2022-04-13 18:16:34.718498 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\na = []\n\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\na_flat = [a[i][j] for i in range(n) for j in range(m)]\n\na_flat_sorted = sorted(a_flat)\n\nif a_flat == a_flat_sorted:\n    print(\"YES\")\n    print(\"0\" * n)\n    print(\"0\" * m)\n    exit(0)\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n    a_flat = [a[i][j] for i in range(n) for j in range(m)]\n    if a_flat == a_flat_sorted:\n        print(\"YES\")\n        print(\"1\" + \"0\" * (n - 1))\n        print(\"0\" * m)\n        exit(0)\n    for j in range(m):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n\nfor j in range(m):\n    for i in range(n):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n    a_flat = [a[i][j] for i in range(n) for j in range(m)]\n    if a_flat == a_flat_sorted:\n        print(\"YES\")\n        print(\"0\" * n)\n        print(\"1\" + \"0\" * (m - 1))\n        exit(0)\n    for i in range(n):\n        if a[i][j] == 0:\n            a[i][j] = 1\n        else:\n            a[i][j] = 0\n\nprint(\"NO\")"
+}
+2022-04-13 18:16:34.718554 REASON stop
+2022-04-13 18:16:34.747457 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn,m = map(int,input().split())\na = [[int(i) for i in input().split()] for j in range(n)]\n\ndef invert(matrix):\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            matrix[i][j] = 1 - matrix[i][j]\n    return matrix\n\ndef matrix_to_list(matrix):\n    res = []\n    for i in matrix:\n        res += i\n    return res\n\ndef is_sorted(matrix):\n    res = matrix_to_list(matrix)\n    for i in range(1,len(res)):\n        if res[i] < res[i-1]:\n            return False\n    return True\n\ndef re_matrix(matrix):\n    res = []\n    for i in range(len(matrix[0])):\n        res.append([])\n        for j in range(len(matrix)):\n            res[i].append(matrix[j][i])\n    return res\n\ndef find_min(matrix):\n    min_row = 0\n    min_col = 0\n    min_val = matrix[0][0]\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            if matrix[i][j] < min_val:\n                min_val = matrix[i][j]\n                min_row = i\n                min_col = j\n    return min_row,min_col\n\ndef do_invert(matrix):\n    row,col = find_min(matrix)\n    #print(row,col)\n    if row == 0 and col == 0:\n        return False\n    elif row == 0:\n        matrix = invert(re_matrix(matrix))\n        return True,matrix\n    elif col == 0:\n        matrix = invert(matrix)\n        return True,matrix\n    else:\n        matrix = invert(re_matrix(matrix))\n        return True,matrix\n\ndef sort_matrix(matrix):\n    res = []\n    while not is_sorted(matrix):\n        flag,matrix = do_invert(matrix)\n        #print(matrix)\n        if not flag:\n            return False\n        res.append(flag)\n    return res\n\nres = sort_matrix(a)\nif not res:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    print(\"0\"*n)\n    print(\"0\"*m)"
+}
+2022-04-13 18:16:34.747565 REASON stop
+2022-04-13 18:16:34.748475 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The idea is to use the following observation:\n# If we have a matrix of 0s and 1s, then the matrix is sorted if and only if\n# the number of 1s in every row and column is at most 1.\n\n# The algorithm is as follows:\n# We iterate through each row and column and count the number of 1s.\n# If the number of 1s is 0, we do nothing.\n# If the number of 1s is 1, we invert the row/column.\n# If the number of 1s is more than 1, we return \"NO\" because it is impossible to sort the matrix.\n\n# NOTE: The input is a list of lists, but the output is a string.\n\n# FUNCTIONS\ndef isSorted(matrix):\n    for i in range(len(matrix)):\n        for j in range(len(matrix[0])):\n            if i > 0 and matrix[i][j] < matrix[i-1][j]:\n                return False\n            if j > 0 and matrix[i][j] < matrix[i][j-1]:\n                return False\n    return True\n\ndef sortMatrix(matrix):\n    row = [0] * len(matrix)\n    col = [0] * len(matrix[0])\n    \n    for i in range(len(matrix)):\n        count = 0\n        for j in range(len(matrix[0])):\n            if matrix[i][j] == 1:\n                count += 1\n        if count == 0:\n            continue\n        if count == 1:\n            row[i] = 1\n            continue\n        return \"NO\"\n    \n    for j in range(len(matrix[0])):\n        count = 0\n        for i in range(len(matrix)):\n            if matrix[i][j] == 1:\n                count += 1\n        if count == 0:\n            continue\n        if count == 1:\n            col[j] = 1\n            continue\n        return \"NO\"\n    \n    return \"YES\\n\" + \"\".join(map(str, row)) + \"\\n\" + \"\".join(map(str, col))\n\n# MAIN\nn, m = [int(i) for i in input().split()]\nmatrix = []\nfor i in range(n):\n    matrix.append([int(i) for i in input().split()])\n\nprint(sortMatrix(matrix))"
+}
+2022-04-13 18:16:34.748573 REASON stop
+2022-04-13 18:16:34.749376 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef is_sorted(matrix):\n    for i in range(len(matrix) - 1):\n        if matrix[i] > matrix[i + 1]:\n            return False\n    return True\n\n\ndef is_sorted_matrix(matrix):\n    rows = [row for row in matrix]\n    cols = [row[i] for row in matrix for i in range(len(row))]\n    return is_sorted(rows) and is_sorted(cols)\n\n\ndef inverse_row(matrix, row):\n    for i in range(len(matrix[row])):\n        matrix[row][i] = 1 - matrix[row][i]\n\n\ndef inverse_col(matrix, col):\n    for i in range(len(matrix)):\n        matrix[i][col] = 1 - matrix[i][col]\n\n\ndef solve(matrix):\n    if is_sorted_matrix(matrix):\n        print(\"YES\")\n        print(\"0\" * len(matrix))\n        print(\"0\" * len(matrix[0]))\n        return\n    for i in range(len(matrix)):\n        inverse_row(matrix, i)\n        if is_sorted_matrix(matrix):\n            print(\"YES\")\n            print(\"0\" * i + \"1\" + \"0\" * (len(matrix) - i - 1))\n            print(\"0\" * len(matrix[0]))\n            return\n        inverse_row(matrix, i)\n    for i in range(len(matrix[0])):\n        inverse_col(matrix, i)\n        if is_sorted_matrix(matrix):\n            print(\"YES\")\n            print(\"0\" * len(matrix))\n            print(\"0\" * i + \"1\" + \"0\" * (len(matrix[0]) - i - 1))\n            return\n        inverse_col(matrix, i)\n    print(\"NO\")\n\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append([int(x) for x in input().split()])\n    solve(matrix)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:16:34.749490 REASON stop
+2022-04-13 18:16:34.750144 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n\n    a = []\n    for _ in range(n):\n        a.append(list(map(int, input().split())))\n\n    r = [0] * n\n    c = [0] * m\n\n    for i in range(n):\n        if a[i].count(1) % 2 == 1:\n            r[i] = 1\n\n    for j in range(m):\n        if sum(a[i][j] for i in range(n)) % 2 == 1:\n            c[j] = 1\n\n    if sum(r) % 2 == 1:\n        sorted = False\n        for i in range(n):\n            if a[i].count(1) % 2 == 0:\n                r[i] = 1\n                sorted = True\n                break\n        if not sorted:\n            print(\"NO\")\n            return\n\n    if sum(c) % 2 == 1:\n        sorted = False\n        for j in range(m):\n            if sum(a[i][j] for i in range(n)) % 2 == 0:\n                c[j] = 1\n                sorted = True\n                break\n        if not sorted:\n            print(\"NO\")\n            return\n\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nmain()"
+}
+2022-04-13 18:16:34.750213 REASON stop

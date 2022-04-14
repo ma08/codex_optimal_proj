@@ -1,0 +1,152 @@
+2022-04-13 17:22:32.473699 """
+You are given three integers $a \le b \le c$.
+
+In one move, you can add $+1$ or $-1$ to any of these integers (i.e. increase or decrease any number by one). You can perform such operation any (possibly, zero) number of times, you can even perform this operation several times with one number. Note that you cannot make non-positive numbers using such operations.
+
+You have to perform the minimum number of such operations in order to obtain three integers $A \le B \le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$.
+
+You have to answer $t$ independent test cases. 
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases.
+
+The next $t$ lines describe test cases. Each test case is given on a separate line as three space-separated integers $a, b$ and $c$ ($1 \le a \le b \le c \le 10^4$).
+
+
+-----Output-----
+
+For each test case, print the answer. In the first line print $res$ — the minimum number of operations you have to perform to obtain three integers $A \le B \le C$ such that $B$ is divisible by $A$ and $C$ is divisible by $B$. On the second line print any suitable triple $A, B$ and $C$.
+
+
+-----Example-----
+Input
+8
+1 2 3
+123 321 456
+5 10 15
+15 18 21
+100 100 101
+1 22 29
+3 19 38
+6 30 46
+
+Output
+1
+1 1 3
+102
+114 228 456
+4
+4 8 16
+6
+18 18 18
+1
+100 100 100
+7
+1 22 22
+2
+1 19 38
+8
+6 24 48
+"""
+2022-04-13 17:22:32.473719 --------------------------
+2022-04-13 17:22:58.934917 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\nfor i in range(t):\n    a,b,c = list(map(int,input().split()))\n    if a == b:\n        if b == c:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,b,b)\n    elif b == c:\n        print(\"1\")\n        print(a,b,b)\n    else:\n        if b%a == 0:\n            if c%b == 0:\n                print(\"0\")\n                print(a,b,c)\n            else:\n                print(\"1\")\n                print(a,b,b)\n        else:\n            if c%b == 0:\n                print(\"1\")\n                print(a,b,b)\n            else:\n                print(\"2\")\n                print(a,a,b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef min_div(a, b, c):\n    if b % a == 0 and c % b == 0:\n        return 0\n    if a == b and b == c:\n        return 0\n    if a == b:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if b == c:\n        return min(b - a + min_div(b, b + 1, b + 1), a - b + min_div(b - 1, b, b))\n    if a < b < c:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if b < a < c:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if a < c < b:\n        return min(b - a + min_div(b, b + 1, b + 1), a - b + min_div(b - 1, b, c))\n\ndef main():\n    t = int(sys.stdin.readline().strip())\n    for i in range(t):\n        a, b, c = [int(x) for x in sys.stdin.readline().strip().split()]\n        print(min_div(a, b, c))\n        print(a, b, c)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef min_moves(a, b, c):\n    if b % a == 0 and c % b == 0:\n        return 0\n    else:\n        if b % a != 0:\n            if b % a > a // 2:\n                return 1 + min_moves(a, b + 1, c)\n            else:\n                return 1 + min_moves(a, b - 1, c)\n        else:\n            if c % b > b // 2:\n                return 1 + min_moves(a, b, c + 1)\n            else:\n                return 1 + min_moves(a, b, c - 1)\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        a, b, c = [int(x) for x in sys.stdin.readline().split()]\n        res = min_moves(a, b, c)\n        print(res)\n        print(a, b, c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, c = map(int, input().split())\n        print(b-a)\n        print(a, a, c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a,b,c = [int(x) for x in input().split()]\n        if b%a==0 and c%b==0:\n            print(0)\n            print(a,b,c)\n        else:\n            if b%a==0:\n                print(1)\n                print(a,b,c-(c%b))\n            elif c%b==0:\n                print(1)\n                print(a,b-(b%a),c)\n            else:\n                print(2)\n                print(a,b-(b%a),c-(c%b))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom math import gcd\n\nt = int(input())\nfor _ in range(t):\n    a, b, c = map(int, input().split())\n    if b % a == 0 and c % b == 0:\n        print(0)\n        print(a, b, c)\n    else:\n        g = gcd(a, b)\n        if b % g == 0 and c % b == 0:\n            print(1)\n            print(g, b, c)\n        else:\n            print(2)\n            print(a, b - b % a, c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\nfor i in range(t):\n    a,b,c = map(int,input().split())\n    if a==b==c:\n        print(\"0\")\n        print(a,b,c)\n    elif a==b and b!=c:\n        if c%b==0:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,b,b)\n    elif a!=b and b==c:\n        if b%a==0:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,a,b)\n    elif a!=b and b!=c:\n        if b%a==0 and c%b==0:\n            print(\"0\")\n            print(a,b,c)\n        elif b%a==0 and c%b!=0:\n            print(\"2\")\n            print(a,b,b)\n        elif b%a!=0 and c%b==0:\n            print(\"1\")\n            print(a,a,b)\n        else:\n            print(\"2\")\n            print(a,a,a)"
+    }
+  ],
+  "created": 1649870552,
+  "id": "cmpl-4wazIhRUFMp1Zw7jHdCtPoJFMY2J3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:22:58.935217 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\nfor i in range(t):\n    a,b,c = list(map(int,input().split()))\n    if a == b:\n        if b == c:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,b,b)\n    elif b == c:\n        print(\"1\")\n        print(a,b,b)\n    else:\n        if b%a == 0:\n            if c%b == 0:\n                print(\"0\")\n                print(a,b,c)\n            else:\n                print(\"1\")\n                print(a,b,b)\n        else:\n            if c%b == 0:\n                print(\"1\")\n                print(a,b,b)\n            else:\n                print(\"2\")\n                print(a,a,b)"
+}
+2022-04-13 17:22:58.935252 REASON stop
+2022-04-13 17:22:58.935679 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef min_div(a, b, c):\n    if b % a == 0 and c % b == 0:\n        return 0\n    if a == b and b == c:\n        return 0\n    if a == b:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if b == c:\n        return min(b - a + min_div(b, b + 1, b + 1), a - b + min_div(b - 1, b, b))\n    if a < b < c:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if b < a < c:\n        return min(b - a + min_div(b, b + 1, c), a - b + min_div(b - 1, b, c))\n    if a < c < b:\n        return min(b - a + min_div(b, b + 1, b + 1), a - b + min_div(b - 1, b, c))\n\ndef main():\n    t = int(sys.stdin.readline().strip())\n    for i in range(t):\n        a, b, c = [int(x) for x in sys.stdin.readline().strip().split()]\n        print(min_div(a, b, c))\n        print(a, b, c)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:22:58.935820 REASON stop
+2022-04-13 17:22:58.936201 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef min_moves(a, b, c):\n    if b % a == 0 and c % b == 0:\n        return 0\n    else:\n        if b % a != 0:\n            if b % a > a // 2:\n                return 1 + min_moves(a, b + 1, c)\n            else:\n                return 1 + min_moves(a, b - 1, c)\n        else:\n            if c % b > b // 2:\n                return 1 + min_moves(a, b, c + 1)\n            else:\n                return 1 + min_moves(a, b, c - 1)\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        a, b, c = [int(x) for x in sys.stdin.readline().split()]\n        res = min_moves(a, b, c)\n        print(res)\n        print(a, b, c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:22:58.936253 REASON stop
+2022-04-13 17:22:58.970348 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, c = map(int, input().split())\n        print(b-a)\n        print(a, a, c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:22:58.970447 REASON stop
+2022-04-13 17:22:58.994583 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a,b,c = [int(x) for x in input().split()]\n        if b%a==0 and c%b==0:\n            print(0)\n            print(a,b,c)\n        else:\n            if b%a==0:\n                print(1)\n                print(a,b,c-(c%b))\n            elif c%b==0:\n                print(1)\n                print(a,b-(b%a),c)\n            else:\n                print(2)\n                print(a,b-(b%a),c-(c%b))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:22:58.994687 REASON stop
+2022-04-13 17:22:58.995392 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom math import gcd\n\nt = int(input())\nfor _ in range(t):\n    a, b, c = map(int, input().split())\n    if b % a == 0 and c % b == 0:\n        print(0)\n        print(a, b, c)\n    else:\n        g = gcd(a, b)\n        if b % g == 0 and c % b == 0:\n            print(1)\n            print(g, b, c)\n        else:\n            print(2)\n            print(a, b - b % a, c)"
+}
+2022-04-13 17:22:58.995461 REASON stop
+2022-04-13 17:22:58.996384 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\nfor i in range(t):\n    a,b,c = map(int,input().split())\n    if a==b==c:\n        print(\"0\")\n        print(a,b,c)\n    elif a==b and b!=c:\n        if c%b==0:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,b,b)\n    elif a!=b and b==c:\n        if b%a==0:\n            print(\"0\")\n            print(a,b,c)\n        else:\n            print(\"1\")\n            print(a,a,b)\n    elif a!=b and b!=c:\n        if b%a==0 and c%b==0:\n            print(\"0\")\n            print(a,b,c)\n        elif b%a==0 and c%b!=0:\n            print(\"2\")\n            print(a,b,b)\n        elif b%a!=0 and c%b==0:\n            print(\"1\")\n            print(a,a,b)\n        else:\n            print(\"2\")\n            print(a,a,a)"
+}
+2022-04-13 17:22:58.996466 REASON stop

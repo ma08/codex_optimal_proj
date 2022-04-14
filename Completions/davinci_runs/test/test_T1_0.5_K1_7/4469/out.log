@@ -1,0 +1,173 @@
+2022-04-13 21:06:29.248648 """
+You have got a shelf and want to put some books on it.
+
+You are given $q$ queries of three types:  L $id$ — put a book having index $id$ on the shelf to the left from the leftmost existing book;  R $id$ — put a book having index $id$ on the shelf to the right from the rightmost existing book;  ? $id$ — calculate the minimum number of books you need to pop from the left or from the right in such a way that the book with index $id$ will be leftmost or rightmost. 
+
+You can assume that the first book you will put can have any position (it does not matter) and queries of type $3$ are always valid (it is guaranteed that the book in each such query is already placed). You can also assume that you don't put the same book on the shelf twice, so $id$s don't repeat in queries of first two types.
+
+Your problem is to answer all the queries of type $3$ in order they appear in the input.
+
+Note that after answering the query of type $3$ all the books remain on the shelf and the relative order of books does not change.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 2 \cdot 10^5$) — the number of queries.
+
+Then $q$ lines follow. The $i$-th line contains the $i$-th query in format as in the problem statement. It is guaranteed that queries are always valid (for query type $3$, it is guaranteed that the book in each such query is already placed, and for other types, it is guaranteed that the book was not placed before).
+
+It is guaranteed that there is at least one query of type $3$ in the input.
+
+In each query the constraint $1 \le id \le 2 \cdot 10^5$ is met.
+
+
+-----Output-----
+
+Print answers to queries of the type $3$ in order they appear in the input.
+
+
+-----Examples-----
+Input
+8
+L 1
+R 2
+R 3
+? 2
+L 4
+? 1
+L 5
+? 1
+
+Output
+1
+1
+2
+
+Input
+10
+L 100
+R 100000
+R 123
+L 101
+? 123
+L 10
+R 115
+? 100
+R 110
+? 115
+
+Output
+0
+2
+1
+
+
+
+-----Note-----
+
+Let's take a look at the first example and let's consider queries:   The shelf will look like $[1]$;  The shelf will look like $[1, 2]$;  The shelf will look like $[1, 2, 3]$;  The shelf looks like $[1, \textbf{2}, 3]$ so the answer is $1$;  The shelf will look like $[4, 1, 2, 3]$;  The shelf looks like $[4, \textbf{1}, 2, 3]$ so the answer is $1$;  The shelf will look like $[5, 4, 1, 2, 3]$;  The shelf looks like $[5, 4, \textbf{1}, 2, 3]$ so the answer is $2$. 
+
+Let's take a look at the second example and let's consider queries:   The shelf will look like $[100]$;  The shelf will look like $[100, 100000]$;  The shelf will look like $[100, 100000, 123]$;  The shelf will look like $[101, 100, 100000, 123]$;  The shelf looks like $[101, 100, 100000, \textbf{123}]$ so the answer is $0$;  The shelf will look like $[10, 101, 100, 100000, 123]$;  The shelf will look like $[10, 101, 100, 100000, 123, 115]$;  The shelf looks like $[10, 101, \textbf{100}, 100000, 123, 115]$ so the answer is $2$;  The shelf will look like $[10, 101, 100, 100000, 123, 115, 110]$;  The shelf looks like $[10, 101, 100, 100000, 123, \textbf{115}, 110]$ so the answer is $1$.
+"""
+2022-04-13 21:06:29.248665 --------------------------
+2022-04-13 21:06:55.442685 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport os\nimport heapq\nimport math\n\ndef solve(n, queries):\n    left = []\n    right = []\n    left_map = {}\n    right_map = {}\n    for q in queries:\n        if q[0] == 'L':\n            heapq.heappush(left, (q[1], q[2]))\n            left_map[q[2]] = len(left)\n        elif q[0] == 'R':\n            heapq.heappush(right, (q[1], q[2]))\n            right_map[q[2]] = len(right)\n        else:\n            if q[2] in left_map:\n                l = left_map[q[2]]\n                print(l)\n            elif q[2] in right_map:\n                r = right_map[q[2]]\n                print(r)\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline())\n    queries = []\n    for _ in range(n):\n        q = sys.stdin.readline().split()\n        if q[0] == 'L':\n            queries.append((q[0], q[1], len(queries)))\n        elif q[0] == 'R':\n            queries.append((q[0], q[1], len(queries)))\n        else:\n            queries.append((q[0], q[1], int(q[1])))\n    solve(n, queries)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1 <= q <= 2 * 10^5\n    \"\"\"\n    q = int(input())\n    assert 1 <= q <= 2 * 10 ** 5\n\n    \"\"\"\n    1 <= id <= 2 * 10^5\n    \"\"\"\n    for i in range(q):\n        # L or R\n        op = input()\n        assert op == \"L\" or op == \"R\"\n\n        # id\n        id = int(input())\n        assert 1 <= id <= 2 * 10 ** 5\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(q):\n    left = []\n    right = []\n    for q in q:\n        if q[0] == 'L':\n            left.append(q[1])\n        elif q[0] == 'R':\n            right.append(q[1])\n        else:\n            l = len(left)\n            r = len(right)\n            if l <= r:\n                for i in range(l):\n                    if left[-i-1] == q[1]:\n                        print(i)\n                        break\n            else:\n                for i in range(r):\n                    if right[i] == q[1]:\n                        print(i)\n                        break\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline().rstrip())\n    q = []\n    for i in range(n):\n        q.append(tuple(sys.stdin.readline().rstrip().split()))\n    solve(q)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    inp = sys.stdin.readlines()\n    q = int(inp[0])\n    queries = []\n    for i in range(1, q+1):\n        queries.append(inp[i].split())\n    left = []\n    right = []\n    for i in range(q):\n        if queries[i][0] == \"L\":\n            left.append(queries[i][1])\n        else:\n            right.append(queries[i][1])\n    for i in range(q):\n        if queries[i][0] == \"?\":\n            if queries[i][1] in left:\n                print(len(right))\n            else:\n                print(len(left))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n    n = int(input())\n    l = []\n    r = []\n    for i in range(n):\n        s = input().split()\n        if s[0] == 'L':\n            l.append(s[1])\n        elif s[0] == 'R':\n            r.append(s[1])\n        else:\n            print(min(len(l) - l.index(s[1]) - 1, len(r) - r.index(s[1]) - 1))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\ndef solution():\n    q = int(input())\n    queries = []\n    for _ in range(q):\n        queries.append(input())\n\n    books = deque()\n    for query in queries:\n        q = query.split()\n        if q[0] == 'L':\n            books.appendleft(q[1])\n        elif q[0] == 'R':\n            books.append(q[1])\n        else:\n            book = q[1]\n            i = 0\n            for b in books:\n                if b == book:\n                    break\n                i += 1\n            print(min(i, len(books) - i - 1))\n\nsolution()"
+    }
+  ],
+  "created": 1649883989,
+  "id": "cmpl-4weU14NBPU8QX9jrXdThZqoqpVaZH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:06:55.442953 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport os\nimport heapq\nimport math\n\ndef solve(n, queries):\n    left = []\n    right = []\n    left_map = {}\n    right_map = {}\n    for q in queries:\n        if q[0] == 'L':\n            heapq.heappush(left, (q[1], q[2]))\n            left_map[q[2]] = len(left)\n        elif q[0] == 'R':\n            heapq.heappush(right, (q[1], q[2]))\n            right_map[q[2]] = len(right)\n        else:\n            if q[2] in left_map:\n                l = left_map[q[2]]\n                print(l)\n            elif q[2] in right_map:\n                r = right_map[q[2]]\n                print(r)\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline())\n    queries = []\n    for _ in range(n):\n        q = sys.stdin.readline().split()\n        if q[0] == 'L':\n            queries.append((q[0], q[1], len(queries)))\n        elif q[0] == 'R':\n            queries.append((q[0], q[1], len(queries)))\n        else:\n            queries.append((q[0], q[1], int(q[1])))\n    solve(n, queries)"
+}
+2022-04-13 21:06:55.443060 REASON stop
+2022-04-13 21:06:55.443454 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 21:06:55.443558 REASON stop
+2022-04-13 21:06:55.443929 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1 <= q <= 2 * 10^5\n    \"\"\"\n    q = int(input())\n    assert 1 <= q <= 2 * 10 ** 5\n\n    \"\"\"\n    1 <= id <= 2 * 10^5\n    \"\"\"\n    for i in range(q):\n        # L or R\n        op = input()\n        assert op == \"L\" or op == \"R\"\n\n        # id\n        id = int(input())\n        assert 1 <= id <= 2 * 10 ** 5\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:06:55.443980 REASON stop
+2022-04-13 21:06:55.465532 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(q):\n    left = []\n    right = []\n    for q in q:\n        if q[0] == 'L':\n            left.append(q[1])\n        elif q[0] == 'R':\n            right.append(q[1])\n        else:\n            l = len(left)\n            r = len(right)\n            if l <= r:\n                for i in range(l):\n                    if left[-i-1] == q[1]:\n                        print(i)\n                        break\n            else:\n                for i in range(r):\n                    if right[i] == q[1]:\n                        print(i)\n                        break\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline().rstrip())\n    q = []\n    for i in range(n):\n        q.append(tuple(sys.stdin.readline().rstrip().split()))\n    solve(q)"
+}
+2022-04-13 21:06:55.465636 REASON stop
+2022-04-13 21:06:55.466262 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    inp = sys.stdin.readlines()\n    q = int(inp[0])\n    queries = []\n    for i in range(1, q+1):\n        queries.append(inp[i].split())\n    left = []\n    right = []\n    for i in range(q):\n        if queries[i][0] == \"L\":\n            left.append(queries[i][1])\n        else:\n            right.append(queries[i][1])\n    for i in range(q):\n        if queries[i][0] == \"?\":\n            if queries[i][1] in left:\n                print(len(right))\n            else:\n                print(len(left))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:06:55.466342 REASON stop
+2022-04-13 21:06:55.481817 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n    n = int(input())\n    l = []\n    r = []\n    for i in range(n):\n        s = input().split()\n        if s[0] == 'L':\n            l.append(s[1])\n        elif s[0] == 'R':\n            r.append(s[1])\n        else:\n            print(min(len(l) - l.index(s[1]) - 1, len(r) - r.index(s[1]) - 1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:06:55.481907 REASON stop
+2022-04-13 21:06:55.482741 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\ndef solution():\n    q = int(input())\n    queries = []\n    for _ in range(q):\n        queries.append(input())\n\n    books = deque()\n    for query in queries:\n        q = query.split()\n        if q[0] == 'L':\n            books.appendleft(q[1])\n        elif q[0] == 'R':\n            books.append(q[1])\n        else:\n            book = q[1]\n            i = 0\n            for b in books:\n                if b == book:\n                    break\n                i += 1\n            print(min(i, len(books) - i - 1))\n\nsolution()"
+}
+2022-04-13 21:06:55.482811 REASON stop

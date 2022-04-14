@@ -1,0 +1,159 @@
+2022-04-13 18:47:55.493467 """
+A sequence $a_1, a_2, \dots, a_n$ is called good if, for each element $a_i$, there exists an element $a_j$ ($i \ne j$) such that $a_i+a_j$ is a power of two (that is, $2^d$ for some non-negative integer $d$).
+
+For example, the following sequences are good:  $[5, 3, 11]$ (for example, for $a_1=5$ we can choose $a_2=3$. Note that their sum is a power of two. Similarly, such an element can be found for $a_2$ and $a_3$),  $[1, 1, 1, 1023]$,  $[7, 39, 89, 25, 89]$,  $[]$. 
+
+Note that, by definition, an empty sequence (with a length of $0$) is good.
+
+For example, the following sequences are not good:  $[16]$ (for $a_1=16$, it is impossible to find another element $a_j$ such that their sum is a power of two),  $[4, 16]$ (for $a_1=4$, it is impossible to find another element $a_j$ such that their sum is a power of two),  $[1, 3, 2, 8, 8, 8]$ (for $a_3=2$, it is impossible to find another element $a_j$ such that their sum is a power of two). 
+
+You are given a sequence $a_1, a_2, \dots, a_n$. What is the minimum number of elements you need to remove to make it good? You can delete an arbitrary set of elements.
+
+
+-----Input-----
+
+The first line contains the integer $n$ ($1 \le n \le 120000$) — the length of the given sequence.
+
+The second line contains the sequence of integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$).
+
+
+-----Output-----
+
+Print the minimum number of elements needed to be removed from the given sequence in order to make it good. It is possible that you need to delete all $n$ elements, make it empty, and thus get a good sequence.
+
+
+-----Examples-----
+Input
+6
+4 7 1 5 4 9
+
+Output
+1
+
+Input
+5
+1 2 3 4 5
+
+Output
+2
+
+Input
+1
+16
+
+Output
+1
+
+Input
+4
+1 1 1 1023
+
+Output
+0
+
+
+
+-----Note-----
+
+In the first example, it is enough to delete one element $a_4=5$. The remaining elements form the sequence $[4, 7, 1, 4, 9]$, which is good.
+"""
+2022-04-13 18:47:55.493483 --------------------------
+2022-04-13 18:49:53.959423 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nimport math\n\ndef check(lst):\n    for i in range(len(lst)):\n        for j in range(len(lst)):\n            if i != j:\n                if lst[i] + lst[j] == 2**math.floor(math.log(lst[i] + lst[j], 2)):\n                    return True\n    return False\n\ndef remove(lst):\n    if check(lst):\n        return 0\n    else:\n        for i in range(len(lst)):\n            lst.pop(i)\n            if check(lst):\n                return 1 + remove(lst)\n            lst.insert(i, lst[i])\n        return len(lst)\n            \n\nn = int(input())\nlst = list(map(int, input().split()))\nprint(remove(lst))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nif n == 1:\n    print(1)\n    exit()\n\npowers = [2**i for i in range(1, 31)]\n\na = set(a)\n\ndef get_power(x):\n    for p in powers:\n        if p == x:\n            return True\n    return False\n\ndef get_sum(x):\n    for i in a:\n        if i != x and get_power(x+i):\n            return True\n    return False\n\nans = 0\nfor i in a:\n    if not get_sum(i):\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nfor i in range(n):\n    if arr[i] not in arr[:i] + arr[i+1:]:\n        print(n-1)\n        break\nelse:\n    print(n)"
+    },
+    {
+      "finish_reason": "length",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#from collections import Counter\nimport math\n\ndef main():\n    n = int(input())\n    l = [int(i) for i in input().split()]\n    #print(l)\n    #print(math.log2(1024))\n    #print(math.log2(10))\n    #print(math.log2(1))\n    #print(math.log2(0))\n    #print(math.log2(2))\n    \n    #print(math.log2(1))\n    #print(math.log2(2))\n    #print(math.log2(3))\n    #print(math.log2(4))\n    #print(math.log2(5))\n    #print(math.log2(6))\n    #print(math.log2(7))\n    #print(math.log2(8))\n    #print(math.log2(9))\n    #print(math.log2(10))\n    #print(math.log2(11))\n    #print(math.log2(12))\n    #print(math.log2(13))\n    #print(math.log2(14))\n    #print(math.log2(15))\n    #print(math.log2(16))\n    #print(math.log2(17))\n    #print(math.log2(18))\n    #print(math.log2(19))\n    #print(math.log2(20))\n    #print(math.log2(21))\n    #print(math.log2(22))\n    #print(math.log2(23))\n    #print(math.log2(24))\n    #print(math.log2(25))\n    #print(math.log2(26))\n    #print(math.log2(27))\n    #print(math.log2(28))\n    #print(math.log2(29))\n    #print(math.log2(30))\n    #print(math.log2(31))\n    #print(math.log2(32))\n    #print(math.log2(33))\n    #print(math.log2(34))\n    #print(math.log2(35))\n    #print(math.log2(36))\n    #print(math.log2(37))\n    #print(math.log2(38))\n    #print(math.log2(39))\n    #print(math.log2(40))\n    #print(math.log2(41))\n    #print(math.log2(42))\n    #print(math.log2(43))\n    #print(math.log2(44))\n    #print(math.log2(45))\n    #print(math.log2(46))\n    #print(math.log2(47))\n    #print(math.log2(48))\n    #print(math.log2(49))\n    #print(math.log2(50))\n    #print(math.log2(51))\n    #print(math.log2(52))\n    #print(math.log2(53))\n    #print(math.log2(54))\n    #print(math.log2(55))\n    #print(math.log2(56))\n    #print(math.log2(57))\n    #print(math.log2(58))\n    #print(math.log2(59))\n    #print(math.log2(60))\n    #print(math.log2(61))\n    #print(math.log2(62))\n    #print(math.log2(63))\n    #print(math.log2(64))\n    #print(math.log2(65))\n    #print(math.log2(66))\n    #print(math.log2(67))\n    #print(math.log2(68))\n    #print(math.log2(69))\n    #print(math.log2(70))\n    #print(math.log2(71))\n    #print(math.log2(72))\n    #print(math.log2(73))\n    #print(math.log2(74))\n    #print(math.log2(75))\n    #print(math.log2(76))\n    #print(math.log2(77))\n    #print(math.log2(78))\n    #print(math.log2(79))\n    #print(math.log2(80))\n    #print(math.log2(81))\n    #print(math.log2(82))\n    #print(math.log2(83))\n    #print(math.log2(84))\n    #print(math.log2(85))\n    #print(math.log2(86))\n    #print(math.log2(87))\n    #print(math.log2(88))\n    #print(math.log2(89))\n    #print(math.log2(90))\n    #print(math.log2(91))\n    #print(math.log2(92))\n    #print(math.log2(93))\n    #print(math.log2(94))\n    #print(math.log2(95))\n    #print(math.log2(96))\n    #print(math.log2(97))\n    #print(math.log2(98))\n    #print(math.log2(99))\n    #print(math.log2(100))\n    #print(math.log2(101))\n    #print(math.log2(102))\n    #print(math.log2(103))\n    #print(math.log2(104))\n    #print(math.log2(105))\n    #print(math.log2(106))\n    #print(math.log2(107))\n    #print(math.log2(108))\n    #print(math.log2(109))\n    #print(math.log2(110))\n    #print(math.log2(111))\n    #print(math.log2(112))\n    #print(math.log2(113))\n    #print(math.log2(114))\n    #print(math.log2(115))\n    #print(math.log2(116))\n    #print(math.log2(117))\n    #print(math.log2(118))\n    #print(math.log2(119))\n    #print(math.log2(120))\n    #print(math.log2(121))\n    #print(math.log2(122))\n    #print(math.log2(123))\n    #print(math.log2(124))\n    #print(math.log2(125))\n    #print(math.log2(126))\n    #print(math.log2(127))\n    #print(math.log2(128))\n    #print(math.log2(129))\n    #print(math.log2(130))\n    #print(math.log2(131))\n    #print(math.log2(132))\n    #print(math.log2(133))\n    #print(math.log2(134))\n    #print(math.log2(135))\n    #print(math.log2(136))\n    #print(math.log2(137))\n    #print(math.log2(138))\n    #print(math.log2(139))\n    #print(math.log2(140))\n    #print(math.log2(141))\n    #print(math.log2(142))\n    #print(math.log2(143))\n    #print(math.log2(144))\n    #print(math.log2(145))\n    #print(math.log2(146))\n    #print(math.log2(147))\n    #print(math.log2(148))\n    #print(math.log2(149))\n    #print(math.log2(150))\n    #print(math.log2(151))\n    #print(math.log2(152))\n    #print(math.log2(153))\n    #print(math.log2(154))\n    #print(math.log2(155))\n    #print(math.log2(156))\n    #print(math.log2(157))\n    #print(math.log2(158))\n    #print(math.log2(159))\n    #print(math.log2(160))\n    #print(math.log2(161))\n    #print(math.log2(162))\n    #print(math.log2(163))\n    #print(math.log2(164))\n    #print(math.log2(165))\n    #print(math.log2(166))\n    #print(math.log2(167))\n    #print(math.log2(168))\n    #print(math.log2(169))\n    #print(math.log2(170))\n    #print(math.log2(171))\n    #print(math.log2(172))\n    #print(math.log2(173))\n    #print(math.log2(174))\n    #print(math.log2(175))\n    #print(math.log2(176))\n    #print(math.log2(177))\n    #print(math.log2(178))\n    #print(math.log2(179))\n    #print(math.log2(180))\n    #print(math.log2(181))\n    #print(math.log2(182))\n    #print(math.log2(183))\n    #print(math.log2(184))\n    #print(math.log2(185))\n    #print(math.log2(186))\n    #print(math.log2(187))\n    #print(math.log2(188))\n    #print(math.log2(189))\n    #print(math.log2(190))\n    #print(math.log2(191))\n    #print(math.log2(192))\n    #print(math.log2(193))\n    #print(math.log2(194))\n    #print(math.log2(195))\n    #print(math.log2(196))\n    #print(math.log2(197))\n    #print(math.log2(198))\n    #print(math.log2(199))\n    #print(math.log2(200))\n    #print(math.log2(201))\n    #print(math.log2(202))\n    #print(math.log2(203))\n    #print(math.log2(204))\n    #print(math.log2(205))\n    #print(math.log2(206))\n    #print(math.log2(207))\n    #print(math.log2(208))\n    #print(math.log2(209))\n    #print(math.log2(210))\n    #print(math.log2(211))\n    #print(math.log2(212))\n    #print(math.log2(213))\n    #print(math.log2(214))\n    #print(math.log2(215))\n    #print(math.log2(216))\n    #print(math.log2(217))\n    #print(math.log2(218))\n    #print(math.log2(219))\n    #print(math.log2(220))\n    #print(math.log2(221))\n    #print(math.log2(222))\n    #print(math.log2(223))\n    #print(math.log2(224))\n    #print(math.log2(225))\n    #print(math.log2(226))\n    #print(math.log2(227))\n    #print(math.log2(228))\n    #print(math.log2(229))\n    #print(math.log2(230))\n    #print(math.log2(231))\n    #print(math.log2(232))\n    #print(math.log2(233))\n    #print(math.log2(234))\n    #print(math.log2(235))\n    #print(math.log2(236))\n    #print(math.log2(237))\n    #print(math.log2(238))\n    #print(math.log2(239))\n    #print(math.log2(240))\n    #print(math.log2(241))\n    #print(math.log2(242))\n    #print(math.log2(243))\n    #print(math.log2(244))\n    #print(math.log2(245))\n    #print(math.log2(246))\n    #print(math.log2(247))\n    #print(math.log2(248))\n    #print(math.log2(249))\n    #print(math.log2(250))\n    #print(math.log2(251))\n    #print(math.log2(252))\n    #print(math.log2(253))\n    #print(math.log2(254))\n    #print(math.log2(255))\n    #print(math.log2(256))\n    #print(math.log2(257))\n    #print(math.log2(258))\n    #print(math.log2(259))\n    #print(math.log2(260))\n    #print(math.log2(261))\n    #print(math.log2(262))\n    #print(math.log2(263))\n    #print(math.log2(264))\n    #print(math.log2(265))\n    #print(math.log2(266))\n    #print(math.log2(267))\n    #print(math.log2(268))\n    #print(math.log2(269))\n    #print(math.log2(270))\n    #print(math.log2(271))\n    #print(math.log2(272))\n    #print(math.log2(273))\n    #print(math.log2(274))\n    #print(math.log2(275))\n    #print(math.log2(276))\n    #print(math.log2(277))\n    #print(math.log2(278))\n    #print(math.log2(279))\n    #print(math.log2(280))\n    #print(math.log2(281))\n    #print(math.log2(282))\n    #print(math.log2(283))\n    #print(math.log2(284))\n    #print(math.log2(285))\n    #print(math.log2(286))\n    #print(math.log2(287))\n    #print(math.log2(288))\n    #print(math.log2(289))\n    #print(math.log2(290))\n    #print(math.log2(291))\n    #print(math.log2(292))\n    #print(math.log2(293))\n    #print(math.log2(294))\n    #print(math.log2(295))\n    #print(math.log2(296))\n    #print(math.log2(297))\n    #print(math.log2(298))\n    #print(math.log2(299))\n    #print(math.log2(300))\n    #print(math.log2(301))\n    #print(math.log2(302))\n    #print(math.log2(303))\n    #print(math.log2(304))\n    #print(math.log2(305))\n    #print(math.log2(306))\n    #print(math.log2(307))\n    #print(math.log2(308))\n    #print(math.log2(309))\n    #print(math.log2(310))\n    #print(math.log2(311))\n    #print(math.log2(312))\n    #print(math.log2(313))\n    #print(math.log2(314))\n    #print(math.log2(315))\n    #print(math.log2(316))\n    #print(math.log2(317))\n    #print(math.log2(318))\n    #print(math.log2(319))\n    #print(math.log2(320))\n    #print(math.log2(321))\n    #print(math.log2(322))\n    #print(math.log2(323))\n    #print(math.log2(324))\n    #print(math.log2(325))\n    #print(math.log2(326))\n    #print(math.log2(327))\n    #print(math.log2(328))\n    #print(math.log2(329))\n    #print(math.log2(330))\n    #print(math.log2(331))\n    #print(math.log2(332))\n    #"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\n\nn = int(input())\na = list(map(int, input().split()))\n\n# if a number is a power of 2\n# then it has only one bit set to 1\n# and all other bits are 0\n# we can check if a number is a power of 2\n# by ANDing it with its previous number\n# if the result is 0, then it is a power of 2\ndef is_power_of_2(x):\n    return x != 0 and ((x & (x - 1)) == 0)\n\n# if a number is a power of 2\n# then its binary representation is of the form\n# 1 followed by all 0s\n# so the number of 0s is the exponent of the power of 2\ndef count_zeros(x):\n    return bin(x).count(\"0\") - 1\n\n# we need to delete all numbers\n# whose sum with all other numbers is not a power of 2\n# we can count the number of zeros in all sums of two numbers\n# and we need to delete all numbers whose sum with all other numbers\n# has the maximum number of zeros\n# because that means that the sum is a power of 2\n# and all other numbers whose sum with all other numbers\n# has a number of zeros less than the maximum number of zeros\n# will be deleted\ncounter = Counter()\nfor i in range(n):\n    for j in range(i + 1, n):\n        counter[count_zeros(a[i] + a[j])] += 1\n\n# if the maximum number of zeros is 0, then we need to delete all numbers\n# because the sum of any two numbers is not a power of 2\nif counter[max(counter.keys())] == 0:\n    print(n)\n# otherwise, we need to delete all numbers whose sum with all other numbers\n# has a number of zeros less than the maximum number of zeros\nelse:\n    print(n - counter[max(counter.keys())])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\na = [4, 7, 1, 5, 4, 9]\n\nprint(a)\n\n# for i in range(0, len(a)):\n#     if (a[i] + a[i]) in a:\n#         a.pop(i)\n#         break\n\nfor i in range(0, len(a)):\n    for j in range(0, len(a)):\n        if i != j:\n            if a[i] + a[j] in a:\n                a.pop(i)\n                break\n\nprint(a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    Count the number of occurences of each number and\n    if the number of occurences is odd, then it can't be part\n    of a pair.\n    \"\"\"\n\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    d = {}\n\n    for num in a:\n        d[num] = d.get(num, 0) + 1\n\n    count = 0\n    for num, occurences in d.items():\n        if occurences % 2 == 1:\n            count += 1\n\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649875675,
+  "id": "cmpl-4wcJvFv8IqikgWkFFQ4BT9IskREUZ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:49:53.959840 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nimport math\n\ndef check(lst):\n    for i in range(len(lst)):\n        for j in range(len(lst)):\n            if i != j:\n                if lst[i] + lst[j] == 2**math.floor(math.log(lst[i] + lst[j], 2)):\n                    return True\n    return False\n\ndef remove(lst):\n    if check(lst):\n        return 0\n    else:\n        for i in range(len(lst)):\n            lst.pop(i)\n            if check(lst):\n                return 1 + remove(lst)\n            lst.insert(i, lst[i])\n        return len(lst)\n            \n\nn = int(input())\nlst = list(map(int, input().split()))\nprint(remove(lst))"
+}
+2022-04-13 18:49:53.959892 REASON stop
+2022-04-13 18:49:53.960287 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nif n == 1:\n    print(1)\n    exit()\n\npowers = [2**i for i in range(1, 31)]\n\na = set(a)\n\ndef get_power(x):\n    for p in powers:\n        if p == x:\n            return True\n    return False\n\ndef get_sum(x):\n    for i in a:\n        if i != x and get_power(x+i):\n            return True\n    return False\n\nans = 0\nfor i in a:\n    if not get_sum(i):\n        ans += 1\n\nprint(ans)"
+}
+2022-04-13 18:49:53.960434 REASON stop
+2022-04-13 18:49:53.960828 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nfor i in range(n):\n    if arr[i] not in arr[:i] + arr[i+1:]:\n        print(n-1)\n        break\nelse:\n    print(n)"
+}
+2022-04-13 18:49:53.960874 REASON stop
+2022-04-13 18:49:53.977709 3 {
+  "finish_reason": "length",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#from collections import Counter\nimport math\n\ndef main():\n    n = int(input())\n    l = [int(i) for i in input().split()]\n    #print(l)\n    #print(math.log2(1024))\n    #print(math.log2(10))\n    #print(math.log2(1))\n    #print(math.log2(0))\n    #print(math.log2(2))\n    \n    #print(math.log2(1))\n    #print(math.log2(2))\n    #print(math.log2(3))\n    #print(math.log2(4))\n    #print(math.log2(5))\n    #print(math.log2(6))\n    #print(math.log2(7))\n    #print(math.log2(8))\n    #print(math.log2(9))\n    #print(math.log2(10))\n    #print(math.log2(11))\n    #print(math.log2(12))\n    #print(math.log2(13))\n    #print(math.log2(14))\n    #print(math.log2(15))\n    #print(math.log2(16))\n    #print(math.log2(17))\n    #print(math.log2(18))\n    #print(math.log2(19))\n    #print(math.log2(20))\n    #print(math.log2(21))\n    #print(math.log2(22))\n    #print(math.log2(23))\n    #print(math.log2(24))\n    #print(math.log2(25))\n    #print(math.log2(26))\n    #print(math.log2(27))\n    #print(math.log2(28))\n    #print(math.log2(29))\n    #print(math.log2(30))\n    #print(math.log2(31))\n    #print(math.log2(32))\n    #print(math.log2(33))\n    #print(math.log2(34))\n    #print(math.log2(35))\n    #print(math.log2(36))\n    #print(math.log2(37))\n    #print(math.log2(38))\n    #print(math.log2(39))\n    #print(math.log2(40))\n    #print(math.log2(41))\n    #print(math.log2(42))\n    #print(math.log2(43))\n    #print(math.log2(44))\n    #print(math.log2(45))\n    #print(math.log2(46))\n    #print(math.log2(47))\n    #print(math.log2(48))\n    #print(math.log2(49))\n    #print(math.log2(50))\n    #print(math.log2(51))\n    #print(math.log2(52))\n    #print(math.log2(53))\n    #print(math.log2(54))\n    #print(math.log2(55))\n    #print(math.log2(56))\n    #print(math.log2(57))\n    #print(math.log2(58))\n    #print(math.log2(59))\n    #print(math.log2(60))\n    #print(math.log2(61))\n    #print(math.log2(62))\n    #print(math.log2(63))\n    #print(math.log2(64))\n    #print(math.log2(65))\n    #print(math.log2(66))\n    #print(math.log2(67))\n    #print(math.log2(68))\n    #print(math.log2(69))\n    #print(math.log2(70))\n    #print(math.log2(71))\n    #print(math.log2(72))\n    #print(math.log2(73))\n    #print(math.log2(74))\n    #print(math.log2(75))\n    #print(math.log2(76))\n    #print(math.log2(77))\n    #print(math.log2(78))\n    #print(math.log2(79))\n    #print(math.log2(80))\n    #print(math.log2(81))\n    #print(math.log2(82))\n    #print(math.log2(83))\n    #print(math.log2(84))\n    #print(math.log2(85))\n    #print(math.log2(86))\n    #print(math.log2(87))\n    #print(math.log2(88))\n    #print(math.log2(89))\n    #print(math.log2(90))\n    #print(math.log2(91))\n    #print(math.log2(92))\n    #print(math.log2(93))\n    #print(math.log2(94))\n    #print(math.log2(95))\n    #print(math.log2(96))\n    #print(math.log2(97))\n    #print(math.log2(98))\n    #print(math.log2(99))\n    #print(math.log2(100))\n    #print(math.log2(101))\n    #print(math.log2(102))\n    #print(math.log2(103))\n    #print(math.log2(104))\n    #print(math.log2(105))\n    #print(math.log2(106))\n    #print(math.log2(107))\n    #print(math.log2(108))\n    #print(math.log2(109))\n    #print(math.log2(110))\n    #print(math.log2(111))\n    #print(math.log2(112))\n    #print(math.log2(113))\n    #print(math.log2(114))\n    #print(math.log2(115))\n    #print(math.log2(116))\n    #print(math.log2(117))\n    #print(math.log2(118))\n    #print(math.log2(119))\n    #print(math.log2(120))\n    #print(math.log2(121))\n    #print(math.log2(122))\n    #print(math.log2(123))\n    #print(math.log2(124))\n    #print(math.log2(125))\n    #print(math.log2(126))\n    #print(math.log2(127))\n    #print(math.log2(128))\n    #print(math.log2(129))\n    #print(math.log2(130))\n    #print(math.log2(131))\n    #print(math.log2(132))\n    #print(math.log2(133))\n    #print(math.log2(134))\n    #print(math.log2(135))\n    #print(math.log2(136))\n    #print(math.log2(137))\n    #print(math.log2(138))\n    #print(math.log2(139))\n    #print(math.log2(140))\n    #print(math.log2(141))\n    #print(math.log2(142))\n    #print(math.log2(143))\n    #print(math.log2(144))\n    #print(math.log2(145))\n    #print(math.log2(146))\n    #print(math.log2(147))\n    #print(math.log2(148))\n    #print(math.log2(149))\n    #print(math.log2(150))\n    #print(math.log2(151))\n    #print(math.log2(152))\n    #print(math.log2(153))\n    #print(math.log2(154))\n    #print(math.log2(155))\n    #print(math.log2(156))\n    #print(math.log2(157))\n    #print(math.log2(158))\n    #print(math.log2(159))\n    #print(math.log2(160))\n    #print(math.log2(161))\n    #print(math.log2(162))\n    #print(math.log2(163))\n    #print(math.log2(164))\n    #print(math.log2(165))\n    #print(math.log2(166))\n    #print(math.log2(167))\n    #print(math.log2(168))\n    #print(math.log2(169))\n    #print(math.log2(170))\n    #print(math.log2(171))\n    #print(math.log2(172))\n    #print(math.log2(173))\n    #print(math.log2(174))\n    #print(math.log2(175))\n    #print(math.log2(176))\n    #print(math.log2(177))\n    #print(math.log2(178))\n    #print(math.log2(179))\n    #print(math.log2(180))\n    #print(math.log2(181))\n    #print(math.log2(182))\n    #print(math.log2(183))\n    #print(math.log2(184))\n    #print(math.log2(185))\n    #print(math.log2(186))\n    #print(math.log2(187))\n    #print(math.log2(188))\n    #print(math.log2(189))\n    #print(math.log2(190))\n    #print(math.log2(191))\n    #print(math.log2(192))\n    #print(math.log2(193))\n    #print(math.log2(194))\n    #print(math.log2(195))\n    #print(math.log2(196))\n    #print(math.log2(197))\n    #print(math.log2(198))\n    #print(math.log2(199))\n    #print(math.log2(200))\n    #print(math.log2(201))\n    #print(math.log2(202))\n    #print(math.log2(203))\n    #print(math.log2(204))\n    #print(math.log2(205))\n    #print(math.log2(206))\n    #print(math.log2(207))\n    #print(math.log2(208))\n    #print(math.log2(209))\n    #print(math.log2(210))\n    #print(math.log2(211))\n    #print(math.log2(212))\n    #print(math.log2(213))\n    #print(math.log2(214))\n    #print(math.log2(215))\n    #print(math.log2(216))\n    #print(math.log2(217))\n    #print(math.log2(218))\n    #print(math.log2(219))\n    #print(math.log2(220))\n    #print(math.log2(221))\n    #print(math.log2(222))\n    #print(math.log2(223))\n    #print(math.log2(224))\n    #print(math.log2(225))\n    #print(math.log2(226))\n    #print(math.log2(227))\n    #print(math.log2(228))\n    #print(math.log2(229))\n    #print(math.log2(230))\n    #print(math.log2(231))\n    #print(math.log2(232))\n    #print(math.log2(233))\n    #print(math.log2(234))\n    #print(math.log2(235))\n    #print(math.log2(236))\n    #print(math.log2(237))\n    #print(math.log2(238))\n    #print(math.log2(239))\n    #print(math.log2(240))\n    #print(math.log2(241))\n    #print(math.log2(242))\n    #print(math.log2(243))\n    #print(math.log2(244))\n    #print(math.log2(245))\n    #print(math.log2(246))\n    #print(math.log2(247))\n    #print(math.log2(248))\n    #print(math.log2(249))\n    #print(math.log2(250))\n    #print(math.log2(251))\n    #print(math.log2(252))\n    #print(math.log2(253))\n    #print(math.log2(254))\n    #print(math.log2(255))\n    #print(math.log2(256))\n    #print(math.log2(257))\n    #print(math.log2(258))\n    #print(math.log2(259))\n    #print(math.log2(260))\n    #print(math.log2(261))\n    #print(math.log2(262))\n    #print(math.log2(263))\n    #print(math.log2(264))\n    #print(math.log2(265))\n    #print(math.log2(266))\n    #print(math.log2(267))\n    #print(math.log2(268))\n    #print(math.log2(269))\n    #print(math.log2(270))\n    #print(math.log2(271))\n    #print(math.log2(272))\n    #print(math.log2(273))\n    #print(math.log2(274))\n    #print(math.log2(275))\n    #print(math.log2(276))\n    #print(math.log2(277))\n    #print(math.log2(278))\n    #print(math.log2(279))\n    #print(math.log2(280))\n    #print(math.log2(281))\n    #print(math.log2(282))\n    #print(math.log2(283))\n    #print(math.log2(284))\n    #print(math.log2(285))\n    #print(math.log2(286))\n    #print(math.log2(287))\n    #print(math.log2(288))\n    #print(math.log2(289))\n    #print(math.log2(290))\n    #print(math.log2(291))\n    #print(math.log2(292))\n    #print(math.log2(293))\n    #print(math.log2(294))\n    #print(math.log2(295))\n    #print(math.log2(296))\n    #print(math.log2(297))\n    #print(math.log2(298))\n    #print(math.log2(299))\n    #print(math.log2(300))\n    #print(math.log2(301))\n    #print(math.log2(302))\n    #print(math.log2(303))\n    #print(math.log2(304))\n    #print(math.log2(305))\n    #print(math.log2(306))\n    #print(math.log2(307))\n    #print(math.log2(308))\n    #print(math.log2(309))\n    #print(math.log2(310))\n    #print(math.log2(311))\n    #print(math.log2(312))\n    #print(math.log2(313))\n    #print(math.log2(314))\n    #print(math.log2(315))\n    #print(math.log2(316))\n    #print(math.log2(317))\n    #print(math.log2(318))\n    #print(math.log2(319))\n    #print(math.log2(320))\n    #print(math.log2(321))\n    #print(math.log2(322))\n    #print(math.log2(323))\n    #print(math.log2(324))\n    #print(math.log2(325))\n    #print(math.log2(326))\n    #print(math.log2(327))\n    #print(math.log2(328))\n    #print(math.log2(329))\n    #print(math.log2(330))\n    #print(math.log2(331))\n    #print(math.log2(332))\n    #"
+}
+2022-04-13 18:49:53.977865 REASON length
+2022-04-13 18:49:53.977874 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\n\nn = int(input())\na = list(map(int, input().split()))\n\n# if a number is a power of 2\n# then it has only one bit set to 1\n# and all other bits are 0\n# we can check if a number is a power of 2\n# by ANDing it with its previous number\n# if the result is 0, then it is a power of 2\ndef is_power_of_2(x):\n    return x != 0 and ((x & (x - 1)) == 0)\n\n# if a number is a power of 2\n# then its binary representation is of the form\n# 1 followed by all 0s\n# so the number of 0s is the exponent of the power of 2\ndef count_zeros(x):\n    return bin(x).count(\"0\") - 1\n\n# we need to delete all numbers\n# whose sum with all other numbers is not a power of 2\n# we can count the number of zeros in all sums of two numbers\n# and we need to delete all numbers whose sum with all other numbers\n# has the maximum number of zeros\n# because that means that the sum is a power of 2\n# and all other numbers whose sum with all other numbers\n# has a number of zeros less than the maximum number of zeros\n# will be deleted\ncounter = Counter()\nfor i in range(n):\n    for j in range(i + 1, n):\n        counter[count_zeros(a[i] + a[j])] += 1\n\n# if the maximum number of zeros is 0, then we need to delete all numbers\n# because the sum of any two numbers is not a power of 2\nif counter[max(counter.keys())] == 0:\n    print(n)\n# otherwise, we need to delete all numbers whose sum with all other numbers\n# has a number of zeros less than the maximum number of zeros\nelse:\n    print(n - counter[max(counter.keys())])"
+}
+2022-04-13 18:49:53.977919 REASON stop
+2022-04-13 18:49:53.999244 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\na = [4, 7, 1, 5, 4, 9]\n\nprint(a)\n\n# for i in range(0, len(a)):\n#     if (a[i] + a[i]) in a:\n#         a.pop(i)\n#         break\n\nfor i in range(0, len(a)):\n    for j in range(0, len(a)):\n        if i != j:\n            if a[i] + a[j] in a:\n                a.pop(i)\n                break\n\nprint(a)"
+}
+2022-04-13 18:49:53.999356 REASON stop
+2022-04-13 18:49:54.000233 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    Count the number of occurences of each number and\n    if the number of occurences is odd, then it can't be part\n    of a pair.\n    \"\"\"\n\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    d = {}\n\n    for num in a:\n        d[num] = d.get(num, 0) + 1\n\n    count = 0\n    for num, occurences in d.items():\n        if occurences % 2 == 1:\n            count += 1\n\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:49:54.000302 REASON stop

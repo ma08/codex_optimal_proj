@@ -1,0 +1,131 @@
+2022-04-13 23:23:44.076867 """
+While working a night shift at the university as a janitor, you absentmindedly erase a blackboard covered with equations, only to realize afterwards that these were no ordinary equations! They were the notes of the venerable Professor E. I. N. Stein who earlier in the day solved the elusive maximum quadrilateral problem! Quick, you have to redo his work so no one noticed what happened. 
+
+The maximum quadrilateral problem is quite easy to state: given four side lengths $s_1, s_2, s_3$ and $s_4$, find the maximum area of any quadrilateral that can be constructed using these lengths. A quadrilateral is a polygon with four vertices.
+
+-----Input-----
+The input consists of a single line with four positive integers, the four side lengths $s_1$, $s_2$, $s_3$, and $s_4$.
+
+It is guaranteed that $2s_ i < \sum _{j=1}^4 s_ j$, for all $i$, and that $1 \leq s_ i \leq 1000$.
+
+-----Output-----
+Output a single real number, the maximal area as described above. Your answer must be accurate to an absolute or relative error of at most $10^{-6}$.
+
+-----Examples-----
+Sample Input 1:
+3 3 3 3
+Sample Output 1:
+9
+
+Sample Input 2:
+1 2 1 1
+Sample Output 2:
+1.299038105676658
+"""
+2022-04-13 23:23:44.076875 --------------------------
+2022-04-13 23:24:16.894184 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = list(map(int, input().split()))\n    s.sort()\n    x = s[0]\n    y = s[1]\n    z = s[2]\n    w = s[3]\n    if x + y > w or x + z > y + w:\n        print((x + y + z + w) / 4)\n    else:\n        print((x + y + z + w - 2 * max(x, y)) / 4)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Read input\n    s = [int(x) for x in input().split()]\n    s.sort()\n\n    # Calculate maximum area\n    area = 0\n    for i in range(4):\n        for j in range(i+1, 4):\n            for k in range(j+1, 4):\n                for l in range(k+1, 4):\n                    a = s[i]\n                    b = s[j]\n                    c = s[k]\n                    d = s[l]\n                    if a+b>c and a+c>b and b+c>a:\n                        area = max(area, (a+b+c+d)*(a+b+c-d)*(a+b-c+d)*(-a+b+c+d)/16)\n\n    # Print answer\n    print(area)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n\ts = list(map(int, input().split()))\n\tss = sum(s)\n\tp = ss/2\n\tarea = math.sqrt((p-s[0])*(p-s[1])*(p-s[2])*(p-s[3]))\n\tprint(area)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read input\n    s = list(map(int, input().split()))\n\n    # calculate area\n    s.sort()\n    a = (s[0] + s[1] + s[2] + s[3]) / 2\n    area = (a - s[0]) * (a - s[1]) * (a - s[2]) * (a - s[3])\n    area = (area * 4 * a * a) ** 0.5\n\n    # print area\n    print(area)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read input\n    sides = [int(x) for x in input().split()]\n    assert len(sides) == 4\n    assert 1 <= sides[0] <= 1000\n    assert 1 <= sides[1] <= 1000\n    assert 1 <= sides[2] <= 1000\n    assert 1 <= sides[3] <= 1000\n    assert 2*sides[0] < sum(sides)\n    assert 2*sides[1] < sum(sides)\n    assert 2*sides[2] < sum(sides)\n    assert 2*sides[3] < sum(sides)\n\n    # solve problem\n    max_area = 0\n    for i in range(4):\n        # rotate sides\n        sides = sides[1:] + sides[0:1]\n\n        # find area of triangle with largest base\n        max_base = 0\n        max_base_index = 0\n        for j in range(3):\n            if sides[j] > max_base:\n                max_base = sides[j]\n                max_base_index = j\n        assert max_base > 0\n\n        # find area of triangle with largest height\n        max_height = 0\n        max_height_index = 0\n        for j in range(3):\n            if j != max_base_index:\n                height = sides[j]\n                base = sides[3]\n                side = sides[3-j]\n                area = area_of_triangle(height, base, side)\n                if area > max_height:\n                    max_height = area\n                    max_height_index = j\n        assert max_height > 0\n\n        # find area of trapezoid\n        height = sides[max_height_index]\n        base1 = sides[3]\n        base2 = sides[3-max_height_index]\n        area = area_of_trapezoid(height, base1, base2)\n        if area > max_area:\n            max_area = area\n\n    # print answer\n    print(max_area)\n\ndef area_of_triangle(height, base, side):\n    assert height > 0\n    assert base > 0\n    assert side > 0\n    assert height + base > side\n    assert base + side > height\n    assert side + height > base\n    s = (height + base + side)/2\n    return (s*(s-height)*(s-base)*(s-side))**0.5\n\ndef area_of_trapezoid(height, base1, base2):\n    assert height > 0\n    assert base1 > 0\n    assert base2 > 0\n    return (base1 + base2)*height/2\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# Grab the side lengths\ns1, s2, s3, s4 = [int(x) for x in sys.stdin.readline().split(' ')]\n\n# Use Heron's formula to compute the area\ndef area(s1, s2, s3):\n    p = (s1 + s2 + s3) / 2\n    return math.sqrt(p * (p - s1) * (p - s2) * (p - s3))\n\n# Compute the area of the triangle formed by the three sides given\ndef areaTriangle(s1, s2, s3):\n    return area(s1, s2, s3)\n\n# Compute the area of the quadrilateral formed by the four sides given\ndef areaQuadrilateral(s1, s2, s3, s4):\n    # Compute the height of the quadrilateral\n    h = (2 * areaTriangle(s1, s2, s3)) / s4\n\n    # Compute the area of the quadrilateral\n    return (s4 * h) / 2\n\n# Compute the maximum area of a quadrilateral formed by the given side lengths\ndef maxArea(s1, s2, s3, s4):\n    maxArea = 0\n    for i in range(1, 4):\n        area = areaQuadrilateral(s1, s2, s3, s4)\n        if area > maxArea:\n            maxArea = area\n        s1, s2, s3, s4 = s2, s3, s4, s1\n    return maxArea\n\nprint(maxArea(s1, s2, s3, s4))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#----Solution-----\n\n#Input\nsides = input()\nsides = sides.split()\nsides = [int(i) for i in sides]\n\n#Find the maximum area of a quadrilateral with side lengths s1, s2, s3, s4\ndef max_area(s1, s2, s3, s4):\n    #The maximum area is determined by the two largest side lengths\n    #The two largest side lengths are also the two sides of a rectangle with the maximum area\n    #The two remaining sides are the base and height of the rectangle\n    #The maximum area is thus (s1*s2)/2\n    s1, s2, s3, s4 = sorted([s1, s2, s3, s4])\n    return (s1*s2)/2\n\n#Output\nprint(max_area(sides[0], sides[1], sides[2], sides[3]))"
+    }
+  ],
+  "created": 1649892224,
+  "id": "cmpl-4wgcqU5lH9j9MCe4AYzRo6MWNIRkx",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:24:16.894492 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = list(map(int, input().split()))\n    s.sort()\n    x = s[0]\n    y = s[1]\n    z = s[2]\n    w = s[3]\n    if x + y > w or x + z > y + w:\n        print((x + y + z + w) / 4)\n    else:\n        print((x + y + z + w - 2 * max(x, y)) / 4)\n\nmain()"
+}
+2022-04-13 23:24:16.894532 REASON stop
+2022-04-13 23:24:16.894910 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.894927 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Read input\n    s = [int(x) for x in input().split()]\n    s.sort()\n\n    # Calculate maximum area\n    area = 0\n    for i in range(4):\n        for j in range(i+1, 4):\n            for k in range(j+1, 4):\n                for l in range(k+1, 4):\n                    a = s[i]\n                    b = s[j]\n                    c = s[k]\n                    d = s[l]\n                    if a+b>c and a+c>b and b+c>a:\n                        area = max(area, (a+b+c+d)*(a+b+c-d)*(a+b-c+d)*(-a+b+c+d)/16)\n\n    # Print answer\n    print(area)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:24:16.895071 REASON stop
+2022-04-13 23:24:16.895319 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.895332 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n\ts = list(map(int, input().split()))\n\tss = sum(s)\n\tp = ss/2\n\tarea = math.sqrt((p-s[0])*(p-s[1])*(p-s[2])*(p-s[3]))\n\tprint(area)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 23:24:16.895371 REASON stop
+2022-04-13 23:24:16.906817 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.906849 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read input\n    s = list(map(int, input().split()))\n\n    # calculate area\n    s.sort()\n    a = (s[0] + s[1] + s[2] + s[3]) / 2\n    area = (a - s[0]) * (a - s[1]) * (a - s[2]) * (a - s[3])\n    area = (area * 4 * a * a) ** 0.5\n\n    # print area\n    print(area)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:24:16.906918 REASON stop
+2022-04-13 23:24:16.931880 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.931914 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read input\n    sides = [int(x) for x in input().split()]\n    assert len(sides) == 4\n    assert 1 <= sides[0] <= 1000\n    assert 1 <= sides[1] <= 1000\n    assert 1 <= sides[2] <= 1000\n    assert 1 <= sides[3] <= 1000\n    assert 2*sides[0] < sum(sides)\n    assert 2*sides[1] < sum(sides)\n    assert 2*sides[2] < sum(sides)\n    assert 2*sides[3] < sum(sides)\n\n    # solve problem\n    max_area = 0\n    for i in range(4):\n        # rotate sides\n        sides = sides[1:] + sides[0:1]\n\n        # find area of triangle with largest base\n        max_base = 0\n        max_base_index = 0\n        for j in range(3):\n            if sides[j] > max_base:\n                max_base = sides[j]\n                max_base_index = j\n        assert max_base > 0\n\n        # find area of triangle with largest height\n        max_height = 0\n        max_height_index = 0\n        for j in range(3):\n            if j != max_base_index:\n                height = sides[j]\n                base = sides[3]\n                side = sides[3-j]\n                area = area_of_triangle(height, base, side)\n                if area > max_height:\n                    max_height = area\n                    max_height_index = j\n        assert max_height > 0\n\n        # find area of trapezoid\n        height = sides[max_height_index]\n        base1 = sides[3]\n        base2 = sides[3-max_height_index]\n        area = area_of_trapezoid(height, base1, base2)\n        if area > max_area:\n            max_area = area\n\n    # print answer\n    print(max_area)\n\ndef area_of_triangle(height, base, side):\n    assert height > 0\n    assert base > 0\n    assert side > 0\n    assert height + base > side\n    assert base + side > height\n    assert side + height > base\n    s = (height + base + side)/2\n    return (s*(s-height)*(s-base)*(s-side))**0.5\n\ndef area_of_trapezoid(height, base1, base2):\n    assert height > 0\n    assert base1 > 0\n    assert base2 > 0\n    return (base1 + base2)*height/2\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:24:16.932002 REASON stop
+2022-04-13 23:24:16.932549 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.932568 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# Grab the side lengths\ns1, s2, s3, s4 = [int(x) for x in sys.stdin.readline().split(' ')]\n\n# Use Heron's formula to compute the area\ndef area(s1, s2, s3):\n    p = (s1 + s2 + s3) / 2\n    return math.sqrt(p * (p - s1) * (p - s2) * (p - s3))\n\n# Compute the area of the triangle formed by the three sides given\ndef areaTriangle(s1, s2, s3):\n    return area(s1, s2, s3)\n\n# Compute the area of the quadrilateral formed by the four sides given\ndef areaQuadrilateral(s1, s2, s3, s4):\n    # Compute the height of the quadrilateral\n    h = (2 * areaTriangle(s1, s2, s3)) / s4\n\n    # Compute the area of the quadrilateral\n    return (s4 * h) / 2\n\n# Compute the maximum area of a quadrilateral formed by the given side lengths\ndef maxArea(s1, s2, s3, s4):\n    maxArea = 0\n    for i in range(1, 4):\n        area = areaQuadrilateral(s1, s2, s3, s4)\n        if area > maxArea:\n            maxArea = area\n        s1, s2, s3, s4 = s2, s3, s4, s1\n    return maxArea\n\nprint(maxArea(s1, s2, s3, s4))"
+}
+2022-04-13 23:24:16.932625 REASON stop
+2022-04-13 23:24:16.950935 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'
+2022-04-13 23:24:16.950968 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#----Solution-----\n\n#Input\nsides = input()\nsides = sides.split()\nsides = [int(i) for i in sides]\n\n#Find the maximum area of a quadrilateral with side lengths s1, s2, s3, s4\ndef max_area(s1, s2, s3, s4):\n    #The maximum area is determined by the two largest side lengths\n    #The two largest side lengths are also the two sides of a rectangle with the maximum area\n    #The two remaining sides are the base and height of the rectangle\n    #The maximum area is thus (s1*s2)/2\n    s1, s2, s3, s4 = sorted([s1, s2, s3, s4])\n    return (s1*s2)/2\n\n#Output\nprint(max_area(sides[0], sides[1], sides[2], sides[3]))"
+}
+2022-04-13 23:24:16.951044 REASON stop
+2022-04-13 23:24:16.951772 test/intro-questions.txt_dir/4791/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4791/solutions.json'

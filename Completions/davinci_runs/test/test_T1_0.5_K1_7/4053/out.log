@@ -1,0 +1,167 @@
+2022-04-13 17:50:23.342691 """
+Ivan wants to play a game with you. He picked some string $s$ of length $n$ consisting only of lowercase Latin letters. 
+
+You don't know this string. Ivan has informed you about all its improper prefixes and suffixes (i.e. prefixes and suffixes of lengths from $1$ to $n-1$), but he didn't tell you which strings are prefixes and which are suffixes.
+
+Ivan wants you to guess which of the given $2n-2$ strings are prefixes of the given string and which are suffixes. It may be impossible to guess the string Ivan picked (since multiple strings may give the same set of suffixes and prefixes), but Ivan will accept your answer if there is at least one string that is consistent with it. Let the game begin!
+
+
+-----Input-----
+
+The first line of the input contains one integer number $n$ ($2 \le n \le 100$) — the length of the guessed string $s$.
+
+The next $2n-2$ lines are contain prefixes and suffixes, one per line. Each of them is the string of length from $1$ to $n-1$ consisting only of lowercase Latin letters. They can be given in arbitrary order.
+
+It is guaranteed that there are exactly $2$ strings of each length from $1$ to $n-1$. It is also guaranteed that these strings are prefixes and suffixes of some existing string of length $n$.
+
+
+-----Output-----
+
+Print one string of length $2n-2$ — the string consisting only of characters 'P' and 'S'. The number of characters 'P' should be equal to the number of characters 'S'. The $i$-th character of this string should be 'P' if the $i$-th of the input strings is the prefix and 'S' otherwise.
+
+If there are several possible answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+ba
+a
+abab
+a
+aba
+baba
+ab
+aba
+
+Output
+SPPSPSPS
+
+Input
+3
+a
+aa
+aa
+a
+
+Output
+PPSS
+
+Input
+2
+a
+c
+
+Output
+PS
+
+
+
+-----Note-----
+
+The only string which Ivan can guess in the first example is "ababa".
+
+The only string which Ivan can guess in the second example is "aaa". Answers "SPSP", "SSPP" and "PSPS" are also acceptable.
+
+In the third example Ivan can guess the string "ac" or the string "ca". The answer "SP" is also acceptable.
+"""
+2022-04-13 17:50:23.342708 --------------------------
+2022-04-13 17:50:47.751037 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nprefixes = []\nsuffixes = []\n\nfor i in range(2*n-2):\n    x = input()\n    if i < n-1:\n        prefixes.append(x)\n    else:\n        suffixes.append(x)\n\nfor i in range(len(prefixes)):\n    if prefixes[i] == suffixes[i]:\n        print(\"P\", end=\"\")\n    else:\n        print(\"S\", end=\"\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    prefixes = []\n    suffixes = []\n    for i in range(2*n-2):\n        line = sys.stdin.readline().strip()\n        if line[0] == line[-1]:\n            prefixes.append(line)\n        else:\n            suffixes.append(line)\n    prefixes.sort(key=lambda x: len(x), reverse=True)\n    suffixes.sort(key=lambda x: len(x), reverse=True)\n    result = \"\"\n    for i in range(len(prefixes)):\n        result += \"P\"\n    for i in range(len(suffixes)):\n        result += \"S\"\n    print(result)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nfrom collections import defaultdict\n\nn = int(input())\n\nprefixes = defaultdict(int)\nsuffixes = defaultdict(int)\n\nfor i in range(2*n-2):\n    s = input()\n    if i < n-1:\n        prefixes[s] += 1\n    else:\n        suffixes[s] += 1\n\nans = \"\"\nfor i in range(2*n-2):\n    if i < n-1:\n        if prefixes[s] == 1:\n            ans += \"P\"\n        else:\n            ans += \"S\"\n    else:\n        if suffixes[s] == 1:\n            ans += \"S\"\n        else:\n            ans += \"P\"\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    prefixes = []\n    suffixes = []\n    for i in range(2*n-2):\n        s = input()\n        if s[0] == 'a':\n            prefixes.append(s)\n        else:\n            suffixes.append(s)\n    result = []\n    for s in prefixes:\n        if s in suffixes:\n            result.append('P')\n            suffixes.remove(s)\n        else:\n            result.append('S')\n    print(''.join(result))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef find_solution(n, prefixes_and_suffixes):\n    prefixes = []\n    suffixes = []\n    for i in range(n):\n        prefixes.append([])\n        suffixes.append([])\n    for i in range(len(prefixes_and_suffixes)):\n        curr = prefixes_and_suffixes[i]\n        for j in range(1, n):\n            if curr[0:j] in prefixes[j]:\n                suffixes[j].append(curr)\n            else:\n                prefixes[j].append(curr)\n    solution = \"\"\n    for i in range(len(prefixes_and_suffixes)):\n        curr = prefixes_and_suffixes[i]\n        if curr in prefixes[len(curr)]:\n            solution += \"P\"\n        else:\n            solution += \"S\"\n    return solution\n\ndef main():\n    n = int(sys.stdin.readline())\n    prefixes_and_suffixes = []\n    for i in range(2*n - 2):\n        prefixes_and_suffixes.append(sys.stdin.readline().strip())\n    print(find_solution(n, prefixes_and_suffixes))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nprefixes = []\nsuffixes = []\n\nfor i in range(0, 2*n-2):\n    x = input()\n    if len(x) == 1:\n        prefixes.append(x)\n    else:\n        suffixes.append(x)\n        \nprefixes.sort()\nsuffixes.sort()\n\nans = \"\"\nfor i in range(0, n-1):\n    ans += 'P'\n    ans += 'S'\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nfor i in range(2*n-2):\n    print(\"a\", end=\"\")\nprint()"
+    }
+  ],
+  "created": 1649872223,
+  "id": "cmpl-4wbQFG7Ac1pTLCysZ5OomWsaf5c4e",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:50:47.751374 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nprefixes = []\nsuffixes = []\n\nfor i in range(2*n-2):\n    x = input()\n    if i < n-1:\n        prefixes.append(x)\n    else:\n        suffixes.append(x)\n\nfor i in range(len(prefixes)):\n    if prefixes[i] == suffixes[i]:\n        print(\"P\", end=\"\")\n    else:\n        print(\"S\", end=\"\")"
+}
+2022-04-13 17:50:47.751408 REASON stop
+2022-04-13 17:50:47.761133 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    prefixes = []\n    suffixes = []\n    for i in range(2*n-2):\n        line = sys.stdin.readline().strip()\n        if line[0] == line[-1]:\n            prefixes.append(line)\n        else:\n            suffixes.append(line)\n    prefixes.sort(key=lambda x: len(x), reverse=True)\n    suffixes.sort(key=lambda x: len(x), reverse=True)\n    result = \"\"\n    for i in range(len(prefixes)):\n        result += \"P\"\n    for i in range(len(suffixes)):\n        result += \"S\"\n    print(result)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:50:47.761301 REASON stop
+2022-04-13 17:50:47.789103 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nfrom collections import defaultdict\n\nn = int(input())\n\nprefixes = defaultdict(int)\nsuffixes = defaultdict(int)\n\nfor i in range(2*n-2):\n    s = input()\n    if i < n-1:\n        prefixes[s] += 1\n    else:\n        suffixes[s] += 1\n\nans = \"\"\nfor i in range(2*n-2):\n    if i < n-1:\n        if prefixes[s] == 1:\n            ans += \"P\"\n        else:\n            ans += \"S\"\n    else:\n        if suffixes[s] == 1:\n            ans += \"S\"\n        else:\n            ans += \"P\"\n\nprint(ans)"
+}
+2022-04-13 17:50:47.789236 REASON stop
+2022-04-13 17:50:47.790231 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    prefixes = []\n    suffixes = []\n    for i in range(2*n-2):\n        s = input()\n        if s[0] == 'a':\n            prefixes.append(s)\n        else:\n            suffixes.append(s)\n    result = []\n    for s in prefixes:\n        if s in suffixes:\n            result.append('P')\n            suffixes.remove(s)\n        else:\n            result.append('S')\n    print(''.join(result))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:50:47.790307 REASON stop
+2022-04-13 17:50:47.803174 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef find_solution(n, prefixes_and_suffixes):\n    prefixes = []\n    suffixes = []\n    for i in range(n):\n        prefixes.append([])\n        suffixes.append([])\n    for i in range(len(prefixes_and_suffixes)):\n        curr = prefixes_and_suffixes[i]\n        for j in range(1, n):\n            if curr[0:j] in prefixes[j]:\n                suffixes[j].append(curr)\n            else:\n                prefixes[j].append(curr)\n    solution = \"\"\n    for i in range(len(prefixes_and_suffixes)):\n        curr = prefixes_and_suffixes[i]\n        if curr in prefixes[len(curr)]:\n            solution += \"P\"\n        else:\n            solution += \"S\"\n    return solution\n\ndef main():\n    n = int(sys.stdin.readline())\n    prefixes_and_suffixes = []\n    for i in range(2*n - 2):\n        prefixes_and_suffixes.append(sys.stdin.readline().strip())\n    print(find_solution(n, prefixes_and_suffixes))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:50:47.803277 REASON stop
+2022-04-13 17:50:47.804391 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nprefixes = []\nsuffixes = []\n\nfor i in range(0, 2*n-2):\n    x = input()\n    if len(x) == 1:\n        prefixes.append(x)\n    else:\n        suffixes.append(x)\n        \nprefixes.sort()\nsuffixes.sort()\n\nans = \"\"\nfor i in range(0, n-1):\n    ans += 'P'\n    ans += 'S'\n\nprint(ans)"
+}
+2022-04-13 17:50:47.804454 REASON stop
+2022-04-13 17:50:47.813926 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nfor i in range(2*n-2):\n    print(\"a\", end=\"\")\nprint()"
+}
+2022-04-13 17:50:47.814021 REASON stop

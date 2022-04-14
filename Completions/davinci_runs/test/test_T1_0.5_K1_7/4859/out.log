@@ -1,0 +1,142 @@
+2022-04-13 23:46:33.579145 """
+Since entering $2^\text {nd}$ grade Theta has daily math homework sheets. The problems on her worksheet usually go like this: There is a certain number of birds, dogs, and cats on a farm. Together they have $14$ legs. How many birds, dogs, and cats could there be? Write down as many answers as you can! 
+
+It is always the same problem, just written in different ways: sometimes with horses, cows, sheep, goats, chickens, beetles, or even spiders – but never with snakes or fishes!
+
+Can you write a program to double-check Theta’s answers?
+
+-----Input-----
+Input consists of a single line with $4$ integers: $b$, $d$, $c$, and $l$, with $b$, $d$, and $c$ representing the numbers of legs the first, second, and third type of animal has. You are given that $0 < b, c, d \le 100$ because some farm animals in these math problems may be centipedes. The total number of legs is given by $l$ ($0 \le l \le 250$).
+
+-----Output-----
+Output all possible answers, each on a separate line, in lexicographical order so that they are sorted by the number of the first animal, ties broken by the second and third animal numbers’, respectively. Separate the number of the first, second, and third animal with spaces. If there are no possible solutions, output impossible on a single line!
+
+-----Examples-----
+Sample Input 1:
+2 4 4 14
+Sample Output 1:
+1 0 3
+1 1 2
+1 2 1
+1 3 0
+3 0 2
+3 1 1
+3 2 0
+5 0 1
+5 1 0
+7 0 0
+
+Sample Input 2:
+100 80 60 240
+Sample Output 2:
+0 0 4
+0 3 0
+1 1 1
+"""
+2022-04-13 23:46:33.579160 --------------------------
+2022-04-13 23:46:56.097070 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION:\n\nb, d, c, l = map(int, input().split())\n\ndef is_valid(b, d, c):\n    return b + d + c == l and b >= 0 and d >= 0 and c >= 0\n\nif is_valid(b, d, c):\n    print(b, d, c)\nelif is_valid(b, d, c + d):\n    print(b, d, c + d)\nelif is_valid(b, d, c + 2 * d):\n    print(b, d, c + 2 * d)\nelif is_valid(b, d, c + 3 * d):\n    print(b, d, c + 3 * d)\nelif is_valid(b, d, c + 4 * d):\n    print(b, d, c + 4 * d)\nelif is_valid(b, d, c + 5 * d):\n    print(b, d, c + 5 * d)\nelif is_valid(b, d, c + 6 * d):\n    print(b, d, c + 6 * d)\nelif is_valid(b, d, c + 7 * d):\n    print(b, d, c + 7 * d)\nelif is_valid(b, d, c + 8 * d):\n    print(b, d, c + 8 * d)\nelif is_valid(b, d, c + 9 * d):\n    print(b, d, c + 9 * d)\nelif is_valid(b, d, c + 10 * d):\n    print(b, d, c + 10 * d)\nelse:\n    print(\"impossible\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Grab the inputs\nb, d, c, l = sys.stdin.readline().split()\nb, d, c, l = int(b), int(d), int(c), int(l)\n\n# Initialize our list of answers\nanswers = []\n\n# Now loop through all possible combinations of animals\nfor bb in range(l//b + 1):\n    for dd in range((l-bb*b)//d + 1):\n        # If we have a solution, add it to our list of answers\n        if (l-bb*b-dd*d)%c == 0:\n            cc = (l-bb*b-dd*d)//c\n            answers.append([bb, dd, cc])\n\n# If there are no answers, print impossible\nif len(answers) == 0:\n    print(\"impossible\")\nelse:\n    # Otherwise, sort the answers and print them\n    answers.sort()\n    for a in answers:\n        print(\"{0} {1} {2}\".format(a[0], a[1], a[2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    b, d, c, l = map(int, sys.stdin.readline().split())\n    solutions = []\n    for x in range(l//b + 1):\n        for y in range(l//d + 1):\n            for z in range(l//c + 1):\n                if x*b + y*d + z*c == l:\n                    solutions.append([x, y, z])\n    solutions.sort()\n    for solution in solutions:\n        print(' '.join(map(str, solution)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nb, d, c, l = map(int, input().split())\n\nfor i in range(l // b + 1):\n    for j in range(l // d + 1):\n        for k in range(l // c + 1):\n            if i * b + j * d + k * c == l:\n                print(i, j, k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nimport sys\n\nb, d, c, l = sys.stdin.readline().split()\nb = int(b)\nd = int(d)\nc = int(c)\nl = int(l)\n\nans = []\n\nfor i in range(int(l / b) + 1):\n    for j in range(int((l - b * i) / d) + 1):\n        k = (l - b * i - d * j) / c\n        if k >= 0 and k == int(k):\n            ans.append((i, j, int(k)))\n\nif len(ans) == 0:\n    print(\"impossible\")\nelse:\n    for i in ans:\n        print(str(i[0]) + \" \" + str(i[1]) + \" \" + str(i[2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    #read input\n    line = sys.stdin.readline().split()\n    b = int(line[0])\n    d = int(line[1])\n    c = int(line[2])\n    l = int(line[3])\n    #check if input is valid\n    if not (0 < b and 0 < c and 0 < d and 0 < l and b <= 100 and c <= 100 and d <= 100 and l <= 250):\n        print(\"Input is not valid\")\n        return\n    #check if there are any solutions\n    if l % b != 0 and l % c != 0 and l % d != 0:\n        print(\"impossible\")\n        return\n    #list to hold solutions\n    solutions = []\n    #calculate solutions\n    for i in range(l//b + 1):\n        for j in range(l//d + 1):\n            for k in range(l//c + 1):\n                if b * i + d * j + c * k == l:\n                    solutions.append((i, j, k))\n    #sort solutions\n    solutions.sort()\n    #print solutions\n    for sol in solutions:\n        print(sol[0], sol[1], sol[2])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(b, d, c, l):\n    #print(\"b = {}, d = {}, c = {}, l = {}\".format(b, d, c, l))\n    if l%b != 0 or l%d != 0 or l%c != 0:\n        return []\n    if l == 0:\n        return [[0, 0, 0]]\n    result = []\n    for i in range(l//b + 1):\n        for j in range(l//d + 1):\n            for k in range(l//c + 1):\n                if i*b + j*d + k*c == l:\n                    result.append([i, j, k])\n    return result\n\ndef main():\n    b, d, c, l = [int(x) for x in sys.stdin.readline().split()]\n    result = solve(b, d, c, l)\n    if result == []:\n        print(\"impossible\")\n    else:\n        for r in result:\n            print(\"{} {} {}\".format(r[0], r[1], r[2]))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649893593,
+  "id": "cmpl-4wgyv8qFGalofkFeljRGXddg4zMl2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:46:56.097368 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION:\n\nb, d, c, l = map(int, input().split())\n\ndef is_valid(b, d, c):\n    return b + d + c == l and b >= 0 and d >= 0 and c >= 0\n\nif is_valid(b, d, c):\n    print(b, d, c)\nelif is_valid(b, d, c + d):\n    print(b, d, c + d)\nelif is_valid(b, d, c + 2 * d):\n    print(b, d, c + 2 * d)\nelif is_valid(b, d, c + 3 * d):\n    print(b, d, c + 3 * d)\nelif is_valid(b, d, c + 4 * d):\n    print(b, d, c + 4 * d)\nelif is_valid(b, d, c + 5 * d):\n    print(b, d, c + 5 * d)\nelif is_valid(b, d, c + 6 * d):\n    print(b, d, c + 6 * d)\nelif is_valid(b, d, c + 7 * d):\n    print(b, d, c + 7 * d)\nelif is_valid(b, d, c + 8 * d):\n    print(b, d, c + 8 * d)\nelif is_valid(b, d, c + 9 * d):\n    print(b, d, c + 9 * d)\nelif is_valid(b, d, c + 10 * d):\n    print(b, d, c + 10 * d)\nelse:\n    print(\"impossible\")"
+}
+2022-04-13 23:46:56.097447 REASON stop
+2022-04-13 23:46:56.097777 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.097793 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Grab the inputs\nb, d, c, l = sys.stdin.readline().split()\nb, d, c, l = int(b), int(d), int(c), int(l)\n\n# Initialize our list of answers\nanswers = []\n\n# Now loop through all possible combinations of animals\nfor bb in range(l//b + 1):\n    for dd in range((l-bb*b)//d + 1):\n        # If we have a solution, add it to our list of answers\n        if (l-bb*b-dd*d)%c == 0:\n            cc = (l-bb*b-dd*d)//c\n            answers.append([bb, dd, cc])\n\n# If there are no answers, print impossible\nif len(answers) == 0:\n    print(\"impossible\")\nelse:\n    # Otherwise, sort the answers and print them\n    answers.sort()\n    for a in answers:\n        print(\"{0} {1} {2}\".format(a[0], a[1], a[2]))"
+}
+2022-04-13 23:46:56.097935 REASON stop
+2022-04-13 23:46:56.098197 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.098208 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    b, d, c, l = map(int, sys.stdin.readline().split())\n    solutions = []\n    for x in range(l//b + 1):\n        for y in range(l//d + 1):\n            for z in range(l//c + 1):\n                if x*b + y*d + z*c == l:\n                    solutions.append([x, y, z])\n    solutions.sort()\n    for solution in solutions:\n        print(' '.join(map(str, solution)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:56.098247 REASON stop
+2022-04-13 23:46:56.120377 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.120409 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nb, d, c, l = map(int, input().split())\n\nfor i in range(l // b + 1):\n    for j in range(l // d + 1):\n        for k in range(l // c + 1):\n            if i * b + j * d + k * c == l:\n                print(i, j, k)"
+}
+2022-04-13 23:46:56.120483 REASON stop
+2022-04-13 23:46:56.141419 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.141448 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nimport sys\n\nb, d, c, l = sys.stdin.readline().split()\nb = int(b)\nd = int(d)\nc = int(c)\nl = int(l)\n\nans = []\n\nfor i in range(int(l / b) + 1):\n    for j in range(int((l - b * i) / d) + 1):\n        k = (l - b * i - d * j) / c\n        if k >= 0 and k == int(k):\n            ans.append((i, j, int(k)))\n\nif len(ans) == 0:\n    print(\"impossible\")\nelse:\n    for i in ans:\n        print(str(i[0]) + \" \" + str(i[1]) + \" \" + str(i[2]))"
+}
+2022-04-13 23:46:56.141524 REASON stop
+2022-04-13 23:46:56.155250 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.155287 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    #read input\n    line = sys.stdin.readline().split()\n    b = int(line[0])\n    d = int(line[1])\n    c = int(line[2])\n    l = int(line[3])\n    #check if input is valid\n    if not (0 < b and 0 < c and 0 < d and 0 < l and b <= 100 and c <= 100 and d <= 100 and l <= 250):\n        print(\"Input is not valid\")\n        return\n    #check if there are any solutions\n    if l % b != 0 and l % c != 0 and l % d != 0:\n        print(\"impossible\")\n        return\n    #list to hold solutions\n    solutions = []\n    #calculate solutions\n    for i in range(l//b + 1):\n        for j in range(l//d + 1):\n            for k in range(l//c + 1):\n                if b * i + d * j + c * k == l:\n                    solutions.append((i, j, k))\n    #sort solutions\n    solutions.sort()\n    #print solutions\n    for sol in solutions:\n        print(sol[0], sol[1], sol[2])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:56.155353 REASON stop
+2022-04-13 23:46:56.170997 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'
+2022-04-13 23:46:56.171027 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(b, d, c, l):\n    #print(\"b = {}, d = {}, c = {}, l = {}\".format(b, d, c, l))\n    if l%b != 0 or l%d != 0 or l%c != 0:\n        return []\n    if l == 0:\n        return [[0, 0, 0]]\n    result = []\n    for i in range(l//b + 1):\n        for j in range(l//d + 1):\n            for k in range(l//c + 1):\n                if i*b + j*d + k*c == l:\n                    result.append([i, j, k])\n    return result\n\ndef main():\n    b, d, c, l = [int(x) for x in sys.stdin.readline().split()]\n    result = solve(b, d, c, l)\n    if result == []:\n        print(\"impossible\")\n    else:\n        for r in result:\n            print(\"{} {} {}\".format(r[0], r[1], r[2]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:46:56.171103 REASON stop
+2022-04-13 23:46:56.171726 test/intro-questions.txt_dir/4859/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4859/solutions.json'

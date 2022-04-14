@@ -1,0 +1,129 @@
+2022-04-13 19:41:14.375738 """
+You have a pot and N ingredients. Each ingredient has a real number parameter called value, and the value of the i-th ingredient (1 \leq i \leq N) is v_i.
+When you put two ingredients in the pot, they will vanish and result in the formation of a new ingredient. The value of the new ingredient will be (x + y) / 2 where x and y are the values of the ingredients consumed, and you can put this ingredient again in the pot.
+After you compose ingredients in this way N-1 times, you will end up with one ingredient. Find the maximum possible value of this ingredient.
+
+-----Constraints-----
+ - 2 \leq N \leq 50
+ - 1 \leq v_i \leq 1000
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+v_1 v_2 \ldots v_N
+
+-----Output-----
+Print a decimal number (or an integer) representing the maximum possible value of the last ingredient remaining.
+Your output will be judged correct when its absolute or relative error from the judge's output is at most 10^{-5}.
+
+-----Sample Input-----
+2
+3 4
+
+-----Sample Output-----
+3.5
+
+If you start with two ingredients, the only choice is to put both of them in the pot. The value of the ingredient resulting from the ingredients of values 3 and 4 is (3 + 4) / 2 = 3.5.
+Printing 3.50001, 3.49999, and so on will also be accepted.
+"""
+2022-04-13 19:41:14.375745 --------------------------
+2022-04-13 19:42:10.708229 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    values = list(map(int, sys.stdin.readline().split()))\n\n    # Sort the values.\n    values.sort()\n\n    # Iterate until there is only one value left.\n    while len(values) > 1:\n        # Remove the smallest and largest values.\n        smallest = values.pop(0)\n        largest = values.pop(-1)\n\n        # Calculate the average of the two values.\n        average = (smallest + largest) / 2.0\n\n        # Insert the average back into the list.\n        values.insert(len(values) // 2, average)\n\n    # Print the last value.\n    print(values[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom heapq import heappush, heappop\n\nN = int(input())\nV = list(map(int, input().split()))\n\nheap = []\nfor v in V:\n    heappush(heap, -v)\n\nans = 0\nwhile len(heap) > 1:\n    x = heappop(heap)\n    y = heappop(heap)\n    ans = (-x + -y) / 2\n    heappush(heap, -ans)\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nsys.setrecursionlimit(1000000)\n\n# ====================\n# = global variables =\n# ====================\n\ng_n = 0\ng_v = []\n\n# ===============\n# = subroutines =\n# ===============\n\ndef input():\n\tglobal g_n, g_v\n\tg_n = int(input())\n\tg_v = [int(x) for x in input().split()]\n\ndef output():\n\tprint(g_v[0])\n\ndef solve():\n\tglobal g_n, g_v\n\twhile g_n > 1:\n\t\tg_v.sort()\n\t\tv_new = (g_v[0] + g_v[1]) / 2\n\t\tg_v.pop(0)\n\t\tg_v.pop(0)\n\t\tg_v.append(v_new)\n\t\tg_n = g_n - 1\n\n# =======\n# = main =\n# =======\n\nif __name__ == '__main__':\n\tinput()\n\tsolve()\n\toutput()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport heapq\n\nN = int(sys.stdin.readline())\n\ningredients = []\nfor i in range(N):\n    heapq.heappush(ingredients, int(sys.stdin.readline()))\n\nwhile len(ingredients) > 1:\n    a = heapq.heappop(ingredients)\n    b = heapq.heappop(ingredients)\n    heapq.heappush(ingredients, (a + b) / 2)\n\nprint(ingredients[0])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport math\nimport sys\n\n\nclass Ingredient:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n        self.parent = None\n        self.is_root = True\n\n    def __repr__(self):\n        return str(self.value)\n\n    def __lt__(self, other):\n        return self.value < other.value\n\n    def __gt__(self, other):\n        return self.value > other.value\n\n    def __eq__(self, other):\n        return self.value == other.value\n\n\nclass Heap:\n    def __init__(self, num_elements):\n        self.num_elements = num_elements\n        self.heap = []\n\n    def insert(self, element):\n        if len(self.heap) == 0:\n            self.heap.append(element)\n        else:\n            self.heap.append(element)\n            self.heapify_up(len(self.heap) - 1)\n\n    def delete(self, element):\n        \"\"\"\n        Delete the element from the heap and replace it with the last element in the heap.\n        :param element:\n        :return:\n        \"\"\"\n        if self.is_empty():\n            raise Exception(\"Heap is empty!\")\n\n        element_index = self.get_index(element)\n\n        if element_index is None:\n            raise Exception(\"Element not in heap!\")\n\n        if element_index == len(self.heap) - 1:\n            self.heap.pop()\n        else:\n            self.heap[element_index] = self.heap[-1]\n            self.heap.pop()\n            self.heapify_down(element_index)\n\n    def heapify_up(self, index):\n        \"\"\"\n        Maintain heap property after insertion\n        :param index:\n        :return:\n        \"\"\"\n        while index > 0:\n            parent_index = math.floor((index - 1) / 2)\n            if self.heap[index] < self.heap[parent_index]:\n                self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]\n                index = parent_index\n            else:\n                break\n\n    def heapify_down(self, index):\n        \"\"\"\n        Maintain heap property after deletion\n        :param index:\n        :return:\n        \"\"\"\n        while index < len(self.heap):\n            left_index = 2 * index + 1\n            right_index = 2 * index + 2\n\n            if left_index >= len(self.heap):\n                break\n            elif right_index >= len(self.heap):\n                if self.heap[index] > self.heap[left_index]:\n                    self.heap[index], self.heap[left_index] = self.heap[left_index], self.heap[index]\n                    index = left_index\n                else:\n                    break\n            else:\n                min_child_index = left_index if self.heap[left_index] < self.heap[right_index] else right_index\n                if self.heap[index] > self.heap[min_child_index]:\n                    self.heap[index], self.heap[min_child_index] = self.heap[min_child_index], self.heap[index]\n                    index = min_child_index\n                else:\n                    break\n\n    def get_min(self):\n        return self.heap[0]\n\n    def get_index(self, element):\n        for index, element_in_heap in enumerate(self.heap):\n            if element_in_heap == element:\n                return index\n        return None\n\n    def is_empty(self):\n        return len(self.heap) == 0\n\n\ndef main():\n    num_ingredients = int(sys.stdin.readline().strip())\n    ingredients = []\n    for line in sys.stdin:\n        value = int(line.strip())\n        ingredients.append(Ingredient(value))\n\n    heap = Heap(num_ingredients)\n    for ingredient in ingredients:\n        heap.insert(ingredient)\n\n    while heap.num_elements > 1:\n        min_one = heap.get_min()\n        heap.delete(min_one)\n        min_two = heap.get_min()\n        heap.delete(min_two)\n        new_ingredient = Ingredient((min_one.value + min_two.value) / 2)\n        heap.insert(new_ingredient)\n\n    print(heap.get_min().value)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    v = [int(x) for x in input().split()]\n    v.sort()\n    while len(v) > 1:\n        x = v.pop(0)\n        y = v.pop(0)\n        v.append((x + y) / 2)\n        v.sort()\n    print(v[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nv = [int(i) for i in input().split()]\n\nv.sort()\n\nfor i in range(N-1):\n    v[i+1] = (v[i] + v[i+1]) / 2\n\nprint(v[-1])"
+    }
+  ],
+  "created": 1649878874,
+  "id": "cmpl-4wd9WWe4UtJKlPsDU2lFKYy0rj3T6",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:42:10.708600 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    values = list(map(int, sys.stdin.readline().split()))\n\n    # Sort the values.\n    values.sort()\n\n    # Iterate until there is only one value left.\n    while len(values) > 1:\n        # Remove the smallest and largest values.\n        smallest = values.pop(0)\n        largest = values.pop(-1)\n\n        # Calculate the average of the two values.\n        average = (smallest + largest) / 2.0\n\n        # Insert the average back into the list.\n        values.insert(len(values) // 2, average)\n\n    # Print the last value.\n    print(values[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:10.708638 REASON stop
+2022-04-13 19:42:10.709014 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom heapq import heappush, heappop\n\nN = int(input())\nV = list(map(int, input().split()))\n\nheap = []\nfor v in V:\n    heappush(heap, -v)\n\nans = 0\nwhile len(heap) > 1:\n    x = heappop(heap)\n    y = heappop(heap)\n    ans = (-x + -y) / 2\n    heappush(heap, -ans)\n\nprint(ans)"
+}
+2022-04-13 19:42:10.709124 REASON stop
+2022-04-13 19:42:10.709621 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nsys.setrecursionlimit(1000000)\n\n# ====================\n# = global variables =\n# ====================\n\ng_n = 0\ng_v = []\n\n# ===============\n# = subroutines =\n# ===============\n\ndef input():\n\tglobal g_n, g_v\n\tg_n = int(input())\n\tg_v = [int(x) for x in input().split()]\n\ndef output():\n\tprint(g_v[0])\n\ndef solve():\n\tglobal g_n, g_v\n\twhile g_n > 1:\n\t\tg_v.sort()\n\t\tv_new = (g_v[0] + g_v[1]) / 2\n\t\tg_v.pop(0)\n\t\tg_v.pop(0)\n\t\tg_v.append(v_new)\n\t\tg_n = g_n - 1\n\n# =======\n# = main =\n# =======\n\nif __name__ == '__main__':\n\tinput()\n\tsolve()\n\toutput()"
+}
+2022-04-13 19:42:10.709679 REASON stop
+2022-04-13 19:42:10.729750 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport heapq\n\nN = int(sys.stdin.readline())\n\ningredients = []\nfor i in range(N):\n    heapq.heappush(ingredients, int(sys.stdin.readline()))\n\nwhile len(ingredients) > 1:\n    a = heapq.heappop(ingredients)\n    b = heapq.heappop(ingredients)\n    heapq.heappush(ingredients, (a + b) / 2)\n\nprint(ingredients[0])"
+}
+2022-04-13 19:42:10.729851 REASON stop
+2022-04-13 19:42:10.730481 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport math\nimport sys\n\n\nclass Ingredient:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n        self.parent = None\n        self.is_root = True\n\n    def __repr__(self):\n        return str(self.value)\n\n    def __lt__(self, other):\n        return self.value < other.value\n\n    def __gt__(self, other):\n        return self.value > other.value\n\n    def __eq__(self, other):\n        return self.value == other.value\n\n\nclass Heap:\n    def __init__(self, num_elements):\n        self.num_elements = num_elements\n        self.heap = []\n\n    def insert(self, element):\n        if len(self.heap) == 0:\n            self.heap.append(element)\n        else:\n            self.heap.append(element)\n            self.heapify_up(len(self.heap) - 1)\n\n    def delete(self, element):\n        \"\"\"\n        Delete the element from the heap and replace it with the last element in the heap.\n        :param element:\n        :return:\n        \"\"\"\n        if self.is_empty():\n            raise Exception(\"Heap is empty!\")\n\n        element_index = self.get_index(element)\n\n        if element_index is None:\n            raise Exception(\"Element not in heap!\")\n\n        if element_index == len(self.heap) - 1:\n            self.heap.pop()\n        else:\n            self.heap[element_index] = self.heap[-1]\n            self.heap.pop()\n            self.heapify_down(element_index)\n\n    def heapify_up(self, index):\n        \"\"\"\n        Maintain heap property after insertion\n        :param index:\n        :return:\n        \"\"\"\n        while index > 0:\n            parent_index = math.floor((index - 1) / 2)\n            if self.heap[index] < self.heap[parent_index]:\n                self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]\n                index = parent_index\n            else:\n                break\n\n    def heapify_down(self, index):\n        \"\"\"\n        Maintain heap property after deletion\n        :param index:\n        :return:\n        \"\"\"\n        while index < len(self.heap):\n            left_index = 2 * index + 1\n            right_index = 2 * index + 2\n\n            if left_index >= len(self.heap):\n                break\n            elif right_index >= len(self.heap):\n                if self.heap[index] > self.heap[left_index]:\n                    self.heap[index], self.heap[left_index] = self.heap[left_index], self.heap[index]\n                    index = left_index\n                else:\n                    break\n            else:\n                min_child_index = left_index if self.heap[left_index] < self.heap[right_index] else right_index\n                if self.heap[index] > self.heap[min_child_index]:\n                    self.heap[index], self.heap[min_child_index] = self.heap[min_child_index], self.heap[index]\n                    index = min_child_index\n                else:\n                    break\n\n    def get_min(self):\n        return self.heap[0]\n\n    def get_index(self, element):\n        for index, element_in_heap in enumerate(self.heap):\n            if element_in_heap == element:\n                return index\n        return None\n\n    def is_empty(self):\n        return len(self.heap) == 0\n\n\ndef main():\n    num_ingredients = int(sys.stdin.readline().strip())\n    ingredients = []\n    for line in sys.stdin:\n        value = int(line.strip())\n        ingredients.append(Ingredient(value))\n\n    heap = Heap(num_ingredients)\n    for ingredient in ingredients:\n        heap.insert(ingredient)\n\n    while heap.num_elements > 1:\n        min_one = heap.get_min()\n        heap.delete(min_one)\n        min_two = heap.get_min()\n        heap.delete(min_two)\n        new_ingredient = Ingredient((min_one.value + min_two.value) / 2)\n        heap.insert(new_ingredient)\n\n    print(heap.get_min().value)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:10.730569 REASON stop
+2022-04-13 19:42:10.744466 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    v = [int(x) for x in input().split()]\n    v.sort()\n    while len(v) > 1:\n        x = v.pop(0)\n        y = v.pop(0)\n        v.append((x + y) / 2)\n        v.sort()\n    print(v[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:42:10.744554 REASON stop
+2022-04-13 19:42:10.745511 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nv = [int(i) for i in input().split()]\n\nv.sort()\n\nfor i in range(N-1):\n    v[i+1] = (v[i] + v[i+1]) / 2\n\nprint(v[-1])"
+}
+2022-04-13 19:42:10.745581 REASON stop

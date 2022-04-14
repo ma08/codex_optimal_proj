@@ -1,0 +1,152 @@
+2022-04-13 20:59:30.545157 """
+The only difference between easy and hard versions is constraints.
+
+There are $n$ kids, each of them is reading a unique book. At the end of any day, the $i$-th kid will give his book to the $p_i$-th kid (in case of $i = p_i$ the kid will give his book to himself). It is guaranteed that all values of $p_i$ are distinct integers from $1$ to $n$ (i.e. $p$ is a permutation). The sequence $p$ doesn't change from day to day, it is fixed.
+
+For example, if $n=6$ and $p=[4, 6, 1, 3, 5, 2]$ then at the end of the first day the book of the $1$-st kid will belong to the $4$-th kid, the $2$-nd kid will belong to the $6$-th kid and so on. At the end of the second day the book of the $1$-st kid will belong to the $3$-th kid, the $2$-nd kid will belong to the $2$-th kid and so on.
+
+Your task is to determine the number of the day the book of the $i$-th child is returned back to him for the first time for every $i$ from $1$ to $n$.
+
+Consider the following example: $p = [5, 1, 2, 4, 3]$. The book of the $1$-st kid will be passed to the following kids:  after the $1$-st day it will belong to the $5$-th kid,  after the $2$-nd day it will belong to the $3$-rd kid,  after the $3$-rd day it will belong to the $2$-nd kid,  after the $4$-th day it will belong to the $1$-st kid. 
+
+So after the fourth day, the book of the first kid will return to its owner. The book of the fourth kid will return to him for the first time after exactly one day.
+
+You have to answer $q$ independent queries.
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 200$) — the number of queries. Then $q$ queries follow.
+
+The first line of the query contains one integer $n$ ($1 \le n \le 200$) — the number of kids in the query. The second line of the query contains $n$ integers $p_1, p_2, \dots, p_n$ ($1 \le p_i \le n$, all $p_i$ are distinct, i.e. $p$ is a permutation), where $p_i$ is the kid which will get the book of the $i$-th kid.
+
+
+-----Output-----
+
+For each query, print the answer on it: $n$ integers $a_1, a_2, \dots, a_n$, where $a_i$ is the number of the day the book of the $i$-th child is returned back to him for the first time in this query.
+
+
+-----Example-----
+Input
+6
+5
+1 2 3 4 5
+3
+2 3 1
+6
+4 6 2 1 5 3
+1
+1
+4
+3 4 1 2
+5
+5 1 2 4 3
+
+Output
+1 1 1 1 1 
+3 3 3 
+2 3 3 2 1 3 
+1 
+2 2 2 2 
+4 4 4 1 4
+"""
+2022-04-13 20:59:30.545171 --------------------------
+2022-04-13 21:00:01.160536 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# For each query, we can represent each kid as a node in a graph. There is an edge from kid $i$ to kid $p_i$ (the one who receives the book).\n# We can find the length of the cycle that each node belongs to using Breadth-First Search.\n\nimport queue\n\nq = int(input())\nfor _ in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    G = [[] for i in range(n)]\n    for i in range(n):\n        G[i].append(p[i]-1)\n    ans = [0 for i in range(n)]\n    for i in range(n):\n        vis = [False for i in range(n)]\n        q = queue.Queue()\n        q.put(i)\n        vis[i] = True\n        while not q.empty():\n            u = q.get()\n            for v in G[u]:\n                if not vis[v]:\n                    vis[v] = True\n                    q.put(v)\n                    ans[v] = ans[u] + 1\n    print(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\ndef answer_query(n,p):\n    \"\"\"\n    :param n: the number of kids\n    :param p: the permutation of the kids\n    :return: the number of the day the book of the i-th child is returned back to him for the first time for every i from 1 to n.\n    \"\"\"\n    \n    # init a list of the days\n    days = [0] * n\n    \n    # for each kid\n    for i in range(n):\n        # get the book of the kid\n        book = p[i]\n        \n        # while the book is not returned back\n        while book != i:\n            # pass the book to the next kid\n            book = p[book]\n            \n            # add a day\n            days[i] += 1\n            \n    return days\n\n# number of queries\nq = int(input())\n\n# for each query\nfor _ in range(q):\n    # number of kids\n    n = int(input())\n    \n    # permutation of the kids\n    p = list(map(int, input().split()))\n    \n    # answer the query\n    print(*answer_query(n,p))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef get_cycles(perm):\n    cycles = []\n    remaining = [i for i in range(len(perm))]\n    while len(remaining) > 0:\n        cur = remaining[0]\n        cycle = [cur]\n        remaining.remove(cur)\n        while True:\n            cur = perm[cur] - 1\n            if cur in remaining:\n                remaining.remove(cur)\n                cycle.append(cur)\n            else:\n                break\n        cycles.append(cycle)\n    return cycles\n\ndef solve(cycles):\n    n = len(cycles)\n    s = [0] * n\n    for i in range(n):\n        cycle = cycles[i]\n        for j in range(len(cycle)):\n            s[cycle[j]] = len(cycle)\n    return s\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        perm = [int(x) for x in input().split()]\n        cycles = get_cycles(perm)\n        s = solve(cycles)\n        print(' '.join([str(x) for x in s]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nfor _ in range(int(input())):\n    n = int(input())\n    p = list(map(int, input().split()))\n    a = []\n    for i in range(n):\n        j = i\n        count = 0\n        while (j + 1) != p[j]:\n            j = p[j] - 1\n            count += 1\n        a.append(count + 1)\n    print(*a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#import sys\n#input = sys.stdin.readline\n\n# --- end of library ---\n\nq = int(input())\n\nfor _ in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    p = [x-1 for x in p]\n\n    ans = [0] * n\n    used = [False] * n\n    for i in range(n):\n        if used[i]:\n            continue\n        j = i\n        cnt = 0\n        while not used[j]:\n            used[j] = True\n            j = p[j]\n            cnt += 1\n        ans[i] = cnt\n    print(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\ndef solve(n, p):\n    a = [0] * n\n    visited = [False] * n\n    for v in range(n):\n        if not visited[v]:\n            d = deque([v])\n            visited[v] = True\n            while d:\n                u = d.popleft()\n                if not visited[p[u] - 1]:\n                    d.append(p[u] - 1)\n                    visited[p[u] - 1] = True\n                    a[p[u] - 1] = a[u] + 1\n    return a\n\nq = int(input())\nfor _ in range(q):\n    n = int(input())\n    p = [int(x) for x in input().split()]\n    print(' '.join([str(x) for x in solve(n, p)]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# This solution is based on the fact that the sequence of numbers in the cycle will always be the same.\n# Hence, if we start with the cycle of the number 1, we can find the cycle of any number.\n# To find the cycle of a number, we just have to find the number that is in the same position\n# as the number we are looking for in the cycle of the number 1.\n\n# For example, if the cycle of the number 1 is [1, 2, 3, 4, 5], then the cycle of the number 3 is [3, 4, 5, 1, 2].\n\n# The complexity of this solution is O(n^2), because we have to find the cycle of each number.\n\n# The following function finds the cycle of the number 1.\n# It returns a dictionary where the key is the number and the value is the position of the number in the cycle.\ndef find_cycle(p):\n    cycle = {}\n    cycle[1] = 0\n    for i in range(1, len(p)):\n        cycle[p[i]] = i\n    return cycle\n\n# The following function finds the cycle of a number.\n# It returns a list with the cycle.\ndef find_n_cycle(cycle, n):\n    n_cycle = [n]\n    for i in range(1, len(cycle)):\n        n_cycle.append(cycle[n_cycle[i - 1]] + 1)\n    return n_cycle\n\n# The following function finds the answer to the query.\n# It returns a list with the answers.\ndef solution(p):\n    cycle = find_cycle(p)\n    answer = []\n    for n in range(1, len(p) + 1):\n        n_cycle = find_n_cycle(cycle, n)\n        answer.append(n_cycle.index(n) + 1)\n    return answer\n\n# The following code reads the input and calls the functions.\n# It prints the answer.\nq = int(input())\nfor i in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    answer = solution(p)\n    print(*answer)"
+    }
+  ],
+  "created": 1649883570,
+  "id": "cmpl-4weNG7H5mquVgAGZqXsnIRuw7TQNS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:00:01.160872 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# For each query, we can represent each kid as a node in a graph. There is an edge from kid $i$ to kid $p_i$ (the one who receives the book).\n# We can find the length of the cycle that each node belongs to using Breadth-First Search.\n\nimport queue\n\nq = int(input())\nfor _ in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    G = [[] for i in range(n)]\n    for i in range(n):\n        G[i].append(p[i]-1)\n    ans = [0 for i in range(n)]\n    for i in range(n):\n        vis = [False for i in range(n)]\n        q = queue.Queue()\n        q.put(i)\n        vis[i] = True\n        while not q.empty():\n            u = q.get()\n            for v in G[u]:\n                if not vis[v]:\n                    vis[v] = True\n                    q.put(v)\n                    ans[v] = ans[u] + 1\n    print(*ans)"
+}
+2022-04-13 21:00:01.160915 REASON stop
+2022-04-13 21:00:01.161294 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\ndef answer_query(n,p):\n    \"\"\"\n    :param n: the number of kids\n    :param p: the permutation of the kids\n    :return: the number of the day the book of the i-th child is returned back to him for the first time for every i from 1 to n.\n    \"\"\"\n    \n    # init a list of the days\n    days = [0] * n\n    \n    # for each kid\n    for i in range(n):\n        # get the book of the kid\n        book = p[i]\n        \n        # while the book is not returned back\n        while book != i:\n            # pass the book to the next kid\n            book = p[book]\n            \n            # add a day\n            days[i] += 1\n            \n    return days\n\n# number of queries\nq = int(input())\n\n# for each query\nfor _ in range(q):\n    # number of kids\n    n = int(input())\n    \n    # permutation of the kids\n    p = list(map(int, input().split()))\n    \n    # answer the query\n    print(*answer_query(n,p))"
+}
+2022-04-13 21:00:01.161470 REASON stop
+2022-04-13 21:00:01.161832 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef get_cycles(perm):\n    cycles = []\n    remaining = [i for i in range(len(perm))]\n    while len(remaining) > 0:\n        cur = remaining[0]\n        cycle = [cur]\n        remaining.remove(cur)\n        while True:\n            cur = perm[cur] - 1\n            if cur in remaining:\n                remaining.remove(cur)\n                cycle.append(cur)\n            else:\n                break\n        cycles.append(cycle)\n    return cycles\n\ndef solve(cycles):\n    n = len(cycles)\n    s = [0] * n\n    for i in range(n):\n        cycle = cycles[i]\n        for j in range(len(cycle)):\n            s[cycle[j]] = len(cycle)\n    return s\n\ndef main():\n    q = int(input())\n    for _ in range(q):\n        n = int(input())\n        perm = [int(x) for x in input().split()]\n        cycles = get_cycles(perm)\n        s = solve(cycles)\n        print(' '.join([str(x) for x in s]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:00:01.161879 REASON stop
+2022-04-13 21:00:01.181045 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nfor _ in range(int(input())):\n    n = int(input())\n    p = list(map(int, input().split()))\n    a = []\n    for i in range(n):\n        j = i\n        count = 0\n        while (j + 1) != p[j]:\n            j = p[j] - 1\n            count += 1\n        a.append(count + 1)\n    print(*a)"
+}
+2022-04-13 21:00:01.181125 REASON stop
+2022-04-13 21:00:01.202849 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#import sys\n#input = sys.stdin.readline\n\n# --- end of library ---\n\nq = int(input())\n\nfor _ in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    p = [x-1 for x in p]\n\n    ans = [0] * n\n    used = [False] * n\n    for i in range(n):\n        if used[i]:\n            continue\n        j = i\n        cnt = 0\n        while not used[j]:\n            used[j] = True\n            j = p[j]\n            cnt += 1\n        ans[i] = cnt\n    print(*ans)"
+}
+2022-04-13 21:00:01.202955 REASON stop
+2022-04-13 21:00:01.211490 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\ndef solve(n, p):\n    a = [0] * n\n    visited = [False] * n\n    for v in range(n):\n        if not visited[v]:\n            d = deque([v])\n            visited[v] = True\n            while d:\n                u = d.popleft()\n                if not visited[p[u] - 1]:\n                    d.append(p[u] - 1)\n                    visited[p[u] - 1] = True\n                    a[p[u] - 1] = a[u] + 1\n    return a\n\nq = int(input())\nfor _ in range(q):\n    n = int(input())\n    p = [int(x) for x in input().split()]\n    print(' '.join([str(x) for x in solve(n, p)]))"
+}
+2022-04-13 21:00:01.211577 REASON stop
+2022-04-13 21:00:01.212342 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# This solution is based on the fact that the sequence of numbers in the cycle will always be the same.\n# Hence, if we start with the cycle of the number 1, we can find the cycle of any number.\n# To find the cycle of a number, we just have to find the number that is in the same position\n# as the number we are looking for in the cycle of the number 1.\n\n# For example, if the cycle of the number 1 is [1, 2, 3, 4, 5], then the cycle of the number 3 is [3, 4, 5, 1, 2].\n\n# The complexity of this solution is O(n^2), because we have to find the cycle of each number.\n\n# The following function finds the cycle of the number 1.\n# It returns a dictionary where the key is the number and the value is the position of the number in the cycle.\ndef find_cycle(p):\n    cycle = {}\n    cycle[1] = 0\n    for i in range(1, len(p)):\n        cycle[p[i]] = i\n    return cycle\n\n# The following function finds the cycle of a number.\n# It returns a list with the cycle.\ndef find_n_cycle(cycle, n):\n    n_cycle = [n]\n    for i in range(1, len(cycle)):\n        n_cycle.append(cycle[n_cycle[i - 1]] + 1)\n    return n_cycle\n\n# The following function finds the answer to the query.\n# It returns a list with the answers.\ndef solution(p):\n    cycle = find_cycle(p)\n    answer = []\n    for n in range(1, len(p) + 1):\n        n_cycle = find_n_cycle(cycle, n)\n        answer.append(n_cycle.index(n) + 1)\n    return answer\n\n# The following code reads the input and calls the functions.\n# It prints the answer.\nq = int(input())\nfor i in range(q):\n    n = int(input())\n    p = list(map(int, input().split()))\n    answer = solution(p)\n    print(*answer)"
+}
+2022-04-13 21:00:01.212428 REASON stop

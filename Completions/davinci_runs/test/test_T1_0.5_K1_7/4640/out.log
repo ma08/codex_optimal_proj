@@ -1,0 +1,160 @@
+2022-04-13 22:21:04.408485 """
+There are $n$ points on a plane. The $i$-th point has coordinates $(x_i, y_i)$. You have two horizontal platforms, both of length $k$. Each platform can be placed anywhere on a plane but it should be placed horizontally (on the same $y$-coordinate) and have integer borders. If the left border of the platform is $(x, y)$ then the right border is $(x + k, y)$ and all points between borders (including borders) belong to the platform.
+
+Note that platforms can share common points (overlap) and it is not necessary to place both platforms on the same $y$-coordinate.
+
+When you place both platforms on a plane, all points start falling down decreasing their $y$-coordinate. If a point collides with some platform at some moment, the point stops and is saved. Points which never collide with any platform are lost.
+
+Your task is to find the maximum number of points you can save if you place both platforms optimally.
+
+You have to answer $t$ independent test cases.
+
+For better understanding, please read the Note section below to see a picture for the first test case.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 2 \cdot 10^4$) — the number of test cases. Then $t$ test cases follow.
+
+The first line of the test case contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5$; $1 \le k \le 10^9$) — the number of points and the length of each platform, respectively. The second line of the test case contains $n$ integers $x_1, x_2, \dots, x_n$ ($1 \le x_i \le 10^9$), where $x_i$ is $x$-coordinate of the $i$-th point. The third line of the input contains $n$ integers $y_1, y_2, \dots, y_n$ ($1 \le y_i \le 10^9$), where $y_i$ is $y$-coordinate of the $i$-th point. All points are distinct (there is no pair $1 \le i < j \le n$ such that $x_i = x_j$ and $y_i = y_j$).
+
+It is guaranteed that the sum of $n$ does not exceed $2 \cdot 10^5$ ($\sum n \le 2 \cdot 10^5$).
+
+
+-----Output-----
+
+For each test case, print the answer: the maximum number of points you can save if you place both platforms optimally.
+
+
+-----Example-----
+Input
+4
+7 1
+1 5 2 3 1 5 4
+1 3 6 7 2 5 4
+1 1
+1000000000
+1000000000
+5 10
+10 7 5 15 8
+20 199 192 219 1904
+10 10
+15 19 8 17 20 10 9 2 10 19
+12 13 6 17 1 14 7 9 19 3
+
+Output
+6
+1
+5
+10
+
+
+
+-----Note-----
+
+The picture corresponding to the first test case of the example:
+
+[Image]
+
+Blue dots represent the points, red segments represent the platforms. One of the possible ways is to place the first platform between points $(1, -1)$ and $(2, -1)$ and the second one between points $(4, 3)$ and $(5, 3)$. Vectors represent how the points will fall down. As you can see, the only point we can't save is the point $(3, 7)$ so it falls down infinitely and will be lost. It can be proven that we can't achieve better answer here. Also note that the point $(5, 3)$ doesn't fall at all because it is already on the platform.
+"""
+2022-04-13 22:21:04.408501 --------------------------
+2022-04-13 22:22:02.988848 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    PSEUDOCODE:\n    1. Scan from left to right, and find the max y for each x.\n    2. Scan from right to left, and find the max y for each x.\n    3. Find the max of the two, and that's the answer.\n    \"\"\"\n    # x = [1, 5, 2, 3, 1, 5, 4]\n    # y = [1, 3, 6, 7, 2, 5, 4]\n    # k = 1\n    # n = 7\n    # x = [10, 7, 5, 15, 8]\n    # y = [20, 199, 192, 219, 1904]\n    # k = 10\n    # n = 5\n    x = [15, 19, 8, 17, 20, 10, 9, 2, 10, 19]\n    y = [12, 13, 6, 17, 1, 14, 7, 9, 19, 3]\n    k = 10\n    n = 10\n\n    # 1. Scan from left to right, and find the max y for each x.\n    left_max = []\n    curr_max = -1\n    for i in range(n):\n        if y[i] > curr_max:\n            curr_max = y[i]\n        left_max.append(curr_max)\n\n    # 2. Scan from right to left, and find the max y for each x.\n    right_max = []\n    curr_max = -1\n    for i in range(n-1, -1, -1):\n        if y[i] > curr_max:\n            curr_max = y[i]\n        right_max.insert(0, curr_max)\n\n    # 3. Find the max of the two, and that's the answer.\n    ans = 0\n    for i in range(n):\n        ans += max(left_max[i], right_max[i])\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\ndef solve(points, k):\n    points_by_y = defaultdict(list)\n    for x, y in points:\n        points_by_y[y].append(x)\n    for y in points_by_y:\n        points_by_y[y].sort()\n    ys = sorted(points_by_y.keys())\n\n    ans = 0\n    for y in ys:\n        xs = points_by_y[y]\n        i = 0\n        while i < len(xs):\n            x = xs[i]\n            i += 1\n            while i < len(xs) and xs[i] <= x + k:\n                i += 1\n            ans += 1\n    return ans\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        xs = list(map(int, input().split()))\n        ys = list(map(int, input().split()))\n        points = list(zip(xs, ys))\n        ans = solve(points, k)\n        print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\ndef solve(points, k):\n    points.sort(key=lambda x: x[1])\n    left_platform = points[0][1]\n    right_platform = points[0][1]\n    ans = 0\n    for point in points:\n        if point[1] == left_platform:\n            if point[0] <= left_platform and point[0] >= left_platform - k:\n                ans += 1\n        elif point[1] == right_platform:\n            if point[0] >= right_platform and point[0] <= right_platform + k:\n                ans += 1\n        else:\n            if point[0] >= left_platform and point[0] <= left_platform + k:\n                ans += 1\n            elif point[0] >= right_platform and point[0] <= right_platform + k:\n                ans += 1\n    return ans\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    x = list(map(int, input().split()))\n    y = list(map(int, input().split()))\n    points = list(zip(x, y))\n    print(solve(points, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The idea is that we can keep track of the most left point in the array and the most right point in the array.\n# We will use a greedy approach.\n# We will first try to save the most right point.\n# If it is not possible, we will try to save the most left point.\n# We will repeat this process until we cannot save any more points.\n\n# Time complexity: O(n)\n# Space complexity: O(1)\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    x = list(map(int, input().split()))\n    y = list(map(int, input().split()))\n    \n    count = 0\n    i = 0\n    j = n - 1\n    while i <= j:\n        if x[j] + k >= y[j]:\n            j -= 1\n            count += 1\n        elif x[i] <= y[i] - k:\n            i += 1\n            count += 1\n        else:\n            break\n    print(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\n\ndef solve(n, k, xs, ys):\n    x_to_ys = defaultdict(list)\n    for x, y in zip(xs, ys):\n        x_to_ys[x].append(y)\n\n    xs = sorted(x_to_ys.keys())\n    ys = sorted(set(ys))\n\n    dp = [[0 for _ in range(len(ys))] for _ in range(len(xs))]\n\n    for i in range(len(xs)):\n        last_y_idx = 0\n        for j in range(len(ys)):\n            y = ys[j]\n            if y in x_to_ys[xs[i]]:\n                dp[i][j] = 1\n                for k in range(last_y_idx, j):\n                    dp[i][j] += dp[i][k]\n                last_y_idx = j\n            else:\n                dp[i][j] = 0\n\n    ans = 0\n    for i in range(len(xs)):\n        for j in range(len(ys)):\n            if i + 1 < len(xs) - k + 1:\n                ans += dp[i][j] * dp[i + k][j]\n\n    return ans\n\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        xs = list(map(int, input().split()))\n        ys = list(map(int, input().split()))\n        print(solve(n, k, xs, ys))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom itertools import groupby\n\ndef read_list():\n    return [int(x) for x in input().split()]\n\ndef read_tuple():\n    return tuple(read_list())\n\ndef read_matrix(H):\n    '''\n    H is number of rows\n    '''\n    return [list(map(int, input().split())) for _ in range(H)]\n    \ndef read_map(H):\n    '''\n    H is number of rows\n    \u6587\u5b57\u5217\u3067\u4e0e\u3048\u3089\u308c\u305f\u76e4\u9762\u3092\u8aad\u307f\u53d6\u308b\u7528\n    '''\n    return [input() for _ in range(H)]\n\ndef read_map_as_int(H):\n    '''\n    #\u21921,.\u21920\u3068\u3057\u3066\u8aad\u307f\u8fbc\u3080\n    '''\n    ret = []\n    for _ in range(H):\n        ret.append([1 if s=='#' else 0 for s in list(input())])\n        # \u5185\u5305\u8868\u8a18\u306fpypy\u3067\u306f\u82e5\u5e72\u9045\u3044\u3053\u3068\u306b\u6ce8\u610f\n        # #numpy\u4f7f\u3046\u3060\u308d\u3046\u304b\u3089\u3053\u308c\u3092\u6b8b\u3057\u3066\u304a\u304f\u3051\u3069\n    return ret\n    # return [list(map(int, list(input()))) for _ in range(H)]\n\nMOD = 10**9+7\nINF = 2**31  # 2147483648 > 10**9\n# default import\nfrom collections import defaultdict, Counter, deque\nfrom operator import itemgetter\nfrom itertools import product, permutations, combinations\nfrom bisect import bisect_left, bisect_right  # , insort_left, insort_right\n\nN, K = read_tuple()\nx = read_list()\ny = read_list()\n\n# \u7e26\u306b\u4e26\u3079\u3066\u30bd\u30fc\u30c8\nx_y = list(zip(x, y))\nx_y.sort(key=lambda x: x[1])\n\n# \u7e26\u306b\u4e26\u3079\u305f\u6642\u306b\u3001\u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092\u307e\u3068\u3081\u308b\nx_y_grouped = []\nfor k, g in groupby(x_y, key=lambda x: x[1]):\n    x_y_grouped.append(list(g))\n\n# \u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092x\u5ea7\u6a19\u3067\u30bd\u30fc\u30c8\nfor i in range(len(x_y_grouped)):\n    x_y_grouped[i].sort(key=lambda x: x[0])\n\n# \u7e26\u306b\u4e26\u3079\u305f\u6642\u306b\u3001\u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092\u307e\u3068\u3081\u308b\n# \u3053\u308c\u306f\u3001\u5225\u306e\u65b9\u6cd5\u3067\u3084\u3063\u3066\u307f\u305f\n# for x_y_g in x_y_grouped:\n#     for i in range(len(x_y_g)):\n#         for j in range(i + 1, len(x_y_g)):\n#             if x_y_g[i][0] > x_y_g[j][0]:\n#                 x_y_g[i], x_y_g[j] = x_y_g[j], x_y_g[i]\n\nx_y_grouped_len = [len(x_y_g) for x_y_g in x_y_grouped]\n\n# print(x_y_grouped)\n\n# \u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u306e\u3046\u3061\u3001\u843d\u3061\u308b\u3082\u306e\u306e\u6700\u5c0f\u5024\u3068\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\n# min_max = [[x_y_g[0][0], x_y_g[-1][0]] for x_y_g in x_y_grouped]\nmin_max = []\nfor x_y_g in x_y_grouped:\n    if len(x_y_g) == 1:\n        min_max.append([x_y_g[0][0], x_y_g[0][0]])\n    else:\n        min_max.append([x_y_g[0][0], x_y_g[-1][0]])\n\n# print(min_max)\n\n# \u4e0b\u304b\u3089\u4e0a\u306b\u4e0a\u304c\u3063\u3066\u3044\u304f\nans = 0\nfor i in range(len(min_max)-1, -1, -1):\n    if min_max[i][0] <= min_max[i][1] - K + 1:\n        # \u5de6\u306e\u7aef\u70b9\u304c\u3001\u53f3\u306e\u7aef\u70b9\u304b\u3089K-1\u5206\u96e2\u308c\u3066\u3044\u308b\n        ans += x_y_grouped_len[i]\n        # print(i, x_y_grouped_len[i])\n        min_max[i-1][0] = min_max[i][1] - K + 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nnum_of_test_cases = int(input())\nfor _ in range(num_of_test_cases):\n    num_of_points, length_of_platform = map(int, input().split())\n    x_coords = list(map(int, input().split()))\n    y_coords = list(map(int, input().split()))\n    # print(f\"num_of_points: {num_of_points}\")\n    # print(f\"length_of_platform: {length_of_platform}\")\n    # print(f\"x_coords: {x_coords}\")\n    # print(f\"y_coords: {y_coords}\")\n\n    # Sort the points by x-coordinate\n    points = list(zip(x_coords, y_coords))\n    points.sort()\n    # print(f\"points: {points}\")\n\n    # Find the maximum number of points that can be saved by a single platform\n    #   This is the maximum number of points that are at the same y-coordinate\n    #   This is the maximum number of points that have the same y-coordinate as the point with the lowest y-coordinate\n    #   This is the maximum number of points that have the same y-coordinate as the point with the highest x-coordinate\n\n    # Find the point with the lowest y-coordinate\n    min_y_coord = min(y_coords)\n    # print(f\"min_y_coord: {min_y_coord}\")\n\n    # Find the point with the highest x-coordinate\n    max_x_coord = max(x_coords)\n    # print(f\"max_x_coord: {max_x_coord}\")\n\n    # Find the point with the highest x-coordinate and the lowest y-coordinate\n    max_x_coord_and_min_y_coord = None\n    for i in range(len(points)):\n        if points[i][0] == max_x_coord and points[i][1] == min_y_coord:\n            max_x_coord_and_min_y_coord = points[i]\n            # print(f\"max_x_coord_and_min_y_coord: {max_x_coord_and_min_y_coord}\")\n            break\n\n    # Find the number of points that have the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    num_of_points_with_same_y_coord = 0\n    for i in range(len(points)):\n        if points[i][1] == max_x_coord_and_min_y_coord[1]:\n            num_of_points_with_same_y_coord += 1\n    # print(f\"num_of_points_with_same_y_coord: {num_of_points_with_same_y_coord}\")\n\n    # Find the maximum number of points that can be saved by a single platform\n    max_num_of_points_saved_by_single_platform = num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_single_platform: {max_num_of_points_saved_by_single_platform}\")\n\n    # Find the maximum number of points that can be saved by two platforms\n    #   This is the maximum number of points that can be saved by a single platform, plus the maximum number of points that can be saved by a single platform that are at the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    max_num_of_points_saved_by_two_platforms = max_num_of_points_saved_by_single_platform + num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_two_platforms: {max_num_of_points_saved_by_two_platforms}\")\n\n    # Find the maximum number of points that can be saved by two platforms\n    #   This is the maximum number of points that can be saved by a single platform, plus the maximum number of points that can be saved by a single platform that are at the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    max_num_of_points_saved_by_two_platforms = max_num_of_points_saved_by_single_platform + num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_two_platforms: {max_num_of_points_saved_by_two_platforms}\")\n\n    # Print the answer: the maximum number of points that can be saved by two platforms\n    print(max_num_of_points_saved_by_two_platforms)"
+    }
+  ],
+  "created": 1649888464,
+  "id": "cmpl-4wfeC9pLseBKQzPmGo5Ix5UDVbUrO",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:22:02.989224 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    PSEUDOCODE:\n    1. Scan from left to right, and find the max y for each x.\n    2. Scan from right to left, and find the max y for each x.\n    3. Find the max of the two, and that's the answer.\n    \"\"\"\n    # x = [1, 5, 2, 3, 1, 5, 4]\n    # y = [1, 3, 6, 7, 2, 5, 4]\n    # k = 1\n    # n = 7\n    # x = [10, 7, 5, 15, 8]\n    # y = [20, 199, 192, 219, 1904]\n    # k = 10\n    # n = 5\n    x = [15, 19, 8, 17, 20, 10, 9, 2, 10, 19]\n    y = [12, 13, 6, 17, 1, 14, 7, 9, 19, 3]\n    k = 10\n    n = 10\n\n    # 1. Scan from left to right, and find the max y for each x.\n    left_max = []\n    curr_max = -1\n    for i in range(n):\n        if y[i] > curr_max:\n            curr_max = y[i]\n        left_max.append(curr_max)\n\n    # 2. Scan from right to left, and find the max y for each x.\n    right_max = []\n    curr_max = -1\n    for i in range(n-1, -1, -1):\n        if y[i] > curr_max:\n            curr_max = y[i]\n        right_max.insert(0, curr_max)\n\n    # 3. Find the max of the two, and that's the answer.\n    ans = 0\n    for i in range(n):\n        ans += max(left_max[i], right_max[i])\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:22:02.989274 REASON stop
+2022-04-13 22:22:02.989698 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\ndef solve(points, k):\n    points_by_y = defaultdict(list)\n    for x, y in points:\n        points_by_y[y].append(x)\n    for y in points_by_y:\n        points_by_y[y].sort()\n    ys = sorted(points_by_y.keys())\n\n    ans = 0\n    for y in ys:\n        xs = points_by_y[y]\n        i = 0\n        while i < len(xs):\n            x = xs[i]\n            i += 1\n            while i < len(xs) and xs[i] <= x + k:\n                i += 1\n            ans += 1\n    return ans\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        xs = list(map(int, input().split()))\n        ys = list(map(int, input().split()))\n        points = list(zip(xs, ys))\n        ans = solve(points, k)\n        print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:22:02.989802 REASON stop
+2022-04-13 22:22:02.990154 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\ndef solve(points, k):\n    points.sort(key=lambda x: x[1])\n    left_platform = points[0][1]\n    right_platform = points[0][1]\n    ans = 0\n    for point in points:\n        if point[1] == left_platform:\n            if point[0] <= left_platform and point[0] >= left_platform - k:\n                ans += 1\n        elif point[1] == right_platform:\n            if point[0] >= right_platform and point[0] <= right_platform + k:\n                ans += 1\n        else:\n            if point[0] >= left_platform and point[0] <= left_platform + k:\n                ans += 1\n            elif point[0] >= right_platform and point[0] <= right_platform + k:\n                ans += 1\n    return ans\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    x = list(map(int, input().split()))\n    y = list(map(int, input().split()))\n    points = list(zip(x, y))\n    print(solve(points, k))"
+}
+2022-04-13 22:22:02.990199 REASON stop
+2022-04-13 22:22:03.005838 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The idea is that we can keep track of the most left point in the array and the most right point in the array.\n# We will use a greedy approach.\n# We will first try to save the most right point.\n# If it is not possible, we will try to save the most left point.\n# We will repeat this process until we cannot save any more points.\n\n# Time complexity: O(n)\n# Space complexity: O(1)\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    x = list(map(int, input().split()))\n    y = list(map(int, input().split()))\n    \n    count = 0\n    i = 0\n    j = n - 1\n    while i <= j:\n        if x[j] + k >= y[j]:\n            j -= 1\n            count += 1\n        elif x[i] <= y[i] - k:\n            i += 1\n            count += 1\n        else:\n            break\n    print(count)"
+}
+2022-04-13 22:22:03.005929 REASON stop
+2022-04-13 22:22:03.030218 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\n\ndef solve(n, k, xs, ys):\n    x_to_ys = defaultdict(list)\n    for x, y in zip(xs, ys):\n        x_to_ys[x].append(y)\n\n    xs = sorted(x_to_ys.keys())\n    ys = sorted(set(ys))\n\n    dp = [[0 for _ in range(len(ys))] for _ in range(len(xs))]\n\n    for i in range(len(xs)):\n        last_y_idx = 0\n        for j in range(len(ys)):\n            y = ys[j]\n            if y in x_to_ys[xs[i]]:\n                dp[i][j] = 1\n                for k in range(last_y_idx, j):\n                    dp[i][j] += dp[i][k]\n                last_y_idx = j\n            else:\n                dp[i][j] = 0\n\n    ans = 0\n    for i in range(len(xs)):\n        for j in range(len(ys)):\n            if i + 1 < len(xs) - k + 1:\n                ans += dp[i][j] * dp[i + k][j]\n\n    return ans\n\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        xs = list(map(int, input().split()))\n        ys = list(map(int, input().split()))\n        print(solve(n, k, xs, ys))"
+}
+2022-04-13 22:22:03.030334 REASON stop
+2022-04-13 22:22:03.031546 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom itertools import groupby\n\ndef read_list():\n    return [int(x) for x in input().split()]\n\ndef read_tuple():\n    return tuple(read_list())\n\ndef read_matrix(H):\n    '''\n    H is number of rows\n    '''\n    return [list(map(int, input().split())) for _ in range(H)]\n    \ndef read_map(H):\n    '''\n    H is number of rows\n    \u6587\u5b57\u5217\u3067\u4e0e\u3048\u3089\u308c\u305f\u76e4\u9762\u3092\u8aad\u307f\u53d6\u308b\u7528\n    '''\n    return [input() for _ in range(H)]\n\ndef read_map_as_int(H):\n    '''\n    #\u21921,.\u21920\u3068\u3057\u3066\u8aad\u307f\u8fbc\u3080\n    '''\n    ret = []\n    for _ in range(H):\n        ret.append([1 if s=='#' else 0 for s in list(input())])\n        # \u5185\u5305\u8868\u8a18\u306fpypy\u3067\u306f\u82e5\u5e72\u9045\u3044\u3053\u3068\u306b\u6ce8\u610f\n        # #numpy\u4f7f\u3046\u3060\u308d\u3046\u304b\u3089\u3053\u308c\u3092\u6b8b\u3057\u3066\u304a\u304f\u3051\u3069\n    return ret\n    # return [list(map(int, list(input()))) for _ in range(H)]\n\nMOD = 10**9+7\nINF = 2**31  # 2147483648 > 10**9\n# default import\nfrom collections import defaultdict, Counter, deque\nfrom operator import itemgetter\nfrom itertools import product, permutations, combinations\nfrom bisect import bisect_left, bisect_right  # , insort_left, insort_right\n\nN, K = read_tuple()\nx = read_list()\ny = read_list()\n\n# \u7e26\u306b\u4e26\u3079\u3066\u30bd\u30fc\u30c8\nx_y = list(zip(x, y))\nx_y.sort(key=lambda x: x[1])\n\n# \u7e26\u306b\u4e26\u3079\u305f\u6642\u306b\u3001\u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092\u307e\u3068\u3081\u308b\nx_y_grouped = []\nfor k, g in groupby(x_y, key=lambda x: x[1]):\n    x_y_grouped.append(list(g))\n\n# \u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092x\u5ea7\u6a19\u3067\u30bd\u30fc\u30c8\nfor i in range(len(x_y_grouped)):\n    x_y_grouped[i].sort(key=lambda x: x[0])\n\n# \u7e26\u306b\u4e26\u3079\u305f\u6642\u306b\u3001\u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u3092\u307e\u3068\u3081\u308b\n# \u3053\u308c\u306f\u3001\u5225\u306e\u65b9\u6cd5\u3067\u3084\u3063\u3066\u307f\u305f\n# for x_y_g in x_y_grouped:\n#     for i in range(len(x_y_g)):\n#         for j in range(i + 1, len(x_y_g)):\n#             if x_y_g[i][0] > x_y_g[j][0]:\n#                 x_y_g[i], x_y_g[j] = x_y_g[j], x_y_g[i]\n\nx_y_grouped_len = [len(x_y_g) for x_y_g in x_y_grouped]\n\n# print(x_y_grouped)\n\n# \u540c\u3058y\u5ea7\u6a19\u306b\u3042\u308b\u3082\u306e\u306e\u3046\u3061\u3001\u843d\u3061\u308b\u3082\u306e\u306e\u6700\u5c0f\u5024\u3068\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\n# min_max = [[x_y_g[0][0], x_y_g[-1][0]] for x_y_g in x_y_grouped]\nmin_max = []\nfor x_y_g in x_y_grouped:\n    if len(x_y_g) == 1:\n        min_max.append([x_y_g[0][0], x_y_g[0][0]])\n    else:\n        min_max.append([x_y_g[0][0], x_y_g[-1][0]])\n\n# print(min_max)\n\n# \u4e0b\u304b\u3089\u4e0a\u306b\u4e0a\u304c\u3063\u3066\u3044\u304f\nans = 0\nfor i in range(len(min_max)-1, -1, -1):\n    if min_max[i][0] <= min_max[i][1] - K + 1:\n        # \u5de6\u306e\u7aef\u70b9\u304c\u3001\u53f3\u306e\u7aef\u70b9\u304b\u3089K-1\u5206\u96e2\u308c\u3066\u3044\u308b\n        ans += x_y_grouped_len[i]\n        # print(i, x_y_grouped_len[i])\n        min_max[i-1][0] = min_max[i][1] - K + 1\n\nprint(ans)"
+}
+2022-04-13 22:22:03.031668 REASON stop
+2022-04-13 22:22:03.032449 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nnum_of_test_cases = int(input())\nfor _ in range(num_of_test_cases):\n    num_of_points, length_of_platform = map(int, input().split())\n    x_coords = list(map(int, input().split()))\n    y_coords = list(map(int, input().split()))\n    # print(f\"num_of_points: {num_of_points}\")\n    # print(f\"length_of_platform: {length_of_platform}\")\n    # print(f\"x_coords: {x_coords}\")\n    # print(f\"y_coords: {y_coords}\")\n\n    # Sort the points by x-coordinate\n    points = list(zip(x_coords, y_coords))\n    points.sort()\n    # print(f\"points: {points}\")\n\n    # Find the maximum number of points that can be saved by a single platform\n    #   This is the maximum number of points that are at the same y-coordinate\n    #   This is the maximum number of points that have the same y-coordinate as the point with the lowest y-coordinate\n    #   This is the maximum number of points that have the same y-coordinate as the point with the highest x-coordinate\n\n    # Find the point with the lowest y-coordinate\n    min_y_coord = min(y_coords)\n    # print(f\"min_y_coord: {min_y_coord}\")\n\n    # Find the point with the highest x-coordinate\n    max_x_coord = max(x_coords)\n    # print(f\"max_x_coord: {max_x_coord}\")\n\n    # Find the point with the highest x-coordinate and the lowest y-coordinate\n    max_x_coord_and_min_y_coord = None\n    for i in range(len(points)):\n        if points[i][0] == max_x_coord and points[i][1] == min_y_coord:\n            max_x_coord_and_min_y_coord = points[i]\n            # print(f\"max_x_coord_and_min_y_coord: {max_x_coord_and_min_y_coord}\")\n            break\n\n    # Find the number of points that have the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    num_of_points_with_same_y_coord = 0\n    for i in range(len(points)):\n        if points[i][1] == max_x_coord_and_min_y_coord[1]:\n            num_of_points_with_same_y_coord += 1\n    # print(f\"num_of_points_with_same_y_coord: {num_of_points_with_same_y_coord}\")\n\n    # Find the maximum number of points that can be saved by a single platform\n    max_num_of_points_saved_by_single_platform = num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_single_platform: {max_num_of_points_saved_by_single_platform}\")\n\n    # Find the maximum number of points that can be saved by two platforms\n    #   This is the maximum number of points that can be saved by a single platform, plus the maximum number of points that can be saved by a single platform that are at the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    max_num_of_points_saved_by_two_platforms = max_num_of_points_saved_by_single_platform + num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_two_platforms: {max_num_of_points_saved_by_two_platforms}\")\n\n    # Find the maximum number of points that can be saved by two platforms\n    #   This is the maximum number of points that can be saved by a single platform, plus the maximum number of points that can be saved by a single platform that are at the same y-coordinate as the point with the highest x-coordinate and the lowest y-coordinate\n    max_num_of_points_saved_by_two_platforms = max_num_of_points_saved_by_single_platform + num_of_points_with_same_y_coord\n    # print(f\"max_num_of_points_saved_by_two_platforms: {max_num_of_points_saved_by_two_platforms}\")\n\n    # Print the answer: the maximum number of points that can be saved by two platforms\n    print(max_num_of_points_saved_by_two_platforms)"
+}
+2022-04-13 22:22:03.032533 REASON stop

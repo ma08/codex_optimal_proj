@@ -1,0 +1,172 @@
+2022-04-13 23:36:50.156399 """
+Good old Marko came across a new feature on his mobile phone – T9 input! His phone has a keyboard consisting of numbers looking like this:
+
+1
+
+2
+
+3 
+
+abc
+
+def
+
+4
+
+5
+
+6
+
+ghi
+
+jkl
+
+mno
+
+7
+
+8
+
+9
+
+pqrs
+
+tuv
+
+wxyz
+
+In order to input a word using this keyboard, one needs to press a key multiple times for the required letter. More specifically, if the required letter is the first letter mapped to the key, one key press is needed, if it’s the second, two key presses are needed and so on. For instance, if we want to input the word “giht”, we will press the following keys: g-4 i-444 h-44 t-8. The new possibility Marko discovered enables you to input text more easily because you don’t need several presses per letter anymore, just one. The software will try to figure out what word from the dictionary you are trying to input.
+
+Marko is quite sceptical of new technologies (at least new for him) and he is afraid that errors will be frequent. That is the reason why he decided to test his hypothesis that the errors are frequent. Marko knows by heart the whole dictionary in the mobile phone. The dictionary consists of $N$ words consisting of lowercase letters from the English alphabet, the total length of the word not exceeding $1000000$ characters. He will give an array of key presses $S$, of total length at most $1000$, and wants to know how many words from the dictionary can be mapped to the given array of key presses if the T9 input feature is used.
+
+-----Input-----
+The first line of input contains the integer $N$, the number of words in the dictionary. ($1 \leq N \leq 1000$). Each of the following $N$ lines contains a single word. The last line of input contains the string $S$ ($1 \leq |S| \leq 1000$) consisting of digits $2$–$9$.
+
+-----Output-----
+The first and only line of output must contain the number of words from the dictionary possible to construct from the letters on the keys determined by the string $S$.
+
+-----Examples-----
+Sample Input 1:
+3
+tomo
+mono
+dak
+6666
+Sample Output 1:
+1
+
+Sample Input 2:
+2
+ja
+la
+52
+Sample Output 2:
+2
+"""
+2022-04-13 23:36:50.156416 --------------------------
+2022-04-13 23:37:24.913507 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef t9(n, dictionary, s):\n    letter_to_number = {\n        'a': 2, 'b': 22, 'c': 222,\n        'd': 3, 'e': 33, 'f': 333,\n        'g': 4, 'h': 44, 'i': 444,\n        'j': 5, 'k': 55, 'l': 555,\n        'm': 6, 'n': 66, 'o': 666,\n        'p': 7, 'q': 77, 'r': 777, 's': 7777,\n        't': 8, 'u': 88, 'v': 888,\n        'w': 9, 'x': 99, 'y': 999, 'z': 9999,\n    }\n    number_to_letter = {v: k for k, v in letter_to_number.items()}\n\n    def get_number(word):\n        return ''.join(str(letter_to_number[char]) for char in word)\n\n    def get_word(number):\n        return ''.join(number_to_letter[int(n)] for n in number)\n\n    def get_possible_words(number):\n        if number == '':\n            return ['']\n        if number[0] not in number_to_letter:\n            return []\n\n        possible_words = []\n        for i in range(len(number)):\n            if number[:i + 1] in number_to_letter:\n                possible_words.extend(\n                    get_word(number[:i + 1]) + word\n                    for word in get_possible_words(number[i + 1:])\n                )\n        return possible_words\n\n    possible_words = get_possible_words(s)\n    return len(set(possible_words) & set(dictionary))\n\n\ndef main():\n    n = int(input())\n    dictionary = [input() for _ in range(n)]\n    s = input()\n    print(t9(n, dictionary, s))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n    sequence = input()\n    count = 0\n    for word in words:\n        if is_match(word, sequence):\n            count += 1\n    print(count)\n\ndef is_match(word, sequence):\n    letters = \"abcdefghijklmnopqrstuvwxyz\"\n    key_letters = {\n        '2': letters[:3],\n        '3': letters[3:6],\n        '4': letters[6:9],\n        '5': letters[9:12],\n        '6': letters[12:15],\n        '7': letters[15:19],\n        '8': letters[19:22],\n        '9': letters[22:]\n    }\n    word_index = 0\n    for key in sequence:\n        if word[word_index] in key_letters[key]:\n            word_index += 1\n        else:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\n\ndef t9(word):\n    t9_dict = {\n        '2': 'abc', \n        '3': 'def', \n        '4': 'ghi', \n        '5': 'jkl', \n        '6': 'mno', \n        '7': 'pqrs', \n        '8': 'tuv', \n        '9': 'wxyz'\n    }\n    t9_word = ''\n    for letter in word:\n        for key, letters in t9_dict.items():\n            if letter in letters:\n                t9_word += key*(letters.index(letter) + 1)\n                break\n    return t9_word\n\ndef main():\n    words = [t9(input().strip()) for _ in range(int(stdin.readline()))]\n    t9_input = t9(stdin.readline().strip())\n    t9_dict = defaultdict(int)\n    for word in words:\n        t9_dict[word] += 1\n    print(t9_dict[t9_input])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n    s = input()\n    keyboard = {'2':'abc', '3':'def', '4':'ghi', '5':'jkl', '6':'mno', '7':'pqrs', '8':'tuv', '9':'wxyz'}\n    keys = []\n    for i in s:\n        keys.append(keyboard[i])\n    count = 0\n    for word in words:\n        if len(word) == len(keys):\n            if check(word, keys):\n                count += 1\n    print(count)\n\ndef check(word, keys):\n    for i in range(len(word)):\n        if word[i] not in keys[i]:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# N = int(input())\n# dictionary = [input() for i in range(N)]\n# S = input()\n#\n# def t9(word):\n#     output = ''\n#     for letter in word:\n#         if letter == 'a' or letter == 'b' or letter == 'c':\n#             output += '2'\n#         elif letter == 'd' or letter == 'e' or letter == 'f':\n#             output += '3'\n#         elif letter == 'g' or letter == 'h' or letter == 'i':\n#             output += '4'\n#         elif letter == 'j' or letter == 'k' or letter == 'l':\n#             output += '5'\n#         elif letter == 'm' or letter == 'n' or letter == 'o':\n#             output += '6'\n#         elif letter == 'p' or letter == 'q' or letter == 'r' or letter == 's':\n#             output += '7'\n#         elif letter == 't' or letter == 'u' or letter == 'v':\n#             output += '8'\n#         elif letter == 'w' or letter == 'x' or letter == 'y' or letter == 'z':\n#             output += '9'\n#         else:\n#             output += letter\n#     return output\n#\n#\n# count = 0\n# for word in dictionary:\n#     if t9(word) == S:\n#         count += 1\n# print(count)\n\n# V2\n\nN = int(input())\ndictionary = [input() for i in range(N)]\nS = input()\n\n\ndef t9(word):\n    output = ''\n    for letter in word:\n        if letter == 'a' or letter == 'b' or letter == 'c':\n            output += '2'\n        elif letter == 'd' or letter == 'e' or letter == 'f':\n            output += '3'\n        elif letter == 'g' or letter == 'h' or letter == 'i':\n            output += '4'\n        elif letter == 'j' or letter == 'k' or letter == 'l':\n            output += '5'\n        elif letter == 'm' or letter == 'n' or letter == 'o':\n            output += '6'\n        elif letter == 'p' or letter == 'q' or letter == 'r' or letter == 's':\n            output += '7'\n        elif letter == 't' or letter == 'u' or letter == 'v':\n            output += '8'\n        elif letter == 'w' or letter == 'x' or letter == 'y' or letter == 'z':\n            output += '9'\n        else:\n            output += letter\n    return output\n\n\ncount = 0\nfor word in dictionary:\n    if t9(word) == S:\n        count += 1\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#N = int(input())\n#words = []\n#for i in range(N):\n#    words.append(input())\n#S = input()\n\nN = 3\nwords = [\"tomo\", \"mono\", \"dak\"]\nS = \"6666\"\n\nkeypad = {\n    \"1\": \"1\",\n    \"2\": \"abc\",\n    \"3\": \"def\",\n    \"4\": \"ghi\",\n    \"5\": \"jkl\",\n    \"6\": \"mno\",\n    \"7\": \"pqrs\",\n    \"8\": \"tuv\",\n    \"9\": \"wxyz\"\n}\n\ndef T9(word, S):\n    if len(word) != len(S):\n        return False\n    for i in range(len(word)):\n        if word[i] not in keypad[S[i]]:\n            return False\n    return True\n\ncount = 0\nfor word in words:\n    if T9(word, S):\n        count += 1\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\ns = input()\n\ncount = 0\n\nfor word in words:\n    i = 0\n    j = 0\n    while i < len(word):\n        if word[i] == 'a' or word[i] == 'b' or word[i] == 'c':\n            if s[j] == '2':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'd' or word[i] == 'e' or word[i] == 'f':\n            if s[j] == '3':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'g' or word[i] == 'h' or word[i] == 'i':\n            if s[j] == '4':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'j' or word[i] == 'k' or word[i] == 'l':\n            if s[j] == '5':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'm' or word[i] == 'n' or word[i] == 'o':\n            if s[j] == '6':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'p' or word[i] == 'q' or word[i] == 'r' or word[i] == 's':\n            if s[j] == '7':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 't' or word[i] == 'u' or word[i] == 'v':\n            if s[j] == '8':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'w' or word[i] == 'x' or word[i] == 'y' or word[i] == 'z':\n            if s[j] == '9':\n                i += 1\n                j += 1\n            else:\n                break\n    if i == len(word):\n        count += 1\nprint(count)"
+    }
+  ],
+  "created": 1649893010,
+  "id": "cmpl-4wgpWzgFb853V7F0fdsMZbJaQqpsI",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:37:24.913901 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef t9(n, dictionary, s):\n    letter_to_number = {\n        'a': 2, 'b': 22, 'c': 222,\n        'd': 3, 'e': 33, 'f': 333,\n        'g': 4, 'h': 44, 'i': 444,\n        'j': 5, 'k': 55, 'l': 555,\n        'm': 6, 'n': 66, 'o': 666,\n        'p': 7, 'q': 77, 'r': 777, 's': 7777,\n        't': 8, 'u': 88, 'v': 888,\n        'w': 9, 'x': 99, 'y': 999, 'z': 9999,\n    }\n    number_to_letter = {v: k for k, v in letter_to_number.items()}\n\n    def get_number(word):\n        return ''.join(str(letter_to_number[char]) for char in word)\n\n    def get_word(number):\n        return ''.join(number_to_letter[int(n)] for n in number)\n\n    def get_possible_words(number):\n        if number == '':\n            return ['']\n        if number[0] not in number_to_letter:\n            return []\n\n        possible_words = []\n        for i in range(len(number)):\n            if number[:i + 1] in number_to_letter:\n                possible_words.extend(\n                    get_word(number[:i + 1]) + word\n                    for word in get_possible_words(number[i + 1:])\n                )\n        return possible_words\n\n    possible_words = get_possible_words(s)\n    return len(set(possible_words) & set(dictionary))\n\n\ndef main():\n    n = int(input())\n    dictionary = [input() for _ in range(n)]\n    s = input()\n    print(t9(n, dictionary, s))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:37:24.913944 REASON stop
+2022-04-13 23:37:24.914247 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.914261 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n    sequence = input()\n    count = 0\n    for word in words:\n        if is_match(word, sequence):\n            count += 1\n    print(count)\n\ndef is_match(word, sequence):\n    letters = \"abcdefghijklmnopqrstuvwxyz\"\n    key_letters = {\n        '2': letters[:3],\n        '3': letters[3:6],\n        '4': letters[6:9],\n        '5': letters[9:12],\n        '6': letters[12:15],\n        '7': letters[15:19],\n        '8': letters[19:22],\n        '9': letters[22:]\n    }\n    word_index = 0\n    for key in sequence:\n        if word[word_index] in key_letters[key]:\n            word_index += 1\n        else:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:37:24.914367 REASON stop
+2022-04-13 23:37:24.914602 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.914614 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\n\ndef t9(word):\n    t9_dict = {\n        '2': 'abc', \n        '3': 'def', \n        '4': 'ghi', \n        '5': 'jkl', \n        '6': 'mno', \n        '7': 'pqrs', \n        '8': 'tuv', \n        '9': 'wxyz'\n    }\n    t9_word = ''\n    for letter in word:\n        for key, letters in t9_dict.items():\n            if letter in letters:\n                t9_word += key*(letters.index(letter) + 1)\n                break\n    return t9_word\n\ndef main():\n    words = [t9(input().strip()) for _ in range(int(stdin.readline()))]\n    t9_input = t9(stdin.readline().strip())\n    t9_dict = defaultdict(int)\n    for word in words:\n        t9_dict[word] += 1\n    print(t9_dict[t9_input])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:37:24.914654 REASON stop
+2022-04-13 23:37:24.931509 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.931536 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    words = [input() for _ in range(n)]\n    s = input()\n    keyboard = {'2':'abc', '3':'def', '4':'ghi', '5':'jkl', '6':'mno', '7':'pqrs', '8':'tuv', '9':'wxyz'}\n    keys = []\n    for i in s:\n        keys.append(keyboard[i])\n    count = 0\n    for word in words:\n        if len(word) == len(keys):\n            if check(word, keys):\n                count += 1\n    print(count)\n\ndef check(word, keys):\n    for i in range(len(word)):\n        if word[i] not in keys[i]:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:37:24.931595 REASON stop
+2022-04-13 23:37:24.932319 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.932335 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# N = int(input())\n# dictionary = [input() for i in range(N)]\n# S = input()\n#\n# def t9(word):\n#     output = ''\n#     for letter in word:\n#         if letter == 'a' or letter == 'b' or letter == 'c':\n#             output += '2'\n#         elif letter == 'd' or letter == 'e' or letter == 'f':\n#             output += '3'\n#         elif letter == 'g' or letter == 'h' or letter == 'i':\n#             output += '4'\n#         elif letter == 'j' or letter == 'k' or letter == 'l':\n#             output += '5'\n#         elif letter == 'm' or letter == 'n' or letter == 'o':\n#             output += '6'\n#         elif letter == 'p' or letter == 'q' or letter == 'r' or letter == 's':\n#             output += '7'\n#         elif letter == 't' or letter == 'u' or letter == 'v':\n#             output += '8'\n#         elif letter == 'w' or letter == 'x' or letter == 'y' or letter == 'z':\n#             output += '9'\n#         else:\n#             output += letter\n#     return output\n#\n#\n# count = 0\n# for word in dictionary:\n#     if t9(word) == S:\n#         count += 1\n# print(count)\n\n# V2\n\nN = int(input())\ndictionary = [input() for i in range(N)]\nS = input()\n\n\ndef t9(word):\n    output = ''\n    for letter in word:\n        if letter == 'a' or letter == 'b' or letter == 'c':\n            output += '2'\n        elif letter == 'd' or letter == 'e' or letter == 'f':\n            output += '3'\n        elif letter == 'g' or letter == 'h' or letter == 'i':\n            output += '4'\n        elif letter == 'j' or letter == 'k' or letter == 'l':\n            output += '5'\n        elif letter == 'm' or letter == 'n' or letter == 'o':\n            output += '6'\n        elif letter == 'p' or letter == 'q' or letter == 'r' or letter == 's':\n            output += '7'\n        elif letter == 't' or letter == 'u' or letter == 'v':\n            output += '8'\n        elif letter == 'w' or letter == 'x' or letter == 'y' or letter == 'z':\n            output += '9'\n        else:\n            output += letter\n    return output\n\n\ncount = 0\nfor word in dictionary:\n    if t9(word) == S:\n        count += 1\nprint(count)"
+}
+2022-04-13 23:37:24.932394 REASON stop
+2022-04-13 23:37:24.957130 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.957159 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#N = int(input())\n#words = []\n#for i in range(N):\n#    words.append(input())\n#S = input()\n\nN = 3\nwords = [\"tomo\", \"mono\", \"dak\"]\nS = \"6666\"\n\nkeypad = {\n    \"1\": \"1\",\n    \"2\": \"abc\",\n    \"3\": \"def\",\n    \"4\": \"ghi\",\n    \"5\": \"jkl\",\n    \"6\": \"mno\",\n    \"7\": \"pqrs\",\n    \"8\": \"tuv\",\n    \"9\": \"wxyz\"\n}\n\ndef T9(word, S):\n    if len(word) != len(S):\n        return False\n    for i in range(len(word)):\n        if word[i] not in keypad[S[i]]:\n            return False\n    return True\n\ncount = 0\nfor word in words:\n    if T9(word, S):\n        count += 1\nprint(count)"
+}
+2022-04-13 23:37:24.957252 REASON stop
+2022-04-13 23:37:24.957832 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'
+2022-04-13 23:37:24.957871 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\ns = input()\n\ncount = 0\n\nfor word in words:\n    i = 0\n    j = 0\n    while i < len(word):\n        if word[i] == 'a' or word[i] == 'b' or word[i] == 'c':\n            if s[j] == '2':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'd' or word[i] == 'e' or word[i] == 'f':\n            if s[j] == '3':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'g' or word[i] == 'h' or word[i] == 'i':\n            if s[j] == '4':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'j' or word[i] == 'k' or word[i] == 'l':\n            if s[j] == '5':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'm' or word[i] == 'n' or word[i] == 'o':\n            if s[j] == '6':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'p' or word[i] == 'q' or word[i] == 'r' or word[i] == 's':\n            if s[j] == '7':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 't' or word[i] == 'u' or word[i] == 'v':\n            if s[j] == '8':\n                i += 1\n                j += 1\n            else:\n                break\n        elif word[i] == 'w' or word[i] == 'x' or word[i] == 'y' or word[i] == 'z':\n            if s[j] == '9':\n                i += 1\n                j += 1\n            else:\n                break\n    if i == len(word):\n        count += 1\nprint(count)"
+}
+2022-04-13 23:37:24.957922 REASON stop
+2022-04-13 23:37:24.958608 test/intro-questions.txt_dir/4830/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4830/solutions.json'

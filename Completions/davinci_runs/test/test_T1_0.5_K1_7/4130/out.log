@@ -1,0 +1,143 @@
+2022-04-13 18:35:02.130693 """
+There are $n$ boxers, the weight of the $i$-th boxer is $a_i$. Each of them can change the weight by no more than $1$ before the competition (the weight cannot become equal to zero, that is, it must remain positive). Weight is always an integer number.
+
+It is necessary to choose the largest boxing team in terms of the number of people, that all the boxers' weights in the team are different (i.e. unique).
+
+Write a program that for given current values ​$a_i$ will find the maximum possible number of boxers in a team.
+
+It is possible that after some change the weight of some boxer is $150001$ (but no more).
+
+
+-----Input-----
+
+The first line contains an integer $n$ ($1 \le n \le 150000$) — the number of boxers. The next line contains $n$ integers $a_1, a_2, \dots, a_n$, where $a_i$ ($1 \le a_i \le 150000$) is the weight of the $i$-th boxer.
+
+
+-----Output-----
+
+Print a single integer — the maximum possible number of people in a team.
+
+
+-----Examples-----
+Input
+4
+3 2 4 1
+
+Output
+4
+
+Input
+6
+1 1 1 4 4 4
+
+Output
+5
+
+
+
+-----Note-----
+
+In the first example, boxers should not change their weights — you can just make a team out of all of them.
+
+In the second example, one boxer with a weight of $1$ can be increased by one (get the weight of $2$), one boxer with a weight of $4$ can be reduced by one, and the other can be increased by one (resulting the boxers with a weight of $3$ and $5$, respectively). Thus, you can get a team consisting of boxers with weights of $5, 4, 3, 2, 1$.
+"""
+2022-04-13 18:35:02.130715 --------------------------
+2022-04-13 18:35:20.526298 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = list(map(int, sys.stdin.readline().strip().split()))\n    a.sort()\n    cnt, mx = 1, 1\n    for i in range(1, n):\n        if a[i] - a[i-1] <= 1:\n            cnt += 1\n        else:\n            mx = max(mx, cnt)\n            cnt = 1\n    mx = max(mx, cnt)\n    print(mx)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\na.sort()\n\nd = {}\n\nfor i in range(n):\n    d[a[i]] = d.get(a[i], 0) + 1\n\nans = 0\n\nfor i in range(n):\n    if d[a[i]] == 0:\n        continue\n    d[a[i]] -= 1\n    if a[i] - 1 in d and d[a[i] - 1] > 0:\n        d[a[i] - 1] -= 1\n    elif a[i] + 1 in d and d[a[i] + 1] > 0:\n        d[a[i] + 1] -= 1\n    else:\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    d = {}\n    for x in a:\n        if x in d:\n            d[x] += 1\n        else:\n            d[x] = 1\n    s = set()\n    for x in d:\n        if x+d[x] in s:\n            return False\n        s.add(x)\n    return len(s)\n\nprint(main())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nans = 1\nprev = a[0]\nfor i in range(1, n):\n    if a[i] > prev + 1:\n        ans += 1\n        prev = a[i]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = map(int, sys.stdin.readline().split())\n    a = sorted(a)\n    cnt = 0\n    for i in a:\n        if i > cnt+1:\n            break\n        cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\nn = int(stdin.readline())\na = list(map(int, stdin.readline().split()))\n\nc = Counter(a)\n\nprint(n - max(c.values()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif len(a) < 2:\n    print(1)\n    exit()\n\na_set = set()\n\nfor i in range(len(a) - 1):\n    if a[i] == a[i + 1]:\n        a_set.add(a[i])\n\nprint(n - len(a_set))"
+    }
+  ],
+  "created": 1649874902,
+  "id": "cmpl-4wc7S8JDMq4Xlr5ccNaUXvpnLbtvY",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:35:20.526588 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = list(map(int, sys.stdin.readline().strip().split()))\n    a.sort()\n    cnt, mx = 1, 1\n    for i in range(1, n):\n        if a[i] - a[i-1] <= 1:\n            cnt += 1\n        else:\n            mx = max(mx, cnt)\n            cnt = 1\n    mx = max(mx, cnt)\n    print(mx)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:35:20.526621 REASON stop
+2022-04-13 18:35:20.527085 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(i) for i in input().split()]\n\na.sort()\n\nd = {}\n\nfor i in range(n):\n    d[a[i]] = d.get(a[i], 0) + 1\n\nans = 0\n\nfor i in range(n):\n    if d[a[i]] == 0:\n        continue\n    d[a[i]] -= 1\n    if a[i] - 1 in d and d[a[i] - 1] > 0:\n        d[a[i] - 1] -= 1\n    elif a[i] + 1 in d and d[a[i] + 1] > 0:\n        d[a[i] + 1] -= 1\n    else:\n        ans += 1\n\nprint(ans)"
+}
+2022-04-13 18:35:20.527203 REASON stop
+2022-04-13 18:35:20.527561 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    d = {}\n    for x in a:\n        if x in d:\n            d[x] += 1\n        else:\n            d[x] = 1\n    s = set()\n    for x in d:\n        if x+d[x] in s:\n            return False\n        s.add(x)\n    return len(s)\n\nprint(main())"
+}
+2022-04-13 18:35:20.527605 REASON stop
+2022-04-13 18:35:20.544990 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nans = 1\nprev = a[0]\nfor i in range(1, n):\n    if a[i] > prev + 1:\n        ans += 1\n        prev = a[i]\n\nprint(ans)"
+}
+2022-04-13 18:35:20.545096 REASON stop
+2022-04-13 18:35:20.560978 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = map(int, sys.stdin.readline().split())\n    a = sorted(a)\n    cnt = 0\n    for i in a:\n        if i > cnt+1:\n            break\n        cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:35:20.561084 REASON stop
+2022-04-13 18:35:20.562741 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import Counter\n\nn = int(stdin.readline())\na = list(map(int, stdin.readline().split()))\n\nc = Counter(a)\n\nprint(n - max(c.values()))"
+}
+2022-04-13 18:35:20.562810 REASON stop
+2022-04-13 18:35:20.564060 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif len(a) < 2:\n    print(1)\n    exit()\n\na_set = set()\n\nfor i in range(len(a) - 1):\n    if a[i] == a[i + 1]:\n        a_set.add(a[i])\n\nprint(n - len(a_set))"
+}
+2022-04-13 18:35:20.564117 REASON stop

@@ -1,0 +1,161 @@
+2022-04-13 20:58:49.192805 """
+There are $n$ students at your university. The programming skill of the $i$-th student is $a_i$. As a coach, you want to divide them into teams to prepare them for the upcoming ICPC finals. Just imagine how good this university is if it has $2 \cdot 10^5$ students ready for the finals!
+
+Each team should consist of at least three students. Each student should belong to exactly one team. The diversity of a team is the difference between the maximum programming skill of some student that belongs to this team and the minimum programming skill of some student that belongs to this team (in other words, if the team consists of $k$ students with programming skills $a[i_1], a[i_2], \dots, a[i_k]$, then the diversity of this team is $\max\limits_{j=1}^{k} a[i_j] - \min\limits_{j=1}^{k} a[i_j]$).
+
+The total diversity is the sum of diversities of all teams formed.
+
+Your task is to minimize the total diversity of the division of students and find the optimal way to divide the students.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($3 \le n \le 2 \cdot 10^5$) — the number of students.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the programming skill of the $i$-th student.
+
+
+-----Output-----
+
+In the first line print two integers $res$ and $k$ — the minimum total diversity of the division of students and the number of teams in your division, correspondingly.
+
+In the second line print $n$ integers $t_1, t_2, \dots, t_n$ ($1 \le t_i \le k$), where $t_i$ is the number of team to which the $i$-th student belong.
+
+If there are multiple answers, you can print any. Note that you don't need to minimize the number of teams. Each team should consist of at least three students.
+
+
+-----Examples-----
+Input
+5
+1 1 3 4 2
+
+Output
+3 1
+1 1 1 1 1 
+
+Input
+6
+1 5 12 13 2 15
+
+Output
+7 2
+2 2 1 1 2 1 
+
+Input
+10
+1 2 5 129 185 581 1041 1909 1580 8150
+
+Output
+7486 3
+3 3 3 2 2 2 2 1 1 1 
+
+
+
+-----Note-----
+
+In the first example, there is only one team with skills $[1, 1, 2, 3, 4]$ so the answer is $3$. It can be shown that you cannot achieve a better answer.
+
+In the second example, there are two teams with skills $[1, 2, 5]$ and $[12, 13, 15]$ so the answer is $4 + 3 = 7$.
+
+In the third example, there are three teams with skills $[1, 2, 5]$, $[129, 185, 581, 1041]$ and $[1580, 1909, 8150]$ so the answer is $4 + 912 + 6570 = 7486$.
+"""
+2022-04-13 20:58:49.192818 --------------------------
+2022-04-13 20:59:13.449192 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef find_min_diversity(n, skills):\n    skills.sort()\n    min_diversity = 0\n    # if n == 3:\n    #     return skills[2] - skills[0]\n    # elif n == 4:\n    #     return min(skills[2] - skills[0], skills[3] - skills[1])\n    # elif n == 5:\n    #     return min(skills[2] - skills[0], skills[3] - skills[1], skills[4] - skills[2])\n    # else:\n    #     for i in range(3, n - 2):\n    #         return min(skills[2] - skills[0], skills[3] - skills[1], skills[4] - skills[2])\n\ndef main():\n    n = int(sys.stdin.readline())\n    skills = list(map(int, sys.stdin.readline().split()))\n    min_diversity = find_min_diversity(n, skills)\n    print(min_diversity)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    a.sort()\n\n    i = 0\n    j = n - 1\n    k = 0\n    while i < j:\n        if a[i] == a[i + 1]:\n            i += 1\n        elif a[j] == a[j - 1]:\n            j -= 1\n        else:\n            k += 1\n            i += 1\n            j -= 1\n\n    print(a[-1] - a[0], k)\n    for i in range(n):\n        print(1, end=' ')\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# n = int(input())\n# skills = [int(x) for x in input().split()]\n\nn = 5\nskills = [1, 1, 3, 4, 2]\n\n# n = 6\n# skills = [1, 5, 12, 13, 2, 15]\n\n# n = 10\n# skills = [1, 2, 5, 129, 185, 581, 1041, 1909, 1580, 8150]\n\nskills.sort()\n\n# print(skills)\n\nteam_sizes = [3] * (n // 3)\n\nif n % 3 == 1:\n    team_sizes[0] -= 1\n    team_sizes.append(1)\nelif n % 3 == 2:\n    team_sizes[0] -= 1\n    team_sizes[1] -= 1\n    team_sizes.append(2)\n\n# print(team_sizes)\n\nteam_diversities = []\n\nfor size in team_sizes:\n    team_diversities.append(skills[-1] - skills[0])\n    del skills[0]\n    del skills[-1]\n\n# print(team_diversities)\n\ntotal_diversity = sum(team_diversities)\n\nprint(total_diversity, len(team_sizes))\n\nteam_index = 1\nfor size in team_sizes:\n    print(\" \".join([str(team_index)] * size), end=\" \")\n    team_index += 1"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn = int(input())\n\ta = [int(i) for i in input().split()]\n\t#print(a)\n\ta.sort()\n\t#print(a)\n\td = 0\n\tgroups = []\n\tfor i in range(n-2):\n\t\tif a[i+1] - a[i] <= 1:\n\t\t\td += a[i+1] - a[i]\n\t\t\tgroups.append([a[i],a[i+1]])\n\t\telse:\n\t\t\tbreak\n\t#print(d)\n\t#print(groups)\n\tif len(groups) == 0:\n\t\tprint(a[-1]-a[0],1)\n\t\tprint(\" \".join([str(1)]*n))\n\telse:\n\t\tgroups.append([a[i+1]])\n\t\tprint(d,len(groups))\n\t\tfor i in range(n):\n\t\t\tfor j in range(len(groups)):\n\t\t\t\tif a[i] in groups[j]:\n\t\t\t\t\tprint(j+1, end=\" \")\n\t\t\t\t\tbreak\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    n = int(lines[0])\n    assert 3 <= n <= 200000\n    skill = [int(x) for x in lines[1].split()]\n    assert len(skill) == n\n    assert all(1 <= x <= 10**9 for x in skill)\n    skill = sorted(skill)\n    team = []\n    total = 0\n    for i in range(n):\n        if len(team) < 3:\n            team.append(skill[i])\n        else:\n            total += max(team) - min(team)\n            team.pop(0)\n            team.append(skill[i])\n    total += max(team) - min(team)\n    print(total, 1)\n    print(\" \".join(['1'] * n))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tn = int(sys.stdin.readline().strip())\n\ta = list(map(int, sys.stdin.readline().strip().split()))\n\tres = a[0]\n\tk = 1\n\tteams = [1] * n\n\tlast_team = 1\n\tfor i in range(1, n):\n\t\tif a[i] - res > a[i] - a[i-1]:\n\t\t\tres = a[i]\n\t\t\tk += 1\n\t\t\tlast_team = k\n\t\tteams[i] = last_team\n\tprint(res, k)\n\tprint(\" \".join(map(str, teams)))\n\nif __name__ == \"__main__\":\n\tmain()"
+    }
+  ],
+  "created": 1649883529,
+  "id": "cmpl-4weMb4nT7wR1UpXhbSAPmaN9YjVxn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:59:13.449547 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef find_min_diversity(n, skills):\n    skills.sort()\n    min_diversity = 0\n    # if n == 3:\n    #     return skills[2] - skills[0]\n    # elif n == 4:\n    #     return min(skills[2] - skills[0], skills[3] - skills[1])\n    # elif n == 5:\n    #     return min(skills[2] - skills[0], skills[3] - skills[1], skills[4] - skills[2])\n    # else:\n    #     for i in range(3, n - 2):\n    #         return min(skills[2] - skills[0], skills[3] - skills[1], skills[4] - skills[2])\n\ndef main():\n    n = int(sys.stdin.readline())\n    skills = list(map(int, sys.stdin.readline().split()))\n    min_diversity = find_min_diversity(n, skills)\n    print(min_diversity)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:59:13.449587 REASON stop
+2022-04-13 20:59:13.450062 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    a.sort()\n\n    i = 0\n    j = n - 1\n    k = 0\n    while i < j:\n        if a[i] == a[i + 1]:\n            i += 1\n        elif a[j] == a[j - 1]:\n            j -= 1\n        else:\n            k += 1\n            i += 1\n            j -= 1\n\n    print(a[-1] - a[0], k)\n    for i in range(n):\n        print(1, end=' ')\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:59:13.450210 REASON stop
+2022-04-13 20:59:13.450561 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# n = int(input())\n# skills = [int(x) for x in input().split()]\n\nn = 5\nskills = [1, 1, 3, 4, 2]\n\n# n = 6\n# skills = [1, 5, 12, 13, 2, 15]\n\n# n = 10\n# skills = [1, 2, 5, 129, 185, 581, 1041, 1909, 1580, 8150]\n\nskills.sort()\n\n# print(skills)\n\nteam_sizes = [3] * (n // 3)\n\nif n % 3 == 1:\n    team_sizes[0] -= 1\n    team_sizes.append(1)\nelif n % 3 == 2:\n    team_sizes[0] -= 1\n    team_sizes[1] -= 1\n    team_sizes.append(2)\n\n# print(team_sizes)\n\nteam_diversities = []\n\nfor size in team_sizes:\n    team_diversities.append(skills[-1] - skills[0])\n    del skills[0]\n    del skills[-1]\n\n# print(team_diversities)\n\ntotal_diversity = sum(team_diversities)\n\nprint(total_diversity, len(team_sizes))\n\nteam_index = 1\nfor size in team_sizes:\n    print(\" \".join([str(team_index)] * size), end=\" \")\n    team_index += 1"
+}
+2022-04-13 20:59:13.450607 REASON stop
+2022-04-13 20:59:13.472718 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 20:59:13.472805 REASON stop
+2022-04-13 20:59:13.473812 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn = int(input())\n\ta = [int(i) for i in input().split()]\n\t#print(a)\n\ta.sort()\n\t#print(a)\n\td = 0\n\tgroups = []\n\tfor i in range(n-2):\n\t\tif a[i+1] - a[i] <= 1:\n\t\t\td += a[i+1] - a[i]\n\t\t\tgroups.append([a[i],a[i+1]])\n\t\telse:\n\t\t\tbreak\n\t#print(d)\n\t#print(groups)\n\tif len(groups) == 0:\n\t\tprint(a[-1]-a[0],1)\n\t\tprint(\" \".join([str(1)]*n))\n\telse:\n\t\tgroups.append([a[i+1]])\n\t\tprint(d,len(groups))\n\t\tfor i in range(n):\n\t\t\tfor j in range(len(groups)):\n\t\t\t\tif a[i] in groups[j]:\n\t\t\t\t\tprint(j+1, end=\" \")\n\t\t\t\t\tbreak\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 20:59:13.473885 REASON stop
+2022-04-13 20:59:13.488992 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    n = int(lines[0])\n    assert 3 <= n <= 200000\n    skill = [int(x) for x in lines[1].split()]\n    assert len(skill) == n\n    assert all(1 <= x <= 10**9 for x in skill)\n    skill = sorted(skill)\n    team = []\n    total = 0\n    for i in range(n):\n        if len(team) < 3:\n            team.append(skill[i])\n        else:\n            total += max(team) - min(team)\n            team.pop(0)\n            team.append(skill[i])\n    total += max(team) - min(team)\n    print(total, 1)\n    print(\" \".join(['1'] * n))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:59:13.489072 REASON stop
+2022-04-13 20:59:13.489749 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tn = int(sys.stdin.readline().strip())\n\ta = list(map(int, sys.stdin.readline().strip().split()))\n\tres = a[0]\n\tk = 1\n\tteams = [1] * n\n\tlast_team = 1\n\tfor i in range(1, n):\n\t\tif a[i] - res > a[i] - a[i-1]:\n\t\t\tres = a[i]\n\t\t\tk += 1\n\t\t\tlast_team = k\n\t\tteams[i] = last_team\n\tprint(res, k)\n\tprint(\" \".join(map(str, teams)))\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-13 20:59:13.489812 REASON stop

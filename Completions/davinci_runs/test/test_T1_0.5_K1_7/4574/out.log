@@ -1,0 +1,129 @@
+2022-04-13 21:51:31.884095 """
+We have N sticks with negligible thickness.
+The length of the i-th stick is A_i.
+Snuke wants to select four different sticks from these sticks and form a rectangle (including a square), using the sticks as its sides.
+Find the maximum possible area of the rectangle.
+
+-----Constraints-----
+ - 4 \leq N \leq 10^5
+ - 1 \leq A_i \leq 10^9
+ - A_i is an integer.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_N
+
+-----Output-----
+Print the maximum possible area of the rectangle.
+If no rectangle can be formed, print 0.
+
+-----Sample Input-----
+6
+3 1 2 4 2 1
+
+-----Sample Output-----
+2
+
+1 \times 2 rectangle can be formed.
+"""
+2022-04-13 21:51:31.884103 --------------------------
+2022-04-13 21:51:53.170791 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom typing import List\n\ndef solve(n: int, a: List[int]) -> int:\n    a.sort()\n    for i in range(n-3):\n        for j in range(i+1, n-2):\n            for k in range(j+1, n-1):\n                for l in range(k+1, n):\n                    if a[i] == a[j] and a[j] == a[k] and a[k] == a[l]:\n                        return a[i] ** 2\n                    elif a[i] == a[j] and a[k] == a[l]:\n                        return a[i] * a[k]\n    return 0\n\nif __name__ == '__main__':\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    print(solve(n, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nA.sort()\n\nmax_area = 0\nfor i in range(N):\n    for j in range(i+1, N):\n        for k in range(j+1, N):\n            for l in range(k+1, N):\n                if A[i] == A[j] and A[j] == A[k] and A[k] == A[l]:\n                    continue\n                if A[i] + A[k] > A[j] + A[l]:\n                    continue\n                area = A[i] * A[j]\n                if area > max_area:\n                    max_area = area\n\nprint(max_area)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ninput = sys.stdin.readline\n\nN = int(input())\nA = list(map(int, input().split()))\nA.sort(reverse=True)\n\nans = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        for k in range(j + 1, N):\n            if A[i] < A[j] + A[k]:\n                l = bisect.bisect_left(A, A[i] - A[j] - A[k])\n                if l < k:\n                    ans = max(ans, A[i] * A[j])\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nsticks = [int(i) for i in input().split()]\nsticks.sort()\n\n# If there are not enough sticks, there is no rectangle\nif N < 4:\n    print(0)\n    exit()\n\n# If there are only 4 sticks, check if a rectangle can be formed\nif N == 4:\n    if sticks[0] == sticks[1] and sticks[2] == sticks[3]:\n        print(sticks[0] * sticks[2])\n        exit()\n    else:\n        print(0)\n        exit()\n\n# If there are more than 4 sticks, check if a rectangle can be formed\nfor i in range(N - 3):\n    if sticks[i] == sticks[i + 1]:\n        for j in range(i + 2, N - 1):\n            if sticks[j] == sticks[j + 1]:\n                print(sticks[i] * sticks[j])\n                exit()\n\nprint(0)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom itertools import combinations\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    A.sort()\n\n    max_area = 0\n    for i in range(N-3):\n        for j in range(i+1, N-2):\n            for k in range(j+1, N-1):\n                for l in range(k+1, N):\n                    if A[i] == A[j] and A[i] == A[k] and A[i] == A[l]:\n                        continue\n                    if A[i] == A[j] and A[k] == A[l]:\n                        continue\n                    if A[i] == A[k] and A[j] == A[l]:\n                        continue\n                    if A[i] == A[l] and A[j] == A[k]:\n                        continue\n                    if A[i] == A[j] or A[i] == A[k] or A[i] == A[l]:\n                        continue\n                    if A[j] == A[k] or A[j] == A[l]:\n                        continue\n                    if A[k] == A[l]:\n                        continue\n                    max_area = max(max_area, A[i] * A[j])\n    print(max_area)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nA = []\nfor i in range(N):\n    A.append(int(input()))\n\nA.sort()\n\nmax_area = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        for k in range(j + 1, N):\n            if A[i] == A[j] or A[j] == A[k] or A[k] == A[i]:\n                continue\n            # 2\u8fba\u304c\u6c7a\u307e\u3063\u305f\u3089\u3001\u6b8b\u308a\u306e1\u8fba\u306f\u6761\u4ef6\u306b\u5408\u3046\u3082\u306e\u3092\u3059\u3079\u3066\u8a66\u3059\n            for l in range(k + 1, N):\n                if A[l] == A[i] or A[l] == A[j] or A[l] == A[k]:\n                    continue\n                if A[i] * A[j] == A[k] * A[l]:\n                    max_area = max(max_area, A[i] * A[j])\n\nprint(max_area)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    A = list(map(int, sys.stdin.readline().rstrip().split()))\n\n    A.sort()\n\n    # \u4e00\u756a\u9577\u3044\u7d10\u304b\u3089\u9806\u306b\u9577\u65b9\u5f62\u3092\u4f5c\u308b\n    for i in range(N-3, -1, -1):\n        # \u5de6\u4e0a\u3068\u53f3\u4e0b\u3092\u56fa\u5b9a\n        # \u53f3\u4e0a\u3068\u5de6\u4e0b\u3092\u6c7a\u3081\u308b\n        for j in range(i+1, N-1):\n            # \u53f3\u4e0a\u3092\u56fa\u5b9a\u3057\u305f\u3068\u304d\u306b\u5de6\u4e0b\u304c\u5b58\u5728\u3059\u308b\u304b\n            if A[i]*A[j] % A[i+1] == 0:\n                # \u5de6\u4e0b\u3092\u6c7a\u3081\u308b\n                for k in range(j+1, N):\n                    if A[i]*A[j] % A[k] == 0:\n                        print(A[i]*A[j])\n                        return\n\n    print(0)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649886692,
+  "id": "cmpl-4wfBcllywxOsILEdvGsV90Umm99Tc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:51:53.171091 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom typing import List\n\ndef solve(n: int, a: List[int]) -> int:\n    a.sort()\n    for i in range(n-3):\n        for j in range(i+1, n-2):\n            for k in range(j+1, n-1):\n                for l in range(k+1, n):\n                    if a[i] == a[j] and a[j] == a[k] and a[k] == a[l]:\n                        return a[i] ** 2\n                    elif a[i] == a[j] and a[k] == a[l]:\n                        return a[i] * a[k]\n    return 0\n\nif __name__ == '__main__':\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    print(solve(n, a))"
+}
+2022-04-13 21:51:53.171131 REASON stop
+2022-04-13 21:51:53.171624 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nA.sort()\n\nmax_area = 0\nfor i in range(N):\n    for j in range(i+1, N):\n        for k in range(j+1, N):\n            for l in range(k+1, N):\n                if A[i] == A[j] and A[j] == A[k] and A[k] == A[l]:\n                    continue\n                if A[i] + A[k] > A[j] + A[l]:\n                    continue\n                area = A[i] * A[j]\n                if area > max_area:\n                    max_area = area\n\nprint(max_area)"
+}
+2022-04-13 21:51:53.171740 REASON stop
+2022-04-13 21:51:53.172103 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ninput = sys.stdin.readline\n\nN = int(input())\nA = list(map(int, input().split()))\nA.sort(reverse=True)\n\nans = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        for k in range(j + 1, N):\n            if A[i] < A[j] + A[k]:\n                l = bisect.bisect_left(A, A[i] - A[j] - A[k])\n                if l < k:\n                    ans = max(ans, A[i] * A[j])\n\nprint(ans)"
+}
+2022-04-13 21:51:53.172193 REASON stop
+2022-04-13 21:51:53.173565 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nsticks = [int(i) for i in input().split()]\nsticks.sort()\n\n# If there are not enough sticks, there is no rectangle\nif N < 4:\n    print(0)\n    exit()\n\n# If there are only 4 sticks, check if a rectangle can be formed\nif N == 4:\n    if sticks[0] == sticks[1] and sticks[2] == sticks[3]:\n        print(sticks[0] * sticks[2])\n        exit()\n    else:\n        print(0)\n        exit()\n\n# If there are more than 4 sticks, check if a rectangle can be formed\nfor i in range(N - 3):\n    if sticks[i] == sticks[i + 1]:\n        for j in range(i + 2, N - 1):\n            if sticks[j] == sticks[j + 1]:\n                print(sticks[i] * sticks[j])\n                exit()\n\nprint(0)"
+}
+2022-04-13 21:51:53.173618 REASON stop
+2022-04-13 21:51:53.196218 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom itertools import combinations\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    A.sort()\n\n    max_area = 0\n    for i in range(N-3):\n        for j in range(i+1, N-2):\n            for k in range(j+1, N-1):\n                for l in range(k+1, N):\n                    if A[i] == A[j] and A[i] == A[k] and A[i] == A[l]:\n                        continue\n                    if A[i] == A[j] and A[k] == A[l]:\n                        continue\n                    if A[i] == A[k] and A[j] == A[l]:\n                        continue\n                    if A[i] == A[l] and A[j] == A[k]:\n                        continue\n                    if A[i] == A[j] or A[i] == A[k] or A[i] == A[l]:\n                        continue\n                    if A[j] == A[k] or A[j] == A[l]:\n                        continue\n                    if A[k] == A[l]:\n                        continue\n                    max_area = max(max_area, A[i] * A[j])\n    print(max_area)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:51:53.196314 REASON stop
+2022-04-13 21:51:53.197090 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nA = []\nfor i in range(N):\n    A.append(int(input()))\n\nA.sort()\n\nmax_area = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        for k in range(j + 1, N):\n            if A[i] == A[j] or A[j] == A[k] or A[k] == A[i]:\n                continue\n            # 2\u8fba\u304c\u6c7a\u307e\u3063\u305f\u3089\u3001\u6b8b\u308a\u306e1\u8fba\u306f\u6761\u4ef6\u306b\u5408\u3046\u3082\u306e\u3092\u3059\u3079\u3066\u8a66\u3059\n            for l in range(k + 1, N):\n                if A[l] == A[i] or A[l] == A[j] or A[l] == A[k]:\n                    continue\n                if A[i] * A[j] == A[k] * A[l]:\n                    max_area = max(max_area, A[i] * A[j])\n\nprint(max_area)"
+}
+2022-04-13 21:51:53.197153 REASON stop
+2022-04-13 21:51:53.215182 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    A = list(map(int, sys.stdin.readline().rstrip().split()))\n\n    A.sort()\n\n    # \u4e00\u756a\u9577\u3044\u7d10\u304b\u3089\u9806\u306b\u9577\u65b9\u5f62\u3092\u4f5c\u308b\n    for i in range(N-3, -1, -1):\n        # \u5de6\u4e0a\u3068\u53f3\u4e0b\u3092\u56fa\u5b9a\n        # \u53f3\u4e0a\u3068\u5de6\u4e0b\u3092\u6c7a\u3081\u308b\n        for j in range(i+1, N-1):\n            # \u53f3\u4e0a\u3092\u56fa\u5b9a\u3057\u305f\u3068\u304d\u306b\u5de6\u4e0b\u304c\u5b58\u5728\u3059\u308b\u304b\n            if A[i]*A[j] % A[i+1] == 0:\n                # \u5de6\u4e0b\u3092\u6c7a\u3081\u308b\n                for k in range(j+1, N):\n                    if A[i]*A[j] % A[k] == 0:\n                        print(A[i]*A[j])\n                        return\n\n    print(0)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:51:53.215285 REASON stop

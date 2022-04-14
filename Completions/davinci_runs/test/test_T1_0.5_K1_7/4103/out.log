@@ -1,0 +1,149 @@
+2022-04-13 18:17:01.620152 """
+There is a robot staying at $X=0$ on the $Ox$ axis. He has to walk to $X=n$. You are controlling this robot and controlling how he goes. The robot has a battery and an accumulator with a solar panel.
+
+The $i$-th segment of the path (from $X=i-1$ to $X=i$) can be exposed to sunlight or not. The array $s$ denotes which segments are exposed to sunlight: if segment $i$ is exposed, then $s_i = 1$, otherwise $s_i = 0$.
+
+The robot has one battery of capacity $b$ and one accumulator of capacity $a$. For each segment, you should choose which type of energy storage robot will use to go to the next point (it can be either battery or accumulator). If the robot goes using the battery, the current charge of the battery is decreased by one (the robot can't use the battery if its charge is zero). And if the robot goes using the accumulator, the current charge of the accumulator is decreased by one (and the robot also can't use the accumulator if its charge is zero).
+
+If the current segment is exposed to sunlight and the robot goes through it using the battery, the charge of the accumulator increases by one (of course, its charge can't become higher than it's maximum capacity).
+
+If accumulator is used to pass some segment, its charge decreases by 1 no matter if the segment is exposed or not.
+
+You understand that it is not always possible to walk to $X=n$. You want your robot to go as far as possible. Find the maximum number of segments of distance the robot can pass if you control him optimally.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, b, a$ ($1 \le n, b, a \le 2 \cdot 10^5$) — the robot's destination point, the battery capacity and the accumulator capacity, respectively.
+
+The second line of the input contains $n$ integers $s_1, s_2, \dots, s_n$ ($0 \le s_i \le 1$), where $s_i$ is $1$ if the $i$-th segment of distance is exposed to sunlight, and $0$ otherwise.
+
+
+-----Output-----
+
+Print one integer — the maximum number of segments the robot can pass if you control him optimally.
+
+
+-----Examples-----
+Input
+5 2 1
+0 1 0 1 0
+
+Output
+5
+
+Input
+6 2 1
+1 0 0 1 0 1
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the robot can go through the first segment using the accumulator, and charge levels become $b=2$ and $a=0$. The second segment can be passed using the battery, and charge levels become $b=1$ and $a=1$. The third segment can be passed using the accumulator, and charge levels become $b=1$ and $a=0$. The fourth segment can be passed using the battery, and charge levels become $b=0$ and $a=1$. And the fifth segment can be passed using the accumulator.
+
+In the second example the robot can go through the maximum number of segments using battery two times and accumulator one time in any order.
+"""
+2022-04-13 18:17:01.620179 --------------------------
+2022-04-13 18:17:37.781396 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef is_possible(n, b, a, s):\n    current_battery = b\n    current_accumulator = a\n    for i in range(n):\n        if s[i] == 1:\n            if current_accumulator > 0:\n                current_accumulator -= 1\n            elif current_battery > 0:\n                current_accumulator += 1\n                current_battery -= 1\n            else:\n                return False\n        else:\n            if current_battery > 0:\n                current_battery -= 1\n            elif current_accumulator > 0:\n                current_accumulator -= 1\n            else:\n                return False\n    return True\n\ndef binary_search(n, b, a, s):\n    left = 0\n    right = n\n    while left < right:\n        mid = (left + right) // 2\n        if is_possible(mid, b, a, s):\n            left = mid + 1\n        else:\n            right = mid\n    return left - 1\n\ndef solve():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    print(binary_search(n, b, a, s))\n\nif __name__ == '__main__':\n    solve()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,b,a = map(int,input().split())\ns = list(map(int,input().split()))\n\nacc = a\nbat = b\n\nfor i in range(n):\n    if s[i] == 1:\n        if acc < a:\n            acc += 1\n        else:\n            bat = min(bat+1,b)\n    if acc > 0:\n        acc -= 1\n    else:\n        if bat > 0:\n            bat -= 1\n        else:\n            break\n\nprint(i+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\n# print(n, b, a)\n# print(s)\n\n# all 0\nif s.count(1) == 0:\n    print(min(b, a))\n\n# all 1\nelif s.count(0) == 0:\n    print(min(b, a))\n\n# mixed\nelse:\n    while b > 0 or a > 0:\n        if b > 0 and s[0] == 1:\n            b -= 1\n            a += 1\n        elif a > 0:\n            a -= 1\n        else:\n            b -= 1\n        s.pop(0)\n        if len(s) == 0:\n            break\n    print(n - len(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n\n    # Keep track of the battery and accumulator charge\n    battery = b\n    accumulator = a\n\n    # Keep track of the number of segments passed\n    segments_passed = 0\n\n    # Keep track of the length of the segments passed\n    length_passed = 0\n\n    # Keep track of the current segment\n    current_segment = 0\n\n    # Keep track of the maximum number of segments passed\n    max_segments_passed = 0\n\n    # Keep track of the current segment's length\n    current_length = 0\n\n    # Keep track of the current segment's energy source\n    current_energy_source = 0\n\n    # While the robot can pass the next segment\n    while (current_segment < n) and (battery > 0 or accumulator > 0):\n\n        # If the robot can use the battery to pass the current segment\n        if battery > 0:\n            # If the robot uses the battery to pass the current segment\n            # and the segment is exposed to sunlight\n            if s[current_segment] == 1:\n                # If the accumulator is not full\n                if accumulator < a:\n                    # Increase the accumulator charge by 1\n                    accumulator += 1\n            # Decrease the battery charge by 1\n            battery -= 1\n            # Set the current energy source to battery\n            current_energy_source = 1\n        # Else if the robot can use the accumulator to pass the current segment\n        elif accumulator > 0:\n            # Decrease the accumulator charge by 1\n            accumulator -= 1\n            # Set the current energy source to accumulator\n            current_energy_source = 2\n        else:\n            # If the robot cannot use the battery or the accumulator to pass the current segment\n            # Set the current energy source to 0\n            current_energy_source = 0\n\n        # If the robot can pass the current segment\n        if current_energy_source > 0:\n            # Increase the number of segments passed by 1\n            segments_passed += 1\n            # Increase the length of the segments passed by 1\n            length_passed += 1\n            # Increase the current segment by 1\n            current_segment += 1\n            # If the new length of the segments passed is greater than the maximum number of segments passed\n            if length_passed > max_segments_passed:\n                # Set the maximum number of segments passed to the new length of the segments passed\n                max_segments_passed = length_passed\n        else:\n            # If the robot cannot pass the current segment\n            # Set the current segment to the segment that the robot can pass\n            current_segment = segments_passed + b + a\n            # Set the length of the segments passed to 0\n            length_passed = 0\n\n    # Print the maximum number of segments passed\n    print(max_segments_passed)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\ndef solve(n, b, a, s):\n    charge = [b, a]\n    max_charge = [b, a]\n    count = 0\n    for i in range(n):\n        if charge[0] == 0 and charge[1] == 0:\n            return count\n        if s[i] == 1:\n            if charge[0] < max_charge[0]:\n                charge[0] += 1\n            if charge[1] < max_charge[1]:\n                charge[1] += 1\n        if charge[0] > 0:\n            charge[0] -= 1\n            count += 1\n        elif charge[1] > 0:\n            charge[1] -= 1\n            count += 1\n    return count\n\nprint(solve(n, b, a, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n\n    ans = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b < a:\n                b += 1\n            else:\n                a -= 1\n        else:\n            if b > 0:\n                b -= 1\n            else:\n                a -= 1\n        if b >= 0 and a >= 0:\n            ans += 1\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nif a == 0:\n    print(sum(s[:b]))\n    exit()\n\nm = 0\nc = 0\nfor i in range(n):\n    if s[i] == 0:\n        if a > 0:\n            a -= 1\n            c += 1\n        elif b > 0:\n            b -= 1\n            c += 1\n    else:\n        if a < n:\n            if a == 0:\n                b -= 1\n                a += 1\n            else:\n                a -= 1\n            c += 1\n        elif b > 0:\n            b -= 1\n            c += 1\n        else:\n            break\n    m = max(m, c)\n\nprint(m)"
+    }
+  ],
+  "created": 1649873821,
+  "id": "cmpl-4wbq1NosXq9EMgqeugzRwP6Ppxzsw",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:17:37.781768 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef is_possible(n, b, a, s):\n    current_battery = b\n    current_accumulator = a\n    for i in range(n):\n        if s[i] == 1:\n            if current_accumulator > 0:\n                current_accumulator -= 1\n            elif current_battery > 0:\n                current_accumulator += 1\n                current_battery -= 1\n            else:\n                return False\n        else:\n            if current_battery > 0:\n                current_battery -= 1\n            elif current_accumulator > 0:\n                current_accumulator -= 1\n            else:\n                return False\n    return True\n\ndef binary_search(n, b, a, s):\n    left = 0\n    right = n\n    while left < right:\n        mid = (left + right) // 2\n        if is_possible(mid, b, a, s):\n            left = mid + 1\n        else:\n            right = mid\n    return left - 1\n\ndef solve():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    print(binary_search(n, b, a, s))\n\nif __name__ == '__main__':\n    solve()"
+}
+2022-04-13 18:17:37.781809 REASON stop
+2022-04-13 18:17:37.782216 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,b,a = map(int,input().split())\ns = list(map(int,input().split()))\n\nacc = a\nbat = b\n\nfor i in range(n):\n    if s[i] == 1:\n        if acc < a:\n            acc += 1\n        else:\n            bat = min(bat+1,b)\n    if acc > 0:\n        acc -= 1\n    else:\n        if bat > 0:\n            bat -= 1\n        else:\n            break\n\nprint(i+1)"
+}
+2022-04-13 18:17:37.782330 REASON stop
+2022-04-13 18:17:37.782699 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\n# print(n, b, a)\n# print(s)\n\n# all 0\nif s.count(1) == 0:\n    print(min(b, a))\n\n# all 1\nelif s.count(0) == 0:\n    print(min(b, a))\n\n# mixed\nelse:\n    while b > 0 or a > 0:\n        if b > 0 and s[0] == 1:\n            b -= 1\n            a += 1\n        elif a > 0:\n            a -= 1\n        else:\n            b -= 1\n        s.pop(0)\n        if len(s) == 0:\n            break\n    print(n - len(s))"
+}
+2022-04-13 18:17:37.782748 REASON stop
+2022-04-13 18:17:37.805081 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, b, a = [int(x) for x in input().split()]\n    s = [int(x) for x in input().split()]\n\n    # Keep track of the battery and accumulator charge\n    battery = b\n    accumulator = a\n\n    # Keep track of the number of segments passed\n    segments_passed = 0\n\n    # Keep track of the length of the segments passed\n    length_passed = 0\n\n    # Keep track of the current segment\n    current_segment = 0\n\n    # Keep track of the maximum number of segments passed\n    max_segments_passed = 0\n\n    # Keep track of the current segment's length\n    current_length = 0\n\n    # Keep track of the current segment's energy source\n    current_energy_source = 0\n\n    # While the robot can pass the next segment\n    while (current_segment < n) and (battery > 0 or accumulator > 0):\n\n        # If the robot can use the battery to pass the current segment\n        if battery > 0:\n            # If the robot uses the battery to pass the current segment\n            # and the segment is exposed to sunlight\n            if s[current_segment] == 1:\n                # If the accumulator is not full\n                if accumulator < a:\n                    # Increase the accumulator charge by 1\n                    accumulator += 1\n            # Decrease the battery charge by 1\n            battery -= 1\n            # Set the current energy source to battery\n            current_energy_source = 1\n        # Else if the robot can use the accumulator to pass the current segment\n        elif accumulator > 0:\n            # Decrease the accumulator charge by 1\n            accumulator -= 1\n            # Set the current energy source to accumulator\n            current_energy_source = 2\n        else:\n            # If the robot cannot use the battery or the accumulator to pass the current segment\n            # Set the current energy source to 0\n            current_energy_source = 0\n\n        # If the robot can pass the current segment\n        if current_energy_source > 0:\n            # Increase the number of segments passed by 1\n            segments_passed += 1\n            # Increase the length of the segments passed by 1\n            length_passed += 1\n            # Increase the current segment by 1\n            current_segment += 1\n            # If the new length of the segments passed is greater than the maximum number of segments passed\n            if length_passed > max_segments_passed:\n                # Set the maximum number of segments passed to the new length of the segments passed\n                max_segments_passed = length_passed\n        else:\n            # If the robot cannot pass the current segment\n            # Set the current segment to the segment that the robot can pass\n            current_segment = segments_passed + b + a\n            # Set the length of the segments passed to 0\n            length_passed = 0\n\n    # Print the maximum number of segments passed\n    print(max_segments_passed)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:17:37.805189 REASON stop
+2022-04-13 18:17:37.832264 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\ndef solve(n, b, a, s):\n    charge = [b, a]\n    max_charge = [b, a]\n    count = 0\n    for i in range(n):\n        if charge[0] == 0 and charge[1] == 0:\n            return count\n        if s[i] == 1:\n            if charge[0] < max_charge[0]:\n                charge[0] += 1\n            if charge[1] < max_charge[1]:\n                charge[1] += 1\n        if charge[0] > 0:\n            charge[0] -= 1\n            count += 1\n        elif charge[1] > 0:\n            charge[1] -= 1\n            count += 1\n    return count\n\nprint(solve(n, b, a, s))"
+}
+2022-04-13 18:17:37.832379 REASON stop
+2022-04-13 18:17:37.833573 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n\n    ans = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b < a:\n                b += 1\n            else:\n                a -= 1\n        else:\n            if b > 0:\n                b -= 1\n            else:\n                a -= 1\n        if b >= 0 and a >= 0:\n            ans += 1\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:17:37.833637 REASON stop
+2022-04-13 18:17:37.834904 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nif a == 0:\n    print(sum(s[:b]))\n    exit()\n\nm = 0\nc = 0\nfor i in range(n):\n    if s[i] == 0:\n        if a > 0:\n            a -= 1\n            c += 1\n        elif b > 0:\n            b -= 1\n            c += 1\n    else:\n        if a < n:\n            if a == 0:\n                b -= 1\n                a += 1\n            else:\n                a -= 1\n            c += 1\n        elif b > 0:\n            b -= 1\n            c += 1\n        else:\n            break\n    m = max(m, c)\n\nprint(m)"
+}
+2022-04-13 18:17:37.834975 REASON stop

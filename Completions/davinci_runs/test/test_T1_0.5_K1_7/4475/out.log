@@ -1,0 +1,154 @@
+2022-04-13 21:08:27.096169 """
+You are given four integers $a$, $b$, $x$ and $y$. Initially, $a \ge x$ and $b \ge y$. You can do the following operation no more than $n$ times:
+
+  Choose either $a$ or $b$ and decrease it by one. However, as a result of this operation, value of $a$ cannot become less than $x$, and value of $b$ cannot become less than $y$. 
+
+Your task is to find the minimum possible product of $a$ and $b$ ($a \cdot b$) you can achieve by applying the given operation no more than $n$ times.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 2 \cdot 10^4$) — the number of test cases. Then $t$ test cases follow.
+
+The only line of the test case contains five integers $a$, $b$, $x$, $y$ and $n$ ($1 \le a, b, x, y, n \le 10^9$). Additional constraint on the input: $a \ge x$ and $b \ge y$ always holds.
+
+
+-----Output-----
+
+For each test case, print one integer: the minimum possible product of $a$ and $b$ ($a \cdot b$) you can achieve by applying the given operation no more than $n$ times.
+
+
+-----Example-----
+Input
+7
+10 10 8 5 3
+12 8 8 7 2
+12343 43 4543 39 123212
+1000000000 1000000000 1 1 1
+1000000000 1000000000 1 1 1000000000
+10 11 2 1 5
+10 11 9 1 10
+
+Output
+70
+77
+177177
+999999999000000000
+999999999
+55
+10
+
+
+
+-----Note-----
+
+In the first test case of the example, you need to decrease $b$ three times and obtain $10 \cdot 7 = 70$.
+
+In the second test case of the example, you need to decrease $a$ one time, $b$ one time and obtain $11 \cdot 7 = 77$.
+
+In the sixth test case of the example, you need to decrease $a$ five times and obtain $5 \cdot 11 = 55$.
+
+In the seventh test case of the example, you need to decrease $b$ ten times and obtain $10 \cdot 1 = 10$.
+"""
+2022-04-13 21:08:27.096191 --------------------------
+2022-04-13 21:08:48.312873 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----SOLUTION-----\n\nt = int(input())\n\nfor i in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a - x < n:\n        n = n - (a - x)\n        a = x\n        b = max(y, b-n)\n    else:\n        a = a - n\n        n = 0\n    if b - y < n:\n        b = y\n    else:\n        b = b - n\n    print(a*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nt = int(input())\nfor _ in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a-x >= n:\n        a -= n\n    else:\n        n -= a-x\n        a = x\n        if b-y >= n:\n            b -= n\n        else:\n            b = y\n    print(a*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        a, b, x, y, n = [int(x) for x in sys.stdin.readline().split()]\n        print(min_product(a, b, x, y, n))\n\ndef min_product(a, b, x, y, n):\n    if a == x and b == y:\n        return a * b\n    elif a == x:\n        return min(a * b, a * (b - min(b - y, n)))\n    elif b == y:\n        return min(a * b, (a - min(a - x, n)) * b)\n    else:\n        return min(a * b, a * (b - min(b - y, n)), (a - min(a - x, n)) * b, (a - min(a - x, n)) * (b - min(b - y, n)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Use the greedy algorithm.\n# If the number of operations left is greater than the difference between a and b, then we can just make a equal to x and b equal to y, because the product will never be lower than xy.\n# If the number of operations left is less than the difference between a and b, then we can just make a equal to x+n and b equal to y+n, because if n is greater than the difference between a and b, then the product will never be lower than xy.\n# If the number of operations left is equal to the difference between a and b, then we can just make a equal to x+n and b equal to y+n, because the product will never be lower than xy.\n\nt = int(input())\nfor i in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if n >= abs(a-b):\n        print(x*y)\n    elif n < abs(a-b):\n        if a > b:\n            a = a-n\n            print(a*b)\n        else:\n            b = b-n\n            print(a*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor i in range(t):\n    a, b, x, y, n = list(map(int, input().split()))\n    if a-x < b-y:\n        if n > a-x:\n            n -= a-x\n            b -= n\n            a = x\n        else:\n            a -= n\n    else:\n        if n > b-y:\n            n -= b-y\n            a -= n\n            b = y\n        else:\n            b -= n\n    print(a*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor _ in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a > b:\n        a, b = b, a\n        x, y = y, x\n\n    if a - x < n:\n        n -= a - x\n        a = x\n        b = max(b - n, y)\n    else:\n        a -= n\n    print(a*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef test_a_b():\n    t = int(input())\n    while t > 0:\n        a, b, x, y, n = [int(i) for i in input().split()]\n        if a == x and b == y:\n            print(a*b)\n            t -= 1\n            continue\n        if n >= (a-x) + (b-y):\n            a = x\n            b = y\n            n -= (a-x) + (b-y)\n        if n >= a-x:\n            a = x\n            n -= a-x\n        else:\n            a -= n\n            n = 0\n        if n >= b-y:\n            b = y\n            n -= b-y\n        else:\n            b -= n\n            n = 0\n        print(a*b)\n        t -= 1\n\ntest_a_b()"
+    }
+  ],
+  "created": 1649884107,
+  "id": "cmpl-4weVvG9j6F1mXYxFzjfrhb8th5o6d",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:08:48.313130 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----SOLUTION-----\n\nt = int(input())\n\nfor i in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a - x < n:\n        n = n - (a - x)\n        a = x\n        b = max(y, b-n)\n    else:\n        a = a - n\n        n = 0\n    if b - y < n:\n        b = y\n    else:\n        b = b - n\n    print(a*b)"
+}
+2022-04-13 21:08:48.313166 REASON stop
+2022-04-13 21:08:48.313597 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nt = int(input())\nfor _ in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a-x >= n:\n        a -= n\n    else:\n        n -= a-x\n        a = x\n        if b-y >= n:\n            b -= n\n        else:\n            b = y\n    print(a*b)"
+}
+2022-04-13 21:08:48.313711 REASON stop
+2022-04-13 21:08:48.314068 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        a, b, x, y, n = [int(x) for x in sys.stdin.readline().split()]\n        print(min_product(a, b, x, y, n))\n\ndef min_product(a, b, x, y, n):\n    if a == x and b == y:\n        return a * b\n    elif a == x:\n        return min(a * b, a * (b - min(b - y, n)))\n    elif b == y:\n        return min(a * b, (a - min(a - x, n)) * b)\n    else:\n        return min(a * b, a * (b - min(b - y, n)), (a - min(a - x, n)) * b, (a - min(a - x, n)) * (b - min(b - y, n)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:08:48.314115 REASON stop
+2022-04-13 21:08:48.331916 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Use the greedy algorithm.\n# If the number of operations left is greater than the difference between a and b, then we can just make a equal to x and b equal to y, because the product will never be lower than xy.\n# If the number of operations left is less than the difference between a and b, then we can just make a equal to x+n and b equal to y+n, because if n is greater than the difference between a and b, then the product will never be lower than xy.\n# If the number of operations left is equal to the difference between a and b, then we can just make a equal to x+n and b equal to y+n, because the product will never be lower than xy.\n\nt = int(input())\nfor i in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if n >= abs(a-b):\n        print(x*y)\n    elif n < abs(a-b):\n        if a > b:\n            a = a-n\n            print(a*b)\n        else:\n            b = b-n\n            print(a*b)"
+}
+2022-04-13 21:08:48.332030 REASON stop
+2022-04-13 21:08:48.335856 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor i in range(t):\n    a, b, x, y, n = list(map(int, input().split()))\n    if a-x < b-y:\n        if n > a-x:\n            n -= a-x\n            b -= n\n            a = x\n        else:\n            a -= n\n    else:\n        if n > b-y:\n            n -= b-y\n            a -= n\n            b = y\n        else:\n            b -= n\n    print(a*b)"
+}
+2022-04-13 21:08:48.335928 REASON stop
+2022-04-13 21:08:48.336722 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor _ in range(t):\n    a, b, x, y, n = map(int, input().split())\n    if a > b:\n        a, b = b, a\n        x, y = y, x\n\n    if a - x < n:\n        n -= a - x\n        a = x\n        b = max(b - n, y)\n    else:\n        a -= n\n    print(a*b)"
+}
+2022-04-13 21:08:48.336775 REASON stop
+2022-04-13 21:08:48.337555 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef test_a_b():\n    t = int(input())\n    while t > 0:\n        a, b, x, y, n = [int(i) for i in input().split()]\n        if a == x and b == y:\n            print(a*b)\n            t -= 1\n            continue\n        if n >= (a-x) + (b-y):\n            a = x\n            b = y\n            n -= (a-x) + (b-y)\n        if n >= a-x:\n            a = x\n            n -= a-x\n        else:\n            a -= n\n            n = 0\n        if n >= b-y:\n            b = y\n            n -= b-y\n        else:\n            b -= n\n            n = 0\n        print(a*b)\n        t -= 1\n\ntest_a_b()"
+}
+2022-04-13 21:08:48.337611 REASON stop

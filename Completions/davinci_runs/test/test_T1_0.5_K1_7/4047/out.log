@@ -1,0 +1,147 @@
+2022-04-13 17:45:56.097572 """
+You are given $n$ chips on a number line. The $i$-th chip is placed at the integer coordinate $x_i$. Some chips can have equal coordinates.
+
+You can perform each of the two following types of moves any (possibly, zero) number of times on any chip:
+
+  Move the chip $i$ by $2$ to the left or $2$ to the right for free (i.e. replace the current coordinate $x_i$ with $x_i - 2$ or with $x_i + 2$);  move the chip $i$ by $1$ to the left or $1$ to the right and pay one coin for this move (i.e. replace the current coordinate $x_i$ with $x_i - 1$ or with $x_i + 1$). 
+
+Note that it's allowed to move chips to any integer coordinate, including negative and zero.
+
+Your task is to find the minimum total number of coins required to move all $n$ chips to the same coordinate (i.e. all $x_i$ should be equal after some sequence of moves).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 100$) — the number of chips.
+
+The second line of the input contains $n$ integers $x_1, x_2, \dots, x_n$ ($1 \le x_i \le 10^9$), where $x_i$ is the coordinate of the $i$-th chip.
+
+
+-----Output-----
+
+Print one integer — the minimum total number of coins required to move all $n$ chips to the same coordinate.
+
+
+-----Examples-----
+Input
+3
+1 2 3
+
+Output
+1
+
+Input
+5
+2 2 2 3 3
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example you need to move the first chip by $2$ to the right and the second chip by $1$ to the right or move the third chip by $2$ to the left and the second chip by $1$ to the left so the answer is $1$.
+
+In the second example you need to move two chips with coordinate $3$ by $1$ to the left so the answer is $2$.
+"""
+2022-04-13 17:45:56.097587 --------------------------
+2022-04-13 17:46:24.461217 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nfrom sys import stdin\nfrom math import inf\nfrom typing import List, Tuple\nfrom collections import defaultdict\n\n\ndef count_min_coins(x: List[int]) -> int:\n    \"\"\"\n    >>> count_min_coins([1, 2, 3])\n    1\n    >>> count_min_coins([2, 2, 2, 3, 3])\n    2\n    >>> count_min_coins([1, 3, 5, 7, 9])\n    2\n    \"\"\"\n    if len(x) == 1:\n        return 0\n\n    # Count the number of chips for each coordinate\n    coord_count = defaultdict(int)\n    for coord in x:\n        coord_count[coord] += 1\n\n    # Find the minimum and maximum coordinates\n    min_coord = inf\n    max_coord = -inf\n    for coord in coord_count:\n        min_coord = min(min_coord, coord)\n        max_coord = max(max_coord, coord)\n\n    # The number of coins required to move all the chips to a given coordinate\n    def count_coins(coord: int) -> int:\n        coins = 0\n        for c in coord_count:\n            coins += abs(c - coord)\n        return coins\n\n    # Find the minimum number of coins required to move all the chips\n    # to any of the coordinates\n    min_coins = inf\n    for coord in range(min_coord, max_coord + 1):\n        min_coins = min(min_coins, count_coins(coord))\n\n    return min_coins\n\n\nif __name__ == \"__main__\":\n    n = int(stdin.readline().strip())\n    x = [int(c) for c in stdin.readline().strip().split()]\n    print(count_min_coins(x))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = [int(i) for i in input().split()]\n\nd = {}\nfor i in x:\n    if i in d:\n        d[i] += 1\n    else:\n        d[i] = 1\n\nif len(d) == 1:\n    print(0)\nelse:\n    m = float(\"inf\")\n    for i in d:\n        if d[i] < m:\n            m = d[i]\n    print(m)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = [int(i) for i in input().split()]\nx.sort()\nprint(sum(x)-n*x[0])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, x):\n    min_x = min(x)\n    max_x = max(x)\n    if min_x == max_x:\n        return 0\n    elif min_x + 1 == max_x:\n        return 1\n    else:\n        return 2\n\nn = int(input())\nx = list(map(int, input().split()))\nprint(solve(n, x))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = [int(x) for x in input().split()]\n\nmin_x = min(x)\nmax_x = max(x)\n\nif min_x == max_x:\n    print(0)\nelse:\n    print(max_x - min_x - n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int,input().split()))\nx.sort()\nmid = x[n//2]\nans = 0\nfor i in x:\n    ans += abs(mid-i)\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = float('inf')\n    for i in range(len(x)):\n        ans = min(ans, sum(abs(x[i] - x[j]) for j in range(len(x))))\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649871956,
+  "id": "cmpl-4wbLwFbmqbvRRAOBBVEawDcPG9A1g",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:46:24.461519 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nfrom sys import stdin\nfrom math import inf\nfrom typing import List, Tuple\nfrom collections import defaultdict\n\n\ndef count_min_coins(x: List[int]) -> int:\n    \"\"\"\n    >>> count_min_coins([1, 2, 3])\n    1\n    >>> count_min_coins([2, 2, 2, 3, 3])\n    2\n    >>> count_min_coins([1, 3, 5, 7, 9])\n    2\n    \"\"\"\n    if len(x) == 1:\n        return 0\n\n    # Count the number of chips for each coordinate\n    coord_count = defaultdict(int)\n    for coord in x:\n        coord_count[coord] += 1\n\n    # Find the minimum and maximum coordinates\n    min_coord = inf\n    max_coord = -inf\n    for coord in coord_count:\n        min_coord = min(min_coord, coord)\n        max_coord = max(max_coord, coord)\n\n    # The number of coins required to move all the chips to a given coordinate\n    def count_coins(coord: int) -> int:\n        coins = 0\n        for c in coord_count:\n            coins += abs(c - coord)\n        return coins\n\n    # Find the minimum number of coins required to move all the chips\n    # to any of the coordinates\n    min_coins = inf\n    for coord in range(min_coord, max_coord + 1):\n        min_coins = min(min_coins, count_coins(coord))\n\n    return min_coins\n\n\nif __name__ == \"__main__\":\n    n = int(stdin.readline().strip())\n    x = [int(c) for c in stdin.readline().strip().split()]\n    print(count_min_coins(x))"
+}
+2022-04-13 17:46:24.461560 REASON stop
+2022-04-13 17:46:24.462040 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = [int(i) for i in input().split()]\n\nd = {}\nfor i in x:\n    if i in d:\n        d[i] += 1\n    else:\n        d[i] = 1\n\nif len(d) == 1:\n    print(0)\nelse:\n    m = float(\"inf\")\n    for i in d:\n        if d[i] < m:\n            m = d[i]\n    print(m)"
+}
+2022-04-13 17:46:24.462162 REASON stop
+2022-04-13 17:46:24.462505 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = [int(i) for i in input().split()]\nx.sort()\nprint(sum(x)-n*x[0])"
+}
+2022-04-13 17:46:24.462549 REASON stop
+2022-04-13 17:46:24.482905 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, x):\n    min_x = min(x)\n    max_x = max(x)\n    if min_x == max_x:\n        return 0\n    elif min_x + 1 == max_x:\n        return 1\n    else:\n        return 2\n\nn = int(input())\nx = list(map(int, input().split()))\nprint(solve(n, x))"
+}
+2022-04-13 17:46:24.483017 REASON stop
+2022-04-13 17:46:24.492194 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = [int(x) for x in input().split()]\n\nmin_x = min(x)\nmax_x = max(x)\n\nif min_x == max_x:\n    print(0)\nelse:\n    print(max_x - min_x - n)"
+}
+2022-04-13 17:46:24.492298 REASON stop
+2022-04-13 17:46:24.504756 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int,input().split()))\nx.sort()\nmid = x[n//2]\nans = 0\nfor i in x:\n    ans += abs(mid-i)\nprint(ans)"
+}
+2022-04-13 17:46:24.504876 REASON stop
+2022-04-13 17:46:24.505546 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = float('inf')\n    for i in range(len(x)):\n        ans = min(ans, sum(abs(x[i] - x[j]) for j in range(len(x))))\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:46:24.505616 REASON stop

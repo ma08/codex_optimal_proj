@@ -1,0 +1,136 @@
+2022-04-13 21:12:15.810355 """
+In Takahashi Kingdom, there is an archipelago of N islands, called Takahashi Islands.
+For convenience, we will call them Island 1, Island 2, ..., Island N.
+There are M kinds of regular boat services between these islands.
+Each service connects two islands. The i-th service connects Island a_i and Island b_i.
+Cat Snuke is on Island 1 now, and wants to go to Island N.
+However, it turned out that there is no boat service from Island 1 to Island N, so he wants to know whether it is possible to go to Island N by using two boat services.
+Help him.
+
+-----Constraints-----
+ - 3 ≤ N ≤ 200 000
+ - 1 ≤ M ≤ 200 000
+ - 1 ≤ a_i < b_i ≤ N
+ - (a_i, b_i) \neq (1, N)
+ - If i \neq j, (a_i, b_i) \neq (a_j, b_j).
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+a_1 b_1
+a_2 b_2
+:
+a_M b_M
+
+-----Output-----
+If it is possible to go to Island N by using two boat services, print POSSIBLE; otherwise, print IMPOSSIBLE.
+
+-----Sample Input-----
+3 2
+1 2
+2 3
+
+-----Sample Output-----
+POSSIBLE
+
+"""
+2022-04-13 21:12:15.810365 --------------------------
+2022-04-13 21:12:43.030644 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# N = int(input())\n# M = int(input())\n#\n#\n# def solve(N, M):\n#     graph = [[] for _ in range(N)]\n#     for _ in range(M):\n#         a, b = map(int, input().split())\n#         graph[a-1].append(b-1)\n#     visited = [False for _ in range(N)]\n#     queue = []\n#     queue.append(0)\n#     visited[0] = True\n#     while queue:\n#         s = queue.pop(0)\n#         for i in graph[s]:\n#             if not visited[i]:\n#                 queue.append(i)\n#                 visited[i] = True\n#     return visited[-1]\n#\n#\n# if solve(N, M):\n#     print(\"POSSIBLE\")\n# else:\n#     print(\"IMPOSSIBLE\")\n\nN, M = map(int, input().split())\n\ngraph = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    graph[a-1].append(b-1)\n\nvisited = [False for _ in range(N)]\nqueue = []\nqueue.append(0)\nvisited[0] = True\nwhile queue:\n    s = queue.pop(0)\n    for i in graph[s]:\n        if not visited[i]:\n            queue.append(i)\n            visited[i] = True\n\nif visited[-1]:\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Get input\nn, m = map(int, input().split())\na_b = [list(map(int, input().split())) for i in range(m)]\n\n# Check if a path exists\nif all([[a, b] in a_b for a, b in [[1, n-1], [2, n-1], [1, n-2]]]):\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef is_possible(n, m, a, b):\n    # Make a graph\n    graph = [[] for i in range(n)]\n    for i in range(m):\n        graph[a[i] - 1].append(b[i] - 1)\n        graph[b[i] - 1].append(a[i] - 1)\n\n    # Check if 1 and N are connected by two services\n    visited = [False for i in range(n)]\n    visited[0] = True\n    queue = [[0, 0]] # [position, depth]\n    while len(queue) > 0:\n        pos, depth = queue.pop(0)\n        if depth == 2 and pos == n - 1:\n            return \"POSSIBLE\"\n        for next_pos in graph[pos]:\n            if not visited[next_pos]:\n                queue.append([next_pos, depth + 1])\n                visited[next_pos] = True\n    return \"IMPOSSIBLE\"\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    a = []\n    b = []\n    for i in range(m):\n        a_i, b_i = map(int, input().split())\n        a.append(a_i)\n        b.append(b_i)\n    print(is_possible(n, m, a, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n#read data\nn, m = map(int, sys.stdin.readline().rstrip().split())\n\n#make a dictionary of islands\nislands = {}\nfor i in range(1, n+1):\n    islands[i] = []\n\n#add services to the dictionary\nfor i in range(m):\n    a, b = map(int, sys.stdin.readline().rstrip().split())\n    islands[a].append(b)\n    islands[b].append(a)\n\n#check if it is possible\nif n in islands[1] or 1 in islands[n]:\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = [0] * m\n    b = [0] * m\n    for i in range(m):\n        a[i], b[i] = map(int, sys.stdin.readline().split())\n    if (1 in a and n in b) or (1 in b and n in a):\n        print(\"POSSIBLE\")\n    else:\n        print(\"IMPOSSIBLE\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom collections import deque\n\nN, M = map(int, input().split())\n\n# \u5165\u529b\u53d7\u3051\u53d6\u308a\nedges = [list(map(int, input().split())) for _ in range(M)]\n\n# \u30b0\u30e9\u30d5\u4f5c\u6210\ngraph = defaultdict(list)\nfor edge in edges:\n    graph[edge[0]].append(edge[1])\n    graph[edge[1]].append(edge[0])\n\n\ndef dfs(graph, start, goal):\n    # \u521d\u671f\u5316\n    visited = [False] * (N + 1)\n    stack = deque([start])\n\n    # \u63a2\u7d22\n    while stack:\n        v = stack.pop()\n        if not visited[v]:\n            visited[v] = True\n            stack.extend(graph[v])\n            if v == goal:\n                return True\n    return False\n\n\nif dfs(graph, 1, N):\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+    }
+  ],
+  "created": 1649884335,
+  "id": "cmpl-4weZbUKAoNOiplRsxY3trYQzsILX7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:12:43.030942 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# N = int(input())\n# M = int(input())\n#\n#\n# def solve(N, M):\n#     graph = [[] for _ in range(N)]\n#     for _ in range(M):\n#         a, b = map(int, input().split())\n#         graph[a-1].append(b-1)\n#     visited = [False for _ in range(N)]\n#     queue = []\n#     queue.append(0)\n#     visited[0] = True\n#     while queue:\n#         s = queue.pop(0)\n#         for i in graph[s]:\n#             if not visited[i]:\n#                 queue.append(i)\n#                 visited[i] = True\n#     return visited[-1]\n#\n#\n# if solve(N, M):\n#     print(\"POSSIBLE\")\n# else:\n#     print(\"IMPOSSIBLE\")\n\nN, M = map(int, input().split())\n\ngraph = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    graph[a-1].append(b-1)\n\nvisited = [False for _ in range(N)]\nqueue = []\nqueue.append(0)\nvisited[0] = True\nwhile queue:\n    s = queue.pop(0)\n    for i in graph[s]:\n        if not visited[i]:\n            queue.append(i)\n            visited[i] = True\n\nif visited[-1]:\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+}
+2022-04-13 21:12:43.030996 REASON stop
+2022-04-13 21:12:43.031514 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Get input\nn, m = map(int, input().split())\na_b = [list(map(int, input().split())) for i in range(m)]\n\n# Check if a path exists\nif all([[a, b] in a_b for a, b in [[1, n-1], [2, n-1], [1, n-2]]]):\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+}
+2022-04-13 21:12:43.031628 REASON stop
+2022-04-13 21:12:43.032034 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef is_possible(n, m, a, b):\n    # Make a graph\n    graph = [[] for i in range(n)]\n    for i in range(m):\n        graph[a[i] - 1].append(b[i] - 1)\n        graph[b[i] - 1].append(a[i] - 1)\n\n    # Check if 1 and N are connected by two services\n    visited = [False for i in range(n)]\n    visited[0] = True\n    queue = [[0, 0]] # [position, depth]\n    while len(queue) > 0:\n        pos, depth = queue.pop(0)\n        if depth == 2 and pos == n - 1:\n            return \"POSSIBLE\"\n        for next_pos in graph[pos]:\n            if not visited[next_pos]:\n                queue.append([next_pos, depth + 1])\n                visited[next_pos] = True\n    return \"IMPOSSIBLE\"\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    a = []\n    b = []\n    for i in range(m):\n        a_i, b_i = map(int, input().split())\n        a.append(a_i)\n        b.append(b_i)\n    print(is_possible(n, m, a, b))"
+}
+2022-04-13 21:12:43.032104 REASON stop
+2022-04-13 21:12:43.046664 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n#read data\nn, m = map(int, sys.stdin.readline().rstrip().split())\n\n#make a dictionary of islands\nislands = {}\nfor i in range(1, n+1):\n    islands[i] = []\n\n#add services to the dictionary\nfor i in range(m):\n    a, b = map(int, sys.stdin.readline().rstrip().split())\n    islands[a].append(b)\n    islands[b].append(a)\n\n#check if it is possible\nif n in islands[1] or 1 in islands[n]:\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+}
+2022-04-13 21:12:43.046766 REASON stop
+2022-04-13 21:12:43.047669 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = [0] * m\n    b = [0] * m\n    for i in range(m):\n        a[i], b[i] = map(int, sys.stdin.readline().split())\n    if (1 in a and n in b) or (1 in b and n in a):\n        print(\"POSSIBLE\")\n    else:\n        print(\"IMPOSSIBLE\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:12:43.047734 REASON stop
+2022-04-13 21:12:43.048700 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 21:12:43.048753 REASON stop
+2022-04-13 21:12:43.049617 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom collections import deque\n\nN, M = map(int, input().split())\n\n# \u5165\u529b\u53d7\u3051\u53d6\u308a\nedges = [list(map(int, input().split())) for _ in range(M)]\n\n# \u30b0\u30e9\u30d5\u4f5c\u6210\ngraph = defaultdict(list)\nfor edge in edges:\n    graph[edge[0]].append(edge[1])\n    graph[edge[1]].append(edge[0])\n\n\ndef dfs(graph, start, goal):\n    # \u521d\u671f\u5316\n    visited = [False] * (N + 1)\n    stack = deque([start])\n\n    # \u63a2\u7d22\n    while stack:\n        v = stack.pop()\n        if not visited[v]:\n            visited[v] = True\n            stack.extend(graph[v])\n            if v == goal:\n                return True\n    return False\n\n\nif dfs(graph, 1, N):\n    print(\"POSSIBLE\")\nelse:\n    print(\"IMPOSSIBLE\")"
+}
+2022-04-13 21:12:43.049673 REASON stop

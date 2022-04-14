@@ -1,0 +1,147 @@
+2022-04-13 23:24:47.469152 """
+Mirko got his driver’s license! To celebrate that joyous occasion, his parents bought him his first car: a monster truck! Mirko found out that even though having a car that can squash all other cars is nice in traffic jams, parking a car that is the size of $4$ normal cars can be a bit tricky.
+
+His friend, Slavko, works part time in the city parking company. He periodically sends Mirko a map of the city with occupied parking spaces marked. The map can be represented as a table with $R$ rows, $C$ columns each. Each cell can contain a building (symbol ‘#’), a parked car (symbol ‘X’) or a free parking space (symbol ‘.’). A monster truck is quite huge, $2$ by $2$ cells to be exact.
+
+Help Mirko calculate the number of possible parking spaces grouped by the number of cars he needs to squash to park in them. We are only interested in the number of cars Mirko will squash on the parking space, not the number of cars he will squash on the way over. However, Mirko can’t park on a building. Not even a monster truck is large enough to squash buildings!
+
+-----Input-----
+The first line of input contains two integers, $R$ and $C$ ($2 \leq R, C \leq 50$), the number of rows and columns of the map. The next $R$ lines contain $C$ characters each. Only characters ‘#’, ‘X’ and ‘.’ appear in the input. Note that ‘X’ will always be capital.
+
+-----Output-----
+The output consists of five lines, the total number of parking spaces Mirko can park on if he squashes $0$ cars (first line), $1$ car (second line), $2$ cars (third line), $3$ cars (fourth line), $4$ cars (fifth line).
+
+-----Examples-----
+Sample Input 1:
+4 4
+#..#
+..X.
+..X.
+#XX#
+Sample Output 1:
+1
+1
+2
+1
+0
+
+Sample Input 2:
+4 4
+....
+....
+....
+....
+Sample Output 2:
+9
+0
+0
+0
+0
+"""
+2022-04-13 23:24:47.469167 --------------------------
+2022-04-13 23:25:19.806226 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#CODE:\n\nimport numpy as np\n\ndef get_squash(parking):\n    squash = [0,0,0,0,0]\n    for i in range(len(parking)):\n        for j in range(len(parking[0])):\n            if parking[i][j] == '.':\n                count = 0\n                if i > 0 and parking[i-1][j] == 'X':\n                    count += 1\n                if i < len(parking) - 1 and parking[i+1][j] == 'X':\n                    count += 1\n                if j > 0 and parking[i][j-1] == 'X':\n                    count += 1\n                if j < len(parking[0]) - 1 and parking[i][j+1] == 'X':\n                    count += 1\n                squash[count] += 1\n    return squash\n\ndef main():\n    rows, cols = [int(x) for x in input().split()]\n    parking = []\n    for _ in range(rows):\n        parking.append(input())\n    parking = np.array(parking)\n    squash = get_squash(parking)\n    for i in range(5):\n        print(squash[i])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Reads the input\nR, C = map(int, input().split())\n\n# Creates a 2D list of the input\nmap_ = [[0 for i in range(C)] for j in range(R)]\n\n# Populates the 2D list\nfor i in range(R):\n    map_[i] = list(input())\n\n# Creates a list of the number of parking spaces for each number of cars squashed\nsquash_list = [0 for i in range(5)]\n\n# Iterates through the 2D list\nfor row in range(R):\n    for col in range(C):\n        # Checks if the current space is a building\n        if map_[row][col] == '#':\n            continue\n        # Checks if the current space is a car\n        if map_[row][col] == 'X':\n            squash_list[1] += 1\n            continue\n        # Checks if the current space is free\n        if map_[row][col] == '.':\n            # Checks if the space is on the edge\n            if row == 0 or col == 0:\n                continue\n            # Checks the number of cars squashed\n            squash_count = 0\n            if map_[row - 1][col - 1] == 'X':\n                squash_count += 1\n            if map_[row - 1][col] == 'X':\n                squash_count += 1\n            if map_[row][col - 1] == 'X':\n                squash_count += 1\n            # Adds the number of cars squashed to the list\n            squash_list[squash_count] += 1\n\n# Prints the list\nfor i in squash_list:\n    print(i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    rows, cols = map(int, sys.stdin.readline().split())\n    grid = []\n    for i in range(rows):\n        grid.append(sys.stdin.readline().strip())\n\n    # print(rows, cols)\n    # print(grid)\n\n    # [0, 1, 2, 3, 4]\n    # [1, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n\n    count = [0] * 5\n    for i in range(rows - 2 + 1):\n        for j in range(cols - 2 + 1):\n            free = True\n            for k in range(2):\n                for l in range(2):\n                    if grid[i + k][j + l] == '#':\n                        free = False\n            if free:\n                c = 0\n                for k in range(2):\n                    for l in range(2):\n                        if grid[i + k][j + l] == 'X':\n                            c += 1\n                count[c] += 1\n\n    print('\\n'.join(map(str, count)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    r = int(input())\n    c = int(input())\n    parkings = [0] * 5\n    for _ in range(r):\n        line = input()\n        for i in range(c):\n            if line[i] == '.':\n                parkings[0] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == '.':\n                parkings[1] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == '.':\n                parkings[2] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == 'X' and i + 3 < c and line[i + 3] == '.':\n                parkings[3] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == 'X' and i + 3 < c and line[i + 3] == 'X' and i + 4 < c and line[i + 4] == '.':\n                parkings[4] += 1\n    for i in range(5):\n        print(parkings[i])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nR, C = map(int, input().split())\n\nparking_map = []\n\nfor _ in range(R):\n    parking_map.append(list(input()))\n\nparking_spaces = 0\nsquash_1_car = 0\nsquash_2_cars = 0\nsquash_3_cars = 0\nsquash_4_cars = 0\n\nfor i in range(R-1):\n    for j in range(C-1):\n        if parking_map[i][j] == '.':\n            parking_spaces += 1\n            if parking_map[i][j+1] == 'X':\n                squash_1_car += 1\n            if parking_map[i+1][j] == 'X':\n                squash_1_car += 1\n            if parking_map[i+1][j+1] == 'X':\n                squash_1_car += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j] == 'X':\n                squash_2_cars += 1\n            if parking_map[i+1][j+1] == 'X' and parking_map[i+1][j] == 'X':\n                squash_2_cars += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j+1] == 'X':\n                squash_2_cars += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j] == 'X' and parking_map[i+1][j+1] == 'X':\n                squash_3_cars += 1\n\nfor i in range(R):\n    for j in range(C):\n        if parking_map[i][j] == 'X':\n            squash_4_cars += 1\n\nprint(parking_spaces)\nprint(squash_1_car)\nprint(squash_2_cars)\nprint(squash_3_cars)\nprint(squash_4_cars)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    R, C = map(int, input().split())\n    parking_map = [input() for i in range(R)]\n    parking_spaces = [0] * 5\n    for i in range(R-1):\n        for j in range(C-1):\n            if parking_map[i][j] == '#' or parking_map[i+1][j] == '#' or parking_map[i][j+1] == '#' or parking_map[i+1][j+1] == '#':\n                continue\n            else:\n                cars_squashed = 0\n                if parking_map[i][j] == 'X':\n                    cars_squashed += 1\n                if parking_map[i+1][j] == 'X':\n                    cars_squashed += 1\n                if parking_map[i][j+1] == 'X':\n                    cars_squashed += 1\n                if parking_map[i+1][j+1] == 'X':\n                    cars_squashed += 1\n                parking_spaces[cars_squashed] += 1\n    for space in parking_spaces:\n        print(space)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    R, C = map(int, sys.stdin.readline().split())\n    grid = [sys.stdin.readline().strip() for _ in range(R)]\n\n    ans = [0, 0, 0, 0, 0]\n    for r in range(R):\n        for c in range(C):\n            if grid[r][c] == '.':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[0] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[0] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[0] += 1\n            if grid[r][c] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[1] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[1] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[1] += 1\n            if r+1 < R and grid[r+1][c] == 'X':\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[2] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[2] += 1\n            if c+1 < C and grid[r][c+1] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[2] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[2] += 1\n            if r+1 < R and c+1 < C and grid[r+1][c+1] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[3] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[3] += 1\n            if r+1 < R and c+1 < C and grid[r+1][c+1] == 'X' and grid[r][c+1] == 'X' and grid[r+1][c] == 'X':\n                ans[4] += 1\n    for i in range(5):\n        print(ans[i])\n\nmain()"
+    }
+  ],
+  "created": 1649892287,
+  "id": "cmpl-4wgdrLAj6wA6XN7LRJ4LsA4SrNxMx",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:25:19.806611 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#CODE:\n\nimport numpy as np\n\ndef get_squash(parking):\n    squash = [0,0,0,0,0]\n    for i in range(len(parking)):\n        for j in range(len(parking[0])):\n            if parking[i][j] == '.':\n                count = 0\n                if i > 0 and parking[i-1][j] == 'X':\n                    count += 1\n                if i < len(parking) - 1 and parking[i+1][j] == 'X':\n                    count += 1\n                if j > 0 and parking[i][j-1] == 'X':\n                    count += 1\n                if j < len(parking[0]) - 1 and parking[i][j+1] == 'X':\n                    count += 1\n                squash[count] += 1\n    return squash\n\ndef main():\n    rows, cols = [int(x) for x in input().split()]\n    parking = []\n    for _ in range(rows):\n        parking.append(input())\n    parking = np.array(parking)\n    squash = get_squash(parking)\n    for i in range(5):\n        print(squash[i])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:25:19.806652 REASON stop
+2022-04-13 23:25:19.806936 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.806951 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Reads the input\nR, C = map(int, input().split())\n\n# Creates a 2D list of the input\nmap_ = [[0 for i in range(C)] for j in range(R)]\n\n# Populates the 2D list\nfor i in range(R):\n    map_[i] = list(input())\n\n# Creates a list of the number of parking spaces for each number of cars squashed\nsquash_list = [0 for i in range(5)]\n\n# Iterates through the 2D list\nfor row in range(R):\n    for col in range(C):\n        # Checks if the current space is a building\n        if map_[row][col] == '#':\n            continue\n        # Checks if the current space is a car\n        if map_[row][col] == 'X':\n            squash_list[1] += 1\n            continue\n        # Checks if the current space is free\n        if map_[row][col] == '.':\n            # Checks if the space is on the edge\n            if row == 0 or col == 0:\n                continue\n            # Checks the number of cars squashed\n            squash_count = 0\n            if map_[row - 1][col - 1] == 'X':\n                squash_count += 1\n            if map_[row - 1][col] == 'X':\n                squash_count += 1\n            if map_[row][col - 1] == 'X':\n                squash_count += 1\n            # Adds the number of cars squashed to the list\n            squash_list[squash_count] += 1\n\n# Prints the list\nfor i in squash_list:\n    print(i)"
+}
+2022-04-13 23:25:19.807064 REASON stop
+2022-04-13 23:25:19.807332 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.807343 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    rows, cols = map(int, sys.stdin.readline().split())\n    grid = []\n    for i in range(rows):\n        grid.append(sys.stdin.readline().strip())\n\n    # print(rows, cols)\n    # print(grid)\n\n    # [0, 1, 2, 3, 4]\n    # [1, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n    # [0, 0, 0, 0, 0]\n\n    count = [0] * 5\n    for i in range(rows - 2 + 1):\n        for j in range(cols - 2 + 1):\n            free = True\n            for k in range(2):\n                for l in range(2):\n                    if grid[i + k][j + l] == '#':\n                        free = False\n            if free:\n                c = 0\n                for k in range(2):\n                    for l in range(2):\n                        if grid[i + k][j + l] == 'X':\n                            c += 1\n                count[c] += 1\n\n    print('\\n'.join(map(str, count)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:25:19.807383 REASON stop
+2022-04-13 23:25:19.808398 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.808415 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    r = int(input())\n    c = int(input())\n    parkings = [0] * 5\n    for _ in range(r):\n        line = input()\n        for i in range(c):\n            if line[i] == '.':\n                parkings[0] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == '.':\n                parkings[1] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == '.':\n                parkings[2] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == 'X' and i + 3 < c and line[i + 3] == '.':\n                parkings[3] += 1\n            elif line[i] == 'X' and i + 1 < c and line[i + 1] == 'X' and i + 2 < c and line[i + 2] == 'X' and i + 3 < c and line[i + 3] == 'X' and i + 4 < c and line[i + 4] == '.':\n                parkings[4] += 1\n    for i in range(5):\n        print(parkings[i])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:25:19.808461 REASON stop
+2022-04-13 23:25:19.809039 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.809052 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nR, C = map(int, input().split())\n\nparking_map = []\n\nfor _ in range(R):\n    parking_map.append(list(input()))\n\nparking_spaces = 0\nsquash_1_car = 0\nsquash_2_cars = 0\nsquash_3_cars = 0\nsquash_4_cars = 0\n\nfor i in range(R-1):\n    for j in range(C-1):\n        if parking_map[i][j] == '.':\n            parking_spaces += 1\n            if parking_map[i][j+1] == 'X':\n                squash_1_car += 1\n            if parking_map[i+1][j] == 'X':\n                squash_1_car += 1\n            if parking_map[i+1][j+1] == 'X':\n                squash_1_car += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j] == 'X':\n                squash_2_cars += 1\n            if parking_map[i+1][j+1] == 'X' and parking_map[i+1][j] == 'X':\n                squash_2_cars += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j+1] == 'X':\n                squash_2_cars += 1\n            if parking_map[i][j+1] == 'X' and parking_map[i+1][j] == 'X' and parking_map[i+1][j+1] == 'X':\n                squash_3_cars += 1\n\nfor i in range(R):\n    for j in range(C):\n        if parking_map[i][j] == 'X':\n            squash_4_cars += 1\n\nprint(parking_spaces)\nprint(squash_1_car)\nprint(squash_2_cars)\nprint(squash_3_cars)\nprint(squash_4_cars)"
+}
+2022-04-13 23:25:19.809107 REASON stop
+2022-04-13 23:25:19.809667 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.809685 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    R, C = map(int, input().split())\n    parking_map = [input() for i in range(R)]\n    parking_spaces = [0] * 5\n    for i in range(R-1):\n        for j in range(C-1):\n            if parking_map[i][j] == '#' or parking_map[i+1][j] == '#' or parking_map[i][j+1] == '#' or parking_map[i+1][j+1] == '#':\n                continue\n            else:\n                cars_squashed = 0\n                if parking_map[i][j] == 'X':\n                    cars_squashed += 1\n                if parking_map[i+1][j] == 'X':\n                    cars_squashed += 1\n                if parking_map[i][j+1] == 'X':\n                    cars_squashed += 1\n                if parking_map[i+1][j+1] == 'X':\n                    cars_squashed += 1\n                parking_spaces[cars_squashed] += 1\n    for space in parking_spaces:\n        print(space)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:25:19.809748 REASON stop
+2022-04-13 23:25:19.810443 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'
+2022-04-13 23:25:19.810465 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    R, C = map(int, sys.stdin.readline().split())\n    grid = [sys.stdin.readline().strip() for _ in range(R)]\n\n    ans = [0, 0, 0, 0, 0]\n    for r in range(R):\n        for c in range(C):\n            if grid[r][c] == '.':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[0] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[0] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[0] += 1\n            if grid[r][c] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[1] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[1] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[1] += 1\n            if r+1 < R and grid[r+1][c] == 'X':\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[2] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[2] += 1\n            if c+1 < C and grid[r][c+1] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[2] += 1\n                if r+1 < R and c+1 < C and grid[r+1][c+1] == '.':\n                    ans[2] += 1\n            if r+1 < R and c+1 < C and grid[r+1][c+1] == 'X':\n                if r+1 < R and grid[r+1][c] == '.':\n                    ans[3] += 1\n                if c+1 < C and grid[r][c+1] == '.':\n                    ans[3] += 1\n            if r+1 < R and c+1 < C and grid[r+1][c+1] == 'X' and grid[r][c+1] == 'X' and grid[r+1][c] == 'X':\n                ans[4] += 1\n    for i in range(5):\n        print(ans[i])\n\nmain()"
+}
+2022-04-13 23:25:19.810523 REASON stop
+2022-04-13 23:25:19.811062 test/intro-questions.txt_dir/4794/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4794/solutions.json'

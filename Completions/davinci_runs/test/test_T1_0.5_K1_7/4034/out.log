@@ -1,0 +1,160 @@
+2022-04-13 17:34:12.809218 """
+This is an easy version of the problem. The actual problems are different, but the easy version is almost a subtask of the hard version. Note that the constraints and the output format are different.
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+You have to color all its characters one of the two colors (each character to exactly one color, the same letters can be colored the same or different colors, i.e. you can choose exactly one color for each index in $s$).
+
+After coloring, you can swap any two neighboring characters of the string that are colored different colors. You can perform such an operation arbitrary (possibly, zero) number of times.
+
+The goal is to make the string sorted, i.e. all characters should be in alphabetical order.
+
+Your task is to say if it is possible to color the given string so that after coloring it can become sorted by some sequence of swaps. Note that you have to restore only coloring, not the sequence of swaps.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 200$) — the length of $s$.
+
+The second line of the input contains the string $s$ consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to color the given string so that after coloring it can become sorted by some sequence of swaps, print "NO" (without quotes) in the first line.
+
+Otherwise, print "YES" in the first line and any correct coloring in the second line (the coloring is the string consisting of $n$ characters, the $i$-th character should be '0' if the $i$-th character is colored the first color and '1' otherwise).
+
+
+-----Examples-----
+Input
+9
+abacbecfd
+
+Output
+YES
+001010101
+
+Input
+8
+aaabbcbb
+
+Output
+YES
+01011011
+
+Input
+7
+abcdedc
+
+Output
+NO
+
+Input
+5
+abcde
+
+Output
+YES
+00000
+"""
+2022-04-13 17:34:12.809234 --------------------------
+2022-04-13 17:35:08.964440 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\ns = input()\n\nif \"\".join(sorted(s)) == s:\n    print(\"YES\")\n    print(\"0\" * n)\nelse:\n    print(\"YES\")\n    print(\"\".join(str(int(s[i] != s[i+1])) for i in range(n-1)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nimport sys\n\ndef get_input(source=sys.stdin):\n    \"\"\"\n    source: file-like object (stream); defaults to sys.stdin\n    returns: a tuple of strings\n    \"\"\"\n    return tuple(source.readline().strip() for _ in range(2))\n\ndef process(s):\n    \"\"\"\n    s: a string of lowercase letters\n    returns: a tuple of strings\n    \"\"\"\n    #base case\n    if len(s) == 1:\n        return ('YES', '0')\n    \n    #sort the string\n    sorted_s = sorted(s)\n    #create a defaultdict to keep track of the indices of each letter\n    letters = defaultdict(list)\n    for i, c in enumerate(sorted_s):\n        letters[c].append(i)\n    #create a list to keep track of the colors\n    colors = ['0'] * len(s)\n    \n    #check whether the sorted string is in alphabetical order\n    for i, c in enumerate(sorted_s):\n        #if the letter is not in alphabetical order, then the string can be sorted with swaps\n        if c != s[i]:\n            break\n    else:\n        #if the string is already in alphabetical order, then we don't need to do anything\n        return ('YES', ''.join(colors))\n    \n    #if the string is not in alphabetical order, then we need to change the colors of some letters\n    #we will start by changing the colors of the first letter that is not in alphabetical order\n    #we change the colors of all the letters that are before the letter in the sorted string\n    for i in range(letters[c][0]):\n        colors[i] = '1'\n    \n    #now we need to check whether the string can be sorted with swaps after changing the colors\n    #we will start by checking the first letter that is not in alphabetical order\n    #we need to check whether the letter is in the right position\n    if letters[c][0] != i:\n        #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n        #we will change the color of the letter that is in the right position to the opposite color\n        colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n        #we will change the color of the letter that is in the wrong position to the opposite color\n        colors[i] = '1' if colors[i] == '0' else '0'\n    \n    #now we need to check the rest of the letters\n    for i, c in enumerate(sorted_s):\n        #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n        if letters[c][0] != i:\n            #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n            #we will change the color of the letter that is in the right position to the opposite color\n            colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n            #we will change the color of the letter that is in the wrong position to the opposite color\n            colors[i] = '1' if colors[i] == '0' else '0'\n        \n        #we need to check if the letter that is in the right position is in alphabetical order\n        if c != s[i]:\n            #if the letter is not in alphabetical order, then we need to change the color of the letter that is in the wrong position\n            #we will change the color of the letter that is in the wrong position to the opposite color\n            colors[i] = '1' if colors[i] == '0' else '0'\n            #we will change the color of the letter that is in the right position to the opposite color\n            colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n        \n        #we will remove the letter from the list of indices\n        letters[c].pop(0)\n    \n    #if we reach this point, then the string can be sorted with swaps\n    return ('YES', ''.join(colors))\n\ndef print_answer(answer):\n    \"\"\"\n    answer: a tuple of strings\n    This function prints the first element of answer and then prints the second element of answer in a separate line\n    \"\"\"\n    print(answer[0])\n    print(answer[1])\n\ndef main():\n    s = get_input()\n    answer = process(s[1])\n    print_answer(answer)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef is_sorted(string):\n    for i in range(len(string)-1):\n        if string[i] > string[i+1]:\n            return False\n    return True\n\ndef main():\n    n = int(input())\n    s = input()\n    if is_sorted(s):\n        print('YES')\n        print('0'*n)\n        return\n    s = list(s)\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            s[i] = '0'\n            s[i+1] = '1'\n            break\n    if is_sorted(s):\n        print('YES')\n        print(''.join(s))\n        return\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    if s == ''.join(sorted(s)):\n        return 'YES\\n0' * n\n    if s == ''.join(sorted(s)[::-1]):\n        return 'YES\\n1' * n\n    if s[0] == s[-1]:\n        return 'NO'\n    if s[0] < s[-1]:\n        return 'YES\\n0' * n\n    return 'YES\\n1' * n\n\nif __name__ == '__main__':\n    print(main())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function for this program.\n    \"\"\"\n\n    # Get input.\n    length = int(input())\n    string = input()\n\n    # Print the output.\n    print(\"YES\")\n    print(\"\".join([\"0\"] * length))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\ns = input()\n\nif n == 1:\n    print(\"YES\")\n    print(\"0\")\nelse:\n    if n == 2:\n        if s[0] > s[1]:\n            print(\"YES\")\n            print(\"10\")\n        else:\n            print(\"YES\")\n            print(\"00\")\n    else:\n        if s[0] > s[1]:\n            print(\"YES\")\n            print(\"1\", end='')\n            for i in range(1, n - 1):\n                if s[i] <= s[i - 1]:\n                    print(\"1\", end='')\n                else:\n                    print(\"0\", end='')\n            if s[n - 1] <= s[n - 2]:\n                print(\"1\")\n            else:\n                print(\"0\")\n        else:\n            print(\"YES\")\n            print(\"0\", end='')\n            for i in range(1, n - 1):\n                if s[i] <= s[i - 1]:\n                    print(\"1\", end='')\n                else:\n                    print(\"0\", end='')\n            if s[n - 1] <= s[n - 2]:\n                print(\"1\")\n            else:\n                print(\"0\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef solve(s):\n    n = len(s)\n    res = []\n    for i in range(n):\n        if i == 0:\n            res.append(0)\n        elif s[i] >= s[i-1]:\n            res.append(res[i-1])\n        else:\n            res.append(1 - res[i-1])\n    return res\n\nn = int(input())\ns = input()\nres = solve(s)\nif res is None:\n    print('NO')\nelse:\n    print('YES')\n    print(''.join(map(str, res)))"
+    }
+  ],
+  "created": 1649871252,
+  "id": "cmpl-4wbAayby5f6n63IeqfUw2LiJGmG55",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:35:08.964802 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\ns = input()\n\nif \"\".join(sorted(s)) == s:\n    print(\"YES\")\n    print(\"0\" * n)\nelse:\n    print(\"YES\")\n    print(\"\".join(str(int(s[i] != s[i+1])) for i in range(n-1)))"
+}
+2022-04-13 17:35:08.964842 REASON stop
+2022-04-13 17:35:08.965249 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nimport sys\n\ndef get_input(source=sys.stdin):\n    \"\"\"\n    source: file-like object (stream); defaults to sys.stdin\n    returns: a tuple of strings\n    \"\"\"\n    return tuple(source.readline().strip() for _ in range(2))\n\ndef process(s):\n    \"\"\"\n    s: a string of lowercase letters\n    returns: a tuple of strings\n    \"\"\"\n    #base case\n    if len(s) == 1:\n        return ('YES', '0')\n    \n    #sort the string\n    sorted_s = sorted(s)\n    #create a defaultdict to keep track of the indices of each letter\n    letters = defaultdict(list)\n    for i, c in enumerate(sorted_s):\n        letters[c].append(i)\n    #create a list to keep track of the colors\n    colors = ['0'] * len(s)\n    \n    #check whether the sorted string is in alphabetical order\n    for i, c in enumerate(sorted_s):\n        #if the letter is not in alphabetical order, then the string can be sorted with swaps\n        if c != s[i]:\n            break\n    else:\n        #if the string is already in alphabetical order, then we don't need to do anything\n        return ('YES', ''.join(colors))\n    \n    #if the string is not in alphabetical order, then we need to change the colors of some letters\n    #we will start by changing the colors of the first letter that is not in alphabetical order\n    #we change the colors of all the letters that are before the letter in the sorted string\n    for i in range(letters[c][0]):\n        colors[i] = '1'\n    \n    #now we need to check whether the string can be sorted with swaps after changing the colors\n    #we will start by checking the first letter that is not in alphabetical order\n    #we need to check whether the letter is in the right position\n    if letters[c][0] != i:\n        #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n        #we will change the color of the letter that is in the right position to the opposite color\n        colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n        #we will change the color of the letter that is in the wrong position to the opposite color\n        colors[i] = '1' if colors[i] == '0' else '0'\n    \n    #now we need to check the rest of the letters\n    for i, c in enumerate(sorted_s):\n        #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n        if letters[c][0] != i:\n            #if the letter is not in the right position, then we need to change the color of the letter that is in the right position\n            #we will change the color of the letter that is in the right position to the opposite color\n            colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n            #we will change the color of the letter that is in the wrong position to the opposite color\n            colors[i] = '1' if colors[i] == '0' else '0'\n        \n        #we need to check if the letter that is in the right position is in alphabetical order\n        if c != s[i]:\n            #if the letter is not in alphabetical order, then we need to change the color of the letter that is in the wrong position\n            #we will change the color of the letter that is in the wrong position to the opposite color\n            colors[i] = '1' if colors[i] == '0' else '0'\n            #we will change the color of the letter that is in the right position to the opposite color\n            colors[letters[c][0]] = '1' if colors[letters[c][0]] == '0' else '0'\n        \n        #we will remove the letter from the list of indices\n        letters[c].pop(0)\n    \n    #if we reach this point, then the string can be sorted with swaps\n    return ('YES', ''.join(colors))\n\ndef print_answer(answer):\n    \"\"\"\n    answer: a tuple of strings\n    This function prints the first element of answer and then prints the second element of answer in a separate line\n    \"\"\"\n    print(answer[0])\n    print(answer[1])\n\ndef main():\n    s = get_input()\n    answer = process(s[1])\n    print_answer(answer)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:35:08.965452 REASON stop
+2022-04-13 17:35:08.965853 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef is_sorted(string):\n    for i in range(len(string)-1):\n        if string[i] > string[i+1]:\n            return False\n    return True\n\ndef main():\n    n = int(input())\n    s = input()\n    if is_sorted(s):\n        print('YES')\n        print('0'*n)\n        return\n    s = list(s)\n    for i in range(n-1):\n        if s[i] > s[i+1]:\n            s[i] = '0'\n            s[i+1] = '1'\n            break\n    if is_sorted(s):\n        print('YES')\n        print(''.join(s))\n        return\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:35:08.965903 REASON stop
+2022-04-13 17:35:09.009591 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    if s == ''.join(sorted(s)):\n        return 'YES\\n0' * n\n    if s == ''.join(sorted(s)[::-1]):\n        return 'YES\\n1' * n\n    if s[0] == s[-1]:\n        return 'NO'\n    if s[0] < s[-1]:\n        return 'YES\\n0' * n\n    return 'YES\\n1' * n\n\nif __name__ == '__main__':\n    print(main())"
+}
+2022-04-13 17:35:09.009709 REASON stop
+2022-04-13 17:35:09.035029 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function for this program.\n    \"\"\"\n\n    # Get input.\n    length = int(input())\n    string = input()\n\n    # Print the output.\n    print(\"YES\")\n    print(\"\".join([\"0\"] * length))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:35:09.035134 REASON stop
+2022-04-13 17:35:09.036365 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\ns = input()\n\nif n == 1:\n    print(\"YES\")\n    print(\"0\")\nelse:\n    if n == 2:\n        if s[0] > s[1]:\n            print(\"YES\")\n            print(\"10\")\n        else:\n            print(\"YES\")\n            print(\"00\")\n    else:\n        if s[0] > s[1]:\n            print(\"YES\")\n            print(\"1\", end='')\n            for i in range(1, n - 1):\n                if s[i] <= s[i - 1]:\n                    print(\"1\", end='')\n                else:\n                    print(\"0\", end='')\n            if s[n - 1] <= s[n - 2]:\n                print(\"1\")\n            else:\n                print(\"0\")\n        else:\n            print(\"YES\")\n            print(\"0\", end='')\n            for i in range(1, n - 1):\n                if s[i] <= s[i - 1]:\n                    print(\"1\", end='')\n                else:\n                    print(\"0\", end='')\n            if s[n - 1] <= s[n - 2]:\n                print(\"1\")\n            else:\n                print(\"0\")"
+}
+2022-04-13 17:35:09.036450 REASON stop
+2022-04-13 17:35:09.037549 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef solve(s):\n    n = len(s)\n    res = []\n    for i in range(n):\n        if i == 0:\n            res.append(0)\n        elif s[i] >= s[i-1]:\n            res.append(res[i-1])\n        else:\n            res.append(1 - res[i-1])\n    return res\n\nn = int(input())\ns = input()\nres = solve(s)\nif res is None:\n    print('NO')\nelse:\n    print('YES')\n    print(''.join(map(str, res)))"
+}
+2022-04-13 17:35:09.037628 REASON stop

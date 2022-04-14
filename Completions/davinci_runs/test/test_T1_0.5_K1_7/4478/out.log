@@ -1,0 +1,179 @@
+2022-04-13 21:09:19.956617 """
+You are given $k$ sequences of integers. The length of the $i$-th sequence equals to $n_i$.
+
+You have to choose exactly two sequences $i$ and $j$ ($i \ne j$) such that you can remove exactly one element in each of them in such a way that the sum of the changed sequence $i$ (its length will be equal to $n_i - 1$) equals to the sum of the changed sequence $j$ (its length will be equal to $n_j - 1$).
+
+Note that it's required to remove exactly one element in each of the two chosen sequences.
+
+Assume that the sum of the empty (of the length equals $0$) sequence is $0$.
+
+
+-----Input-----
+
+The first line contains an integer $k$ ($2 \le k \le 2 \cdot 10^5$) — the number of sequences.
+
+Then $k$ pairs of lines follow, each pair containing a sequence.
+
+The first line in the $i$-th pair contains one integer $n_i$ ($1 \le n_i < 2 \cdot 10^5$) — the length of the $i$-th sequence. The second line of the $i$-th pair contains a sequence of $n_i$ integers $a_{i, 1}, a_{i, 2}, \dots, a_{i, n_i}$.
+
+The elements of sequences are integer numbers from $-10^4$ to $10^4$.
+
+The sum of lengths of all given sequences don't exceed $2 \cdot 10^5$, i.e. $n_1 + n_2 + \dots + n_k \le 2 \cdot 10^5$.
+
+
+-----Output-----
+
+If it is impossible to choose two sequences such that they satisfy given conditions, print "NO" (without quotes). Otherwise in the first line print "YES" (without quotes), in the second line — two integers $i$, $x$ ($1 \le i \le k, 1 \le x \le n_i$), in the third line — two integers $j$, $y$ ($1 \le j \le k, 1 \le y \le n_j$). It means that the sum of the elements of the $i$-th sequence without the element with index $x$ equals to the sum of the elements of the $j$-th sequence without the element with index $y$.
+
+Two chosen sequences must be distinct, i.e. $i \ne j$. You can print them in any order.
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+2
+5
+2 3 1 3 2
+6
+1 1 2 2 2 1
+
+Output
+YES
+2 6
+1 2
+
+Input
+3
+1
+5
+5
+1 1 1 1 1
+2
+2 3
+
+Output
+NO
+
+Input
+4
+6
+2 2 2 2 2 2
+5
+2 2 2 2 2
+3
+2 2 2
+5
+2 2 2 2 2
+
+Output
+YES
+2 2
+4 1
+
+
+
+-----Note-----
+
+In the first example there are two sequences $[2, 3, 1, 3, 2]$ and $[1, 1, 2, 2, 2, 1]$. You can remove the second element from the first sequence to get $[2, 1, 3, 2]$ and you can remove the sixth element from the second sequence to get $[1, 1, 2, 2, 2]$. The sums of the both resulting sequences equal to $8$, i.e. the sums are equal.
+"""
+2022-04-13 21:09:19.956644 --------------------------
+2022-04-13 21:09:55.050545 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\narr = []\nfor i in range(n):\n    length = int(input())\n    arr.append([int(x) for x in input().split()])\n\ndef is_equal(arr):\n    sums = []\n    for i in range(n):\n        sums.append(sum(arr[i]))\n    for i in range(n):\n        for j in range(i+1,n):\n            if sums[i] == sums[j]:\n                return True, i, j\n    return False, -1, -1\n\ndef remove_one(arr, i, j):\n    for k in range(len(arr[i])):\n        if sum(arr[i][:k] + arr[i][k+1:]) == sum(arr[j]):\n            return i, k+1\n    for k in range(len(arr[j])):\n        if sum(arr[j][:k] + arr[j][k+1:]) == sum(arr[i]):\n            return j, k+1\n    return -1, -1\n\nis_equal, i, j = is_equal(arr)\nif is_equal:\n    x, y = remove_one(arr, i, j)\n    print(\"YES\")\n    print(x+1, y)\n    print(j+1, y)\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\n\nfor n in range(k):\n    n_i = int(input())\n    a_i = list(map(int, input().split()))\n    s_i = sum(a_i)\n    a_i = [a_i[i] for i in range(n_i) if i != n_i - 1]\n    s_i_ = sum(a_i)\n    if s_i - s_i_ == 0:\n        print(\"YES\")\n        print(n + 1, n_i)\n        print(n + 1, n_i - 1)\n        break\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\ndef get_sum(a):\n    s = 0\n    for i in range(len(a)):\n        s += a[i]\n    return s\n\ndef get_sum_without(a, x):\n    s = 0\n    for i in range(len(a)):\n        if i != x:\n            s += a[i]\n    return s\n\ndef get_sums(a):\n    sums = []\n    for i in range(len(a)):\n        sums.append(get_sum_without(a, i))\n    return sums\n\ndef get_sum_sets(a):\n    sum_sets = []\n    for i in range(len(a)):\n        sum_sets.append(set(get_sums(a[i])))\n    return sum_sets\n\ndef get_sum_sets_intersects(a):\n    sum_sets_intersects = []\n    for i in range(len(a)):\n        for j in range(i + 1, len(a)):\n            sum_sets_intersects.append(a[i] & a[j])\n    return sum_sets_intersects\n\ndef get_intersect_sums(a):\n    intersect_sums = set()\n    for i in range(len(a)):\n        for j in range(len(a[i])):\n            intersect_sums.add(a[i][j])\n    return intersect_sums\n\na = []\nfor i in range(n):\n    m = int(input())\n    a_i = [int(x) for x in input().split()]\n    a.append(a_i)\n\nsums = []\nfor i in range(len(a)):\n    sums.append(get_sum(a[i]))\n\nsum_sets = get_sum_sets(a)\nsum_sets_intersects = get_sum_sets_intersects(sum_sets)\nintersect_sums = get_intersect_sums(sum_sets_intersects)\n\nif len(intersect_sums) > 0:\n    print(\"YES\")\n    for i in range(len(sums)):\n        for j in range(len(a[i])):\n            if sums[i] - a[i][j] in intersect_sums:\n                print(i + 1, j + 1)\n                break\n    for i in range(len(sums)):\n        for j in range(len(a[i])):\n            if sums[i] - a[i][j] in intersect_sums:\n                print(i + 1, j + 1)\n                break\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    lst = []\n    for i in range(n):\n        lst.append([int(x) for x in input().split()])\n    for i in range(n):\n        lst[i].pop(0)\n    for i in range(n):\n        for j in range(len(lst[i])):\n            for k in range(n):\n                for l in range(len(lst[k])):\n                    if sum(lst[i][:j] + lst[i][j+1:]) == sum(lst[k][:l] + lst[k][l+1:]):\n                        print(\"YES\")\n                        print(i + 1, j + 1)\n                        print(k + 1, l + 1)\n                        return\n    print(\"NO\")\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\n\n# init array\na = []\n\nfor i in range(k):\n    n = int(input())\n    a.append([int(x) for x in input().split()])\n\n\ndef find_index_of_removable_element(sequence):\n    for i in range(len(sequence)):\n        if sequence[i] == sum(sequence[:i]) + sum(sequence[i+1:]):\n            return i\n    return None\n\n\ndef find_solution():\n    for i in range(k):\n        for j in range(i+1, k):\n            index_i = find_index_of_removable_element(a[i])\n            index_j = find_index_of_removable_element(a[j])\n            if index_i is not None and index_j is not None:\n                if sum(a[i][:index_i]) + sum(a[i][index_i+1:]) == sum(a[j][:index_j]) + sum(a[j][index_j+1:]):\n                    return True\n    return False\n\n\nif find_solution():\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef read_ints():\n    return list(map(int, input().strip().split()))\n\n\ndef read_array(typ):\n    return list(map(typ, input().strip().split()))\n\n\ndef main():\n    n = int(input().strip())\n    seqs = []\n    for i in range(n):\n        _ = int(input().strip())\n        seqs.append(read_array(int))\n\n    sums = []\n    for seq in seqs:\n        sums.append(sum(seq))\n\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if sums[i] - seqs[i][0] == sums[j] - seqs[j][0]:\n                    print(\"YES\")\n                    print(i + 1, 1)\n                    print(j + 1, 1)\n                    return\n\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if sums[i] - seqs[i][-1] == sums[j] - seqs[j][-1]:\n                    print(\"YES\")\n                    print(i + 1, len(seqs[i]))\n                    print(j + 1, len(seqs[j]))\n                    return\n    print(\"NO\")\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nseqs = []\nfor i in range(n):\n    seqs.append([int(x) for x in input().split()])\n\ndef check_sums(seqs):\n    sums = []\n    for seq in seqs:\n        for i in range(len(seq)):\n            sums.append(sum(seq[:i]+seq[i+1:]))\n    return len(set(sums)) == len(sums)\n\ndef find_pair(seqs):\n    sums = []\n    for seq in seqs:\n        for i in range(len(seq)):\n            sums.append(sum(seq[:i]+seq[i+1:]))\n    sums.sort()\n    for i in range(len(sums)-1):\n        if sums[i] == sums[i+1]:\n            return sums[i]\n    return None\n\nif check_sums(seqs):\n    print(\"YES\")\n    pair_sum = find_pair(seqs)\n    for i in range(n):\n        for j in range(len(seqs[i])):\n            if pair_sum == sum(seqs[i][:j] + seqs[i][j+1:]):\n                print(i+1, j+1)\n                break\n        else:\n            continue\n        break\nelse:\n    print(\"NO\")"
+    }
+  ],
+  "created": 1649884160,
+  "id": "cmpl-4weWm1v47WrURZqteyn9CXtYHGZuu",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:09:55.050905 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\narr = []\nfor i in range(n):\n    length = int(input())\n    arr.append([int(x) for x in input().split()])\n\ndef is_equal(arr):\n    sums = []\n    for i in range(n):\n        sums.append(sum(arr[i]))\n    for i in range(n):\n        for j in range(i+1,n):\n            if sums[i] == sums[j]:\n                return True, i, j\n    return False, -1, -1\n\ndef remove_one(arr, i, j):\n    for k in range(len(arr[i])):\n        if sum(arr[i][:k] + arr[i][k+1:]) == sum(arr[j]):\n            return i, k+1\n    for k in range(len(arr[j])):\n        if sum(arr[j][:k] + arr[j][k+1:]) == sum(arr[i]):\n            return j, k+1\n    return -1, -1\n\nis_equal, i, j = is_equal(arr)\nif is_equal:\n    x, y = remove_one(arr, i, j)\n    print(\"YES\")\n    print(x+1, y)\n    print(j+1, y)\nelse:\n    print(\"NO\")"
+}
+2022-04-13 21:09:55.050972 REASON stop
+2022-04-13 21:09:55.066066 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\n\nfor n in range(k):\n    n_i = int(input())\n    a_i = list(map(int, input().split()))\n    s_i = sum(a_i)\n    a_i = [a_i[i] for i in range(n_i) if i != n_i - 1]\n    s_i_ = sum(a_i)\n    if s_i - s_i_ == 0:\n        print(\"YES\")\n        print(n + 1, n_i)\n        print(n + 1, n_i - 1)\n        break\nelse:\n    print(\"NO\")"
+}
+2022-04-13 21:09:55.066207 REASON stop
+2022-04-13 21:09:55.066550 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\ndef get_sum(a):\n    s = 0\n    for i in range(len(a)):\n        s += a[i]\n    return s\n\ndef get_sum_without(a, x):\n    s = 0\n    for i in range(len(a)):\n        if i != x:\n            s += a[i]\n    return s\n\ndef get_sums(a):\n    sums = []\n    for i in range(len(a)):\n        sums.append(get_sum_without(a, i))\n    return sums\n\ndef get_sum_sets(a):\n    sum_sets = []\n    for i in range(len(a)):\n        sum_sets.append(set(get_sums(a[i])))\n    return sum_sets\n\ndef get_sum_sets_intersects(a):\n    sum_sets_intersects = []\n    for i in range(len(a)):\n        for j in range(i + 1, len(a)):\n            sum_sets_intersects.append(a[i] & a[j])\n    return sum_sets_intersects\n\ndef get_intersect_sums(a):\n    intersect_sums = set()\n    for i in range(len(a)):\n        for j in range(len(a[i])):\n            intersect_sums.add(a[i][j])\n    return intersect_sums\n\na = []\nfor i in range(n):\n    m = int(input())\n    a_i = [int(x) for x in input().split()]\n    a.append(a_i)\n\nsums = []\nfor i in range(len(a)):\n    sums.append(get_sum(a[i]))\n\nsum_sets = get_sum_sets(a)\nsum_sets_intersects = get_sum_sets_intersects(sum_sets)\nintersect_sums = get_intersect_sums(sum_sets_intersects)\n\nif len(intersect_sums) > 0:\n    print(\"YES\")\n    for i in range(len(sums)):\n        for j in range(len(a[i])):\n            if sums[i] - a[i][j] in intersect_sums:\n                print(i + 1, j + 1)\n                break\n    for i in range(len(sums)):\n        for j in range(len(a[i])):\n            if sums[i] - a[i][j] in intersect_sums:\n                print(i + 1, j + 1)\n                break\nelse:\n    print(\"NO\")"
+}
+2022-04-13 21:09:55.066607 REASON stop
+2022-04-13 21:09:55.067616 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    lst = []\n    for i in range(n):\n        lst.append([int(x) for x in input().split()])\n    for i in range(n):\n        lst[i].pop(0)\n    for i in range(n):\n        for j in range(len(lst[i])):\n            for k in range(n):\n                for l in range(len(lst[k])):\n                    if sum(lst[i][:j] + lst[i][j+1:]) == sum(lst[k][:l] + lst[k][l+1:]):\n                        print(\"YES\")\n                        print(i + 1, j + 1)\n                        print(k + 1, l + 1)\n                        return\n    print(\"NO\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:09:55.067666 REASON stop
+2022-04-13 21:09:55.078430 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\n\n# init array\na = []\n\nfor i in range(k):\n    n = int(input())\n    a.append([int(x) for x in input().split()])\n\n\ndef find_index_of_removable_element(sequence):\n    for i in range(len(sequence)):\n        if sequence[i] == sum(sequence[:i]) + sum(sequence[i+1:]):\n            return i\n    return None\n\n\ndef find_solution():\n    for i in range(k):\n        for j in range(i+1, k):\n            index_i = find_index_of_removable_element(a[i])\n            index_j = find_index_of_removable_element(a[j])\n            if index_i is not None and index_j is not None:\n                if sum(a[i][:index_i]) + sum(a[i][index_i+1:]) == sum(a[j][:index_j]) + sum(a[j][index_j+1:]):\n                    return True\n    return False\n\n\nif find_solution():\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+}
+2022-04-13 21:09:55.078519 REASON stop
+2022-04-13 21:09:55.089104 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef read_ints():\n    return list(map(int, input().strip().split()))\n\n\ndef read_array(typ):\n    return list(map(typ, input().strip().split()))\n\n\ndef main():\n    n = int(input().strip())\n    seqs = []\n    for i in range(n):\n        _ = int(input().strip())\n        seqs.append(read_array(int))\n\n    sums = []\n    for seq in seqs:\n        sums.append(sum(seq))\n\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if sums[i] - seqs[i][0] == sums[j] - seqs[j][0]:\n                    print(\"YES\")\n                    print(i + 1, 1)\n                    print(j + 1, 1)\n                    return\n\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if sums[i] - seqs[i][-1] == sums[j] - seqs[j][-1]:\n                    print(\"YES\")\n                    print(i + 1, len(seqs[i]))\n                    print(j + 1, len(seqs[j]))\n                    return\n    print(\"NO\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:09:55.089192 REASON stop
+2022-04-13 21:09:55.089832 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nseqs = []\nfor i in range(n):\n    seqs.append([int(x) for x in input().split()])\n\ndef check_sums(seqs):\n    sums = []\n    for seq in seqs:\n        for i in range(len(seq)):\n            sums.append(sum(seq[:i]+seq[i+1:]))\n    return len(set(sums)) == len(sums)\n\ndef find_pair(seqs):\n    sums = []\n    for seq in seqs:\n        for i in range(len(seq)):\n            sums.append(sum(seq[:i]+seq[i+1:]))\n    sums.sort()\n    for i in range(len(sums)-1):\n        if sums[i] == sums[i+1]:\n            return sums[i]\n    return None\n\nif check_sums(seqs):\n    print(\"YES\")\n    pair_sum = find_pair(seqs)\n    for i in range(n):\n        for j in range(len(seqs[i])):\n            if pair_sum == sum(seqs[i][:j] + seqs[i][j+1:]):\n                print(i+1, j+1)\n                break\n        else:\n            continue\n        break\nelse:\n    print(\"NO\")"
+}
+2022-04-13 21:09:55.089909 REASON stop

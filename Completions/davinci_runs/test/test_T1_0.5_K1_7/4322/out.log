@@ -1,0 +1,155 @@
+2022-04-13 20:01:27.095664 """
+There are $n$ people in a row. The height of the $i$-th person is $a_i$. You can choose any subset of these people and try to arrange them into a balanced circle.
+
+A balanced circle is such an order of people that the difference between heights of any adjacent people is no more than $1$. For example, let heights of chosen people be $[a_{i_1}, a_{i_2}, \dots, a_{i_k}]$, where $k$ is the number of people you choose. Then the condition $|a_{i_j} - a_{i_{j + 1}}| \le 1$ should be satisfied for all $j$ from $1$ to $k-1$ and the condition $|a_{i_1} - a_{i_k}| \le 1$ should be also satisfied. $|x|$ means the absolute value of $x$. It is obvious that the circle consisting of one person is balanced.
+
+Your task is to choose the maximum number of people and construct a balanced circle consisting of all chosen people. It is obvious that the circle consisting of one person is balanced so the answer always exists.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of people.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the height of the $i$-th person.
+
+
+-----Output-----
+
+In the first line of the output print $k$ — the number of people in the maximum balanced circle.
+
+In the second line print $k$ integers $res_1, res_2, \dots, res_k$, where $res_j$ is the height of the $j$-th person in the maximum balanced circle. The condition $|res_{j} - res_{j + 1}| \le 1$ should be satisfied for all $j$ from $1$ to $k-1$ and the condition $|res_{1} - res_{k}| \le 1$ should be also satisfied.
+
+
+-----Examples-----
+Input
+7
+4 3 5 1 2 2 1
+
+Output
+5
+2 1 1 2 3
+
+Input
+5
+3 7 5 1 5
+
+Output
+2
+5 5 
+
+Input
+3
+5 1 4
+
+Output
+2
+4 5 
+
+Input
+7
+2 2 3 2 1 2 2
+
+Output
+7
+1 2 2 2 2 3 2
+"""
+2022-04-13 20:01:27.095679 --------------------------
+2022-04-13 20:03:23.102446 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    f = [0] * (n + 1)\n    g = [0] * (n + 1)\n    for i in range(n):\n        f[i + 1] = max(f[i], g[i])\n        if i + 2 <= n and a[i] + 1 >= a[i + 1]:\n            g[i + 2] = max(g[i + 2], f[i] + 1)\n        if i + 3 <= n and a[i] + 1 >= a[i + 1] and a[i + 1] + 1 >= a[i + 2]:\n            g[i + 3] = max(g[i + 3], f[i] + 2)\n    ans = f[n]\n    print(ans)\n    b = []\n    i = n\n    while i > 0:\n        if g[i] == ans:\n            b.append(a[i - 1])\n            ans -= 1\n            i -= 2\n        elif f[i - 1] == ans:\n            b.append(a[i - 2])\n            ans -= 1\n            i -= 1\n    print(*b[::-1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef find(v):\n    if parents[v] == v:\n        return v\n    else:\n        parents[v] = find(parents[v])\n        return parents[v]\n\ndef union(v1, v2):\n    if find(v1) != find(v2):\n        parents[find(v1)] = find(v2)\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = list(map(int, input().split()))\n    parents = list(range(n))\n    for i in range(n - 1):\n        if a[i] + 1 == a[i + 1]:\n            union(i, i + 1)\n    if a[0] + 1 == a[-1]:\n        union(0, n - 1)\n    d = {}\n    for i in range(n):\n        d[find(i)] = d.get(find(i), 0) + 1\n    print(max(d.values()))\n    print(\" \".join(map(str, a)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef find_max_circle(n, a):\n    if n == 1:\n        return 1, [a[0]]\n    a.sort()\n    if a[-1] - a[0] <= 1:\n        return n, a\n    else:\n        a_min = a.count(a[0])\n        a_max = a.count(a[-1])\n        if a_min > a_max:\n            return n - a_min, [a[-1]] * a_min + [a[0]] * (n - a_min)\n        elif a_max > a_min:\n            return n - a_max, [a[0]] * a_max + [a[-1]] * (n - a_max)\n        else:\n            return n - a_min, [a[0]] * a_min + [a[-1]] * (n - a_min)\n\nk, res = find_max_circle(n, a)\nprint(k)\nprint(*res)"
+    },
+    {
+      "finish_reason": "length",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\n\n# a = [int(x) for x in input().split()]\na = list(map(int, input().split()))\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 2\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 3\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 4\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 5\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 6\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 7\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 8\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 9\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 10\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 11\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 12\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 13\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 14\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 15\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 16\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 17\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 18\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 19\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 20\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 21\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 22\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 23\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 24\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 25\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 26\n\n# max_len = 0\n# max_start"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nb = [a[0]]\nfor i in range(1, n):\n    if a[i] - b[-1] == 1:\n        b.append(a[i-1])\n    b.append(a[i])\n\nprint(len(b))\nprint(*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nres = [a[0]]\n\nfor i in range(1, n - 1):\n    if a[i] - a[i - 1] <= 1:\n        res.append(a[i])\n\nif abs(a[-1] - a[-2]) <= 1:\n    res.append(a[-1])\nelif a[-1] - a[-2] > 1:\n    res.append(a[-2])\n\nprint(len(res))\nprint(*res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = input().split()\na = list(map(int, a))\n\na.sort()\n\nmin_a = a[0]\nmax_a = a[-1]\n\nif max_a - min_a <= 1:\n    print(n)\n    print(*a)\nelse:\n    if max_a - min_a == 2:\n        a.remove(max_a)\n        a.remove(min_a)\n        print(n - 2)\n        print(min_a, min_a, *a, max_a, max_a)\n    else:\n        a.remove(max_a)\n        a.remove(min_a)\n        a.remove(min_a)\n        a.remove(max_a)\n        print(n - 4)\n        print(min_a, min_a, *a, max_a, max_a)"
+    }
+  ],
+  "created": 1649880087,
+  "id": "cmpl-4wdT57Gm38r84jAv45CcxOXXLzRzX",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:03:23.102867 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    f = [0] * (n + 1)\n    g = [0] * (n + 1)\n    for i in range(n):\n        f[i + 1] = max(f[i], g[i])\n        if i + 2 <= n and a[i] + 1 >= a[i + 1]:\n            g[i + 2] = max(g[i + 2], f[i] + 1)\n        if i + 3 <= n and a[i] + 1 >= a[i + 1] and a[i + 1] + 1 >= a[i + 2]:\n            g[i + 3] = max(g[i + 3], f[i] + 2)\n    ans = f[n]\n    print(ans)\n    b = []\n    i = n\n    while i > 0:\n        if g[i] == ans:\n            b.append(a[i - 1])\n            ans -= 1\n            i -= 2\n        elif f[i - 1] == ans:\n            b.append(a[i - 2])\n            ans -= 1\n            i -= 1\n    print(*b[::-1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:03:23.102913 REASON stop
+2022-04-13 20:03:23.103335 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef find(v):\n    if parents[v] == v:\n        return v\n    else:\n        parents[v] = find(parents[v])\n        return parents[v]\n\ndef union(v1, v2):\n    if find(v1) != find(v2):\n        parents[find(v1)] = find(v2)\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = list(map(int, input().split()))\n    parents = list(range(n))\n    for i in range(n - 1):\n        if a[i] + 1 == a[i + 1]:\n            union(i, i + 1)\n    if a[0] + 1 == a[-1]:\n        union(0, n - 1)\n    d = {}\n    for i in range(n):\n        d[find(i)] = d.get(find(i), 0) + 1\n    print(max(d.values()))\n    print(\" \".join(map(str, a)))"
+}
+2022-04-13 20:03:23.103445 REASON stop
+2022-04-13 20:03:23.103819 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef find_max_circle(n, a):\n    if n == 1:\n        return 1, [a[0]]\n    a.sort()\n    if a[-1] - a[0] <= 1:\n        return n, a\n    else:\n        a_min = a.count(a[0])\n        a_max = a.count(a[-1])\n        if a_min > a_max:\n            return n - a_min, [a[-1]] * a_min + [a[0]] * (n - a_min)\n        elif a_max > a_min:\n            return n - a_max, [a[0]] * a_max + [a[-1]] * (n - a_max)\n        else:\n            return n - a_min, [a[0]] * a_min + [a[-1]] * (n - a_min)\n\nk, res = find_max_circle(n, a)\nprint(k)\nprint(*res)"
+}
+2022-04-13 20:03:23.103883 REASON stop
+2022-04-13 20:03:23.138124 3 {
+  "finish_reason": "length",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\n\n# a = [int(x) for x in input().split()]\na = list(map(int, input().split()))\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 2\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 3\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 4\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 5\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 6\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 7\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 8\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 9\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 10\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 11\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 12\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 13\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 14\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 15\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 16\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 17\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 18\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 19\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 20\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 21\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 22\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 23\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 24\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 25\n\n# max_len = 0\n# max_start = 0\n\n# for i in range(n):\n#     curr_len = 1\n#     curr_start = i\n#     for j in range(i + 1, n):\n#         if a[j] - a[j - 1] <= 1:\n#             curr_len += 1\n#         else:\n#             break\n#     if curr_len > max_len:\n#         max_len = curr_len\n#         max_start = curr_start\n\n# print(max_len)\n# print(*a[max_start:max_start + max_len])\n\n# SOLUTION 26\n\n# max_len = 0\n# max_start"
+}
+2022-04-13 20:03:23.138285 REASON length
+2022-04-13 20:03:23.138292 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nb = [a[0]]\nfor i in range(1, n):\n    if a[i] - b[-1] == 1:\n        b.append(a[i-1])\n    b.append(a[i])\n\nprint(len(b))\nprint(*b)"
+}
+2022-04-13 20:03:23.138347 REASON stop
+2022-04-13 20:03:23.154704 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nres = [a[0]]\n\nfor i in range(1, n - 1):\n    if a[i] - a[i - 1] <= 1:\n        res.append(a[i])\n\nif abs(a[-1] - a[-2]) <= 1:\n    res.append(a[-1])\nelif a[-1] - a[-2] > 1:\n    res.append(a[-2])\n\nprint(len(res))\nprint(*res)"
+}
+2022-04-13 20:03:23.154806 REASON stop
+2022-04-13 20:03:23.155549 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = input().split()\na = list(map(int, a))\n\na.sort()\n\nmin_a = a[0]\nmax_a = a[-1]\n\nif max_a - min_a <= 1:\n    print(n)\n    print(*a)\nelse:\n    if max_a - min_a == 2:\n        a.remove(max_a)\n        a.remove(min_a)\n        print(n - 2)\n        print(min_a, min_a, *a, max_a, max_a)\n    else:\n        a.remove(max_a)\n        a.remove(min_a)\n        a.remove(min_a)\n        a.remove(max_a)\n        print(n - 4)\n        print(min_a, min_a, *a, max_a, max_a)"
+}
+2022-04-13 20:03:23.155645 REASON stop

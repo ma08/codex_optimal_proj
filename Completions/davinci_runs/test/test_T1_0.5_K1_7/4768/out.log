@@ -1,0 +1,151 @@
+2022-04-13 23:15:01.989852 """
+The famous Jurassic park biologist Dean O’Saur has discovered new samples of what he expects to be the DNA of a dinosaur. With the help of his assistant Petra Dactil, he managed to sequence the samples, and now they are ready for analysis. Dean thinks this dinosaur was affected with a particular disease that mutated the DNA of some cells.
+
+To verify his theory, he needs to compute the most likely evolutionary tree from the samples, where the nodes are the samples of DNA. Because there is no temporal data for the DNA samples, he is not concerned where the root of the tree is.
+
+Dean considers the most likely evolutionary tree, the tree with smallest unlikeliness: the unlikeliness of a tree is defined as the sum of the weights of all edges, where the weight of an edge is the number of positions at which the two DNA strings are different.
+
+As a world expert in data trees, he asks you to reconstruct the most likely evolutionary tree.
+
+In the first sample, the optimal tree is AA - AT - TT - TC . The unlikeliness of the edge between AA and AT edge is $1$, because the strings AA and AT differ in exactly $1$ position. The weights of the other two edges are also $1$, so that the unlikeliness of the entire tree is $3$. Since there is no tree of unlikeliness less than $3$, the minimal unlikeliness of an evolutionary tree for this case is $3$.
+
+-----Input-----
+ - The first line consists of two integers $1\leq n\leq 1000$ and $1\leq k\leq 10$, the number of samples and the length of each sample respectively.
+ - Each of the next $n$ lines contains a string of length $k$ consisting of the characters in ACTG.
+
+-----Output-----
+ - On the first line, print the minimal unlikeliness of the evolutionary tree.
+ - Then, print $n-1$ lines, each consisting of two integers $0\leq u,v < n$, indicating that in the most likely evolutionary tree, there is an edge between DNA string $u$ and $v$. If there are multiple answers possible, any of them will be accepted.
+
+-----Examples-----
+Sample Input 1:
+4 2
+AA
+AT
+TT
+TC
+Sample Output 1:
+3
+0 1
+1 2
+2 3
+
+Sample Input 2:
+4 1
+A
+A
+G
+T
+Sample Output 2:
+2
+0 1
+0 2
+0 3
+"""
+2022-04-13 23:15:01.989876 --------------------------
+2022-04-13 23:15:40.625779 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport numpy as np\nfrom copy import deepcopy\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    dna = []\n    for i in range(n):\n        dna.append(sys.stdin.readline().strip())\n\n    # print(n, k, dna)\n\n    def get_unlikeliness(x, y):\n        count = 0\n        for i in range(k):\n            if x[i] != y[i]:\n                count += 1\n        return count\n\n    def get_edges(dna_list):\n        edges = []\n        for i in range(len(dna_list)):\n            for j in range(i+1, len(dna_list)):\n                edges.append([i, j, get_unlikeliness(dna_list[i], dna_list[j])])\n        return edges\n\n    def get_minimal_unlikeliness(edges):\n        if len(edges) == 1:\n            return edges[0][2]\n\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness\n\n    def get_minimal_unlikeliness2(edges):\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness, min_edges\n\n    def get_minimal_unlikeliness3(edges):\n        if len(edges) == 1:\n            return edges[0][2]\n\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness3(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness\n\n    edges = get_edges(dna)\n    # print(edges)\n\n    # print(get_minimal_unlikeliness(edges))\n    # print(get_minimal_unlikeliness2(edges))\n    print(get_minimal_unlikeliness3(edges))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\n#Solution\ndef dfs(vertex, prev):\n    global ans\n    for i in graph[vertex]:\n        if i == prev:\n            continue\n        ans += dist[vertex][i]\n        dfs(i, vertex)\n\n\ndef main():\n    global graph, dist, ans\n    n, k = map(int, input().split())\n    s = [input() for i in range(n)]\n    graph = [[] for i in range(n)]\n    dist = [[0] * n for i in range(n)]\n    for i in range(n):\n        for j in range(i + 1, n):\n            dist[i][j] = dist[j][i] = sum(s[i][x] != s[j][x] for x in range(k))\n    for i in range(n):\n        for j in range(i + 1, n):\n            mn = min(dist[i][j], dist[i][0] + dist[0][j], dist[i][1] + dist[1][j])\n            if mn == dist[i][0] + dist[0][j]:\n                graph[i].append(0)\n                graph[0].append(i)\n            if mn == dist[i][1] + dist[1][j]:\n                graph[i].append(1)\n                graph[1].append(i)\n            if mn == dist[i][j]:\n                graph[i].append(j)\n                graph[j].append(i)\n    ans = 0\n    dfs(0, -1)\n    print(ans)\n    for i in range(n):\n        for j in graph[i]:\n            if i < j:\n                print(i, j)\n\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_line():\n    return sys.stdin.readline().strip()\n\ndef read_ints():\n    return map(int, read_line().split())\n\ndef read_int():\n    return int(read_line())\n\ndef read_str():\n    return read_line()\n\ndef read_strs():\n    return read_line().split()\n\ndef read_float():\n    return float(read_line())\n\ndef read_floats():\n    return map(float, read_line().split())\n\ndef read_arr(R):\n    return [map(int, read_line().split()) for _ in xrange(R)]\n\ndef read_grid(H):\n    return [map(int, read_line().split()) for _ in xrange(H)]\n\ndef read_ints_arr(R):\n    return [map(int, read_line().split()) for _ in xrange(R)]\n\ndef read_ints_grid(H):\n    return [map(int, read_line().split()) for _ in xrange(H)]\n\ndef solve_small(N, K, S):\n    from itertools import combinations\n    from collections import defaultdict\n    combs = list(combinations(range(N), 2))\n    d = defaultdict(int)\n    for i, j in combs:\n        d[(i, j)] = d[(j, i)] = sum(1 for a, b in zip(S[i], S[j]) if a != b)\n    d = {k:v for k, v in d.iteritems()}\n    combs = sorted(combs, key=lambda x:d[x])\n    edges = []\n    seen = set()\n    for i, j in combs:\n        if i in seen or j in seen:\n            continue\n        seen.add(i)\n        seen.add(j)\n        edges.append((i, j))\n    return sum(d[x] for x in edges), edges\n\ndef solve(N, K, S):\n    from itertools import combinations\n    from collections import defaultdict\n    from collections import deque\n    combs = list(combinations(range(N), 2))\n    d = defaultdict(int)\n    for i, j in combs:\n        d[(i, j)] = d[(j, i)] = sum(1 for a, b in zip(S[i], S[j]) if a != b)\n    d = {k:v for k, v in d.iteritems()}\n    combs = sorted(combs, key=lambda x:d[x])\n    edges = []\n    seen = set()\n    for i, j in combs:\n        if i in seen or j in seen:\n            continue\n        seen.add(i)\n        seen.add(j)\n        edges.append((i, j))\n    return sum(d[x] for x in edges), edges\n\ndef main():\n    N, K = read_ints()\n    S = [read_str() for _ in xrange(N)]\n    print solve(N, K, S)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef prim(G, n):\n    V = set()\n    e = []\n    V.add(0)\n    while len(V) != n:\n        min_edge = [None, None, float(\"inf\")]\n        for u in V:\n            for v in G[u]:\n                if v not in V and G[u][v] < min_edge[2]:\n                    min_edge = [u, v, G[u][v]]\n        e.append(min_edge)\n        V.add(min_edge[1])\n    return e\n\ndef main():\n    n, k = map(int, input().split())\n    dna = []\n    for _ in range(n):\n        dna.append(input())\n    G = {}\n    for i in range(n):\n        G[i] = {}\n        for j in range(i+1, n):\n            cnt = 0\n            for k in range(len(dna[i])):\n                if dna[i][k] != dna[j][k]:\n                    cnt += 1\n            G[i][j] = cnt\n            G[j][i] = cnt\n    e = prim(G, n)\n    print(sum(map(lambda x: x[2], e)))\n    for u, v, w in e:\n        print(u, v)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# This is a nice application of Kruskal's minimum spanning tree algorithm\n# We use a disjoint set to keep track of the connected components\n# and the weight of the edge is the number of characters that differ\n# between the two strings.\n\nimport sys\n\n# Disjoint set class\nclass DisjointSet():\n    def __init__(self):\n        self.parent = [i for i in range(1000)]\n        self.rank = [0 for i in range(1000)]\n    \n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n    \n    def union(self, x, y):\n        xroot = self.find(x)\n        yroot = self.find(y)\n        if xroot == yroot:\n            return\n        if self.rank[xroot] < self.rank[yroot]:\n            self.parent[xroot] = yroot\n        elif self.rank[xroot] > self.rank[yroot]:\n            self.parent[yroot] = xroot\n        else:\n            self.parent[yroot] = xroot\n            self.rank[xroot] += 1\n\n# Compare two strings and return the number of characters that differ\ndef compare(a, b):\n    count = 0\n    for i in range(len(a)):\n        if a[i] != b[i]:\n            count += 1\n    return count\n\n# Kruskal's algorithm to find minimum spanning tree\ndef kruskal(n, edges):\n    ds = DisjointSet()\n    edges.sort(key=lambda x: x[2])\n    for e in edges:\n        if ds.find(e[0]) != ds.find(e[1]):\n            ds.union(e[0], e[1])\n            print(e[0], e[1])\n\nn, k = map(int, input().split())\ns = []\nfor i in range(n):\n    s.append(input())\n\nedges = []\nfor i in range(n-1):\n    for j in range(i+1, n):\n        edges.append([i, j, compare(s[i], s[j])])\n\nkruskal(n, edges)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    dnas = []\n    for i in range(n):\n        dnas.append(input())\n    print(n)\n    print(k)\n    print(dnas)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nfrom itertools import combinations\n\ndef read_input(filename):\n    with open(filename, 'r') as f:\n        n, k = [int(x) for x in f.readline().split()]\n        dna_strings = [f.readline().strip() for _ in range(n)]\n        return n, k, dna_strings\n\ndef calculate_unlikeliness(dna1, dna2):\n    return sum(1 for x, y in zip(dna1, dna2) if x != y)\n\ndef get_min_unlikeliness(n, k, dna_strings):\n    edge_weights = [calculate_unlikeliness(dna1, dna2) for dna1, dna2 in combinations(dna_strings, 2)]\n    return sum(edge_weights)\n\ndef get_min_unlikeliness_edges(n, k, dna_strings):\n    edges = []\n    for dna1, dna2 in combinations(dna_strings, 2):\n        edges.append((calculate_unlikeliness(dna1, dna2), dna1, dna2))\n    edges.sort()\n    return edges\n\ndef write_output(filename, min_unlikeliness, edges):\n    with open(filename, 'w') as f:\n        f.write('{}\\n'.format(min_unlikeliness))\n        for edge in edges:\n            f.write('{} {}\\n'.format(dna_strings.index(edge[1]), dna_strings.index(edge[2])))\n\nif __name__ == '__main__':\n    n, k, dna_strings = read_input('rosalind_ba7b.txt')\n    min_unlikeliness = get_min_unlikeliness(n, k, dna_strings)\n    edges = get_min_unlikeliness_edges(n, k, dna_strings)\n    write_output('output.txt', min_unlikeliness, edges)"
+    }
+  ],
+  "created": 1649891702,
+  "id": "cmpl-4wgUQMeg6QlYSLmzzxN3aNHeqVdyr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:15:40.626221 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport numpy as np\nfrom copy import deepcopy\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    dna = []\n    for i in range(n):\n        dna.append(sys.stdin.readline().strip())\n\n    # print(n, k, dna)\n\n    def get_unlikeliness(x, y):\n        count = 0\n        for i in range(k):\n            if x[i] != y[i]:\n                count += 1\n        return count\n\n    def get_edges(dna_list):\n        edges = []\n        for i in range(len(dna_list)):\n            for j in range(i+1, len(dna_list)):\n                edges.append([i, j, get_unlikeliness(dna_list[i], dna_list[j])])\n        return edges\n\n    def get_minimal_unlikeliness(edges):\n        if len(edges) == 1:\n            return edges[0][2]\n\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness\n\n    def get_minimal_unlikeliness2(edges):\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness, min_edges\n\n    def get_minimal_unlikeliness3(edges):\n        if len(edges) == 1:\n            return edges[0][2]\n\n        min_unlikeliness = float('inf')\n        for i in range(len(edges)):\n            edge = edges[i]\n            new_edges = deepcopy(edges)\n            new_edges.pop(i)\n            new_edges.append([edge[0], len(dna), edge[2]])\n            new_edges.append([edge[1], len(dna), edge[2]])\n            unlikeliness = get_minimal_unlikeliness3(new_edges) + edge[2]\n            if unlikeliness < min_unlikeliness:\n                min_unlikeliness = unlikeliness\n                min_edges = new_edges\n\n        return min_unlikeliness\n\n    edges = get_edges(dna)\n    # print(edges)\n\n    # print(get_minimal_unlikeliness(edges))\n    # print(get_minimal_unlikeliness2(edges))\n    print(get_minimal_unlikeliness3(edges))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:15:40.626278 REASON stop
+2022-04-13 23:15:40.626576 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.626588 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\n#Solution\ndef dfs(vertex, prev):\n    global ans\n    for i in graph[vertex]:\n        if i == prev:\n            continue\n        ans += dist[vertex][i]\n        dfs(i, vertex)\n\n\ndef main():\n    global graph, dist, ans\n    n, k = map(int, input().split())\n    s = [input() for i in range(n)]\n    graph = [[] for i in range(n)]\n    dist = [[0] * n for i in range(n)]\n    for i in range(n):\n        for j in range(i + 1, n):\n            dist[i][j] = dist[j][i] = sum(s[i][x] != s[j][x] for x in range(k))\n    for i in range(n):\n        for j in range(i + 1, n):\n            mn = min(dist[i][j], dist[i][0] + dist[0][j], dist[i][1] + dist[1][j])\n            if mn == dist[i][0] + dist[0][j]:\n                graph[i].append(0)\n                graph[0].append(i)\n            if mn == dist[i][1] + dist[1][j]:\n                graph[i].append(1)\n                graph[1].append(i)\n            if mn == dist[i][j]:\n                graph[i].append(j)\n                graph[j].append(i)\n    ans = 0\n    dfs(0, -1)\n    print(ans)\n    for i in range(n):\n        for j in graph[i]:\n            if i < j:\n                print(i, j)\n\n\nmain()"
+}
+2022-04-13 23:15:40.626691 REASON stop
+2022-04-13 23:15:40.626919 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.626930 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_line():\n    return sys.stdin.readline().strip()\n\ndef read_ints():\n    return map(int, read_line().split())\n\ndef read_int():\n    return int(read_line())\n\ndef read_str():\n    return read_line()\n\ndef read_strs():\n    return read_line().split()\n\ndef read_float():\n    return float(read_line())\n\ndef read_floats():\n    return map(float, read_line().split())\n\ndef read_arr(R):\n    return [map(int, read_line().split()) for _ in xrange(R)]\n\ndef read_grid(H):\n    return [map(int, read_line().split()) for _ in xrange(H)]\n\ndef read_ints_arr(R):\n    return [map(int, read_line().split()) for _ in xrange(R)]\n\ndef read_ints_grid(H):\n    return [map(int, read_line().split()) for _ in xrange(H)]\n\ndef solve_small(N, K, S):\n    from itertools import combinations\n    from collections import defaultdict\n    combs = list(combinations(range(N), 2))\n    d = defaultdict(int)\n    for i, j in combs:\n        d[(i, j)] = d[(j, i)] = sum(1 for a, b in zip(S[i], S[j]) if a != b)\n    d = {k:v for k, v in d.iteritems()}\n    combs = sorted(combs, key=lambda x:d[x])\n    edges = []\n    seen = set()\n    for i, j in combs:\n        if i in seen or j in seen:\n            continue\n        seen.add(i)\n        seen.add(j)\n        edges.append((i, j))\n    return sum(d[x] for x in edges), edges\n\ndef solve(N, K, S):\n    from itertools import combinations\n    from collections import defaultdict\n    from collections import deque\n    combs = list(combinations(range(N), 2))\n    d = defaultdict(int)\n    for i, j in combs:\n        d[(i, j)] = d[(j, i)] = sum(1 for a, b in zip(S[i], S[j]) if a != b)\n    d = {k:v for k, v in d.iteritems()}\n    combs = sorted(combs, key=lambda x:d[x])\n    edges = []\n    seen = set()\n    for i, j in combs:\n        if i in seen or j in seen:\n            continue\n        seen.add(i)\n        seen.add(j)\n        edges.append((i, j))\n    return sum(d[x] for x in edges), edges\n\ndef main():\n    N, K = read_ints()\n    S = [read_str() for _ in xrange(N)]\n    print solve(N, K, S)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:15:40.626975 REASON stop
+2022-04-13 23:15:40.651184 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.651218 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef prim(G, n):\n    V = set()\n    e = []\n    V.add(0)\n    while len(V) != n:\n        min_edge = [None, None, float(\"inf\")]\n        for u in V:\n            for v in G[u]:\n                if v not in V and G[u][v] < min_edge[2]:\n                    min_edge = [u, v, G[u][v]]\n        e.append(min_edge)\n        V.add(min_edge[1])\n    return e\n\ndef main():\n    n, k = map(int, input().split())\n    dna = []\n    for _ in range(n):\n        dna.append(input())\n    G = {}\n    for i in range(n):\n        G[i] = {}\n        for j in range(i+1, n):\n            cnt = 0\n            for k in range(len(dna[i])):\n                if dna[i][k] != dna[j][k]:\n                    cnt += 1\n            G[i][j] = cnt\n            G[j][i] = cnt\n    e = prim(G, n)\n    print(sum(map(lambda x: x[2], e)))\n    for u, v, w in e:\n        print(u, v)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:15:40.651289 REASON stop
+2022-04-13 23:15:40.676363 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.676420 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# This is a nice application of Kruskal's minimum spanning tree algorithm\n# We use a disjoint set to keep track of the connected components\n# and the weight of the edge is the number of characters that differ\n# between the two strings.\n\nimport sys\n\n# Disjoint set class\nclass DisjointSet():\n    def __init__(self):\n        self.parent = [i for i in range(1000)]\n        self.rank = [0 for i in range(1000)]\n    \n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n    \n    def union(self, x, y):\n        xroot = self.find(x)\n        yroot = self.find(y)\n        if xroot == yroot:\n            return\n        if self.rank[xroot] < self.rank[yroot]:\n            self.parent[xroot] = yroot\n        elif self.rank[xroot] > self.rank[yroot]:\n            self.parent[yroot] = xroot\n        else:\n            self.parent[yroot] = xroot\n            self.rank[xroot] += 1\n\n# Compare two strings and return the number of characters that differ\ndef compare(a, b):\n    count = 0\n    for i in range(len(a)):\n        if a[i] != b[i]:\n            count += 1\n    return count\n\n# Kruskal's algorithm to find minimum spanning tree\ndef kruskal(n, edges):\n    ds = DisjointSet()\n    edges.sort(key=lambda x: x[2])\n    for e in edges:\n        if ds.find(e[0]) != ds.find(e[1]):\n            ds.union(e[0], e[1])\n            print(e[0], e[1])\n\nn, k = map(int, input().split())\ns = []\nfor i in range(n):\n    s.append(input())\n\nedges = []\nfor i in range(n-1):\n    for j in range(i+1, n):\n        edges.append([i, j, compare(s[i], s[j])])\n\nkruskal(n, edges)"
+}
+2022-04-13 23:15:40.676495 REASON stop
+2022-04-13 23:15:40.695199 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.695232 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    dnas = []\n    for i in range(n):\n        dnas.append(input())\n    print(n)\n    print(k)\n    print(dnas)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:15:40.695314 REASON stop
+2022-04-13 23:15:40.695836 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-13 23:15:40.695852 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nfrom itertools import combinations\n\ndef read_input(filename):\n    with open(filename, 'r') as f:\n        n, k = [int(x) for x in f.readline().split()]\n        dna_strings = [f.readline().strip() for _ in range(n)]\n        return n, k, dna_strings\n\ndef calculate_unlikeliness(dna1, dna2):\n    return sum(1 for x, y in zip(dna1, dna2) if x != y)\n\ndef get_min_unlikeliness(n, k, dna_strings):\n    edge_weights = [calculate_unlikeliness(dna1, dna2) for dna1, dna2 in combinations(dna_strings, 2)]\n    return sum(edge_weights)\n\ndef get_min_unlikeliness_edges(n, k, dna_strings):\n    edges = []\n    for dna1, dna2 in combinations(dna_strings, 2):\n        edges.append((calculate_unlikeliness(dna1, dna2), dna1, dna2))\n    edges.sort()\n    return edges\n\ndef write_output(filename, min_unlikeliness, edges):\n    with open(filename, 'w') as f:\n        f.write('{}\\n'.format(min_unlikeliness))\n        for edge in edges:\n            f.write('{} {}\\n'.format(dna_strings.index(edge[1]), dna_strings.index(edge[2])))\n\nif __name__ == '__main__':\n    n, k, dna_strings = read_input('rosalind_ba7b.txt')\n    min_unlikeliness = get_min_unlikeliness(n, k, dna_strings)\n    edges = get_min_unlikeliness_edges(n, k, dna_strings)\n    write_output('output.txt', min_unlikeliness, edges)"
+}
+2022-04-13 23:15:40.695906 REASON stop
+2022-04-13 23:15:40.696567 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'

@@ -1,0 +1,155 @@
+2022-04-13 23:40:37.042479 """
+The “eight queens puzzle” is a classic puzzle where you have to place eight queens on a chess board in such a way that no queen can attack another queen. Remember that, in chess, queens can move in any direction (horizontal, vertical, and diagonal), which means the eight queens would have to be laid out in such a way that no two queens are on the same row, column, or diagonal.
+
+This puzzle actually has multiple solutions. The following is one possible solution:
+
+Finding the solutions to the “eight queens puzzle” is actually an interesting computational problem. However, that’s not the problem you will be solving here. Instead, you will be solving a much simpler problem: given a proposed solution to the puzzle, you must verify whether it is a valid solution (i.e., whether no queen can attack another queen).
+
+When referring to specific squares on the board, we will assume that the bottom-left square is the $(0,0)$ square, and that the $x$ coordinate increases as you move right, and the $y$ coordinate increases as you move up.
+
+In other words, something like this:
+
+Furthermore, we will consider the more general “$N$-queens puzzle”, where the chessboard can have $N\times N$ squares, and there will be $N$ queens on the board. For example, this would be a correct solution to the 4-queens puzzle:
+
+And this would be an incorrect solution to the 4-queens puzzle:
+
+Notice how the queen in (2,2) can attack the queen in (0,2) and the queen in (2,3).
+
+-----Input-----
+The input begins with a line containing a single integer: the value of $N$ ($0 < N \le 5000$). This is followed by $N$ lines, each containing the position of a queen as two integers: $x$ and $y$ (separated by a single space), where $0 \le x, y < N$.
+
+-----Output-----
+The output contains either CORRECT if the positions of the queens is a solution to the $N$-queens puzzle, and INCORRECT otherwise.
+
+Note that the sample data presented below corresponds to the three boards shows earlier.
+
+-----Examples-----
+Sample Input 1:
+8
+1 5
+6 2
+3 1
+5 0
+4 6
+0 3
+2 7
+7 4
+Sample Output 1:
+CORRECT
+
+Sample Input 2:
+4
+2 3
+1 0
+0 2
+3 1
+Sample Output 2:
+CORRECT
+"""
+2022-04-13 23:40:37.042496 --------------------------
+2022-04-13 23:40:55.340485 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef is_correct(N, queens):\n    for i in range(len(queens)):\n        x1, y1 = queens[i]\n        for j in range(i+1, len(queens)):\n            x2, y2 = queens[j]\n            if x1 == x2 or y1 == y2 or abs(x2-x1) == abs(y2-y1):\n                return False\n    return True\n\nN = int(input())\nqueens = [tuple(map(int, input().split())) for _ in range(N)]\n\nif is_correct(N, queens):\n    print(\"CORRECT\")\nelse:\n    print(\"INCORRECT\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline().strip())\n    positions = []\n    for i in range(N):\n        x, y = map(int, sys.stdin.readline().strip().split())\n        positions.append((x, y))\n\n    def check_diagonals(pos1, pos2):\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if x1 - x2 == y1 - y2 or x1 - x2 == y2 - y1:\n            return True\n        return False\n\n    def check_rows(pos1, pos2):\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if x1 == x2 or y1 == y2:\n            return True\n        return False\n\n    for i in range(N):\n        for j in range(i + 1, N):\n            if check_diagonals(positions[i], positions[j]) or check_rows(positions[i], positions[j]):\n                print(\"INCORRECT\")\n                return\n    print(\"CORRECT\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef check_board(board, N):\n    for i in range(N):\n        for j in range(N):\n            if board[i][j] == 1:\n                for k in range(N):\n                    if board[i][k] == 1:\n                        return False\n                    if board[k][j] == 1:\n                        return False\n                    if i+k < N and j+k < N:\n                        if board[i+k][j+k] == 1:\n                            return False\n                    if i-k >= 0 and j-k >= 0:\n                        if board[i-k][j-k] == 1:\n                            return False\n                    if i+k < N and j-k >= 0:\n                        if board[i+k][j-k] == 1:\n                            return False\n                    if i-k >= 0 and j+k < N:\n                        if board[i-k][j+k] == 1:\n                            return False\n    return True\n\nN = int(input())\nboard = []\nfor _ in range(N):\n    board.append([0]*N)\nfor _ in range(N):\n    x, y = [int(x) for x in input().split()]\n    board[x][y] = 1\n\nif check_board(board, N):\n    print(\"CORRECT\")\nelse:\n    print(\"INCORRECT\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    board = []\n    for i in range(N):\n        board.append(list(map(int, input().split())))\n\n    # Check if queens are in the same row\n    for i in range(N):\n        if len(set([j[0] for j in board])) != N:\n            print(\"INCORRECT\")\n            return\n\n    # Check if queens are in the same column\n    for i in range(N):\n        if len(set([j[1] for j in board])) != N:\n            print(\"INCORRECT\")\n            return\n\n    # Check if queens are in the same diagonal\n    for i in range(N):\n        for j in range(i+1, N):\n            if abs(board[i][0] - board[j][0]) == abs(board[i][1] - board[j][1]):\n                print(\"INCORRECT\")\n                return\n\n    print(\"CORRECT\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nqueens = []\n\nfor i in range(N):\n    queens.append(list(map(int, input().split())))\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if queens[i][0] == queens[j][0] or queens[i][1] == queens[j][1]:\n            print(\"INCORRECT\")\n            quit()\n        if abs(queens[i][0] - queens[j][0]) == abs(queens[i][1] - queens[j][1]):\n            print(\"INCORRECT\")\n            quit()\nprint(\"CORRECT\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = []\ny = []\n\nfor i in range(n):\n    x_i, y_i = map(int, input().split())\n    x.append(x_i)\n    y.append(y_i)\n\ndef check_queens(x, y):\n    for i in range(n):\n        for j in range(i + 1, n):\n            if x[i] == x[j] or y[i] == y[j] or abs(x[i] - x[j]) == abs(y[i] - y[j]):\n                return \"INCORRECT\"\n    return \"CORRECT\"\n\n\nprint(check_queens(x, y))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    queens = []\n    for _ in range(n):\n        x, y = [int(i) for i in input().split()]\n        queens.append((x, y))\n        if not check(queens):\n            print(\"INCORRECT\")\n            return\n    print(\"CORRECT\")\n\ndef check(queens):\n    for i in range(len(queens) - 1):\n        for j in range(i + 1, len(queens)):\n            x1, y1 = queens[i]\n            x2, y2 = queens[j]\n            if x1 == x2 or y1 == y2 or abs(x1 - x2) == abs(y1 - y2):\n                return False\n    return True\n\nmain()"
+    }
+  ],
+  "created": 1649893237,
+  "id": "cmpl-4wgtBCPoxD4h1LaLU81wImSxRKBDV",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:40:55.340767 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef is_correct(N, queens):\n    for i in range(len(queens)):\n        x1, y1 = queens[i]\n        for j in range(i+1, len(queens)):\n            x2, y2 = queens[j]\n            if x1 == x2 or y1 == y2 or abs(x2-x1) == abs(y2-y1):\n                return False\n    return True\n\nN = int(input())\nqueens = [tuple(map(int, input().split())) for _ in range(N)]\n\nif is_correct(N, queens):\n    print(\"CORRECT\")\nelse:\n    print(\"INCORRECT\")"
+}
+2022-04-13 23:40:55.340868 REASON stop
+2022-04-13 23:40:55.341133 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.341145 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline().strip())\n    positions = []\n    for i in range(N):\n        x, y = map(int, sys.stdin.readline().strip().split())\n        positions.append((x, y))\n\n    def check_diagonals(pos1, pos2):\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if x1 - x2 == y1 - y2 or x1 - x2 == y2 - y1:\n            return True\n        return False\n\n    def check_rows(pos1, pos2):\n        x1, y1 = pos1\n        x2, y2 = pos2\n        if x1 == x2 or y1 == y2:\n            return True\n        return False\n\n    for i in range(N):\n        for j in range(i + 1, N):\n            if check_diagonals(positions[i], positions[j]) or check_rows(positions[i], positions[j]):\n                print(\"INCORRECT\")\n                return\n    print(\"CORRECT\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:40:55.341275 REASON stop
+2022-04-13 23:40:55.341598 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.341625 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef check_board(board, N):\n    for i in range(N):\n        for j in range(N):\n            if board[i][j] == 1:\n                for k in range(N):\n                    if board[i][k] == 1:\n                        return False\n                    if board[k][j] == 1:\n                        return False\n                    if i+k < N and j+k < N:\n                        if board[i+k][j+k] == 1:\n                            return False\n                    if i-k >= 0 and j-k >= 0:\n                        if board[i-k][j-k] == 1:\n                            return False\n                    if i+k < N and j-k >= 0:\n                        if board[i+k][j-k] == 1:\n                            return False\n                    if i-k >= 0 and j+k < N:\n                        if board[i-k][j+k] == 1:\n                            return False\n    return True\n\nN = int(input())\nboard = []\nfor _ in range(N):\n    board.append([0]*N)\nfor _ in range(N):\n    x, y = [int(x) for x in input().split()]\n    board[x][y] = 1\n\nif check_board(board, N):\n    print(\"CORRECT\")\nelse:\n    print(\"INCORRECT\")"
+}
+2022-04-13 23:40:55.341671 REASON stop
+2022-04-13 23:40:55.342774 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.342791 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    board = []\n    for i in range(N):\n        board.append(list(map(int, input().split())))\n\n    # Check if queens are in the same row\n    for i in range(N):\n        if len(set([j[0] for j in board])) != N:\n            print(\"INCORRECT\")\n            return\n\n    # Check if queens are in the same column\n    for i in range(N):\n        if len(set([j[1] for j in board])) != N:\n            print(\"INCORRECT\")\n            return\n\n    # Check if queens are in the same diagonal\n    for i in range(N):\n        for j in range(i+1, N):\n            if abs(board[i][0] - board[j][0]) == abs(board[i][1] - board[j][1]):\n                print(\"INCORRECT\")\n                return\n\n    print(\"CORRECT\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:40:55.342835 REASON stop
+2022-04-13 23:40:55.364661 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.364694 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nqueens = []\n\nfor i in range(N):\n    queens.append(list(map(int, input().split())))\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if queens[i][0] == queens[j][0] or queens[i][1] == queens[j][1]:\n            print(\"INCORRECT\")\n            quit()\n        if abs(queens[i][0] - queens[j][0]) == abs(queens[i][1] - queens[j][1]):\n            print(\"INCORRECT\")\n            quit()\nprint(\"CORRECT\")"
+}
+2022-04-13 23:40:55.364774 REASON stop
+2022-04-13 23:40:55.365522 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.365553 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = []\ny = []\n\nfor i in range(n):\n    x_i, y_i = map(int, input().split())\n    x.append(x_i)\n    y.append(y_i)\n\ndef check_queens(x, y):\n    for i in range(n):\n        for j in range(i + 1, n):\n            if x[i] == x[j] or y[i] == y[j] or abs(x[i] - x[j]) == abs(y[i] - y[j]):\n                return \"INCORRECT\"\n    return \"CORRECT\"\n\n\nprint(check_queens(x, y))"
+}
+2022-04-13 23:40:55.365608 REASON stop
+2022-04-13 23:40:55.378516 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'
+2022-04-13 23:40:55.378540 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    queens = []\n    for _ in range(n):\n        x, y = [int(i) for i in input().split()]\n        queens.append((x, y))\n        if not check(queens):\n            print(\"INCORRECT\")\n            return\n    print(\"CORRECT\")\n\ndef check(queens):\n    for i in range(len(queens) - 1):\n        for j in range(i + 1, len(queens)):\n            x1, y1 = queens[i]\n            x2, y2 = queens[j]\n            if x1 == x2 or y1 == y2 or abs(x1 - x2) == abs(y1 - y2):\n                return False\n    return True\n\nmain()"
+}
+2022-04-13 23:40:55.378625 REASON stop
+2022-04-13 23:40:55.394029 test/intro-questions.txt_dir/4843/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4843/solutions.json'

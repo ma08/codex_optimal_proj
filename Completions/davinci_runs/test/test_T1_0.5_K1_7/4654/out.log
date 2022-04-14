@@ -1,0 +1,151 @@
+2022-04-13 22:30:09.646540 """
+You are given two positive integers $n$ ($1 \le n \le 10^9$) and $k$ ($1 \le k \le 100$). Represent the number $n$ as the sum of $k$ positive integers of the same parity (have the same remainder when divided by $2$).
+
+In other words, find $a_1, a_2, \ldots, a_k$ such that all $a_i>0$, $n = a_1 + a_2 + \ldots + a_k$ and either all $a_i$ are even or all $a_i$ are odd at the same time.
+
+If such a representation does not exist, then report it.
+
+
+-----Input-----
+
+The first line contains an integer $t$ ($1 \le t \le 1000$) — the number of test cases in the input. Next, $t$ test cases are given, one per line.
+
+Each test case is two positive integers $n$ ($1 \le n \le 10^9$) and $k$ ($1 \le k \le 100$).
+
+
+-----Output-----
+
+For each test case print:
+
+  YES and the required values $a_i$, if the answer exists (if there are several answers, print any of them);  NO if the answer does not exist. 
+
+The letters in the words YES and NO can be printed in any case.
+
+
+-----Example-----
+Input
+8
+10 3
+100 4
+8 7
+97 2
+8 8
+3 10
+5 3
+1000000000 9
+
+Output
+YES
+4 2 4
+YES
+55 5 5 35
+NO
+NO
+YES
+1 1 1 1 1 1 1 1
+NO
+YES
+3 1 1
+YES
+111111110 111111110 111111110 111111110 111111110 111111110 111111110 111111110 111111120
+"""
+2022-04-13 22:30:09.646550 --------------------------
+2022-04-13 22:30:35.692498 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    test_cases = int(input())\n    for i in range(test_cases):\n        num, k = [int(x) for x in input().split()]\n        if num % 2 == 0:\n            if num % k == 0 and k % 2 == 0:\n                print(\"YES\")\n                print(\" \".join([str(num // k)] * k))\n            else:\n                print(\"NO\")\n        else:\n            if num % k == 0 and k % 2 != 0:\n                print(\"YES\")\n                print(\" \".join([str(num // k)] * k))\n            else:\n                print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    if n%2==0:\n        if k>n//2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(k):\n                print(2,end=\" \")\n            print(\"\")\n    else:\n        if k>n//2+1:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(k-1):\n                print(1,end=\" \")\n            print(n-k+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    for line in lines[1:]:\n        n, k = map(int, line.split())\n        if k > n:\n            print(\"NO\")\n        else:\n            if n % k == 0:\n                print(\"YES\")\n                print(n // k, end=' ')\n                print(' '.join([str(n // k)] * (k - 1)))\n            else:\n                n -= n % k\n                if n % 2 == 0 and n // 2 >= n // k:\n                    print(\"YES\")\n                    print(n // k, end=' ')\n                    print(' '.join([str(n // k)] * (k - 2)), end=' ')\n                    print(n // 2)\n                else:\n                    print(\"NO\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        if n % 2 == 0:\n            if k <= n // 2:\n                print(\"YES\")\n                print(\"2 \" * k)\n            else:\n                print(\"NO\")\n        else:\n            if k <= n // 2 + 1:\n                print(\"YES\")\n                print(\"1 \" * (k - 1) + \"1\")\n            else:\n                print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass TestCase:\n    def __init__(self, n, k):\n        self.n = n\n        self.k = k\n\nclass TestSet:\n    def __init__(self, test_cases):\n        self.test_cases = test_cases\n\ndef read_test_set(lines):\n    test_cases = []\n    for i in range(int(lines[0])):\n        test_case = TestCase(*[int(n) for n in lines[i+1].split(\" \")])\n        test_cases.append(test_case)\n    return TestSet(test_cases)\n\ndef solve_test_case(test_case):\n    n = test_case.n\n    k = test_case.k\n    if n % 2 == 0:\n        if k % 2 == 0:\n            return \"YES\\n\" + \" \".join([str(n//k)] * k)\n        else:\n            return \"NO\"\n    else:\n        if k % 2 == 1:\n            return \"YES\\n\" + \" \".join([str(n//k)] * k)\n        else:\n            return \"NO\"\n\ndef solve_test_set(test_set):\n    return \"\\n\".join([solve_test_case(test_case) for test_case in test_set.test_cases])\n\ndef main():\n    lines = sys.stdin.readlines()\n    test_set = read_test_set(lines)\n    solution = solve_test_set(test_set)\n    print(solution)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        n, k = map(int, sys.stdin.readline().split())\n        if n % 2 != k % 2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            if k % 2 == 0:\n                print(\" \".join([str(2) for _ in range(k // 2)]))\n            else:\n                print(\" \".join([str(2) for _ in range(k // 2)]), n - 2 * (k // 2))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    if n == 1:\n        if k == 1:\n            print('YES')\n            print(1)\n        else:\n            print('NO')\n    elif k > n:\n        print('NO')\n    elif k == n:\n        print('YES')\n        for i in range(k):\n            print(1, end=' ')\n        print()\n    elif k < n:\n        if (k%2 == n%2) and (k < n):\n            print('YES')\n            for i in range(k-1):\n                print(1, end=' ')\n            print(n-(k-1))\n        else:\n            print('NO')"
+    }
+  ],
+  "created": 1649889009,
+  "id": "cmpl-4wfmz1ebDo17ZMsvxbStLEhAfrEol",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:30:35.692776 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    test_cases = int(input())\n    for i in range(test_cases):\n        num, k = [int(x) for x in input().split()]\n        if num % 2 == 0:\n            if num % k == 0 and k % 2 == 0:\n                print(\"YES\")\n                print(\" \".join([str(num // k)] * k))\n            else:\n                print(\"NO\")\n        else:\n            if num % k == 0 and k % 2 != 0:\n                print(\"YES\")\n                print(\" \".join([str(num // k)] * k))\n            else:\n                print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:30:35.692834 REASON stop
+2022-04-13 22:30:35.693252 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    if n%2==0:\n        if k>n//2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(k):\n                print(2,end=\" \")\n            print(\"\")\n    else:\n        if k>n//2+1:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(k-1):\n                print(1,end=\" \")\n            print(n-k+1)"
+}
+2022-04-13 22:30:35.693478 REASON stop
+2022-04-13 22:30:35.693962 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    for line in lines[1:]:\n        n, k = map(int, line.split())\n        if k > n:\n            print(\"NO\")\n        else:\n            if n % k == 0:\n                print(\"YES\")\n                print(n // k, end=' ')\n                print(' '.join([str(n // k)] * (k - 1)))\n            else:\n                n -= n % k\n                if n % 2 == 0 and n // 2 >= n // k:\n                    print(\"YES\")\n                    print(n // k, end=' ')\n                    print(' '.join([str(n // k)] * (k - 2)), end=' ')\n                    print(n // 2)\n                else:\n                    print(\"NO\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:30:35.694056 REASON stop
+2022-04-13 22:30:35.711634 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        if n % 2 == 0:\n            if k <= n // 2:\n                print(\"YES\")\n                print(\"2 \" * k)\n            else:\n                print(\"NO\")\n        else:\n            if k <= n // 2 + 1:\n                print(\"YES\")\n                print(\"1 \" * (k - 1) + \"1\")\n            else:\n                print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:30:35.711729 REASON stop
+2022-04-13 22:30:35.730021 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass TestCase:\n    def __init__(self, n, k):\n        self.n = n\n        self.k = k\n\nclass TestSet:\n    def __init__(self, test_cases):\n        self.test_cases = test_cases\n\ndef read_test_set(lines):\n    test_cases = []\n    for i in range(int(lines[0])):\n        test_case = TestCase(*[int(n) for n in lines[i+1].split(\" \")])\n        test_cases.append(test_case)\n    return TestSet(test_cases)\n\ndef solve_test_case(test_case):\n    n = test_case.n\n    k = test_case.k\n    if n % 2 == 0:\n        if k % 2 == 0:\n            return \"YES\\n\" + \" \".join([str(n//k)] * k)\n        else:\n            return \"NO\"\n    else:\n        if k % 2 == 1:\n            return \"YES\\n\" + \" \".join([str(n//k)] * k)\n        else:\n            return \"NO\"\n\ndef solve_test_set(test_set):\n    return \"\\n\".join([solve_test_case(test_case) for test_case in test_set.test_cases])\n\ndef main():\n    lines = sys.stdin.readlines()\n    test_set = read_test_set(lines)\n    solution = solve_test_set(test_set)\n    print(solution)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:30:35.730131 REASON stop
+2022-04-13 22:30:35.740948 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        n, k = map(int, sys.stdin.readline().split())\n        if n % 2 != k % 2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            if k % 2 == 0:\n                print(\" \".join([str(2) for _ in range(k // 2)]))\n            else:\n                print(\" \".join([str(2) for _ in range(k // 2)]), n - 2 * (k // 2))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:30:35.741040 REASON stop
+2022-04-13 22:30:35.741936 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    if n == 1:\n        if k == 1:\n            print('YES')\n            print(1)\n        else:\n            print('NO')\n    elif k > n:\n        print('NO')\n    elif k == n:\n        print('YES')\n        for i in range(k):\n            print(1, end=' ')\n        print()\n    elif k < n:\n        if (k%2 == n%2) and (k < n):\n            print('YES')\n            for i in range(k-1):\n                print(1, end=' ')\n            print(n-(k-1))\n        else:\n            print('NO')"
+}
+2022-04-13 22:30:35.742006 REASON stop

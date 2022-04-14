@@ -1,0 +1,166 @@
+2022-04-13 20:10:51.784526 """
+You are given an undirected graph consisting of $n$ vertices and $m$ edges. Your task is to find the number of connected components which are cycles.
+
+Here are some definitions of graph theory.
+
+An undirected graph consists of two sets: set of nodes (called vertices) and set of edges. Each edge connects a pair of vertices. All edges are bidirectional (i.e. if a vertex $a$ is connected with a vertex $b$, a vertex $b$ is also connected with a vertex $a$). An edge can't connect vertex with itself, there is at most one edge between a pair of vertices.
+
+Two vertices $u$ and $v$ belong to the same connected component if and only if there is at least one path along edges connecting $u$ and $v$.
+
+A connected component is a cycle if and only if its vertices can be reordered in such a way that:  the first vertex is connected with the second vertex by an edge,  the second vertex is connected with the third vertex by an edge,  ...  the last vertex is connected with the first vertex by an edge,  all the described edges of a cycle are distinct. 
+
+A cycle doesn't contain any other edges except described above. By definition any cycle contains three or more vertices. [Image] There are $6$ connected components, $2$ of them are cycles: $[7, 10, 16]$ and $[5, 11, 9, 15]$. 
+
+
+-----Input-----
+
+The first line contains two integer numbers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $0 \le m \le 2 \cdot 10^5$) — number of vertices and edges.
+
+The following $m$ lines contains edges: edge $i$ is given as a pair of vertices $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$). There is no multiple edges in the given graph, i.e. for each pair ($v_i, u_i$) there no other pairs ($v_i, u_i$) and ($u_i, v_i$) in the list of edges.
+
+
+-----Output-----
+
+Print one integer — the number of connected components which are also cycles.
+
+
+-----Examples-----
+Input
+5 4
+1 2
+3 4
+5 4
+3 5
+
+Output
+1
+
+Input
+17 15
+1 8
+1 12
+5 11
+11 9
+9 15
+15 5
+4 13
+3 13
+4 3
+10 16
+7 10
+16 7
+14 3
+14 4
+17 6
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example only component $[3, 4, 5]$ is also a cycle.
+
+The illustration above corresponds to the second example.
+"""
+2022-04-13 20:10:51.784544 --------------------------
+2022-04-13 20:11:18.591547 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\ndef dfs(node, graph, visited, parent=None):\n    visited[node] = True\n    \n    for child in graph[node]:\n        if child != parent:\n            if visited[child]:\n                return True\n            else:\n                if dfs(child, graph, visited, node):\n                    return True\n    \n    return False\n\ndef main():\n    n, m = map(int, input().split())\n    \n    graph = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        graph[u].append(v)\n        graph[v].append(u)\n    \n    visited = [False] * (n+1)\n    count = 0\n    for node in range(1, n+1):\n        if not visited[node]:\n            if dfs(node, graph, visited):\n                count += 1\n    \n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nfrom collections import defaultdict\n\ndef main():\n    n, m = map(int, input().split())\n    edges = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        edges[u].append(v)\n        edges[v].append(u)\n    visited = set()\n    def dfs(v):\n        visited.add(v)\n        for u in edges[v]:\n            if u not in visited:\n                dfs(u)\n    ans = 0\n    for v in range(1, n + 1):\n        if v not in visited:\n            dfs(v)\n            ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tn, m = map(int, sys.stdin.readline().split())\n\tedges = []\n\tfor i in range(m):\n\t\tv, u = map(int, sys.stdin.readline().split())\n\t\tedges.append((v, u))\n\tadj_list = [[] for i in range(n+1)]\n\tfor edge in edges:\n\t\tadj_list[edge[0]].append(edge[1])\n\t\tadj_list[edge[1]].append(edge[0])\n\tvisited = [False for i in range(n+1)]\n\tnum_cycles = 0\n\tfor i in range(1, n+1):\n\t\tif not visited[i]:\n\t\t\tvisited[i] = True\n\t\t\tstack = [i]\n\t\t\tcycle = False\n\t\t\twhile stack:\n\t\t\t\tv = stack.pop()\n\t\t\t\tfor u in adj_list[v]:\n\t\t\t\t\tif visited[u]:\n\t\t\t\t\t\tcycle = True\n\t\t\t\t\telse:\n\t\t\t\t\t\tvisited[u] = True\n\t\t\t\t\t\tstack.append(u)\n\t\t\tif cycle:\n\t\t\t\tnum_cycles += 1\n\tprint(num_cycles)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = {}\n    for i in range(1, n+1):\n        graph[i] = []\n    for e in edges:\n        graph[e[0]].append(e[1])\n        graph[e[1]].append(e[0])\n    visited = set()\n    ans = 0\n    for i in range(1, n+1):\n        if i in visited:\n            continue\n        stack = [i]\n        visited.add(i)\n        while stack:\n            v = stack.pop()\n            for nei in graph[v]:\n                if nei not in visited:\n                    visited.add(nei)\n                    stack.append(nei)\n        ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nimport sys\n\ndef find_set(x, parent):\n    if x != parent[x]:\n        parent[x] = find_set(parent[x], parent)\n    return parent[x]\n\ndef union_set(x, y, parent, rank):\n    x = find_set(x, parent)\n    y = find_set(y, parent)\n    if x != y:\n        if rank[x] < rank[y]:\n            x, y = y, x\n        parent[y] = x\n        if rank[x] == rank[y]:\n            rank[x] += 1\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    parent = list(range(n + 1))\n    rank = [0] * (n + 1)\n    for _ in range(m):\n        a, b = map(int, sys.stdin.readline().split())\n        union_set(a, b, parent, rank)\n    c = 0\n    for i in range(1, n + 1):\n        if find_set(i, parent) == i:\n            c += 1\n    print(c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef dfs(graph, start):\n    visited, stack = set(), [start]\n    while stack:\n        vertex = stack.pop()\n        if vertex not in visited:\n            visited.add(vertex)\n            stack.extend(graph[vertex] - visited)\n    return visited\n\ndef connected_components(graph):\n    return [dfs(graph, vertex) for vertex in graph]\n\ndef is_cycle(graph, component):\n    if len(component) < 3:\n        return False\n    for vertex in component:\n        if len(graph[vertex]) != 2:\n            return False\n    return True\n\ndef number_of_cycles(graph):\n    cycles = 0\n    for component in connected_components(graph):\n        if is_cycle(graph, component):\n            cycles += 1\n    return cycles\n\ndef main():\n    n, m = map(int, input().split())\n    graph = {i:set() for i in range(1, n+1)}\n    for _ in range(m):\n        u, v = map(int, input().split())\n        graph[u].add(v)\n        graph[v].add(u)\n    print(number_of_cycles(graph))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": ""
+    }
+  ],
+  "created": 1649880651,
+  "id": "cmpl-4wdcB7WMhKO2DIvObi3Fh39mEckvu",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:11:18.591854 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\ndef dfs(node, graph, visited, parent=None):\n    visited[node] = True\n    \n    for child in graph[node]:\n        if child != parent:\n            if visited[child]:\n                return True\n            else:\n                if dfs(child, graph, visited, node):\n                    return True\n    \n    return False\n\ndef main():\n    n, m = map(int, input().split())\n    \n    graph = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        graph[u].append(v)\n        graph[v].append(u)\n    \n    visited = [False] * (n+1)\n    count = 0\n    for node in range(1, n+1):\n        if not visited[node]:\n            if dfs(node, graph, visited):\n                count += 1\n    \n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:11:18.591960 REASON stop
+2022-04-13 20:11:18.592382 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nfrom collections import defaultdict\n\ndef main():\n    n, m = map(int, input().split())\n    edges = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        edges[u].append(v)\n        edges[v].append(u)\n    visited = set()\n    def dfs(v):\n        visited.add(v)\n        for u in edges[v]:\n            if u not in visited:\n                dfs(u)\n    ans = 0\n    for v in range(1, n + 1):\n        if v not in visited:\n            dfs(v)\n            ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:11:18.592504 REASON stop
+2022-04-13 20:11:18.592908 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tn, m = map(int, sys.stdin.readline().split())\n\tedges = []\n\tfor i in range(m):\n\t\tv, u = map(int, sys.stdin.readline().split())\n\t\tedges.append((v, u))\n\tadj_list = [[] for i in range(n+1)]\n\tfor edge in edges:\n\t\tadj_list[edge[0]].append(edge[1])\n\t\tadj_list[edge[1]].append(edge[0])\n\tvisited = [False for i in range(n+1)]\n\tnum_cycles = 0\n\tfor i in range(1, n+1):\n\t\tif not visited[i]:\n\t\t\tvisited[i] = True\n\t\t\tstack = [i]\n\t\t\tcycle = False\n\t\t\twhile stack:\n\t\t\t\tv = stack.pop()\n\t\t\t\tfor u in adj_list[v]:\n\t\t\t\t\tif visited[u]:\n\t\t\t\t\t\tcycle = True\n\t\t\t\t\telse:\n\t\t\t\t\t\tvisited[u] = True\n\t\t\t\t\t\tstack.append(u)\n\t\t\tif cycle:\n\t\t\t\tnum_cycles += 1\n\tprint(num_cycles)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 20:11:18.592959 REASON stop
+2022-04-13 20:11:18.609438 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = {}\n    for i in range(1, n+1):\n        graph[i] = []\n    for e in edges:\n        graph[e[0]].append(e[1])\n        graph[e[1]].append(e[0])\n    visited = set()\n    ans = 0\n    for i in range(1, n+1):\n        if i in visited:\n            continue\n        stack = [i]\n        visited.add(i)\n        while stack:\n            v = stack.pop()\n            for nei in graph[v]:\n                if nei not in visited:\n                    visited.add(nei)\n                    stack.append(nei)\n        ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:11:18.609531 REASON stop
+2022-04-13 20:11:18.622714 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nimport sys\n\ndef find_set(x, parent):\n    if x != parent[x]:\n        parent[x] = find_set(parent[x], parent)\n    return parent[x]\n\ndef union_set(x, y, parent, rank):\n    x = find_set(x, parent)\n    y = find_set(y, parent)\n    if x != y:\n        if rank[x] < rank[y]:\n            x, y = y, x\n        parent[y] = x\n        if rank[x] == rank[y]:\n            rank[x] += 1\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    parent = list(range(n + 1))\n    rank = [0] * (n + 1)\n    for _ in range(m):\n        a, b = map(int, sys.stdin.readline().split())\n        union_set(a, b, parent, rank)\n    c = 0\n    for i in range(1, n + 1):\n        if find_set(i, parent) == i:\n            c += 1\n    print(c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:11:18.622810 REASON stop
+2022-04-13 20:11:18.623655 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef dfs(graph, start):\n    visited, stack = set(), [start]\n    while stack:\n        vertex = stack.pop()\n        if vertex not in visited:\n            visited.add(vertex)\n            stack.extend(graph[vertex] - visited)\n    return visited\n\ndef connected_components(graph):\n    return [dfs(graph, vertex) for vertex in graph]\n\ndef is_cycle(graph, component):\n    if len(component) < 3:\n        return False\n    for vertex in component:\n        if len(graph[vertex]) != 2:\n            return False\n    return True\n\ndef number_of_cycles(graph):\n    cycles = 0\n    for component in connected_components(graph):\n        if is_cycle(graph, component):\n            cycles += 1\n    return cycles\n\ndef main():\n    n, m = map(int, input().split())\n    graph = {i:set() for i in range(1, n+1)}\n    for _ in range(m):\n        u, v = map(int, input().split())\n        graph[u].add(v)\n        graph[v].add(u)\n    print(number_of_cycles(graph))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:11:18.623718 REASON stop
+2022-04-13 20:11:18.624580 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 20:11:18.624632 REASON stop

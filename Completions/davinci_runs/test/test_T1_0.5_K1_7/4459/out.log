@@ -1,0 +1,130 @@
+2022-04-13 21:02:10.665409 """
+You are given a sequence of positive integers of length N, a = (a_1, a_2, ..., a_N).
+Your objective is to remove some of the elements in a so that a will be a good sequence.
+Here, an sequence b is a good sequence when the following condition holds true:
+ - For each element x in b, the value x occurs exactly x times in b.
+For example, (3, 3, 3), (4, 2, 4, 1, 4, 2, 4) and () (an empty sequence) are good sequences, while (3, 3, 3, 3) and (2, 4, 1, 4, 2) are not.
+Find the minimum number of elements that needs to be removed so that a will be a good sequence.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^5
+ - a_i is an integer.
+ - 1 \leq a_i \leq 10^9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+a_1 a_2 ... a_N
+
+-----Output-----
+Print the minimum number of elements that needs to be removed so that a will be a good sequence.
+
+-----Sample Input-----
+4
+3 3 3 3
+
+-----Sample Output-----
+1
+
+We can, for example, remove one occurrence of 3. Then, (3, 3, 3) is a good sequence.
+"""
+2022-04-13 21:02:10.665418 --------------------------
+2022-04-13 21:02:32.850363 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\na = list(map(int, input().split()))\n\n# Generate a list of counts of each unique number\nunique_numbers = list(set(a))\nunique_numbers.sort()\ncounts = []\nfor i in unique_numbers:\n    counts.append(a.count(i))\n\n# Remove numbers that occur more than the number of times they appear\nremove = 0\nfor i in range(len(counts)):\n    if unique_numbers[i] < counts[i]:\n        remove += counts[i] - unique_numbers[i]\n    elif unique_numbers[i] > counts[i]:\n        remove += counts[i]\n\nprint(remove)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\na.sort()\n\ncount = 0\nfor i in range(n-1, -1, -1):\n    if a[i] == a[i-1]:\n        count += 1\n    else:\n        break\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nnum_dict = {}\nfor num in a:\n    if num in num_dict:\n        num_dict[num] += 1\n    else:\n        num_dict[num] = 1\n\nnum_list = sorted(num_dict.items(), key=lambda x: x[0])\n\nremoved_count = 0\nfor num, count in num_list:\n    if count > num:\n        removed_count += count - num\n    elif count < num:\n        removed_count += count\n\nprint(removed_count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ncnt = [0]*(10**5+1)\nfor i in a:\n    cnt[i] += 1\n\nans = 0\nfor i in range(1, 10**5+1):\n    if cnt[i] < i:\n        ans += cnt[i]\n    else:\n        ans += cnt[i]-i\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    a = list(map(int, input().split()))\n    num_to_remove = 0\n    for i in range(1, N+1):\n        num_to_remove += abs(a.count(i) - i)\n    print(num_to_remove // 2)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Source: https://qiita.com/drken/items/a5e6fe22863b7992efdb#%E5%95%8F%E9%A1%8C-10-abc-086-c-traveling\n# The answer is the number of elements that are greater than the number of remaining elements.\n# The following is a proof.\n#\n# Let n be the number of remaining elements.\n# If there is an element a_i that is greater than n,\n# there is no way to make it a good sequence by removing the remaining elements.\n#\n# On the other hand, if there is no element a_i that is greater than n,\n# let b = (b_1, b_2, ..., b_n) be the sequence of the remaining elements.\n# Then, b is a good sequence.\n# (This is because each element b_i is less than or equal to n,\n# and there are exactly b_i elements of b_i in b.)\n#\n# Therefore, the number of elements that are greater than n is the minimum number of elements to be removed.\n\nn = int(input())\na = list(map(int, input().split()))\n\n# The number of elements that are greater than n.\n# The minimum number of elements to be removed is the minimum of this value.\nans = n\n\n# The number of remaining elements.\nn -= 1\nfor i in range(len(a)):\n    if a[i] > n:\n        ans -= 1\n    else:\n        n -= 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# input\nn = int(input())\na = list(map(int, input().split()))\n\n# create a dictionary to count the occurence of each number\noccurence = {}\nfor i in range(n):\n    if a[i] in occurence:\n        occurence[a[i]] += 1\n    else:\n        occurence[a[i]] = 1\n\n# create a list to store the number of occurence\n# if a number's occurence is more than the number itself, then it will be deleted\n# otherwise, the number will be added to the list\nlst = []\nfor key, val in occurence.items():\n    if key < val:\n        lst.append(val - key)\n    else:\n        lst.append(0)\n\n# if the list is empty, then the answer is 0\n# otherwise, the answer is the sum of the list\nif len(lst) == 0:\n    print(0)\nelse:\n    print(sum(lst))"
+    }
+  ],
+  "created": 1649883730,
+  "id": "cmpl-4wePqjAqfk9ISdcKN6YvEgYw2sRM2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:02:32.850617 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\na = list(map(int, input().split()))\n\n# Generate a list of counts of each unique number\nunique_numbers = list(set(a))\nunique_numbers.sort()\ncounts = []\nfor i in unique_numbers:\n    counts.append(a.count(i))\n\n# Remove numbers that occur more than the number of times they appear\nremove = 0\nfor i in range(len(counts)):\n    if unique_numbers[i] < counts[i]:\n        remove += counts[i] - unique_numbers[i]\n    elif unique_numbers[i] > counts[i]:\n        remove += counts[i]\n\nprint(remove)"
+}
+2022-04-13 21:02:32.850654 REASON stop
+2022-04-13 21:02:32.851103 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\na.sort()\n\ncount = 0\nfor i in range(n-1, -1, -1):\n    if a[i] == a[i-1]:\n        count += 1\n    else:\n        break\nprint(count)"
+}
+2022-04-13 21:02:32.851220 REASON stop
+2022-04-13 21:02:32.851595 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nnum_dict = {}\nfor num in a:\n    if num in num_dict:\n        num_dict[num] += 1\n    else:\n        num_dict[num] = 1\n\nnum_list = sorted(num_dict.items(), key=lambda x: x[0])\n\nremoved_count = 0\nfor num, count in num_list:\n    if count > num:\n        removed_count += count - num\n    elif count < num:\n        removed_count += count\n\nprint(removed_count)"
+}
+2022-04-13 21:02:32.851644 REASON stop
+2022-04-13 21:02:32.872531 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ncnt = [0]*(10**5+1)\nfor i in a:\n    cnt[i] += 1\n\nans = 0\nfor i in range(1, 10**5+1):\n    if cnt[i] < i:\n        ans += cnt[i]\n    else:\n        ans += cnt[i]-i\n\nprint(ans)"
+}
+2022-04-13 21:02:32.872614 REASON stop
+2022-04-13 21:02:32.891118 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    a = list(map(int, input().split()))\n    num_to_remove = 0\n    for i in range(1, N+1):\n        num_to_remove += abs(a.count(i) - i)\n    print(num_to_remove // 2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:02:32.891217 REASON stop
+2022-04-13 21:02:32.892288 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Source: https://qiita.com/drken/items/a5e6fe22863b7992efdb#%E5%95%8F%E9%A1%8C-10-abc-086-c-traveling\n# The answer is the number of elements that are greater than the number of remaining elements.\n# The following is a proof.\n#\n# Let n be the number of remaining elements.\n# If there is an element a_i that is greater than n,\n# there is no way to make it a good sequence by removing the remaining elements.\n#\n# On the other hand, if there is no element a_i that is greater than n,\n# let b = (b_1, b_2, ..., b_n) be the sequence of the remaining elements.\n# Then, b is a good sequence.\n# (This is because each element b_i is less than or equal to n,\n# and there are exactly b_i elements of b_i in b.)\n#\n# Therefore, the number of elements that are greater than n is the minimum number of elements to be removed.\n\nn = int(input())\na = list(map(int, input().split()))\n\n# The number of elements that are greater than n.\n# The minimum number of elements to be removed is the minimum of this value.\nans = n\n\n# The number of remaining elements.\nn -= 1\nfor i in range(len(a)):\n    if a[i] > n:\n        ans -= 1\n    else:\n        n -= 1\n\nprint(ans)"
+}
+2022-04-13 21:02:32.892412 REASON stop
+2022-04-13 21:02:32.893294 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# input\nn = int(input())\na = list(map(int, input().split()))\n\n# create a dictionary to count the occurence of each number\noccurence = {}\nfor i in range(n):\n    if a[i] in occurence:\n        occurence[a[i]] += 1\n    else:\n        occurence[a[i]] = 1\n\n# create a list to store the number of occurence\n# if a number's occurence is more than the number itself, then it will be deleted\n# otherwise, the number will be added to the list\nlst = []\nfor key, val in occurence.items():\n    if key < val:\n        lst.append(val - key)\n    else:\n        lst.append(0)\n\n# if the list is empty, then the answer is 0\n# otherwise, the answer is the sum of the list\nif len(lst) == 0:\n    print(0)\nelse:\n    print(sum(lst))"
+}
+2022-04-13 21:02:32.893382 REASON stop

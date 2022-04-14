@@ -1,0 +1,144 @@
+2022-04-13 18:53:28.721143 """
+There are $n$ distinct points on a coordinate line, the coordinate of $i$-th point equals to $x_i$. Choose a subset of the given set of points such that the distance between each pair of points in a subset is an integral power of two. It is necessary to consider each pair of points, not only adjacent. Note that any subset containing one element satisfies the condition above. Among all these subsets, choose a subset with maximum possible size.
+
+In other words, you have to choose the maximum possible number of points $x_{i_1}, x_{i_2}, \dots, x_{i_m}$ such that for each pair $x_{i_j}$, $x_{i_k}$ it is true that $|x_{i_j} - x_{i_k}| = 2^d$ where $d$ is some non-negative integer number (not necessarily the same for each pair of points).
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of points.
+
+The second line contains $n$ pairwise distinct integers $x_1, x_2, \dots, x_n$ ($-10^9 \le x_i \le 10^9$) — the coordinates of points.
+
+
+-----Output-----
+
+In the first line print $m$ — the maximum possible number of points in a subset that satisfies the conditions described above.
+
+In the second line print $m$ integers — the coordinates of points in the subset you have chosen.
+
+If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+6
+3 5 4 7 10 12
+
+Output
+3
+7 3 5
+Input
+5
+-1 2 5 8 11
+
+Output
+1
+8
+
+
+
+-----Note-----
+
+In the first example the answer is $[7, 3, 5]$. Note, that $|7-3|=4=2^2$, $|7-5|=2=2^1$ and $|3-5|=2=2^1$. You can't find a subset having more points satisfying the required property.
+"""
+2022-04-13 18:53:28.721158 --------------------------
+2022-04-13 18:54:01.753424 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\nx.sort()\n\nans = 1\ncurr = x[0]\nfor i in range(1, n):\n    if x[i] == curr:\n        continue\n    if x[i] == curr*2:\n        ans += 1\n        curr = x[i]\n    elif x[i] > curr*2:\n        break\n\nprint(ans)\nfor i in range(ans):\n    print(x[i], end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\ndef get_closest_power_of_2(x):\n    d = 0\n    while x != 1:\n        x //= 2\n        d += 1\n    return d\n\n# read input\nn = int(input())\npoints = list(map(int, input().split()))\npoints.sort()\n\n# get differences between each point\ndifferences = []\nfor i in range(n-1):\n    differences.append(points[i+1] - points[i])\n\n# get powers of 2 closest to the differences\nd_powers = []\nfor d in differences:\n    d_powers.append(get_closest_power_of_2(d))\n\n# get the maximum number of points\nm = 1\nfor i in range(n-1):\n    if d_powers[i] == d_powers[i+1]:\n        m += 1\n\n# print the result\nprint(m)\nprint(*points[:m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    # arr.sort()\n\n    def get_powers(arr):\n        powers = []\n        for i in range(len(arr)):\n            powers.append([])\n            for j in range(i+1, len(arr)):\n                power = 0\n                while arr[i] - arr[j] != 2 ** power and arr[j] - arr[i] != 2 ** power:\n                    power += 1\n                powers[i].append(power)\n        return powers\n\n    powers = get_powers(arr)\n\n    def get_max_powers(powers):\n        max_powers = []\n        for i in range(len(powers)):\n            max_powers.append(max(powers[i]))\n        return max_powers\n\n    max_powers = get_max_powers(powers)\n\n    def get_max_power(max_powers):\n        max_power = 0\n        for i in range(len(max_powers)):\n            if max_powers[i] > max_power:\n                max_power = max_powers[i]\n        return max_power\n\n    max_power = get_max_power(max_powers)\n\n    def get_max_power_indices(max_powers, max_power):\n        max_power_indices = []\n        for i in range(len(max_powers)):\n            if max_powers[i] == max_power:\n                max_power_indices.append(i)\n        return max_power_indices\n\n    max_power_indices = get_max_power_indices(max_powers, max_power)\n\n    def get_max_power_arr(arr, max_power_indices):\n        max_power_arr = []\n        for i in max_power_indices:\n            max_power_arr.append(arr[i])\n        return max_power_arr\n\n    max_power_arr = get_max_power_arr(arr, max_power_indices)\n\n    print(len(max_power_arr))\n    for i in max_power_arr:\n        print(i, end=' ')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = [int(i) for i in input().split()]\n    x = sorted(x)\n    #print(x)\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[x[j] - x[i]] = (i, j)\n    #print(d)\n    ans = [x[0]]\n    for i in range(1, n):\n        s = ans[-1]\n        while s in d:\n            s = d[s][1]\n            ans.append(s)\n    print(len(ans))\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# TODO: Finish this problem."
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\n\n# 2^0 = 1, 2^1 = 2 ... 2^18 = 262144\n# So max distance between two points is 2^18\n# We can use a list to store distances between each point and every other point\n# Then use a greedy approach to choose the longest distance first, and then the second longest and so on\n\n# Store all distances between each point in a list\ndistances = []\nfor i in range(n):\n    for j in range(n):\n        if i == j:\n            continue\n        # Use abs to get the distance between the two points\n        distances.append(abs(x[i] - x[j]))\n\n# Sort the list in descending order\ndistances.sort(reverse=True)\n\n# Use a set to store the chosen points\nchosen = set()\n\n# For each distance, find the two points that have that distance\n# and add them to the set of chosen points\nfor d in distances:\n    # Calculate the two points that have that distance\n    # If the two points are already in the set, then skip them\n    # If the two points are not in the set, add them to the set\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if abs(x[i] - x[j]) == d:\n                if x[i] not in chosen and x[j] not in chosen:\n                    chosen.add(x[i])\n                    chosen.add(x[j])\n\n# Print the length of the set\nprint(len(chosen))\n\n# Print the set\nprint(*chosen)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n\n    # This is a greedy algorithm\n    # For each point, find the closest point which is 2^i away from it\n    # If there is no such point, then this point is not included in the answer\n    # Otherwise, the point is added to the answer and the closest point is removed from the list\n    # The closest point is removed so that we don't have to consider it again\n    # We do not have to consider the point again because any other point which is 2^i away from it\n    # has already been considered when we considered the closest point\n    #\n    # Time complexity: O(n log n)\n    # Space complexity: O(n)\n    x.sort()\n    ans = []\n    i = 0\n    while i < n:\n        j = i + 1\n        while j < n:\n            if x[j] - x[i] == 2:\n                ans.append(x[i])\n                x.pop(j)\n                break\n            elif x[j] - x[i] > 2:\n                break\n            j += 1\n        i += 1\n    print(len(ans))\n    print(' '.join(map(str, ans)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649876008,
+  "id": "cmpl-4wcPImtYvkzsyQG32kJhFsfi2zY9t",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:54:01.753820 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\nx.sort()\n\nans = 1\ncurr = x[0]\nfor i in range(1, n):\n    if x[i] == curr:\n        continue\n    if x[i] == curr*2:\n        ans += 1\n        curr = x[i]\n    elif x[i] > curr*2:\n        break\n\nprint(ans)\nfor i in range(ans):\n    print(x[i], end=' ')"
+}
+2022-04-13 18:54:01.753875 REASON stop
+2022-04-13 18:54:01.754333 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\ndef get_closest_power_of_2(x):\n    d = 0\n    while x != 1:\n        x //= 2\n        d += 1\n    return d\n\n# read input\nn = int(input())\npoints = list(map(int, input().split()))\npoints.sort()\n\n# get differences between each point\ndifferences = []\nfor i in range(n-1):\n    differences.append(points[i+1] - points[i])\n\n# get powers of 2 closest to the differences\nd_powers = []\nfor d in differences:\n    d_powers.append(get_closest_power_of_2(d))\n\n# get the maximum number of points\nm = 1\nfor i in range(n-1):\n    if d_powers[i] == d_powers[i+1]:\n        m += 1\n\n# print the result\nprint(m)\nprint(*points[:m])"
+}
+2022-04-13 18:54:01.754493 REASON stop
+2022-04-13 18:54:01.755060 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    # arr.sort()\n\n    def get_powers(arr):\n        powers = []\n        for i in range(len(arr)):\n            powers.append([])\n            for j in range(i+1, len(arr)):\n                power = 0\n                while arr[i] - arr[j] != 2 ** power and arr[j] - arr[i] != 2 ** power:\n                    power += 1\n                powers[i].append(power)\n        return powers\n\n    powers = get_powers(arr)\n\n    def get_max_powers(powers):\n        max_powers = []\n        for i in range(len(powers)):\n            max_powers.append(max(powers[i]))\n        return max_powers\n\n    max_powers = get_max_powers(powers)\n\n    def get_max_power(max_powers):\n        max_power = 0\n        for i in range(len(max_powers)):\n            if max_powers[i] > max_power:\n                max_power = max_powers[i]\n        return max_power\n\n    max_power = get_max_power(max_powers)\n\n    def get_max_power_indices(max_powers, max_power):\n        max_power_indices = []\n        for i in range(len(max_powers)):\n            if max_powers[i] == max_power:\n                max_power_indices.append(i)\n        return max_power_indices\n\n    max_power_indices = get_max_power_indices(max_powers, max_power)\n\n    def get_max_power_arr(arr, max_power_indices):\n        max_power_arr = []\n        for i in max_power_indices:\n            max_power_arr.append(arr[i])\n        return max_power_arr\n\n    max_power_arr = get_max_power_arr(arr, max_power_indices)\n\n    print(len(max_power_arr))\n    for i in max_power_arr:\n        print(i, end=' ')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:54:01.755138 REASON stop
+2022-04-13 18:54:01.774373 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = [int(i) for i in input().split()]\n    x = sorted(x)\n    #print(x)\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[x[j] - x[i]] = (i, j)\n    #print(d)\n    ans = [x[0]]\n    for i in range(1, n):\n        s = ans[-1]\n        while s in d:\n            s = d[s][1]\n            ans.append(s)\n    print(len(ans))\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:54:01.774478 REASON stop
+2022-04-13 18:54:01.784715 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# TODO: Finish this problem."
+}
+2022-04-13 18:54:01.784825 REASON stop
+2022-04-13 18:54:01.785858 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nx = list(map(int, input().split()))\n\n# 2^0 = 1, 2^1 = 2 ... 2^18 = 262144\n# So max distance between two points is 2^18\n# We can use a list to store distances between each point and every other point\n# Then use a greedy approach to choose the longest distance first, and then the second longest and so on\n\n# Store all distances between each point in a list\ndistances = []\nfor i in range(n):\n    for j in range(n):\n        if i == j:\n            continue\n        # Use abs to get the distance between the two points\n        distances.append(abs(x[i] - x[j]))\n\n# Sort the list in descending order\ndistances.sort(reverse=True)\n\n# Use a set to store the chosen points\nchosen = set()\n\n# For each distance, find the two points that have that distance\n# and add them to the set of chosen points\nfor d in distances:\n    # Calculate the two points that have that distance\n    # If the two points are already in the set, then skip them\n    # If the two points are not in the set, add them to the set\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if abs(x[i] - x[j]) == d:\n                if x[i] not in chosen and x[j] not in chosen:\n                    chosen.add(x[i])\n                    chosen.add(x[j])\n\n# Print the length of the set\nprint(len(chosen))\n\n# Print the set\nprint(*chosen)"
+}
+2022-04-13 18:54:01.785945 REASON stop
+2022-04-13 18:54:01.786715 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n\n    # This is a greedy algorithm\n    # For each point, find the closest point which is 2^i away from it\n    # If there is no such point, then this point is not included in the answer\n    # Otherwise, the point is added to the answer and the closest point is removed from the list\n    # The closest point is removed so that we don't have to consider it again\n    # We do not have to consider the point again because any other point which is 2^i away from it\n    # has already been considered when we considered the closest point\n    #\n    # Time complexity: O(n log n)\n    # Space complexity: O(n)\n    x.sort()\n    ans = []\n    i = 0\n    while i < n:\n        j = i + 1\n        while j < n:\n            if x[j] - x[i] == 2:\n                ans.append(x[i])\n                x.pop(j)\n                break\n            elif x[j] - x[i] > 2:\n                break\n            j += 1\n        i += 1\n    print(len(ans))\n    print(' '.join(map(str, ans)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:54:01.786811 REASON stop

@@ -1,0 +1,158 @@
+2022-04-13 19:49:17.800423 """
+You are given an undirected graph consisting of $n$ vertices. A number is written on each vertex; the number on vertex $i$ is $a_i$. Initially there are no edges in the graph.
+
+You may add some edges to this graph, but you have to pay for them. The cost of adding an edge between vertices $x$ and $y$ is $a_x + a_y$ coins. There are also $m$ special offers, each of them is denoted by three numbers $x$, $y$ and $w$, and means that you can add an edge connecting vertices $x$ and $y$ and pay $w$ coins for it. You don't have to use special offers: if there is a pair of vertices $x$ and $y$ that has a special offer associated with it, you still may connect these two vertices paying $a_x + a_y$ coins for it.
+
+What is the minimum number of coins you have to spend to make the graph connected? Recall that a graph is connected if it's possible to get from any vertex to any other vertex using only the edges belonging to this graph.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $0 \le m \le 2 \cdot 10^5$) — the number of vertices in the graph and the number of special offers, respectively.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^{12}$) — the numbers written on the vertices.
+
+Then $m$ lines follow, each containing three integers $x$, $y$ and $w$ ($1 \le x, y \le n$, $1 \le w \le 10^{12}$, $x \ne y$) denoting a special offer: you may add an edge connecting vertex $x$ and vertex $y$, and this edge will cost $w$ coins.
+
+
+-----Output-----
+
+Print one integer — the minimum number of coins you have to pay to make the graph connected.
+
+
+-----Examples-----
+Input
+3 2
+1 3 3
+2 3 5
+2 1 1
+
+Output
+5
+
+Input
+4 0
+1 3 3 7
+
+Output
+16
+
+Input
+5 4
+1 2 3 4 5
+1 2 8
+1 3 10
+1 4 7
+1 5 15
+
+Output
+18
+
+
+
+-----Note-----
+
+In the first example it is possible to connect $1$ to $2$ using special offer $2$, and then $1$ to $3$ without using any offers.
+
+In next two examples the optimal answer may be achieved without using special offers.
+"""
+2022-04-13 19:49:17.800439 --------------------------
+2022-04-13 19:49:57.613307 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The solution is to find the minimum spanning tree of the graph, and then add the edges that are not in the MST.\n# The MST can be found using Prim's algorithm, which can be done in $O(E \\log V)$ time.\n# Then, it can be done in $O(N^2)$ time to find the edges that are not in the MST.\n# The total time complexity is $O(N^2)$.\n\n# This solution is not fast enough to pass the time limit.\n\nfrom collections import defaultdict\n\n# V - number of vertices\n# E - number of edges\nV, E = map(int, input().split())\n# a - list of values on each vertex\na = list(map(int, input().split()))\n\n# graph - dictionary of edges, where each vertex is a key, and the value is a list of tuples (vertex, weight)\ngraph = defaultdict(list)\n\n# add edges to the graph\nfor _ in range(E):\n    x, y, w = map(int, input().split())\n    graph[x].append((y, w))\n    graph[y].append((x, w))\n\n# visited - list of visited vertices\n# s - list of vertices to be visited\nvisited = [False] * (V + 1)\ns = [1]\n\n# mst - list of edges in the MST\nmst = []\n\nwhile s:\n    # current - the vertex to be visited\n    current = s.pop()\n    visited[current] = True\n\n    # add edges to the MST\n    for n, w in graph[current]:\n        if not visited[n]:\n            s.append(n)\n            mst.append((current, n, w))\n\n# edges - list of edges not in the MST\nedges = []\n\n# add edges not in the MST\nfor i in range(1, V + 1):\n    for j in range(i + 1, V + 1):\n        if (i, j) not in [(x, y) for x, y, _ in mst] and (j, i) not in [(x, y) for x, y, _ in mst]:\n            edges.append((i, j, a[i - 1] + a[j - 1]))\n\n# add the edges not in the MST to the MST\nmst += edges\n\n# print the sum of all the weights\nprint(sum(w for _, _, w in mst))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offer = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        offer.append([x - 1, y - 1, w])\n    offer = sorted(offer, key=lambda x: x[2])\n    ans = 0\n    father = [i for i in range(n)]\n    size = [1] * n\n    for i in range(m):\n        x, y, w = offer[i]\n        if find(x, father) != find(y, father):\n            ans += w\n            union(x, y, father, size)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if find(i, father) != find(j, father):\n                ans += a[i] + a[j]\n                union(i, j, father, size)\n    print(ans)\n\n\ndef find(x, father):\n    if father[x] == x:\n        return x\n    else:\n        father[x] = find(father[x], father)\n        return father[x]\n\n\ndef union(x, y, father, size):\n    fx = find(x, father)\n    fy = find(y, father)\n    if size[fx] > size[fy]:\n        father[fy] = fx\n        size[fx] += size[fy]\n    else:\n        father[fx] = fy\n        size[fy] += size[fx]\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nimport heapq\n\nclass DisjointSet(object):\n    def __init__(self, n):\n        self.parent = [i for i in range(n)]\n        self.rank = [0] * n\n        self.count = n\n\n    def find(self, x):\n        while x != self.parent[x]:\n            self.parent[x] = self.parent[self.parent[x]]\n            x = self.parent[x]\n        return x\n\n    def union(self, x, y):\n        x_root = self.find(x)\n        y_root = self.find(y)\n        if x_root == y_root:\n            return\n        if self.rank[x_root] < self.rank[y_root]:\n            self.parent[x_root] = y_root\n        elif self.rank[x_root] > self.rank[y_root]:\n            self.parent[y_root] = x_root\n        else:\n            self.parent[y_root] = x_root\n            self.rank[x_root] += 1\n        self.count -= 1\n\n    def get_count(self):\n        return self.count\n\n\nclass Solution(object):\n    def minCostToConnectAllNodes(self, n, edges, special_edges):\n        ds = DisjointSet(n)\n        normal_edges = []\n        for edge in edges:\n            if ds.find(edge[0]) != ds.find(edge[1]):\n                ds.union(edge[0], edge[1])\n                normal_edges.append(edge)\n        if ds.get_count() == 1:\n            return 0\n        heapq.heapify(special_edges)\n        total_cost = 0\n        while special_edges:\n            cost, start, end = heapq.heappop(special_edges)\n            if ds.find(start) != ds.find(end):\n                ds.union(start, end)\n                total_cost += cost\n                if ds.get_count() == 1:\n                    return total_cost\n        for edge in normal_edges:\n            if ds.find(edge[0]) != ds.find(edge[1]):\n                ds.union(edge[0], edge[1])\n                total_cost += edge[2]\n                if ds.get_count() == 1:\n                    return total_cost\n        return total_cost\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    costs = list(map(int, input().split()))\n    edges = []\n    special_edges = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        special_edges.append((w, x - 1, y - 1))\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((costs[i] + costs[j], i, j))\n    print(Solution().minCostToConnectAllNodes(n, edges, special_edges))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass Edge:\n    def __init__(self, to, cost):\n        self.to = to\n        self.cost = cost\n\nclass Vertex:\n    def __init__(self, cost):\n        self.cost = cost\n        self.edges = []\n\ndef find(x):\n    if x != parent[x]:\n        parent[x] = find(parent[x])\n    return parent[x]\n\ndef merge(x, y):\n    x = find(x)\n    y = find(y)\n    if x != y:\n        parent[x] = y\n\ndef kruskal(n):\n    global parent\n    parent = [i for i in range(n)]\n    cost = 0\n    for edge in edges:\n        if find(edge.to[0]) != find(edge.to[1]):\n            cost += edge.cost\n            merge(edge.to[0], edge.to[1])\n    return cost\n\nn, m = map(int, sys.stdin.readline().split())\nvertices = [Vertex(cost) for cost in map(int, sys.stdin.readline().split())]\nedges = []\nfor _ in range(m):\n    x, y, w = map(int, sys.stdin.readline().split())\n    edges.append(Edge((x - 1, y - 1), w))\n\nfor i in range(n):\n    for j in range(i + 1, n):\n        edges.append(Edge((i, j), vertices[i].cost + vertices[j].cost))\n\nedges.sort(key=lambda edge: edge.cost)\nprint(kruskal(n))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#O(N**2)\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\np = [i for i in range(n)]\n\ndef find(x):\n    if p[x] != x:\n        p[x] = find(p[x])\n    return p[x]\n\ndef union(x, y):\n    p[find(x)] = find(y)\n\nfor _ in range(m):\n    x, y, w = map(int, input().split())\n    x -= 1\n    y -= 1\n    if w < a[x] + a[y]:\n        union(x, y)\n\nans = 0\nfor i in range(n):\n    if i != find(i):\n        ans += a[i]\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    global n, m, a, d, s, p, t\n    line = sys.stdin.readline()\n    n, m = [int(x) for x in line.split()]\n    line = sys.stdin.readline()\n    a = [int(x) for x in line.split()]\n    d = [[0] * n for i in range(n)]\n    for i in range(n):\n        d[i][i] = a[i]\n    for i in range(m):\n        line = sys.stdin.readline()\n        x, y, w = [int(x) for x in line.split()]\n        d[x - 1][y - 1] = w\n        d[y - 1][x - 1] = w\n    s = [0] * n\n    p = [0] * n\n    t = 0\n    for i in range(n):\n        if s[i] == 0:\n            dfs(i)\n    ans = 0\n    for i in range(n):\n        ans += d[i][p[i]]\n    print(ans)\n\ndef dfs(v):\n    global n, m, a, d, s, p, t\n    s[v] = 1\n    for i in range(n):\n        if d[v][i] != 0 and s[i] == 0:\n            p[i] = v\n            dfs(i)\n    t += 1\n    s[v] = t\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649879357,
+  "id": "cmpl-4wdHJwu0c3YGZhLlsEmcoXdSe1gjM",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:49:57.613718 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The solution is to find the minimum spanning tree of the graph, and then add the edges that are not in the MST.\n# The MST can be found using Prim's algorithm, which can be done in $O(E \\log V)$ time.\n# Then, it can be done in $O(N^2)$ time to find the edges that are not in the MST.\n# The total time complexity is $O(N^2)$.\n\n# This solution is not fast enough to pass the time limit.\n\nfrom collections import defaultdict\n\n# V - number of vertices\n# E - number of edges\nV, E = map(int, input().split())\n# a - list of values on each vertex\na = list(map(int, input().split()))\n\n# graph - dictionary of edges, where each vertex is a key, and the value is a list of tuples (vertex, weight)\ngraph = defaultdict(list)\n\n# add edges to the graph\nfor _ in range(E):\n    x, y, w = map(int, input().split())\n    graph[x].append((y, w))\n    graph[y].append((x, w))\n\n# visited - list of visited vertices\n# s - list of vertices to be visited\nvisited = [False] * (V + 1)\ns = [1]\n\n# mst - list of edges in the MST\nmst = []\n\nwhile s:\n    # current - the vertex to be visited\n    current = s.pop()\n    visited[current] = True\n\n    # add edges to the MST\n    for n, w in graph[current]:\n        if not visited[n]:\n            s.append(n)\n            mst.append((current, n, w))\n\n# edges - list of edges not in the MST\nedges = []\n\n# add edges not in the MST\nfor i in range(1, V + 1):\n    for j in range(i + 1, V + 1):\n        if (i, j) not in [(x, y) for x, y, _ in mst] and (j, i) not in [(x, y) for x, y, _ in mst]:\n            edges.append((i, j, a[i - 1] + a[j - 1]))\n\n# add the edges not in the MST to the MST\nmst += edges\n\n# print the sum of all the weights\nprint(sum(w for _, _, w in mst))"
+}
+2022-04-13 19:49:57.613765 REASON stop
+2022-04-13 19:49:57.614193 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:49:57.614305 REASON stop
+2022-04-13 19:49:57.614656 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offer = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        offer.append([x - 1, y - 1, w])\n    offer = sorted(offer, key=lambda x: x[2])\n    ans = 0\n    father = [i for i in range(n)]\n    size = [1] * n\n    for i in range(m):\n        x, y, w = offer[i]\n        if find(x, father) != find(y, father):\n            ans += w\n            union(x, y, father, size)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if find(i, father) != find(j, father):\n                ans += a[i] + a[j]\n                union(i, j, father, size)\n    print(ans)\n\n\ndef find(x, father):\n    if father[x] == x:\n        return x\n    else:\n        father[x] = find(father[x], father)\n        return father[x]\n\n\ndef union(x, y, father, size):\n    fx = find(x, father)\n    fy = find(y, father)\n    if size[fx] > size[fy]:\n        father[fy] = fx\n        size[fx] += size[fy]\n    else:\n        father[fx] = fy\n        size[fy] += size[fx]\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:49:57.614719 REASON stop
+2022-04-13 19:49:57.631686 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nimport heapq\n\nclass DisjointSet(object):\n    def __init__(self, n):\n        self.parent = [i for i in range(n)]\n        self.rank = [0] * n\n        self.count = n\n\n    def find(self, x):\n        while x != self.parent[x]:\n            self.parent[x] = self.parent[self.parent[x]]\n            x = self.parent[x]\n        return x\n\n    def union(self, x, y):\n        x_root = self.find(x)\n        y_root = self.find(y)\n        if x_root == y_root:\n            return\n        if self.rank[x_root] < self.rank[y_root]:\n            self.parent[x_root] = y_root\n        elif self.rank[x_root] > self.rank[y_root]:\n            self.parent[y_root] = x_root\n        else:\n            self.parent[y_root] = x_root\n            self.rank[x_root] += 1\n        self.count -= 1\n\n    def get_count(self):\n        return self.count\n\n\nclass Solution(object):\n    def minCostToConnectAllNodes(self, n, edges, special_edges):\n        ds = DisjointSet(n)\n        normal_edges = []\n        for edge in edges:\n            if ds.find(edge[0]) != ds.find(edge[1]):\n                ds.union(edge[0], edge[1])\n                normal_edges.append(edge)\n        if ds.get_count() == 1:\n            return 0\n        heapq.heapify(special_edges)\n        total_cost = 0\n        while special_edges:\n            cost, start, end = heapq.heappop(special_edges)\n            if ds.find(start) != ds.find(end):\n                ds.union(start, end)\n                total_cost += cost\n                if ds.get_count() == 1:\n                    return total_cost\n        for edge in normal_edges:\n            if ds.find(edge[0]) != ds.find(edge[1]):\n                ds.union(edge[0], edge[1])\n                total_cost += edge[2]\n                if ds.get_count() == 1:\n                    return total_cost\n        return total_cost\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    costs = list(map(int, input().split()))\n    edges = []\n    special_edges = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        special_edges.append((w, x - 1, y - 1))\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((costs[i] + costs[j], i, j))\n    print(Solution().minCostToConnectAllNodes(n, edges, special_edges))"
+}
+2022-04-13 19:49:57.631780 REASON stop
+2022-04-13 19:49:57.648324 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass Edge:\n    def __init__(self, to, cost):\n        self.to = to\n        self.cost = cost\n\nclass Vertex:\n    def __init__(self, cost):\n        self.cost = cost\n        self.edges = []\n\ndef find(x):\n    if x != parent[x]:\n        parent[x] = find(parent[x])\n    return parent[x]\n\ndef merge(x, y):\n    x = find(x)\n    y = find(y)\n    if x != y:\n        parent[x] = y\n\ndef kruskal(n):\n    global parent\n    parent = [i for i in range(n)]\n    cost = 0\n    for edge in edges:\n        if find(edge.to[0]) != find(edge.to[1]):\n            cost += edge.cost\n            merge(edge.to[0], edge.to[1])\n    return cost\n\nn, m = map(int, sys.stdin.readline().split())\nvertices = [Vertex(cost) for cost in map(int, sys.stdin.readline().split())]\nedges = []\nfor _ in range(m):\n    x, y, w = map(int, sys.stdin.readline().split())\n    edges.append(Edge((x - 1, y - 1), w))\n\nfor i in range(n):\n    for j in range(i + 1, n):\n        edges.append(Edge((i, j), vertices[i].cost + vertices[j].cost))\n\nedges.sort(key=lambda edge: edge.cost)\nprint(kruskal(n))"
+}
+2022-04-13 19:49:57.648439 REASON stop
+2022-04-13 19:49:57.650862 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#O(N**2)\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\np = [i for i in range(n)]\n\ndef find(x):\n    if p[x] != x:\n        p[x] = find(p[x])\n    return p[x]\n\ndef union(x, y):\n    p[find(x)] = find(y)\n\nfor _ in range(m):\n    x, y, w = map(int, input().split())\n    x -= 1\n    y -= 1\n    if w < a[x] + a[y]:\n        union(x, y)\n\nans = 0\nfor i in range(n):\n    if i != find(i):\n        ans += a[i]\nprint(ans)"
+}
+2022-04-13 19:49:57.650938 REASON stop
+2022-04-13 19:49:57.651781 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    global n, m, a, d, s, p, t\n    line = sys.stdin.readline()\n    n, m = [int(x) for x in line.split()]\n    line = sys.stdin.readline()\n    a = [int(x) for x in line.split()]\n    d = [[0] * n for i in range(n)]\n    for i in range(n):\n        d[i][i] = a[i]\n    for i in range(m):\n        line = sys.stdin.readline()\n        x, y, w = [int(x) for x in line.split()]\n        d[x - 1][y - 1] = w\n        d[y - 1][x - 1] = w\n    s = [0] * n\n    p = [0] * n\n    t = 0\n    for i in range(n):\n        if s[i] == 0:\n            dfs(i)\n    ans = 0\n    for i in range(n):\n        ans += d[i][p[i]]\n    print(ans)\n\ndef dfs(v):\n    global n, m, a, d, s, p, t\n    s[v] = 1\n    for i in range(n):\n        if d[v][i] != 0 and s[i] == 0:\n            p[i] = v\n            dfs(i)\n    t += 1\n    s[v] = t\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:49:57.651872 REASON stop
