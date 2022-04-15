@@ -44,7 +44,7 @@ TEMPERATURE = 0.3
 N_SOLUTIONS = 2
 
 # EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax error", "cleanup code"]
-EDIT_OPERATIONS = ["fix spelling mistakes", "fix syntax errors"]
+EDIT_OPERATIONS = ["fix syntax errors"]
 SLEEP_TIME_SECONDS = 1.5
 
 
