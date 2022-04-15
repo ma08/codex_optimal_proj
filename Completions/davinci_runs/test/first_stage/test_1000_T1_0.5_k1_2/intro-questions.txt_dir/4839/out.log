@@ -1,0 +1,155 @@
+2022-04-09 22:58:25.781411 """
+For NWERC 2018, the organisers have done something rather special with the balloons. Instead of buying balloons of equal size, they bought one balloon of every integer size from $1$ up to $n$. A balloon of size $s$ has a capacity of $s$ decilitres. 
+
+To avoid inflating the balloons by hand, the organisers also bought $n$ helium gas canisters. Each canister can only be used to inflate one balloon, and must be emptied completely into that balloon (it is not possible to disconnect a canister from a balloon before the canister has been fully used).
+
+Unfortunately the gas canisters were bought at a garage sale, and may contain differing amounts of helium. Some may even be empty! To make the best of this challenging situation, the canisters will have to be paired with the balloons smartly.
+
+The organisers want to assign all of the gas canisters to separate balloons, such that the balloon that is inflated the least (relative to its capacity) still contains the maximum possible fraction of helium inside. What is the maximum such (minimum) fraction that is possible?
+
+Balloons filled beyond their capacity will explode. Explosions are upsetting and must be avoided.
+
+-----Input-----
+The input consists of:
+ - One line with the integer $n$ ($1 \le n \le 2\cdot 10^5$), the number of balloons and gas canisters.
+ - One line with $n$ integers $c_1, \ldots , c_ n$ ($0 \le c_ i \le n$ for each $i$), the amounts of helium in the gas canisters, in decilitres.
+
+-----Output-----
+If it is possible to fill all the balloons without any exploding, output the maximum fraction $f$ such that every balloon can be filled to at least $f$ of its capacity. Otherwise, output “impossible”.
+
+Your answer should have an absolute or relative error of at most $10^{-6}$.
+
+-----Examples-----
+Sample Input 1:
+6
+6 1 3 2 2 3
+Sample Output 1:
+0.6
+
+Sample Input 2:
+2
+2 2
+Sample Output 2:
+impossible
+"""
+2022-04-09 22:58:25.781434 --------------------------
+2022-04-09 22:58:56.082557 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    cans = [int(x) for x in sys.stdin.readline().split()]\n    cans.sort()\n    cans.reverse()\n    if cans[0] > n:\n        print(\"impossible\")\n    else:\n        print(float(cans[n-1])/n)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    canisters = list(map(int, input().split()))\n    canisters.sort()\n    balloons = list(range(1, n + 1))\n    balloons.sort()\n    balloon_sum = sum(balloons)\n    canister_sum = sum(canisters)\n    if canister_sum < balloon_sum:\n        print('impossible')\n        return\n    i = 0\n    j = 0\n    while i < n and j < n:\n        if canisters[i] >= balloons[j]:\n            balloon_sum -= balloons[j]\n            canister_sum -= canisters[i]\n            i += 1\n            j += 1\n        else:\n            canister_sum -= canisters[i]\n            i += 1\n    if canister_sum >= balloon_sum:\n        print(balloon_sum / sum(balloons))\n    else:\n        print('impossible')\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    balloons = [int(x) for x in sys.stdin.readline().strip().split(' ')]\n    balloons.sort()\n    balloons.reverse()\n    canisters = [int(x) for x in sys.stdin.readline().strip().split(' ')]\n    canisters.sort()\n    canisters.reverse()\n    for i in range(n):\n        if balloons[i] > canisters[i]:\n            print('impossible')\n            return\n    print(canisters[n-1] / balloons[n-1])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nhelium = list(map(int, input().split()))\nhelium.sort()\n\nif helium[0] == 0:\n    print(\"impossible\")\nelse:\n    print(helium[0]/n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nc = [int(x) for x in input().split()]\n\nc.sort()\n\nif c[-1] > n:\n    print(\"impossible\")\nelse:\n    m = 0\n    for i in range(n-1, -1, -1):\n        if c[i] > m + 1:\n            m += 1\n        else:\n            break\n    print(m/n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nc = [int(x) for x in input().split()]\nc.sort()\n\n# If the helium is too small, it is impossible to fill the balloons\nif c[0] == 0:\n    print(\"impossible\")\n\n# If the helium is large enough, we can fill the balloons from smallest to largest\nelse:\n    # Find the minimum amount of helium needed to fill all balloons\n    min_helium = 0\n    for i in range(1, n + 1):\n        min_helium += i\n\n    # If there is too much helium, fill the balloons from smallest to largest\n    if min_helium <= c[-1]:\n        print(1)\n\n    # If there is just enough helium, fill the balloons from largest to smallest\n    elif min_helium == sum(c):\n        print(1 / n)\n\n    # If there is not enough helium, fill the balloons from largest to smallest\n    else:\n        helium_used = 0\n        for i in range(n, 0, -1):\n            helium_used += c[i - 1]\n            if helium_used >= min_helium:\n                print(helium_used / (n * i))\n                break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom math import ceil\n\ndef main():\n\tn = int(stdin.readline())\n\tc = [int(x) for x in stdin.readline().split()]\n\tc.sort()\n\tif c[0] > 0:\n\t\tprint('impossible')\n\telse:\n\t\tans = 1\n\t\tfor i in range(1,n):\n\t\t\tans = min(ans,c[i]/i)\n\t\tprint(ans)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ncanisters = list(map(int, input().split()))\n\n# Sort the canisters in descending order\ncanisters.sort(reverse=True)\n\n# If the number of canisters is less than the number of balloons, it is impossible\nif n < sum(canisters):\n    print(\"impossible\")\n\n# If the number of canisters is equal to the number of balloons, the minimum fraction is 1\nelif n == sum(canisters):\n    print(1)\n\n# If the number of canisters is greater than the number of balloons, we need to find the minimum fraction\nelse:\n    # The maximum fraction is the sum of the canisters divided by the number of balloons\n    max_fraction = sum(canisters) / n\n    # The minimum fraction is the first canister divided by the number of balloons\n    min_fraction = canisters[0] / n\n    # The minimum fraction is the maximum fraction minus the difference between the maximum fraction and the minimum fraction divided by the number of balloons minus the number of canisters\n    print(max_fraction - (max_fraction - min_fraction) / (n - len(canisters)))"
+    }
+  ],
+  "created": 1649559506,
+  "id": "cmpl-4vI4QuPWPUWyIkKZ00s7MryGlkfQW",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:58:56.082988 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    cans = [int(x) for x in sys.stdin.readline().split()]\n    cans.sort()\n    cans.reverse()\n    if cans[0] > n:\n        print(\"impossible\")\n    else:\n        print(float(cans[n-1])/n)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:58:56.083071 REASON stop
+2022-04-09 22:58:56.094603 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.094635 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    canisters = list(map(int, input().split()))\n    canisters.sort()\n    balloons = list(range(1, n + 1))\n    balloons.sort()\n    balloon_sum = sum(balloons)\n    canister_sum = sum(canisters)\n    if canister_sum < balloon_sum:\n        print('impossible')\n        return\n    i = 0\n    j = 0\n    while i < n and j < n:\n        if canisters[i] >= balloons[j]:\n            balloon_sum -= balloons[j]\n            canister_sum -= canisters[i]\n            i += 1\n            j += 1\n        else:\n            canister_sum -= canisters[i]\n            i += 1\n    if canister_sum >= balloon_sum:\n        print(balloon_sum / sum(balloons))\n    else:\n        print('impossible')\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:58:56.094760 REASON stop
+2022-04-09 22:58:56.095578 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.095605 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    balloons = [int(x) for x in sys.stdin.readline().strip().split(' ')]\n    balloons.sort()\n    balloons.reverse()\n    canisters = [int(x) for x in sys.stdin.readline().strip().split(' ')]\n    canisters.sort()\n    canisters.reverse()\n    for i in range(n):\n        if balloons[i] > canisters[i]:\n            print('impossible')\n            return\n    print(canisters[n-1] / balloons[n-1])\n\nmain()"
+}
+2022-04-09 22:58:56.095660 REASON stop
+2022-04-09 22:58:56.095885 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.095893 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nhelium = list(map(int, input().split()))\nhelium.sort()\n\nif helium[0] == 0:\n    print(\"impossible\")\nelse:\n    print(helium[0]/n)"
+}
+2022-04-09 22:58:56.095922 REASON stop
+2022-04-09 22:58:56.096061 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.096071 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nc = [int(x) for x in input().split()]\n\nc.sort()\n\nif c[-1] > n:\n    print(\"impossible\")\nelse:\n    m = 0\n    for i in range(n-1, -1, -1):\n        if c[i] > m + 1:\n            m += 1\n        else:\n            break\n    print(m/n)"
+}
+2022-04-09 22:58:56.096092 REASON stop
+2022-04-09 22:58:56.096227 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.096233 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nc = [int(x) for x in input().split()]\nc.sort()\n\n# If the helium is too small, it is impossible to fill the balloons\nif c[0] == 0:\n    print(\"impossible\")\n\n# If the helium is large enough, we can fill the balloons from smallest to largest\nelse:\n    # Find the minimum amount of helium needed to fill all balloons\n    min_helium = 0\n    for i in range(1, n + 1):\n        min_helium += i\n\n    # If there is too much helium, fill the balloons from smallest to largest\n    if min_helium <= c[-1]:\n        print(1)\n\n    # If there is just enough helium, fill the balloons from largest to smallest\n    elif min_helium == sum(c):\n        print(1 / n)\n\n    # If there is not enough helium, fill the balloons from largest to smallest\n    else:\n        helium_used = 0\n        for i in range(n, 0, -1):\n            helium_used += c[i - 1]\n            if helium_used >= min_helium:\n                print(helium_used / (n * i))\n                break"
+}
+2022-04-09 22:58:56.096257 REASON stop
+2022-04-09 22:58:56.096402 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.096408 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom math import ceil\n\ndef main():\n\tn = int(stdin.readline())\n\tc = [int(x) for x in stdin.readline().split()]\n\tc.sort()\n\tif c[0] > 0:\n\t\tprint('impossible')\n\telse:\n\t\tans = 1\n\t\tfor i in range(1,n):\n\t\t\tans = min(ans,c[i]/i)\n\t\tprint(ans)\n\nmain()"
+}
+2022-04-09 22:58:56.096429 REASON stop
+2022-04-09 22:58:56.096565 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'
+2022-04-09 22:58:56.096572 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ncanisters = list(map(int, input().split()))\n\n# Sort the canisters in descending order\ncanisters.sort(reverse=True)\n\n# If the number of canisters is less than the number of balloons, it is impossible\nif n < sum(canisters):\n    print(\"impossible\")\n\n# If the number of canisters is equal to the number of balloons, the minimum fraction is 1\nelif n == sum(canisters):\n    print(1)\n\n# If the number of canisters is greater than the number of balloons, we need to find the minimum fraction\nelse:\n    # The maximum fraction is the sum of the canisters divided by the number of balloons\n    max_fraction = sum(canisters) / n\n    # The minimum fraction is the first canister divided by the number of balloons\n    min_fraction = canisters[0] / n\n    # The minimum fraction is the maximum fraction minus the difference between the maximum fraction and the minimum fraction divided by the number of balloons minus the number of canisters\n    print(max_fraction - (max_fraction - min_fraction) / (n - len(canisters)))"
+}
+2022-04-09 22:58:56.096596 REASON stop
+2022-04-09 22:58:56.096731 test/intro-questions.txt_dir/4839/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4839/solutions.json'

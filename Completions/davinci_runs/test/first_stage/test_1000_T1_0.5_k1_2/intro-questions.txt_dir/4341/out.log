@@ -1,0 +1,101 @@
+2022-04-09 19:43:35.598901 """
+You are given an undirected graph consisting of $n$ vertices and $m$ edges. Your task is to find the number of connected components which are cycles.
+
+Here are some definitions of graph theory.
+
+An undirected graph consists of two sets: set of nodes (called vertices) and set of edges. Each edge connects a pair of vertices. All edges are bidirectional (i.e. if a vertex $a$ is connected with a vertex $b$, a vertex $b$ is also connected with a vertex $a$). An edge can't connect vertex with itself, there is at most one edge between a pair of vertices.
+
+Two vertices $u$ and $v$ belong to the same connected component if and only if there is at least one path along edges connecting $u$ and $v$.
+
+A connected component is a cycle if and only if its vertices can be reordered in such a way that:  the first vertex is connected with the second vertex by an edge,  the second vertex is connected with the third vertex by an edge,  ...  the last vertex is connected with the first vertex by an edge,  all the described edges of a cycle are distinct. 
+
+A cycle doesn't contain any other edges except described above. By definition any cycle contains three or more vertices. [Image] There are $6$ connected components, $2$ of them are cycles: $[7, 10, 16]$ and $[5, 11, 9, 15]$. 
+
+
+-----Input-----
+
+The first line contains two integer numbers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $0 \le m \le 2 \cdot 10^5$) — number of vertices and edges.
+
+The following $m$ lines contains edges: edge $i$ is given as a pair of vertices $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$). There is no multiple edges in the given graph, i.e. for each pair ($v_i, u_i$) there no other pairs ($v_i, u_i$) and ($u_i, v_i$) in the list of edges.
+
+
+-----Output-----
+
+Print one integer — the number of connected components which are also cycles.
+
+
+-----Examples-----
+Input
+5 4
+1 2
+3 4
+5 4
+3 5
+
+Output
+1
+
+Input
+17 15
+1 8
+1 12
+5 11
+11 9
+9 15
+15 5
+4 13
+3 13
+4 3
+10 16
+7 10
+16 7
+14 3
+14 4
+17 6
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example only component $[3, 4, 5]$ is also a cycle.
+
+The illustration above corresponds to the second example.
+"""
+2022-04-09 19:43:35.598919 --------------------------
+2022-04-09 19:43:51.371420 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\nclass Graph:\n    def __init__(self):\n        self.graph = defaultdict(set)\n\n    def addEdge(self, u, v):\n        self.graph[u].add(v)\n        self.graph[v].add(u)\n\n    def isCycle(self, u, visited, parent):\n        visited[u] = True\n        for v in self.graph[u]:\n            if visited[v] == False:\n                if self.isCycle(v, visited, u) == True:\n                    return True\n            elif v != parent:\n                return True\n        return False\n\n    def cycle(self):\n        visited = [False] * (len(self.graph) + 1)\n        count = 0\n        for i in range(1, len(self.graph) + 1):\n            if visited[i] == False:\n                if self.isCycle(i, visited, -1) == True:\n                    count += 1\n        return count\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    g = Graph()\n    for i in range(m):\n        u, v = [int(x) for x in input().split()]\n        g.addEdge(u, v)\n    print(g.cycle())\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef dfs(graph, node, visited):\n    visited.add(node)\n    for child in graph[node]:\n        if child not in visited:\n            dfs(graph, child, visited)\n\ndef count_cycles(graph):\n    visited = set()\n    cycles = 0\n\n    for node in graph:\n        if node not in visited:\n            dfs(graph, node, visited)\n            cycles += 1\n    return cycles\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n\n    graph = {i: [] for i in range(1, n + 1)}\n\n    for _ in range(m):\n        v, u = map(int, sys.stdin.readline().split())\n        graph[v].append(u)\n        graph[u].append(v)\n\n    print(count_cycles(graph))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649547816,
+  "id": "cmpl-4vF1s7aVRXygzjOHHnUUwFFQ6kpew",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 19:43:51.371632 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\nclass Graph:\n    def __init__(self):\n        self.graph = defaultdict(set)\n\n    def addEdge(self, u, v):\n        self.graph[u].add(v)\n        self.graph[v].add(u)\n\n    def isCycle(self, u, visited, parent):\n        visited[u] = True\n        for v in self.graph[u]:\n            if visited[v] == False:\n                if self.isCycle(v, visited, u) == True:\n                    return True\n            elif v != parent:\n                return True\n        return False\n\n    def cycle(self):\n        visited = [False] * (len(self.graph) + 1)\n        count = 0\n        for i in range(1, len(self.graph) + 1):\n            if visited[i] == False:\n                if self.isCycle(i, visited, -1) == True:\n                    count += 1\n        return count\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    g = Graph()\n    for i in range(m):\n        u, v = [int(x) for x in input().split()]\n        g.addEdge(u, v)\n    print(g.cycle())\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 19:43:51.371680 REASON stop
+2022-04-09 19:43:51.383505 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef dfs(graph, node, visited):\n    visited.add(node)\n    for child in graph[node]:\n        if child not in visited:\n            dfs(graph, child, visited)\n\ndef count_cycles(graph):\n    visited = set()\n    cycles = 0\n\n    for node in graph:\n        if node not in visited:\n            dfs(graph, node, visited)\n            cycles += 1\n    return cycles\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n\n    graph = {i: [] for i in range(1, n + 1)}\n\n    for _ in range(m):\n        v, u = map(int, sys.stdin.readline().split())\n        graph[v].append(u)\n        graph[u].append(v)\n\n    print(count_cycles(graph))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 19:43:51.383586 REASON stop

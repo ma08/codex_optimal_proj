@@ -1,0 +1,64 @@
+2022-04-09 20:17:10.093386 """
+Given is a permutation P_1, \ldots, P_N of 1, \ldots, N.
+Find the number of integers i (1 \leq i \leq N) that satisfy the following condition:  
+ - For any integer j (1 \leq j \leq i), P_i \leq P_j.
+
+-----Constraints-----
+ - 1 \leq N \leq 2 \times 10^5
+ - P_1, \ldots, P_N is a permutation of 1, \ldots, N.  
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+P_1 ... P_N
+
+-----Output-----
+Print the number of integers i that satisfy the condition.
+
+-----Sample Input-----
+5
+4 2 5 1 3
+
+-----Sample Output-----
+3
+
+i=1, 2, and 4 satisfy the condition, but i=3 does not - for example, P_i > P_j holds for j = 1.
+
+Similarly, i=5 does not satisfy the condition, either. Thus, there are three integers that satisfy the condition.
+"""
+2022-04-09 20:17:10.093402 --------------------------
+2022-04-09 20:17:32.613313 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    P = [int(i) for i in input().split()]\n    ans = 0\n    for i in range(0, N):\n        if P[i] == i + 1:\n            ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    p_inv = [-1] * (n + 1)\n    for i in range(n):\n        p_inv[p[i]] = i\n    seg_tree = [0] * (4 * n)\n    ans = 0\n    for i in range(n):\n        ans += i - get_sum(seg_tree, p_inv[i + 1] + 1, 0, 0, n)\n        update(seg_tree, p_inv[i + 1] + 1, 1, 0, n)\n    print(ans)\n\ndef update(seg_tree, i, x, k, n):\n    seg_tree[k] += x\n    if n == 1:\n        return\n    l, r = k * 2 + 1, k * 2 + 2\n    m = n // 2\n    if i < m:\n        update(seg_tree, i, x, l, m)\n    else:\n        update(seg_tree, i - m, x, r, n - m)\n\ndef get_sum(seg_tree, i, k, l, r):\n    if r <= i:\n        return seg_tree[k]\n    if i <= l:\n        return 0\n    m = (l + r) // 2\n    return get_sum(seg_tree, i, 2 * k + 1, l, m) + get_sum(seg_tree, i, 2 * k + 2, m, r)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649549830,
+  "id": "cmpl-4vFYMeWSRXV6XK2CePAGpgObl4Qwx",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:17:32.613520 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    N = int(input())\n    P = [int(i) for i in input().split()]\n    ans = 0\n    for i in range(0, N):\n        if P[i] == i + 1:\n            ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 20:17:32.613558 REASON stop
+2022-04-09 20:17:32.614783 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    p_inv = [-1] * (n + 1)\n    for i in range(n):\n        p_inv[p[i]] = i\n    seg_tree = [0] * (4 * n)\n    ans = 0\n    for i in range(n):\n        ans += i - get_sum(seg_tree, p_inv[i + 1] + 1, 0, 0, n)\n        update(seg_tree, p_inv[i + 1] + 1, 1, 0, n)\n    print(ans)\n\ndef update(seg_tree, i, x, k, n):\n    seg_tree[k] += x\n    if n == 1:\n        return\n    l, r = k * 2 + 1, k * 2 + 2\n    m = n // 2\n    if i < m:\n        update(seg_tree, i, x, l, m)\n    else:\n        update(seg_tree, i - m, x, r, n - m)\n\ndef get_sum(seg_tree, i, k, l, r):\n    if r <= i:\n        return seg_tree[k]\n    if i <= l:\n        return 0\n    m = (l + r) // 2\n    return get_sum(seg_tree, i, 2 * k + 1, l, m) + get_sum(seg_tree, i, 2 * k + 2, m, r)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 20:17:32.614873 REASON stop

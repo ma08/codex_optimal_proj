@@ -1,0 +1,138 @@
+2022-04-09 23:33:56.422504 """
+Little Mirko wrote into his math notebook an equation containing three positive integers, the equals sign and one of the four basic arithmetic operations (addition, subtraction, multiplication and division).
+
+During another class, his friend Slavko erased the equals sign and the operations from Mirko’s notebook. Help Mirko by reconstructing the equation from the three integers
+
+-----Input-----
+The first line of input contains three integers less than 100, separated by spaces. The input data will guarantee that a solution, although not necessarily unique, will always exist.
+
+-----Output-----
+On a single line, output a valid equation containing the three integers (in the same order), an equals sign and one of the four operations. If there are multiple solutions, output any of them.
+
+-----Examples-----
+Sample Input:
+5 3 8
+Sample Output:
+5+3=8
+"""
+2022-04-09 23:33:56.422522 --------------------------
+2022-04-09 23:34:37.770257 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read the numbers\nnums = sys.stdin.readline().split()\nnums = [int(num) for num in nums]\n\n# Compute the possible answers\nanswers = []\nfor i in range(4):\n    for j in range(4):\n        for k in range(4):\n            if i < 2:\n                a = eval(str(nums[0]) + [\"+\", \"-\"][i] + str(nums[1]))\n            else:\n                a = eval(str(nums[0]) + [\"*\", \"/\"][i-2] + str(nums[1]))\n            if j < 2:\n                b = eval(str(a) + [\"+\", \"-\"][j] + str(nums[2]))\n            else:\n                b = eval(str(a) + [\"*\", \"/\"][j-2] + str(nums[2]))\n            if k < 2:\n                c = eval(str(nums[0]) + [\"+\", \"-\"][k] + str(b))\n            else:\n                c = eval(str(nums[0]) + [\"*\", \"/\"][k-2] + str(b))\n            if c == nums[2]:\n                answers.append([(nums[0], nums[1]), [\"+\", \"-\"][i], (a, nums[2]), [\"+\", \"-\"][j], (nums[0], b), [\"+\", \"-\"][k]])\n\n# Print the first answer\nfor answer in answers:\n    if answer[2][0] == answer[4][1] and answer[4][0] == answer[0][0]:\n        print(\"{}{}{}={}{}{}\".format(answer[0][0], answer[1], answer[0][1], answer[2][0], answer[3], answer[4][1]))\n        break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom math import gcd\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    # get input\n    inp = input().split()\n    a = int(inp[0])\n    b = int(inp[1])\n    c = int(inp[2])\n    # check for possible operations\n    if c % gcd(a, b) == 0:\n        if c // gcd(a, b) == a + b:\n            print(str(a) + \"+\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a - b:\n            print(str(a) + \"-\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a * b:\n            print(str(a) + \"*\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a // b:\n            print(str(a) + \"/\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == b // a:\n            print(str(b) + \"/\" + str(a) + \"=\" + str(c))\n        elif c // gcd(a, b) == a // lcm(a, b):\n            print(str(a) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n        elif c // gcd(a, b) == b // lcm(a, b):\n            print(str(b) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n    elif c == a + b:\n        print(str(a) + \"+\" + str(b) + \"=\" + str(c))\n    elif c == a - b:\n        print(str(a) + \"-\" + str(b) + \"=\" + str(c))\n    elif c == a * b:\n        print(str(a) + \"*\" + str(b) + \"=\" + str(c))\n    elif c == a // b:\n        print(str(a) + \"/\" + str(b) + \"=\" + str(c))\n    elif c == b // a:\n        print(str(b) + \"/\" + str(a) + \"=\" + str(c))\n    elif c == a // lcm(a, b):\n        print(str(a) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n    elif c == b // lcm(a, b):\n        print(str(b) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nnums = [int(x) for x in input().split()]\n\nif nums[0] + nums[1] == nums[2]:\n    print(str(nums[0]) + '+' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] - nums[1] == nums[2]:\n    print(str(nums[0]) + '-' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] * nums[1] == nums[2]:\n    print(str(nums[0]) + '*' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] / nums[1] == nums[2]:\n    print(str(nums[0]) + '/' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] == nums[1] + nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '+' + str(nums[2]))\nelif nums[0] == nums[1] - nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '-' + str(nums[2]))\nelif nums[0] == nums[1] * nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '*' + str(nums[2]))\nelif nums[0] == nums[1] / nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '/' + str(nums[2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tnums = sys.stdin.readline().split()\n\ta = int(nums[0])\n\tb = int(nums[1])\n\tc = int(nums[2])\n\n\tif a + b == c:\n\t\tprint(str(a) + \"+\" + str(b) + \"=\" + str(c))\n\telif a - b == c:\n\t\tprint(str(a) + \"-\" + str(b) + \"=\" + str(c))\n\telif a * b == c:\n\t\tprint(str(a) + \"*\" + str(b) + \"=\" + str(c))\n\telif a == b + c:\n\t\tprint(str(a) + \"=\" + str(b) + \"+\" + str(c))\n\telif a == b - c:\n\t\tprint(str(a) + \"=\" + str(b) + \"-\" + str(c))\n\telif a == b * c:\n\t\tprint(str(a) + \"=\" + str(b) + \"*\" + str(c))\n\telif a == b / c:\n\t\tprint(str(a) + \"=\" + str(b) + \"/\" + str(c))\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef Solve(a, b, c):\n    if a + b == c:\n        return '%d+%d=%d' % (a, b, c)\n    if a - b == c:\n        return '%d-%d=%d' % (a, b, c)\n    if a * b == c:\n        return '%d*%d=%d' % (a, b, c)\n    if a == b * c:\n        return '%d=%d*%d' % (a, b, c)\n    if a == b / c:\n        return '%d=%d/%d' % (a, b, c)\n    if a / b == c:\n        return '%d/%d=%d' % (a, b, c)\n\ndef main():\n    a, b, c = map(int, sys.stdin.readline().strip().split())\n    print(Solve(a, b, c))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nnumbers = input().split()\n\nfor i in range(len(numbers)):\n    numbers[i] = int(numbers[i])\n\nif numbers[0] + numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"+\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] - numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"-\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] * numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"*\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] / numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"/\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[2] + numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"+\" + str(numbers[2]))\nelif numbers[2] - numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"-\" + str(numbers[2]))\nelif numbers[2] * numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"*\" + str(numbers[2]))\nelif numbers[2] / numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"/\" + str(numbers[2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nnums = [int(x) for x in input().split()]\n\nif nums[0] + nums[1] == nums[2]:\n    print(str(nums[0]) + \"+\" + str(nums[1]) + \"=\" + str(nums[2]))\nelif nums[0] - nums[1] == nums[2]:\n    print(str(nums[0]) + \"-\" + str(nums[1]) + \"=\" + str(nums[2]))\nelif nums[0] * nums[1] == nums[2]:\n    print(str(nums[0]) + \"*\" + str(nums[1]) + \"=\" + str(nums[2]))\nelse:\n    print(str(nums[0]) + \"/\" + str(nums[1]) + \"=\" + str(nums[2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#Solution:\n\na,b,c = input().split()\na,b,c = int(a),int(b),int(c)\nif a+b==c:\n    print(str(a)+\"+\"+str(b)+\"=\"+str(c))\nelif a-b==c:\n    print(str(a)+\"-\"+str(b)+\"=\"+str(c))\nelif a*b==c:\n    print(str(a)+\"*\"+str(b)+\"=\"+str(c))\nelif a/b==c:\n    print(str(a)+\"/\"+str(b)+\"=\"+str(c))\nelif a==b+c:\n    print(str(a)+\"=\"+str(b)+\"+\"+str(c))\nelif a==b-c:\n    print(str(a)+\"=\"+str(b)+\"-\"+str(c))\nelif a==b*c:\n    print(str(a)+\"=\"+str(b)+\"*\"+str(c))\nelif a==b/c:\n    print(str(a)+\"=\"+str(b)+\"/\"+str(c))"
+    }
+  ],
+  "created": 1649561636,
+  "id": "cmpl-4vIcmLRlSMcPKGCd6DmLUE1XRKDOF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:34:37.770600 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read the numbers\nnums = sys.stdin.readline().split()\nnums = [int(num) for num in nums]\n\n# Compute the possible answers\nanswers = []\nfor i in range(4):\n    for j in range(4):\n        for k in range(4):\n            if i < 2:\n                a = eval(str(nums[0]) + [\"+\", \"-\"][i] + str(nums[1]))\n            else:\n                a = eval(str(nums[0]) + [\"*\", \"/\"][i-2] + str(nums[1]))\n            if j < 2:\n                b = eval(str(a) + [\"+\", \"-\"][j] + str(nums[2]))\n            else:\n                b = eval(str(a) + [\"*\", \"/\"][j-2] + str(nums[2]))\n            if k < 2:\n                c = eval(str(nums[0]) + [\"+\", \"-\"][k] + str(b))\n            else:\n                c = eval(str(nums[0]) + [\"*\", \"/\"][k-2] + str(b))\n            if c == nums[2]:\n                answers.append([(nums[0], nums[1]), [\"+\", \"-\"][i], (a, nums[2]), [\"+\", \"-\"][j], (nums[0], b), [\"+\", \"-\"][k]])\n\n# Print the first answer\nfor answer in answers:\n    if answer[2][0] == answer[4][1] and answer[4][0] == answer[0][0]:\n        print(\"{}{}{}={}{}{}\".format(answer[0][0], answer[1], answer[0][1], answer[2][0], answer[3], answer[4][1]))\n        break"
+}
+2022-04-09 23:34:37.770771 REASON stop
+2022-04-09 23:34:37.771548 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.771579 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom math import gcd\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    # get input\n    inp = input().split()\n    a = int(inp[0])\n    b = int(inp[1])\n    c = int(inp[2])\n    # check for possible operations\n    if c % gcd(a, b) == 0:\n        if c // gcd(a, b) == a + b:\n            print(str(a) + \"+\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a - b:\n            print(str(a) + \"-\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a * b:\n            print(str(a) + \"*\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == a // b:\n            print(str(a) + \"/\" + str(b) + \"=\" + str(c))\n        elif c // gcd(a, b) == b // a:\n            print(str(b) + \"/\" + str(a) + \"=\" + str(c))\n        elif c // gcd(a, b) == a // lcm(a, b):\n            print(str(a) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n        elif c // gcd(a, b) == b // lcm(a, b):\n            print(str(b) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n    elif c == a + b:\n        print(str(a) + \"+\" + str(b) + \"=\" + str(c))\n    elif c == a - b:\n        print(str(a) + \"-\" + str(b) + \"=\" + str(c))\n    elif c == a * b:\n        print(str(a) + \"*\" + str(b) + \"=\" + str(c))\n    elif c == a // b:\n        print(str(a) + \"/\" + str(b) + \"=\" + str(c))\n    elif c == b // a:\n        print(str(b) + \"/\" + str(a) + \"=\" + str(c))\n    elif c == a // lcm(a, b):\n        print(str(a) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n    elif c == b // lcm(a, b):\n        print(str(b) + \"/\" + str(lcm(a, b)) + \"=\" + str(c))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:34:37.771670 REASON stop
+2022-04-09 23:34:37.772026 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.772039 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nnums = [int(x) for x in input().split()]\n\nif nums[0] + nums[1] == nums[2]:\n    print(str(nums[0]) + '+' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] - nums[1] == nums[2]:\n    print(str(nums[0]) + '-' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] * nums[1] == nums[2]:\n    print(str(nums[0]) + '*' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] / nums[1] == nums[2]:\n    print(str(nums[0]) + '/' + str(nums[1]) + '=' + str(nums[2]))\nelif nums[0] == nums[1] + nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '+' + str(nums[2]))\nelif nums[0] == nums[1] - nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '-' + str(nums[2]))\nelif nums[0] == nums[1] * nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '*' + str(nums[2]))\nelif nums[0] == nums[1] / nums[2]:\n    print(str(nums[0]) + '=' + str(nums[1]) + '/' + str(nums[2]))"
+}
+2022-04-09 23:34:37.772085 REASON stop
+2022-04-09 23:34:37.772314 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.772334 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tnums = sys.stdin.readline().split()\n\ta = int(nums[0])\n\tb = int(nums[1])\n\tc = int(nums[2])\n\n\tif a + b == c:\n\t\tprint(str(a) + \"+\" + str(b) + \"=\" + str(c))\n\telif a - b == c:\n\t\tprint(str(a) + \"-\" + str(b) + \"=\" + str(c))\n\telif a * b == c:\n\t\tprint(str(a) + \"*\" + str(b) + \"=\" + str(c))\n\telif a == b + c:\n\t\tprint(str(a) + \"=\" + str(b) + \"+\" + str(c))\n\telif a == b - c:\n\t\tprint(str(a) + \"=\" + str(b) + \"-\" + str(c))\n\telif a == b * c:\n\t\tprint(str(a) + \"=\" + str(b) + \"*\" + str(c))\n\telif a == b / c:\n\t\tprint(str(a) + \"=\" + str(b) + \"/\" + str(c))\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 23:34:37.772361 REASON stop
+2022-04-09 23:34:37.772470 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.772475 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef Solve(a, b, c):\n    if a + b == c:\n        return '%d+%d=%d' % (a, b, c)\n    if a - b == c:\n        return '%d-%d=%d' % (a, b, c)\n    if a * b == c:\n        return '%d*%d=%d' % (a, b, c)\n    if a == b * c:\n        return '%d=%d*%d' % (a, b, c)\n    if a == b / c:\n        return '%d=%d/%d' % (a, b, c)\n    if a / b == c:\n        return '%d/%d=%d' % (a, b, c)\n\ndef main():\n    a, b, c = map(int, sys.stdin.readline().strip().split())\n    print(Solve(a, b, c))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:34:37.772494 REASON stop
+2022-04-09 23:34:37.772613 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.772618 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nnumbers = input().split()\n\nfor i in range(len(numbers)):\n    numbers[i] = int(numbers[i])\n\nif numbers[0] + numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"+\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] - numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"-\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] * numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"*\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[0] / numbers[1] == numbers[2]:\n    print(str(numbers[0]) + \"/\" + str(numbers[1]) + \"=\" + str(numbers[2]))\nelif numbers[2] + numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"+\" + str(numbers[2]))\nelif numbers[2] - numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"-\" + str(numbers[2]))\nelif numbers[2] * numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"*\" + str(numbers[2]))\nelif numbers[2] / numbers[1] == numbers[0]:\n    print(str(numbers[0]) + \"=\" + str(numbers[1]) + \"/\" + str(numbers[2]))"
+}
+2022-04-09 23:34:37.772638 REASON stop
+2022-04-09 23:34:37.772745 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.772760 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nnums = [int(x) for x in input().split()]\n\nif nums[0] + nums[1] == nums[2]:\n    print(str(nums[0]) + \"+\" + str(nums[1]) + \"=\" + str(nums[2]))\nelif nums[0] - nums[1] == nums[2]:\n    print(str(nums[0]) + \"-\" + str(nums[1]) + \"=\" + str(nums[2]))\nelif nums[0] * nums[1] == nums[2]:\n    print(str(nums[0]) + \"*\" + str(nums[1]) + \"=\" + str(nums[2]))\nelse:\n    print(str(nums[0]) + \"/\" + str(nums[1]) + \"=\" + str(nums[2]))"
+}
+2022-04-09 23:34:37.772918 REASON stop
+2022-04-09 23:34:37.773199 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'
+2022-04-09 23:34:37.773209 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#Solution:\n\na,b,c = input().split()\na,b,c = int(a),int(b),int(c)\nif a+b==c:\n    print(str(a)+\"+\"+str(b)+\"=\"+str(c))\nelif a-b==c:\n    print(str(a)+\"-\"+str(b)+\"=\"+str(c))\nelif a*b==c:\n    print(str(a)+\"*\"+str(b)+\"=\"+str(c))\nelif a/b==c:\n    print(str(a)+\"/\"+str(b)+\"=\"+str(c))\nelif a==b+c:\n    print(str(a)+\"=\"+str(b)+\"+\"+str(c))\nelif a==b-c:\n    print(str(a)+\"=\"+str(b)+\"-\"+str(c))\nelif a==b*c:\n    print(str(a)+\"=\"+str(b)+\"*\"+str(c))\nelif a==b/c:\n    print(str(a)+\"=\"+str(b)+\"/\"+str(c))"
+}
+2022-04-09 23:34:37.773256 REASON stop
+2022-04-09 23:34:37.773380 test/intro-questions.txt_dir/4908/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4908/solutions.json'

@@ -1,0 +1,153 @@
+2022-04-10 00:07:57.990101 """
+The following are musical notes in “increasing order”:$A$, $A\sharp $, $B$, $C$, $C\sharp $, $D$, $D\sharp $, $E$, $F$, $F\sharp $, $G$, $G\sharp $
+
+The difference between consecutive notes is a semitone, and the sequence wraps around so the note that is one semitone above $G\sharp $ is $A$. The difference between a tone is the same as two semitones. So the note that is one tone above $B$ is $C\sharp $. The note that is one tone above $G$ is $A$.
+
+We do not worry about flats such as $C\flat $ nor do we worry about adding a $\sharp $ sign to $B$ and $E$ in this problem (they are aliases for notes that are already listed).
+
+A major scale is defined by a note (such as $A$ or $C\sharp $) and all other notes following that one in an arithmetic progression:tone, tone, semitone, tone, tone, tone, semitone
+
+The starting note appears in the name of the scale.
+
+For example, the scale $A\sharp $-major consists of the following notes:$A\sharp $, $C$, $D$, $D\sharp $, $F$, $G$, $A$, $A\sharp $
+
+(by convention, the first note is repeated at the end of the sequence).
+
+Note that $A\sharp $-major is typically not considered a standard musical scale. It is identical in sound to $B\flat $, and proper notation of $A\sharp $-major would require the use of double-sharps. We ignore such issues in this problem and just use the $12$ notes given at the top of this problem.
+
+Finally, in this problem a song is just a sequence of notes. Your job is to identify all major scales such that the song uses only notes in that scale.
+
+-----Input-----
+The first line of input is an integer $1\leq n \leq 100$ denoting the number of notes played in a song. The second line consists of a sequence of notes, separated by spaces.
+
+-----Output-----
+Output consists of a single line that lists all scales the song may be played in. Consecutive scales should be separated by a single space and the scales must appear in lexicographic order. If the song may not fit in any one of these scales, simply output a line containing the text none.
+
+-----Examples-----
+Sample Input:
+10
+C D F D C D F F F C 
+Sample Output:
+A# C D# F
+"""
+2022-04-10 00:07:57.990122 --------------------------
+2022-04-10 00:08:47.843414 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nnotes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    song = sys.stdin.readline().strip().split()\n    song = [notes.index(x) for x in song]\n    scales = []\n    for i in range(12):\n        if valid(i, song):\n            scales.append(i)\n    if len(scales) == 0:\n        print(\"none\")\n    else:\n        print(' '.join([notes[x] for x in scales]))\n\ndef valid(i, song):\n    scale = [i, (i+2)%12, (i+4)%12, (i+5)%12, (i+7)%12, (i+9)%12, (i+11)%12]\n    for note in song:\n        if note not in scale:\n            return False\n    return True\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef get_possible_scales(song):\n\t\"\"\"\n\t>>> get_possible_scales(['C', 'D', 'F', 'D', 'C', 'D', 'F', 'F', 'F', 'C'])\n\t['A#', 'C', 'D#', 'F']\n\t\"\"\"\n\tdef get_scale(note):\n\t\tscale = [note]\n\t\twhile len(scale) < 8:\n\t\t\tif len(scale) == 3 or len(scale) == 7:\n\t\t\t\tscale.append(notes[notes.index(scale[-1]) + 1])\n\t\t\telse:\n\t\t\t\tscale.append(notes[notes.index(scale[-1]) + 2])\n\t\treturn scale\n\n\tnotes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\tscales = []\n\tfor note in notes:\n\t\tscale = get_scale(note)\n\t\tif all(song_note in scale for song_note in song):\n\t\t\tscales.append(note)\n\tif len(scales) == 0:\n\t\tprint 'none'\n\telse:\n\t\tprint ' '.join(scales)\n\nif __name__ == '__main__':\n\timport doctest\n\tdoctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    notes = input().split()\n    notes.append(notes[0])\n    scales = []\n    for i in range(12):\n        scale = [notes[i]]\n        for j in range(1, 8):\n            if j % 7 == 0:\n                scale.append(notes[i])\n            elif j % 7 == 1 or j % 7 == 2:\n                scale.append(notes[i+2])\n            else:\n                scale.append(notes[i+1])\n        if set(notes) <= set(scale):\n            scales.append(notes[i])\n    if scales:\n        print(\" \".join(scales))\n    else:\n        print(\"none\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_notes(note):\n    return [note, note + '#', note + '##']\n\ndef get_notes_from_scale(scale):\n    note = scale[0]\n    notes = [note]\n    for i in range(1, len(scale)):\n        if scale[i] == '2':\n            note = get_notes(note)[1]\n        else:\n            note = get_notes(note)[2]\n        notes.append(note)\n    return notes\n\ndef get_scales():\n    scales = []\n    for note in ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']:\n        for scale in ['2212221', '2122212', '2221221', '2212212', '1222221', '2122221', '2212122']:\n            scales.append(note + ' ' + scale)\n    return scales\n\ndef get_song(song):\n    song = song.split(' ')\n    return song\n\ndef is_scale(scale, song):\n    notes = get_notes_from_scale(scale)\n    for note in song:\n        if note not in notes:\n            return False\n    return True\n\ndef get_song_scales(song):\n    scales = get_scales()\n    song_scales = []\n    for scale in scales:\n        scale = scale.split(' ')\n        if is_scale(scale[1], song):\n            song_scales.append(scale[0])\n    return song_scales\n\ndef main():\n    n = int(sys.stdin.readline())\n    song = sys.stdin.readline()\n    song = get_song(song)\n    song_scales = get_song_scales(song)\n    if song_scales:\n        print(' '.join(song_scales))\n    else:\n        print('none')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    song = list(sys.stdin.readline().split())\n    all_scales = [\"A\", \"A#\", \"B\", \"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\"]\n    scales = []\n    for scale in all_scales:\n        if check_scale(song, scale):\n            scales.append(scale)\n    if len(scales) == 0:\n        print(\"none\")\n    else:\n        print(\" \".join(scales))\n    \ndef check_scale(song, scale):\n    scale_index = all_scales.index(scale)\n    for i in range(len(song)):\n        if song[i] != all_scales[scale_index]:\n            return False\n        if i % 7 == 0:\n            scale_index += 2\n        elif i % 7 == 2 or i % 7 == 6:\n            scale_index += 1\n        scale_index = scale_index % 12\n    return True\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport itertools\n\ndef scale_check(notes):\n    if len(notes) != 8:\n        return False\n    elif notes[0] != notes[7]:\n        return False\n    elif notes[1] != notes[0] + 2:\n        return False\n    elif notes[2] != notes[1] + 2:\n        return False\n    elif notes[3] != notes[2] + 1:\n        return False\n    elif notes[4] != notes[3] + 2:\n        return False\n    elif notes[5] != notes[4] + 2:\n        return False\n    elif notes[6] != notes[5] + 2:\n        return False\n    else:\n        return True\n\ndef main():\n    notes = []\n    valid_scales = []\n    n = int(sys.stdin.readline().strip())\n    notes = map(int, sys.stdin.readline().strip().split())\n    for i in xrange(n):\n        for j in xrange(i+1, n):\n            for k in xrange(j+1, n):\n                for l in xrange(k+1, n):\n                    for m in xrange(l+1, n):\n                        for o in xrange(m+1, n):\n                            for p in xrange(o+1, n):\n                                for q in xrange(p+1, n):\n                                    if scale_check(notes[i:q+1]):\n                                        valid_scales.append(notes[i:q+1])\n    valid_scales = list(set(tuple(sorted(l)) for l in valid_scales))\n    valid_scales = [list(l) for l in valid_scales]\n    valid_scales = sorted(valid_scales, key=lambda x: x[0])\n    valid_scales = [chr(l[0]+64) + (\"#\" if l[0] < 11 else \"\") for l in valid_scales]\n    if len(valid_scales) == 0:\n        print \"none\"\n    else:\n        print \" \".join(valid_scales)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nnotes = [\"A\", \"A#\", \"B\", \"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\"]\n\ndef main():\n    num_notes = int(sys.stdin.readline().strip())\n    song = sys.stdin.readline().strip().split()\n    scales = []\n    for i in range(12):\n        scale = [notes[i]]\n        for j in range(1, 8):\n            if j % 2 == 0:\n                scale.append(notes[(i + 2 * j) % 12])\n            else:\n                scale.append(notes[(i + 2 * j - 1) % 12])\n        scales.append(scale)\n    fits = []\n    for scale in scales:\n        fit = True\n        for note in song:\n            if note not in scale:\n                fit = False\n                break\n        if fit:\n            fits.append(scale[0])\n    fits.sort()\n    if len(fits) == 0:\n        print(\"none\")\n    else:\n        print(\" \".join(fits))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#Program starts here\nimport sys\n\n#Reading in input\nn = int(sys.stdin.readline().strip())\nnotes = sys.stdin.readline().strip().split()\n\n#Initializing variables\nnotes_dict = {'A':0, 'A#':1, 'B':2, 'C':3, 'C#':4, 'D':5, 'D#':6, 'E':7, 'F':8, 'F#':9, 'G':10, 'G#':11}\nnotes_list = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\n#Finding the scale\nif notes[0] in notes_dict:\n    starting_note = notes_dict[notes[0]]\nelse:\n    starting_note = notes_dict[notes[0][0] + '#']\n\nscale_dict = {}\n\nfor i in range(0, 12):\n    scale_dict[i] = [0] * 12\n\nfor i in range(0, 12):\n    scale_dict[i][i] = 1\n\n    if i + 2 <= 11:\n        scale_dict[i][i + 2] = 1\n    elif i + 2 > 11:\n        scale_dict[i][i + 2 - 12] = 1\n\n    if i + 4 <= 11:\n        scale_dict[i][i + 4] = 1\n    elif i + 4 > 11:\n        scale_dict[i][i + 4 - 12] = 1\n\n    if i + 5 <= 11:\n        scale_dict[i][i + 5] = 1\n    elif i + 5 > 11:\n        scale_dict[i][i + 5 - 12] = 1\n\n    if i + 7 <= 11:\n        scale_dict[i][i + 7] = 1\n    elif i + 7 > 11:\n        scale_dict[i][i + 7 - 12] = 1\n\n    if i + 9 <= 11:\n        scale_dict[i][i + 9] = 1\n    elif i + 9 > 11:\n        scale_dict[i][i + 9 - 12] = 1\n\n    if i + 11 <= 11:\n        scale_dict[i][i + 11] = 1\n    elif i + 11 > 11:\n        scale_dict[i][i + 11 - 12] = 1\n\n#Checking if the notes fit in the scale\nfits = False\n\nfor i in range(0, 12):\n    if scale_dict[i][starting_note] == 1:\n        fits = True\n        for j in range(0, n):\n            if notes[j] in notes_dict:\n                if scale_dict[i][notes_dict[notes[j]]] == 0:\n                    fits = False\n            elif notes[j][0] + '#' in notes_dict:\n                if scale_dict[i][notes_dict[notes[j][0] + '#']] == 0:\n                    fits = False\n        if fits == True:\n            print(notes_list[i], end=' ')\n\nif fits == False:\n    print('none')"
+    }
+  ],
+  "created": 1649563678,
+  "id": "cmpl-4vJ9ijWY7QAKPhxux3QqC1TyFHOFz",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:08:47.843882 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nnotes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    song = sys.stdin.readline().strip().split()\n    song = [notes.index(x) for x in song]\n    scales = []\n    for i in range(12):\n        if valid(i, song):\n            scales.append(i)\n    if len(scales) == 0:\n        print(\"none\")\n    else:\n        print(' '.join([notes[x] for x in scales]))\n\ndef valid(i, song):\n    scale = [i, (i+2)%12, (i+4)%12, (i+5)%12, (i+7)%12, (i+9)%12, (i+11)%12]\n    for note in song:\n        if note not in scale:\n            return False\n    return True\n\nmain()"
+}
+2022-04-10 00:08:47.843957 REASON stop
+2022-04-10 00:08:47.855220 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.855279 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef get_possible_scales(song):\n\t\"\"\"\n\t>>> get_possible_scales(['C', 'D', 'F', 'D', 'C', 'D', 'F', 'F', 'F', 'C'])\n\t['A#', 'C', 'D#', 'F']\n\t\"\"\"\n\tdef get_scale(note):\n\t\tscale = [note]\n\t\twhile len(scale) < 8:\n\t\t\tif len(scale) == 3 or len(scale) == 7:\n\t\t\t\tscale.append(notes[notes.index(scale[-1]) + 1])\n\t\t\telse:\n\t\t\t\tscale.append(notes[notes.index(scale[-1]) + 2])\n\t\treturn scale\n\n\tnotes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\tscales = []\n\tfor note in notes:\n\t\tscale = get_scale(note)\n\t\tif all(song_note in scale for song_note in song):\n\t\t\tscales.append(note)\n\tif len(scales) == 0:\n\t\tprint 'none'\n\telse:\n\t\tprint ' '.join(scales)\n\nif __name__ == '__main__':\n\timport doctest\n\tdoctest.testmod()"
+}
+2022-04-10 00:08:47.855416 REASON stop
+2022-04-10 00:08:47.855922 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.855951 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    notes = input().split()\n    notes.append(notes[0])\n    scales = []\n    for i in range(12):\n        scale = [notes[i]]\n        for j in range(1, 8):\n            if j % 7 == 0:\n                scale.append(notes[i])\n            elif j % 7 == 1 or j % 7 == 2:\n                scale.append(notes[i+2])\n            else:\n                scale.append(notes[i+1])\n        if set(notes) <= set(scale):\n            scales.append(notes[i])\n    if scales:\n        print(\" \".join(scales))\n    else:\n        print(\"none\")\n\nmain()"
+}
+2022-04-10 00:08:47.856015 REASON stop
+2022-04-10 00:08:47.856391 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.856420 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_notes(note):\n    return [note, note + '#', note + '##']\n\ndef get_notes_from_scale(scale):\n    note = scale[0]\n    notes = [note]\n    for i in range(1, len(scale)):\n        if scale[i] == '2':\n            note = get_notes(note)[1]\n        else:\n            note = get_notes(note)[2]\n        notes.append(note)\n    return notes\n\ndef get_scales():\n    scales = []\n    for note in ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']:\n        for scale in ['2212221', '2122212', '2221221', '2212212', '1222221', '2122221', '2212122']:\n            scales.append(note + ' ' + scale)\n    return scales\n\ndef get_song(song):\n    song = song.split(' ')\n    return song\n\ndef is_scale(scale, song):\n    notes = get_notes_from_scale(scale)\n    for note in song:\n        if note not in notes:\n            return False\n    return True\n\ndef get_song_scales(song):\n    scales = get_scales()\n    song_scales = []\n    for scale in scales:\n        scale = scale.split(' ')\n        if is_scale(scale[1], song):\n            song_scales.append(scale[0])\n    return song_scales\n\ndef main():\n    n = int(sys.stdin.readline())\n    song = sys.stdin.readline()\n    song = get_song(song)\n    song_scales = get_song_scales(song)\n    if song_scales:\n        print(' '.join(song_scales))\n    else:\n        print('none')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:08:47.856484 REASON stop
+2022-04-10 00:08:47.856792 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.856819 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    song = list(sys.stdin.readline().split())\n    all_scales = [\"A\", \"A#\", \"B\", \"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\"]\n    scales = []\n    for scale in all_scales:\n        if check_scale(song, scale):\n            scales.append(scale)\n    if len(scales) == 0:\n        print(\"none\")\n    else:\n        print(\" \".join(scales))\n    \ndef check_scale(song, scale):\n    scale_index = all_scales.index(scale)\n    for i in range(len(song)):\n        if song[i] != all_scales[scale_index]:\n            return False\n        if i % 7 == 0:\n            scale_index += 2\n        elif i % 7 == 2 or i % 7 == 6:\n            scale_index += 1\n        scale_index = scale_index % 12\n    return True\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:08:47.856863 REASON stop
+2022-04-10 00:08:47.857193 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.857220 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport itertools\n\ndef scale_check(notes):\n    if len(notes) != 8:\n        return False\n    elif notes[0] != notes[7]:\n        return False\n    elif notes[1] != notes[0] + 2:\n        return False\n    elif notes[2] != notes[1] + 2:\n        return False\n    elif notes[3] != notes[2] + 1:\n        return False\n    elif notes[4] != notes[3] + 2:\n        return False\n    elif notes[5] != notes[4] + 2:\n        return False\n    elif notes[6] != notes[5] + 2:\n        return False\n    else:\n        return True\n\ndef main():\n    notes = []\n    valid_scales = []\n    n = int(sys.stdin.readline().strip())\n    notes = map(int, sys.stdin.readline().strip().split())\n    for i in xrange(n):\n        for j in xrange(i+1, n):\n            for k in xrange(j+1, n):\n                for l in xrange(k+1, n):\n                    for m in xrange(l+1, n):\n                        for o in xrange(m+1, n):\n                            for p in xrange(o+1, n):\n                                for q in xrange(p+1, n):\n                                    if scale_check(notes[i:q+1]):\n                                        valid_scales.append(notes[i:q+1])\n    valid_scales = list(set(tuple(sorted(l)) for l in valid_scales))\n    valid_scales = [list(l) for l in valid_scales]\n    valid_scales = sorted(valid_scales, key=lambda x: x[0])\n    valid_scales = [chr(l[0]+64) + (\"#\" if l[0] < 11 else \"\") for l in valid_scales]\n    if len(valid_scales) == 0:\n        print \"none\"\n    else:\n        print \" \".join(valid_scales)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:08:47.857265 REASON stop
+2022-04-10 00:08:47.857531 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.857554 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nnotes = [\"A\", \"A#\", \"B\", \"C\", \"C#\", \"D\", \"D#\", \"E\", \"F\", \"F#\", \"G\", \"G#\"]\n\ndef main():\n    num_notes = int(sys.stdin.readline().strip())\n    song = sys.stdin.readline().strip().split()\n    scales = []\n    for i in range(12):\n        scale = [notes[i]]\n        for j in range(1, 8):\n            if j % 2 == 0:\n                scale.append(notes[(i + 2 * j) % 12])\n            else:\n                scale.append(notes[(i + 2 * j - 1) % 12])\n        scales.append(scale)\n    fits = []\n    for scale in scales:\n        fit = True\n        for note in song:\n            if note not in scale:\n                fit = False\n                break\n        if fit:\n            fits.append(scale[0])\n    fits.sort()\n    if len(fits) == 0:\n        print(\"none\")\n    else:\n        print(\" \".join(fits))\n\nmain()"
+}
+2022-04-10 00:08:47.857628 REASON stop
+2022-04-10 00:08:47.857915 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'
+2022-04-10 00:08:47.857945 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#Program starts here\nimport sys\n\n#Reading in input\nn = int(sys.stdin.readline().strip())\nnotes = sys.stdin.readline().strip().split()\n\n#Initializing variables\nnotes_dict = {'A':0, 'A#':1, 'B':2, 'C':3, 'C#':4, 'D':5, 'D#':6, 'E':7, 'F':8, 'F#':9, 'G':10, 'G#':11}\nnotes_list = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']\n\n#Finding the scale\nif notes[0] in notes_dict:\n    starting_note = notes_dict[notes[0]]\nelse:\n    starting_note = notes_dict[notes[0][0] + '#']\n\nscale_dict = {}\n\nfor i in range(0, 12):\n    scale_dict[i] = [0] * 12\n\nfor i in range(0, 12):\n    scale_dict[i][i] = 1\n\n    if i + 2 <= 11:\n        scale_dict[i][i + 2] = 1\n    elif i + 2 > 11:\n        scale_dict[i][i + 2 - 12] = 1\n\n    if i + 4 <= 11:\n        scale_dict[i][i + 4] = 1\n    elif i + 4 > 11:\n        scale_dict[i][i + 4 - 12] = 1\n\n    if i + 5 <= 11:\n        scale_dict[i][i + 5] = 1\n    elif i + 5 > 11:\n        scale_dict[i][i + 5 - 12] = 1\n\n    if i + 7 <= 11:\n        scale_dict[i][i + 7] = 1\n    elif i + 7 > 11:\n        scale_dict[i][i + 7 - 12] = 1\n\n    if i + 9 <= 11:\n        scale_dict[i][i + 9] = 1\n    elif i + 9 > 11:\n        scale_dict[i][i + 9 - 12] = 1\n\n    if i + 11 <= 11:\n        scale_dict[i][i + 11] = 1\n    elif i + 11 > 11:\n        scale_dict[i][i + 11 - 12] = 1\n\n#Checking if the notes fit in the scale\nfits = False\n\nfor i in range(0, 12):\n    if scale_dict[i][starting_note] == 1:\n        fits = True\n        for j in range(0, n):\n            if notes[j] in notes_dict:\n                if scale_dict[i][notes_dict[notes[j]]] == 0:\n                    fits = False\n            elif notes[j][0] + '#' in notes_dict:\n                if scale_dict[i][notes_dict[notes[j][0] + '#']] == 0:\n                    fits = False\n        if fits == True:\n            print(notes_list[i], end=' ')\n\nif fits == False:\n    print('none')"
+}
+2022-04-10 00:08:47.857999 REASON stop
+2022-04-10 00:08:47.858268 test/intro-questions.txt_dir/4955/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4955/solutions.json'

@@ -1,0 +1,143 @@
+2022-04-09 23:32:34.447874 """
+Alice and Barbara played some friendly games of one-on-one basketball after work, and you agreed to help them keep score. The rules of the game were simple:
+ - Each successful shot by a player earns them either one or two points;
+ - The first player to eleven points wins, with one exception;
+ - If the score is tied $10$–$10$, the previous rule is replaced by a “win by 2” rule: the first player to lead the other by at least two points wins.
+
+So for example, $11$–$7$, $9$–$11$, and $14$–$12$ are possible final scores (but not $14$–$13$).
+
+Whenever Alice or Barbara scored points, you jotted down an A or B (indicating a score by Alice or by Barbara) followed by a 1 or 2 (the number of points scored). You have some records of the games Alice and Barbara played in this format, but do not remember who won each game. Can you reconstruct the winner from the game record?
+
+-----Input-----
+The input consists of a single line with no more than $200$ characters: the record of one game. The record consists of single letters (either A or B) alternating with single numbers (either 1 or 2), and includes no spaces or other extraneous characters. Each record will be a correct scoring history of a single completed game, played under the rules described above.
+
+-----Output-----
+Print a single character, either A or B: the winner of the recorded game.
+
+-----Examples-----
+Sample Input:
+A2B1A2B2A1A2A2A2
+Sample Output:
+A
+"""
+2022-04-09 23:32:34.447903 --------------------------
+2022-04-09 23:33:04.072881 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    score = {'A': 0, 'B': 0}\n    for i in sys.stdin.readline():\n        if i == 'A' or i == 'B':\n            score[i] += 1\n        if score['A'] == 11 and score['B'] == 10:\n            score['A'] -= 1\n        if score['B'] == 11 and score['A'] == 10:\n            score['B'] -= 1\n        if score['A'] >= 11 and score['B'] < score['A'] - 1:\n            print('A')\n            break\n        if score['B'] >= 11 and score['A'] < score['B'] - 1:\n            print('B')\n            break\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport re\n\ndef main():\n    game_record = input()\n    game_record = re.findall(r'[AB]\\d', game_record)\n    alice_score = 0\n    barbara_score = 0\n    for i in range(len(game_record)):\n        if game_record[i][0] == 'A':\n            alice_score += int(game_record[i][1])\n        else:\n            barbara_score += int(game_record[i][1])\n        if (alice_score >= 11 or barbara_score >= 11) and abs(alice_score - barbara_score) >= 2:\n            break\n    if alice_score > barbara_score:\n        print('A')\n    else:\n        print('B')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    game = sys.stdin.readline().strip()\n\n    # Alice starts with 0 points\n    alice = 0\n    # Barbara starts with 0 points\n    barbara = 0\n\n    # Iterate through the game history\n    for i in range(0, len(game), 2):\n        # If Alice scored\n        if game[i] == 'A':\n            # Add the points to her score\n            alice += int(game[i + 1])\n            # Check to see if she won\n            if alice >= 11 and alice - barbara >= 2:\n                print('A')\n                break\n        # If Barbara scored\n        else:\n            # Add the points to her score\n            barbara += int(game[i + 1])\n            # Check to see if she won\n            if barbara >= 11 and barbara - alice >= 2:\n                print('B')\n                break\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # parse input\n    game = input()\n    alice = 0\n    barbara = 0\n\n    for i in range(len(game)):\n        if game[i] == 'A':\n            if game[i + 1] == '1':\n                alice += 1\n            else:\n                alice += 2\n        else:\n            if game[i + 1] == '1':\n                barbara += 1\n            else:\n                barbara += 2\n\n    # determine the winner\n    if alice == 11 and barbara == 10:\n        print('A')\n    elif barbara == 11 and alice == 10:\n        print('B')\n    elif alice > barbara:\n        print('A')\n    elif barbara > alice:\n        print('B')\n    else:\n        print('error')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# ----- Imports -----\n\nimport sys\n\n# ----- Functions -----\n\ndef calculate_winner(score):\n\tif score[0] >= score[1]:\n\t\treturn 0\n\telse:\n\t\treturn 1\n\ndef main(args):\n\tscore = [0, 0]\n\tfor i in range(0, len(args[1]), 2):\n\t\tscore[int(args[1][i])] += int(args[1][i+1])\n\t\tif score[0] >= 11 or score[1] >= 11:\n\t\t\tif score[0] - score[1] >= 2 or score[1] - score[0] >= 2:\n\t\t\t\tprint(\"A\" if calculate_winner(score) == 0 else \"B\")\n\t\t\t\tbreak\n\n# ----- Main -----\n\nif __name__ == '__main__':\n\tmain(sys.argv)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Gets the input from the user\nrecord = input()\n\n# Initializes the scores to zero\nscore_a = 0\nscore_b = 0\n\n# Loops through the input, adding the scores to the appropriate player\nfor i in range(len(record)):\n    if record[i] == \"A\":\n        score_a += int(record[i + 1])\n    elif record[i] == \"B\":\n        score_b += int(record[i + 1])\n\n# Prints the winner\nif score_a > score_b:\n    print(\"A\")\nelse:\n    print(\"B\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    record = input()\n    alice,barbara = 0,0\n    for i in range(len(record)):\n        if i%2 == 0:\n            if record[i] == \"A\":\n                alice += int(record[i+1])\n            else:\n                barbara += int(record[i+1])\n        else:\n            pass\n    if alice == 11 and barbara < 11:\n        print(\"A\")\n    elif barbara == 11 and alice < 11:\n        print(\"B\")\n    elif alice == 11 and barbara == 11:\n        if alice - barbara >= 2:\n            print(\"A\")\n        elif barbara - alice >= 2:\n            print(\"B\")\n    else:\n        pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # read input\n    record = sys.stdin.readline().strip()\n\n    # keep track of score for each player\n    Alice = 0\n    Barbara = 0\n\n    # loop through the record\n    for i in range(0, len(record), 2):\n        # if Alice scored\n        if record[i] == 'A':\n            # add to Alice's score\n            Alice += int(record[i+1])\n            # if Alice's score is greater than 11\n            if Alice > 11:\n                # if Alice's score is greater than Barbara's score by 2\n                if Alice - Barbara >= 2:\n                    # print Alice\n                    print('A')\n                    # end program\n                    return\n                # if Alice's score is not greater than Barbara's score by 2\n                else:\n                    # subtract from Alice's score\n                    Alice -= int(record[i+1])\n        # if Barbara scored\n        else:\n            # add to Barbara's score\n            Barbara += int(record[i+1])\n            # if Barbara's score is greater than 11\n            if Barbara > 11:\n                # if Barbara's score is greater than Alice's score by 2\n                if Barbara - Alice >= 2:\n                    # print Barbara\n                    print('B')\n                    # end program\n                    return\n                # if Barbara's score is not greater than Alice's score by 2\n                else:\n                    # subtract from Barbara's score\n                    Barbara -= int(record[i+1])\n\n    # print the winner\n    if Alice > Barbara:\n        print('A')\n    else:\n        print('B')\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649561554,
+  "id": "cmpl-4vIbS49VOx8dUaU5eH3BuHooMp9Du",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:33:04.073210 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    score = {'A': 0, 'B': 0}\n    for i in sys.stdin.readline():\n        if i == 'A' or i == 'B':\n            score[i] += 1\n        if score['A'] == 11 and score['B'] == 10:\n            score['A'] -= 1\n        if score['B'] == 11 and score['A'] == 10:\n            score['B'] -= 1\n        if score['A'] >= 11 and score['B'] < score['A'] - 1:\n            print('A')\n            break\n        if score['B'] >= 11 and score['A'] < score['B'] - 1:\n            print('B')\n            break\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:04.073250 REASON stop
+2022-04-09 23:33:04.084404 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.084434 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport re\n\ndef main():\n    game_record = input()\n    game_record = re.findall(r'[AB]\\d', game_record)\n    alice_score = 0\n    barbara_score = 0\n    for i in range(len(game_record)):\n        if game_record[i][0] == 'A':\n            alice_score += int(game_record[i][1])\n        else:\n            barbara_score += int(game_record[i][1])\n        if (alice_score >= 11 or barbara_score >= 11) and abs(alice_score - barbara_score) >= 2:\n            break\n    if alice_score > barbara_score:\n        print('A')\n    else:\n        print('B')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:04.084540 REASON stop
+2022-04-09 23:33:04.084929 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.084963 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    game = sys.stdin.readline().strip()\n\n    # Alice starts with 0 points\n    alice = 0\n    # Barbara starts with 0 points\n    barbara = 0\n\n    # Iterate through the game history\n    for i in range(0, len(game), 2):\n        # If Alice scored\n        if game[i] == 'A':\n            # Add the points to her score\n            alice += int(game[i + 1])\n            # Check to see if she won\n            if alice >= 11 and alice - barbara >= 2:\n                print('A')\n                break\n        # If Barbara scored\n        else:\n            # Add the points to her score\n            barbara += int(game[i + 1])\n            # Check to see if she won\n            if barbara >= 11 and barbara - alice >= 2:\n                print('B')\n                break\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:04.085040 REASON stop
+2022-04-09 23:33:04.085451 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.085487 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # parse input\n    game = input()\n    alice = 0\n    barbara = 0\n\n    for i in range(len(game)):\n        if game[i] == 'A':\n            if game[i + 1] == '1':\n                alice += 1\n            else:\n                alice += 2\n        else:\n            if game[i + 1] == '1':\n                barbara += 1\n            else:\n                barbara += 2\n\n    # determine the winner\n    if alice == 11 and barbara == 10:\n        print('A')\n    elif barbara == 11 and alice == 10:\n        print('B')\n    elif alice > barbara:\n        print('A')\n    elif barbara > alice:\n        print('B')\n    else:\n        print('error')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:04.085556 REASON stop
+2022-04-09 23:33:04.085967 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.086007 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# ----- Imports -----\n\nimport sys\n\n# ----- Functions -----\n\ndef calculate_winner(score):\n\tif score[0] >= score[1]:\n\t\treturn 0\n\telse:\n\t\treturn 1\n\ndef main(args):\n\tscore = [0, 0]\n\tfor i in range(0, len(args[1]), 2):\n\t\tscore[int(args[1][i])] += int(args[1][i+1])\n\t\tif score[0] >= 11 or score[1] >= 11:\n\t\t\tif score[0] - score[1] >= 2 or score[1] - score[0] >= 2:\n\t\t\t\tprint(\"A\" if calculate_winner(score) == 0 else \"B\")\n\t\t\t\tbreak\n\n# ----- Main -----\n\nif __name__ == '__main__':\n\tmain(sys.argv)"
+}
+2022-04-09 23:33:04.086080 REASON stop
+2022-04-09 23:33:04.086499 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.086534 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Gets the input from the user\nrecord = input()\n\n# Initializes the scores to zero\nscore_a = 0\nscore_b = 0\n\n# Loops through the input, adding the scores to the appropriate player\nfor i in range(len(record)):\n    if record[i] == \"A\":\n        score_a += int(record[i + 1])\n    elif record[i] == \"B\":\n        score_b += int(record[i + 1])\n\n# Prints the winner\nif score_a > score_b:\n    print(\"A\")\nelse:\n    print(\"B\")"
+}
+2022-04-09 23:33:04.086615 REASON stop
+2022-04-09 23:33:04.087033 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.087069 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    record = input()\n    alice,barbara = 0,0\n    for i in range(len(record)):\n        if i%2 == 0:\n            if record[i] == \"A\":\n                alice += int(record[i+1])\n            else:\n                barbara += int(record[i+1])\n        else:\n            pass\n    if alice == 11 and barbara < 11:\n        print(\"A\")\n    elif barbara == 11 and alice < 11:\n        print(\"B\")\n    elif alice == 11 and barbara == 11:\n        if alice - barbara >= 2:\n            print(\"A\")\n        elif barbara - alice >= 2:\n            print(\"B\")\n    else:\n        pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:33:04.087140 REASON stop
+2022-04-09 23:33:04.087554 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'
+2022-04-09 23:33:04.087591 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # read input\n    record = sys.stdin.readline().strip()\n\n    # keep track of score for each player\n    Alice = 0\n    Barbara = 0\n\n    # loop through the record\n    for i in range(0, len(record), 2):\n        # if Alice scored\n        if record[i] == 'A':\n            # add to Alice's score\n            Alice += int(record[i+1])\n            # if Alice's score is greater than 11\n            if Alice > 11:\n                # if Alice's score is greater than Barbara's score by 2\n                if Alice - Barbara >= 2:\n                    # print Alice\n                    print('A')\n                    # end program\n                    return\n                # if Alice's score is not greater than Barbara's score by 2\n                else:\n                    # subtract from Alice's score\n                    Alice -= int(record[i+1])\n        # if Barbara scored\n        else:\n            # add to Barbara's score\n            Barbara += int(record[i+1])\n            # if Barbara's score is greater than 11\n            if Barbara > 11:\n                # if Barbara's score is greater than Alice's score by 2\n                if Barbara - Alice >= 2:\n                    # print Barbara\n                    print('B')\n                    # end program\n                    return\n                # if Barbara's score is not greater than Alice's score by 2\n                else:\n                    # subtract from Barbara's score\n                    Barbara -= int(record[i+1])\n\n    # print the winner\n    if Alice > Barbara:\n        print('A')\n    else:\n        print('B')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:04.087674 REASON stop
+2022-04-09 23:33:04.088093 test/intro-questions.txt_dir/4904/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4904/solutions.json'

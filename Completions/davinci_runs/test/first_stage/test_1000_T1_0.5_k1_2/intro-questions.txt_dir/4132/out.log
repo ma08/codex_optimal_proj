@@ -1,0 +1,66 @@
+2022-04-09 18:44:06.182238 """
+There are N monsters, numbered 1, 2, ..., N.
+Initially, the health of Monster i is A_i.
+Below, a monster with at least 1 health is called alive.
+Until there is only one alive monster, the following is repeated:
+ - A random alive monster attacks another random alive monster.
+ - As a result, the health of the monster attacked is reduced by the amount equal to the current health of the monster attacking.
+Find the minimum possible final health of the last monster alive.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 10^5
+ - 1 \leq A_i \leq 10^9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_N
+
+-----Output-----
+Print the minimum possible final health of the last monster alive.
+
+-----Sample Input-----
+4
+2 10 8 40
+
+-----Sample Output-----
+2
+
+When only the first monster keeps on attacking, the final health of the last monster will be 2, which is minimum.
+"""
+2022-04-09 18:44:06.182279 --------------------------
+2022-04-09 18:44:40.429074 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# My Solution\nimport random\n\nn = int(input())\na = list(map(int, input().split()))\n\nwhile len(a) > 1:\n    a.sort()\n    attacker = random.randint(0, len(a)-1)\n    victim = random.randint(0, len(a)-1)\n    if a[attacker] > a[victim]:\n        a[victim] = 0\n        a = [i for i in a if i != 0]\n    else:\n        a[attacker] = 0\n        a = [i for i in a if i != 0]\nprint(a[0])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport itertools\nimport random\n\nn = int(input())\nA = list(map(int, input().split()))\n\n# \u521d\u671f\u5316\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u540d\u524d\nmonsters = list(range(1, n+1))\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\nhealth = [a for a in A]\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u751f\u6b7b\nalive = [True for _ in range(n)]\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u304c\u653b\u6483\u3057\u305f\u56de\u6570\nattack_num = [0 for _ in range(n)]\n\n# \u751f\u304d\u3066\u3044\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u6570\nalive_num = n\n# \u653b\u6483\u3092\u884c\u3063\u305f\u56de\u6570\nattack_count = 0\n\nwhile alive_num > 1:\n    # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u629e\n    attacker = random.choice(monsters)\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u629e\n    defender = random.choice(monsters)\n\n    # \u653b\u6483\u3068\u9632\u5fa1\u304c\u540c\u3058\u30e2\u30f3\u30b9\u30bf\u30fc\u3067\u3042\u3063\u305f\u5834\u5408\u3001\u653b\u6483\u3092\u7e70\u308a\u8fd4\u3059\n    while attacker == defender:\n        defender = random.choice(monsters)\n\n    # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u653b\u6483\u56de\u6570\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    attack_num[attacker-1] += 1\n\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u6e1b\u3089\u3059\n    health[defender-1] -= health[attacker-1]\n\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u304c0\u4ee5\u4e0b\u306b\u306a\u3063\u305f\u5834\u5408\n    if health[defender-1] <= 0:\n        # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u6b7b\u4ea1\u306b\u3059\u308b\n        alive[defender-1] = False\n        # \u751f\u304d\u3066\u3044\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u6570\u3092\u30c7\u30af\u30ea\u30e1\u30f3\u30c8\n        alive_num -= 1\n\n    # \u653b\u6483\u3092\u884c\u3063\u305f\u56de\u6570\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    attack_count += 1\n\n# \u6700\u5f8c\u306b\u751f\u304d\u6b8b\u3063\u305f\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u51fa\u529b\nfor i in range(n):\n    if alive[i]:\n        print(health[i])"
+    }
+  ],
+  "created": 1649544246,
+  "id": "cmpl-4vE6IEdxMYLcmJYSiEpEZqqRAEyWb",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:44:40.429436 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# My Solution\nimport random\n\nn = int(input())\na = list(map(int, input().split()))\n\nwhile len(a) > 1:\n    a.sort()\n    attacker = random.randint(0, len(a)-1)\n    victim = random.randint(0, len(a)-1)\n    if a[attacker] > a[victim]:\n        a[victim] = 0\n        a = [i for i in a if i != 0]\n    else:\n        a[attacker] = 0\n        a = [i for i in a if i != 0]\nprint(a[0])"
+}
+2022-04-09 18:44:40.429559 REASON stop
+2022-04-09 18:44:40.454740 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport itertools\nimport random\n\nn = int(input())\nA = list(map(int, input().split()))\n\n# \u521d\u671f\u5316\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u540d\u524d\nmonsters = list(range(1, n+1))\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\nhealth = [a for a in A]\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u751f\u6b7b\nalive = [True for _ in range(n)]\n# \u5404\u30e2\u30f3\u30b9\u30bf\u30fc\u304c\u653b\u6483\u3057\u305f\u56de\u6570\nattack_num = [0 for _ in range(n)]\n\n# \u751f\u304d\u3066\u3044\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u6570\nalive_num = n\n# \u653b\u6483\u3092\u884c\u3063\u305f\u56de\u6570\nattack_count = 0\n\nwhile alive_num > 1:\n    # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u629e\n    attacker = random.choice(monsters)\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u629e\n    defender = random.choice(monsters)\n\n    # \u653b\u6483\u3068\u9632\u5fa1\u304c\u540c\u3058\u30e2\u30f3\u30b9\u30bf\u30fc\u3067\u3042\u3063\u305f\u5834\u5408\u3001\u653b\u6483\u3092\u7e70\u308a\u8fd4\u3059\n    while attacker == defender:\n        defender = random.choice(monsters)\n\n    # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u653b\u6483\u56de\u6570\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    attack_num[attacker-1] += 1\n\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u6e1b\u3089\u3059\n    health[defender-1] -= health[attacker-1]\n\n    # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u304c0\u4ee5\u4e0b\u306b\u306a\u3063\u305f\u5834\u5408\n    if health[defender-1] <= 0:\n        # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u6b7b\u4ea1\u306b\u3059\u308b\n        alive[defender-1] = False\n        # \u751f\u304d\u3066\u3044\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u6570\u3092\u30c7\u30af\u30ea\u30e1\u30f3\u30c8\n        alive_num -= 1\n\n    # \u653b\u6483\u3092\u884c\u3063\u305f\u56de\u6570\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    attack_count += 1\n\n# \u6700\u5f8c\u306b\u751f\u304d\u6b8b\u3063\u305f\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u51fa\u529b\nfor i in range(n):\n    if alive[i]:\n        print(health[i])"
+}
+2022-04-09 18:44:40.454911 REASON stop

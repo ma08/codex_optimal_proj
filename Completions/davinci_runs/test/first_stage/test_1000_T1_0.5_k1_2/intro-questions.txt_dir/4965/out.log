@@ -1,0 +1,143 @@
+2022-04-10 00:14:16.783346 """
+Iceland is famous for its geothermal activity, which supplies the country with much of its electricity and heating. It is also a source of pleasure, in the form of hot springs. 
+
+Kalle is visiting one of Iceland’s famous hot springs. It contains $n$ pools of water, where the $i$th one has temperature $t_ i$. Although staying in one of the warmer pools for a long time sure is relaxing, Kalle is on a very tight schedule and just wants a quick dip in each of the pools. As you may know, the nicest thing about hot baths is the contrast between hot and cold. Therefore, to get the most out of his stay, Kalle wants to find an ordering of the pools so that the difference in temperature between subsequent pools is increasing.
+
+Given a sequence of pool temperatures $t_1, t_2, \dots , t_ n$, rearrange them into a new sequence $t’_1, t’_2, \dots , t’_ n$ such that for all $2 \leq i \leq n-1$ it holds that\[ |t’_{i-1} - t’_ i| \leq |t’_ i - t’_{i+1}|. \]
+
+-----Input-----
+The input consists of:
+ - One line with an integer $n$ ($2 \le n \leq 10^5$), the number of pools.
+ - One line with $n$ integers $t_1, \ldots , t_ n$ ($-10^5\leq t_ i \leq 10^5$ for each $i$), the temperatures in each of the $n$ pools.
+
+-----Output-----
+Output a rearrangement of the sequence satisfying the given requirement. If no solution exists, output “impossible”. If there are multiple valid solutions, you may output any one of them.
+
+-----Examples-----
+Sample Input:
+3
+1 3 4
+Sample Output:
+4 3 1
+"""
+2022-04-10 00:14:16.783414 --------------------------
+2022-04-10 00:14:42.448569 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef rearrange(n, t):\n    t = sorted(t)\n    if n%2 == 0:\n        t1 = t[:n//2]\n        t2 = t[n//2:]\n    else:\n        t1 = t[:n//2]\n        t2 = t[n//2+1:]\n    t1.reverse()\n    t1 = t1 + t2\n    return t1\n\nn = int(input())\nt = [int(x) for x in input().split()]\n\nprint(*rearrange(n, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    temperatures = sorted(list(map(int, sys.stdin.readline().split())))\n    if temperatures[0] == temperatures[1]:\n        print(\"impossible\")\n        return\n    if temperatures[-2] == temperatures[-1]:\n        print(\"impossible\")\n        return\n    if temperatures[-2] - temperatures[0] > temperatures[-1] - temperatures[1]:\n        print(\"impossible\")\n        return\n    print(\" \".join(map(str, reversed(temperatures))))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nt = list(map(int, input().split()))\n\n# Sort the temperatures\nt.sort()\n\n# Base case for n = 2\nif n == 2:\n    print(t[1], t[0])\n\n# Base case for n = 3\nelif n == 3:\n    print(t[2], t[0], t[1])\n\n# General case\nelse:\n    # If the input is impossible\n    if t[-1] - t[0] < t[1] - t[0]:\n        print('impossible')\n\n    # If the input is possible\n    else:\n        print(t[-1], end=' ')\n        for i in range(1, n-1):\n            print(t[i], end=' ')\n        print(t[0])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    temperatures = list(map(int, input().split()))\n    temperatures.sort()\n    if n % 2 == 0:\n        for i in range(0, n, 2):\n            print(temperatures[i], end=' ')\n        for i in range(n - 1, 0, -2):\n            print(temperatures[i], end=' ')\n    else:\n        for i in range(0, n, 2):\n            print(temperatures[i], end=' ')\n        for i in range(n - 2, 0, -2):\n            print(temperatures[i], end=' ')\n        print(temperatures[-1], end=' ')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ntemps = list(map(int,input().split()))\n\n# sort the temperatures\ntemps.sort()\n\n# check if the temperature difference is increasing\ninc = True\nfor i in range(1,n-1):\n    if abs(temps[i-1]-temps[i]) > abs(temps[i]-temps[i+1]):\n        inc = False\n        break\n\nif inc:\n    print(*temps)\nelse:\n    print(\"impossible\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    t = list(map(int,input().split()))\n    t.sort()\n    if n%2 == 0:\n        for i in range(n//2):\n            t[i],t[n-1-i] = t[n-1-i],t[i]\n    else:\n        for i in range(n//2):\n            t[i],t[n-1-i] = t[n-1-i],t[i]\n    print(*t)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys, math\n\ndef main():\n    n = int(input())\n    t = list(map(int,input().split()))\n    t.sort()\n    if n % 2 == 0:\n        for i in range(n):\n            print(t[int(i/2)], end = \" \")\n            if i % 2 == 0:\n                print(t[int(n/2) - int(i/2) - 1], end = \" \")\n    else:\n        for i in range(n):\n            print(t[int(i/2)], end = \" \")\n            if i % 2 == 0:\n                print(t[int(n/2) - int(i/2)], end = \" \")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef main():\n    n = int(stdin.readline())\n    line = stdin.readline()\n    line = list(map(int, line.split()))\n    line.sort()\n    if n % 2 == 0:\n        line.reverse()\n    print(\" \".join([str(x) for x in line]))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649564057,
+  "id": "cmpl-4vJFp0L8mbfWE3pzpY89N6gSmQbRf",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:14:42.448961 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef rearrange(n, t):\n    t = sorted(t)\n    if n%2 == 0:\n        t1 = t[:n//2]\n        t2 = t[n//2:]\n    else:\n        t1 = t[:n//2]\n        t2 = t[n//2+1:]\n    t1.reverse()\n    t1 = t1 + t2\n    return t1\n\nn = int(input())\nt = [int(x) for x in input().split()]\n\nprint(*rearrange(n, t))"
+}
+2022-04-10 00:14:42.449006 REASON stop
+2022-04-10 00:14:42.450161 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.450198 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    temperatures = sorted(list(map(int, sys.stdin.readline().split())))\n    if temperatures[0] == temperatures[1]:\n        print(\"impossible\")\n        return\n    if temperatures[-2] == temperatures[-1]:\n        print(\"impossible\")\n        return\n    if temperatures[-2] - temperatures[0] > temperatures[-1] - temperatures[1]:\n        print(\"impossible\")\n        return\n    print(\" \".join(map(str, reversed(temperatures))))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:14:42.450275 REASON stop
+2022-04-10 00:14:42.450734 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.450773 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nt = list(map(int, input().split()))\n\n# Sort the temperatures\nt.sort()\n\n# Base case for n = 2\nif n == 2:\n    print(t[1], t[0])\n\n# Base case for n = 3\nelif n == 3:\n    print(t[2], t[0], t[1])\n\n# General case\nelse:\n    # If the input is impossible\n    if t[-1] - t[0] < t[1] - t[0]:\n        print('impossible')\n\n    # If the input is possible\n    else:\n        print(t[-1], end=' ')\n        for i in range(1, n-1):\n            print(t[i], end=' ')\n        print(t[0])"
+}
+2022-04-10 00:14:42.450840 REASON stop
+2022-04-10 00:14:42.451126 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.451181 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    temperatures = list(map(int, input().split()))\n    temperatures.sort()\n    if n % 2 == 0:\n        for i in range(0, n, 2):\n            print(temperatures[i], end=' ')\n        for i in range(n - 1, 0, -2):\n            print(temperatures[i], end=' ')\n    else:\n        for i in range(0, n, 2):\n            print(temperatures[i], end=' ')\n        for i in range(n - 2, 0, -2):\n            print(temperatures[i], end=' ')\n        print(temperatures[-1], end=' ')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:14:42.451227 REASON stop
+2022-04-10 00:14:42.451918 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.451963 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ntemps = list(map(int,input().split()))\n\n# sort the temperatures\ntemps.sort()\n\n# check if the temperature difference is increasing\ninc = True\nfor i in range(1,n-1):\n    if abs(temps[i-1]-temps[i]) > abs(temps[i]-temps[i+1]):\n        inc = False\n        break\n\nif inc:\n    print(*temps)\nelse:\n    print(\"impossible\")"
+}
+2022-04-10 00:14:42.452064 REASON stop
+2022-04-10 00:14:42.452638 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.452672 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    t = list(map(int,input().split()))\n    t.sort()\n    if n%2 == 0:\n        for i in range(n//2):\n            t[i],t[n-1-i] = t[n-1-i],t[i]\n    else:\n        for i in range(n//2):\n            t[i],t[n-1-i] = t[n-1-i],t[i]\n    print(*t)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:14:42.452743 REASON stop
+2022-04-10 00:14:42.453016 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.453030 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys, math\n\ndef main():\n    n = int(input())\n    t = list(map(int,input().split()))\n    t.sort()\n    if n % 2 == 0:\n        for i in range(n):\n            print(t[int(i/2)], end = \" \")\n            if i % 2 == 0:\n                print(t[int(n/2) - int(i/2) - 1], end = \" \")\n    else:\n        for i in range(n):\n            print(t[int(i/2)], end = \" \")\n            if i % 2 == 0:\n                print(t[int(n/2) - int(i/2)], end = \" \")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:14:42.453073 REASON stop
+2022-04-10 00:14:42.453340 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
+2022-04-10 00:14:42.453354 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef main():\n    n = int(stdin.readline())\n    line = stdin.readline()\n    line = list(map(int, line.split()))\n    line.sort()\n    if n % 2 == 0:\n        line.reverse()\n    print(\" \".join([str(x) for x in line]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:14:42.453403 REASON stop
+2022-04-10 00:14:42.453672 test/intro-questions.txt_dir/4965/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4965/solutions.json'
