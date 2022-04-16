@@ -1,0 +1,33 @@
+
+
+import sys
+
+def calcTime(currTime, targetTime):
+    #calculate the difference between the current time and the target time
+    #if the difference is negative, add 24 hours
+    #this will give us the time until the target time
+    #if the difference is greater than 24 hours, subtract 24 hours
+    #this will give us the time until the target time
+    #return the time until the target time
+    currTime = currTime.split(':').map(int)
+    targetTime = targetTime.split(':').map(int)
+    diff = [targetTime[0] - currTime[0], targetTime[1] - currTime[1], targetTime[2] - currTime[2]]    
+    if diff[0] < 0:
+        diff[0] += 24
+    if diff[1] < 0:
+        diff[0] -= 1
+        diff[1] += 60
+    if diff[2] < 0:
+        diff[1] -= 1
+        diff[2] += 60
+    if diff[0] > 24:
+        diff[0] -= 24
+    return ':'.join(map(str, diff))
+
+def main():
+    currTime = sys.stdin.readline().strip()
+    targetTime = sys.stdin.readline().strip()
+    print(calcTime(currTime, targetTime))
+
+if __name__ == '__main__':
+    main()

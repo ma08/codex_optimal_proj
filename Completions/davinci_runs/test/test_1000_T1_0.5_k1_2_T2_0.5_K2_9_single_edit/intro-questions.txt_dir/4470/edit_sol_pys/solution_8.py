@@ -1,0 +1,4 @@
+
+
+def solve(n):
+    pass

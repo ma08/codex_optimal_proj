@@ -1,0 +1,31 @@
+import os
+
+import sys
+
+def main():
+    try:
+        line = sys.stdin.readline()
+    except KeyboardInterrupt:
+        return
+    while line:
+        line = line.strip()
+        words = line.split()
+        for word in words:
+            newWord = ""
+            i = 0
+            while i < len(word):
+                if word[i] in "aeiou":
+                    newWord += word[i:i+3]
+                    i += 3
+                else:
+                    newWord += word[i]
+                    i += 1
+            print(newWord, end="")
+            print(" ", end="")
+        print()
+        try:
+            line = sys.stdin.readline()
+        except KeyboardInterrupt:
+            return
+
+main()

@@ -1,0 +1,368 @@
+2022-04-16 14:40:14.845590 num operations 1
+2022-04-16 14:40:14.845610 size on input set 1
+2022-04-16 14:40:59.865799 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    print(a)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a\n\n    print(a)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    # let x = y, then x + y >= sigma, 2x >= sigma, x >= sigma/2\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/2 <= x <= m/2\n    # we want the max of x^2 - ax + a\n    # derivative is 2x - a\n    # 2x - a = 0, x = a/2\n    # x^2 - ax + a = (a/2)^2 - a(a/2) + a = a^2/4 - a^2/2 + a = a/2\n    # so max rent is a\n\n    print(a)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 3,
+      "text": "\nimport sys, math\n\ndef main():\n    a, b = map(float, sys.stdin.readline().split())\n    m, sigma = map(float, sys.stdin.readline().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a = 3x^2 - 2ax + a^2/3 + a^2/3\n    # derivative is 6x - 2a, 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a^2/3 + a^2/3 = 3(a/3)^2 - 2a(a/3) + a^2/3 + a^2/3 = a^2/3 - a^2/3 + 2a^2/3 = a^2/3 + 2a^2/3 = 3a^2/3\n\n    print(math.floor(3*a*a/3))\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split()) # a = rent, b = cost\n    m, sigma = map(int, sys.stdin.readline().split()) # m = max number of apartments, sigma = total rent\n    n = int(sys.stdin.readline()) # n = number of apartments\n    apartments = []\n    for i in range(n):\n        apartments.append(list(map(int, sys.stdin.readline().split()))) # apartments[i][0] = rent, apartments[i][1] = cost\n\n    # we want to maximize the sum of the rents\n    # subject to the constraint that the sum of the costs is less than or equal to b\n    # and the number of apartments is less than or equal to m\n    # and the total rent is less than or equal to sigma\n    # and each apartment is rented\n\n    # let x_i = 1 if we rent the ith apartment and 0 otherwise\n    # we want to maximize sum_i r_i x_i\n    # subject to sum_i c_i x_i <= b\n    # and sum_i x_i <= m\n    # and sum_i r_i x_i <= sigma\n    # and x_i >= 1\n\n    # let z = sum_i r_i x_i\n    # x_i >= 1 => x_i <= z\n    # sum_i x_i <= m => sum_i x_i <= mz\n    # sum_i r_i x_i <= sigma => sum_i r_i x_i <= sigma z\n    # sum_i c_i x_i <= b => sum_i c_i x_i <= bz\n    # so we have a system of inequalities\n    # x_i <= z\n    # sum_i x_i <= mz\n    # sum_i r_i x_i <= sigma z\n    # sum_i c_i x_i <= bz\n    # x_i >= 1\n    # we want to maximize z\n\n    # let A = [c_1, ..., c_n], b = [b, m, sigma]\n    # then we want to maximize z\n    # subject to A x <= b\n    # and x >= 1\n\n    # we can use the simplex algorithm to solve this\n\n    # add slack variables\n    # add slack variables to the first three inequalities\n    # add surplus variables to the last three inequalities\n\n    # A = [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #      [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #      [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #      [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #      [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #      [0, ..., 0, 0, 0, -1, 0, 0, 1]]\n    # b = [b, m, sigma, 0, 0, 0]\n    # c = [0, ..., 0, 0, 0, 0, 1, 1, 1]\n\n    # we want to maximize c^T x\n    # subject to A x <= b\n    # and x >= 1\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 5,
+      "text": "\nimport sys\n\ndef main():\n    a, b = map(float, sys.stdin.readline().split())\n    m, sigma = map(float, sys.stdin.readline().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a\n\n    print(int(a))\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\nimport sys\na, b = map(int, sys.stdin.readline().split())\nm, sigma = map(int, sys.stdin.readline().split())\n# let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n# x + y <= m, 2x <= m, x <= m/2\n# x >= 1, y >= 1\n# so we have sigma/3 <= x <= m/2\n# we want the max of 3x^2 - 2ax + a\n# derivative is 6x - 2a\n# 6x - 2a = 0, 3x = a, x = a/3\n# 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n# so max rent is a\nprint(a)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 7,
+      "text": "\nimport sys\n\ndef main():\n\ta, b = map(int, sys.stdin.readline().split())\n\tm, sigma = map(int, sys.stdin.readline().split())\n\n\t# let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n\t# x + y <= m, 2x <= m, x <= m/2\n\t# x >= 1, y >= 1\n\t# so we have sigma/3 <= x <= m/2\n\t# we want the max of 3x^2 - 2ax + a\n\t# derivative is 6x - 2a\n\t# 6x - 2a = 0, 3x = a, x = a/3\n\t# 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n\t# so max rent is a\n\n\tprint(a)\n\nif __name__ == \"__main__\":\n\tmain()\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a, set to 0 and solve\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a, regardless of sigma\n\n    print(a)\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1650120015,
+  "object": "edit"
+}
+2022-04-16 14:40:59.866308 fix syntax errors 9 ['\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    print(a)\n\nif __name__ == "__main__":\n    main()\n', '\n\nimport sys\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a\n\n    print(a)\n\nif __name__ == "__main__":\n    main()\n', '\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    # let x = y, then x + y >= sigma, 2x >= sigma, x >= sigma/2\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/2 <= x <= m/2\n    # we want the max of x^2 - ax + a\n    # derivative is 2x - a\n    # 2x - a = 0, x = a/2\n    # x^2 - ax + a = (a/2)^2 - a(a/2) + a = a^2/4 - a^2/2 + a = a/2\n    # so max rent is a\n\n    print(a)\n\nif __name__ == "__main__":\n    main()\n', '\nimport sys, math\n\ndef main():\n    a, b = map(float, sys.stdin.readline().split())\n    m, sigma = map(float, sys.stdin.readline().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a = 3x^2 - 2ax + a^2/3 + a^2/3\n    # derivative is 6x - 2a, 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a^2/3 + a^2/3 = 3(a/3)^2 - 2a(a/3) + a^2/3 + a^2/3 = a^2/3 - a^2/3 + 2a^2/3 = a^2/3 + 2a^2/3 = 3a^2/3\n\n    print(math.floor(3*a*a/3))\n\nif __name__ == "__main__":\n    main()\n', '\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split()) # a = rent, b = cost\n    m, sigma = map(int, sys.stdin.readline().split()) # m = max number of apartments, sigma = total rent\n    n = int(sys.stdin.readline()) # n = number of apartments\n    apartments = []\n    for i in range(n):\n        apartments.append(list(map(int, sys.stdin.readline().split()))) # apartments[i][0] = rent, apartments[i][1] = cost\n\n    # we want to maximize the sum of the rents\n    # subject to the constraint that the sum of the costs is less than or equal to b\n    # and the number of apartments is less than or equal to m\n    # and the total rent is less than or equal to sigma\n    # and each apartment is rented\n\n    # let x_i = 1 if we rent the ith apartment and 0 otherwise\n    # we want to maximize sum_i r_i x_i\n    # subject to sum_i c_i x_i <= b\n    # and sum_i x_i <= m\n    # and sum_i r_i x_i <= sigma\n    # and x_i >= 1\n\n    # let z = sum_i r_i x_i\n    # x_i >= 1 => x_i <= z\n    # sum_i x_i <= m => sum_i x_i <= mz\n    # sum_i r_i x_i <= sigma => sum_i r_i x_i <= sigma z\n    # sum_i c_i x_i <= b => sum_i c_i x_i <= bz\n    # so we have a system of inequalities\n    # x_i <= z\n    # sum_i x_i <= mz\n    # sum_i r_i x_i <= sigma z\n    # sum_i c_i x_i <= bz\n    # x_i >= 1\n    # we want to maximize z\n\n    # let A = [c_1, ..., c_n], b = [b, m, sigma]\n    # then we want to maximize z\n    # subject to A x <= b\n    # and x >= 1\n\n    # we can use the simplex algorithm to solve this\n\n    # add slack variables\n    # add slack variables to the first three inequalities\n    # add surplus variables to the last three inequalities\n\n    # A = [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #      [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #      [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #      [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #      [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #      [0, ..., 0, 0, 0, -1, 0, 0, 1]]\n    # b = [b, m, sigma, 0, 0, 0]\n    # c = [0, ..., 0, 0, 0, 0, 1, 1, 1]\n\n    # we want to maximize c^T x\n    # subject to A x <= b\n    # and x >= 1\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then we want to maximize [0, ..., 0, 0, 0, 0, 1, 1, 1]^T x\n    # subject to [[c_1, ..., c_n, 1, 0, 0, 0, 0, 0],\n    #            [1, ..., 1, 0, 1, 0, 0, 0, 0],\n    #            [r_1, ..., r_n, 0, 0, 1, 0, 0, 0],\n    #            [0, ..., 0, -1, 0, 0, 1, 0, 0],\n    #            [0, ..., 0, 0, -1, 0, 0, 1, 0],\n    #            [0, ..., 0, 0, 0, -1, 0, 0, 1]] x <= [b, m, sigma, 0, 0, 0]\n    # and x >= [1, ..., 1, 0, 0, 0, 0, 0, 0]\n\n    # we can use the simplex algorithm to solve this\n\n    # let x = [x_1, ..., x_n, z_1, z_2, z_3, s_1, s_2, s_3]\n    # then\n\nif __name__ == "__main__":\n    main()\n', '\nimport sys\n\ndef main():\n    a, b = map(float, sys.stdin.readline().split())\n    m, sigma = map(float, sys.stdin.readline().split())\n\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a\n\n    print(int(a))\n\nif __name__ == "__main__":\n    main()\n', '\n\nimport sys\na, b = map(int, sys.stdin.readline().split())\nm, sigma = map(int, sys.stdin.readline().split())\n# let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n# x + y <= m, 2x <= m, x <= m/2\n# x >= 1, y >= 1\n# so we have sigma/3 <= x <= m/2\n# we want the max of 3x^2 - 2ax + a\n# derivative is 6x - 2a\n# 6x - 2a = 0, 3x = a, x = a/3\n# 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n# so max rent is a\nprint(a)\n\nif __name__ == "__main__":\n    main()\n', '\nimport sys\n\ndef main():\n\ta, b = map(int, sys.stdin.readline().split())\n\tm, sigma = map(int, sys.stdin.readline().split())\n\n\t# let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n\t# x + y <= m, 2x <= m, x <= m/2\n\t# x >= 1, y >= 1\n\t# so we have sigma/3 <= x <= m/2\n\t# we want the max of 3x^2 - 2ax + a\n\t# derivative is 6x - 2a\n\t# 6x - 2a = 0, 3x = a, x = a/3\n\t# 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n\t# so max rent is a\n\n\tprint(a)\n\nif __name__ == "__main__":\n\tmain()\n', '\n\nimport sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n    # let x = y, then 2x + y >= sigma, 3x >= sigma, x >= sigma/3\n\n    # x + y <= m, 2x <= m, x <= m/2\n    # x >= 1, y >= 1\n    # so we have sigma/3 <= x <= m/2\n    # we want the max of 3x^2 - 2ax + a\n    # derivative is 6x - 2a, set to 0 and solve\n    # 6x - 2a = 0, 3x = a, x = a/3\n    # 3x^2 - 2ax + a = 3(a/3)^2 - 2a(a/3) + a = a^2/3 - a^2/3 + a = a\n    # so max rent is a, regardless of sigma\n\n    print(a)\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-16 14:40:59.866415 size on output set 9
+2022-04-16 14:40:59.866443 num operations 1
+2022-04-16 14:40:59.866449 size on input set 1
+2022-04-16 14:41:10.837204 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 3,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = [int(i) for i in input[0].split()]\n    a = prices[0]\n    b = prices[1]\n    maxes = [int(i) for i in input[1].split()]\n    m = maxes[0]\n    sigma = maxes[1]\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\n#Submissions\n# Attempt 1 - Accepted\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\n\nmain()\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\nimport sys\n\ndef main():\n    input_ = sys.stdin.read().splitlines()\n    prices = input_[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input_[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n"
+    }
+  ],
+  "created": 1650120059,
+  "object": "edit"
+}
+2022-04-16 14:41:10.837477 fix syntax errors 9 ['\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = [int(i) for i in input[0].split()]\n    a = prices[0]\n    b = prices[1]\n    maxes = [int(i) for i in input[1].split()]\n    m = maxes[0]\n    sigma = maxes[1]\n    maxRent = 0\n    for x in range(1, m//2+1):\n        y = m - x\n        if y < 1:\n            break\n        if 2*x + y >= sigma:\n            rent = a*x + b*y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\n#Submissions\n# Attempt 1 - Accepted\n\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\n\nmain()\n', '\n\n# Submissions\n# Attempt 1 - Accepted\nimport sys\n\ndef main():\n    input = sys.stdin.read().splitlines()\n    prices = input[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n', '\n\nimport sys\n\ndef main():\n    input_ = sys.stdin.read().splitlines()\n    prices = input_[0].split()\n    a = int(prices[0])\n    b = int(prices[1])\n    maxes = input_[1].split()\n    m = int(maxes[0])\n    sigma = int(maxes[1])\n    maxRent = 0\n    for x in range(1, m // 2 + 1):\n        y = m - x\n        if y < 1:\n            break\n        if 2 * x + y >= sigma:\n            rent = a * x + b * y\n            if rent > maxRent:\n                maxRent = rent\n    print(maxRent)\n\nmain()\n']
+2022-04-16 14:41:10.837611 size on output set 8
+2022-04-16 14:41:10.837628 num operations 1
+2022-04-16 14:41:10.837634 size on input set 1
+2022-04-16 14:41:19.836575 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2 + 1):\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1): # m//2+1\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 3,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = (sigma - 2*x)//2\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = int((sigma - 2*x) / 2)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = (sigma - 2*x)/2\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1650120070,
+  "object": "edit"
+}
+2022-04-16 14:41:19.836821 fix syntax errors 9 ['\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2 + 1):\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1): # m//2+1\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = (sigma - 2*x)//2\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = int((sigma - 2*x) / 2)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2 * x)\n        if y < 1:\n            continue\n        R = a * x + b * y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m // 2 + 1):\n        y = (sigma - 2*x)\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n    maxR = 0\n    for x in range(1, m//2+1):\n        y = (sigma - 2*x)/2\n        if y < 1:\n            continue\n        R = a*x + b*y\n        if R > maxR:\n            maxR = R\n    print(maxR)\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-16 14:41:19.836879 size on output set 7
+2022-04-16 14:41:19.836892 num operations 1
+2022-04-16 14:41:19.836897 size on input set 1
+2022-04-16 14:41:30.462539 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = s - a\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - y\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = max(s - b, 0) / 2\n    y = max(m - x, 0)\n    return a * x + b * y\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 3,
+      "text": "\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\ndef solve(n, k, c):\n    l = []\n    while n > 0:\n        l.append(n % k)\n        n /= k\n    l.reverse()\n    return l\n\ndef main():\n    n, k, c = [int(x) for x in raw_input().split()]\n    l = solve(n, k, c)\n    print \" \".join(map(str, l))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 8,
+      "text": "\ndef solve(a, b, m, s):\n    x = max((s - b) / 2, 0)\n    y = max(m - x, 0)\n    return (a * x) + (b * y) \n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650120079,
+  "object": "edit"
+}
+2022-04-16 14:41:30.462862 fix syntax errors 9 ["\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef solve(a, b, m, s):\n    x = s - a\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - y\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef solve(a, b, m, s):\n    x = max(s - b, 0) / 2\n    y = max(m - x, 0)\n    return a * x + b * y\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", '\n\ndef solve(n, k, c):\n    l = []\n    while n > 0:\n        l.append(n % k)\n        n /= k\n    l.reverse()\n    return l\n\ndef main():\n    n, k, c = [int(x) for x in raw_input().split()]\n    l = solve(n, k, c)\n    print " ".join(map(str, l))\n\nif __name__ == \'__main__\':\n    main()\n', "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef solve(a, b, m, s):\n    x = s - b\n    if x < 0:\n        x = 0\n    else:\n        x /= 2\n    y = m - x\n    if y < 0:\n        y = 0\n    return (a * x) + (b * y)\n\ndef main():\n    a, b = [int(x) for x in input().split()]\n    m, s = [int(x) for x in input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n", "\ndef solve(a, b, m, s):\n    x = max((s - b) / 2, 0)\n    y = max(m - x, 0)\n    return (a * x) + (b * y) \n\ndef main():\n    a, b = [int(x) for x in raw_input().split()]\n    m, s = [int(x) for x in raw_input().split()]\n    print solve(a, b, m, s)\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-16 14:41:30.462919 size on output set 6
+2022-04-16 14:41:30.462928 num operations 1
+2022-04-16 14:41:30.462934 size on input set 1
+2022-04-16 14:41:40.305029 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n# a, b = map(int, input().split())\n# m, sigma = map(int, input().split())\n#\n# max_rent = 0\n# for y in range(1, m//2 + 1):\n#     x = sigma - 2*y\n#     if x >= 1:\n#         max_rent = max(max_rent, a*x + b*y)\n#\n# print(max_rent)\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nprint(max(a*(sigma-2*y) + b*y for y in range(1, m//2 + 1) if sigma-2*y >= 1))\n"
+    },
+    {
+      "index": 2,
+      "text": "n = int(input())\na = list(map(int, input().split()))\na.sort()\n\n\nans = 0\nfor i in range(n-1):\n    ans += a[i]\nprint(ans)\n"
+    },
+    {
+      "index": 3,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m // 2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 4,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 5,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 6,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 7,
+      "text": "#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n# @Author: Shuailong\n# @Email: liangshuailong@gmail.com\n# @Date: 2019-05-21 15:34:08\n# @Last Modified by: Shuailong\n# @Last Modified time: 2019-05-21 15:36:44\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n"
+    },
+    {
+      "index": 8,
+      "text": "\nprint(\"Hello World\")\n"
+    }
+  ],
+  "created": 1650120090,
+  "object": "edit"
+}
+2022-04-16 14:41:40.305266 fix syntax errors 9 ['\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '\n\n# a, b = map(int, input().split())\n# m, sigma = map(int, input().split())\n#\n# max_rent = 0\n# for y in range(1, m//2 + 1):\n#     x = sigma - 2*y\n#     if x >= 1:\n#         max_rent = max(max_rent, a*x + b*y)\n#\n# print(max_rent)\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nprint(max(a*(sigma-2*y) + b*y for y in range(1, m//2 + 1) if sigma-2*y >= 1))\n', 'n = int(input())\na = list(map(int, input().split()))\na.sort()\n\n\nans = 0\nfor i in range(n-1):\n    ans += a[i]\nprint(ans)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m // 2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n# @Author: Shuailong\n# @Email: liangshuailong@gmail.com\n# @Date: 2019-05-21 15:34:08\n# @Last Modified by: Shuailong\n# @Last Modified time: 2019-05-21 15:36:44\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\nfor y in range(1, m//2 + 1):\n    x = sigma - 2*y\n    if x >= 1:\n        max_rent = max(max_rent, a*x + b*y)\n\nprint(max_rent)\n', '\nprint("Hello World")\n']
+2022-04-16 14:41:40.305305 size on output set 6
+2022-04-16 14:41:40.305315 num operations 1
+2022-04-16 14:41:40.305320 size on input set 1
+2022-04-16 14:41:53.961388 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m // 2 + 1):\n    # calculate y\n    y = m - x\n    if(2 * x + y >= sigma):\n        # calculate rent\n        rent = a * x + b * y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n#loop through each possible x\nfor x in range(1, m//2 + 1):\n    #calculate y\n    y = m - x\n    #check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        #calculate rent\n        rent = a*x + b*y\n        #if rent is greater than max rent\n        if(rent > max_rent):\n            #update max rent\n            max_rent = rent\n\n#output\nprint(max_rent)\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n"
+    },
+    {
+      "index": 3,
+      "text": "\n#read input\nn = int(input())\n#SOLUTION\n#inputs\na, b, m, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n#loop through each possible x\nfor x in range(1, m//2 + 1):\n    #calculate y\n    y = m - x\n    #check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        #calculate rent\n        rent = a*x + b*y\n        #if rent is greater than max rent\n        if(rent > max_rent):\n            #update max rent\n            max_rent = rent\n\n#output\nprint(max_rent)\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\n# SOLUTION\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\n# SOLUTION\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\n# #SOLUTION\n# #inputs\n# a, b = map(int, input().split())\n# m, sigma = map(int, input().split())\n#\n# #initialize max rent\n# max_rent = 0\n#\n# #loop through each possible x\n# for x in range(1, m//2 + 1):\n#     #calculate y\n#     y = m - x\n#     #check if the number of outlets is satisfied\n#     if(2*x + y >= sigma):\n#         #calculate rent\n#         rent = a*x + b*y\n#         #if rent is greater than max rent\n#         if(rent > max_rent):\n#             #update max rent\n#             max_rent = rent\n#\n# #output\n# print(max_rent)\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\n\nfor x in range(1, m//2 + 1):\n    y = m - x\n    if(2*x + y >= sigma):\n        rent = a*x + b*y\n        if(rent > max_rent):\n            max_rent = rent\n\nprint(max_rent)\n"
+    }
+  ],
+  "created": 1650120100,
+  "object": "edit"
+}
+2022-04-16 14:41:53.961719 fix syntax errors 9 ['\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m // 2 + 1):\n    # calculate y\n    y = m - x\n    if(2 * x + y >= sigma):\n        # calculate rent\n        rent = a * x + b * y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n', '\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n#loop through each possible x\nfor x in range(1, m//2 + 1):\n    #calculate y\n    y = m - x\n    #check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        #calculate rent\n        rent = a*x + b*y\n        #if rent is greater than max rent\n        if(rent > max_rent):\n            #update max rent\n            max_rent = rent\n\n#output\nprint(max_rent)\n', '\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n', '\n#read input\nn = int(input())\n#SOLUTION\n#inputs\na, b, m, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n#loop through each possible x\nfor x in range(1, m//2 + 1):\n    #calculate y\n    y = m - x\n    #check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        #calculate rent\n        rent = a*x + b*y\n        #if rent is greater than max rent\n        if(rent > max_rent):\n            #update max rent\n            max_rent = rent\n\n#output\nprint(max_rent)\n', '\n\n# SOLUTION\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n#initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n', '\n\n# SOLUTION\n# inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n', '\n\n# SOLUTION\n#inputs\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\n# initialize max rent\nmax_rent = 0\n\n# loop through each possible x\nfor x in range(1, m//2 + 1):\n    # calculate y\n    y = m - x\n    # check if the number of outlets is satisfied\n    if(2*x + y >= sigma):\n        # calculate rent\n        rent = a*x + b*y\n        # if rent is greater than max rent\n        if(rent > max_rent):\n            # update max rent\n            max_rent = rent\n\n# output\nprint(max_rent)\n', '\n\n# #SOLUTION\n# #inputs\n# a, b = map(int, input().split())\n# m, sigma = map(int, input().split())\n#\n# #initialize max rent\n# max_rent = 0\n#\n# #loop through each possible x\n# for x in range(1, m//2 + 1):\n#     #calculate y\n#     y = m - x\n#     #check if the number of outlets is satisfied\n#     if(2*x + y >= sigma):\n#         #calculate rent\n#         rent = a*x + b*y\n#         #if rent is greater than max rent\n#         if(rent > max_rent):\n#             #update max rent\n#             max_rent = rent\n#\n# #output\n# print(max_rent)\n', '\n\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nmax_rent = 0\n\nfor x in range(1, m//2 + 1):\n    y = m - x\n    if(2*x + y >= sigma):\n        rent = a*x + b*y\n        if(rent > max_rent):\n            max_rent = rent\n\nprint(max_rent)\n']
+2022-04-16 14:41:53.961798 size on output set 8
+2022-04-16 14:41:53.961808 num operations 1
+2022-04-16 14:41:53.961814 size on input set 1
+2022-04-16 14:42:01.735336 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\ny = (sigma - 2) / 3\nx = m - y\nprint(a*x + b*y)\n"
+    },
+    {
+      "index": 1,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a * m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a * x + b * y)\n"
+    },
+    {
+      "index": 2,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) // 3\n    x = m - y\n    print(a*x + b*y)\n"
+    },
+    {
+      "index": 3,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a * m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a * x + b * y)\n"
+    },
+    {
+      "index": 4,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2 * m:\n    print(a*m)\nelse:\n    y = (sigma - 2 * m) / 3\n    x = m - y\n    print(a*x + b*y)\n"
+    },
+    {
+      "index": 5,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    if sigma % 3 == 0:\n        y = (sigma - 2) / 3\n        x = m - y\n        print(a*x + b*y)\n    else:\n        y = (sigma - 2) / 3\n        x = m - y\n        print(a*x + b*y)\n"
+    },
+    {
+      "index": 6,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = int((sigma - 2) / 3)\n    x = m - y\n    print(a*x + b*y)\n"
+    },
+    {
+      "index": 7,
+      "text": "a, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a*x + b*y)\n"
+    },
+    {
+      "index": 8,
+      "text": "\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) // 3\n    x = m - y\n    print(a*x + b*y)\n"
+    }
+  ],
+  "created": 1650120114,
+  "object": "edit"
+}
+2022-04-16 14:42:01.735661 fix syntax errors 9 ['\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\ny = (sigma - 2) / 3\nx = m - y\nprint(a*x + b*y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a * m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a * x + b * y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) // 3\n    x = m - y\n    print(a*x + b*y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a * m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a * x + b * y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2 * m:\n    print(a*m)\nelse:\n    y = (sigma - 2 * m) / 3\n    x = m - y\n    print(a*x + b*y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    if sigma % 3 == 0:\n        y = (sigma - 2) / 3\n        x = m - y\n        print(a*x + b*y)\n    else:\n        y = (sigma - 2) / 3\n        x = m - y\n        print(a*x + b*y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = int((sigma - 2) / 3)\n    x = m - y\n    print(a*x + b*y)\n', 'a, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) / 3\n    x = m - y\n    print(a*x + b*y)\n', '\na, b = map(int, input().split())\nm, sigma = map(int, input().split())\n\nif sigma <= 2:\n    print(a*m)\nelse:\n    y = (sigma - 2) // 3\n    x = m - y\n    print(a*x + b*y)\n']
+2022-04-16 14:42:01.735721 size on output set 7
+2022-04-16 14:42:01.735736 num operations 1
+2022-04-16 14:42:01.735743 size on input set 1
+2022-04-16 14:42:12.142690 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    n = int(input())\n    a_arr = list(map(int, input().split()))\n\n    print(sum(a_arr))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2)) \n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\ndef main():\n    a, b, c, d = map(int, input().split())\n\n    print(min(a, b) + min(c, d))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 3,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b/2))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 4,
+      "text": "import sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))  # // is integer division\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2)) \n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 7,
+      "text": "\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\ndef main():\n    a, b = map(int, input().split())  # a: \u8ca0\u3051\u305f\u6642\u306e\u6e1b\u70b9, b: \u52dd\u3063\u305f\u6642\u306b\u52a0\u70b9\n    m, sigma = map(int, input().split())  # m: \u5168\u4f53\u306e\u554f\u984c\u6570, sigma: \u6b63\u89e3\u3057\u305f\u554f\u984c\u6570\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650120121,
+  "object": "edit"
+}
+2022-04-16 14:42:12.142932 fix syntax errors 9 ["\n\ndef main():\n    n = int(input())\n    a_arr = list(map(int, input().split()))\n\n    print(sum(a_arr))\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2)) \n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b, c, d = map(int, input().split())\n\n    print(min(a, b) + min(c, d))\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b/2))\n\nif __name__ == '__main__':\n    main()\n", "import sys\n\ndef main():\n    a, b = map(int, sys.stdin.readline().split())\n    m, sigma = map(int, sys.stdin.readline().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))  # // is integer division\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2)) \n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    a, b = map(int, input().split())\n    m, sigma = map(int, input().split())\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, b = map(int, input().split())  # a: 負けた時の減点, b: 勝った時に加点\n    m, sigma = map(int, input().split())  # m: 全体の問題数, sigma: 正解した問題数\n\n    if sigma > m:\n        print(0)\n    else:\n        print(max(0, (m-sigma)*a + sigma*b//2))\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-16 14:42:12.143069 size on output set 8

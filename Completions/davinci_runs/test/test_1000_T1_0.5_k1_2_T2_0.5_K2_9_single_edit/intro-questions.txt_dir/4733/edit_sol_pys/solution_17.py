@@ -1,0 +1,16 @@
+
+import sys
+
+def main():
+    num_cases = int(sys.stdin.readline().strip())
+    for i in range(num_cases):
+        n = int(sys.stdin.readline().strip())
+        shuffle = sys.stdin.readline().strip().split()
+
+        if shuffle[0] == 'out':
+            print(n//2)
+        else:
+            print(n-1)
+
+if __name__ == '__main__':
+    main()

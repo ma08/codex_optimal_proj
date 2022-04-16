@@ -1,0 +1,181 @@
+2022-04-09 22:41:25.065644 """
+Every evening, little Ivica sends secret messages to little Marica through e-mail. Knowing Ivica’s e-letter travels unguarded through the network on its way to Marica’s e-mailbox, they have decided to encrypt every message using the following algorithm:
+ - Suppose Ivica’s message consists of $N$ characters.
+ - Ivica must first find a matrix consisting of $R$ rows and $C$ columns such that $R \le C$ and $R \cdot C = N$. If there is more than one such matrix, Ivica chooses the one with the most rows.
+ - Ivica writes his message into the matrix in row-major order. In other words, he writes the first segment of the message into the first row, the second segment into the second row and so on.
+ - The message he sends to Marica is the matrix read in column-major order.
+
+For instance, suppose Ivica wants to send the message “bombonisuuladici” containing 16 letters. He can use a $1 \times 16$, $2 \times 8$, or $4 \times 4$ matrix. Of these, the $4 \times 4$ has the most rows. When the message is written into it, the matrix looks like this, and the encrypted message becomes “boudonuimilcbsai”.
+
+b
+
+o
+
+m
+
+b
+
+o
+
+n
+
+i
+
+s
+
+u
+
+u
+
+l
+
+a
+
+d
+
+i
+
+c
+
+i
+
+Marica has grown tired of spending her precious time deciphering Ivica’s messages, so you must write a program to do it for her.
+
+-----Input-----
+The input contains the received message, a string of lowercase letters of the English alphabet (with no spaces). The number of letters will be between 1 and 100.
+
+-----Output-----
+Output the original (decrypted) message.
+
+-----Examples-----
+Sample Input 1:
+bok
+Sample Output 1:
+bok
+
+Sample Input 2:
+koaski
+Sample Output 2:
+kakosi
+"""
+2022-04-09 22:41:25.065671 --------------------------
+2022-04-09 22:41:57.654672 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nmessage = input()\n\nlength = len(message)\n\nrows = math.sqrt(length)\n\ncolumns = math.sqrt(length)\n\nif rows.is_integer():\n    rows = int(rows)\n    columns = int(columns)\nelse:\n    rows = math.floor(rows)\n    columns = math.ceil(columns)\n\nmatrix = []\n\nfor i in range(0, rows):\n    matrix.append([])\n    for j in range(0, columns):\n        matrix[i].append(\"0\")\n\nfor i in range(0, rows):\n    for j in range(0, columns):\n        if j + (i * columns) < length:\n            matrix[i][j] = message[j + (i * columns)]\n\noutput = \"\"\n\nfor j in range(0, columns):\n    for i in range(0, rows):\n        if matrix[i][j] != \"0\":\n            output += matrix[i][j]\n\nprint(output)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef decrypt(message):\n    message_len = len(message)\n    rows = 1\n    while rows * rows < message_len:\n        rows += 1\n    columns = message_len // rows\n    if rows * columns < message_len:\n        columns += 1\n    matrix = [[' '] * columns for _ in range(rows)]\n    for i in range(message_len):\n        matrix[i % rows][i // rows] = message[i]\n    return ''.join(c for row in matrix for c in row if c != ' ')\n\ndef main():\n    message = sys.stdin.readline().strip()\n    print(decrypt(message))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef decrypt(message):\n    length = len(message)\n    max_rows = int(math.sqrt(length))\n    rows = max_rows\n    columns = max_rows\n    if rows * columns < length:\n        rows += 1\n\n    matrix = [['' for x in range(columns)] for y in range(rows)]\n    for i in range(rows):\n        for j in range(columns):\n            matrix[i][j] = message[i * columns + j]\n\n    decrypted = []\n    for j in range(columns):\n        for i in range(rows):\n            decrypted.append(matrix[i][j])\n\n    return ''.join(decrypted)\n\n\nmessage = input()\nprint(decrypt(message))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nmessage = input()\n\n# Get the length of the message\nlength = len(message)\n\n# Get the square root of the length of the message\nsqrt = length ** 0.5\n\n# Get the next lowest integer value of sqrt\nrows = int(sqrt)\n\n# Get the next highest integer value of sqrt\ncolumns = int(sqrt) + 1\n\n# If the number of rows times the number of columns is not equal to the length of the message,\n# increment the number of rows by 1 and decrement the number of columns by 1\n# until the number of rows times the number of columns is equal to the length of the message\nwhile rows * columns != length:\n    if rows * columns < length:\n        rows += 1\n    else:\n        columns -= 1\n\n# Create a matrix with the number of rows and columns\nmatrix = [[0 for x in range(columns)] for y in range(rows)]\n\n# Create a counter for the message\ncounter = 0\n\n# For each row and column in the matrix, place the character at the counter in the message\n# in the matrix and increment the counter by 1\nfor row in range(rows):\n    for column in range(columns):\n        matrix[row][column] = message[counter]\n        counter += 1\n\n# Create a new string\nnewString = \"\"\n\n# For each column in the matrix, for each row in the matrix, add the character\n# at the row and column in the matrix to the new string\nfor column in range(columns):\n    for row in range(rows):\n        newString += matrix[row][column]\n\n# Print the new string\nprint(newString)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\n\ns = input()\n\n#najdi nejveci ctverec\nmax_ctv = int(len(s)**0.5)\n\n#vypis v ctvercich\nfor i in range(max_ctv,0,-1):\n    if len(s) % i == 0:\n        #vypis zleva do prava\n        for j in range(0,len(s),i):\n            print(s[j:j+i])\n        break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    m = input()\n    r = int(len(m) ** .5)\n    c = int(len(m) / r)\n    for i in range(c):\n        print(m[i::c], end=\"\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef decrypt(message):\n    length = len(message)\n    sqrt = math.sqrt(length)\n    if sqrt == int(sqrt):\n        sqrt = int(sqrt)\n        return decrypt_square(message, sqrt)\n    else:\n        sqrt = int(sqrt)\n        return decrypt_rectangle(message, sqrt, sqrt+1)\n\ndef decrypt_square(message, sqrt):\n    matrix = [['' for i in range(sqrt)] for j in range(sqrt)]\n    for i in range(sqrt):\n        for j in range(sqrt):\n            matrix[i][j] = message[i*sqrt + j]\n    return ''.join([row[i] for i in range(sqrt) for row in matrix])\n\ndef decrypt_rectangle(message, rows, cols):\n    matrix = [['' for i in range(cols)] for j in range(rows)]\n    for i in range(rows):\n        for j in range(cols):\n            matrix[i][j] = message[i*cols + j]\n    return ''.join([row[i] for i in range(cols) for row in matrix])\n\n\nmessage = input()\nprint(decrypt(message))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nmessage = input()\n\nfor n in range(1, len(message) + 1):\n    if len(message) % n == 0:\n        r = n\n        c = int(len(message) / n)\n\nmatrix = [[0 for x in range(c)] for y in range(r)]\n\ncount = 0\nfor i in range(r):\n    for j in range(c):\n        matrix[i][j] = message[count]\n        count += 1\n\nfor i in range(c):\n    for j in range(r):\n        print(matrix[j][i], end=\"\")\n    print()"
+    }
+  ],
+  "created": 1649558485,
+  "id": "cmpl-4vHnx4q4drXi270K9TckHfeS05Bwr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:41:57.655003 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nmessage = input()\n\nlength = len(message)\n\nrows = math.sqrt(length)\n\ncolumns = math.sqrt(length)\n\nif rows.is_integer():\n    rows = int(rows)\n    columns = int(columns)\nelse:\n    rows = math.floor(rows)\n    columns = math.ceil(columns)\n\nmatrix = []\n\nfor i in range(0, rows):\n    matrix.append([])\n    for j in range(0, columns):\n        matrix[i].append(\"0\")\n\nfor i in range(0, rows):\n    for j in range(0, columns):\n        if j + (i * columns) < length:\n            matrix[i][j] = message[j + (i * columns)]\n\noutput = \"\"\n\nfor j in range(0, columns):\n    for i in range(0, rows):\n        if matrix[i][j] != \"0\":\n            output += matrix[i][j]\n\nprint(output)"
+}
+2022-04-09 22:41:57.655150 REASON stop
+2022-04-09 22:41:57.666460 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.666492 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef decrypt(message):\n    message_len = len(message)\n    rows = 1\n    while rows * rows < message_len:\n        rows += 1\n    columns = message_len // rows\n    if rows * columns < message_len:\n        columns += 1\n    matrix = [[' '] * columns for _ in range(rows)]\n    for i in range(message_len):\n        matrix[i % rows][i // rows] = message[i]\n    return ''.join(c for row in matrix for c in row if c != ' ')\n\ndef main():\n    message = sys.stdin.readline().strip()\n    print(decrypt(message))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:41:57.666568 REASON stop
+2022-04-09 22:41:57.667223 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.667258 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef decrypt(message):\n    length = len(message)\n    max_rows = int(math.sqrt(length))\n    rows = max_rows\n    columns = max_rows\n    if rows * columns < length:\n        rows += 1\n\n    matrix = [['' for x in range(columns)] for y in range(rows)]\n    for i in range(rows):\n        for j in range(columns):\n            matrix[i][j] = message[i * columns + j]\n\n    decrypted = []\n    for j in range(columns):\n        for i in range(rows):\n            decrypted.append(matrix[i][j])\n\n    return ''.join(decrypted)\n\n\nmessage = input()\nprint(decrypt(message))"
+}
+2022-04-09 22:41:57.667329 REASON stop
+2022-04-09 22:41:57.667878 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.667911 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nmessage = input()\n\n# Get the length of the message\nlength = len(message)\n\n# Get the square root of the length of the message\nsqrt = length ** 0.5\n\n# Get the next lowest integer value of sqrt\nrows = int(sqrt)\n\n# Get the next highest integer value of sqrt\ncolumns = int(sqrt) + 1\n\n# If the number of rows times the number of columns is not equal to the length of the message,\n# increment the number of rows by 1 and decrement the number of columns by 1\n# until the number of rows times the number of columns is equal to the length of the message\nwhile rows * columns != length:\n    if rows * columns < length:\n        rows += 1\n    else:\n        columns -= 1\n\n# Create a matrix with the number of rows and columns\nmatrix = [[0 for x in range(columns)] for y in range(rows)]\n\n# Create a counter for the message\ncounter = 0\n\n# For each row and column in the matrix, place the character at the counter in the message\n# in the matrix and increment the counter by 1\nfor row in range(rows):\n    for column in range(columns):\n        matrix[row][column] = message[counter]\n        counter += 1\n\n# Create a new string\nnewString = \"\"\n\n# For each column in the matrix, for each row in the matrix, add the character\n# at the row and column in the matrix to the new string\nfor column in range(columns):\n    for row in range(rows):\n        newString += matrix[row][column]\n\n# Print the new string\nprint(newString)"
+}
+2022-04-09 22:41:57.667983 REASON stop
+2022-04-09 22:41:57.668629 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.668663 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\n\ns = input()\n\n#najdi nejveci ctverec\nmax_ctv = int(len(s)**0.5)\n\n#vypis v ctvercich\nfor i in range(max_ctv,0,-1):\n    if len(s) % i == 0:\n        #vypis zleva do prava\n        for j in range(0,len(s),i):\n            print(s[j:j+i])\n        break"
+}
+2022-04-09 22:41:57.668739 REASON stop
+2022-04-09 22:41:57.669399 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.669433 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    m = input()\n    r = int(len(m) ** .5)\n    c = int(len(m) / r)\n    for i in range(c):\n        print(m[i::c], end=\"\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:41:57.669505 REASON stop
+2022-04-09 22:41:57.670157 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.670191 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef decrypt(message):\n    length = len(message)\n    sqrt = math.sqrt(length)\n    if sqrt == int(sqrt):\n        sqrt = int(sqrt)\n        return decrypt_square(message, sqrt)\n    else:\n        sqrt = int(sqrt)\n        return decrypt_rectangle(message, sqrt, sqrt+1)\n\ndef decrypt_square(message, sqrt):\n    matrix = [['' for i in range(sqrt)] for j in range(sqrt)]\n    for i in range(sqrt):\n        for j in range(sqrt):\n            matrix[i][j] = message[i*sqrt + j]\n    return ''.join([row[i] for i in range(sqrt) for row in matrix])\n\ndef decrypt_rectangle(message, rows, cols):\n    matrix = [['' for i in range(cols)] for j in range(rows)]\n    for i in range(rows):\n        for j in range(cols):\n            matrix[i][j] = message[i*cols + j]\n    return ''.join([row[i] for i in range(cols) for row in matrix])\n\n\nmessage = input()\nprint(decrypt(message))"
+}
+2022-04-09 22:41:57.670263 REASON stop
+2022-04-09 22:41:57.670781 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'
+2022-04-09 22:41:57.670815 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nmessage = input()\n\nfor n in range(1, len(message) + 1):\n    if len(message) % n == 0:\n        r = n\n        c = int(len(message) / n)\n\nmatrix = [[0 for x in range(c)] for y in range(r)]\n\ncount = 0\nfor i in range(r):\n    for j in range(c):\n        matrix[i][j] = message[count]\n        count += 1\n\nfor i in range(c):\n    for j in range(r):\n        print(matrix[j][i], end=\"\")\n    print()"
+}
+2022-04-09 22:41:57.670893 REASON stop
+2022-04-09 22:41:57.671397 test/intro-questions.txt_dir/4810/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4810/solutions.json'

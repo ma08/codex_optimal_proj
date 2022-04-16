@@ -1,0 +1,27 @@
+
+n = int(input())
+
+x = []
+y = []
+
+for i in range(n):
+    a, b = map(int, input().split())
+    x.append(a)
+    y.append(b)
+
+x.sort()
+y.sort()
+
+a = 0
+b = 0
+
+for i in range(n - 1):
+    if x[i] == x[i + 1]:
+        a += 1
+    if y[i] == y[i + 1]:
+        b += 1
+
+if a == n - 1 or b == n - 1:
+    print(0)
+else:
+    print(y[b] - x[a])

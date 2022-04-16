@@ -1,0 +1,11 @@
+# https://atcoder.jp/contests/abc126/tasks/abc126_c
+
+N = int(input())
+A = [int(i) for i in input().split()]
+
+B = [0] * N
+for i in range(1, N):
+    B[A[i - 1]] += 1
+
+for i in range(N):
+    print(B[i])

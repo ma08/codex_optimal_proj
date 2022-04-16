@@ -1,0 +1,92 @@
+2022-04-16 06:20:56.754697 num operations 1
+2022-04-16 06:20:56.754715 size on input set 1
+2022-04-16 06:21:03.495331 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n#!/usr/bin/env python\n#-----Solution-----\n\n#-----Test-----\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n#-----solution-----\n\n#-----test-----\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\n#-----Solution-----#\n\n#-----Test-----#\n"
+    },
+    {
+      "index": 3,
+      "text": "\ndef file(a, b):\n    return a + b\n#-----Solution-----\n\nprint(file(1, 2))\n#-----Test-----\n"
+    },
+    {
+      "index": 4,
+      "text": "\ndef solution(A):\n    # write your code in Python 3.6\n    pass\n#-----Solution-----\n\n#-----Test-----\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\n#-----Solution 1-----\n\n#-----Test 1-----\n\n\n#-----Solution 2-----\n\n#-----Test 2-----\n"
+    },
+    {
+      "index": 6,
+      "text": "\n#-----Solution-----\n\n\n#-----Notes-----\n\n#-----Pseudocode-----\n#-----Test-----\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\n# -----Solution-----\n\n# -----Test-----\n"
+    },
+    {
+      "index": 8,
+      "text": "\n\n#-----Solution-----\n\n\n\n\n#-----Test-----\n"
+    }
+  ],
+  "created": 1650090056,
+  "object": "edit"
+}
+2022-04-16 06:21:03.495677 fix syntax errors 9 ['\n#!/usr/bin/env python\n#-----Solution-----\n\n#-----Test-----\n', '\n\n#-----solution-----\n\n#-----test-----\n', '\n\n#-----Solution-----#\n\n#-----Test-----#\n', '\ndef file(a, b):\n    return a + b\n#-----Solution-----\n\nprint(file(1, 2))\n#-----Test-----\n', '\ndef solution(A):\n    # write your code in Python 3.6\n    pass\n#-----Solution-----\n\n#-----Test-----\n', '\n\n#-----Solution 1-----\n\n#-----Test 1-----\n\n\n#-----Solution 2-----\n\n#-----Test 2-----\n', '\n#-----Solution-----\n\n\n#-----Notes-----\n\n#-----Pseudocode-----\n#-----Test-----\n', '\n\n# -----Solution-----\n\n# -----Test-----\n', '\n\n#-----Solution-----\n\n\n\n\n#-----Test-----\n']
+2022-04-16 06:21:03.495720 size on output set 9
+2022-04-16 06:21:03.495741 num operations 1
+2022-04-16 06:21:03.495748 size on input set 1
+2022-04-16 06:21:19.116182 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, raw_input().split())[1:])\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, raw_input().split())[1:])\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1): # x\n        for j in xrange(1, m+1): # umbrella index\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(j): # umbrella index\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for i in xrange(n):\n        rain.append(map(int, raw_input().split()[1:]))\n    umbrellas = []\n    for i in xrange(m):\n        umbrellas.append(map(int, raw_input().split()[1:]))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(x[0] <= i-1 and i <= x[1] for x in rain): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 3,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, input().split()))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, input().split()))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 4,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 5,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(list(map(lambda x: x[0] <= i-1 and i <= x[1], rain))): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 7,
+      "text": "\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, raw_input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, raw_input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 8,
+      "text": "\ndef get_fatigue(x, rain, umbrellas):\n    if any(map(lambda r: r[0] <= x-1 and x <= r[1], rain)): # raining at i-1\n        min_fatigue = float('inf')\n        for k in xrange(1, len(umbrellas)+1):\n            min_fatigue = min(min_fatigue, dp[x-1][k] + umbrellas[k-1][1])\n        return min_fatigue\n    else:\n        return dp[x-1][len(umbrellas)]\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, raw_input().split()))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, raw_input().split()))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            dp[i][j] = get_fatigue(i, rain, umbrellas[:j])\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650090063,
+  "object": "edit"
+}
+2022-04-16 06:21:19.116546 fix syntax errors 9 ["\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, raw_input().split())[1:])\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, raw_input().split())[1:])\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1): # x\n        for j in xrange(1, m+1): # umbrella index\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(j): # umbrella index\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for i in xrange(n):\n        rain.append(map(int, raw_input().split()[1:]))\n    umbrellas = []\n    for i in xrange(m):\n        umbrellas.append(map(int, raw_input().split()[1:]))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(x[0] <= i-1 and i <= x[1] for x in rain): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, input().split()))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, input().split()))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(list(map(lambda x: x[0] <= i-1 and i <= x[1], rain))): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(list(map(int, raw_input().split())))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(list(map(int, raw_input().split())))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            if any(map(lambda x: x[0] <= i-1 and i <= x[1], rain)): # raining at i-1\n                min_fatigue = float('inf')\n                for k in xrange(1, j+1):\n                    min_fatigue = min(min_fatigue, dp[i-1][k] + umbrellas[k-1][1])\n                dp[i][j] = min_fatigue\n            else:\n                dp[i][j] = dp[i-1][j]\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n", "\ndef get_fatigue(x, rain, umbrellas):\n    if any(map(lambda r: r[0] <= x-1 and x <= r[1], rain)): # raining at i-1\n        min_fatigue = float('inf')\n        for k in xrange(1, len(umbrellas)+1):\n            min_fatigue = min(min_fatigue, dp[x-1][k] + umbrellas[k-1][1])\n        return min_fatigue\n    else:\n        return dp[x-1][len(umbrellas)]\n\ndef main():\n    a, n, m = map(int, raw_input().split())\n    rain = []\n    for _ in xrange(n):\n        rain.append(map(int, raw_input().split()))\n    umbrellas = []\n    for _ in xrange(m):\n        umbrellas.append(map(int, raw_input().split()))\n\n    # dp[i][j]: minimum fatigue at x=i, using umbrellas up to index j\n    dp = [[0] * (m+1) for _ in xrange(a+1)]\n    for i in xrange(1, a+1):\n        for j in xrange(m+1):\n            dp[i][j] = get_fatigue(i, rain, umbrellas[:j])\n    print dp[-1][-1]\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-16 06:21:19.116633 size on output set 8

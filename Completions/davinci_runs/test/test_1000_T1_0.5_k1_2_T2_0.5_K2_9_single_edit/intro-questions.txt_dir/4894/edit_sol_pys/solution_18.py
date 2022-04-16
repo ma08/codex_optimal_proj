@@ -1,0 +1,21 @@
+import os
+
+import sys
+
+def main():
+    with open(os.environ['OUTPUT_PATH'], 'w') as f:
+        n = int(sys.stdin.readline().strip())
+        notes = sys.stdin.readline().strip().split()
+        lines = [l.strip() for l in sys.stdin.readlines()]
+        staff = []
+        for line in lines:
+            staff.append(line.split())
+        for note in notes:
+            if len(note) == 1:
+                staff[ord(note.lower()) - ord('a')].append('*')
+            else:
+                staff[ord(note[0].lower()) - ord('a')].append('*' * int(note[1]))
+        for line in staff:
+            f.write(' '.join(line))
+            f.write('\n')
+main()

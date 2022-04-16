@@ -1,0 +1,98 @@
+2022-04-09 17:57:31.483613 """
+The only difference between problems C1 and C2 is that all values in input of problem C1 are distinct (this condition may be false for problem C2).
+
+You are given a sequence $a$ consisting of $n$ integers.
+
+You are making a sequence of moves. During each move you must take either the leftmost element of the sequence or the rightmost element of the sequence, write it down and remove it from the sequence. Your task is to write down a strictly increasing sequence, and among all such sequences you should take the longest (the length of the sequence is the number of elements in it).
+
+For example, for the sequence $[1, 2, 4, 3, 2]$ the answer is $4$ (you take $1$ and the sequence becomes $[2, 4, 3, 2]$, then you take the rightmost element $2$ and the sequence becomes $[2, 4, 3]$, then you take $3$ and the sequence becomes $[2, 4]$ and then you take $4$ and the sequence becomes $[2]$, the obtained increasing sequence is $[1, 2, 3, 4]$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+In the first line of the output print $k$ — the maximum number of elements in a strictly increasing sequence you can obtain.
+
+In the second line print a string $s$ of length $k$, where the $j$-th character of this string $s_j$ should be 'L' if you take the leftmost element during the $j$-th move and 'R' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+1 2 4 3 2
+
+Output
+4
+LRRR
+
+Input
+7
+1 3 5 6 5 4 2
+
+Output
+6
+LRLRRR
+
+Input
+3
+2 2 2
+
+Output
+1
+R
+
+Input
+4
+1 2 4 3
+
+Output
+4
+LLRR
+
+
+
+-----Note-----
+
+The first example is described in the problem statement.
+"""
+2022-04-09 17:57:31.483643 --------------------------
+2022-04-09 17:58:07.802272 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\n# For C1:\n\n# We can use a stack to store the elements we have taken from the left.\n# The stack will always be sorted in ascending order.\n# If a new element is greater than the top element of the stack,\n# \twe can add it to the stack and increase the length of the sequence by one.\n# Otherwise, we pop elements from the stack until the top element is smaller than the new element.\n# \tAfter that, we add the new element to the stack.\n# This way, we can always maintain a stack with increasing elements.\n# \tIf we take the last element from the right,\n# \t\tthe stack will be empty and we can add the new element to the stack.\n# \tIf we take the last element from the left,\n# \t\tthe stack will be empty and we can add the new element to the stack.\n\n# For C2:\n\n# The solution for C1 is not valid for C2 because the elements may not be distinct.\n# We can use a dictionary to store the number of occurences of each element.\n# We can use a stack to store the elements we have taken from the left.\n# The stack will always be sorted in ascending order.\n# If a new element is greater than the top element of the stack,\n# \twe can add it to the stack and increase the length of the sequence by one.\n# Otherwise, we pop elements from the stack until the top element is smaller than the new element.\n# \tAfter that, we add the new element to the stack.\n# This way, we can always maintain a stack with increasing elements.\n# \tIf we take the last element from the right,\n# \t\twe can check if the element is in the stack.\n# \t\tIf it is, we can remove it from the stack.\n# \t\tOtherwise, we can remove it from the dictionary and add it to the stack.\n# \tIf we take the last element from the left,\n# \t\twe can check if the element is in the stack.\n# \t\tIf it is, we can remove it from the stack.\n# \t\tOtherwise, we can remove it from the dictionary and add it to the stack.\n\n#-----Code-----\n\n# C1:\n\nn = int(input())\na = list(map(int, input().split()))\n\nstack = []\nlength = 0\n\nfor i in range(n):\n\tif (len(stack) == 0):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telif (a[i] > stack[-1]):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telse:\n\t\twhile (len(stack) > 0 and a[i] <= stack[-1]):\n\t\t\tstack.pop()\n\t\tstack.append(a[i])\n\t\tlength += 1\n\nprint(length)\n\nfor i in range(length):\n\tif (i < length / 2):\n\t\tprint(\"L\", end=\"\")\n\telse:\n\t\tprint(\"R\", end=\"\")\n\nprint()\n\n# C2:\n\nn = int(input())\na = list(map(int, input().split()))\n\nd = {}\nstack = []\nlength = 0\n\nfor i in range(n):\n\tif (a[i] not in d):\n\t\td[a[i]] = 1\n\telse:\n\t\td[a[i]] += 1\n\nfor i in range(n):\n\tif (len(stack) == 0):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telif (a[i] > stack[-1]):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telse:\n\t\twhile (len(stack) > 0 and a[i] <= stack[-1]):\n\t\t\tstack.pop()\n\t\tstack.append(a[i])\n\t\tlength += 1\n\nprint(length)\n\nfor i in range(length):\n\tif (i < length / 2):\n\t\tif (a[i] in stack):\n\t\t\tstack.remove(a[i])\n\t\telse:\n\t\t\td[a[i]] -= 1\n\t\t\tstack.append(a[i])\n\t\tprint(\"L\", end=\"\")\n\telse:\n\t\tif (a[n - i - 1] in stack):\n\t\t\tstack.remove(a[n - i - 1])\n\t\telse:\n\t\t\td[a[n - i - 1]] -= 1\n\t\t\tstack.append(a[n - i - 1])\n\t\tprint(\"R\", end=\"\")\n\nprint()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(1)\n    print(\"R\")\nelse:\n    l = [a[0]]\n    r = [a[n-1]]\n    l_i = 1\n    r_i = n-2\n    while l_i < r_i:\n        if a[l_i] > l[-1]:\n            l.append(a[l_i])\n            l_i += 1\n        if a[r_i] > r[-1]:\n            r.append(a[r_i])\n            r_i -= 1\n        if a[l_i] <= l[-1] and a[r_i] <= r[-1]:\n            break\n    if len(l) > len(r):\n        print(len(l))\n        print(\"L\"*len(l))\n    else:\n        print(len(r))\n        print(\"R\"*len(r))"
+    }
+  ],
+  "created": 1649541452,
+  "id": "cmpl-4vDNE8NEK9wHEy13ZwJah0rXdVRHi",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 17:58:07.802651 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\n# For C1:\n\n# We can use a stack to store the elements we have taken from the left.\n# The stack will always be sorted in ascending order.\n# If a new element is greater than the top element of the stack,\n# \twe can add it to the stack and increase the length of the sequence by one.\n# Otherwise, we pop elements from the stack until the top element is smaller than the new element.\n# \tAfter that, we add the new element to the stack.\n# This way, we can always maintain a stack with increasing elements.\n# \tIf we take the last element from the right,\n# \t\tthe stack will be empty and we can add the new element to the stack.\n# \tIf we take the last element from the left,\n# \t\tthe stack will be empty and we can add the new element to the stack.\n\n# For C2:\n\n# The solution for C1 is not valid for C2 because the elements may not be distinct.\n# We can use a dictionary to store the number of occurences of each element.\n# We can use a stack to store the elements we have taken from the left.\n# The stack will always be sorted in ascending order.\n# If a new element is greater than the top element of the stack,\n# \twe can add it to the stack and increase the length of the sequence by one.\n# Otherwise, we pop elements from the stack until the top element is smaller than the new element.\n# \tAfter that, we add the new element to the stack.\n# This way, we can always maintain a stack with increasing elements.\n# \tIf we take the last element from the right,\n# \t\twe can check if the element is in the stack.\n# \t\tIf it is, we can remove it from the stack.\n# \t\tOtherwise, we can remove it from the dictionary and add it to the stack.\n# \tIf we take the last element from the left,\n# \t\twe can check if the element is in the stack.\n# \t\tIf it is, we can remove it from the stack.\n# \t\tOtherwise, we can remove it from the dictionary and add it to the stack.\n\n#-----Code-----\n\n# C1:\n\nn = int(input())\na = list(map(int, input().split()))\n\nstack = []\nlength = 0\n\nfor i in range(n):\n\tif (len(stack) == 0):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telif (a[i] > stack[-1]):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telse:\n\t\twhile (len(stack) > 0 and a[i] <= stack[-1]):\n\t\t\tstack.pop()\n\t\tstack.append(a[i])\n\t\tlength += 1\n\nprint(length)\n\nfor i in range(length):\n\tif (i < length / 2):\n\t\tprint(\"L\", end=\"\")\n\telse:\n\t\tprint(\"R\", end=\"\")\n\nprint()\n\n# C2:\n\nn = int(input())\na = list(map(int, input().split()))\n\nd = {}\nstack = []\nlength = 0\n\nfor i in range(n):\n\tif (a[i] not in d):\n\t\td[a[i]] = 1\n\telse:\n\t\td[a[i]] += 1\n\nfor i in range(n):\n\tif (len(stack) == 0):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telif (a[i] > stack[-1]):\n\t\tstack.append(a[i])\n\t\tlength += 1\n\telse:\n\t\twhile (len(stack) > 0 and a[i] <= stack[-1]):\n\t\t\tstack.pop()\n\t\tstack.append(a[i])\n\t\tlength += 1\n\nprint(length)\n\nfor i in range(length):\n\tif (i < length / 2):\n\t\tif (a[i] in stack):\n\t\t\tstack.remove(a[i])\n\t\telse:\n\t\t\td[a[i]] -= 1\n\t\t\tstack.append(a[i])\n\t\tprint(\"L\", end=\"\")\n\telse:\n\t\tif (a[n - i - 1] in stack):\n\t\t\tstack.remove(a[n - i - 1])\n\t\telse:\n\t\t\td[a[n - i - 1]] -= 1\n\t\t\tstack.append(a[n - i - 1])\n\t\tprint(\"R\", end=\"\")\n\nprint()"
+}
+2022-04-09 17:58:07.802782 REASON stop
+2022-04-09 17:58:07.803246 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(1)\n    print(\"R\")\nelse:\n    l = [a[0]]\n    r = [a[n-1]]\n    l_i = 1\n    r_i = n-2\n    while l_i < r_i:\n        if a[l_i] > l[-1]:\n            l.append(a[l_i])\n            l_i += 1\n        if a[r_i] > r[-1]:\n            r.append(a[r_i])\n            r_i -= 1\n        if a[l_i] <= l[-1] and a[r_i] <= r[-1]:\n            break\n    if len(l) > len(r):\n        print(len(l))\n        print(\"L\"*len(l))\n    else:\n        print(len(r))\n        print(\"R\"*len(r))"
+}
+2022-04-09 17:58:07.803304 REASON stop

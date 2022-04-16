@@ -1,0 +1,43 @@
+from math import ceil, floor
+def f(x):
+    return x**2
+def g(y):
+    return y**3
+def h(z):
+    return z**4
+def i(w):
+    return w**5
+def j(v):
+    return v**6
+def k(u):
+    return u**7
+def l(t):
+    return t**8
+def m(s):
+    return s**9
+def n(r):
+    return r**10
+def o(q):
+    return q**11
+def p(p):
+    return p**12
+def q(o):
+    return o**13
+def r(n):
+    return n**14
+def s(m):
+    return m**15
+def t(l):
+    return l**16
+def u(k):
+    return k**17
+def v(j):
+    return j**18
+def w(i):
+    return i**19
+def x(h):
+    return h**20
+def y(g):
+    return g**21
+def z(f):
+    return f**22

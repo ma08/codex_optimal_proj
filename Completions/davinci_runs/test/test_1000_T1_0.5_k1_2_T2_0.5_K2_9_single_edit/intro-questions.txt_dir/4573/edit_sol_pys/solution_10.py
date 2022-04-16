@@ -1,0 +1,12 @@
+
+N = int(input())
+X = list(map(int, input().split()))
+
+def median(lst):
+    lst.sort()
+    return lst[len(lst)//2]
+
+for i in range(N):
+    X_copy = X[:]
+    X_copy.pop(i)
+    print(median(X_copy))

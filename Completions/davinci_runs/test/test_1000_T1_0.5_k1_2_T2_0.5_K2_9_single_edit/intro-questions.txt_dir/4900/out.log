@@ -1,0 +1,148 @@
+2022-04-09 23:30:21.830781 """
+Somewhere in a mountainous region of the world is a collection of $n$ villages. Connecting these villages to one another is a series of roads, always running directly between two villages and allowing travel in both directions. Due to the treacherous landscape, building these roads is expensive, so the minimum number of roads have been constructed such that each village can reach every other village via a sequence of roads. 
+
+Trade between these villages is very important, since not every village has access to the same supply of natural resources. Many villages produce the same resource, however, so it is useful for villages to know their relative distance to other villages so that they can choose trading partners to minimize overall trading costs. Note that the distance between two villages $a$ and $b$ is the sum of the lengths of the individual roads on the shortest path that connects $a$ and $b$.
+
+A project has been underway to compute the distance between every pair of villages. This information has been incorporated in a table, along with a map that shows the layout of villages and roads that run between them. You have been assigned the task of distributing the table and map to all the villages for the betterment of the regional economy.
+
+Unfortunately, not long after you were given this task, a gust of wind blew the map right out of your hand and into the countryside. Despite your best efforts of searching for it, you have been unable to locate it. You know that you could visit all the villages to reconstruct the map and THEN start distributing the map and table, but this will take twice as long as the original task and the villages will be very displeased with you. You wonder, maybe it’s possible to reconstruct the map given only the table?
+
+-----Input-----
+The first line of input will contain the integer $n$ ($2 \leq n \leq 2500$), the number of villages in this region. The next $n$ lines will contain $n$ integers each. The $j^{\rm th}$ integer of the $i^{\rm th}$ line is the distance from village $i$ to village $j$. All distances are greater than zero unless $i = j$, less than $10^7$, and it is guaranteed that the distance from village $i$ to village $j$ is the same as the distance from village $j$ to village $i$.
+
+-----Output-----
+For each test case, output $n-1$ lines with two integers $u$ and $v$ on each line, indicating that there is a road connecting villages $u$ and $v$ in this region. Assume the villages are numbered from $1$ to $n$. Any solution that outputs the original set of roads will be accepted.
+
+-----Examples-----
+Sample Input:
+4
+0 1 1 2
+1 0 2 3
+1 2 0 3
+2 3 3 0
+Sample Output:
+1 2
+1 3
+1 4
+"""
+2022-04-09 23:30:21.830803 --------------------------
+2022-04-09 23:31:09.654724 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read in the number of villages\n    n = int(input())\n\n    # read in the distances between each pair of villages\n    distances = []\n    for i in range(n):\n        distances.append([int(x) for x in input().split()])\n\n    # find the minimum spanning tree of the graph\n    # the algorithm we use is Prim's algorithm\n    # the algorithm is explained in detail here:\n    # https://en.wikipedia.org/wiki/Prim%27s_algorithm\n    # a good visualization of the algorithm can be found here:\n    # https://www.cs.usfca.edu/~galles/visualization/Prim.html\n\n    # create a list of all the vertices\n    vertices = [i for i in range(n)]\n\n    # the set of vertices that have been visited\n    visited = set()\n\n    # the set of vertices that have not been visited\n    not_visited = set(vertices)\n\n    # the set of edges that have been visited\n    # each edge is represented as a tuple (u, v)\n    # where u is the vertex that is already in the visited set\n    # and v is the vertex that is being added to the visited set\n    edges = []\n\n    # start at vertex 0\n    current_vertex = 0\n\n    # while there are still vertices to visit\n    while len(not_visited) > 0:\n        # add the current vertex to the visited set\n        visited.add(current_vertex)\n        not_visited.remove(current_vertex)\n\n        # find the vertex that is closest to the current vertex\n        # that has not been visited yet\n        min_distance = float(\"inf\")\n        min_vertex = None\n        for vertex in not_visited:\n            if distances[current_vertex][vertex] < min_distance:\n                min_distance = distances[current_vertex][vertex]\n                min_vertex = vertex\n\n        # if a vertex has been found, then add it to the visited set\n        # and add the edge that connects it to the current vertex\n        # to the set of edges\n        if min_vertex is not None:\n            visited.add(min_vertex)\n            not_visited.remove(min_vertex)\n            edges.append((current_vertex, min_vertex))\n\n        # move to the next vertex\n        current_vertex = min_vertex\n\n    # output the edges\n    for edge in edges:\n        print(edge[0] + 1, edge[1] + 1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# read input\nn = int(sys.stdin.readline())\ndistances = []\nfor i in range(n):\n    distances.append([int(x) for x in sys.stdin.readline().split()])\n\n# calculate the minimum spanning tree\nmst = []\nvisited = [False]*n\nvisited[0] = True\nwhile False in visited:\n    min_dist = float('inf')\n    min_i = -1\n    min_j = -1\n    for i in range(n):\n        if visited[i]:\n            for j in range(n):\n                if not visited[j] and distances[i][j] < min_dist:\n                    min_dist = distances[i][j]\n                    min_i = i\n                    min_j = j\n    mst.append((min_i+1, min_j+1))\n    visited[min_j] = True\n\n# print the minimum spanning tree\nfor road in mst:\n    print(road[0], road[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    villages = [list(map(int, sys.stdin.readline().split())) for i in range(n)]\n    roads = []\n    for i in range(1, n):\n        roads.append((i, i+1))\n        villages[i][i+1] = 0\n        villages[i+1][i] = 0\n    for i in range(1, n):\n        for j in range(i+2, n):\n            if villages[i][j] == villages[i][1] + villages[1][j]:\n                roads.append((i, j))\n                villages[i][j] = 0\n                villages[j][i] = 0\n    for road in roads:\n        print(road[0], road[1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn = int(input())\n\tmatrix = []\n\tfor _ in range(n):\n\t\tmatrix.append([int(x) for x in input().split()])\n\tfor i in range(n):\n\t\tfor j in range(i+1, n):\n\t\t\tif matrix[i][j] == 1:\n\t\t\t\tprint(i+1, j+1)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    distances = []\n    for i in range(n):\n        distances.append(list(map(int, sys.stdin.readline().strip().split())))\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                distances[i][j] = 0\n            elif distances[i][j] == 0:\n                distances[i][j] = distances[j][i]\n    for i in range(n):\n        for j in range(n):\n            for k in range(n):\n                distances[j][k] = min(distances[j][k], distances[j][i] + distances[i][k])\n    for i in range(n):\n        for j in range(n):\n            if distances[i][j] == 1:\n                print(i + 1, j + 1)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nclass Node:\n    def __init__(self, val):\n        self.val = val\n        self.children = []\n\nclass Graph:\n    def __init__(self):\n        self.nodes = []\n        self.size = 0\n\n    def add_node(self, val):\n        node = Node(val)\n        self.nodes.append(node)\n        self.size += 1\n\n    def add_edge(self, node1, node2):\n        node1.children.append(node2)\n        node2.children.append(node1)\n\n    def get_node(self, val):\n        for node in self.nodes:\n            if node.val == val:\n                return node\n        return None\n\n    def get_size(self):\n        return self.size\n\n    def get_node_at(self, index):\n        return self.nodes[index]\n\n    def get_nodes(self):\n        return self.nodes\n\ndef get_distance(node1, node2):\n    return math.sqrt((node1.x - node2.x)**2 + (node1.y - node2.y)**2)\n\ndef print_graph(graph):\n    for node in graph.get_nodes():\n        print(node.val, end=\" \")\n        for child in node.children:\n            print(child.val, end=\" \")\n        print()\n\ndef prims(graph):\n    mst = Graph()\n    visited = set()\n    visited.add(graph.get_node_at(0))\n    while len(visited) < graph.get_size():\n        min_edge = None\n        for node in visited:\n            for child in node.children:\n                if child not in visited:\n                    if min_edge is None:\n                        min_edge = (node, child)\n                    elif get_distance(node, child) < get_distance(min_edge[0], min_edge[1]):\n                        min_edge = (node, child)\n        visited.add(min_edge[1])\n        mst.add_node(min_edge[0].val)\n        mst.add_node(min_edge[1].val)\n        mst.add_edge(mst.get_node(min_edge[0].val), mst.get_node(min_edge[1].val))\n    return mst\n\ndef main():\n    n = int(input())\n    graph = Graph()\n    for node in range(n):\n        graph.add_node(node+1)\n    for i in range(n):\n        for j in range(n):\n            if j != i:\n                graph.add_edge(graph.get_node(i+1), graph.get_node(j+1))\n    mst = prims(graph)\n    print_graph(mst)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    dists = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        dists[i] = map(int, sys.stdin.readline().strip().split())\n    \n    # preprocess dists\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                dists[i][j] = min(dists[i][j], dists[i][k] + dists[k][j])\n    \n    # find two nodes that are not adjacent\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if dists[i][j] == dists[i][0] + dists[0][j]:\n                print i + 1, j + 1\n                return\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    distances = []\n    for i in range(n):\n        distances.append(list(map(int, sys.stdin.readline().split())))\n    for i in range(n):\n        for j in range(i+1, n):\n            for k in range(j+1, n):\n                if distances[i][j] == distances[i][k] + distances[k][j]:\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    return\n                if distances[i][j] == distances[i][k] - distances[j][k]:\n                    print(i+1, j+1)\n                    print(k+1, j+1)\n                    print(i+1, k+1)\n                    return\n                if distances[i][j] == distances[k][j] - distances[i][k]:\n                    print(i+1, k+1)\n                    print(i+1, j+1)\n                    print(k+1, j+1)\n                    return\n                if distances[i][j] + distances[i][k] == distances[j][k]:\n                    print(j+1, k+1)\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    return\n                if distances[i][j] + distances[k][j] == distances[i][k]:\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    print(i+1, j+1)\n                    return\n                if distances[i][k] + distances[j][k] == distances[i][j]:\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    return\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649561422,
+  "id": "cmpl-4vIZKDaEkyDA0Utq1B8zmE0mdRDp8",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:31:09.655184 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read in the number of villages\n    n = int(input())\n\n    # read in the distances between each pair of villages\n    distances = []\n    for i in range(n):\n        distances.append([int(x) for x in input().split()])\n\n    # find the minimum spanning tree of the graph\n    # the algorithm we use is Prim's algorithm\n    # the algorithm is explained in detail here:\n    # https://en.wikipedia.org/wiki/Prim%27s_algorithm\n    # a good visualization of the algorithm can be found here:\n    # https://www.cs.usfca.edu/~galles/visualization/Prim.html\n\n    # create a list of all the vertices\n    vertices = [i for i in range(n)]\n\n    # the set of vertices that have been visited\n    visited = set()\n\n    # the set of vertices that have not been visited\n    not_visited = set(vertices)\n\n    # the set of edges that have been visited\n    # each edge is represented as a tuple (u, v)\n    # where u is the vertex that is already in the visited set\n    # and v is the vertex that is being added to the visited set\n    edges = []\n\n    # start at vertex 0\n    current_vertex = 0\n\n    # while there are still vertices to visit\n    while len(not_visited) > 0:\n        # add the current vertex to the visited set\n        visited.add(current_vertex)\n        not_visited.remove(current_vertex)\n\n        # find the vertex that is closest to the current vertex\n        # that has not been visited yet\n        min_distance = float(\"inf\")\n        min_vertex = None\n        for vertex in not_visited:\n            if distances[current_vertex][vertex] < min_distance:\n                min_distance = distances[current_vertex][vertex]\n                min_vertex = vertex\n\n        # if a vertex has been found, then add it to the visited set\n        # and add the edge that connects it to the current vertex\n        # to the set of edges\n        if min_vertex is not None:\n            visited.add(min_vertex)\n            not_visited.remove(min_vertex)\n            edges.append((current_vertex, min_vertex))\n\n        # move to the next vertex\n        current_vertex = min_vertex\n\n    # output the edges\n    for edge in edges:\n        print(edge[0] + 1, edge[1] + 1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:31:09.655247 REASON stop
+2022-04-09 23:31:09.666546 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.666583 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# read input\nn = int(sys.stdin.readline())\ndistances = []\nfor i in range(n):\n    distances.append([int(x) for x in sys.stdin.readline().split()])\n\n# calculate the minimum spanning tree\nmst = []\nvisited = [False]*n\nvisited[0] = True\nwhile False in visited:\n    min_dist = float('inf')\n    min_i = -1\n    min_j = -1\n    for i in range(n):\n        if visited[i]:\n            for j in range(n):\n                if not visited[j] and distances[i][j] < min_dist:\n                    min_dist = distances[i][j]\n                    min_i = i\n                    min_j = j\n    mst.append((min_i+1, min_j+1))\n    visited[min_j] = True\n\n# print the minimum spanning tree\nfor road in mst:\n    print(road[0], road[1])"
+}
+2022-04-09 23:31:09.666679 REASON stop
+2022-04-09 23:31:09.667194 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.667233 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    villages = [list(map(int, sys.stdin.readline().split())) for i in range(n)]\n    roads = []\n    for i in range(1, n):\n        roads.append((i, i+1))\n        villages[i][i+1] = 0\n        villages[i+1][i] = 0\n    for i in range(1, n):\n        for j in range(i+2, n):\n            if villages[i][j] == villages[i][1] + villages[1][j]:\n                roads.append((i, j))\n                villages[i][j] = 0\n                villages[j][i] = 0\n    for road in roads:\n        print(road[0], road[1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:31:09.667301 REASON stop
+2022-04-09 23:31:09.667812 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.667848 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn = int(input())\n\tmatrix = []\n\tfor _ in range(n):\n\t\tmatrix.append([int(x) for x in input().split()])\n\tfor i in range(n):\n\t\tfor j in range(i+1, n):\n\t\t\tif matrix[i][j] == 1:\n\t\t\t\tprint(i+1, j+1)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 23:31:09.667913 REASON stop
+2022-04-09 23:31:09.668370 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.668396 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    distances = []\n    for i in range(n):\n        distances.append(list(map(int, sys.stdin.readline().strip().split())))\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                distances[i][j] = 0\n            elif distances[i][j] == 0:\n                distances[i][j] = distances[j][i]\n    for i in range(n):\n        for j in range(n):\n            for k in range(n):\n                distances[j][k] = min(distances[j][k], distances[j][i] + distances[i][k])\n    for i in range(n):\n        for j in range(n):\n            if distances[i][j] == 1:\n                print(i + 1, j + 1)\n\nmain()"
+}
+2022-04-09 23:31:09.668444 REASON stop
+2022-04-09 23:31:09.668778 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.668808 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nclass Node:\n    def __init__(self, val):\n        self.val = val\n        self.children = []\n\nclass Graph:\n    def __init__(self):\n        self.nodes = []\n        self.size = 0\n\n    def add_node(self, val):\n        node = Node(val)\n        self.nodes.append(node)\n        self.size += 1\n\n    def add_edge(self, node1, node2):\n        node1.children.append(node2)\n        node2.children.append(node1)\n\n    def get_node(self, val):\n        for node in self.nodes:\n            if node.val == val:\n                return node\n        return None\n\n    def get_size(self):\n        return self.size\n\n    def get_node_at(self, index):\n        return self.nodes[index]\n\n    def get_nodes(self):\n        return self.nodes\n\ndef get_distance(node1, node2):\n    return math.sqrt((node1.x - node2.x)**2 + (node1.y - node2.y)**2)\n\ndef print_graph(graph):\n    for node in graph.get_nodes():\n        print(node.val, end=\" \")\n        for child in node.children:\n            print(child.val, end=\" \")\n        print()\n\ndef prims(graph):\n    mst = Graph()\n    visited = set()\n    visited.add(graph.get_node_at(0))\n    while len(visited) < graph.get_size():\n        min_edge = None\n        for node in visited:\n            for child in node.children:\n                if child not in visited:\n                    if min_edge is None:\n                        min_edge = (node, child)\n                    elif get_distance(node, child) < get_distance(min_edge[0], min_edge[1]):\n                        min_edge = (node, child)\n        visited.add(min_edge[1])\n        mst.add_node(min_edge[0].val)\n        mst.add_node(min_edge[1].val)\n        mst.add_edge(mst.get_node(min_edge[0].val), mst.get_node(min_edge[1].val))\n    return mst\n\ndef main():\n    n = int(input())\n    graph = Graph()\n    for node in range(n):\n        graph.add_node(node+1)\n    for i in range(n):\n        for j in range(n):\n            if j != i:\n                graph.add_edge(graph.get_node(i+1), graph.get_node(j+1))\n    mst = prims(graph)\n    print_graph(mst)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:31:09.668906 REASON stop
+2022-04-09 23:31:09.669262 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.669298 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    dists = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        dists[i] = map(int, sys.stdin.readline().strip().split())\n    \n    # preprocess dists\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                dists[i][j] = min(dists[i][j], dists[i][k] + dists[k][j])\n    \n    # find two nodes that are not adjacent\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if dists[i][j] == dists[i][0] + dists[0][j]:\n                print i + 1, j + 1\n                return\n\nmain()"
+}
+2022-04-09 23:31:09.669356 REASON stop
+2022-04-09 23:31:09.669742 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'
+2022-04-09 23:31:09.669764 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    distances = []\n    for i in range(n):\n        distances.append(list(map(int, sys.stdin.readline().split())))\n    for i in range(n):\n        for j in range(i+1, n):\n            for k in range(j+1, n):\n                if distances[i][j] == distances[i][k] + distances[k][j]:\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    return\n                if distances[i][j] == distances[i][k] - distances[j][k]:\n                    print(i+1, j+1)\n                    print(k+1, j+1)\n                    print(i+1, k+1)\n                    return\n                if distances[i][j] == distances[k][j] - distances[i][k]:\n                    print(i+1, k+1)\n                    print(i+1, j+1)\n                    print(k+1, j+1)\n                    return\n                if distances[i][j] + distances[i][k] == distances[j][k]:\n                    print(j+1, k+1)\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    return\n                if distances[i][j] + distances[k][j] == distances[i][k]:\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    print(i+1, j+1)\n                    return\n                if distances[i][k] + distances[j][k] == distances[i][j]:\n                    print(i+1, j+1)\n                    print(i+1, k+1)\n                    print(j+1, k+1)\n                    return\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:31:09.669817 REASON stop
+2022-04-09 23:31:09.670081 test/intro-questions.txt_dir/4900/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4900/solutions.json'

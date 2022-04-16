@@ -1,0 +1,15 @@
+
+
+#Solution:
+
+import sys
+
+def main():
+    s=int(input())
+    print(s,":")
+    for x in range(2,s):
+        for y in range(1,s):
+            if 2*y+x==s and s%(x+y)==0:
+                print(x,",",y) 
+
+main()

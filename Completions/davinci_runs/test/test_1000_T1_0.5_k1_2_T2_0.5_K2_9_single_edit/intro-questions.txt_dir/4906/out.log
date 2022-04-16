@@ -1,0 +1,144 @@
+2022-04-09 23:33:05.121428 """
+Forrest lives in a prehistoric era of “dial-up Internet.” Unlike the fast streaming of today’s broadband era, dial-up connections are only capable of transmitting small amounts of text data at reasonable speeds. Forrest has noticed that his communications typically include repeated characters, and has designed a simple compression scheme based on repeated information. Text data is encoded for transmission, possibly resulting in a much shorter data string, and decoded after transmission to reveal the original data.
+
+The compression scheme is rather simple. When encoding a text string, repeated consecutive characters are replaced by a single instance of that character and the number of occurrences of that character (the character’s run length). Decoding the encoded string results in the original string by repeating each character the number of times encoded by the run length. Forrest calls this encoding scheme run-length encoding. (We don’t think he was actually the first person to invent it, but we haven’t mentioned that to him.)
+
+For example, the string HHHeelllo is encoded as H3e2l3o1. Decoding H3e2l3o1 results in the original string. Forrest has hired you to write an implementation for his run-length encoding algorithm.
+
+-----Input-----
+Input consists of a single line of text. The line starts with a single letter: E for encode or D for decode. This letter is followed by a single space and then a message. The message consists of $1$ to $100$ characters.
+
+Each string to encode contains only upper- and lowercase English letters, underscores, periods, and exclamation points. No consecutive sequence of characters exceeds $9$ repetitions.
+
+Each string to decode has even length. Its characters alternate between the same characters as strings to encode and a single digit between $1$ and $9$, indicating the run length for the preceding character.
+
+-----Output-----
+On an input of E output the run-length encoding of the provided message. On an input of D output the original string corresponding to the given run-length encoding.
+
+-----Examples-----
+Sample Input:
+E HHHeellloWooorrrrlld!!
+Sample Output:
+H3e2l3o1W1o3r4l2d1!2
+"""
+2022-04-09 23:33:05.121455 --------------------------
+2022-04-09 23:33:33.648485 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef encode(string):\n    new_string = \"\"\n    count = 1\n    for i in range(len(string)-1):\n        if string[i] == string[i+1]:\n            count += 1\n        else:\n            new_string += string[i] + str(count)\n            count = 1\n    new_string += string[-1] + str(count)\n    return new_string\n\ndef decode(string):\n    new_string = \"\"\n    for i in range(0, len(string)-1, 2):\n        new_string += string[i] * int(string[i+1])\n    return new_string\n\ndef main():\n    for line in sys.stdin:\n        if line[0] == \"E\":\n            print(encode(line[2:]))\n        else:\n            print(decode(line[2:]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef encode(msg):\n    msg = list(msg)\n    new_msg = \"\"\n    count = 1\n    for i in range(len(msg)):\n        # if i == len(msg) - 1:\n        #     new_msg += msg[i] + str(count)\n        #     break\n        if msg[i] == msg[i + 1]:\n            count += 1\n        else:\n            new_msg += msg[i] + str(count)\n            count = 1\n    return new_msg\n\ndef decode(msg):\n    msg = list(msg)\n    new_msg = \"\"\n    count = \"\"\n    for i in range(len(msg)):\n        if i % 2 == 0:\n            new_msg += msg[i]\n        else:\n            count += msg[i]\n            if i == len(msg) - 1 or msg[i + 1] in \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_!.\":\n                new_msg += msg[i - 1] * int(count)\n                count = \"\"\n    return new_msg\n\ndef main():\n    msg = sys.stdin.readline().strip().split()\n    if msg[0] == \"E\":\n        print(encode(msg[1]))\n    else:\n        print(decode(msg[1]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef decode(message):\n    decoded = \"\"\n    for i in range(0,len(message),2):\n        decoded += message[i]*int(message[i+1])\n    return decoded\n\ndef encode(message):\n    encoded = \"\"\n    prev = \"\"\n    count = 0\n    for i in range(len(message)):\n        if message[i] == prev:\n            count += 1\n        else:\n            if prev != \"\":\n                encoded += prev + str(count)\n            prev = message[i]\n            count = 1\n    encoded += prev + str(count)\n    return encoded\n\ndef main():\n    line = sys.stdin.readline().strip().split()\n    if line[0] == \"E\":\n        print(encode(line[1]))\n    else:\n        print(decode(line[1]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    encoding = sys.stdin.readline().strip().split()\n    if encoding[0] == \"E\":\n        print(encode(encoding[1]))\n    else:\n        print(decode(encoding[1]))\n\ndef encode(string):\n    encoded = \"\"\n    count = 0\n    for i in range(len(string)):\n        count += 1\n        if i == len(string)-1 or string[i] != string[i+1]:\n            encoded += string[i] + str(count)\n            count = 0\n    return encoded\n\ndef decode(string):\n    decoded = \"\"\n    for i in range(len(string)):\n        if i % 2 == 0:\n            decoded += string[i] * int(string[i+1])\n    return decoded\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    input_list = input().split()\n    if input_list[0] == 'E':\n        print(encode(input_list[1]))\n    elif input_list[0] == 'D':\n        print(decode(input_list[1]))\n\n\ndef encode(text):\n    encoded_text = ''\n    cur_char = ''\n    char_count = 0\n    for char in text:\n        if char == cur_char:\n            char_count += 1\n        else:\n            if cur_char != '':\n                encoded_text += cur_char + str(char_count)\n            cur_char = char\n            char_count = 1\n    encoded_text += cur_char + str(char_count)\n    return encoded_text\n\n\ndef decode(text):\n    decoded_text = ''\n    for i in range(0, len(text), 2):\n        decoded_text += text[i]*int(text[i+1])\n    return decoded_text\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # get input\n    input = sys.stdin.readlines()\n    input = [x.strip() for x in input]\n\n    # find out if encoding or decoding\n    if input[0][0] == 'E':\n        encoded = encode(input[0][2:])\n        print(encoded)\n    else:\n        decoded = decode(input[0][2:])\n        print(decoded)\n\ndef encode(string):\n    encoded = ''\n    count = 1\n    for i in range(len(string) - 1):\n        if string[i] == string[i+1]:\n            count += 1\n        else:\n            encoded += string[i] + str(count)\n            count = 1\n    encoded += string[-1] + str(count)\n    return encoded\n\ndef decode(string):\n    decoded = ''\n    for i in range(0, len(string), 2):\n        decoded += string[i] * int(string[i+1])\n    return decoded\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline().strip().split()\n    if input[0] == \"E\":\n        encode(input[1])\n    elif input[0] == \"D\":\n        decode(input[1])\n\ndef encode(string):\n    encoded_string = \"\"\n    count = 1\n    for i in range(1, len(string)):\n        if string[i] == string[i-1]:\n            count += 1\n        else:\n            encoded_string += string[i-1] + str(count)\n            count = 1\n    encoded_string += string[-1] + str(count)\n    print(encoded_string)\n\ndef decode(string):\n    decoded_string = \"\"\n    for i in range(0, len(string), 2):\n        decoded_string += string[i] * int(string[i+1])\n    print(decoded_string)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef encode(string):\n    encoded = \"\"\n    prev = string[0]\n    count = 0\n    for c in string:\n        if c == prev:\n            count += 1\n        else:\n            encoded += prev + str(count)\n            prev = c\n            count = 1\n    encoded += prev + str(count)\n    return encoded\n\ndef decode(string):\n    decoded = \"\"\n    for i in range(0, len(string), 2):\n        decoded += string[i]*int(string[i+1])\n    return decoded\n\ndef main():\n    line = sys.stdin.readline().strip()\n    if line[0] == \"E\":\n        print(encode(line[2:]))\n    else:\n        print(decode(line[2:]))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649561585,
+  "id": "cmpl-4vIbxuLhjdFTFFpWDp1At0drvsYD5",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:33:33.648758 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef encode(string):\n    new_string = \"\"\n    count = 1\n    for i in range(len(string)-1):\n        if string[i] == string[i+1]:\n            count += 1\n        else:\n            new_string += string[i] + str(count)\n            count = 1\n    new_string += string[-1] + str(count)\n    return new_string\n\ndef decode(string):\n    new_string = \"\"\n    for i in range(0, len(string)-1, 2):\n        new_string += string[i] * int(string[i+1])\n    return new_string\n\ndef main():\n    for line in sys.stdin:\n        if line[0] == \"E\":\n            print(encode(line[2:]))\n        else:\n            print(decode(line[2:]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:33.648785 REASON stop
+2022-04-09 23:33:33.649680 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.649717 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef encode(msg):\n    msg = list(msg)\n    new_msg = \"\"\n    count = 1\n    for i in range(len(msg)):\n        # if i == len(msg) - 1:\n        #     new_msg += msg[i] + str(count)\n        #     break\n        if msg[i] == msg[i + 1]:\n            count += 1\n        else:\n            new_msg += msg[i] + str(count)\n            count = 1\n    return new_msg\n\ndef decode(msg):\n    msg = list(msg)\n    new_msg = \"\"\n    count = \"\"\n    for i in range(len(msg)):\n        if i % 2 == 0:\n            new_msg += msg[i]\n        else:\n            count += msg[i]\n            if i == len(msg) - 1 or msg[i + 1] in \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_!.\":\n                new_msg += msg[i - 1] * int(count)\n                count = \"\"\n    return new_msg\n\ndef main():\n    msg = sys.stdin.readline().strip().split()\n    if msg[0] == \"E\":\n        print(encode(msg[1]))\n    else:\n        print(decode(msg[1]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:33.649832 REASON stop
+2022-04-09 23:33:33.650278 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.650311 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef decode(message):\n    decoded = \"\"\n    for i in range(0,len(message),2):\n        decoded += message[i]*int(message[i+1])\n    return decoded\n\ndef encode(message):\n    encoded = \"\"\n    prev = \"\"\n    count = 0\n    for i in range(len(message)):\n        if message[i] == prev:\n            count += 1\n        else:\n            if prev != \"\":\n                encoded += prev + str(count)\n            prev = message[i]\n            count = 1\n    encoded += prev + str(count)\n    return encoded\n\ndef main():\n    line = sys.stdin.readline().strip().split()\n    if line[0] == \"E\":\n        print(encode(line[1]))\n    else:\n        print(decode(line[1]))\n\nmain()"
+}
+2022-04-09 23:33:33.650382 REASON stop
+2022-04-09 23:33:33.650839 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.650882 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    encoding = sys.stdin.readline().strip().split()\n    if encoding[0] == \"E\":\n        print(encode(encoding[1]))\n    else:\n        print(decode(encoding[1]))\n\ndef encode(string):\n    encoded = \"\"\n    count = 0\n    for i in range(len(string)):\n        count += 1\n        if i == len(string)-1 or string[i] != string[i+1]:\n            encoded += string[i] + str(count)\n            count = 0\n    return encoded\n\ndef decode(string):\n    decoded = \"\"\n    for i in range(len(string)):\n        if i % 2 == 0:\n            decoded += string[i] * int(string[i+1])\n    return decoded\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:33:33.650953 REASON stop
+2022-04-09 23:33:33.651294 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.651336 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    input_list = input().split()\n    if input_list[0] == 'E':\n        print(encode(input_list[1]))\n    elif input_list[0] == 'D':\n        print(decode(input_list[1]))\n\n\ndef encode(text):\n    encoded_text = ''\n    cur_char = ''\n    char_count = 0\n    for char in text:\n        if char == cur_char:\n            char_count += 1\n        else:\n            if cur_char != '':\n                encoded_text += cur_char + str(char_count)\n            cur_char = char\n            char_count = 1\n    encoded_text += cur_char + str(char_count)\n    return encoded_text\n\n\ndef decode(text):\n    decoded_text = ''\n    for i in range(0, len(text), 2):\n        decoded_text += text[i]*int(text[i+1])\n    return decoded_text\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:33.651416 REASON stop
+2022-04-09 23:33:33.651806 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.651839 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # get input\n    input = sys.stdin.readlines()\n    input = [x.strip() for x in input]\n\n    # find out if encoding or decoding\n    if input[0][0] == 'E':\n        encoded = encode(input[0][2:])\n        print(encoded)\n    else:\n        decoded = decode(input[0][2:])\n        print(decoded)\n\ndef encode(string):\n    encoded = ''\n    count = 1\n    for i in range(len(string) - 1):\n        if string[i] == string[i+1]:\n            count += 1\n        else:\n            encoded += string[i] + str(count)\n            count = 1\n    encoded += string[-1] + str(count)\n    return encoded\n\ndef decode(string):\n    decoded = ''\n    for i in range(0, len(string), 2):\n        decoded += string[i] * int(string[i+1])\n    return decoded\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:33.651902 REASON stop
+2022-04-09 23:33:33.652292 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.652332 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline().strip().split()\n    if input[0] == \"E\":\n        encode(input[1])\n    elif input[0] == \"D\":\n        decode(input[1])\n\ndef encode(string):\n    encoded_string = \"\"\n    count = 1\n    for i in range(1, len(string)):\n        if string[i] == string[i-1]:\n            count += 1\n        else:\n            encoded_string += string[i-1] + str(count)\n            count = 1\n    encoded_string += string[-1] + str(count)\n    print(encoded_string)\n\ndef decode(string):\n    decoded_string = \"\"\n    for i in range(0, len(string), 2):\n        decoded_string += string[i] * int(string[i+1])\n    print(decoded_string)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:33:33.652396 REASON stop
+2022-04-09 23:33:33.652795 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'
+2022-04-09 23:33:33.652831 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef encode(string):\n    encoded = \"\"\n    prev = string[0]\n    count = 0\n    for c in string:\n        if c == prev:\n            count += 1\n        else:\n            encoded += prev + str(count)\n            prev = c\n            count = 1\n    encoded += prev + str(count)\n    return encoded\n\ndef decode(string):\n    decoded = \"\"\n    for i in range(0, len(string), 2):\n        decoded += string[i]*int(string[i+1])\n    return decoded\n\ndef main():\n    line = sys.stdin.readline().strip()\n    if line[0] == \"E\":\n        print(encode(line[2:]))\n    else:\n        print(decode(line[2:]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:33:33.652902 REASON stop
+2022-04-09 23:33:33.653361 test/intro-questions.txt_dir/4906/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4906/solutions.json'

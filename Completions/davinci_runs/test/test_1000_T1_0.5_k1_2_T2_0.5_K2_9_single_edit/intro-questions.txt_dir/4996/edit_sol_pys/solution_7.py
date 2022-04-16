@@ -1,0 +1,16 @@
+from sys import stdin
+
+
+message = stdin.readline().rstrip('\n')
+key = stdin.readline().rstrip('\n')
+
+decrypted = []
+
+for i in range(len(message)):
+    shift = ord(key[i]) - 65
+    if i % 2 == 0:
+        decrypted.append(chr((ord(message[i]) - shift - 65) % 26 + 65))
+    else:
+        decrypted.append(chr((ord(message[i]) + shift - 65) % 26 + 65))
+
+print(''.join(decrypted))

@@ -1,0 +1,17 @@
+
+
+import sys
+
+def main():
+    N = int(sys.stdin.readline())
+    rods = []
+    for i in range(N):
+        rods.append(int(sys.stdin.readline()))
+    rods.sort()
+    while len(rods) > 1:
+        rods.append(rods.pop() + rods.pop())
+        rods.sort()
+    print(rods[0])
+
+if __name__ == '__main__':
+    main()

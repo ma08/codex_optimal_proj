@@ -1,0 +1,14 @@
+
+
+n = int(input()) # the number of numbers
+recited = [] # the numbers recited
+
+for i in range(n):
+    recited.append(int(input())) # add the number to the list
+
+for i in range(1, recited[-1] + 1):
+    if i not in recited:
+        print(i)
+
+if len(recited) == recited[-1]:
+    print("good job")

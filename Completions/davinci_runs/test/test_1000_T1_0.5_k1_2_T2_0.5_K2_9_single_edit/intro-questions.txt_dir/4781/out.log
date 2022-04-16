@@ -1,0 +1,157 @@
+2022-04-09 22:20:22.563172 """
+Croatia’s national television programme is broadcasting an entertainment show titled “I Love Croatia”, modeled on the licensed format I love my country. In this show two teams of celebrities and public figures play various games which require knowledge about Croatia. One of the games is Happy Birthday, which will be used in this task, although somewhat altered.
+
+Eight players numbered one through eight are seated in a circle (see picture). One of them is holding a box which will explode after 3 minutes and 30 seconds from the beginning of the game when some colorful confetti will be blown out. The game begins with a question to the player holding the box. If the players answers incorrectly or skips the question, he is immediately given the next question. If the player answers correctly, he passes the box to the first player seated on his left and then that player gets the next question.
+
+You are given the numbered label of the player who has the box in the beginning and the outcomes of the first $N$ questions asked. Determine the numbered label of the player who had the box when it finally exploded. The question outcome is described with the following data - time passed from the beginning of the question being asked to the moment an answer was given and whether the answer was true (“T”), false (“N”) or skipped (“P”). The time between giving the answer and asking the next question shouldn’t be taken into consideration, as well as time necessary for the box to be passed to the next player. The box will surely explode on a player’s turn.
+
+-----Input-----
+The first line of input contains a positive integer $K$ ($1 \leq K \leq 8$), the numbered label of the player who has the box initially. The second line of input contains a positive integer $N$ ($1 \leq N \leq 100$), the number of questions asked during the game. Each of the following $N$ lines contains a positive integer $T$ ($1 \leq T \leq 100$), time passed from the beginning of the $i$-th question being asked to the moment an answer was given, measured in seconds, and a single character $Z$ (“T”, “N” or “P”), the type of answer given.
+
+-----Output-----
+The first and only line of output must contain the numbered label of the player who had the box when it finally exploded.
+
+-----Examples-----
+Sample Input 1:
+1
+5
+20 T
+50 T
+80 T
+50 T
+30 T
+Sample Output 1:
+5
+
+Sample Input 2:
+3
+5
+100 T
+100 N
+100 T
+100 T
+100 N
+Sample Output 2:
+4
+"""
+2022-04-09 22:20:22.563211 --------------------------
+2022-04-09 22:20:51.352628 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    k = int(input())\n    n = int(input())\n\n    for _ in range(n):\n        t, z = input().split()\n        t, z = int(t), z\n        if z == 'T':\n            k = (k + 1) % 8\n        elif z == 'N':\n            k = (k + 7) % 8\n        else:\n            k = (k + 6) % 8\n\n    print(k)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tk = int(sys.stdin.readline().strip())\n\tn = int(sys.stdin.readline().strip())\n\tl = []\n\tfor i in range(n):\n\t\tl.append(sys.stdin.readline().strip().split())\n\t\tl[i][0] = int(l[i][0])\n\t\tl[i][1] = str(l[i][1])\n\tcurr = k\n\tfor i in range(n):\n\t\tif l[i][1] == \"T\":\n\t\t\tcurr = (curr+1)%8\n\t\telif l[i][1] == \"N\":\n\t\t\tcurr = (curr-1)%8\n\t\tif l[i][0] > 210:\n\t\t\tbreak\n\tprint(curr)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if (t + k) % 8 == 0:\n        k = 8\n    else:\n        k = (t + k) % 8\n\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nK = int(input())\nN = int(input())\n\nfor i in range(N):\n    T, Z = input().split()\n    T = int(T)\n    if Z == \"T\":\n        K = (K % 8) + 1\n    elif Z == \"N\":\n        K = K\n    elif Z == \"P\":\n        K = (K % 8) + 1\n\nprint(K)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nk = int(input())\nn = int(input())\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if t > 210:\n        break\n    if z == \"T\":\n        k = (k + 1) % 8\n    if z == \"N\":\n        k = (k - 1) % 8\nprint(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Read input\n    player = int(input())\n    num_questions = int(input())\n    questions = []\n    for i in range(num_questions):\n        questions.append(input().split())\n    \n    # Solve\n    for question in questions:\n        player = (player % 8) + 1\n        if question[1] == \"T\":\n            player = (player % 8) + 1\n        elif question[1] == \"N\":\n            pass\n        elif question[1] == \"P\":\n            pass\n        else:\n            print(\"Error: invalid question response\")\n            exit()\n\n    # Output\n    print(player)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Get input\n    player = int(input())\n    num_questions = int(input())\n\n    # Get the answers\n    answers = [input().split() for _ in range(num_questions)]\n\n    # Get the time limit\n    time_limit = 3 * 60 + 30\n\n    # Get the player who has the box initially\n    current_player = player\n\n    # Iterate through the answers\n    for time, answer in answers:\n        # Check if the time limit is reached\n        if int(time) > time_limit:\n            break\n        # Check if the answer is correct\n        if answer == \"T\":\n            # Pass the box to the next player\n            current_player = (current_player + 1) % 8 or 8\n        # Check if the answer is incorrect\n        elif answer == \"N\":\n            # Skip to the next question\n            continue\n        # Check if the answer is skipped\n        elif answer == \"P\":\n            # Pass the box to the next player\n            current_player = (current_player + 1) % 8 or 8\n            # Skip to the next question\n            continue\n\n    # Print the answer\n    print(current_player)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nk, n = map(int, input().split())\nplayers = [False for i in range(8)]\nplayers[k-1] = True\nfor i in range(n):\n    time, ans = map(str, input().split())\n    time = int(time)\n    if ans == 'T':\n        pass\n    elif ans == 'N':\n        players = [False for i in range(8)]\n    elif ans == 'P':\n        players = [False for i in range(8)]\n        players[(k-1+1)%8] = True\n    if time >= 210:\n        print(players.index(True)+1)\n        break\n    else:\n        players = [False for i in range(8)]\n        players[(players.index(True)+1)%8] = True"
+    }
+  ],
+  "created": 1649557223,
+  "id": "cmpl-4vHTbicqQN4YF36EZ5MfNJ9OI2YSK",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:20:51.353169 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    k = int(input())\n    n = int(input())\n\n    for _ in range(n):\n        t, z = input().split()\n        t, z = int(t), z\n        if z == 'T':\n            k = (k + 1) % 8\n        elif z == 'N':\n            k = (k + 7) % 8\n        else:\n            k = (k + 6) % 8\n\n    print(k)\n\nmain()"
+}
+2022-04-09 22:20:51.353333 REASON stop
+2022-04-09 22:20:51.354312 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.354323 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tk = int(sys.stdin.readline().strip())\n\tn = int(sys.stdin.readline().strip())\n\tl = []\n\tfor i in range(n):\n\t\tl.append(sys.stdin.readline().strip().split())\n\t\tl[i][0] = int(l[i][0])\n\t\tl[i][1] = str(l[i][1])\n\tcurr = k\n\tfor i in range(n):\n\t\tif l[i][1] == \"T\":\n\t\t\tcurr = (curr+1)%8\n\t\telif l[i][1] == \"N\":\n\t\t\tcurr = (curr-1)%8\n\t\tif l[i][0] > 210:\n\t\t\tbreak\n\tprint(curr)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 22:20:51.354386 REASON stop
+2022-04-09 22:20:51.354736 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.354767 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if (t + k) % 8 == 0:\n        k = 8\n    else:\n        k = (t + k) % 8\n\nprint(k)"
+}
+2022-04-09 22:20:51.354814 REASON stop
+2022-04-09 22:20:51.355181 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.355214 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nK = int(input())\nN = int(input())\n\nfor i in range(N):\n    T, Z = input().split()\n    T = int(T)\n    if Z == \"T\":\n        K = (K % 8) + 1\n    elif Z == \"N\":\n        K = K\n    elif Z == \"P\":\n        K = (K % 8) + 1\n\nprint(K)"
+}
+2022-04-09 22:20:51.355262 REASON stop
+2022-04-09 22:20:51.355605 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.355643 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nk = int(input())\nn = int(input())\nfor i in range(n):\n    t, z = input().split()\n    t = int(t)\n    if t > 210:\n        break\n    if z == \"T\":\n        k = (k + 1) % 8\n    if z == \"N\":\n        k = (k - 1) % 8\nprint(k)"
+}
+2022-04-09 22:20:51.355688 REASON stop
+2022-04-09 22:20:51.356008 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.356034 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Read input\n    player = int(input())\n    num_questions = int(input())\n    questions = []\n    for i in range(num_questions):\n        questions.append(input().split())\n    \n    # Solve\n    for question in questions:\n        player = (player % 8) + 1\n        if question[1] == \"T\":\n            player = (player % 8) + 1\n        elif question[1] == \"N\":\n            pass\n        elif question[1] == \"P\":\n            pass\n        else:\n            print(\"Error: invalid question response\")\n            exit()\n\n    # Output\n    print(player)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:20:51.356082 REASON stop
+2022-04-09 22:20:51.356562 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.356596 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Get input\n    player = int(input())\n    num_questions = int(input())\n\n    # Get the answers\n    answers = [input().split() for _ in range(num_questions)]\n\n    # Get the time limit\n    time_limit = 3 * 60 + 30\n\n    # Get the player who has the box initially\n    current_player = player\n\n    # Iterate through the answers\n    for time, answer in answers:\n        # Check if the time limit is reached\n        if int(time) > time_limit:\n            break\n        # Check if the answer is correct\n        if answer == \"T\":\n            # Pass the box to the next player\n            current_player = (current_player + 1) % 8 or 8\n        # Check if the answer is incorrect\n        elif answer == \"N\":\n            # Skip to the next question\n            continue\n        # Check if the answer is skipped\n        elif answer == \"P\":\n            # Pass the box to the next player\n            current_player = (current_player + 1) % 8 or 8\n            # Skip to the next question\n            continue\n\n    # Print the answer\n    print(current_player)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:20:51.356648 REASON stop
+2022-04-09 22:20:51.357021 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'
+2022-04-09 22:20:51.357053 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nk, n = map(int, input().split())\nplayers = [False for i in range(8)]\nplayers[k-1] = True\nfor i in range(n):\n    time, ans = map(str, input().split())\n    time = int(time)\n    if ans == 'T':\n        pass\n    elif ans == 'N':\n        players = [False for i in range(8)]\n    elif ans == 'P':\n        players = [False for i in range(8)]\n        players[(k-1+1)%8] = True\n    if time >= 210:\n        print(players.index(True)+1)\n        break\n    else:\n        players = [False for i in range(8)]\n        players[(players.index(True)+1)%8] = True"
+}
+2022-04-09 22:20:51.357113 REASON stop
+2022-04-09 22:20:51.357438 test/intro-questions.txt_dir/4781/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4781/solutions.json'

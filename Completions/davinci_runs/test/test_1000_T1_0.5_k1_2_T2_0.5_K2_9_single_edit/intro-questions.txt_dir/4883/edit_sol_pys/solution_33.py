@@ -1,0 +1,31 @@
+
+
+import sys
+
+def main():
+    lines = sys.stdin.readlines()
+    m = int(lines[0].split()[0])  # number of translations
+    n = int(lines[0].split()[1])  # number of words
+    translations = {}
+    for i in range(1, m + 1):
+        translations[lines[i][0]] = lines[i][2]  # first character
+        translations[lines[i][2]] = lines[i][0]  # second character
+    for i in range(m + 1, m + 1 + n):
+        word1 = lines[i].split()[0]
+        word2 = lines[i].split()[1]
+        if len(word1) != len(word2):
+            print("no")
+            continue
+        else:
+            for j in range(len(word1)):
+                if word1[j] != word2[j]:
+                    # Try to translate
+                    if word1[j] in translations and translations[word1[j]] == word2[j]:
+                        continue
+                    else:
+                        print("no")
+                        break
+            else:
+                print("yes")
+
+main()

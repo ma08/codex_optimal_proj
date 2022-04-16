@@ -1,0 +1,10 @@
+
+import sys
+
+if __name__ == "__main__":
+    a, b, c = map(int, sys.stdin.readline().split())
+
+    if a == 5 and b == 7 and c == 5:
+        print("YES")
+    else:
+        print("NO")
