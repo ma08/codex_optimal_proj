@@ -1,0 +1,156 @@
+2022-04-09 23:37:46.421722 """
+To determine the efficacy of a vaccine against a disease, a clinical trial is needed. Some participants are given the real vaccine, while others are given a placebo as the control group. The participants are tracked to determine if they are infected by three different strains (A, B, and C) of a virus. The efficacy of the vaccine against infection by a particular strain is simply the percentage reduction of the infection rate of the vaccinated group compared to the control group.
+
+For example, suppose that there are $40$ people in the vaccinated group, $8$ of which are infected by strain B. Then the infection rate is $20$%. Further suppose that $50$ people are in the control group, and $30$ people are infected by strain B. Then the infection rate for the control group is $60$%. Thus the vaccine efficacy against infection is approximately $66.67$% (since $20$% is a $66.67$% percentage reduction of $60$%). If the infection rate for a particular strain in the vaccinated group is not lower than that of the control group, the vaccine is not effective against infection by that strain.
+
+What is the vaccine efficacy against infection by the three strains?
+
+-----Input-----
+The first line of input contains an integer $N$ ($2 \leq N \leq 10000$) containing the number of participants in the clinical trial.
+
+The next $N$ lines describe the participants. Each of these lines contains a string of length four. Each letter is either ‘Y’ or ‘N’. The first letter indicates whether the participant is vaccinated with the real vaccine, and the remaining three letters indicate whether the participant is infected by strain A, B, and C, respectively.
+
+There is at least one participant in the vaccinated group and the control group. There is at least one participant in the control group infected by each strain (but they may be different participants).
+
+-----Output-----
+Display the vaccine efficacy against infection by strain A, B, and C in that order. If the vaccine is not effective against infection by a particular strain, display Not Effective for that strain instead. Answers with an absolute error or relative error of at most $10^{-2}$ will be accepted.
+
+-----Examples-----
+Sample Input:
+10
+NYNY
+NNYY
+NYYY
+NYYN
+NNNY
+YYNN
+YYYN
+YYNY
+YYNN
+YYNY
+Sample Output:
+Not Effective
+66.666667
+50.000000
+"""
+2022-04-09 23:37:46.421741 --------------------------
+2022-04-09 23:38:22.510647 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nvaccinated = []\ncontrol = []\n\nfor i in range(n):\n    line = input()\n    if line[0] == 'Y':\n        vaccinated.append(line)\n    else:\n        control.append(line)\n\nstrains = ['A', 'B', 'C']\n\nfor strain in strains:\n    count = 0\n    for person in vaccinated:\n        if person[strains.index(strain) + 1] == 'Y':\n            count += 1\n    if count == 0:\n        print(\"Not Effective\")\n        continue\n    rate = count / len(vaccinated)\n    count = 0\n    for person in control:\n        if person[strains.index(strain) + 1] == 'Y':\n            count += 1\n    if count == 0:\n        print(\"Not Effective\")\n        continue\n    rate2 = count / len(control)\n    print(100 - rate / rate2 * 100)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nvaccinated, control = [], []\n\nfor line in sys.stdin:\n    if line.startswith('N'):\n        control.append(line)\n    else:\n        vaccinated.append(line)\n\ninfected = {'A': 0, 'B': 0, 'C': 0}\nfor line in control:\n    for i in range(1, 4):\n        if line[i] == 'Y':\n            infected[chr(ord('A') + i - 1)] += 1\n\nfor line in vaccinated:\n    for i in range(1, 4):\n        if line[i] == 'Y':\n            infected[chr(ord('A') + i - 1)] -= 1\n\nfor i in range(3):\n    print('Not Effective' if infected[chr(ord('A') + i)] >= 0 else '{:.6f}'.format(infected[chr(ord('A') + i)] / len(control) * 100))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read the input\n    N = int(sys.stdin.readline())\n    control = []\n    vaccine = []\n    for i in range(N):\n        line = sys.stdin.readline().strip()\n        if line[0] == 'Y':\n            vaccine.append(line[1:])\n        else:\n            control.append(line[1:])\n    \n    # Find the number of infected people in the control and vaccine groups\n    control_infections = [0, 0, 0]\n    vaccine_infections = [0, 0, 0]\n    for i in range(len(control)):\n        for j in range(3):\n            if control[i][j] == 'Y':\n                control_infections[j] += 1\n    for i in range(len(vaccine)):\n        for j in range(3):\n            if vaccine[i][j] == 'Y':\n                vaccine_infections[j] += 1\n    \n    # Calculate the percentage of infected people in the control and vaccine groups\n    control_percent = [x / len(control) * 100 for x in control_infections]\n    vaccine_percent = [x / len(vaccine) * 100 for x in vaccine_infections]\n    \n    # Calculate the efficacy\n    efficacy = [0, 0, 0]\n    for i in range(3):\n        if control_percent[i] == 0:\n            efficacy[i] = 'Not Effective'\n        else:\n            efficacy[i] = 100 - vaccine_percent[i] / control_percent[i] * 100\n    \n    # Output the result\n    for i in range(3):\n        print(efficacy[i])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nvaccinated = [0,0,0]\ncontrol = [0,0,0]\n\nfor i in range(N):\n    line = input()\n    if line[0] == 'Y':\n        vaccinated[0] += 1\n        if line[1] == 'Y':\n            vaccinated[1] += 1\n        if line[2] == 'Y':\n            vaccinated[2] += 1\n        if line[3] == 'Y':\n            vaccinated[3] += 1\n    else:\n        control[0] += 1\n        if line[1] == 'Y':\n            control[1] += 1\n        if line[2] == 'Y':\n            control[2] += 1\n        if line[3] == 'Y':\n            control[3] += 1\n\nprint(format((vaccinated[1]/vaccinated[0])/(control[1]/control[0])*100, '.6f'))\nprint(format((vaccinated[2]/vaccinated[0])/(control[2]/control[0])*100, '.6f'))\nprint(format((vaccinated[3]/vaccinated[0])/(control[3]/control[0])*100, '.6f'))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nvaccinated = []\nunvaccinated = []\n\nfor i in range(N):\n    temp = input()\n    if temp[0] == 'Y':\n        vaccinated.append(temp)\n    else:\n        unvaccinated.append(temp)\n\nstrains = ['A', 'B', 'C']\nfor i in range(3):\n    infected_v = 0\n    infected_u = 0\n    for j in range(len(vaccinated)):\n        if vaccinated[j][i+1] == 'Y':\n            infected_v += 1\n    for j in range(len(unvaccinated)):\n        if unvaccinated[j][i+1] == 'Y':\n            infected_u += 1\n    if infected_v == 0:\n        print(\"Not Effective\")\n    else:\n        print(100 - (infected_v/len(vaccinated))/(infected_u/len(unvaccinated))*100)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nvaccinated = []\ncontrol = []\n\nfor i in range(N):\n    participant = input()\n    if participant[0] == 'Y':\n        vaccinated.append(participant[1:])\n    else:\n        control.append(participant[1:])\n\ndef efficacy(infection):\n    vaccinated_infection = sum(map(lambda x: x[infection], vaccinated)) / len(vaccinated)\n    control_infection = sum(map(lambda x: x[infection], control)) / len(control)\n    if vaccinated_infection >= control_infection:\n        return 'Not Effective'\n    else:\n        return str((1 - vaccinated_infection/control_infection) * 100)\n\nfor i in range(3):\n    print(efficacy(i))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    vax = [0, 0, 0]\n    ctrl = [0, 0, 0]\n    for i in range(n):\n        line = sys.stdin.readline().strip()\n        if line[0] == 'Y':\n            for j in range(3):\n                if line[j+1] == 'Y':\n                    vax[j] += 1\n        else:\n            for j in range(3):\n                if line[j+1] == 'Y':\n                    ctrl[j] += 1\n    for i in range(3):\n        if ctrl[i] == 0:\n            print(\"Not Effective\")\n        else:\n            print(\"{:.6f}\".format((vax[i]/ctrl[i])*100))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read input\nnum_participants = int(sys.stdin.readline())\nvaccinated = []\ninfected = []\nfor i in range(num_participants):\n    participant = sys.stdin.readline()\n    vaccinated.append(participant[0])\n    infected.append(participant[1:])\n\n# Calculate vaccine efficacy\nefficacy = []\nfor i in range(3):\n    # Count infected and not infected for each group\n    num_infected_vaccinated = 0\n    num_not_infected_vaccinated = 0\n    num_infected_control = 0\n    num_not_infected_control = 0\n    for j in range(num_participants):\n        if infected[j][i] == 'Y':\n            if vaccinated[j] == 'Y':\n                num_infected_vaccinated += 1\n            else:\n                num_infected_control += 1\n        else:\n            if vaccinated[j] == 'Y':\n                num_not_infected_vaccinated += 1\n            else:\n                num_not_infected_control += 1\n    # Calculate percentage infected for each group\n    percent_infected_vaccinated = num_infected_vaccinated / (num_infected_vaccinated + num_not_infected_vaccinated)\n    percent_infected_control = num_infected_control / (num_infected_control + num_not_infected_control)\n    # Calculate vaccine efficacy\n    if percent_infected_vaccinated < percent_infected_control:\n        efficacy.append(100 - percent_infected_vaccinated / percent_infected_control * 100)\n    else:\n        efficacy.append(\"Not Effective\")\n\n# Print vaccine efficacy\nprint(efficacy[0])\nprint(efficacy[1])\nprint(efficacy[2])"
+    }
+  ],
+  "created": 1649561866,
+  "id": "cmpl-4vIgUSmRC0zp5Y09nGwWOiMmVGfZ1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:38:22.511009 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nvaccinated = []\ncontrol = []\n\nfor i in range(n):\n    line = input()\n    if line[0] == 'Y':\n        vaccinated.append(line)\n    else:\n        control.append(line)\n\nstrains = ['A', 'B', 'C']\n\nfor strain in strains:\n    count = 0\n    for person in vaccinated:\n        if person[strains.index(strain) + 1] == 'Y':\n            count += 1\n    if count == 0:\n        print(\"Not Effective\")\n        continue\n    rate = count / len(vaccinated)\n    count = 0\n    for person in control:\n        if person[strains.index(strain) + 1] == 'Y':\n            count += 1\n    if count == 0:\n        print(\"Not Effective\")\n        continue\n    rate2 = count / len(control)\n    print(100 - rate / rate2 * 100)"
+}
+2022-04-09 23:38:22.511140 REASON stop
+2022-04-09 23:38:22.512427 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.512463 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nvaccinated, control = [], []\n\nfor line in sys.stdin:\n    if line.startswith('N'):\n        control.append(line)\n    else:\n        vaccinated.append(line)\n\ninfected = {'A': 0, 'B': 0, 'C': 0}\nfor line in control:\n    for i in range(1, 4):\n        if line[i] == 'Y':\n            infected[chr(ord('A') + i - 1)] += 1\n\nfor line in vaccinated:\n    for i in range(1, 4):\n        if line[i] == 'Y':\n            infected[chr(ord('A') + i - 1)] -= 1\n\nfor i in range(3):\n    print('Not Effective' if infected[chr(ord('A') + i)] >= 0 else '{:.6f}'.format(infected[chr(ord('A') + i)] / len(control) * 100))"
+}
+2022-04-09 23:38:22.512536 REASON stop
+2022-04-09 23:38:22.513279 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.513314 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Read the input\n    N = int(sys.stdin.readline())\n    control = []\n    vaccine = []\n    for i in range(N):\n        line = sys.stdin.readline().strip()\n        if line[0] == 'Y':\n            vaccine.append(line[1:])\n        else:\n            control.append(line[1:])\n    \n    # Find the number of infected people in the control and vaccine groups\n    control_infections = [0, 0, 0]\n    vaccine_infections = [0, 0, 0]\n    for i in range(len(control)):\n        for j in range(3):\n            if control[i][j] == 'Y':\n                control_infections[j] += 1\n    for i in range(len(vaccine)):\n        for j in range(3):\n            if vaccine[i][j] == 'Y':\n                vaccine_infections[j] += 1\n    \n    # Calculate the percentage of infected people in the control and vaccine groups\n    control_percent = [x / len(control) * 100 for x in control_infections]\n    vaccine_percent = [x / len(vaccine) * 100 for x in vaccine_infections]\n    \n    # Calculate the efficacy\n    efficacy = [0, 0, 0]\n    for i in range(3):\n        if control_percent[i] == 0:\n            efficacy[i] = 'Not Effective'\n        else:\n            efficacy[i] = 100 - vaccine_percent[i] / control_percent[i] * 100\n    \n    # Output the result\n    for i in range(3):\n        print(efficacy[i])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:38:22.513384 REASON stop
+2022-04-09 23:38:22.514074 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.514112 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nvaccinated = [0,0,0]\ncontrol = [0,0,0]\n\nfor i in range(N):\n    line = input()\n    if line[0] == 'Y':\n        vaccinated[0] += 1\n        if line[1] == 'Y':\n            vaccinated[1] += 1\n        if line[2] == 'Y':\n            vaccinated[2] += 1\n        if line[3] == 'Y':\n            vaccinated[3] += 1\n    else:\n        control[0] += 1\n        if line[1] == 'Y':\n            control[1] += 1\n        if line[2] == 'Y':\n            control[2] += 1\n        if line[3] == 'Y':\n            control[3] += 1\n\nprint(format((vaccinated[1]/vaccinated[0])/(control[1]/control[0])*100, '.6f'))\nprint(format((vaccinated[2]/vaccinated[0])/(control[2]/control[0])*100, '.6f'))\nprint(format((vaccinated[3]/vaccinated[0])/(control[3]/control[0])*100, '.6f'))"
+}
+2022-04-09 23:38:22.514183 REASON stop
+2022-04-09 23:38:22.514953 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.514988 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nvaccinated = []\nunvaccinated = []\n\nfor i in range(N):\n    temp = input()\n    if temp[0] == 'Y':\n        vaccinated.append(temp)\n    else:\n        unvaccinated.append(temp)\n\nstrains = ['A', 'B', 'C']\nfor i in range(3):\n    infected_v = 0\n    infected_u = 0\n    for j in range(len(vaccinated)):\n        if vaccinated[j][i+1] == 'Y':\n            infected_v += 1\n    for j in range(len(unvaccinated)):\n        if unvaccinated[j][i+1] == 'Y':\n            infected_u += 1\n    if infected_v == 0:\n        print(\"Not Effective\")\n    else:\n        print(100 - (infected_v/len(vaccinated))/(infected_u/len(unvaccinated))*100)"
+}
+2022-04-09 23:38:22.515070 REASON stop
+2022-04-09 23:38:22.515793 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.515827 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nvaccinated = []\ncontrol = []\n\nfor i in range(N):\n    participant = input()\n    if participant[0] == 'Y':\n        vaccinated.append(participant[1:])\n    else:\n        control.append(participant[1:])\n\ndef efficacy(infection):\n    vaccinated_infection = sum(map(lambda x: x[infection], vaccinated)) / len(vaccinated)\n    control_infection = sum(map(lambda x: x[infection], control)) / len(control)\n    if vaccinated_infection >= control_infection:\n        return 'Not Effective'\n    else:\n        return str((1 - vaccinated_infection/control_infection) * 100)\n\nfor i in range(3):\n    print(efficacy(i))"
+}
+2022-04-09 23:38:22.515896 REASON stop
+2022-04-09 23:38:22.516597 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.516626 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    vax = [0, 0, 0]\n    ctrl = [0, 0, 0]\n    for i in range(n):\n        line = sys.stdin.readline().strip()\n        if line[0] == 'Y':\n            for j in range(3):\n                if line[j+1] == 'Y':\n                    vax[j] += 1\n        else:\n            for j in range(3):\n                if line[j+1] == 'Y':\n                    ctrl[j] += 1\n    for i in range(3):\n        if ctrl[i] == 0:\n            print(\"Not Effective\")\n        else:\n            print(\"{:.6f}\".format((vax[i]/ctrl[i])*100))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:38:22.516695 REASON stop
+2022-04-09 23:38:22.517369 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'
+2022-04-09 23:38:22.517401 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read input\nnum_participants = int(sys.stdin.readline())\nvaccinated = []\ninfected = []\nfor i in range(num_participants):\n    participant = sys.stdin.readline()\n    vaccinated.append(participant[0])\n    infected.append(participant[1:])\n\n# Calculate vaccine efficacy\nefficacy = []\nfor i in range(3):\n    # Count infected and not infected for each group\n    num_infected_vaccinated = 0\n    num_not_infected_vaccinated = 0\n    num_infected_control = 0\n    num_not_infected_control = 0\n    for j in range(num_participants):\n        if infected[j][i] == 'Y':\n            if vaccinated[j] == 'Y':\n                num_infected_vaccinated += 1\n            else:\n                num_infected_control += 1\n        else:\n            if vaccinated[j] == 'Y':\n                num_not_infected_vaccinated += 1\n            else:\n                num_not_infected_control += 1\n    # Calculate percentage infected for each group\n    percent_infected_vaccinated = num_infected_vaccinated / (num_infected_vaccinated + num_not_infected_vaccinated)\n    percent_infected_control = num_infected_control / (num_infected_control + num_not_infected_control)\n    # Calculate vaccine efficacy\n    if percent_infected_vaccinated < percent_infected_control:\n        efficacy.append(100 - percent_infected_vaccinated / percent_infected_control * 100)\n    else:\n        efficacy.append(\"Not Effective\")\n\n# Print vaccine efficacy\nprint(efficacy[0])\nprint(efficacy[1])\nprint(efficacy[2])"
+}
+2022-04-09 23:38:22.517528 REASON stop
+2022-04-09 23:38:22.518277 test/intro-questions.txt_dir/4913/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4913/solutions.json'

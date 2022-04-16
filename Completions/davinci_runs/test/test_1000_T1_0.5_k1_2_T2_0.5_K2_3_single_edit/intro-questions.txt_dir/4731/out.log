@@ -1,0 +1,156 @@
+2022-04-09 21:40:19.009679 """
+The Japanese game of Shiritori is the perfect 2-player game for a long car ride. The rules are simple: the first player picks any word to say, then the second player must choose a new word that begins with the last letter of the word that the first player just said. Then it is the first player’s turn again to say a word that begins with the last letter of the previous word the second player said, and so on. At each turn, the player whose turn it is must say a word that links to the previous one and which has not been called out before during the game. Your job is to determine if the game was played according to these rules, given a history of the words used in a particular game. In a game, player $1$ always starts first.
+
+-----Input-----
+Input consists of one test case that begins with an integer $N$ ($2 \leq N \leq 100000$) on a single line. Each of the following $N$ lines contains $1$ word. The words are presented in the order in which the players called them out, starting with player $1$. All words consist of between $1$ and $120$ lowercase English letters.
+
+-----Output-----
+If the game was played according to the rules, output “Fair Game”. Otherwise, find out which player first violated the rules of the game. That player lost the game, so output “Player <i> lost”. For example, if player $1$ violated the rules first, output “Player 1 lost”.
+
+-----Examples-----
+Sample Input 1:
+5
+apple
+ear
+real
+letters
+style
+Sample Output 1:
+Fair Game
+
+Sample Input 2:
+3
+apple
+extra
+apple
+Sample Output 2:
+Player 1 lost
+
+Sample Input 3:
+2
+apple
+neat
+Sample Output 3:
+Player 2 lost
+"""
+2022-04-09 21:40:19.009703 --------------------------
+2022-04-09 21:40:44.507786 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Get input\nnumWords = int(input())\nwords = []\nfor i in range(numWords):\n    words.append(input())\n\n# Check if the game was played according to the rules\nfairGame = True\nfor i in range(1, numWords):\n    if words[i][0] != words[i-1][-1]:\n        fairGame = False\n        break\n\nif fairGame:\n    print(\"Fair Game\")\nelse:\n    print(\"Player \" + str(i) + \" lost\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    words = []\n    for line in sys.stdin:\n        words.append(line.strip())\n    if len(words) == 1:\n        return\n    elif words[1][0] != words[0][-1]:\n        print('Player 1 lost')\n        return\n    else:\n        for i in range(1, len(words) - 1):\n            if words[i + 1][0] != words[i][-1]:\n                print('Player %d lost' % (i % 2 + 1))\n                return\n    print('Fair Game')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read in the input\n    n = int(sys.stdin.readline())\n    words = []\n    for i in range(n):\n        words.append(sys.stdin.readline().strip())\n    \n    # Check the input to see if the game was played correctly\n    game_played_correctly = True\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1]:\n            game_played_correctly = False\n            break\n    \n    # Output the result\n    if game_played_correctly:\n        print(\"Fair Game\")\n    else:\n        print(\"Player {} lost\".format(i%2 + 1))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef shiritori(words):\n    \"\"\"\n    Returns \"Fair Game\" if the game was played according to the rules,\n    otherwise returns \"Player <i> lost\"\n    \"\"\"\n    words = [word.rstrip() for word in words]\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1]:\n            return \"Player {} lost\".format(i%2+1)\n    return \"Fair Game\"\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    num_words = int(stdin.readline())\n    words = [stdin.readline() for _ in range(num_words)]\n    print(shiritori(words))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input().strip())\n\nif len(words) == len(set(words)):\n    if n == 1:\n        print(\"Fair Game\")\n    elif words[0][-1] == words[1][0]:\n        for i in range(1, n-1):\n            if words[i][-1] != words[i+1][0]:\n                print(\"Player {} lost\".format(i%2 + 1))\n                break\n        else:\n            print(\"Fair Game\")\n    else:\n        print(\"Player 1 lost\")\nelse:\n    for i in range(n-1):\n        if words[i] == words[i+1]:\n            print(\"Player {} lost\".format(i%2 + 1))\n            break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nwords = []\n\nfor i in range(N):\n    words.append(input())\n\nfor i in range(1,N):\n    if words[i][0]!=words[i-1][-1]:\n        print(\"Player \" + str(i%2+1) + \" lost\")\n        exit()\n\nprint(\"Fair Game\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\n\nplayer = 1\nfor i in range(n - 1):\n    if words[i][-1] != words[i + 1][0]:\n        print(\"Player {} lost\".format(player))\n        break\n    if i < n - 2 and words[i + 1] == words[i + 2]:\n        print(\"Player {} lost\".format(player))\n        break\n    player = (player % 2) + 1\nelse:\n    print(\"Fair Game\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\nif len(words) == len(set(words)):\n    if words[0][0] == words[1][-1]:\n        for i in range(1, N - 1):\n            if words[i][-1] == words[i + 1][0]:\n                continue\n            else:\n                print(\"Player\", i + 1, \"lost\")\n                break\n        else:\n            print(\"Fair Game\")\n    else:\n        print(\"Player 1 lost\")\nelse:\n    print(\"Player\", words.index(max(set(words), key=words.count)) + 1, \"lost\")"
+    }
+  ],
+  "created": 1649554819,
+  "id": "cmpl-4vGqp7PqexGvpuOJ01YOScfGXzD19",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:40:44.508024 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Get input\nnumWords = int(input())\nwords = []\nfor i in range(numWords):\n    words.append(input())\n\n# Check if the game was played according to the rules\nfairGame = True\nfor i in range(1, numWords):\n    if words[i][0] != words[i-1][-1]:\n        fairGame = False\n        break\n\nif fairGame:\n    print(\"Fair Game\")\nelse:\n    print(\"Player \" + str(i) + \" lost\")"
+}
+2022-04-09 21:40:44.508049 REASON stop
+2022-04-09 21:40:44.508960 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.509012 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    words = []\n    for line in sys.stdin:\n        words.append(line.strip())\n    if len(words) == 1:\n        return\n    elif words[1][0] != words[0][-1]:\n        print('Player 1 lost')\n        return\n    else:\n        for i in range(1, len(words) - 1):\n            if words[i + 1][0] != words[i][-1]:\n                print('Player %d lost' % (i % 2 + 1))\n                return\n    print('Fair Game')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:40:44.509170 REASON stop
+2022-04-09 21:40:44.510365 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.510444 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Read in the input\n    n = int(sys.stdin.readline())\n    words = []\n    for i in range(n):\n        words.append(sys.stdin.readline().strip())\n    \n    # Check the input to see if the game was played correctly\n    game_played_correctly = True\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1]:\n            game_played_correctly = False\n            break\n    \n    # Output the result\n    if game_played_correctly:\n        print(\"Fair Game\")\n    else:\n        print(\"Player {} lost\".format(i%2 + 1))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:40:44.510649 REASON stop
+2022-04-09 21:40:44.511220 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.511260 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef shiritori(words):\n    \"\"\"\n    Returns \"Fair Game\" if the game was played according to the rules,\n    otherwise returns \"Player <i> lost\"\n    \"\"\"\n    words = [word.rstrip() for word in words]\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1]:\n            return \"Player {} lost\".format(i%2+1)\n    return \"Fair Game\"\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    num_words = int(stdin.readline())\n    words = [stdin.readline() for _ in range(num_words)]\n    print(shiritori(words))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:40:44.511343 REASON stop
+2022-04-09 21:40:44.511653 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.511674 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input().strip())\n\nif len(words) == len(set(words)):\n    if n == 1:\n        print(\"Fair Game\")\n    elif words[0][-1] == words[1][0]:\n        for i in range(1, n-1):\n            if words[i][-1] != words[i+1][0]:\n                print(\"Player {} lost\".format(i%2 + 1))\n                break\n        else:\n            print(\"Fair Game\")\n    else:\n        print(\"Player 1 lost\")\nelse:\n    for i in range(n-1):\n        if words[i] == words[i+1]:\n            print(\"Player {} lost\".format(i%2 + 1))\n            break"
+}
+2022-04-09 21:40:44.511719 REASON stop
+2022-04-09 21:40:44.511860 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.511867 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nwords = []\n\nfor i in range(N):\n    words.append(input())\n\nfor i in range(1,N):\n    if words[i][0]!=words[i-1][-1]:\n        print(\"Player \" + str(i%2+1) + \" lost\")\n        exit()\n\nprint(\"Fair Game\")"
+}
+2022-04-09 21:40:44.511895 REASON stop
+2022-04-09 21:40:44.512020 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.512027 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\n\nplayer = 1\nfor i in range(n - 1):\n    if words[i][-1] != words[i + 1][0]:\n        print(\"Player {} lost\".format(player))\n        break\n    if i < n - 2 and words[i + 1] == words[i + 2]:\n        print(\"Player {} lost\".format(player))\n        break\n    player = (player % 2) + 1\nelse:\n    print(\"Fair Game\")"
+}
+2022-04-09 21:40:44.512051 REASON stop
+2022-04-09 21:40:44.512173 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-09 21:40:44.512180 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\nif len(words) == len(set(words)):\n    if words[0][0] == words[1][-1]:\n        for i in range(1, N - 1):\n            if words[i][-1] == words[i + 1][0]:\n                continue\n            else:\n                print(\"Player\", i + 1, \"lost\")\n                break\n        else:\n            print(\"Fair Game\")\n    else:\n        print(\"Player 1 lost\")\nelse:\n    print(\"Player\", words.index(max(set(words), key=words.count)) + 1, \"lost\")"
+}
+2022-04-09 21:40:44.512202 REASON stop
+2022-04-09 21:40:44.512453 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'

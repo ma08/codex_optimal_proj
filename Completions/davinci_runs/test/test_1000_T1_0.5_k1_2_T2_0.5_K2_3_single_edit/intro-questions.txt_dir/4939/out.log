@@ -1,0 +1,145 @@
+2022-04-09 23:58:07.283474 """
+Daenerys frequently invents games to help teach her second grade Computer Science class about various aspects of the discipline. For this week’s lesson she has the children form a circle and (carefully) throw around a petrified dragon egg.
+
+The $n$ children are numbered from $0$ to $n - 1$ (it is a Computer Science class after all) clockwise around the circle. Child $0$ always starts with the egg. Daenerys will call out one of two things:
+ - a number $t$, indicating that the egg is to be thrown to the child who is $t$ positions clockwise from the current egg holder, wrapping around if necessary. If $t$ is negative, then the throw is to the counter-clockwise direction.
+ - the phrase undo $m$, indicating that the last $m$ throws should be undone. Note that undo commands never undo other undo commands; they just undo commands described in item $1$ above.
+
+For example, if there are $5$ children, and the teacher calls out the four throw commands 8 -2 3 undo 2, the throws will start from child $0$ to child $3$, then from child $3$ to child $1$, then from child $1$ to child $4$. After this, the undo 2 instructions will result in the egg being thrown back from child $4$ to child $1$ and then from child $1$ back to child $3$. If Daenerys calls out $0$ (or $n, -n, 2n, -2n$, etc.) then the child with the egg simply throws it straight up in the air and (carefully) catches it again.
+
+Daenerys would like a little program that determines where the egg should end up if her commands are executed correctly. Don’t ask what happens to the children if this isn’t the case.
+
+-----Input-----
+Input consists of two lines. The first line contains two positive integers $n$$k$ ($1\leq n \leq 30$, $1 \leq k \leq 100$) indicating the number of students and how many throw commands Daenerys calls out, respectively. The following line contains the $k$ throw commands. Each command is either an integer $p$ ($-10000 \leq p \leq 10000$) indicating how many positions to throw the egg clockwise or undo $m$ ($m \geq 1$) indicating that the last $m$ throws should be undone. Daenerys never has the kids undo beyond the start of the game.
+
+-----Output-----
+Display the number of the child with the egg at the end of the game.
+
+-----Examples-----
+Sample Input:
+5 4
+8 -2 3 undo 2
+Sample Output:
+3
+"""
+2022-04-09 23:58:07.283537 --------------------------
+2022-04-09 23:58:55.139481 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#Program starts here\nn, k = map(int, input().split())\ncommands = input().split()\n\negg = 0\n\nfor i in range(len(commands)):\n    if \"undo\" in commands[i]:\n        for j in range(int(commands[i][5:])):\n            if i - j - 1 >= 0:\n                egg -= int(commands[i-j-1])\n            elif i - j - 1 < 0:\n                egg -= int(commands[0])\n    else:\n        egg += int(commands[i])\n\nprint(egg % n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nthrows = input().split()\n\nposition = 0\n\nfor i in range(k):\n    if throws[i] == 'undo':\n        position += int(throws[i+1])\n    else:\n        position += int(throws[i])\n        if position > n-1:\n            position -= n\n        elif position < 0:\n            position += n\n\nprint(position)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    commands = sys.stdin.readline().strip().split()\n    egg = 0\n    for command in commands:\n        if command == 'undo':\n            k -= 1\n            if k == 0:\n                break\n            continue\n        command = int(command)\n        egg = (egg + command) % n\n        if egg < 0:\n            egg += n\n    print(egg)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#Program\nn, k = map(int, input().split())\n\nchildren = [0] * n\n\nchildren[0] = 1\n\nfor i in range(k):\n    command = input()\n    if command[0:4] == \"undo\":\n        command = command.split()\n        for j in range(int(command[1])):\n            children[j] = 0\n    else:\n        command = int(command)\n        if command < 0:\n            children[(command % n) + n] = 1\n        else:\n            children[command % n] = 1\n\nfor i in range(n):\n    if children[i] == 1:\n        print(i)\n        break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nthrows = input().split()\n\ncurrent_student = 0\ncurrent_throw = 0\n\nwhile current_throw < k:\n    if throws[current_throw].isdigit():\n        current_student = (current_student + int(throws[current_throw]) % n) % n\n        current_throw += 1\n    else:\n        m = int(throws[current_throw][5:])\n        for _ in range(m):\n            current_throw -= 1\n            if throws[current_throw].isdigit():\n                current_student = (current_student - int(throws[current_throw]) % n) % n\n            else:\n                m = int(throws[current_throw][5:])\n                for _ in range(m):\n                    current_throw -= 1\n                    current_student = (current_student + int(throws[current_throw]) % n) % n\n\nprint(current_student)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = [int(i) for i in sys.stdin.readline().split()]\n    commands = sys.stdin.readline().split()\n    current_child = 0\n    undo_commands = []\n    for command in commands:\n        if command == 'undo':\n            undo_commands.append(int(commands[commands.index(command)+1]))\n        elif command == '0' or command == '-0':\n            pass\n        else:\n            current_child += int(command)\n    while undo_commands:\n        undo_command = undo_commands.pop()\n        undo_index = commands.index('undo')\n        undo_commands_to_remove = []\n        for i in range(undo_command):\n            undo_index -= 1\n            if commands[undo_index] == 'undo':\n                undo_commands_to_remove.append(undo_index)\n            else:\n                current_child -= int(commands[undo_index])\n        for i in undo_commands_to_remove:\n            commands.pop(i)\n    if current_child < 0:\n        current_child += n\n    elif current_child > n:\n        current_child %= n\n    print(current_child)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    commands = sys.stdin.readline().split()\n    student = 0\n    undo = []\n    for command in commands:\n        if command == \"undo\":\n            student = undo.pop()\n        else:\n            student = (student + int(command)) % n\n            undo.append(student)\n    print(student)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n\n    def insert(self, data):\n        newNode = Node(data)\n        if self.head is None:\n            self.head = newNode\n            return\n\n        lastNode = self.head\n        while lastNode.next is not None:\n            lastNode = lastNode.next\n        lastNode.next = newNode\n\n    def printList(self):\n        currNode = self.head\n        while currNode is not None:\n            print(currNode.data)\n            currNode = currNode.next\n\n    def delete(self, index):\n        currNode = self.head\n        if index == 0:\n            self.head = currNode.next\n            currNode = None\n            return\n\n        prevNode = None\n        count = 0\n        while currNode is not None and count != index:\n            prevNode = currNode\n            currNode = currNode.next\n            count += 1\n\n        if currNode is None:\n            return\n\n        prevNode.next = currNode.next\n        currNode = None\n\n    def length(self):\n        currNode = self.head\n        count = 0\n        while currNode is not None:\n            count += 1\n            currNode = currNode.next\n        return count\n\n    def get(self, index):\n        currNode = self.head\n        count = 0\n        while currNode is not None:\n            if count == index:\n                return currNode.data\n            count += 1\n            currNode = currNode.next\n        return -1\n\n\ndef main():\n    lines = sys.stdin.readlines()\n    n, k = lines[0].split()\n    n, k = int(n), int(k)\n    commands = lines[1].split()\n\n    ll = LinkedList()\n    for i in range(n):\n        ll.insert(i)\n\n    curr_index = 0\n    for i in range(k):\n        command = commands[i]\n        if command == \"undo\":\n            m = int(commands[i+1])\n            for j in range(m):\n                ll.delete(curr_index)\n            i += 1\n            continue\n        else:\n            t = int(command)\n            if t < 0:\n                t = n + t\n            curr_index = (curr_index + t) % ll.length()\n    print(ll.get(curr_index))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649563087,
+  "id": "cmpl-4vJ0BhE1jAzDcf4KwxSb8cGi2p2dp",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:58:55.139970 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#Program starts here\nn, k = map(int, input().split())\ncommands = input().split()\n\negg = 0\n\nfor i in range(len(commands)):\n    if \"undo\" in commands[i]:\n        for j in range(int(commands[i][5:])):\n            if i - j - 1 >= 0:\n                egg -= int(commands[i-j-1])\n            elif i - j - 1 < 0:\n                egg -= int(commands[0])\n    else:\n        egg += int(commands[i])\n\nprint(egg % n)"
+}
+2022-04-09 23:58:55.140024 REASON stop
+2022-04-09 23:58:55.141514 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.141563 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nthrows = input().split()\n\nposition = 0\n\nfor i in range(k):\n    if throws[i] == 'undo':\n        position += int(throws[i+1])\n    else:\n        position += int(throws[i])\n        if position > n-1:\n            position -= n\n        elif position < 0:\n            position += n\n\nprint(position)"
+}
+2022-04-09 23:58:55.141728 REASON stop
+2022-04-09 23:58:55.142620 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.142657 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    commands = sys.stdin.readline().strip().split()\n    egg = 0\n    for command in commands:\n        if command == 'undo':\n            k -= 1\n            if k == 0:\n                break\n            continue\n        command = int(command)\n        egg = (egg + command) % n\n        if egg < 0:\n            egg += n\n    print(egg)\n\nmain()"
+}
+2022-04-09 23:58:55.142721 REASON stop
+2022-04-09 23:58:55.142940 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.142947 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#Program\nn, k = map(int, input().split())\n\nchildren = [0] * n\n\nchildren[0] = 1\n\nfor i in range(k):\n    command = input()\n    if command[0:4] == \"undo\":\n        command = command.split()\n        for j in range(int(command[1])):\n            children[j] = 0\n    else:\n        command = int(command)\n        if command < 0:\n            children[(command % n) + n] = 1\n        else:\n            children[command % n] = 1\n\nfor i in range(n):\n    if children[i] == 1:\n        print(i)\n        break"
+}
+2022-04-09 23:58:55.142967 REASON stop
+2022-04-09 23:58:55.143095 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.143112 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nthrows = input().split()\n\ncurrent_student = 0\ncurrent_throw = 0\n\nwhile current_throw < k:\n    if throws[current_throw].isdigit():\n        current_student = (current_student + int(throws[current_throw]) % n) % n\n        current_throw += 1\n    else:\n        m = int(throws[current_throw][5:])\n        for _ in range(m):\n            current_throw -= 1\n            if throws[current_throw].isdigit():\n                current_student = (current_student - int(throws[current_throw]) % n) % n\n            else:\n                m = int(throws[current_throw][5:])\n                for _ in range(m):\n                    current_throw -= 1\n                    current_student = (current_student + int(throws[current_throw]) % n) % n\n\nprint(current_student)"
+}
+2022-04-09 23:58:55.143133 REASON stop
+2022-04-09 23:58:55.143260 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.143265 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = [int(i) for i in sys.stdin.readline().split()]\n    commands = sys.stdin.readline().split()\n    current_child = 0\n    undo_commands = []\n    for command in commands:\n        if command == 'undo':\n            undo_commands.append(int(commands[commands.index(command)+1]))\n        elif command == '0' or command == '-0':\n            pass\n        else:\n            current_child += int(command)\n    while undo_commands:\n        undo_command = undo_commands.pop()\n        undo_index = commands.index('undo')\n        undo_commands_to_remove = []\n        for i in range(undo_command):\n            undo_index -= 1\n            if commands[undo_index] == 'undo':\n                undo_commands_to_remove.append(undo_index)\n            else:\n                current_child -= int(commands[undo_index])\n        for i in undo_commands_to_remove:\n            commands.pop(i)\n    if current_child < 0:\n        current_child += n\n    elif current_child > n:\n        current_child %= n\n    print(current_child)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:58:55.143285 REASON stop
+2022-04-09 23:58:55.143628 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.143670 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    commands = sys.stdin.readline().split()\n    student = 0\n    undo = []\n    for command in commands:\n        if command == \"undo\":\n            student = undo.pop()\n        else:\n            student = (student + int(command)) % n\n            undo.append(student)\n    print(student)\n\nmain()"
+}
+2022-04-09 23:58:55.143744 REASON stop
+2022-04-09 23:58:55.144149 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'
+2022-04-09 23:58:55.144188 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass Node:\n    def __init__(self, data):\n        self.data = data\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n\n    def insert(self, data):\n        newNode = Node(data)\n        if self.head is None:\n            self.head = newNode\n            return\n\n        lastNode = self.head\n        while lastNode.next is not None:\n            lastNode = lastNode.next\n        lastNode.next = newNode\n\n    def printList(self):\n        currNode = self.head\n        while currNode is not None:\n            print(currNode.data)\n            currNode = currNode.next\n\n    def delete(self, index):\n        currNode = self.head\n        if index == 0:\n            self.head = currNode.next\n            currNode = None\n            return\n\n        prevNode = None\n        count = 0\n        while currNode is not None and count != index:\n            prevNode = currNode\n            currNode = currNode.next\n            count += 1\n\n        if currNode is None:\n            return\n\n        prevNode.next = currNode.next\n        currNode = None\n\n    def length(self):\n        currNode = self.head\n        count = 0\n        while currNode is not None:\n            count += 1\n            currNode = currNode.next\n        return count\n\n    def get(self, index):\n        currNode = self.head\n        count = 0\n        while currNode is not None:\n            if count == index:\n                return currNode.data\n            count += 1\n            currNode = currNode.next\n        return -1\n\n\ndef main():\n    lines = sys.stdin.readlines()\n    n, k = lines[0].split()\n    n, k = int(n), int(k)\n    commands = lines[1].split()\n\n    ll = LinkedList()\n    for i in range(n):\n        ll.insert(i)\n\n    curr_index = 0\n    for i in range(k):\n        command = commands[i]\n        if command == \"undo\":\n            m = int(commands[i+1])\n            for j in range(m):\n                ll.delete(curr_index)\n            i += 1\n            continue\n        else:\n            t = int(command)\n            if t < 0:\n                t = n + t\n            curr_index = (curr_index + t) % ll.length()\n    print(ll.get(curr_index))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:58:55.144276 REASON stop
+2022-04-09 23:58:55.144589 test/intro-questions.txt_dir/4939/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4939/solutions.json'

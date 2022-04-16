@@ -1,0 +1,11 @@
+
+import sys
+def k_periodic(s):  
+    k = 1  
+    while k < len(s):  
+        if s[:-k] == s[k:]:  
+            return k  
+        k += 1  
+    return len(s)  
+  
+print(k_periodic(sys.stdin.readline()))

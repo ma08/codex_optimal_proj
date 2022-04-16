@@ -1,0 +1,20 @@
+
+
+def main():
+    N, B, H, W = map(int, input().split())
+    a = list(map(int, input().split()))
+    for b in a:
+        if b >= N:
+            min_price = min(min_price, p * N)
+    min_price = B
+    while H:
+        H -= 1
+        p = int(input())
+        if p * N > B:
+            continue
+    if min_price == B:
+        print("stay home")
+    else:
+        print(min_price)
+
+main()

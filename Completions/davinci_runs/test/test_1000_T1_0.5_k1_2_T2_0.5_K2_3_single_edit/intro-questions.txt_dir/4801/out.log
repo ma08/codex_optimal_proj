@@ -1,0 +1,152 @@
+2022-04-09 22:30:26.558230 """
+Given a permutation $A = (a_1, a_2, \dots , a_ N)$ of the integers $1, 2, \dots , N$, we define the greedily increasing subsequence (GIS) in the following way.
+
+Let $g_1 = a_1$. For every $i > 1$, let $g_ i$ be the leftmost integer in $A$ that is strictly larger than $g_{i-1}$. If there for a given $i$ is no such integer, we say that the GIS of the sequence is the sequence $(g_1, g_2, ..., g_{i - 1})$.
+
+Your task is to, given a permutation $A$, compute the GIS of $A$.
+
+-----Input-----
+The first line of input contains an integer $1 \le N \le 10^6$, the number of elements of the permutation $A$. The next line contains $N$ distinct integers between $1$ and $N$, the elements $a_1, \dots , a_ N$ of the permutation $A$.
+
+-----Output-----
+First, output a line containing the length $l$ of the GIS of $A$. Then, output $l$ integers, containing (in order) the elements of the GIS.
+
+-----Explanation of sample 1-----
+In this case, we have the permutation $2, 3, 1, 5, 4, 7, 6$. First, we have $g_1 = 2$. The leftmost integer larger than $2$ is $3$, so $g_2 = 3$. The leftmost integer larger than $3$ is $5$ ($1$ is too small), so $g_3 = 5$. The leftmost integer larger than $5$ is $7$, so $g_4 = 7$. Finally, there is no integer larger than $7$. Thus, the GIS of $2, 3, 1, 5, 4, 7, 6$ is $2, 3, 5, 7$.
+
+-----Examples-----
+Sample Input 1:
+7
+2 3 1 5 4 7 6
+Sample Output 1:
+4
+2 3 5 7
+
+Sample Input 2:
+5
+1 2 3 4 5
+Sample Output 2:
+5
+1 2 3 4 5
+"""
+2022-04-09 22:30:26.558251 --------------------------
+2022-04-09 22:31:14.502960 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ng = [0] * n\ng[0] = a[0]\n\nfor i in range(1, n):\n    if a[i] > g[-1]:\n        g.append(a[i])\n    else:\n        for j in range(len(g)):\n            if a[i] <= g[j]:\n                g[j] = a[i]\n                break\n\nprint(len(g))\nprint(*g)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# ---=== FUNCTIONS ===---\ndef get_input():\n    \"\"\"\n    Gets and returns input from stdin.\n    \"\"\"\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    return n, a\n\ndef get_gis(a):\n    \"\"\"\n    Returns the GIS of the given sequence.\n    \"\"\"\n    n = len(a)\n    gis = [a[0]]\n    for i in range(1, n):\n        if a[i] > gis[-1]:\n            gis.append(a[i])\n    return gis\n\ndef print_gis(gis):\n    \"\"\"\n    Prints the given GIS.\n    \"\"\"\n    print(len(gis))\n    print(\" \".join([str(x) for x in gis]))\n\n# ---=== MAIN ===---\nn, a = get_input()\ngis = get_gis(a)\nprint_gis(gis)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    gis = []\n    gis.append(a[0])\n    for i in range(1, n):\n        if a[i] > gis[-1]:\n            gis.append(a[i])\n    print(len(gis))\n    print(*gis)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solve():\n    n = int(input())\n    a = list(map(int, input().split()))\n    dp = [a[0]]\n    for i in range(1, n):\n        if a[i] > dp[-1]:\n            dp.append(a[i])\n        else:\n            for j in range(len(dp)):\n                if dp[j] >= a[i]:\n                    dp[j] = a[i]\n                    break\n    print(len(dp))\n    print(*dp)\n\nsolve()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nN = int(stdin.readline())\nA = [int(x) for x in stdin.readline().split()]\n\ndef gis(A):\n    g = []\n    for a in A:\n        if not g or a > g[-1]:\n            g.append(a)\n    return g\n\ng = gis(A)\n\nprint(len(g))\nprint(*g)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef greedy_inc_subseq(arr):\n    \"\"\"\n    Return the length of the longest increasing subsequence in arr.\n    \"\"\"\n    # Keep track of the last element in the increasing subsequence\n    # (initially assume the first element is the last element)\n    last_element = arr[0]\n    length = 1\n    for element in arr[1:]:\n        if element > last_element:\n            last_element = element\n            length += 1\n    return length\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    print(greedy_inc_subseq(arr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    permutation = list(map(int, input().split()))\n\n    gis = [permutation[0]]\n\n    for i in range(1, n):\n        if permutation[i] > gis[-1]:\n            gis.append(permutation[i])\n\n    print(len(gis))\n    print(*gis)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\n# we are looking for the longest increasing subsequence\n# the idea is to store the longest increasing subsequence that ends at a certain index\n# the longest subsequence that ends at i is the longest subsequence that ends at i-1 and a_i\n# we are looking for the longest subsequence that ends at the last index\n# we store the length of the longest subsequence that ends at index i in dp[i]\n# we also store the index of the last element of the longest subsequence that ends at index i in last[i]\n# dp[0] = 1, last[0] = 0\n# dp[i] = dp[i-1] + 1 if a[i] > a[last[i-1]] else dp[i-1]\n# last[i] = i if dp[i] > dp[i-1] else last[i-1]\n# the longest subsequence ends at the index of the longest subsequence that ends at the last index\n# we use the last array to backtrack and find the elements of the longest subsequence\n# we start at last[last[n-1]] and add the element at that index to the subsequence\n# then we move to the index that is stored at last[last[n-1]]\n# and so on until we reach 0\n\n# read input\nn = int(input())\na = list(map(int, input().split()))\n\n# initialise the arrays\ndp = [1 for _ in range(n)]\nlast = [i for i in range(n)]\n\n# loop over the array\nfor i in range(1, n):\n    # if the current element is greater than the last element of the longest subsequence that ends at i-1\n    # then the longest subsequence that ends at i is the longest subsequence that ends at i-1 plus the current element\n    # otherwise it is the same as the longest subsequence that ends at i-1\n    if a[i] > a[last[i-1]]:\n        dp[i] = dp[i-1] + 1\n    else:\n        dp[i] = dp[i-1]\n    # if the length of the longest subsequence that ends at i is greater than the length of the longest subsequence that ends at i-1\n    # then the last element of the longest subsequence that ends at i is the current element\n    # otherwise it is the same as the last element of the longest subsequence that ends at i-1\n    if dp[i] > dp[i-1]:\n        last[i] = i\n    else:\n        last[i] = last[i-1]\n\n# print the length of the longest subsequence\nprint(dp[n-1])\n\n# backtrack to find the elements of the longest subsequence\n# start at the index of the last element of the longest subsequence that ends at the last index\ni = last[n-1]\n# initialise the subsequence\nsubseq = []\n# loop over the array\nwhile i >= 0:\n    # add the element at the current index to the subsequence\n    subseq.append(a[i])\n    # move to the index of the last element of the longest subsequence that ends at the current index\n    i = last[i]\n# reverse the subsequence\nsubseq.reverse()\n# print the subsequence\nprint(\" \".join(map(str, subseq)))"
+    }
+  ],
+  "created": 1649557826,
+  "id": "cmpl-4vHdKTeM8qtYNi6SQ1eOcNatvNgCg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:31:14.503367 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ng = [0] * n\ng[0] = a[0]\n\nfor i in range(1, n):\n    if a[i] > g[-1]:\n        g.append(a[i])\n    else:\n        for j in range(len(g)):\n            if a[i] <= g[j]:\n                g[j] = a[i]\n                break\n\nprint(len(g))\nprint(*g)"
+}
+2022-04-09 22:31:14.503514 REASON stop
+2022-04-09 22:31:14.504432 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.504477 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# ---=== FUNCTIONS ===---\ndef get_input():\n    \"\"\"\n    Gets and returns input from stdin.\n    \"\"\"\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    return n, a\n\ndef get_gis(a):\n    \"\"\"\n    Returns the GIS of the given sequence.\n    \"\"\"\n    n = len(a)\n    gis = [a[0]]\n    for i in range(1, n):\n        if a[i] > gis[-1]:\n            gis.append(a[i])\n    return gis\n\ndef print_gis(gis):\n    \"\"\"\n    Prints the given GIS.\n    \"\"\"\n    print(len(gis))\n    print(\" \".join([str(x) for x in gis]))\n\n# ---=== MAIN ===---\nn, a = get_input()\ngis = get_gis(a)\nprint_gis(gis)"
+}
+2022-04-09 22:31:14.504559 REASON stop
+2022-04-09 22:31:14.505102 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.505144 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    gis = []\n    gis.append(a[0])\n    for i in range(1, n):\n        if a[i] > gis[-1]:\n            gis.append(a[i])\n    print(len(gis))\n    print(*gis)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:31:14.505242 REASON stop
+2022-04-09 22:31:14.505594 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.505607 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solve():\n    n = int(input())\n    a = list(map(int, input().split()))\n    dp = [a[0]]\n    for i in range(1, n):\n        if a[i] > dp[-1]:\n            dp.append(a[i])\n        else:\n            for j in range(len(dp)):\n                if dp[j] >= a[i]:\n                    dp[j] = a[i]\n                    break\n    print(len(dp))\n    print(*dp)\n\nsolve()"
+}
+2022-04-09 22:31:14.505644 REASON stop
+2022-04-09 22:31:14.505869 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.505880 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nN = int(stdin.readline())\nA = [int(x) for x in stdin.readline().split()]\n\ndef gis(A):\n    g = []\n    for a in A:\n        if not g or a > g[-1]:\n            g.append(a)\n    return g\n\ng = gis(A)\n\nprint(len(g))\nprint(*g)"
+}
+2022-04-09 22:31:14.505916 REASON stop
+2022-04-09 22:31:14.506144 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.506156 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef greedy_inc_subseq(arr):\n    \"\"\"\n    Return the length of the longest increasing subsequence in arr.\n    \"\"\"\n    # Keep track of the last element in the increasing subsequence\n    # (initially assume the first element is the last element)\n    last_element = arr[0]\n    length = 1\n    for element in arr[1:]:\n        if element > last_element:\n            last_element = element\n            length += 1\n    return length\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    print(greedy_inc_subseq(arr))"
+}
+2022-04-09 22:31:14.506193 REASON stop
+2022-04-09 22:31:14.506418 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.506436 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    permutation = list(map(int, input().split()))\n\n    gis = [permutation[0]]\n\n    for i in range(1, n):\n        if permutation[i] > gis[-1]:\n            gis.append(permutation[i])\n\n    print(len(gis))\n    print(*gis)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:31:14.506592 REASON stop
+2022-04-09 22:31:14.507090 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-09 22:31:14.507112 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\n# we are looking for the longest increasing subsequence\n# the idea is to store the longest increasing subsequence that ends at a certain index\n# the longest subsequence that ends at i is the longest subsequence that ends at i-1 and a_i\n# we are looking for the longest subsequence that ends at the last index\n# we store the length of the longest subsequence that ends at index i in dp[i]\n# we also store the index of the last element of the longest subsequence that ends at index i in last[i]\n# dp[0] = 1, last[0] = 0\n# dp[i] = dp[i-1] + 1 if a[i] > a[last[i-1]] else dp[i-1]\n# last[i] = i if dp[i] > dp[i-1] else last[i-1]\n# the longest subsequence ends at the index of the longest subsequence that ends at the last index\n# we use the last array to backtrack and find the elements of the longest subsequence\n# we start at last[last[n-1]] and add the element at that index to the subsequence\n# then we move to the index that is stored at last[last[n-1]]\n# and so on until we reach 0\n\n# read input\nn = int(input())\na = list(map(int, input().split()))\n\n# initialise the arrays\ndp = [1 for _ in range(n)]\nlast = [i for i in range(n)]\n\n# loop over the array\nfor i in range(1, n):\n    # if the current element is greater than the last element of the longest subsequence that ends at i-1\n    # then the longest subsequence that ends at i is the longest subsequence that ends at i-1 plus the current element\n    # otherwise it is the same as the longest subsequence that ends at i-1\n    if a[i] > a[last[i-1]]:\n        dp[i] = dp[i-1] + 1\n    else:\n        dp[i] = dp[i-1]\n    # if the length of the longest subsequence that ends at i is greater than the length of the longest subsequence that ends at i-1\n    # then the last element of the longest subsequence that ends at i is the current element\n    # otherwise it is the same as the last element of the longest subsequence that ends at i-1\n    if dp[i] > dp[i-1]:\n        last[i] = i\n    else:\n        last[i] = last[i-1]\n\n# print the length of the longest subsequence\nprint(dp[n-1])\n\n# backtrack to find the elements of the longest subsequence\n# start at the index of the last element of the longest subsequence that ends at the last index\ni = last[n-1]\n# initialise the subsequence\nsubseq = []\n# loop over the array\nwhile i >= 0:\n    # add the element at the current index to the subsequence\n    subseq.append(a[i])\n    # move to the index of the last element of the longest subsequence that ends at the current index\n    i = last[i]\n# reverse the subsequence\nsubseq.reverse()\n# print the subsequence\nprint(\" \".join(map(str, subseq)))"
+}
+2022-04-09 22:31:14.507182 REASON stop
+2022-04-09 22:31:14.507414 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'

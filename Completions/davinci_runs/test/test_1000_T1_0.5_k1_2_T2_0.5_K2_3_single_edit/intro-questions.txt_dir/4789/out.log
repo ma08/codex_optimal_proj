@@ -1,0 +1,167 @@
+2022-04-09 22:23:50.265635 """
+Getting a business permit in Kafkatown requires a trip to City Hall. There you are given a permit form that must be signed by $K$ city clerks whose names are printed at the bottom of the form.
+
+Entering the clerks’ room, you find a long line of people working their way down a narrow aisle along the clerks’ desks. Their desks are arranged in increasing numeric order. The aisle is so narrow that the line is forced to shuffle forward, single file, past each of the clerks’ desk in turn. Once in the line you cannot leave, back up, or change positions with other people.
+
+As you present your permit for a signature, you are told that no clerk will sign unless all of the signatures above his or her name on the permit form have already been filled in. To your dismay, the clerks’ desks are not arranged in the same order as the names on your form.
+
+How many times do you need to pass through the line until you can get your permit?
+
+-----Input-----
+The first line of input contains an integer $K$, the number of signatures you need to collect ($1 \leq K \leq 100$).
+
+This is followed by $K$ lines of input, each containing an integer in the range $1\ldots 100$, indicating the desk numbers of each of the clerks whose signature you need, in the order that they appear on your form. (Clerks whose signatures are not needed on your form are omitted from this list.)
+
+For example, the input
+
+    5 1 23 18 13 99
+
+means that you need $5$ signatures. The first must come from the clerk in desk #$1$, the next from the clerk in desk #$23$, and so on, with the final signature coming from the clerk in desk #$99$.
+
+No desk number appears more than once in the input.
+
+-----Output-----
+Print a single line containing an integer denoting the number of passes you need to make through the line until you can collect the signatures that you need.
+
+-----Examples-----
+Sample Input 1:
+5
+1
+23
+18
+13
+99
+Sample Output 1:
+3
+
+Sample Input 2:
+5
+11
+20
+33
+40
+55
+Sample Output 2:
+1
+"""
+2022-04-09 22:23:50.265669 --------------------------
+2022-04-09 22:24:15.655531 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    clerks = [int(sys.stdin.readline().strip()) for i in range(K)]\n    desk_positions = {desk: i for i, desk in enumerate(clerks)}\n    min_passes = 0\n    for i in range(K):\n        min_passes = max(min_passes, desk_positions[clerks[i]] - i)\n    print(min_passes)\n    \nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    desks = [int(sys.stdin.readline().strip()) for _ in range(K)]\n    desks.sort()\n    count = 0\n    for i in range(K):\n        count += 1\n        if desks[i] < i+1:\n            count += i - desks[i]\n    print(count)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport fileinput\n\nlines = fileinput.input()\n\nk = int(lines[0])\ndesks = list(map(int, lines[1:k+1]))\n\n# Sort the desks in ascending order\ndesks.sort()\n\n# Find the minimum number of passes through the line\n# by finding the maximum distance between two adjacent desk numbers\nprint(max(desks[i] - desks[i-1] for i in range(1, k)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    K = int(input())\n    desks = list(map(int, input().split()))\n    # print(desks)\n    pos = 0\n    passes = 0\n    while pos < K:\n        for i in range(pos, K):\n            if desks[i] == i+1:\n                pos += 1\n        passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    clerks = []\n    for i in range(K):\n        clerks.append(int(sys.stdin.readline().strip()))\n    #print(clerks)\n    clerks.sort()\n    #print(clerks)\n    max_val = max(clerks)\n    #print(max_val)\n    max_index = clerks.index(max_val)\n    #print(max_index)\n    passes = max_index\n    for i in range(max_index+1, K):\n        if clerks[i] - clerks[i-1] > 1:\n            passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    K = int(input())\n    desks = [int(input()) for i in range(K)]\n    current_desk = 1\n    passes = 0\n    while any(desk > current_desk for desk in desks):\n        current_desk = max(desk for desk in desks if desk <= current_desk)\n        passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    k = int(input())\n    d = list(map(int, input().split()))\n    d.sort()\n    print(max(d[i] - d[i - 1] for i in range(1, len(d))))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tk = int(sys.stdin.readline())\n\tdesks = [int(sys.stdin.readline()) for _ in range(k)]\n\tcurrent_desk = 1\n\tpasses = 0\n\tfor desk in desks:\n\t\tif desk > current_desk:\n\t\t\tpasses = passes + (desk - current_desk)\n\t\tcurrent_desk = desk\n\tprint(passes)\n\nif __name__ == '__main__':\n\tmain()"
+    }
+  ],
+  "created": 1649557430,
+  "id": "cmpl-4vHWwwsxbEIf1YZFuxHITS3wSoIU0",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:24:15.655840 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    clerks = [int(sys.stdin.readline().strip()) for i in range(K)]\n    desk_positions = {desk: i for i, desk in enumerate(clerks)}\n    min_passes = 0\n    for i in range(K):\n        min_passes = max(min_passes, desk_positions[clerks[i]] - i)\n    print(min_passes)\n    \nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:24:15.655877 REASON stop
+2022-04-09 22:24:15.667117 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.667165 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    desks = [int(sys.stdin.readline().strip()) for _ in range(K)]\n    desks.sort()\n    count = 0\n    for i in range(K):\n        count += 1\n        if desks[i] < i+1:\n            count += i - desks[i]\n    print(count)\n\nmain()"
+}
+2022-04-09 22:24:15.667237 REASON stop
+2022-04-09 22:24:15.667747 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.667795 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport fileinput\n\nlines = fileinput.input()\n\nk = int(lines[0])\ndesks = list(map(int, lines[1:k+1]))\n\n# Sort the desks in ascending order\ndesks.sort()\n\n# Find the minimum number of passes through the line\n# by finding the maximum distance between two adjacent desk numbers\nprint(max(desks[i] - desks[i-1] for i in range(1, k)))"
+}
+2022-04-09 22:24:15.667869 REASON stop
+2022-04-09 22:24:15.668240 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.668276 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    K = int(input())\n    desks = list(map(int, input().split()))\n    # print(desks)\n    pos = 0\n    passes = 0\n    while pos < K:\n        for i in range(pos, K):\n            if desks[i] == i+1:\n                pos += 1\n        passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:24:15.668371 REASON stop
+2022-04-09 22:24:15.668705 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.668734 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    K = int(sys.stdin.readline().strip())\n    clerks = []\n    for i in range(K):\n        clerks.append(int(sys.stdin.readline().strip()))\n    #print(clerks)\n    clerks.sort()\n    #print(clerks)\n    max_val = max(clerks)\n    #print(max_val)\n    max_index = clerks.index(max_val)\n    #print(max_index)\n    passes = max_index\n    for i in range(max_index+1, K):\n        if clerks[i] - clerks[i-1] > 1:\n            passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:24:15.668794 REASON stop
+2022-04-09 22:24:15.669168 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.669199 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    K = int(input())\n    desks = [int(input()) for i in range(K)]\n    current_desk = 1\n    passes = 0\n    while any(desk > current_desk for desk in desks):\n        current_desk = max(desk for desk in desks if desk <= current_desk)\n        passes += 1\n    print(passes)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:24:15.669255 REASON stop
+2022-04-09 22:24:15.669631 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.669663 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    k = int(input())\n    d = list(map(int, input().split()))\n    d.sort()\n    print(max(d[i] - d[i - 1] for i in range(1, len(d))))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:24:15.669712 REASON stop
+2022-04-09 22:24:15.670090 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'
+2022-04-09 22:24:15.670123 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tk = int(sys.stdin.readline())\n\tdesks = [int(sys.stdin.readline()) for _ in range(k)]\n\tcurrent_desk = 1\n\tpasses = 0\n\tfor desk in desks:\n\t\tif desk > current_desk:\n\t\t\tpasses = passes + (desk - current_desk)\n\t\tcurrent_desk = desk\n\tprint(passes)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 22:24:15.670181 REASON stop
+2022-04-09 22:24:15.670593 test/intro-questions.txt_dir/4789/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4789/solutions.json'

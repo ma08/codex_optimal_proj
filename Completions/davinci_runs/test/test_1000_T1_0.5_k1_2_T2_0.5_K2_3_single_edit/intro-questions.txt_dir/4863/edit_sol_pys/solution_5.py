@@ -1,0 +1,14 @@
+
+import sys
+
+def main():
+    n = int(sys.stdin.readline())
+    correct = 0
+    for _ in range(n):
+        answer = sys.stdin.readline()
+        if answer == "A\n" or answer == "a\n":
+            correct += 1
+    print(correct)
+
+if __name__ == "__main__":
+    main()

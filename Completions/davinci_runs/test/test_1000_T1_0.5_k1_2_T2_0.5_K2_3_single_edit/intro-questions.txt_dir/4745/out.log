@@ -1,0 +1,154 @@
+2022-04-09 21:50:45.825552 """
+After the festive opening of your new store, the Boutique store for Alternative Paramedicine and Cwakhsahlvereigh, to your disappointment you find out that you are not making as many sales as you had hoped. To remedy this, you decide to run a special offer: you will mark some subset of the $n$ items for sale in your store as participating in the offer, and if people buy exactly two of these items, and the cost of these items is strictly more than $X$ euros, you will give them a free complimentary unicorn horn!
+
+Since you recently found out all your unicorn horns are really narwhal tusks, you decide to rig the offer by picking the participating items in such a way that no one can earn a horn anyway.
+
+To make sure no one becomes suspicious, you want to mark as many items as possible as participating in the offer.
+
+-----Input-----
+ - On the first line are two integers, $1 \leq n \leq 10^5$, the number of items for sale in your store, and $1\leq X \leq 10^9$, the minimum cost specified in the statement.
+ - On the second line are $n$ positive integers, each at most $10^9$. These are the prices of the items in the store.
+
+-----Output-----
+Print the maximum number of items you can mark as part of your special offer, without anyone actually being able to receive a horn.
+
+-----Examples-----
+Sample Input 1:
+5 6
+1 2 3 4 5
+Sample Output 1:
+3
+
+Sample Input 2:
+5 10
+4 8 1 9 7
+Sample Output 2:
+2
+
+Sample Input 3:
+4 10
+1 3 1 7
+Sample Output 3:
+4
+"""
+2022-04-09 21:50:45.825577 --------------------------
+2022-04-09 21:51:22.109136 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, x = map(int, input().split())\nprices = list(map(int, input().split()))\n\nprices.sort()\n\n# If the smallest two elements are less than x, we can't mark anything\nif prices[0] + prices[1] < x:\n    print(0)\n    exit()\n\n# If the smallest two elements are greater than x, we can mark everything\nif prices[0] + prices[1] > x:\n    print(n)\n    exit()\n\n# Otherwise, we can mark everything except the smallest element\nprint(n - 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nn,x=map(int,input().split())\na=list(map(int,input().split()))\na.sort()\ncount=0\nfor i in range(n):\n    for j in range(i+1,n):\n        if a[i]+a[j]>x:\n            count=max(count,i+1)\n            break\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, X = map(int, input().split())\nprices = list(map(int, input().split()))\n\nprices.sort()\n\ncount = 0\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\nn, X = map(int, input().split())\nprices = list(map(int, input().split()))\n\n# sort the prices and keep track of the original index\nprices_with_indices = list(enumerate(prices))\nprices_with_indices.sort(key = lambda x: x[1])\n\n# create a list of all indices\nindices = [x[0] for x in prices_with_indices]\n\n# create a list of all prices\nprices = [x[1] for x in prices_with_indices]\n\n# create a list of all possible pairs of prices\npairs = [(prices[i], prices[j]) for i in range(len(prices)) for j in range(i+1, len(prices))]\n\n# filter out all pairs with sum less than X\npairs = list(filter(lambda x: x[0] + x[1] > X, pairs))\n\n# sort the pairs by the first entry in descending order\npairs.sort(key = lambda x: x[0], reverse = True)\n\n# create a set of all used indices\nused_indices = set()\n\n# go through all pairs\nfor pair in pairs:\n    # if the first index is not used, add it to the used indices\n    if indices[prices.index(pair[0])] not in used_indices:\n        used_indices.add(indices[prices.index(pair[0])])\n    # if the second index is not used, add it to the used indices\n    if indices[prices.index(pair[1])] not in used_indices:\n        used_indices.add(indices[prices.index(pair[1])])\n\nprint(len(used_indices))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"find the maximum number of items that can be marked as part of the special offer\"\"\"\n    n, x = map(int, input().split())\n    prices = list(map(int, input().split()))\n    prices.sort()\n    total = 0\n    count = 0\n    for i in prices:\n        if i + total > x:\n            break\n        total += i\n        count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Solution 1\nimport sys\nraw_input = sys.stdin.readline\n\nn, X = map(int, raw_input().split())\nprices = map(int, raw_input().split())\n\nprices.sort()\n\ncount = 0\nfor i in range(n):\n    if prices[i] >= X:\n        break\n    for j in range(i + 1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(n - count)\n\n# Solution 2\nimport sys\nraw_input = sys.stdin.readline\n\nn, X = map(int, raw_input().split())\nprices = map(int, raw_input().split())\n\nprices.sort()\n\ncount = 0\nfor i in range(n):\n    if prices[i] >= X:\n        break\n    for j in range(i + 1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(n - count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, X = list(map(int, sys.stdin.readline().split()))\n    prices = list(map(int, sys.stdin.readline().split()))\n\n    prices.sort()\n\n    if prices[-1] + prices[-2] <= X:\n        print(n)\n        return\n\n    if prices[0] + prices[1] > X:\n        print(0)\n        return\n\n    left = 0\n    right = n-1\n\n    while left < right:\n        if prices[left] + prices[right] > X:\n            right -= 1\n        else:\n            left += 1\n\n    print(n - (right + 1))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\nn, x = map(int, input().split())\nprices = list(map(int, input().split()))\nprices.sort()\n\nleft = 0\nright = n - 1\n\nresult = 0\nwhile left < right:\n    if prices[left] + prices[right] > x:\n        result += 1\n    right -= 1\n    if prices[left] + prices[right] > x:\n        result += 1\n    left += 1\n\nif left == right and prices[left] > x:\n    result += 1\n\nprint(result)"
+    }
+  ],
+  "created": 1649555446,
+  "id": "cmpl-4vH0whn4kyYCmSHr8lUqCI0sesxik",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:51:22.109547 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, x = map(int, input().split())\nprices = list(map(int, input().split()))\n\nprices.sort()\n\n# If the smallest two elements are less than x, we can't mark anything\nif prices[0] + prices[1] < x:\n    print(0)\n    exit()\n\n# If the smallest two elements are greater than x, we can mark everything\nif prices[0] + prices[1] > x:\n    print(n)\n    exit()\n\n# Otherwise, we can mark everything except the smallest element\nprint(n - 1)"
+}
+2022-04-09 21:51:22.109617 REASON stop
+2022-04-09 21:51:22.110443 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.110451 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nn,x=map(int,input().split())\na=list(map(int,input().split()))\na.sort()\ncount=0\nfor i in range(n):\n    for j in range(i+1,n):\n        if a[i]+a[j]>x:\n            count=max(count,i+1)\n            break\nprint(count)"
+}
+2022-04-09 21:51:22.110470 REASON stop
+2022-04-09 21:51:22.110606 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.110615 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, X = map(int, input().split())\nprices = list(map(int, input().split()))\n\nprices.sort()\n\ncount = 0\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(count)"
+}
+2022-04-09 21:51:22.110649 REASON stop
+2022-04-09 21:51:22.111727 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.111757 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\nn, X = map(int, input().split())\nprices = list(map(int, input().split()))\n\n# sort the prices and keep track of the original index\nprices_with_indices = list(enumerate(prices))\nprices_with_indices.sort(key = lambda x: x[1])\n\n# create a list of all indices\nindices = [x[0] for x in prices_with_indices]\n\n# create a list of all prices\nprices = [x[1] for x in prices_with_indices]\n\n# create a list of all possible pairs of prices\npairs = [(prices[i], prices[j]) for i in range(len(prices)) for j in range(i+1, len(prices))]\n\n# filter out all pairs with sum less than X\npairs = list(filter(lambda x: x[0] + x[1] > X, pairs))\n\n# sort the pairs by the first entry in descending order\npairs.sort(key = lambda x: x[0], reverse = True)\n\n# create a set of all used indices\nused_indices = set()\n\n# go through all pairs\nfor pair in pairs:\n    # if the first index is not used, add it to the used indices\n    if indices[prices.index(pair[0])] not in used_indices:\n        used_indices.add(indices[prices.index(pair[0])])\n    # if the second index is not used, add it to the used indices\n    if indices[prices.index(pair[1])] not in used_indices:\n        used_indices.add(indices[prices.index(pair[1])])\n\nprint(len(used_indices))"
+}
+2022-04-09 21:51:22.111820 REASON stop
+2022-04-09 21:51:22.112055 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.112061 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"find the maximum number of items that can be marked as part of the special offer\"\"\"\n    n, x = map(int, input().split())\n    prices = list(map(int, input().split()))\n    prices.sort()\n    total = 0\n    count = 0\n    for i in prices:\n        if i + total > x:\n            break\n        total += i\n        count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:22.112086 REASON stop
+2022-04-09 21:51:22.112338 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.112345 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Solution 1\nimport sys\nraw_input = sys.stdin.readline\n\nn, X = map(int, raw_input().split())\nprices = map(int, raw_input().split())\n\nprices.sort()\n\ncount = 0\nfor i in range(n):\n    if prices[i] >= X:\n        break\n    for j in range(i + 1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(n - count)\n\n# Solution 2\nimport sys\nraw_input = sys.stdin.readline\n\nn, X = map(int, raw_input().split())\nprices = map(int, raw_input().split())\n\nprices.sort()\n\ncount = 0\nfor i in range(n):\n    if prices[i] >= X:\n        break\n    for j in range(i + 1, n):\n        if prices[i] + prices[j] > X:\n            count += 1\n\nprint(n - count)"
+}
+2022-04-09 21:51:22.112371 REASON stop
+2022-04-09 21:51:22.112600 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.112610 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, X = list(map(int, sys.stdin.readline().split()))\n    prices = list(map(int, sys.stdin.readline().split()))\n\n    prices.sort()\n\n    if prices[-1] + prices[-2] <= X:\n        print(n)\n        return\n\n    if prices[0] + prices[1] > X:\n        print(0)\n        return\n\n    left = 0\n    right = n-1\n\n    while left < right:\n        if prices[left] + prices[right] > X:\n            right -= 1\n        else:\n            left += 1\n\n    print(n - (right + 1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:51:22.112638 REASON stop
+2022-04-09 21:51:22.112744 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'
+2022-04-09 21:51:22.112750 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\nn, x = map(int, input().split())\nprices = list(map(int, input().split()))\nprices.sort()\n\nleft = 0\nright = n - 1\n\nresult = 0\nwhile left < right:\n    if prices[left] + prices[right] > x:\n        result += 1\n    right -= 1\n    if prices[left] + prices[right] > x:\n        result += 1\n    left += 1\n\nif left == right and prices[left] > x:\n    result += 1\n\nprint(result)"
+}
+2022-04-09 21:51:22.112768 REASON stop
+2022-04-09 21:51:22.112876 test/intro-questions.txt_dir/4745/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4745/solutions.json'

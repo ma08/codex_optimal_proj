@@ -1,0 +1,19 @@
+
+
+from sys import stdout
+from sys import stdin
+from math import ceil
+
+def main():
+	n = int(stdin.readline())
+	c = [int(x) for x in stdin.readline().split()]
+	c.sort()
+	if c[0] > 0:
+		stdout.write('impossible')
+	else:
+		ans = 1
+		for i in range(1,n):
+			ans = min(ans,c[i]/i)
+		stdout.write(str(ans))
+
+main()

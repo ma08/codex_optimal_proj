@@ -1,0 +1,165 @@
+2022-04-09 22:06:18.019792 """
+The famous Jurassic park biologist Dean O’Saur has discovered new samples of what he expects to be the DNA of a dinosaur. With the help of his assistant Petra Dactil, he managed to sequence the samples, and now they are ready for analysis. Dean thinks this dinosaur was affected with a particular disease that mutated the DNA of some cells.
+
+To verify his theory, he needs to compute the most likely evolutionary tree from the samples, where the nodes are the samples of DNA. Because there is no temporal data for the DNA samples, he is not concerned where the root of the tree is.
+
+Dean considers the most likely evolutionary tree, the tree with smallest unlikeliness: the unlikeliness of a tree is defined as the sum of the weights of all edges, where the weight of an edge is the number of positions at which the two DNA strings are different.
+
+As a world expert in data trees, he asks you to reconstruct the most likely evolutionary tree.
+
+In the first sample, the optimal tree is AA - AT - TT - TC . The unlikeliness of the edge between AA and AT edge is $1$, because the strings AA and AT differ in exactly $1$ position. The weights of the other two edges are also $1$, so that the unlikeliness of the entire tree is $3$. Since there is no tree of unlikeliness less than $3$, the minimal unlikeliness of an evolutionary tree for this case is $3$.
+
+-----Input-----
+ - The first line consists of two integers $1\leq n\leq 1000$ and $1\leq k\leq 10$, the number of samples and the length of each sample respectively.
+ - Each of the next $n$ lines contains a string of length $k$ consisting of the characters in ACTG.
+
+-----Output-----
+ - On the first line, print the minimal unlikeliness of the evolutionary tree.
+ - Then, print $n-1$ lines, each consisting of two integers $0\leq u,v < n$, indicating that in the most likely evolutionary tree, there is an edge between DNA string $u$ and $v$. If there are multiple answers possible, any of them will be accepted.
+
+-----Examples-----
+Sample Input 1:
+4 2
+AA
+AT
+TT
+TC
+Sample Output 1:
+3
+0 1
+1 2
+2 3
+
+Sample Input 2:
+4 1
+A
+A
+G
+T
+Sample Output 2:
+2
+0 1
+0 2
+0 3
+"""
+2022-04-09 22:06:18.019839 --------------------------
+2022-04-09 22:07:11.345438 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_input(f):\n    \"\"\"\n    Parse the input text file.\n    Arguments:\n        f: input file\n    Returns:\n        n: number of DNA samples\n        k: length of DNA samples\n        dna: list of strings representing the DNA samples\n    \"\"\"\n    # Get the first line\n    line = f.readline()\n    try:\n        n, k = map(int, line.split())\n    except ValueError:\n        print(\"Invalid Input\")\n        sys.exit()\n\n    # Get the rest of the lines\n    dna = []\n    for i in range(n):\n        line = f.readline()\n        dna.append(line.strip())\n\n    return n, k, dna\n\ndef min_unlikeliness(n, k, dna):\n    \"\"\"\n    Compute the minimal unlikeliness of the evolutionary tree.\n    Arguments:\n        n: number of DNA samples\n        k: length of DNA samples\n        dna: list of strings representing the DNA samples\n    Returns:\n        unlikeliness: the minimal unlikeliness of the evolutionary tree\n    \"\"\"\n    unlikeliness = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            for c in range(k):\n                if dna[i][c] != dna[j][c]:\n                    unlikeliness += 1\n    return unlikeliness\n\ndef print_tree(n):\n    \"\"\"\n    Print the tree in the required format.\n    Arguments:\n        n: number of DNA samples\n    \"\"\"\n    for i in range(n - 1):\n        print(i, i + 1)\n\nif __name__ == \"__main__\":\n    # Get the input\n    f = open(sys.argv[1])\n    n, k, dna = get_input(f)\n\n    # Compute the minimal unlikeliness and print it\n    unlikeliness = min_unlikeliness(n, k, dna)\n    print(unlikeliness)\n\n    # Print the tree\n    print_tree(n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef solve(k, dna):\n    n = len(dna)\n    edge = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        for j in range(i+1, n):\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    edge[i][j] += 1\n                    edge[j][i] += 1\n    # print(edge)\n    mst = [[math.inf for i in range(n)] for j in range(n)]\n    used = [False for i in range(n)]\n    mst[0][0] = 0\n    ans = 0\n    for i in range(n):\n        v = -1\n        for j in range(n):\n            if not used[j] and (v == -1 or mst[j][i] < mst[v][i]):\n                v = j\n        used[v] = True\n        ans += mst[v][i]\n        for j in range(n):\n            if mst[j][i] > edge[v][j]:\n                mst[j][i] = edge[v][j]\n    print(ans)\n    for i in range(n):\n        for j in range(n):\n            if mst[i][j] != math.inf:\n                print(i, j)\n\ndef main():\n    line = sys.stdin.readline()\n    n, k = [int(x) for x in line.split()]\n    dna = [sys.stdin.readline().strip() for i in range(n)]\n    solve(k, dna)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    dna = []\n    for _ in range(n):\n        dna.append(input())\n    dna = sorted(dna)\n\n    # Construct a table of distances between each pair of strings\n    distances = [[0 for _ in range(n)] for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    distances[i][j] += 1\n\n    # Compute the minimal spanning tree\n    tree = []\n    edges = []\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((i, j, distances[i][j]))\n    edges = sorted(edges, key=lambda x: x[2])\n\n    # Use Kruskal's algorithm to find the minimum spanning tree\n    def find(parent, child):\n        while parent[child] != child:\n            child = parent[child]\n        return child\n\n    parent = list(range(n))\n    for i, j, dist in edges:\n        root_i, root_j = find(parent, i), find(parent, j)\n        if root_i != root_j:\n            tree.append((i, j, dist))\n            parent[root_i] = root_j\n\n    # Print the result\n    print(sum(dist for _, _, dist in tree))\n    for i, j, _ in tree:\n        print(i, j)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    dna = [input() for _ in range(n)]\n    edges = []\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((i, j, hamming(dna[i], dna[j])))\n    edges.sort(key=lambda x: x[2])\n    components = {i: i for i in range(n)}\n    total_distance = 0\n    for i, j, d in edges:\n        if components[i] != components[j]:\n            total_distance += d\n            c1 = components[i]\n            c2 = components[j]\n            for k in range(n):\n                if components[k] == c2:\n                    components[k] = c1\n    print(total_distance)\n    for i, j, d in edges:\n        if components[i] != components[j]:\n            print(i, j)\n            c1 = components[i]\n            c2 = components[j]\n            for k in range(n):\n                if components[k] == c2:\n                    components[k] = c1\n\ndef hamming(s1, s2):\n    return sum(a != b for a, b in zip(s1, s2))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\n    n, k = map(int, input().split())\n    dna = [input() for i in range(n)]\n    dna_dict = {}\n\n    for i in range(n):\n        for j in range(i+1, n):\n            count = 0\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    count += 1\n            dna_dict[(i,j)] = count\n\n    print(min(dna_dict.values()))\n\n    for key, value in dna_dict.items():\n        if value == min(dna_dict.values()):\n            print(*key)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# from math import inf\nfrom sys import stdin, stdout\n\n# f = open(\"input.txt\", \"r\")\n# input = f.readline\n# stdin = f\n\nn, k = map(int, input().split())\n# dna = [input().strip() for i in range(n)]\ndna = list(map(str, stdin.read().splitlines()))\n# print(dna)\n\n# d = [[inf for i in range(n)] for j in range(n)]\nd = [[0 for i in range(n)] for j in range(n)]\nfor i in range(n):\n    for j in range(n):\n        d[i][j] = sum(1 for k in range(k) if dna[i][k] != dna[j][k])\n\n# print(d)\n\n# def mst(n):\n#     used = [False for i in range(n)]\n#     min_e = [inf for i in range(n)]\n#     min_e[0] = 0\n#     sel_e = []\n#     for i in range(n):\n#         v = -1\n#         for j in range(n):\n#             if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n#                 v = j\n#         if min_e[v] == inf:\n#             return sel_e\n#         used[v] = True\n#         sel_e.append((min_e[v], v))\n#         for to in range(n):\n#             min_e[to] = min(min_e[to], d[v][to])\n#     return sel_e\n\n# edges = mst(n)\n# print(edges)\n# print(sum(e for e, v in edges))\n\n# def mst(n):\n#     used = [False for i in range(n)]\n#     min_e = [inf for i in range(n)]\n#     min_e[0] = 0\n#     sel_e = []\n#     for i in range(n):\n#         v = -1\n#         for j in range(n):\n#             if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n#                 v = j\n#         if min_e[v] == inf:\n#             return sel_e\n#         used[v] = True\n#         sel_e.append((min_e[v], v))\n#         for to in range(n):\n#             min_e[to] = min(min_e[to], d[v][to])\n#     return sel_e\n\n# edges = mst(n)\n# print(edges)\n# print(sum(e for e, v in edges))\n\ndef mst(n):\n    used = [False for i in range(n)]\n    min_e = [0 for i in range(n)]\n    sel_e = []\n    for i in range(n):\n        v = -1\n        for j in range(n):\n            if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n                v = j\n        if min_e[v] == 0:\n            return sel_e\n        used[v] = True\n        sel_e.append((min_e[v], v))\n        for to in range(n):\n            min_e[to] = max(min_e[to], d[v][to])\n    return sel_e\n\n\nedges = mst(n)\nprint(sum(e for e, v in edges))\nfor e, v in edges:\n    print(v, e)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    dna = [input() for _ in range(n)]\n    print(kruskal(dna))\n\ndef kruskal(dna):\n    \"\"\"\n    Kruskal's algorithm for finding the minimum spanning tree of a graph.\n    \"\"\"\n    # Initialize the graph\n    graph = Graph(dna)\n    # Initialize the disjoint set\n    ds = DisjointSet(len(dna))\n    # Initialize the minimum spanning tree as an empty list\n    mst = []\n    # Iterate through the edges in the graph\n    for edge in sorted(graph.edges, key=lambda x: x.weight):\n        # If the edge does not create a cycle\n        if not ds.is_in_same_set(edge.vertex1, edge.vertex2):\n            # Add the edge to the minimum spanning tree\n            mst.append(edge)\n            # Merge the two sets\n            ds.union(edge.vertex1, edge.vertex2)\n    # Return the minimum spanning tree\n    return mst\n\nclass Graph:\n    \"\"\"\n    Class for representing a graph.\n    \"\"\"\n    def __init__(self, dna):\n        \"\"\"\n        Initialize the graph.\n        \"\"\"\n        self.edges = []\n        self.vertices = [i for i in range(len(dna))]\n        for vertex1 in range(len(dna)):\n            for vertex2 in range(vertex1 + 1, len(dna)):\n                self.edges.append(Edge(vertex1, vertex2, self.weight(dna[vertex1], dna[vertex2])))\n    \n    def weight(self, dna1, dna2):\n        \"\"\"\n        Compute the weight of an edge between two vertices.\n        \"\"\"\n        return sum(1 if dna1[i] != dna2[i] else 0 for i in range(len(dna1)))\n\nclass Edge:\n    \"\"\"\n    Class for representing an edge.\n    \"\"\"\n    def __init__(self, vertex1, vertex2, weight):\n        \"\"\"\n        Initialize the edge.\n        \"\"\"\n        self.vertex1 = vertex1\n        self.vertex2 = vertex2\n        self.weight = weight\n\nclass DisjointSet:\n    \"\"\"\n    Class for representing a disjoint set.\n    \"\"\"\n    def __init__(self, size):\n        \"\"\"\n        Initialize the disjoint set.\n        \"\"\"\n        self.size = size\n        self.parent = [i for i in range(size)]\n        self.rank = [0 for i in range(size)]\n    \n    def find(self, x):\n        \"\"\"\n        Find the root of a given vertex.\n        \"\"\"\n        if self.parent[x] == x:\n            return x\n        else:\n            return self.find(self.parent[x])\n    \n    def union(self, x, y):\n        \"\"\"\n        Merge the sets containing two given vertices.\n        \"\"\"\n        xroot = self.find(x)\n        yroot = self.find(y)\n        if self.rank[xroot] > self.rank[yroot]:\n            self.parent[yroot] = xroot\n        elif self.rank[xroot] < self.rank[yroot]:\n            self.parent[xroot] = yroot\n        else:\n            self.parent[yroot] = xroot\n            self.rank[xroot] += 1\n    \n    def is_in_same_set(self, x, y):\n        \"\"\"\n        Check if two given vertices are in the same set.\n        \"\"\"\n        return self.find(x) == self.find(y)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport heapq\nimport sys\n\n# Read input and build graph\nn, k = map(int, sys.stdin.readline().split())\ngraph = [[] for _ in range(n)]\nfor i in range(n):\n    dna = sys.stdin.readline().strip()\n    for j in range(i):\n        u, v = i, j\n        graph[u].append((v, sum(1 for a, b in zip(dna, graph[j][0][1]) if a != b)))\n        graph[v].append((u, sum(1 for a, b in zip(dna, dna) if a != b)))\n\n# Prim's algorithm\nmin_tree = []\nmin_weight = 0\nvisited = [False] * n\npq = [(0, 0, dna)]\nwhile pq:\n    weight, u, dna = heapq.heappop(pq)\n    if not visited[u]:\n        visited[u] = True\n        min_tree.append((u, dna))\n        min_weight += weight\n        for v, w in graph[u]:\n            if not visited[v]:\n                heapq.heappush(pq, (w, v, dna))\n\n# Print results\nprint(min_weight)\nfor u, dna in min_tree[1:]:\n    print(min_tree.index((u, dna)), u)"
+    }
+  ],
+  "created": 1649556378,
+  "id": "cmpl-4vHFymxuosPQQIFXg9BLdDExSwqzC",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:07:11.345953 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_input(f):\n    \"\"\"\n    Parse the input text file.\n    Arguments:\n        f: input file\n    Returns:\n        n: number of DNA samples\n        k: length of DNA samples\n        dna: list of strings representing the DNA samples\n    \"\"\"\n    # Get the first line\n    line = f.readline()\n    try:\n        n, k = map(int, line.split())\n    except ValueError:\n        print(\"Invalid Input\")\n        sys.exit()\n\n    # Get the rest of the lines\n    dna = []\n    for i in range(n):\n        line = f.readline()\n        dna.append(line.strip())\n\n    return n, k, dna\n\ndef min_unlikeliness(n, k, dna):\n    \"\"\"\n    Compute the minimal unlikeliness of the evolutionary tree.\n    Arguments:\n        n: number of DNA samples\n        k: length of DNA samples\n        dna: list of strings representing the DNA samples\n    Returns:\n        unlikeliness: the minimal unlikeliness of the evolutionary tree\n    \"\"\"\n    unlikeliness = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            for c in range(k):\n                if dna[i][c] != dna[j][c]:\n                    unlikeliness += 1\n    return unlikeliness\n\ndef print_tree(n):\n    \"\"\"\n    Print the tree in the required format.\n    Arguments:\n        n: number of DNA samples\n    \"\"\"\n    for i in range(n - 1):\n        print(i, i + 1)\n\nif __name__ == \"__main__\":\n    # Get the input\n    f = open(sys.argv[1])\n    n, k, dna = get_input(f)\n\n    # Compute the minimal unlikeliness and print it\n    unlikeliness = min_unlikeliness(n, k, dna)\n    print(unlikeliness)\n\n    # Print the tree\n    print_tree(n)"
+}
+2022-04-09 22:07:11.346050 REASON stop
+2022-04-09 22:07:11.346780 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.346802 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef solve(k, dna):\n    n = len(dna)\n    edge = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        for j in range(i+1, n):\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    edge[i][j] += 1\n                    edge[j][i] += 1\n    # print(edge)\n    mst = [[math.inf for i in range(n)] for j in range(n)]\n    used = [False for i in range(n)]\n    mst[0][0] = 0\n    ans = 0\n    for i in range(n):\n        v = -1\n        for j in range(n):\n            if not used[j] and (v == -1 or mst[j][i] < mst[v][i]):\n                v = j\n        used[v] = True\n        ans += mst[v][i]\n        for j in range(n):\n            if mst[j][i] > edge[v][j]:\n                mst[j][i] = edge[v][j]\n    print(ans)\n    for i in range(n):\n        for j in range(n):\n            if mst[i][j] != math.inf:\n                print(i, j)\n\ndef main():\n    line = sys.stdin.readline()\n    n, k = [int(x) for x in line.split()]\n    dna = [sys.stdin.readline().strip() for i in range(n)]\n    solve(k, dna)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:07:11.346853 REASON stop
+2022-04-09 22:07:11.347106 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347132 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    dna = []\n    for _ in range(n):\n        dna.append(input())\n    dna = sorted(dna)\n\n    # Construct a table of distances between each pair of strings\n    distances = [[0 for _ in range(n)] for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    distances[i][j] += 1\n\n    # Compute the minimal spanning tree\n    tree = []\n    edges = []\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((i, j, distances[i][j]))\n    edges = sorted(edges, key=lambda x: x[2])\n\n    # Use Kruskal's algorithm to find the minimum spanning tree\n    def find(parent, child):\n        while parent[child] != child:\n            child = parent[child]\n        return child\n\n    parent = list(range(n))\n    for i, j, dist in edges:\n        root_i, root_j = find(parent, i), find(parent, j)\n        if root_i != root_j:\n            tree.append((i, j, dist))\n            parent[root_i] = root_j\n\n    # Print the result\n    print(sum(dist for _, _, dist in tree))\n    for i, j, _ in tree:\n        print(i, j)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:07:11.347184 REASON stop
+2022-04-09 22:07:11.347348 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347355 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    dna = [input() for _ in range(n)]\n    edges = []\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges.append((i, j, hamming(dna[i], dna[j])))\n    edges.sort(key=lambda x: x[2])\n    components = {i: i for i in range(n)}\n    total_distance = 0\n    for i, j, d in edges:\n        if components[i] != components[j]:\n            total_distance += d\n            c1 = components[i]\n            c2 = components[j]\n            for k in range(n):\n                if components[k] == c2:\n                    components[k] = c1\n    print(total_distance)\n    for i, j, d in edges:\n        if components[i] != components[j]:\n            print(i, j)\n            c1 = components[i]\n            c2 = components[j]\n            for k in range(n):\n                if components[k] == c2:\n                    components[k] = c1\n\ndef hamming(s1, s2):\n    return sum(a != b for a, b in zip(s1, s2))\n\nmain()"
+}
+2022-04-09 22:07:11.347377 REASON stop
+2022-04-09 22:07:11.347483 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347489 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\n    n, k = map(int, input().split())\n    dna = [input() for i in range(n)]\n    dna_dict = {}\n\n    for i in range(n):\n        for j in range(i+1, n):\n            count = 0\n            for x in range(k):\n                if dna[i][x] != dna[j][x]:\n                    count += 1\n            dna_dict[(i,j)] = count\n\n    print(min(dna_dict.values()))\n\n    for key, value in dna_dict.items():\n        if value == min(dna_dict.values()):\n            print(*key)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:07:11.347507 REASON stop
+2022-04-09 22:07:11.347618 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347624 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# from math import inf\nfrom sys import stdin, stdout\n\n# f = open(\"input.txt\", \"r\")\n# input = f.readline\n# stdin = f\n\nn, k = map(int, input().split())\n# dna = [input().strip() for i in range(n)]\ndna = list(map(str, stdin.read().splitlines()))\n# print(dna)\n\n# d = [[inf for i in range(n)] for j in range(n)]\nd = [[0 for i in range(n)] for j in range(n)]\nfor i in range(n):\n    for j in range(n):\n        d[i][j] = sum(1 for k in range(k) if dna[i][k] != dna[j][k])\n\n# print(d)\n\n# def mst(n):\n#     used = [False for i in range(n)]\n#     min_e = [inf for i in range(n)]\n#     min_e[0] = 0\n#     sel_e = []\n#     for i in range(n):\n#         v = -1\n#         for j in range(n):\n#             if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n#                 v = j\n#         if min_e[v] == inf:\n#             return sel_e\n#         used[v] = True\n#         sel_e.append((min_e[v], v))\n#         for to in range(n):\n#             min_e[to] = min(min_e[to], d[v][to])\n#     return sel_e\n\n# edges = mst(n)\n# print(edges)\n# print(sum(e for e, v in edges))\n\n# def mst(n):\n#     used = [False for i in range(n)]\n#     min_e = [inf for i in range(n)]\n#     min_e[0] = 0\n#     sel_e = []\n#     for i in range(n):\n#         v = -1\n#         for j in range(n):\n#             if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n#                 v = j\n#         if min_e[v] == inf:\n#             return sel_e\n#         used[v] = True\n#         sel_e.append((min_e[v], v))\n#         for to in range(n):\n#             min_e[to] = min(min_e[to], d[v][to])\n#     return sel_e\n\n# edges = mst(n)\n# print(edges)\n# print(sum(e for e, v in edges))\n\ndef mst(n):\n    used = [False for i in range(n)]\n    min_e = [0 for i in range(n)]\n    sel_e = []\n    for i in range(n):\n        v = -1\n        for j in range(n):\n            if not used[j] and (v == -1 or min_e[j] < min_e[v]):\n                v = j\n        if min_e[v] == 0:\n            return sel_e\n        used[v] = True\n        sel_e.append((min_e[v], v))\n        for to in range(n):\n            min_e[to] = max(min_e[to], d[v][to])\n    return sel_e\n\n\nedges = mst(n)\nprint(sum(e for e, v in edges))\nfor e, v in edges:\n    print(v, e)"
+}
+2022-04-09 22:07:11.347671 REASON stop
+2022-04-09 22:07:11.347779 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347785 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    dna = [input() for _ in range(n)]\n    print(kruskal(dna))\n\ndef kruskal(dna):\n    \"\"\"\n    Kruskal's algorithm for finding the minimum spanning tree of a graph.\n    \"\"\"\n    # Initialize the graph\n    graph = Graph(dna)\n    # Initialize the disjoint set\n    ds = DisjointSet(len(dna))\n    # Initialize the minimum spanning tree as an empty list\n    mst = []\n    # Iterate through the edges in the graph\n    for edge in sorted(graph.edges, key=lambda x: x.weight):\n        # If the edge does not create a cycle\n        if not ds.is_in_same_set(edge.vertex1, edge.vertex2):\n            # Add the edge to the minimum spanning tree\n            mst.append(edge)\n            # Merge the two sets\n            ds.union(edge.vertex1, edge.vertex2)\n    # Return the minimum spanning tree\n    return mst\n\nclass Graph:\n    \"\"\"\n    Class for representing a graph.\n    \"\"\"\n    def __init__(self, dna):\n        \"\"\"\n        Initialize the graph.\n        \"\"\"\n        self.edges = []\n        self.vertices = [i for i in range(len(dna))]\n        for vertex1 in range(len(dna)):\n            for vertex2 in range(vertex1 + 1, len(dna)):\n                self.edges.append(Edge(vertex1, vertex2, self.weight(dna[vertex1], dna[vertex2])))\n    \n    def weight(self, dna1, dna2):\n        \"\"\"\n        Compute the weight of an edge between two vertices.\n        \"\"\"\n        return sum(1 if dna1[i] != dna2[i] else 0 for i in range(len(dna1)))\n\nclass Edge:\n    \"\"\"\n    Class for representing an edge.\n    \"\"\"\n    def __init__(self, vertex1, vertex2, weight):\n        \"\"\"\n        Initialize the edge.\n        \"\"\"\n        self.vertex1 = vertex1\n        self.vertex2 = vertex2\n        self.weight = weight\n\nclass DisjointSet:\n    \"\"\"\n    Class for representing a disjoint set.\n    \"\"\"\n    def __init__(self, size):\n        \"\"\"\n        Initialize the disjoint set.\n        \"\"\"\n        self.size = size\n        self.parent = [i for i in range(size)]\n        self.rank = [0 for i in range(size)]\n    \n    def find(self, x):\n        \"\"\"\n        Find the root of a given vertex.\n        \"\"\"\n        if self.parent[x] == x:\n            return x\n        else:\n            return self.find(self.parent[x])\n    \n    def union(self, x, y):\n        \"\"\"\n        Merge the sets containing two given vertices.\n        \"\"\"\n        xroot = self.find(x)\n        yroot = self.find(y)\n        if self.rank[xroot] > self.rank[yroot]:\n            self.parent[yroot] = xroot\n        elif self.rank[xroot] < self.rank[yroot]:\n            self.parent[xroot] = yroot\n        else:\n            self.parent[yroot] = xroot\n            self.rank[xroot] += 1\n    \n    def is_in_same_set(self, x, y):\n        \"\"\"\n        Check if two given vertices are in the same set.\n        \"\"\"\n        return self.find(x) == self.find(y)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:07:11.347810 REASON stop
+2022-04-09 22:07:11.347953 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'
+2022-04-09 22:07:11.347959 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport heapq\nimport sys\n\n# Read input and build graph\nn, k = map(int, sys.stdin.readline().split())\ngraph = [[] for _ in range(n)]\nfor i in range(n):\n    dna = sys.stdin.readline().strip()\n    for j in range(i):\n        u, v = i, j\n        graph[u].append((v, sum(1 for a, b in zip(dna, graph[j][0][1]) if a != b)))\n        graph[v].append((u, sum(1 for a, b in zip(dna, dna) if a != b)))\n\n# Prim's algorithm\nmin_tree = []\nmin_weight = 0\nvisited = [False] * n\npq = [(0, 0, dna)]\nwhile pq:\n    weight, u, dna = heapq.heappop(pq)\n    if not visited[u]:\n        visited[u] = True\n        min_tree.append((u, dna))\n        min_weight += weight\n        for v, w in graph[u]:\n            if not visited[v]:\n                heapq.heappush(pq, (w, v, dna))\n\n# Print results\nprint(min_weight)\nfor u, dna in min_tree[1:]:\n    print(min_tree.index((u, dna)), u)"
+}
+2022-04-09 22:07:11.347983 REASON stop
+2022-04-09 22:07:11.348088 test/intro-questions.txt_dir/4768/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4768/solutions.json'

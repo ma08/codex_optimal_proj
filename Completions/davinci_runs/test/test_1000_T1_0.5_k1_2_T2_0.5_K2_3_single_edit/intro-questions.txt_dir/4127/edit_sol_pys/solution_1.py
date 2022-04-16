@@ -1,0 +1,2 @@
+
+print(int(input().split()[0]) * int(input().split()[1]))

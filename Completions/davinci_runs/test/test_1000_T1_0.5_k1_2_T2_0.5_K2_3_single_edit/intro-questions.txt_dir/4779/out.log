@@ -1,0 +1,148 @@
+2022-04-09 22:17:38.812848 """
+The Bureau for Artificial Problems in Competitions wants you to solve the following problem: Given $n$ positive integers $a_1, \dots , a_ n$, what is the maximal value of\[ \left(a_1^2 + \dots + a_ k^2\right) \cdot \left(a_{k+1} + \dots + a_ n\right)? \]
+
+-----Input-----
+ - A single line containing an integer $2\leq n\leq 10^6$.
+ - Then follow $n$ lines, the $i$th of which contains the integer $1 \leq a_ i \leq 100$.
+
+-----Output-----
+Output the maximal value of the given expression.
+
+-----Examples-----
+Sample Input 1:
+5
+2
+1
+4
+3
+5
+Sample Output 1:
+168
+
+Sample Input 2:
+2
+1
+1
+Sample Output 2:
+1
+"""
+2022-04-09 22:17:38.812868 --------------------------
+2022-04-09 22:19:42.756414 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(int(input()))\n\na.sort()\n\ns1 = 0\ns2 = 0\nfor i in range(len(a)):\n    if i < len(a) / 2:\n        s1 += a[i]**2\n    else:\n        s2 += a[i]\n\nprint(s1 * s2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = []\n    for i in range(n):\n        a.append(int(sys.stdin.readline()))\n    a.sort()\n    ans = 0\n    cur = 0\n    for i in range(n):\n        cur += a[i]\n        ans = max(ans, cur * a[i])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input().strip())\n    A = list(map(int, [input().strip() for _ in range(N)]))\n    A.sort()\n\n    # (a1^2 + ... + ak^2) * (ak+1 + ... + an)\n    # is maximized when ak+1 + ... + an is maximized\n    # and a1^2 + ... + ak^2 is minimized\n    # which is when a1 ... ak are the smallest numbers\n\n    # (a1^2 + ... + ak^2) * (ak+1 + ... + an)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an) - (a1^2 + ... + ak^2) * (a1 + ... + ak)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an) - (a1^3 + ... + ak^3)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an - a1 - ... - ak)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an - a1 - ... - ak)\n    # = (a1^2 + ... + ak^2) * (an - ak)\n    # = (a1^2 + ... + ak^2) * (an - ak)\n\n    # a1^2 + ... + ak^2 is minimized when a1 ... ak are the smallest numbers\n    # an - ak is maximized when an is the largest number and ak is the smallest number\n\n    # so we can use the largest and smallest numbers\n    # a1^2 + ... + ak^2 = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n\n    # a1^2 + ... + ak^2 = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n    # = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n    # = a1^2 + ... + an^2 - (an+1^2 + ... + an^2)\n    # = a1^2 + ... + an^2 - (an^2 + ... + an^2)\n    # = a1^2 + ... + an^2 - (n - k) * an^2\n    # = a1^2 + ... + an^2 - (n - k) * an^2\n    # = (k - (n - k)) * an^2\n\n    # so the answer is (k - (n - k)) * an^2 * (an - a1)\n\n    # we can use the largest and smallest numbers\n    # (k - (n - k)) * an^2 * (an - a1)\n\n    print((N - 1) * A[-1]**2 * (A[-1] - A[0]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#%%\nn = int(input())\narr = [int(input()) for i in range(n)]\n\narr.sort()\nres = arr[0]*arr[0]*(sum(arr[1:]))\nfor i in range(1,n):\n    res = max(res, sum(arr[:i])*sum(arr[i:]))\nprint(res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = []\n    for i in range(n):\n        a.append(int(sys.stdin.readline().strip()))\n    a.sort()\n    sum_sq = 0\n    sum_lin = 0\n    for i in range(n):\n        if i < (n//2):\n            sum_sq += a[i]**2\n        else:\n            sum_lin += a[i]\n    print(sum_sq*sum_lin)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\na = []\n\nfor _ in range(n):\n    a.append(int(input()))\n\na.sort()\n\nmax_value = 0\n\nfor i in range(n):\n    current_value = a[i]**2 * (sum(a[i+1:]) + a[i])\n    if current_value > max_value:\n        max_value = current_value\n\nprint(max_value)"
+    },
+    {
+      "finish_reason": "length",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(int(input()))\n\n#1\n#a.sort()\n#print(sum(a[:n//2])**2 + sum(a[n//2:])**2)\n\n#2\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n)\n\n#3\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#4\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#5\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#6\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#7\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#8\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#9\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#10\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#11\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#12\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#13\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#14\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#15\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#16\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#17\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#18\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#19\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#20\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#21\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#22\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#23\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#24\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#25\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#26\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#27\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#28\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#29\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#30\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#31\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#32\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#33\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#34\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#35\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#36\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#37\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#38\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#39\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#40\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#41\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#42\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#43\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#44\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#45\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#46\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#47\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#48\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#49\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#50\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#51\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#52\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#53\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#54\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#55\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#56\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#57\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#58\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#59\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#60\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#61\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#62\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#63\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#64\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#65\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#66\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#67\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#68\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#69\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#70\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#71\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#72\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#73\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#74\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#75\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#76\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#77\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#78\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#79\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#80\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#81\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#82\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#83\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#84\n#a.sort()\n#print(a[n//2 - 1]*a[n"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport bisect\n\n\ndef main():\n    n = int(sys.stdin.readline())\n    input = [int(sys.stdin.readline()) for _ in range(n)]\n    input.sort()\n    max_val = float('-inf')\n    for i in range(n):\n        if i == 0:\n            max_val = max(max_val, input[i] * sum(input[i + 1:]))\n        elif i == n - 1:\n            max_val = max(max_val, input[i] * sum(input[:i]))\n        else:\n            max_val = max(max_val, input[i] * sum(input[:i]) + input[i] * sum(input[i + 1:]))\n    print(max_val)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649557059,
+  "id": "cmpl-4vHQxZKtHhrelTOIGUlscP1BzcljF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:19:42.756833 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(int(input()))\n\na.sort()\n\ns1 = 0\ns2 = 0\nfor i in range(len(a)):\n    if i < len(a) / 2:\n        s1 += a[i]**2\n    else:\n        s2 += a[i]\n\nprint(s1 * s2)"
+}
+2022-04-09 22:19:42.756875 REASON stop
+2022-04-09 22:19:42.767988 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.768034 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = []\n    for i in range(n):\n        a.append(int(sys.stdin.readline()))\n    a.sort()\n    ans = 0\n    cur = 0\n    for i in range(n):\n        cur += a[i]\n        ans = max(ans, cur * a[i])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:19:42.768117 REASON stop
+2022-04-09 22:19:42.768850 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.768888 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n\n    N = int(input().strip())\n    A = list(map(int, [input().strip() for _ in range(N)]))\n    A.sort()\n\n    # (a1^2 + ... + ak^2) * (ak+1 + ... + an)\n    # is maximized when ak+1 + ... + an is maximized\n    # and a1^2 + ... + ak^2 is minimized\n    # which is when a1 ... ak are the smallest numbers\n\n    # (a1^2 + ... + ak^2) * (ak+1 + ... + an)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an) - (a1^2 + ... + ak^2) * (a1 + ... + ak)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an) - (a1^3 + ... + ak^3)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an - a1 - ... - ak)\n    # = (a1^2 + ... + ak^2) * (a1 + ... + an - a1 - ... - ak)\n    # = (a1^2 + ... + ak^2) * (an - ak)\n    # = (a1^2 + ... + ak^2) * (an - ak)\n\n    # a1^2 + ... + ak^2 is minimized when a1 ... ak are the smallest numbers\n    # an - ak is maximized when an is the largest number and ak is the smallest number\n\n    # so we can use the largest and smallest numbers\n    # a1^2 + ... + ak^2 = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n\n    # a1^2 + ... + ak^2 = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n    # = a1^2 + ... + an^2 - (an+1^2 + ... + ak^2)\n    # = a1^2 + ... + an^2 - (an+1^2 + ... + an^2)\n    # = a1^2 + ... + an^2 - (an^2 + ... + an^2)\n    # = a1^2 + ... + an^2 - (n - k) * an^2\n    # = a1^2 + ... + an^2 - (n - k) * an^2\n    # = (k - (n - k)) * an^2\n\n    # so the answer is (k - (n - k)) * an^2 * (an - a1)\n\n    # we can use the largest and smallest numbers\n    # (k - (n - k)) * an^2 * (an - a1)\n\n    print((N - 1) * A[-1]**2 * (A[-1] - A[0]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:19:42.768967 REASON stop
+2022-04-09 22:19:42.769807 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.769842 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#%%\nn = int(input())\narr = [int(input()) for i in range(n)]\n\narr.sort()\nres = arr[0]*arr[0]*(sum(arr[1:]))\nfor i in range(1,n):\n    res = max(res, sum(arr[:i])*sum(arr[i:]))\nprint(res)"
+}
+2022-04-09 22:19:42.769912 REASON stop
+2022-04-09 22:19:42.770548 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.770584 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = []\n    for i in range(n):\n        a.append(int(sys.stdin.readline().strip()))\n    a.sort()\n    sum_sq = 0\n    sum_lin = 0\n    for i in range(n):\n        if i < (n//2):\n            sum_sq += a[i]**2\n        else:\n            sum_lin += a[i]\n    print(sum_sq*sum_lin)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:19:42.770658 REASON stop
+2022-04-09 22:19:42.771220 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.771318 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\na = []\n\nfor _ in range(n):\n    a.append(int(input()))\n\na.sort()\n\nmax_value = 0\n\nfor i in range(n):\n    current_value = a[i]**2 * (sum(a[i+1:]) + a[i])\n    if current_value > max_value:\n        max_value = current_value\n\nprint(max_value)"
+}
+2022-04-09 22:19:42.771401 REASON stop
+2022-04-09 22:19:42.771783 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'
+2022-04-09 22:19:42.771801 6 {
+  "finish_reason": "length",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = []\nfor i in range(n):\n    a.append(int(input()))\n\n#1\n#a.sort()\n#print(sum(a[:n//2])**2 + sum(a[n//2:])**2)\n\n#2\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n)\n\n#3\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#4\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#5\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#6\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#7\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#8\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#9\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#10\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#11\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#12\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#13\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#14\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#15\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#16\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#17\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#18\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#19\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#20\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#21\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#22\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#23\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#24\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#25\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#26\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#27\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#28\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#29\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#30\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#31\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#32\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#33\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#34\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#35\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#36\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#37\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#38\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#39\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#40\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#41\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#42\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#43\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#44\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#45\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#46\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#47\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#48\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#49\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#50\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#51\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#52\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#53\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#54\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#55\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#56\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#57\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#58\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#59\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#60\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#61\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#62\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#63\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#64\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#65\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#66\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#67\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#68\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#69\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#70\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#71\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#72\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#73\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#74\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#75\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#76\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#77\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#78\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#79\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#80\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#81\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#82\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#83\n#a.sort()\n#print(a[n//2 - 1]*a[n//2]*n if n%2 == 0 else a[n//2]**2*n)\n\n#84\n#a.sort()\n#print(a[n//2 - 1]*a[n"
+}
+2022-04-09 22:19:42.771902 REASON length
+2022-04-09 22:19:42.771909 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport bisect\n\n\ndef main():\n    n = int(sys.stdin.readline())\n    input = [int(sys.stdin.readline()) for _ in range(n)]\n    input.sort()\n    max_val = float('-inf')\n    for i in range(n):\n        if i == 0:\n            max_val = max(max_val, input[i] * sum(input[i + 1:]))\n        elif i == n - 1:\n            max_val = max(max_val, input[i] * sum(input[:i]))\n        else:\n            max_val = max(max_val, input[i] * sum(input[:i]) + input[i] * sum(input[i + 1:]))\n    print(max_val)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:19:42.771941 REASON stop
+2022-04-09 22:19:42.772202 test/intro-questions.txt_dir/4779/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4779/solutions.json'

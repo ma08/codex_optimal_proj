@@ -1,0 +1,166 @@
+2022-04-09 21:59:39.471367 """
+Every evening villagers in a small village gather around a big fire and sing songs.
+
+A prominent member of the community is the bard. Every evening, if the bard is present, he sings a brand new song that no villager has heard before, and no other song is sung that night. In the event that the bard is not present, other villagers sing without him and exchange all songs that they know.
+
+Given the list of villagers present for $E$ consecutive evenings, output all villagers that know all songs sung during that period.
+
+-----Input-----
+The first line of input contains an integer $N$, $2 \leq N \leq 100$, the number of villagers. The villagers are numbered $1$ to $N$. Villager number $1$ is the bard.
+
+The second line contains an integer $E$, $1 \leq E \leq 50$, the number of evenings.
+
+The next $E$ lines contain the list of villagers present on each of the $E$ evenings. Each line begins with a positive integer $K$, $2 \leq K \leq N$, the number of villagers present that evening, followed by $K$ positive integers separated by spaces representing the villagers.
+
+No villager will appear twice in one night and the bard will appear at least once across all nights.
+
+-----Output-----
+Output all villagers that know all songs, including the bard, one integer per line in ascending order.
+
+-----Examples-----
+Sample Input 1:
+4
+3
+2 1 2
+3 2 3 4
+3 4 2 1
+Sample Output 1:
+1
+2
+4
+
+Sample Input 2:
+8
+5
+4 1 3 5 6
+2 5 6
+3 6 7 8
+2 6 2
+4 2 6 8 1
+Sample Output 2:
+1
+2
+6
+8
+"""
+2022-04-09 21:59:39.471389 --------------------------
+2022-04-09 22:00:09.355468 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import deque\n\ndef main():\n    n = int(stdin.readline())\n    e = int(stdin.readline())\n    songs = {}\n    for i in range(1, n+1):\n        songs[i] = set()\n\n    for i in range(e):\n        line = stdin.readline().split()\n        for j in range(1, int(line[0])+1):\n            songs[int(line[j])].add(i)\n\n    q = deque()\n    q.append(1)\n    known = set()\n    while len(q) > 0:\n        curr = q.popleft()\n        known.add(curr)\n        for i in range(2, n+1):\n            if i not in known and len(songs[i].difference(songs[curr])) == 0:\n                q.append(i)\n\n    for i in range(1, n+1):\n        if i in known:\n            print(i)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"Bard\"\"\"\n    num_villagers = int(input())\n    num_evenings = int(input())\n    bard_list = []\n    bard_list.append(1)\n    for _ in range(num_evenings):\n        num_villagers_present = int(input())\n        villager_list = [int(i) for i in input().split()]\n        if 1 in villager_list:\n            for i in villager_list:\n                if i not in bard_list:\n                    bard_list.append(i)\n        else:\n            for i in villager_list:\n                if i not in bard_list:\n                    bard_list.append(i)\n    bard_list.sort()\n    for i in bard_list:\n        print(i)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    e = int(sys.stdin.readline().strip())\n    songs = set()\n    for i in range(e):\n        line = sys.stdin.readline().strip().split()\n        k = int(line[0])\n        for j in range(k):\n            songs.add(line[j])\n    for i in range(1, n + 1):\n        print(i)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#!/usr/bin/env python3\n\ndef main():\n    n = int(input())\n    e = int(input())\n    songs = set()\n    for _ in range(e):\n        for i in input().split()[1:]:\n            songs.add(i)\n    for i in range(1,n+1):\n        if str(i) not in songs:\n            print(i)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    villagers = int(sys.stdin.readline().strip())\n    evenings = int(sys.stdin.readline().strip())\n    songs = []\n    for evening in range(evenings):\n        singers = [int(x) for x in sys.stdin.readline().strip().split()]\n        if singers[0] == 1:\n            songs.append(singers[1])\n        else:\n            songs.extend(singers[1:])\n    for villager in range(1,villagers+1):\n        if songs.count(villager) == len(songs):\n            print(villager)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    e = int(sys.stdin.readline())\n    bard = 1\n    villagers = set(range(1, n + 1))\n    for i in range(e):\n        line = sys.stdin.readline().split()\n        k = int(line[0])\n        present = set([int(x) for x in line[1:]])\n        if bard in present:\n            villagers = present\n        else:\n            villagers = villagers.intersection(present)\n    print('\\n'.join([str(x) for x in sorted(list(villagers))]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nvillagers = int(input())\nnights = int(input())\nbard = 1\nnights_songs = []\nfor i in range(nights):\n    nights_songs.append(input().split()[1:])\n\nsongs = set()\nfor i in range(nights):\n    if bard in nights_songs[i]:\n        songs.add(i)\n    else:\n        for j in range(nights):\n            if i != j and set(nights_songs[i]).intersection(set(nights_songs[j])) != set():\n                songs.add(i)\n                songs.add(j)\n\nfor i in range(1, villagers+1):\n    for j in range(nights):\n        if i in nights_songs[j] and j not in songs:\n            break\n    else:\n        print(i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\" Main function \"\"\"\n    num_villagers = int(input())\n    num_nights = int(input())\n    villagers_nights = []\n    for _ in range(num_nights):\n        villagers_nights.append(set(map(int, input().split())))\n    songs = set()\n    for i in range(num_nights):\n        if 1 in villagers_nights[i]:\n            songs.add(i)\n        else:\n            for j in range(i):\n                if villagers_nights[i].intersection(villagers_nights[j]):\n                    songs.add(i)\n                    break\n    for i in range(num_villagers):\n        if i == 0 or all(i in villagers_nights[j] for j in songs):\n            print(i + 1)\n\nmain()"
+    }
+  ],
+  "created": 1649555979,
+  "id": "cmpl-4vH9XpPYQX6N2wDn5GPQfPTFlHwQF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:00:09.355819 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import deque\n\ndef main():\n    n = int(stdin.readline())\n    e = int(stdin.readline())\n    songs = {}\n    for i in range(1, n+1):\n        songs[i] = set()\n\n    for i in range(e):\n        line = stdin.readline().split()\n        for j in range(1, int(line[0])+1):\n            songs[int(line[j])].add(i)\n\n    q = deque()\n    q.append(1)\n    known = set()\n    while len(q) > 0:\n        curr = q.popleft()\n        known.add(curr)\n        for i in range(2, n+1):\n            if i not in known and len(songs[i].difference(songs[curr])) == 0:\n                q.append(i)\n\n    for i in range(1, n+1):\n        if i in known:\n            print(i)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:00:09.355873 REASON stop
+2022-04-09 22:00:09.367540 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.367609 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"Bard\"\"\"\n    num_villagers = int(input())\n    num_evenings = int(input())\n    bard_list = []\n    bard_list.append(1)\n    for _ in range(num_evenings):\n        num_villagers_present = int(input())\n        villager_list = [int(i) for i in input().split()]\n        if 1 in villager_list:\n            for i in villager_list:\n                if i not in bard_list:\n                    bard_list.append(i)\n        else:\n            for i in villager_list:\n                if i not in bard_list:\n                    bard_list.append(i)\n    bard_list.sort()\n    for i in bard_list:\n        print(i)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:00:09.367809 REASON stop
+2022-04-09 22:00:09.369086 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.369160 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    e = int(sys.stdin.readline().strip())\n    songs = set()\n    for i in range(e):\n        line = sys.stdin.readline().strip().split()\n        k = int(line[0])\n        for j in range(k):\n            songs.add(line[j])\n    for i in range(1, n + 1):\n        print(i)\n\nmain()"
+}
+2022-04-09 22:00:09.369359 REASON stop
+2022-04-09 22:00:09.370125 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.370155 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#!/usr/bin/env python3\n\ndef main():\n    n = int(input())\n    e = int(input())\n    songs = set()\n    for _ in range(e):\n        for i in input().split()[1:]:\n            songs.add(i)\n    for i in range(1,n+1):\n        if str(i) not in songs:\n            print(i)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:00:09.370219 REASON stop
+2022-04-09 22:00:09.370887 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.370919 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    villagers = int(sys.stdin.readline().strip())\n    evenings = int(sys.stdin.readline().strip())\n    songs = []\n    for evening in range(evenings):\n        singers = [int(x) for x in sys.stdin.readline().strip().split()]\n        if singers[0] == 1:\n            songs.append(singers[1])\n        else:\n            songs.extend(singers[1:])\n    for villager in range(1,villagers+1):\n        if songs.count(villager) == len(songs):\n            print(villager)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:00:09.370994 REASON stop
+2022-04-09 22:00:09.371694 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.371727 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    e = int(sys.stdin.readline())\n    bard = 1\n    villagers = set(range(1, n + 1))\n    for i in range(e):\n        line = sys.stdin.readline().split()\n        k = int(line[0])\n        present = set([int(x) for x in line[1:]])\n        if bard in present:\n            villagers = present\n        else:\n            villagers = villagers.intersection(present)\n    print('\\n'.join([str(x) for x in sorted(list(villagers))]))\n\nmain()"
+}
+2022-04-09 22:00:09.371819 REASON stop
+2022-04-09 22:00:09.372544 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.372578 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nvillagers = int(input())\nnights = int(input())\nbard = 1\nnights_songs = []\nfor i in range(nights):\n    nights_songs.append(input().split()[1:])\n\nsongs = set()\nfor i in range(nights):\n    if bard in nights_songs[i]:\n        songs.add(i)\n    else:\n        for j in range(nights):\n            if i != j and set(nights_songs[i]).intersection(set(nights_songs[j])) != set():\n                songs.add(i)\n                songs.add(j)\n\nfor i in range(1, villagers+1):\n    for j in range(nights):\n        if i in nights_songs[j] and j not in songs:\n            break\n    else:\n        print(i)"
+}
+2022-04-09 22:00:09.372649 REASON stop
+2022-04-09 22:00:09.373014 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
+2022-04-09 22:00:09.373141 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\" Main function \"\"\"\n    num_villagers = int(input())\n    num_nights = int(input())\n    villagers_nights = []\n    for _ in range(num_nights):\n        villagers_nights.append(set(map(int, input().split())))\n    songs = set()\n    for i in range(num_nights):\n        if 1 in villagers_nights[i]:\n            songs.add(i)\n        else:\n            for j in range(i):\n                if villagers_nights[i].intersection(villagers_nights[j]):\n                    songs.add(i)\n                    break\n    for i in range(num_villagers):\n        if i == 0 or all(i in villagers_nights[j] for j in songs):\n            print(i + 1)\n\nmain()"
+}
+2022-04-09 22:00:09.373230 REASON stop
+2022-04-09 22:00:09.373891 test/intro-questions.txt_dir/4757/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4757/solutions.json'
