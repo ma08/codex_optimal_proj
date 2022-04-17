@@ -1,0 +1,75 @@
+2022-04-09 18:50:42.385307 """
+Authors guessed an array $a$ consisting of $n$ integers; each integer is not less than $2$ and not greater than $2 \cdot 10^5$. You don't know the array $a$, but you know the array $b$ which is formed from it with the following sequence of operations:  Firstly, let the array $b$ be equal to the array $a$;  Secondly, for each $i$ from $1$ to $n$:   if $a_i$ is a prime number, then one integer $p_{a_i}$ is appended to array $b$, where $p$ is an infinite sequence of prime numbers ($2, 3, 5, \dots$);  otherwise (if $a_i$ is not a prime number), the greatest divisor of $a_i$ which is not equal to $a_i$ is appended to $b$;   Then the obtained array of length $2n$ is shuffled and given to you in the input. 
+
+Here $p_{a_i}$ means the $a_i$-th prime number. The first prime $p_1 = 2$, the second one is $p_2 = 3$, and so on.
+
+Your task is to recover any suitable array $a$ that forms the given array $b$. It is guaranteed that the answer exists (so the array $b$ is obtained from some suitable array $a$). If there are multiple answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $2n$ integers $b_1, b_2, \dots, b_{2n}$ ($2 \le b_i \le 2750131$), where $b_i$ is the $i$-th element of $b$. $2750131$ is the $199999$-th prime number.
+
+
+-----Output-----
+
+In the only line of the output print $n$ integers $a_1, a_2, \dots, a_n$ ($2 \le a_i \le 2 \cdot 10^5$) in any order — the array $a$ from which the array $b$ can be obtained using the sequence of moves given in the problem statement. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+3
+3 5 2 3 2 4
+
+Output
+3 4 2 
+Input
+1
+2750131 199999
+
+Output
+199999 
+Input
+1
+3 6
+
+Output
+6
+"""
+2022-04-09 18:50:42.385344 --------------------------
+2022-04-09 18:51:02.208961 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(n, b):\n    \"\"\"\n    >>> solve(3, [3, 5, 2, 3, 2, 4])\n    [3, 4, 2]\n    >>> solve(1, [2750131, 199999])\n    [199999]\n    >>> solve(1, [3, 6])\n    [6]\n    \"\"\"\n    # The first n elements of b are the elements of a.\n    # The remaining n elements of b are the divisors of the elements of a.\n    # If an element of a is prime, it is replaced by the n-th prime number.\n    # Thus the elements of b can be sorted and the second half of the elements of b can be used to find the elements of a.\n    # The elements of a are the elements of b that are not in the second half of b.\n    b.sort()\n    a = [i for i in b if i not in b[n:]]\n    return a\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    b = list(map(int, input().split()))\n    print(*solve(n, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef convert_to_primes(n):\n    primes = []\n    i = 2\n    while len(primes) < n:\n        if is_prime(i):\n            primes.append(i)\n        i += 1\n    return primes\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef get_primes():\n    primes = []\n    i = 2\n    while True:\n        if is_prime(i):\n            primes.append(i)\n        i += 1\n        yield primes\n\ndef solve(n, b):\n    primes = convert_to_primes(n)\n    a = []\n    for i, val in enumerate(b):\n        if i % 2 == 0:\n            a.append(val)\n        else:\n            if val in primes:\n                a.append(primes.index(val) + 1)\n            else:\n                a.append(val)\n    return a\n\ndef main():\n    n = int(input())\n    b = [int(i) for i in input().split(' ')]\n    a = solve(n, b)\n    print(' '.join([str(i) for i in a]))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649544642,
+  "id": "cmpl-4vECgbrS2kus8DwxZkZ7RO5ocVueP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:51:02.209226 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(n, b):\n    \"\"\"\n    >>> solve(3, [3, 5, 2, 3, 2, 4])\n    [3, 4, 2]\n    >>> solve(1, [2750131, 199999])\n    [199999]\n    >>> solve(1, [3, 6])\n    [6]\n    \"\"\"\n    # The first n elements of b are the elements of a.\n    # The remaining n elements of b are the divisors of the elements of a.\n    # If an element of a is prime, it is replaced by the n-th prime number.\n    # Thus the elements of b can be sorted and the second half of the elements of b can be used to find the elements of a.\n    # The elements of a are the elements of b that are not in the second half of b.\n    b.sort()\n    a = [i for i in b if i not in b[n:]]\n    return a\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    b = list(map(int, input().split()))\n    print(*solve(n, b))"
+}
+2022-04-09 18:51:02.209286 REASON stop
+2022-04-09 18:51:02.210868 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef convert_to_primes(n):\n    primes = []\n    i = 2\n    while len(primes) < n:\n        if is_prime(i):\n            primes.append(i)\n        i += 1\n    return primes\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef get_primes():\n    primes = []\n    i = 2\n    while True:\n        if is_prime(i):\n            primes.append(i)\n        i += 1\n        yield primes\n\ndef solve(n, b):\n    primes = convert_to_primes(n)\n    a = []\n    for i, val in enumerate(b):\n        if i % 2 == 0:\n            a.append(val)\n        else:\n            if val in primes:\n                a.append(primes.index(val) + 1)\n            else:\n                a.append(val)\n    return a\n\ndef main():\n    n = int(input())\n    b = [int(i) for i in input().split(' ')]\n    a = solve(n, b)\n    print(' '.join([str(i) for i in a]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 18:51:02.210962 REASON stop
