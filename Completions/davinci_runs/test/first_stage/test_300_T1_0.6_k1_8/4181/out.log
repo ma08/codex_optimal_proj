@@ -1,0 +1,145 @@
+2022-04-16 20:06:16.454735 """
+There are N+1 towns. The i-th town is being attacked by A_i monsters.
+We have N heroes. The i-th hero can defeat monsters attacking the i-th or (i+1)-th town, for a total of at most B_i monsters.
+What is the maximum total number of monsters the heroes can cooperate to defeat?
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq A_i \leq 10^9
+ - 1 \leq B_i \leq 10^9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_{N+1}
+B_1 B_2 ... B_N
+
+-----Output-----
+Print the maximum total number of monsters the heroes can defeat.
+
+-----Sample Input-----
+2
+3 5 2
+4 5
+
+-----Sample Output-----
+9
+
+If the heroes choose the monsters to defeat as follows, they can defeat nine monsters in total, which is the maximum result.
+ - The first hero defeats two monsters attacking the first town and two monsters attacking the second town.
+ - The second hero defeats three monsters attacking the second town and two monsters attacking the third town.
+"""
+2022-04-16 20:06:16.454757 --------------------------
+2022-04-16 20:06:33.958189 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# N = 2\n# A = [3, 5, 2]\n# B = [4, 5]\n\n# N = 3\n# A = [1, 2, 1, 1, 2]\n# B = [2, 3, 1, 2]\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\n# print(N, A, B)\n\na = 0\nb = 0\ntotal = 0\n\nwhile a < N+1:\n    hero_a = A[a]\n    hero_b = B[b]\n\n    if hero_a < hero_b:\n        A[a] = 0\n        A[a+1] -= hero_a\n        total += hero_a\n        a += 1\n    elif hero_a > hero_b:\n        A[a] -= hero_b\n        B[b] = 0\n        total += hero_b\n        b += 1\n    elif hero_a == hero_b:\n        A[a] = 0\n        B[b] = 0\n        total += hero_a\n        a += 1\n        b += 1\n\nprint(total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    C = [0] * (N+1)\n\n    for i in range(N):\n        if A[i] >= B[i]:\n            C[i] = B[i]\n        else:\n            C[i] = A[i]\n            C[i+1] = B[i] - A[i]\n    print(sum(C))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int,input().split()))\n    b = list(map(int,input().split()))\n    ans = 0\n    for i in range(n):\n        ans += min(a[i],b[i])\n        a[i+1] = max(0,a[i+1]-b[i])\n    ans += min(a[n],b[n-1])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        a_i = min(a[i], b[i])\n        b_i = min(a[i+1], b[i] - a_i)\n        ans += a_i + b_i\n        a[i+1] -= b_i\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = [int(i) for i in input().split()]\nB = [int(i) for i in input().split()]\n\ndefeat = 0\nfor i in range(N):\n    defeat += min(A[i], B[i])\n    defeat += min(A[i+1], B[i] - min(A[i], B[i]))\nprint(defeat)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    monsters = list(map(int, input().split()))\n    heroes = list(map(int, input().split()))\n\n    max_monsters = 0\n    for i, hero in enumerate(heroes):\n        if i == 0:\n            max_monsters += min(hero, monsters[i] + monsters[i+1])\n        elif i == len(heroes) - 1:\n            max_monsters += min(hero, monsters[i] + monsters[i+1])\n        else:\n            max_monsters += min(hero, monsters[i] + monsters[i+1] - monsters[i-1])\n\n    print(max_monsters)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    A[0] = 0\n    for i in range(N):\n        t = min(A[i+1], B[i])\n        A[i+1] -= t\n        B[i] -= t\n        A[i+2] += t\n    print(sum(A)+sum(B))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nresult = 0\n\n#The first hero can defeat either a[0] or a[1] monsters depending on which is smaller.\nresult += min(a[0], b[0])\n\n#The other heroes can defeat either a[i-1] or a[i] monsters depending on which is smaller.\nfor i in range(1, n):\n    result += min(a[i], b[i])\n\n#The last hero can defeat either a[n-1] or a[n] monsters depending on which is smaller.\nresult += min(a[n], b[n-1])\n\nprint(result)"
+    }
+  ],
+  "created": 1650139576,
+  "id": "cmpl-4xiyOwjJXDNhB7rn6v6xm2LBrJa1k",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:06:33.958449 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# N = 2\n# A = [3, 5, 2]\n# B = [4, 5]\n\n# N = 3\n# A = [1, 2, 1, 1, 2]\n# B = [2, 3, 1, 2]\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\n# print(N, A, B)\n\na = 0\nb = 0\ntotal = 0\n\nwhile a < N+1:\n    hero_a = A[a]\n    hero_b = B[b]\n\n    if hero_a < hero_b:\n        A[a] = 0\n        A[a+1] -= hero_a\n        total += hero_a\n        a += 1\n    elif hero_a > hero_b:\n        A[a] -= hero_b\n        B[b] = 0\n        total += hero_b\n        b += 1\n    elif hero_a == hero_b:\n        A[a] = 0\n        B[b] = 0\n        total += hero_a\n        a += 1\n        b += 1\n\nprint(total)"
+}
+2022-04-16 20:06:33.958483 REASON stop
+2022-04-16 20:06:34.368984 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    C = [0] * (N+1)\n\n    for i in range(N):\n        if A[i] >= B[i]:\n            C[i] = B[i]\n        else:\n            C[i] = A[i]\n            C[i+1] = B[i] - A[i]\n    print(sum(C))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:06:34.369179 REASON stop
+2022-04-16 20:06:34.490777 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int,input().split()))\n    b = list(map(int,input().split()))\n    ans = 0\n    for i in range(n):\n        ans += min(a[i],b[i])\n        a[i+1] = max(0,a[i+1]-b[i])\n    ans += min(a[n],b[n-1])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:06:34.490898 REASON stop
+2022-04-16 20:06:34.565385 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        a_i = min(a[i], b[i])\n        b_i = min(a[i+1], b[i] - a_i)\n        ans += a_i + b_i\n        a[i+1] -= b_i\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:06:34.565495 REASON stop
+2022-04-16 20:06:34.660811 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = [int(i) for i in input().split()]\nB = [int(i) for i in input().split()]\n\ndefeat = 0\nfor i in range(N):\n    defeat += min(A[i], B[i])\n    defeat += min(A[i+1], B[i] - min(A[i], B[i]))\nprint(defeat)"
+}
+2022-04-16 20:06:34.660944 REASON stop
+2022-04-16 20:06:34.783689 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    monsters = list(map(int, input().split()))\n    heroes = list(map(int, input().split()))\n\n    max_monsters = 0\n    for i, hero in enumerate(heroes):\n        if i == 0:\n            max_monsters += min(hero, monsters[i] + monsters[i+1])\n        elif i == len(heroes) - 1:\n            max_monsters += min(hero, monsters[i] + monsters[i+1])\n        else:\n            max_monsters += min(hero, monsters[i] + monsters[i+1] - monsters[i-1])\n\n    print(max_monsters)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:06:34.783848 REASON stop
+2022-04-16 20:06:34.840225 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    A[0] = 0\n    for i in range(N):\n        t = min(A[i+1], B[i])\n        A[i+1] -= t\n        B[i] -= t\n        A[i+2] += t\n    print(sum(A)+sum(B))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:06:34.840342 REASON stop
+2022-04-16 20:06:34.986333 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nresult = 0\n\n#The first hero can defeat either a[0] or a[1] monsters depending on which is smaller.\nresult += min(a[0], b[0])\n\n#The other heroes can defeat either a[i-1] or a[i] monsters depending on which is smaller.\nfor i in range(1, n):\n    result += min(a[i], b[i])\n\n#The last hero can defeat either a[n-1] or a[n] monsters depending on which is smaller.\nresult += min(a[n], b[n-1])\n\nprint(result)"
+}
+2022-04-16 20:06:34.986461 REASON stop

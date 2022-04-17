@@ -1,0 +1,160 @@
+2022-04-16 18:45:57.771345 """
+You are given a matrix $a$ of size $n \times m$ consisting of integers.
+
+You can choose no more than $\left\lfloor\frac{m}{2}\right\rfloor$ elements in each row. Your task is to choose these elements in such a way that their sum is divisible by $k$ and this sum is the maximum.
+
+In other words, you can choose no more than a half (rounded down) of elements in each row, you have to find the maximum sum of these elements divisible by $k$.
+
+Note that you can choose zero elements (and the sum of such set is $0$).
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $m$ and $k$ ($1 \le n, m, k \le 70$) — the number of rows in the matrix, the number of columns in the matrix and the value of $k$. The next $n$ lines contain $m$ elements each, where the $j$-th element of the $i$-th row is $a_{i, j}$ ($1 \le a_{i, j} \le 70$).
+
+
+-----Output-----
+
+Print one integer — the maximum sum divisible by $k$ you can obtain.
+
+
+-----Examples-----
+Input
+3 4 3
+1 2 3 4
+5 2 2 2
+7 1 1 4
+
+Output
+24
+
+Input
+5 5 4
+1 2 4 2 1
+3 5 1 2 4
+1 5 7 1 2
+3 8 7 1 2
+8 4 7 1 6
+
+Output
+56
+
+
+
+-----Note-----
+
+In the first example, the optimal answer is $2$ and $4$ in the first row, $5$ and $2$ in the second row and $7$ and $4$ in the third row. The total sum is $2 + 4 + 5 + 2 + 7 + 4 = 24$.
+"""
+2022-04-16 18:45:57.771357 --------------------------
+2022-04-16 18:47:01.843353 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef max_sum(n, m, k, matrix):\n    max_sum = 0\n    for i in range(n):\n        max_sum += max_sum_in_row(matrix[i], m, k)\n    return max_sum\n\n\ndef max_sum_in_row(row, m, k):\n    half = m // 2\n    row = sorted(row, key=lambda x: x % k)\n    max_sum = 0\n    for i in range(half + 1):\n        if i == half and row[i] % k != 0:\n            continue\n        max_sum += row[i]\n    return max_sum\n\n\nif __name__ == '__main__':\n    n, m, k = map(int, input().split())\n    matrix = []\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(max_sum(n, m, k, matrix))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\n\nmatrix = [list(map(int, input().split())) for _ in range(n)]\n\ndp = [[0] * (m+1) for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m+1):\n        dp[i][j] = max(dp[i][j-1], dp[i-1][j])\n        if j > 1:\n            dp[i][j] = max(dp[i][j], dp[i-1][j-2]+matrix[i-1][j-1])\n\nfor row in dp:\n    print(row)\n\nprint(dp[n][m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\ndp = [[0] * (m + 1) for i in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, min(m + 1, i * (m // 2) + 1)):\n        if j <= m // 2:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - m // 2] + a[i - 1][j - m // 2 - 1])\n\nprint(dp[n][m // 2])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = [[int(el) for el in input().split()] for _ in range(n)]\n    dp = [[0] * (m // 2 + 1) for _ in range(n)]\n    for i in range(n):\n        for j in range(m // 2 + 1):\n            if i == 0:\n                dp[i][j] = sum(sorted(matrix[i])[-j:])\n            elif j == 0:\n                dp[i][j] = 0\n            else:\n                dp[i][j] = max(dp[i - 1][j], sum(sorted(matrix[i])[-j:]) + dp[i - 1][j - 1])\n    print(dp[-1][-1] - dp[-1][-1] % k)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nimport sys\nfrom collections import deque\n\nn, m, k = map(int, input().split())\n\nmatrix = []\n\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\nans = 0\n\nfor i in range(1, k):\n    count_per_column = [0] * m\n    for row in matrix:\n        for j, val in enumerate(row):\n            if val % k == i:\n                count_per_column[j] += 1\n\n    # print('i:', i, 'count_per_column:', count_per_column)\n    count_per_column = deque(sorted(count_per_column))\n    # print('i:', i, 'count_per_column:', count_per_column)\n\n    max_column = m // 2\n    if m % 2 == 1:\n        max_column += 1\n    for _ in range(max_column):\n        val = count_per_column.popleft()\n        ans += val\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = []\nfor i in range(n):\n    a.append([int(x) for x in input().split()])\n\ndp = [[0 for i in range(m+1)] for j in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m+1):\n        dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1][j-1])\n\nprint(dp[n][m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom itertools import product\nfrom collections import defaultdict\nfrom collections import deque\nfrom math import ceil\n\ndef read_ints():\n    return tuple(int(x) for x in stdin.readline().split())\n\ndef read_int_matrix(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_rows(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_3d(rows, cols, depth):\n    return tuple(tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(cols)) for _ in range(depth))\n\ndef read_ints_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_2d(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_str_matrix(rows):\n    return tuple(stdin.readline().split() for _ in range(rows))\n\ndef read_str_matrix_2d(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_str_matrix_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_floats():\n    return tuple(float(x) for x in stdin.readline().split())\n\ndef read_floats_cols(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_cols(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_2d(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_2d(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_3d(rows, cols, depth):\n    return tuple(tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(cols)) for _ in range(depth))\n\ndef read_ints_matrix_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_cols_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_cols_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_cols_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_cols_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_chars():\n    return tuple(stdin.readline().split())\n\ndef read_chars_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_cols_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_cols_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef dp_algorithm(rows, cols, k, matrix):\n    # dp_table = [[0 for _ in range(cols+1)] for _ in range(rows+1)]\n    # for i in range(rows):\n    #     for j in range(cols):\n    #         for k in range(j, cols):\n    #             dp_table[i][k] = max(dp_table[i][k], matrix[i][j])\n    # print(dp_table)\n    # return dp_table\n    return [[0 for _ in range(cols+1)] for _ in range(rows+1)]\n\ndef main():\n    n, m, k = read_ints()\n    matrix = read_int_matrix(n)\n    dp_table = dp_algorithm(n, m, k, matrix)\n    print(dp_table)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef read_ints():\n    return list(map(int, input().split(' ')))\n\ndef read_int():\n    return int(input())\n\ndef read_matrix():\n    return [read_ints() for _ in range(read_int())]\n\ndef matrix_rows(matrix):\n    return len(matrix)\n\ndef matrix_cols(matrix):\n    return len(matrix[0])\n\ndef matrix_elems(matrix):\n    for row in matrix:\n        for elem in row:\n            yield elem\n\ndef matrix_max_sum_divisible_by(matrix, divisor):\n    return max(sum(row) for row in matrix if sum(row) % divisor == 0)\n\ndef matrix_elems_sum_divisible_by(matrix, divisor):\n    return sum(elem for elem in matrix_elems(matrix) if elem % divisor == 0)\n\ndef matrix_max_sum_divisible_by_k(matrix, k):\n    return max(matrix_elems_sum_divisible_by(matrix, k),\n        matrix_max_sum_divisible_by(matrix, k))\n\n#-----\n\nn, m, k = read_ints()\na = read_matrix()\n\nprint(matrix_max_sum_divisible_by_k(a, k))"
+    }
+  ],
+  "created": 1650134757,
+  "id": "cmpl-4xhifdFMhhX076tbQid9dAVIGPPOQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 18:47:01.843849 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef max_sum(n, m, k, matrix):\n    max_sum = 0\n    for i in range(n):\n        max_sum += max_sum_in_row(matrix[i], m, k)\n    return max_sum\n\n\ndef max_sum_in_row(row, m, k):\n    half = m // 2\n    row = sorted(row, key=lambda x: x % k)\n    max_sum = 0\n    for i in range(half + 1):\n        if i == half and row[i] % k != 0:\n            continue\n        max_sum += row[i]\n    return max_sum\n\n\nif __name__ == '__main__':\n    n, m, k = map(int, input().split())\n    matrix = []\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(max_sum(n, m, k, matrix))"
+}
+2022-04-16 18:47:01.843919 REASON stop
+2022-04-16 18:47:01.874373 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\n\nmatrix = [list(map(int, input().split())) for _ in range(n)]\n\ndp = [[0] * (m+1) for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m+1):\n        dp[i][j] = max(dp[i][j-1], dp[i-1][j])\n        if j > 1:\n            dp[i][j] = max(dp[i][j], dp[i-1][j-2]+matrix[i-1][j-1])\n\nfor row in dp:\n    print(row)\n\nprint(dp[n][m])"
+}
+2022-04-16 18:47:01.874605 REASON stop
+2022-04-16 18:47:01.875502 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\ndp = [[0] * (m + 1) for i in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, min(m + 1, i * (m // 2) + 1)):\n        if j <= m // 2:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - m // 2] + a[i - 1][j - m // 2 - 1])\n\nprint(dp[n][m // 2])"
+}
+2022-04-16 18:47:01.875594 REASON stop
+2022-04-16 18:47:01.896701 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = [[int(el) for el in input().split()] for _ in range(n)]\n    dp = [[0] * (m // 2 + 1) for _ in range(n)]\n    for i in range(n):\n        for j in range(m // 2 + 1):\n            if i == 0:\n                dp[i][j] = sum(sorted(matrix[i])[-j:])\n            elif j == 0:\n                dp[i][j] = 0\n            else:\n                dp[i][j] = max(dp[i - 1][j], sum(sorted(matrix[i])[-j:]) + dp[i - 1][j - 1])\n    print(dp[-1][-1] - dp[-1][-1] % k)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:47:01.896821 REASON stop
+2022-04-16 18:47:01.910354 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nimport sys\nfrom collections import deque\n\nn, m, k = map(int, input().split())\n\nmatrix = []\n\nfor i in range(n):\n    matrix.append(list(map(int, input().split())))\n\nans = 0\n\nfor i in range(1, k):\n    count_per_column = [0] * m\n    for row in matrix:\n        for j, val in enumerate(row):\n            if val % k == i:\n                count_per_column[j] += 1\n\n    # print('i:', i, 'count_per_column:', count_per_column)\n    count_per_column = deque(sorted(count_per_column))\n    # print('i:', i, 'count_per_column:', count_per_column)\n\n    max_column = m // 2\n    if m % 2 == 1:\n        max_column += 1\n    for _ in range(max_column):\n        val = count_per_column.popleft()\n        ans += val\n\nprint(ans)"
+}
+2022-04-16 18:47:01.910493 REASON stop
+2022-04-16 18:47:01.937127 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = []\nfor i in range(n):\n    a.append([int(x) for x in input().split()])\n\ndp = [[0 for i in range(m+1)] for j in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m+1):\n        dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1][j-1])\n\nprint(dp[n][m])"
+}
+2022-04-16 18:47:01.937249 REASON stop
+2022-04-16 18:47:01.938292 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom itertools import product\nfrom collections import defaultdict\nfrom collections import deque\nfrom math import ceil\n\ndef read_ints():\n    return tuple(int(x) for x in stdin.readline().split())\n\ndef read_int_matrix(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_rows(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_3d(rows, cols, depth):\n    return tuple(tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(cols)) for _ in range(depth))\n\ndef read_ints_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_2d(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_int_matrix_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_str_matrix(rows):\n    return tuple(stdin.readline().split() for _ in range(rows))\n\ndef read_str_matrix_2d(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_str_matrix_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_floats():\n    return tuple(float(x) for x in stdin.readline().split())\n\ndef read_floats_cols(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_cols(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_cols(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_2d(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_2d(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_3d(rows, cols, depth):\n    return tuple(tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(cols)) for _ in range(depth))\n\ndef read_ints_matrix_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_cols_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_cols_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_floats_matrix_cols_one_line(rows):\n    return tuple(tuple(float(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_ints_matrix_cols_one_line(rows):\n    return tuple(tuple(int(x) for x in stdin.readline().split()) for _ in range(rows))\n\ndef read_chars():\n    return tuple(stdin.readline().split())\n\ndef read_chars_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_cols(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_cols_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_matrix_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef read_chars_cols_one_line(rows):\n    return tuple(tuple(stdin.readline().split()) for _ in range(rows))\n\ndef dp_algorithm(rows, cols, k, matrix):\n    # dp_table = [[0 for _ in range(cols+1)] for _ in range(rows+1)]\n    # for i in range(rows):\n    #     for j in range(cols):\n    #         for k in range(j, cols):\n    #             dp_table[i][k] = max(dp_table[i][k], matrix[i][j])\n    # print(dp_table)\n    # return dp_table\n    return [[0 for _ in range(cols+1)] for _ in range(rows+1)]\n\ndef main():\n    n, m, k = read_ints()\n    matrix = read_int_matrix(n)\n    dp_table = dp_algorithm(n, m, k, matrix)\n    print(dp_table)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:47:01.938471 REASON stop
+2022-04-16 18:47:01.951914 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef read_ints():\n    return list(map(int, input().split(' ')))\n\ndef read_int():\n    return int(input())\n\ndef read_matrix():\n    return [read_ints() for _ in range(read_int())]\n\ndef matrix_rows(matrix):\n    return len(matrix)\n\ndef matrix_cols(matrix):\n    return len(matrix[0])\n\ndef matrix_elems(matrix):\n    for row in matrix:\n        for elem in row:\n            yield elem\n\ndef matrix_max_sum_divisible_by(matrix, divisor):\n    return max(sum(row) for row in matrix if sum(row) % divisor == 0)\n\ndef matrix_elems_sum_divisible_by(matrix, divisor):\n    return sum(elem for elem in matrix_elems(matrix) if elem % divisor == 0)\n\ndef matrix_max_sum_divisible_by_k(matrix, k):\n    return max(matrix_elems_sum_divisible_by(matrix, k),\n        matrix_max_sum_divisible_by(matrix, k))\n\n#-----\n\nn, m, k = read_ints()\na = read_matrix()\n\nprint(matrix_max_sum_divisible_by_k(a, k))"
+}
+2022-04-16 18:47:01.952052 REASON stop

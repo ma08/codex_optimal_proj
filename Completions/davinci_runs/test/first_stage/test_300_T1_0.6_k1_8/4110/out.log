@@ -1,0 +1,156 @@
+2022-04-16 19:34:41.874586 """
+A programming competition site AtCode provides algorithmic problems.
+Each problem is allocated a score based on its difficulty.
+Currently, for each integer i between 1 and D (inclusive), there are p_i problems with a score of 100i points.
+These p_1 + … + p_D problems are all of the problems available on AtCode.
+A user of AtCode has a value called total score.
+The total score of a user is the sum of the following two elements:
+ - Base score: the sum of the scores of all problems solved by the user.
+ - Perfect bonuses: when a user solves all problems with a score of 100i points, he/she earns the perfect bonus of c_i points, aside from the base score (1 ≤ i ≤ D).
+Takahashi, who is the new user of AtCode, has not solved any problem.
+His objective is to have a total score of G or more points.
+At least how many problems does he need to solve for this objective?
+
+-----Constraints-----
+ - 1 ≤ D ≤ 10
+ - 1 ≤ p_i ≤ 100
+ - 100 ≤ c_i ≤ 10^6
+ - 100 ≤ G
+ - All values in input are integers.
+ - c_i and G are all multiples of 100.
+ - It is possible to have a total score of G or more points.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+D G
+p_1 c_1
+:
+p_D c_D
+
+-----Output-----
+Print the minimum number of problems that needs to be solved in order to have a total score of G or more points. Note that this objective is always achievable (see Constraints).
+
+-----Sample Input-----
+2 700
+3 500
+5 800
+
+-----Sample Output-----
+3
+
+In this case, there are three problems each with 100 points and five problems each with 200 points. The perfect bonus for solving all the 100-point problems is 500 points, and the perfect bonus for solving all the 200-point problems is 800 points. Takahashi's objective is to have a total score of 700 points or more.
+One way to achieve this objective is to solve four 200-point problems and earn a base score of 800 points. However, if we solve three 100-point problems, we can earn the perfect bonus of 500 points in addition to the base score of 300 points, for a total score of 800 points, and we can achieve the objective with fewer problems.
+"""
+2022-04-16 19:34:41.874601 --------------------------
+2022-04-16 19:35:52.823317 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    d, g = map(int, input().split())\n    p_c_ls = [list(map(int, input().split())) for _ in range(d)]\n    ans = float('inf')\n    for i in range(2 ** d):\n        score = 0\n        cnt = 0\n        for j in range(d):\n            if i & (1 << j):\n                cnt += p_c_ls[j][0]\n                score += p_c_ls[j][0] * 100 * (j + 1) + p_c_ls[j][1]\n        if score >= g:\n            ans = min(ans, cnt)\n        else:\n            for j in range(d - 1, -1, -1):\n                if i & (1 << j):\n                    continue\n                need = (g - score + 100 * (j + 1) - 1) // (100 * (j + 1))\n                if need >= p_c_ls[j][0]:\n                    continue\n                cnt += need\n                score += need * 100 * (j + 1)\n                ans = min(ans, cnt)\n                break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nd,g = map(int, input().split())\nproblems = []\nfor i in range(d):\n    p,c = map(int, input().split())\n    problems.append((p,c,i+1))\n\nproblems.sort(key=lambda x: x[2], reverse=True)\n\nans = 0\n\nfor p,c,i in problems:\n    if g <= 0: break\n    score = i*100\n    if g - score <= 0:\n        ans += g // score\n        g -= (g // score)*score\n    elif g - score > 0:\n        ans += p\n        g -= p*score\n\nif g > 0:\n    for p,c,i in problems:\n        if g <= 0: break\n        score = i*100\n        if c > 0:\n            if g - c <= 0:\n                g -= c\n            else:\n                ans += 1\n                g -= c\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#/usr/bin/python\n#-*- coding: utf-8 -*-\n\nD, G = map(int, input().split())\npc_list = []\nfor i in range(D):\n    pc_list.append(list(map(int, input().split())))\n\n#print(D, G)\n#print(pc_list)\n\n# \u89e3\u7b54\u6570\u3092\u6700\u5927\u5316\u3059\u308b\n# \u6700\u5927\u5024\u3092\u6c42\u3081\u308b\u305f\u3081\u306b\u3001\u6700\u5c0f\u5024\u3092\u63a2\u3059\n# \u63a2\u7d22\u3059\u308b\u5024\u306f\u30011\u554f\u304b\u3089D\u554f\u307e\u3067\n# \u305f\u3060\u3057\u3001\u5168\u554f\u89e3\u7b54\u3057\u305f\u5834\u5408\u306f\u3001\u554f\u984c\u6570\u30921\u554f\u6e1b\u3089\u3059\n\nmin_answer_num = 0\n\nfor i in range(D):\n    min_answer_num += pc_list[i][0]\n\nprint(min_answer_num)\n\nfor i in range(1,D+1):\n    #print(i)\n    #print(pc_list[i-1][0])\n    if pc_list[i-1][0] == 1:\n        # \u5168\u554f\u89e3\u7b54\u3057\u305f\u5834\u5408\u306f\u3001\u554f\u984c\u6570\u30921\u554f\u6e1b\u3089\u3059\n        min_answer_num -= 1\n        continue\n    else:\n        min_answer_num -= pc_list[i-1][0]\n        min_answer_num += 1\n        print(min_answer_num)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ninput_str = input()\nD = int(input_str.split()[0])\nG = int(input_str.split()[1])\nproblem_list = []\nfor i in range(D):\n    input_str = input()\n    problem_list.append([int(input_str.split()[0]), int(input_str.split()[1])])\n\nproblem_score_list = []\nfor i in range(D):\n    for j in range(problem_list[i][0]):\n        problem_score_list.append((i+1)*100)\n\ntotal_problem_num = sum([x[0] for x in problem_list])\nmax_score = sum([x[0]*100*(i+1) + x[1] for i, x in enumerate(problem_list)])\n\nif G >= max_score:\n    print(total_problem_num)\n    exit()\n\nremain_score = G\nans = 0\nproblem_score_list = sorted(problem_score_list, reverse=True)\nfor i in range(len(problem_score_list)):\n    problem_score = problem_score_list[i]\n    remain_score -= problem_score\n    ans += 1\n    if remain_score <= 0:\n        break\n\nif remain_score > 0:\n    problem_score_list = sorted(problem_score_list, reverse=False)\n    for i in range(len(problem_score_list)):\n        problem_score = problem_score_list[i]\n        remain_score -= problem_score\n        ans += 1\n        if remain_score <= 0:\n            break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\n#%%\n\n\"\"\"\nAtCode\u3067\u306f\uff0c\u30a2\u30eb\u30b4\u30ea\u30ba\u30e0\u306e\u554f\u984c\u3092\u63d0\u4f9b\u3059\u308b\u30d7\u30ed\u30b0\u30e9\u30df\u30f3\u30b0\u30b3\u30f3\u30c6\u30b9\u30c8\u30b5\u30a4\u30c8\u304c\u3042\u308a\u307e\u3059\uff0e\n\u3053\u306e\u30b5\u30a4\u30c8\u3067\u306f\uff0c\u305d\u308c\u305e\u308c\u306e\u554f\u984c\u306f\u96e3\u6613\u5ea6\u306b\u5fdc\u3058\u3066\u70b9\u6570\u304c\u6c7a\u307e\u3063\u3066\u3044\u307e\u3059\uff0e\n\u73fe\u5728\uff0c1\u4ee5\u4e0aD\u4ee5\u4e0b\u306e\u6574\u6570i\u306b\u5bfe\u3057\u3066\uff0c100i\u70b9\u306e\u554f\u984c\u304cpi\u500b\u3042\u308a\u307e\u3059\uff0e\n\u3053\u308c\u3089\u306ep1+\u22ef+pD\u500b\u306e\u554f\u984c\u304cAtCode\u3067\u63d0\u4f9b\u3055\u308c\u3066\u3044\u308b\u554f\u984c\u3067\u3059\uff0e\nAtCode\u306e\u30e6\u30fc\u30b6\u30fc\u306b\u306f\uff0ctotal score\u3068\u3044\u3046\u5024\u304c\u3042\u308a\u307e\u3059\uff0e\ntotal score\u306f\uff0c\u4ee5\u4e0b\u306e2\u8981\u7d20\u306e\u548c\u3067\u5b9a\u7fa9\u3055\u308c\u307e\u3059\uff1a\n - Base score: \u30e6\u30fc\u30b6\u30fc\u304c\u89e3\u3044\u305f\u554f\u984c\u306e\u70b9\u6570\u306e\u5408\u8a08\n - Perfect bonuses: \u30e6\u30fc\u30b6\u30fc\u304c100i\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u3044\u305f\u5834\u5408\u306b\uff0cbase score\u306b\u52a0\u7b97\u3055\u308c\u308b\u30dc\u30fc\u30ca\u30b9\u70b9\uff081\u2264i\u2264D\uff09\nAtCode\u306e\u65b0\u898f\u30e6\u30fc\u30b6\u30fc\u306e\u305f\u304b\u306f\u3057\u306f\uff0c\u307e\u3060\u554f\u984c\u3092\u89e3\u3044\u305f\u3053\u3068\u304c\u3042\u308a\u307e\u305b\u3093\uff0e\n\u5f7c\u306e\u76ee\u6a19\u306f\uff0ctotal score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u3067\u3059\uff0e\n\u3053\u306e\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u305f\u3081\u306b\u306f\uff0c\u5c11\u306a\u304f\u3068\u3082\u4f55\u554f\u554f\u984c\u3092\u89e3\u304f\u5fc5\u8981\u304c\u3042\u308b\u3067\u3057\u3087\u3046\u304b\uff1f\n\n-----\u5236\u7d04-----\n - 1\u2264D\u226410\n - 1\u2264pi\u2264100\n - 100\u2264ci\u226410^6\n - 100\u2264G\n - \u5165\u529b\u306f\u3059\u3079\u3066\u6574\u6570\u3067\u3042\u308b\uff0e\n - ci\u304a\u3088\u3073G\u306f\u3059\u3079\u3066100\u306e\u500d\u6570\u3067\u3042\u308b\uff0e\n - total score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u304c\u53ef\u80fd\u3067\u3042\u308b\uff0e\n\n-----\u5165\u529b-----\n\u5165\u529b\u306f\u6a19\u6e96\u5165\u529b\u304b\u3089\u4ee5\u4e0b\u306e\u5f62\u5f0f\u3067\u4e0e\u3048\u3089\u308c\u308b\uff0e\nD G\np1 c1\n:\npD cD\n\nD\u306f\u554f\u984c\u306e\u6570\u3092\u8868\u3059\u6574\u6570\uff0cG\u306f\u76ee\u6a19\u306etotal score\u3092\u8868\u3059\u6574\u6570\u3067\u3042\u308b\uff0e\n2\u884c\u76ee\u4ee5\u964d\u306b\u306f\uff0c\u305d\u308c\u305e\u308c\u306e\u554f\u984c\u306e\u60c5\u5831\u304c\u4e0e\u3048\u3089\u308c\u308b\uff0e\ni\u884c\u76ee\u306e\u5165\u529b\u306f\uff0cpi ci\u3067\u4e0e\u3048\u3089\u308c\u308b\uff0e\npi\u306f100i\u70b9\u306e\u554f\u984c\u306e\u6570\u3092\u8868\u3059\u6574\u6570\uff0cci\u306f100i\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u3044\u305f\u5834\u5408\u306e\u30dc\u30fc\u30ca\u30b9\u70b9\u3092\u8868\u3059\u6574\u6570\u3067\u3042\u308b\uff0e\n\n-----\u51fa\u529b-----\ntotal score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u305f\u3081\u306b\u5fc5\u8981\u306a\u6700\u5c0f\u306e\u554f\u984c\u6570\u3092\u51fa\u529b\u305b\u3088\uff0e\n\u6ce8\u610f: \u3053\u306e\u76ee\u6a19\u306f\u5e38\u306b\u9054\u6210\u53ef\u80fd\u3067\u3042\u308b\uff08\u5236\u7d04\u53c2\u7167\uff09\uff0e\n\n-----\u30b5\u30f3\u30d7\u30eb1-----\n\u5165\u529b\n2 700\n3 500\n5 800\n\n\u51fa\u529b\n3\n\n\u3053\u306e\u4f8b\u3067\u306f\uff0c100\u70b9\u306e\u554f\u984c\u304c3\u554f\u3042\u308a\uff0c200\u70b9\u306e\u554f\u984c\u304c5\u554f\u3042\u308b\uff0e\n100\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u304f\u3068\uff0c500\u70b9\u306e\u30dc\u30fc\u30ca\u30b9\u304c\u52a0\u7b97\u3055\u308c\u308b\uff0e\n200\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u304f\u3068\uff0c800\u70b9\u306e\u30dc\u30fc\u30ca\u30b9\u304c\u52a0\u7b97\u3055\u308c\u308b\uff0e\n\u305f\u304b\u306f\u3057\u306e\u76ee\u6a19\u306f\uff0ctotal score\u304c700\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u3067\u3042\u308b\uff0e\n\u3053\u306e\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u65b9\u6cd5\u306e\u4e00\u3064\u3068\u3057\u3066\uff0c200\u70b9\u306e\u554f\u984c\u30924\u554f\u89e3\u304d\uff0cbase score\u304c800\u70b9\u306b\u306a\u308b\uff0e\n\u3057\u304b\u3057\uff0c100\u70b9\u306e\u554f\u984c\u30923\u554f\u89e3\u304f\u3068\uff0cbase score\u304c300\u70b9\u306b\u52a0\u3048\uff0c\u30dc\u30fc\u30ca\u30b9\u70b9\u306e500\u70b9\u304c\u52a0\u7b97\u3055\u308c\uff0c\u5408\u8a08\u3067800\u70b9\u306b\u306a\u308a\uff0c\u3088\u308a\u5c11\u306a\u3044\u554f\u984c\u6570\u3067\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u3053\u3068\u304c\u3067\u304d\u308b\uff0e\n\"\"\"\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\nG_tmp = G\nans = 0\nfor i in range(D-1, -1, -1):\n    p, c = problem[i]\n    if p*(i+1) > G_tmp:\n        add_num = G_tmp // (i+1)\n        ans += add_num\n        G_tmp -= add_num * (i+1)\n    else:\n        ans += p\n        G_tmp -= p * (i+1) + c\n        continue\n    if G_tmp <= 0:\n        break\nelse:\n    ans += (G_tmp-1) // 100 + 1\nprint(ans)\n\n#%%"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nD_and_G = input().split(\" \")\nD = int(D_and_G[0])\nG = int(D_and_G[1])\n\nproblems = []\nfor i in range(D):\n    problems.append(input().split(\" \"))\n    problems[i][0] = int(problems[i][0])\n    problems[i][1] = int(problems[i][1])\n\nproblems.reverse()\n\nproblem_count = 0\ntotal_point = 0\n\nfor i in range(D):\n    if total_point < G:\n        problem_count += problems[i][0]\n        total_point += 100 * (i + 1) * problems[i][0]\n        total_point += problems[i][1]\n\nif total_point >= G:\n    print(problem_count)\nelse:\n    remain = G - total_point\n    problem_count += int(remain / (100 * (D + 1)))\n    if 100 * (D + 1) * int(remain / (100 * (D + 1))) < remain:\n        problem_count += 1\n    print(problem_count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# This is not a good solution. I don't like it...\n# I'll try to improve it later.\n\n# Get the input\nD, G = map(int, input().split())\nproblems = []\nfor _ in range(D):\n    problems.append(list(map(int, input().split())))\n\n# Calculate the total score of Takahashi\ntotal_score = 0\nfor i in range(D):\n    total_score += 100 * (i + 1) * problems[i][0]\n\n# Calculate the minimum number of problems that needs to be solved\nresult = 0\nfor i in range(D):\n    if G == total_score:\n        break\n    else:\n        if problems[i][1] != 0:\n            for j in range(problems[i][0]):\n                total_score += 100 * (i + 1)\n                result += 1\n                if G <= total_score:\n                    break\n            if G <= total_score:\n                break\n            else:\n                total_score -= problems[i][1]\n                total_score -= 100 * (i + 1) * problems[i][0]\n                result -= problems[i][0]\n\nprint(result)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nd, g = map(int, input().split())\npc_list = []\nfor i in range(d):\n    pc_list.append(list(map(int, input().split())))\n\nans = 0\nfor i in range(d):\n    ans += pc_list[i][0]\n    g -= pc_list[i][0] * (i + 1) * 100\n    if g <= 0:\n        break\n\nif g > 0:\n    pc_list = sorted(pc_list, key=lambda x: x[1], reverse=True)\n    for i in range(d):\n        if g <= 0:\n            break\n        if g <= pc_list[i][1]:\n            ans += (g + (i + 1) * 100 - 1) // ((i + 1) * 100)\n            break\n        else:\n            ans += pc_list[i][0]\n            g -= pc_list[i][1]\n\nprint(ans)"
+    }
+  ],
+  "created": 1650137681,
+  "id": "cmpl-4xiTpIL3885zND4y2CDMd8h0b1EDl",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:35:52.823767 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    d, g = map(int, input().split())\n    p_c_ls = [list(map(int, input().split())) for _ in range(d)]\n    ans = float('inf')\n    for i in range(2 ** d):\n        score = 0\n        cnt = 0\n        for j in range(d):\n            if i & (1 << j):\n                cnt += p_c_ls[j][0]\n                score += p_c_ls[j][0] * 100 * (j + 1) + p_c_ls[j][1]\n        if score >= g:\n            ans = min(ans, cnt)\n        else:\n            for j in range(d - 1, -1, -1):\n                if i & (1 << j):\n                    continue\n                need = (g - score + 100 * (j + 1) - 1) // (100 * (j + 1))\n                if need >= p_c_ls[j][0]:\n                    continue\n                cnt += need\n                score += need * 100 * (j + 1)\n                ans = min(ans, cnt)\n                break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:35:52.823814 REASON stop
+2022-04-16 19:35:52.825582 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nd,g = map(int, input().split())\nproblems = []\nfor i in range(d):\n    p,c = map(int, input().split())\n    problems.append((p,c,i+1))\n\nproblems.sort(key=lambda x: x[2], reverse=True)\n\nans = 0\n\nfor p,c,i in problems:\n    if g <= 0: break\n    score = i*100\n    if g - score <= 0:\n        ans += g // score\n        g -= (g // score)*score\n    elif g - score > 0:\n        ans += p\n        g -= p*score\n\nif g > 0:\n    for p,c,i in problems:\n        if g <= 0: break\n        score = i*100\n        if c > 0:\n            if g - c <= 0:\n                g -= c\n            else:\n                ans += 1\n                g -= c\n\nprint(ans)"
+}
+2022-04-16 19:35:52.825741 REASON stop
+2022-04-16 19:35:52.826286 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#/usr/bin/python\n#-*- coding: utf-8 -*-\n\nD, G = map(int, input().split())\npc_list = []\nfor i in range(D):\n    pc_list.append(list(map(int, input().split())))\n\n#print(D, G)\n#print(pc_list)\n\n# \u89e3\u7b54\u6570\u3092\u6700\u5927\u5316\u3059\u308b\n# \u6700\u5927\u5024\u3092\u6c42\u3081\u308b\u305f\u3081\u306b\u3001\u6700\u5c0f\u5024\u3092\u63a2\u3059\n# \u63a2\u7d22\u3059\u308b\u5024\u306f\u30011\u554f\u304b\u3089D\u554f\u307e\u3067\n# \u305f\u3060\u3057\u3001\u5168\u554f\u89e3\u7b54\u3057\u305f\u5834\u5408\u306f\u3001\u554f\u984c\u6570\u30921\u554f\u6e1b\u3089\u3059\n\nmin_answer_num = 0\n\nfor i in range(D):\n    min_answer_num += pc_list[i][0]\n\nprint(min_answer_num)\n\nfor i in range(1,D+1):\n    #print(i)\n    #print(pc_list[i-1][0])\n    if pc_list[i-1][0] == 1:\n        # \u5168\u554f\u89e3\u7b54\u3057\u305f\u5834\u5408\u306f\u3001\u554f\u984c\u6570\u30921\u554f\u6e1b\u3089\u3059\n        min_answer_num -= 1\n        continue\n    else:\n        min_answer_num -= pc_list[i-1][0]\n        min_answer_num += 1\n        print(min_answer_num)"
+}
+2022-04-16 19:35:52.826347 REASON stop
+2022-04-16 19:35:52.842833 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ninput_str = input()\nD = int(input_str.split()[0])\nG = int(input_str.split()[1])\nproblem_list = []\nfor i in range(D):\n    input_str = input()\n    problem_list.append([int(input_str.split()[0]), int(input_str.split()[1])])\n\nproblem_score_list = []\nfor i in range(D):\n    for j in range(problem_list[i][0]):\n        problem_score_list.append((i+1)*100)\n\ntotal_problem_num = sum([x[0] for x in problem_list])\nmax_score = sum([x[0]*100*(i+1) + x[1] for i, x in enumerate(problem_list)])\n\nif G >= max_score:\n    print(total_problem_num)\n    exit()\n\nremain_score = G\nans = 0\nproblem_score_list = sorted(problem_score_list, reverse=True)\nfor i in range(len(problem_score_list)):\n    problem_score = problem_score_list[i]\n    remain_score -= problem_score\n    ans += 1\n    if remain_score <= 0:\n        break\n\nif remain_score > 0:\n    problem_score_list = sorted(problem_score_list, reverse=False)\n    for i in range(len(problem_score_list)):\n        problem_score = problem_score_list[i]\n        remain_score -= problem_score\n        ans += 1\n        if remain_score <= 0:\n            break\n\nprint(ans)"
+}
+2022-04-16 19:35:52.842949 REASON stop
+2022-04-16 19:35:52.855445 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\n#%%\n\n\"\"\"\nAtCode\u3067\u306f\uff0c\u30a2\u30eb\u30b4\u30ea\u30ba\u30e0\u306e\u554f\u984c\u3092\u63d0\u4f9b\u3059\u308b\u30d7\u30ed\u30b0\u30e9\u30df\u30f3\u30b0\u30b3\u30f3\u30c6\u30b9\u30c8\u30b5\u30a4\u30c8\u304c\u3042\u308a\u307e\u3059\uff0e\n\u3053\u306e\u30b5\u30a4\u30c8\u3067\u306f\uff0c\u305d\u308c\u305e\u308c\u306e\u554f\u984c\u306f\u96e3\u6613\u5ea6\u306b\u5fdc\u3058\u3066\u70b9\u6570\u304c\u6c7a\u307e\u3063\u3066\u3044\u307e\u3059\uff0e\n\u73fe\u5728\uff0c1\u4ee5\u4e0aD\u4ee5\u4e0b\u306e\u6574\u6570i\u306b\u5bfe\u3057\u3066\uff0c100i\u70b9\u306e\u554f\u984c\u304cpi\u500b\u3042\u308a\u307e\u3059\uff0e\n\u3053\u308c\u3089\u306ep1+\u22ef+pD\u500b\u306e\u554f\u984c\u304cAtCode\u3067\u63d0\u4f9b\u3055\u308c\u3066\u3044\u308b\u554f\u984c\u3067\u3059\uff0e\nAtCode\u306e\u30e6\u30fc\u30b6\u30fc\u306b\u306f\uff0ctotal score\u3068\u3044\u3046\u5024\u304c\u3042\u308a\u307e\u3059\uff0e\ntotal score\u306f\uff0c\u4ee5\u4e0b\u306e2\u8981\u7d20\u306e\u548c\u3067\u5b9a\u7fa9\u3055\u308c\u307e\u3059\uff1a\n - Base score: \u30e6\u30fc\u30b6\u30fc\u304c\u89e3\u3044\u305f\u554f\u984c\u306e\u70b9\u6570\u306e\u5408\u8a08\n - Perfect bonuses: \u30e6\u30fc\u30b6\u30fc\u304c100i\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u3044\u305f\u5834\u5408\u306b\uff0cbase score\u306b\u52a0\u7b97\u3055\u308c\u308b\u30dc\u30fc\u30ca\u30b9\u70b9\uff081\u2264i\u2264D\uff09\nAtCode\u306e\u65b0\u898f\u30e6\u30fc\u30b6\u30fc\u306e\u305f\u304b\u306f\u3057\u306f\uff0c\u307e\u3060\u554f\u984c\u3092\u89e3\u3044\u305f\u3053\u3068\u304c\u3042\u308a\u307e\u305b\u3093\uff0e\n\u5f7c\u306e\u76ee\u6a19\u306f\uff0ctotal score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u3067\u3059\uff0e\n\u3053\u306e\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u305f\u3081\u306b\u306f\uff0c\u5c11\u306a\u304f\u3068\u3082\u4f55\u554f\u554f\u984c\u3092\u89e3\u304f\u5fc5\u8981\u304c\u3042\u308b\u3067\u3057\u3087\u3046\u304b\uff1f\n\n-----\u5236\u7d04-----\n - 1\u2264D\u226410\n - 1\u2264pi\u2264100\n - 100\u2264ci\u226410^6\n - 100\u2264G\n - \u5165\u529b\u306f\u3059\u3079\u3066\u6574\u6570\u3067\u3042\u308b\uff0e\n - ci\u304a\u3088\u3073G\u306f\u3059\u3079\u3066100\u306e\u500d\u6570\u3067\u3042\u308b\uff0e\n - total score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u304c\u53ef\u80fd\u3067\u3042\u308b\uff0e\n\n-----\u5165\u529b-----\n\u5165\u529b\u306f\u6a19\u6e96\u5165\u529b\u304b\u3089\u4ee5\u4e0b\u306e\u5f62\u5f0f\u3067\u4e0e\u3048\u3089\u308c\u308b\uff0e\nD G\np1 c1\n:\npD cD\n\nD\u306f\u554f\u984c\u306e\u6570\u3092\u8868\u3059\u6574\u6570\uff0cG\u306f\u76ee\u6a19\u306etotal score\u3092\u8868\u3059\u6574\u6570\u3067\u3042\u308b\uff0e\n2\u884c\u76ee\u4ee5\u964d\u306b\u306f\uff0c\u305d\u308c\u305e\u308c\u306e\u554f\u984c\u306e\u60c5\u5831\u304c\u4e0e\u3048\u3089\u308c\u308b\uff0e\ni\u884c\u76ee\u306e\u5165\u529b\u306f\uff0cpi ci\u3067\u4e0e\u3048\u3089\u308c\u308b\uff0e\npi\u306f100i\u70b9\u306e\u554f\u984c\u306e\u6570\u3092\u8868\u3059\u6574\u6570\uff0cci\u306f100i\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u3044\u305f\u5834\u5408\u306e\u30dc\u30fc\u30ca\u30b9\u70b9\u3092\u8868\u3059\u6574\u6570\u3067\u3042\u308b\uff0e\n\n-----\u51fa\u529b-----\ntotal score\u304cG\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u305f\u3081\u306b\u5fc5\u8981\u306a\u6700\u5c0f\u306e\u554f\u984c\u6570\u3092\u51fa\u529b\u305b\u3088\uff0e\n\u6ce8\u610f: \u3053\u306e\u76ee\u6a19\u306f\u5e38\u306b\u9054\u6210\u53ef\u80fd\u3067\u3042\u308b\uff08\u5236\u7d04\u53c2\u7167\uff09\uff0e\n\n-----\u30b5\u30f3\u30d7\u30eb1-----\n\u5165\u529b\n2 700\n3 500\n5 800\n\n\u51fa\u529b\n3\n\n\u3053\u306e\u4f8b\u3067\u306f\uff0c100\u70b9\u306e\u554f\u984c\u304c3\u554f\u3042\u308a\uff0c200\u70b9\u306e\u554f\u984c\u304c5\u554f\u3042\u308b\uff0e\n100\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u304f\u3068\uff0c500\u70b9\u306e\u30dc\u30fc\u30ca\u30b9\u304c\u52a0\u7b97\u3055\u308c\u308b\uff0e\n200\u70b9\u306e\u554f\u984c\u3092\u5168\u3066\u89e3\u304f\u3068\uff0c800\u70b9\u306e\u30dc\u30fc\u30ca\u30b9\u304c\u52a0\u7b97\u3055\u308c\u308b\uff0e\n\u305f\u304b\u306f\u3057\u306e\u76ee\u6a19\u306f\uff0ctotal score\u304c700\u70b9\u4ee5\u4e0a\u306b\u306a\u308b\u3053\u3068\u3067\u3042\u308b\uff0e\n\u3053\u306e\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u65b9\u6cd5\u306e\u4e00\u3064\u3068\u3057\u3066\uff0c200\u70b9\u306e\u554f\u984c\u30924\u554f\u89e3\u304d\uff0cbase score\u304c800\u70b9\u306b\u306a\u308b\uff0e\n\u3057\u304b\u3057\uff0c100\u70b9\u306e\u554f\u984c\u30923\u554f\u89e3\u304f\u3068\uff0cbase score\u304c300\u70b9\u306b\u52a0\u3048\uff0c\u30dc\u30fc\u30ca\u30b9\u70b9\u306e500\u70b9\u304c\u52a0\u7b97\u3055\u308c\uff0c\u5408\u8a08\u3067800\u70b9\u306b\u306a\u308a\uff0c\u3088\u308a\u5c11\u306a\u3044\u554f\u984c\u6570\u3067\u76ee\u6a19\u3092\u9054\u6210\u3059\u308b\u3053\u3068\u304c\u3067\u304d\u308b\uff0e\n\"\"\"\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\n#%%\n\n(D, G) = map(int, input().split())\n\nproblem = []\nfor i in range(D):\n    p, c = map(int, input().split())\n    problem.append([p, c])\n\n#%%\n\nG_tmp = G\nans = 0\nfor i in range(D-1, -1, -1):\n    p, c = problem[i]\n    if p*(i+1) > G_tmp:\n        add_num = G_tmp // (i+1)\n        ans += add_num\n        G_tmp -= add_num * (i+1)\n    else:\n        ans += p\n        G_tmp -= p * (i+1) + c\n        continue\n    if G_tmp <= 0:\n        break\nelse:\n    ans += (G_tmp-1) // 100 + 1\nprint(ans)\n\n#%%"
+}
+2022-04-16 19:35:52.855598 REASON stop
+2022-04-16 19:35:52.857238 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nD_and_G = input().split(\" \")\nD = int(D_and_G[0])\nG = int(D_and_G[1])\n\nproblems = []\nfor i in range(D):\n    problems.append(input().split(\" \"))\n    problems[i][0] = int(problems[i][0])\n    problems[i][1] = int(problems[i][1])\n\nproblems.reverse()\n\nproblem_count = 0\ntotal_point = 0\n\nfor i in range(D):\n    if total_point < G:\n        problem_count += problems[i][0]\n        total_point += 100 * (i + 1) * problems[i][0]\n        total_point += problems[i][1]\n\nif total_point >= G:\n    print(problem_count)\nelse:\n    remain = G - total_point\n    problem_count += int(remain / (100 * (D + 1)))\n    if 100 * (D + 1) * int(remain / (100 * (D + 1))) < remain:\n        problem_count += 1\n    print(problem_count)"
+}
+2022-04-16 19:35:52.857326 REASON stop
+2022-04-16 19:35:52.859255 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# This is not a good solution. I don't like it...\n# I'll try to improve it later.\n\n# Get the input\nD, G = map(int, input().split())\nproblems = []\nfor _ in range(D):\n    problems.append(list(map(int, input().split())))\n\n# Calculate the total score of Takahashi\ntotal_score = 0\nfor i in range(D):\n    total_score += 100 * (i + 1) * problems[i][0]\n\n# Calculate the minimum number of problems that needs to be solved\nresult = 0\nfor i in range(D):\n    if G == total_score:\n        break\n    else:\n        if problems[i][1] != 0:\n            for j in range(problems[i][0]):\n                total_score += 100 * (i + 1)\n                result += 1\n                if G <= total_score:\n                    break\n            if G <= total_score:\n                break\n            else:\n                total_score -= problems[i][1]\n                total_score -= 100 * (i + 1) * problems[i][0]\n                result -= problems[i][0]\n\nprint(result)"
+}
+2022-04-16 19:35:52.859381 REASON stop
+2022-04-16 19:35:52.860878 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nd, g = map(int, input().split())\npc_list = []\nfor i in range(d):\n    pc_list.append(list(map(int, input().split())))\n\nans = 0\nfor i in range(d):\n    ans += pc_list[i][0]\n    g -= pc_list[i][0] * (i + 1) * 100\n    if g <= 0:\n        break\n\nif g > 0:\n    pc_list = sorted(pc_list, key=lambda x: x[1], reverse=True)\n    for i in range(d):\n        if g <= 0:\n            break\n        if g <= pc_list[i][1]:\n            ans += (g + (i + 1) * 100 - 1) // ((i + 1) * 100)\n            break\n        else:\n            ans += pc_list[i][0]\n            g -= pc_list[i][1]\n\nprint(ans)"
+}
+2022-04-16 19:35:52.861052 REASON stop

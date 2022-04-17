@@ -1,0 +1,152 @@
+2022-04-16 18:52:14.731902 """
+You are given a string $t$ consisting of $n$ lowercase Latin letters and an integer number $k$.
+
+Let's define a substring of some string $s$ with indices from $l$ to $r$ as $s[l \dots r]$.
+
+Your task is to construct such string $s$ of minimum possible length that there are exactly $k$ positions $i$ such that $s[i \dots i + n - 1] = t$. In other words, your task is to construct such string $s$ of minimum possible length that there are exactly $k$ substrings of $s$ equal to $t$.
+
+It is guaranteed that the answer is always unique.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n, k \le 50$) — the length of the string $t$ and the number of substrings.
+
+The second line of the input contains the string $t$ consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+Print such string $s$ of minimum possible length that there are exactly $k$ substrings of $s$ equal to $t$.
+
+It is guaranteed that the answer is always unique.
+
+
+-----Examples-----
+Input
+3 4
+aba
+
+Output
+ababababa
+
+Input
+3 2
+cat
+
+Output
+catcat
+"""
+2022-04-16 18:52:14.731912 --------------------------
+2022-04-16 18:52:35.230550 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# n, k = map(int, input().split())\n# t = input()\nn, k = 3, 4\nt = 'aba'\n\nif k == 1:\n    print(t)\n    sys.exit(0)\n\n# \u0435\u0441\u043b\u0438 k \u043a\u0440\u0430\u0442\u043d\u043e n, \u0442\u043e \u044d\u0442\u043e \u0432\u0441\u0435 \u0448\u0430\u0431\u043b\u043e\u043d\u044b \u043f\u043e\u0432\u0442\u043e\u0440\u044f\u044e\u0442\u0441\u044f \u043f\u043e\u0434\u0440\u044f\u0434\nif k % n == 0:\n    print(t * (k // n))\n    sys.exit(0)\n\n# \u0435\u0441\u043b\u0438 k \u043d\u0435 \u043a\u0440\u0430\u0442\u043d\u043e n, \u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c \u043f\u043e\u0434\u0440\u044f\u0434 \u043f\u043e\u0432\u0442\u043e\u0440\u0435\u043d\u0438\u044f \u0448\u0430\u0431\u043b\u043e\u043d\u0430 \u0438 \u043e\u0441\u0442\u0430\u0442\u043e\u043a \u0432 \u043a\u043e\u043d\u0446\u0435\nif k % n != 0:\n    print(t * (k // n) + t[:k % n])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Find the minimum length of string s, such that there are exactly k substrings of s equal to t.\n    :return: None\n    \"\"\"\n\n    n, k = map(int, input().split())\n    t = input()\n\n    if k == 1:\n        print(t)\n        return\n\n    if len(set(t)) == 1:\n        print(t * k)\n        return\n\n    if k < n:\n        print(\"-1\")\n        return\n\n    if k == n:\n        print(t)\n        return\n\n    if k > n:\n        s = t\n        while len(s) < k:\n            s += t[1:]\n        print(s)\n        return\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# We need to find a string s that has exactly k occurrences of the given string t.\n# We will use two pointers to keep track of the number of occurrences of t in s.\n# One pointer will be at the beginning of s and the other at the end.\n# The pointer at the end will be moved at a time.\n# While moving the end pointer, we will check if the string from the start to the end pointer\n# is equal to t.\n# If yes, we will increment the count of the occurrences by 1.\n# We will keep moving the end pointer until the count of occurrences is equal to k.\n# Now, to remove one occurrence of t from s, we will move the start pointer to the next position after the occurrence of t,\n# and then move the end pointer to the same position as the start pointer.\n# We will keep doing this until the count of occurrences is equal to k.\n# The string s is the substring from the start pointer to the end pointer.\n\nn, k = map(int, input().split())\nt = input()\n\nstart = 0\nend = 0\ncount = 0\n\nwhile count < k:\n    if t in t[start:end+1]:\n        count += 1\n    end += 1\n\nwhile count == k:\n    if t in t[start:end+1]:\n        count += 1\n    start = end + 1\n    end = start\n\nprint(t[start:end])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nfrom collections import deque\nfrom collections import Counter\nfrom collections import defaultdict\nfrom collections import OrderedDict\nfrom fractions import gcd\n\n\ndef I(): return int(sys.stdin.readline())\n\n\ndef MI(): return map(int, sys.stdin.readline().split())\n\n\ndef LI(): return list(map(int, sys.stdin.readline().split()))\n\n\ndef LLI(rows_number): return [LI() for _ in range(rows_number)]\n\n\ndef solver(string, count):\n    if count == 1:\n        return string\n\n    string_length = len(string)\n    reoccurrence_index = 0\n    for i in range(1, string_length):\n        if string[i] == string[0]:\n            reoccurrence_index = i\n            break\n    else:\n        return string * count\n\n    divisor = gcd(reoccurrence_index, string_length)\n    # print(divisor)\n    if count % divisor == 0:\n        return string * (count // divisor)\n\n    return solver(string, count - (count % divisor)) + string[:count % divisor]\n\n\ndef main():\n    _, count = MI()\n    string = input()\n    print(solver(string, count))\n\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\ndef main():\n\tn, k = map(int, input().split())\n\tt = input()\n\tl = n\n\twhile l <= k:\n\t\tl += n\n\tl -= n\n\t#print(l)\n\tc = t[:l - k]\n\t#print(c)\n\tif len(c) > 0:\n\t\tfor i in range(len(c)):\n\t\t\tfor j in range(i + 1, len(c) + 1):\n\t\t\t\tif t.startswith(c[i:j]):\n\t\t\t\t\ts = c[i:j]\n\t\t\t\t\tbreak\n\telse:\n\t\ts = \"\"\n\t#print(s)\n\tprint(s * k)\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef solve(t, k):\n    l = len(t)\n    result = []\n    for i in range(k):\n        result.append(t[i % l])\n    return ''.join(result)\n\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    t = input()\n    print(solve(t, k))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nt = input()\n\nans = \"\"\nif k == 1:\n    ans = t\nelif k == 2:\n    ans = t + t\nelif k == 3:\n    ans = t + t + t\nelif k == 4:\n    ans = t + t + t + t\nelif k == 5:\n    ans = t + t + t + t + t\nelif k == 6:\n    ans = t + t + t + t + t + t\nelif k == 7:\n    ans = t + t + t + t + t + t + t\nelif k == 8:\n    ans = t + t + t + t + t + t + t + t\nelif k == 9:\n    ans = t + t + t + t + t + t + t + t + t\nelif k == 10:\n    ans = t + t + t + t + t + t + t + t + t + t\nelse:\n    ans = t\n    for i in range(k - 1):\n        ans += t[-1]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\nimport sys\n\ninput = sys.stdin.readline\n\nn, k = map(int, input().split())\nt = input().rstrip()\n\nans = t * (k // n) + t[:k % n]\nprint(ans)"
+    }
+  ],
+  "created": 1650135135,
+  "id": "cmpl-4xholbeNFS4tZueadI8tFwmcaMo8S",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 18:52:35.230839 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# n, k = map(int, input().split())\n# t = input()\nn, k = 3, 4\nt = 'aba'\n\nif k == 1:\n    print(t)\n    sys.exit(0)\n\n# \u0435\u0441\u043b\u0438 k \u043a\u0440\u0430\u0442\u043d\u043e n, \u0442\u043e \u044d\u0442\u043e \u0432\u0441\u0435 \u0448\u0430\u0431\u043b\u043e\u043d\u044b \u043f\u043e\u0432\u0442\u043e\u0440\u044f\u044e\u0442\u0441\u044f \u043f\u043e\u0434\u0440\u044f\u0434\nif k % n == 0:\n    print(t * (k // n))\n    sys.exit(0)\n\n# \u0435\u0441\u043b\u0438 k \u043d\u0435 \u043a\u0440\u0430\u0442\u043d\u043e n, \u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c \u043f\u043e\u0434\u0440\u044f\u0434 \u043f\u043e\u0432\u0442\u043e\u0440\u0435\u043d\u0438\u044f \u0448\u0430\u0431\u043b\u043e\u043d\u0430 \u0438 \u043e\u0441\u0442\u0430\u0442\u043e\u043a \u0432 \u043a\u043e\u043d\u0446\u0435\nif k % n != 0:\n    print(t * (k // n) + t[:k % n])"
+}
+2022-04-16 18:52:35.230995 REASON stop
+2022-04-16 18:52:35.282864 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Find the minimum length of string s, such that there are exactly k substrings of s equal to t.\n    :return: None\n    \"\"\"\n\n    n, k = map(int, input().split())\n    t = input()\n\n    if k == 1:\n        print(t)\n        return\n\n    if len(set(t)) == 1:\n        print(t * k)\n        return\n\n    if k < n:\n        print(\"-1\")\n        return\n\n    if k == n:\n        print(t)\n        return\n\n    if k > n:\n        s = t\n        while len(s) < k:\n            s += t[1:]\n        print(s)\n        return\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:52:35.283075 REASON stop
+2022-04-16 18:52:35.283533 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# We need to find a string s that has exactly k occurrences of the given string t.\n# We will use two pointers to keep track of the number of occurrences of t in s.\n# One pointer will be at the beginning of s and the other at the end.\n# The pointer at the end will be moved at a time.\n# While moving the end pointer, we will check if the string from the start to the end pointer\n# is equal to t.\n# If yes, we will increment the count of the occurrences by 1.\n# We will keep moving the end pointer until the count of occurrences is equal to k.\n# Now, to remove one occurrence of t from s, we will move the start pointer to the next position after the occurrence of t,\n# and then move the end pointer to the same position as the start pointer.\n# We will keep doing this until the count of occurrences is equal to k.\n# The string s is the substring from the start pointer to the end pointer.\n\nn, k = map(int, input().split())\nt = input()\n\nstart = 0\nend = 0\ncount = 0\n\nwhile count < k:\n    if t in t[start:end+1]:\n        count += 1\n    end += 1\n\nwhile count == k:\n    if t in t[start:end+1]:\n        count += 1\n    start = end + 1\n    end = start\n\nprint(t[start:end])"
+}
+2022-04-16 18:52:35.283597 REASON stop
+2022-04-16 18:52:35.312357 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nfrom collections import deque\nfrom collections import Counter\nfrom collections import defaultdict\nfrom collections import OrderedDict\nfrom fractions import gcd\n\n\ndef I(): return int(sys.stdin.readline())\n\n\ndef MI(): return map(int, sys.stdin.readline().split())\n\n\ndef LI(): return list(map(int, sys.stdin.readline().split()))\n\n\ndef LLI(rows_number): return [LI() for _ in range(rows_number)]\n\n\ndef solver(string, count):\n    if count == 1:\n        return string\n\n    string_length = len(string)\n    reoccurrence_index = 0\n    for i in range(1, string_length):\n        if string[i] == string[0]:\n            reoccurrence_index = i\n            break\n    else:\n        return string * count\n\n    divisor = gcd(reoccurrence_index, string_length)\n    # print(divisor)\n    if count % divisor == 0:\n        return string * (count // divisor)\n\n    return solver(string, count - (count % divisor)) + string[:count % divisor]\n\n\ndef main():\n    _, count = MI()\n    string = input()\n    print(solver(string, count))\n\n\nmain()"
+}
+2022-04-16 18:52:35.312461 REASON stop
+2022-04-16 18:52:35.314180 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\ndef main():\n\tn, k = map(int, input().split())\n\tt = input()\n\tl = n\n\twhile l <= k:\n\t\tl += n\n\tl -= n\n\t#print(l)\n\tc = t[:l - k]\n\t#print(c)\n\tif len(c) > 0:\n\t\tfor i in range(len(c)):\n\t\t\tfor j in range(i + 1, len(c) + 1):\n\t\t\t\tif t.startswith(c[i:j]):\n\t\t\t\t\ts = c[i:j]\n\t\t\t\t\tbreak\n\telse:\n\t\ts = \"\"\n\t#print(s)\n\tprint(s * k)\nmain()"
+}
+2022-04-16 18:52:35.314280 REASON stop
+2022-04-16 18:52:35.315755 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef solve(t, k):\n    l = len(t)\n    result = []\n    for i in range(k):\n        result.append(t[i % l])\n    return ''.join(result)\n\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    t = input()\n    print(solve(t, k))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:52:35.315848 REASON stop
+2022-04-16 18:52:35.316997 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nt = input()\n\nans = \"\"\nif k == 1:\n    ans = t\nelif k == 2:\n    ans = t + t\nelif k == 3:\n    ans = t + t + t\nelif k == 4:\n    ans = t + t + t + t\nelif k == 5:\n    ans = t + t + t + t + t\nelif k == 6:\n    ans = t + t + t + t + t + t\nelif k == 7:\n    ans = t + t + t + t + t + t + t\nelif k == 8:\n    ans = t + t + t + t + t + t + t + t\nelif k == 9:\n    ans = t + t + t + t + t + t + t + t + t\nelif k == 10:\n    ans = t + t + t + t + t + t + t + t + t + t\nelse:\n    ans = t\n    for i in range(k - 1):\n        ans += t[-1]\n\nprint(ans)"
+}
+2022-04-16 18:52:35.317084 REASON stop
+2022-04-16 18:52:35.317770 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\nimport sys\n\ninput = sys.stdin.readline\n\nn, k = map(int, input().split())\nt = input().rstrip()\n\nans = t * (k // n) + t[:k % n]\nprint(ans)"
+}
+2022-04-16 18:52:35.317842 REASON stop

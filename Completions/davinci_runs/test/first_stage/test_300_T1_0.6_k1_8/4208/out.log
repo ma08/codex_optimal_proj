@@ -1,0 +1,196 @@
+2022-04-16 20:16:39.015016 """
+There are $n$ left boots and $n$ right boots. Each boot has a color which is denoted as a lowercase Latin letter or a question mark ('?'). Thus, you are given two strings $l$ and $r$, both of length $n$. The character $l_i$ stands for the color of the $i$-th left boot and the character $r_i$ stands for the color of the $i$-th right boot.
+
+A lowercase Latin letter denotes a specific color, but the question mark ('?') denotes an indefinite color. Two specific colors are compatible if they are exactly the same. An indefinite color is compatible with any (specific or indefinite) color.
+
+For example, the following pairs of colors are compatible: ('f', 'f'), ('?', 'z'), ('a', '?') and ('?', '?'). The following pairs of colors are not compatible: ('f', 'g') and ('a', 'z').
+
+Compute the maximum number of pairs of boots such that there is one left and one right boot in a pair and their colors are compatible.
+
+Print the maximum number of such pairs and the pairs themselves. A boot can be part of at most one pair.
+
+
+-----Input-----
+
+The first line contains $n$ ($1 \le n \le 150000$), denoting the number of boots for each leg (i.e. the number of left boots and the number of right boots).
+
+The second line contains the string $l$ of length $n$. It contains only lowercase Latin letters or question marks. The $i$-th character stands for the color of the $i$-th left boot.
+
+The third line contains the string $r$ of length $n$. It contains only lowercase Latin letters or question marks. The $i$-th character stands for the color of the $i$-th right boot.
+
+
+-----Output-----
+
+Print $k$ — the maximum number of compatible left-right pairs of boots, i.e. pairs consisting of one left and one right boot which have compatible colors.
+
+The following $k$ lines should contain pairs $a_j, b_j$ ($1 \le a_j, b_j \le n$). The $j$-th of these lines should contain the index $a_j$ of the left boot in the $j$-th pair and index $b_j$ of the right boot in the $j$-th pair. All the numbers $a_j$ should be distinct (unique), all the numbers $b_j$ should be distinct (unique).
+
+If there are many optimal answers, print any of them.
+
+
+-----Examples-----
+Input
+10
+codeforces
+dodivthree
+
+Output
+5
+7 8
+4 9
+2 2
+9 10
+3 1
+
+Input
+7
+abaca?b
+zabbbcc
+
+Output
+5
+6 5
+2 3
+4 6
+7 4
+1 2
+
+Input
+9
+bambarbia
+hellocode
+
+Output
+0
+
+Input
+10
+code??????
+??????test
+
+Output
+10
+6 2
+1 6
+7 3
+3 5
+4 8
+9 7
+5 1
+2 4
+10 9
+8 10
+"""
+2022-04-16 20:16:39.015043 --------------------------
+2022-04-16 20:17:11.262873 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\nn = int(input())\nl = input()\nr = input()\n\nleft = [0] * 26\nright = [0] * 26\n\nfor i in range(n):\n    if l[i] != \"?\":\n        left[ord(l[i]) - 97] += 1\n    if r[i] != \"?\":\n        right[ord(r[i]) - 97] += 1\n\nans = 0\nfor i in range(26):\n    ans += min(left[i], right[i])\n\nprint(ans)\n\nleft = [0] * 26\nright = [0] * 26\n\nfor i in range(n):\n    if l[i] != \"?\":\n        if left[ord(l[i]) - 97] > 0:\n            left[ord(l[i]) - 97] -= 1\n            print(i + 1, left[ord(l[i]) - 97] + 1)\n        else:\n            left[ord(l[i]) - 97] = i\n    if r[i] != \"?\":\n        if right[ord(r[i]) - 97] > 0:\n            right[ord(r[i]) - 97] -= 1\n            print(right[ord(r[i]) - 97] + 1, i + 1)\n        else:\n            right[ord(r[i]) - 97] = i\n\nfor i in range(26):\n    if left[i] > 0 and right[i] > 0:\n        left[i] -= 1\n        right[i] -= 1\n        print(left[i] + 1, right[i] + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nl = input()\nr = input()\n\n# O(n^2) solution\n# for i in range(n):\n#     for j in range(n):\n#         if l[i] == r[j] or l[i] == '?' or r[j] == '?':\n#             print(i + 1, j + 1)\n\n# O(n) solution\nd = {}\nfor i in range(n):\n    if l[i] == '?':\n        if r[i] in d:\n            d[r[i]].append(i + 1)\n        else:\n            d[r[i]] = [i + 1]\n    else:\n        if l[i] in d:\n            d[l[i]].append(i + 1)\n        else:\n            d[l[i]] = [i + 1]\n\nfor i in range(n):\n    if r[i] == '?':\n        if l[i] in d:\n            d[l[i]].append(i + 1)\n        else:\n            d[l[i]] = [i + 1]\n    else:\n        if r[i] in d:\n            d[r[i]].append(i + 1)\n        else:\n            d[r[i]] = [i + 1]\n\ns = 0\nfor k, v in d.items():\n    if len(v) >= 2:\n        s += (len(v) // 2)\n        for i in range(0, len(v) - 1, 2):\n            print(v[i], v[i + 1])\n\nprint(s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef check_color(c1, c2):\n    if c1 == '?' or c2 == '?':\n        return True\n    return c1 == c2\n\ndef get_color(color):\n    if color == '?':\n        return '?'\n    return color\n\ndef get_max_pairs(left, right):\n    # print(left, right)\n    left_color = {}\n    right_color = {}\n    count = 0\n    for l, r in zip(left, right):\n        l_color = get_color(l)\n        r_color = get_color(r)\n        if check_color(l, r):\n            count += 1\n        else:\n            if l_color not in left_color:\n                left_color[l_color] = r_color\n            elif left_color[l_color] == '?':\n                left_color[l_color] = r_color\n            elif left_color[l_color] != r_color:\n                return 0\n            if r_color not in right_color:\n                right_color[r_color] = l_color\n            elif right_color[r_color] == '?':\n                right_color[r_color] = l_color\n            elif right_color[r_color] != l_color:\n                return 0\n    # print(left_color, right_color)\n    for l_color, r_color in left_color.items():\n        if r_color in right_color:\n            count += 1\n            right_color[r_color] = None\n    # print(count)\n    return count\n\nif __name__ == \"__main__\":\n    n = int(input())\n    left = input()\n    right = input()\n    pairs = get_max_pairs(left, right)\n    print(pairs)\n    if pairs > 0:\n        for l_index, l_color in enumerate(left):\n            for r_index, r_color in enumerate(right):\n                if check_color(l_color, r_color):\n                    print(l_index+1, r_index+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\ndef read_ints():\n    return map(int, raw_input().split())\n\ndef read_int():\n    return int(raw_input())\n\ndef read_words():\n    return raw_input().split()\n\ndef read_word():\n    return raw_input()\n\ndef parse_input():\n    n = read_int()\n    ls = read_word()\n    rs = read_word()\n    return n, ls, rs\n\ndef solve(n, ls, rs):\n    l_indices = defaultdict(list)\n    r_indices = defaultdict(list)\n    for i, c in enumerate(ls, 1):\n        l_indices[c].append(i)\n    for i, c in enumerate(rs, 1):\n        r_indices[c].append(i)\n    result = []\n    for lc, lis in l_indices.iteritems():\n        for rc, ris in r_indices.iteritems():\n            if lc == rc or lc == '?' or rc == '?':\n                for i in xrange(min(len(lis), len(ris))):\n                    result.append((lis[i], ris[i]))\n    return result\n\ndef main():\n    n, ls, rs = parse_input()\n    result = solve(n, ls, rs)\n    print len(result)\n    for a, b in result:\n        print a, b\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef readInput():\n    n = int(input().strip())\n    l = input().strip()\n    r = input().strip()\n    return n,l,r\n\ndef findMaxPairs(n,l,r):\n    # build hash table with counts of each color\n    lCount = {}\n    rCount = {}\n    for i in range(n):\n        if l[i] not in lCount:\n            lCount[l[i]] = 1\n        else:\n            lCount[l[i]] += 1\n        if r[i] not in rCount:\n            rCount[r[i]] = 1\n        else:\n            rCount[r[i]] += 1\n    # check for pairs of color\n    pairs = []\n    for i in range(n):\n        if l[i] in rCount and r[i] in lCount:\n            if l[i] == r[i] and lCount[l[i]] > 0 and rCount[r[i]] > 0:\n                lCount[l[i]] -= 1\n                rCount[r[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif l[i] == '?' and rCount[r[i]] > 0:\n                rCount[r[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif r[i] == '?' and lCount[l[i]] > 0:\n                lCount[l[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif l[i] != r[i] and l[i] != '?' and r[i] != '?':\n                pass\n    # check for pairs of '?'\n    for i in range(n):\n        if l[i] == '?':\n            for j in range(n):\n                if r[j] == '?' and (i+1,j+1) not in pairs:\n                    pairs.append((i+1,j+1))\n                    break\n    return len(pairs),pairs\n\ndef main():\n    n,l,r = readInput()\n    k,pairs = findMaxPairs(n,l,r)\n    print(k)\n    for i in range(len(pairs)):\n        print(pairs[i][0],pairs[i][1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nl = input()\nr = input()\n\nleft = {}\nright = {}\n\nfor i, c in enumerate(l):\n    if c in left:\n        left[c].append(i+1)\n    else:\n        left[c] = [i+1]\n\nfor i, c in enumerate(r):\n    if c in right:\n        right[c].append(i+1)\n    else:\n        right[c] = [i+1]\n\npairs = []\nfor c in left:\n    if c in right:\n        for l in left[c]:\n            for r in right[c]:\n                pairs.append((l, r))\n\nprint(len(pairs))\nfor p in pairs:\n    print(p[0], p[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nl = input()\nr = input()\n\n# First, find all the pairs of boots with compatible colors.\npairs = []\nfor i in range(n):\n    for j in range(n):\n        if (l[i] == '?' or r[j] == '?' or l[i] == r[j]):\n            pairs.append((i+1, j+1))\n\n# Now, remove duplicates by only keeping the largest right boot.\npairs.sort(key=lambda x: x[0])\npairs_no_dups = []\nlast_i = -1\nfor pair in pairs:\n    if pair[0] != last_i:\n        pairs_no_dups.append(pair)\n        last_i = pair[0]\n\n# Print the pairs\nprint(len(pairs_no_dups))\nfor pair in pairs_no_dups:\n    print(pair[0], pair[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\n#%%\nN = int(input())\nl = input()\nr = input()\n#%%\ndef is_match(l, r):\n    if l == r or l == '?' or r == '?':\n        return True\n    return False\n\ndef find_match(l, r):\n    for i in range(len(l)):\n        for j in range(len(r)):\n            if is_match(l[i], r[j]):\n                return i, j\n    return -1, -1\n\ndef solve(l, r):\n    matches = []\n    while True:\n        i, j = find_match(l, r)\n        if i >= 0:\n            matches.append((i+1, j+1))\n            l = l[:i] + '-' + l[i+1:]\n            r = r[:j] + '-' + r[j+1:]\n        else:\n            break\n    return matches\n#%%\nmatches = solve(l, r)\nprint(len(matches))\nfor i, j in matches:\n    print(i, j)"
+    }
+  ],
+  "created": 1650140199,
+  "id": "cmpl-4xj8R3jcbSVbUIyF2zXd06U1CClgn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:17:11.263272 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\nn = int(input())\nl = input()\nr = input()\n\nleft = [0] * 26\nright = [0] * 26\n\nfor i in range(n):\n    if l[i] != \"?\":\n        left[ord(l[i]) - 97] += 1\n    if r[i] != \"?\":\n        right[ord(r[i]) - 97] += 1\n\nans = 0\nfor i in range(26):\n    ans += min(left[i], right[i])\n\nprint(ans)\n\nleft = [0] * 26\nright = [0] * 26\n\nfor i in range(n):\n    if l[i] != \"?\":\n        if left[ord(l[i]) - 97] > 0:\n            left[ord(l[i]) - 97] -= 1\n            print(i + 1, left[ord(l[i]) - 97] + 1)\n        else:\n            left[ord(l[i]) - 97] = i\n    if r[i] != \"?\":\n        if right[ord(r[i]) - 97] > 0:\n            right[ord(r[i]) - 97] -= 1\n            print(right[ord(r[i]) - 97] + 1, i + 1)\n        else:\n            right[ord(r[i]) - 97] = i\n\nfor i in range(26):\n    if left[i] > 0 and right[i] > 0:\n        left[i] -= 1\n        right[i] -= 1\n        print(left[i] + 1, right[i] + 1)"
+}
+2022-04-16 20:17:11.263489 REASON stop
+2022-04-16 20:17:11.276229 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nl = input()\nr = input()\n\n# O(n^2) solution\n# for i in range(n):\n#     for j in range(n):\n#         if l[i] == r[j] or l[i] == '?' or r[j] == '?':\n#             print(i + 1, j + 1)\n\n# O(n) solution\nd = {}\nfor i in range(n):\n    if l[i] == '?':\n        if r[i] in d:\n            d[r[i]].append(i + 1)\n        else:\n            d[r[i]] = [i + 1]\n    else:\n        if l[i] in d:\n            d[l[i]].append(i + 1)\n        else:\n            d[l[i]] = [i + 1]\n\nfor i in range(n):\n    if r[i] == '?':\n        if l[i] in d:\n            d[l[i]].append(i + 1)\n        else:\n            d[l[i]] = [i + 1]\n    else:\n        if r[i] in d:\n            d[r[i]].append(i + 1)\n        else:\n            d[r[i]] = [i + 1]\n\ns = 0\nfor k, v in d.items():\n    if len(v) >= 2:\n        s += (len(v) // 2)\n        for i in range(0, len(v) - 1, 2):\n            print(v[i], v[i + 1])\n\nprint(s)"
+}
+2022-04-16 20:17:11.276423 REASON stop
+2022-04-16 20:17:11.276923 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef check_color(c1, c2):\n    if c1 == '?' or c2 == '?':\n        return True\n    return c1 == c2\n\ndef get_color(color):\n    if color == '?':\n        return '?'\n    return color\n\ndef get_max_pairs(left, right):\n    # print(left, right)\n    left_color = {}\n    right_color = {}\n    count = 0\n    for l, r in zip(left, right):\n        l_color = get_color(l)\n        r_color = get_color(r)\n        if check_color(l, r):\n            count += 1\n        else:\n            if l_color not in left_color:\n                left_color[l_color] = r_color\n            elif left_color[l_color] == '?':\n                left_color[l_color] = r_color\n            elif left_color[l_color] != r_color:\n                return 0\n            if r_color not in right_color:\n                right_color[r_color] = l_color\n            elif right_color[r_color] == '?':\n                right_color[r_color] = l_color\n            elif right_color[r_color] != l_color:\n                return 0\n    # print(left_color, right_color)\n    for l_color, r_color in left_color.items():\n        if r_color in right_color:\n            count += 1\n            right_color[r_color] = None\n    # print(count)\n    return count\n\nif __name__ == \"__main__\":\n    n = int(input())\n    left = input()\n    right = input()\n    pairs = get_max_pairs(left, right)\n    print(pairs)\n    if pairs > 0:\n        for l_index, l_color in enumerate(left):\n            for r_index, r_color in enumerate(right):\n                if check_color(l_color, r_color):\n                    print(l_index+1, r_index+1)"
+}
+2022-04-16 20:17:11.276992 REASON stop
+2022-04-16 20:17:11.291626 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\ndef read_ints():\n    return map(int, raw_input().split())\n\ndef read_int():\n    return int(raw_input())\n\ndef read_words():\n    return raw_input().split()\n\ndef read_word():\n    return raw_input()\n\ndef parse_input():\n    n = read_int()\n    ls = read_word()\n    rs = read_word()\n    return n, ls, rs\n\ndef solve(n, ls, rs):\n    l_indices = defaultdict(list)\n    r_indices = defaultdict(list)\n    for i, c in enumerate(ls, 1):\n        l_indices[c].append(i)\n    for i, c in enumerate(rs, 1):\n        r_indices[c].append(i)\n    result = []\n    for lc, lis in l_indices.iteritems():\n        for rc, ris in r_indices.iteritems():\n            if lc == rc or lc == '?' or rc == '?':\n                for i in xrange(min(len(lis), len(ris))):\n                    result.append((lis[i], ris[i]))\n    return result\n\ndef main():\n    n, ls, rs = parse_input()\n    result = solve(n, ls, rs)\n    print len(result)\n    for a, b in result:\n        print a, b\n\nmain()"
+}
+2022-04-16 20:17:11.291731 REASON stop
+2022-04-16 20:17:11.309148 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef readInput():\n    n = int(input().strip())\n    l = input().strip()\n    r = input().strip()\n    return n,l,r\n\ndef findMaxPairs(n,l,r):\n    # build hash table with counts of each color\n    lCount = {}\n    rCount = {}\n    for i in range(n):\n        if l[i] not in lCount:\n            lCount[l[i]] = 1\n        else:\n            lCount[l[i]] += 1\n        if r[i] not in rCount:\n            rCount[r[i]] = 1\n        else:\n            rCount[r[i]] += 1\n    # check for pairs of color\n    pairs = []\n    for i in range(n):\n        if l[i] in rCount and r[i] in lCount:\n            if l[i] == r[i] and lCount[l[i]] > 0 and rCount[r[i]] > 0:\n                lCount[l[i]] -= 1\n                rCount[r[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif l[i] == '?' and rCount[r[i]] > 0:\n                rCount[r[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif r[i] == '?' and lCount[l[i]] > 0:\n                lCount[l[i]] -= 1\n                pairs.append((i+1,i+1))\n            elif l[i] != r[i] and l[i] != '?' and r[i] != '?':\n                pass\n    # check for pairs of '?'\n    for i in range(n):\n        if l[i] == '?':\n            for j in range(n):\n                if r[j] == '?' and (i+1,j+1) not in pairs:\n                    pairs.append((i+1,j+1))\n                    break\n    return len(pairs),pairs\n\ndef main():\n    n,l,r = readInput()\n    k,pairs = findMaxPairs(n,l,r)\n    print(k)\n    for i in range(len(pairs)):\n        print(pairs[i][0],pairs[i][1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:17:11.309268 REASON stop
+2022-04-16 20:17:11.310188 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nl = input()\nr = input()\n\nleft = {}\nright = {}\n\nfor i, c in enumerate(l):\n    if c in left:\n        left[c].append(i+1)\n    else:\n        left[c] = [i+1]\n\nfor i, c in enumerate(r):\n    if c in right:\n        right[c].append(i+1)\n    else:\n        right[c] = [i+1]\n\npairs = []\nfor c in left:\n    if c in right:\n        for l in left[c]:\n            for r in right[c]:\n                pairs.append((l, r))\n\nprint(len(pairs))\nfor p in pairs:\n    print(p[0], p[1])"
+}
+2022-04-16 20:17:11.310281 REASON stop
+2022-04-16 20:17:11.311168 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nl = input()\nr = input()\n\n# First, find all the pairs of boots with compatible colors.\npairs = []\nfor i in range(n):\n    for j in range(n):\n        if (l[i] == '?' or r[j] == '?' or l[i] == r[j]):\n            pairs.append((i+1, j+1))\n\n# Now, remove duplicates by only keeping the largest right boot.\npairs.sort(key=lambda x: x[0])\npairs_no_dups = []\nlast_i = -1\nfor pair in pairs:\n    if pair[0] != last_i:\n        pairs_no_dups.append(pair)\n        last_i = pair[0]\n\n# Print the pairs\nprint(len(pairs_no_dups))\nfor pair in pairs_no_dups:\n    print(pair[0], pair[1])"
+}
+2022-04-16 20:17:11.311242 REASON stop
+2022-04-16 20:17:11.312401 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\n#%%\nN = int(input())\nl = input()\nr = input()\n#%%\ndef is_match(l, r):\n    if l == r or l == '?' or r == '?':\n        return True\n    return False\n\ndef find_match(l, r):\n    for i in range(len(l)):\n        for j in range(len(r)):\n            if is_match(l[i], r[j]):\n                return i, j\n    return -1, -1\n\ndef solve(l, r):\n    matches = []\n    while True:\n        i, j = find_match(l, r)\n        if i >= 0:\n            matches.append((i+1, j+1))\n            l = l[:i] + '-' + l[i+1:]\n            r = r[:j] + '-' + r[j+1:]\n        else:\n            break\n    return matches\n#%%\nmatches = solve(l, r)\nprint(len(matches))\nfor i, j in matches:\n    print(i, j)"
+}
+2022-04-16 20:17:11.312478 REASON stop

@@ -1,0 +1,162 @@
+2022-04-16 19:31:41.548622 """
+There is a robot staying at $X=0$ on the $Ox$ axis. He has to walk to $X=n$. You are controlling this robot and controlling how he goes. The robot has a battery and an accumulator with a solar panel.
+
+The $i$-th segment of the path (from $X=i-1$ to $X=i$) can be exposed to sunlight or not. The array $s$ denotes which segments are exposed to sunlight: if segment $i$ is exposed, then $s_i = 1$, otherwise $s_i = 0$.
+
+The robot has one battery of capacity $b$ and one accumulator of capacity $a$. For each segment, you should choose which type of energy storage robot will use to go to the next point (it can be either battery or accumulator). If the robot goes using the battery, the current charge of the battery is decreased by one (the robot can't use the battery if its charge is zero). And if the robot goes using the accumulator, the current charge of the accumulator is decreased by one (and the robot also can't use the accumulator if its charge is zero).
+
+If the current segment is exposed to sunlight and the robot goes through it using the battery, the charge of the accumulator increases by one (of course, its charge can't become higher than it's maximum capacity).
+
+If accumulator is used to pass some segment, its charge decreases by 1 no matter if the segment is exposed or not.
+
+You understand that it is not always possible to walk to $X=n$. You want your robot to go as far as possible. Find the maximum number of segments of distance the robot can pass if you control him optimally.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, b, a$ ($1 \le n, b, a \le 2 \cdot 10^5$) — the robot's destination point, the battery capacity and the accumulator capacity, respectively.
+
+The second line of the input contains $n$ integers $s_1, s_2, \dots, s_n$ ($0 \le s_i \le 1$), where $s_i$ is $1$ if the $i$-th segment of distance is exposed to sunlight, and $0$ otherwise.
+
+
+-----Output-----
+
+Print one integer — the maximum number of segments the robot can pass if you control him optimally.
+
+
+-----Examples-----
+Input
+5 2 1
+0 1 0 1 0
+
+Output
+5
+
+Input
+6 2 1
+1 0 0 1 0 1
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the robot can go through the first segment using the accumulator, and charge levels become $b=2$ and $a=0$. The second segment can be passed using the battery, and charge levels become $b=1$ and $a=1$. The third segment can be passed using the accumulator, and charge levels become $b=1$ and $a=0$. The fourth segment can be passed using the battery, and charge levels become $b=0$ and $a=1$. And the fifth segment can be passed using the accumulator.
+
+In the second example the robot can go through the maximum number of segments using battery two times and accumulator one time in any order.
+"""
+2022-04-16 19:31:41.548639 --------------------------
+2022-04-16 19:32:00.243981 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, b, a = [int(i) for i in input().split()]\n    s = [int(i) for i in input().split()]\n\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a < b:\n                a += 1\n                b -= 1\n            else:\n                a -= 1\n        else:\n            if a > 0:\n                a -= 1\n            elif b > 0:\n                b -= 1\n            else:\n                break\n        i += 1\n\n    print(i)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n\tn, b, a = map(int, input().split())\n\ts = list(map(int, input().split()))\n\t\n\tmax_dist = 0\n\t\n\tbattery_charge = b\n\taccumulator_charge = a\n\t\n\tfor i in range(n):\n\t\tif s[i] == 1:\n\t\t\tif accumulator_charge < a and battery_charge > 0:\n\t\t\t\taccumulator_charge += 1\n\t\t\t\tbattery_charge -= 1\n\t\t\n\t\tif accumulator_charge > 0:\n\t\t\taccumulator_charge -= 1\n\t\telif battery_charge > 0:\n\t\t\tbattery_charge -= 1\n\t\telse:\n\t\t\tbreak\n\t\t\n\t\tmax_dist += 1\n\t\t\n\tprint(max_dist)\n\n\nif __name__ == \"__main__\":\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n\n    ans = 0\n    while b > 0 and a > 0:\n        ans += 1\n        if s[ans - 1] == 1:\n            b = min(b + 1, 2)\n            a = min(a - 1, 1)\n        else:\n            b = min(b - 1, 2)\n            a = min(a - 1, 1)\n\n    while a > 0:\n        ans += 1\n        a = min(a - 1, 1)\n    while b > 0:\n        ans += 1\n        b = min(b - 1, 2)\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef get_maximum_distance(n, b, a, s):\n    \"\"\"\n    :param n: the robot's destination point\n    :param b: the battery capacity\n    :param a: the accumulator capacity\n    :param s: an array of n integers (0 <= s[i] <= 1) where s[i] is 1 if the i-th segment of distance is exposed to sunlight, and 0 otherwise\n    :return: the maximum number of segments the robot can pass if you control him optimally\n    \"\"\"\n    # TODO: implement this function\n    pass\n\n\nif __name__ == '__main__':\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n    print(get_maximum_distance(n, b, a, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef determine_max_distance_that_can_be_traveled(n, b, a, s):\n    max_distance_that_can_be_traveled = 0\n    b_charge = b\n    a_charge = a\n    for i in range(n):\n        if s[i] == 1:\n            if b_charge > 0:\n                b_charge -= 1\n                a_charge += 1\n                max_distance_that_can_be_traveled += 1\n            elif a_charge > 0:\n                a_charge -= 1\n                max_distance_that_can_be_traveled += 1\n        else:\n            if a_charge > 0:\n                a_charge -= 1\n                max_distance_that_can_be_traveled += 1\n            elif b_charge > 0:\n                b_charge -= 1\n                max_distance_that_can_be_traveled += 1\n        if a_charge > a:\n            a_charge = a\n        if b_charge > b:\n            b_charge = b\n    return max_distance_that_can_be_traveled\n\nn, b, a = [int(x) for x in input().split()]\ns = [int(x) for x in input().split()]\nprint(determine_max_distance_that_can_be_traveled(n, b, a, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_len = 0\nbattery = b\naccumulator = a\n\nfor s_i in s:\n    if s_i:\n        if battery < b:\n            battery += 1\n        else:\n            if accumulator > 0:\n                accumulator -= 1\n            else:\n                break\n    else:\n        if accumulator > 0:\n            accumulator -= 1\n        else:\n            if battery > 0:\n                battery -= 1\n            else:\n                break\n    max_len += 1\n\nprint(max_len)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef solution(n, b, a, s):\n    \"\"\"\n    Calculate maximum segments.\n\n    Parameters\n    ----------\n    n : int\n        The robot's destination point.\n    b : int\n        The battery capacity.\n    a : int\n        The accumulator capacity.\n    s : list\n        List of segments.\n\n    Returns\n    -------\n    int\n        Maximum segments.\n    \"\"\"\n    max_segments = 0\n    battery = b\n    accumulator = a\n    for i in range(n):\n        if s[i] == 0:\n            if accumulator > 0:\n                accumulator -= 1\n            elif battery > 0:\n                battery -= 1\n            else:\n                break\n        else:\n            if battery > 0:\n                battery -= 1\n                accumulator += 1\n                if accumulator > a:\n                    accumulator = a\n            elif accumulator > 0:\n                accumulator -= 1\n            else:\n                break\n        max_segments += 1\n    return max_segments\n\n# n, b, a = [int(x) for x in input().split()]\n# s = [int(x) for x in input().split()]\n# print(solution(n, b, a, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef _get_args():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    return n, b, a, s\n\n\ndef solve(n, b, a, s):\n    # TODO: Solve the problem!\n    return 0\n\n\nif __name__ == '__main__':\n    print(solve(*_get_args()))"
+    }
+  ],
+  "created": 1650137501,
+  "id": "cmpl-4xiQvqVOhU47tUKRR0ejPkCsLeykv",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:32:00.244391 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, b, a = [int(i) for i in input().split()]\n    s = [int(i) for i in input().split()]\n\n    i = 0\n    while i < n:\n        if s[i] == 1:\n            if a < b:\n                a += 1\n                b -= 1\n            else:\n                a -= 1\n        else:\n            if a > 0:\n                a -= 1\n            elif b > 0:\n                b -= 1\n            else:\n                break\n        i += 1\n\n    print(i)\n\nmain()"
+}
+2022-04-16 19:32:00.244429 REASON stop
+2022-04-16 19:32:00.260405 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n\tn, b, a = map(int, input().split())\n\ts = list(map(int, input().split()))\n\t\n\tmax_dist = 0\n\t\n\tbattery_charge = b\n\taccumulator_charge = a\n\t\n\tfor i in range(n):\n\t\tif s[i] == 1:\n\t\t\tif accumulator_charge < a and battery_charge > 0:\n\t\t\t\taccumulator_charge += 1\n\t\t\t\tbattery_charge -= 1\n\t\t\n\t\tif accumulator_charge > 0:\n\t\t\taccumulator_charge -= 1\n\t\telif battery_charge > 0:\n\t\t\tbattery_charge -= 1\n\t\telse:\n\t\t\tbreak\n\t\t\n\t\tmax_dist += 1\n\t\t\n\tprint(max_dist)\n\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-16 19:32:00.260605 REASON stop
+2022-04-16 19:32:00.261059 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n\n    ans = 0\n    while b > 0 and a > 0:\n        ans += 1\n        if s[ans - 1] == 1:\n            b = min(b + 1, 2)\n            a = min(a - 1, 1)\n        else:\n            b = min(b - 1, 2)\n            a = min(a - 1, 1)\n\n    while a > 0:\n        ans += 1\n        a = min(a - 1, 1)\n    while b > 0:\n        ans += 1\n        b = min(b - 1, 2)\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:32:00.261125 REASON stop
+2022-04-16 19:32:00.273640 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef get_maximum_distance(n, b, a, s):\n    \"\"\"\n    :param n: the robot's destination point\n    :param b: the battery capacity\n    :param a: the accumulator capacity\n    :param s: an array of n integers (0 <= s[i] <= 1) where s[i] is 1 if the i-th segment of distance is exposed to sunlight, and 0 otherwise\n    :return: the maximum number of segments the robot can pass if you control him optimally\n    \"\"\"\n    # TODO: implement this function\n    pass\n\n\nif __name__ == '__main__':\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = list(map(int, sys.stdin.readline().split()))\n    print(get_maximum_distance(n, b, a, s))"
+}
+2022-04-16 19:32:00.273744 REASON stop
+2022-04-16 19:32:00.293510 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef determine_max_distance_that_can_be_traveled(n, b, a, s):\n    max_distance_that_can_be_traveled = 0\n    b_charge = b\n    a_charge = a\n    for i in range(n):\n        if s[i] == 1:\n            if b_charge > 0:\n                b_charge -= 1\n                a_charge += 1\n                max_distance_that_can_be_traveled += 1\n            elif a_charge > 0:\n                a_charge -= 1\n                max_distance_that_can_be_traveled += 1\n        else:\n            if a_charge > 0:\n                a_charge -= 1\n                max_distance_that_can_be_traveled += 1\n            elif b_charge > 0:\n                b_charge -= 1\n                max_distance_that_can_be_traveled += 1\n        if a_charge > a:\n            a_charge = a\n        if b_charge > b:\n            b_charge = b\n    return max_distance_that_can_be_traveled\n\nn, b, a = [int(x) for x in input().split()]\ns = [int(x) for x in input().split()]\nprint(determine_max_distance_that_can_be_traveled(n, b, a, s))"
+}
+2022-04-16 19:32:00.293636 REASON stop
+2022-04-16 19:32:00.295453 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nmax_len = 0\nbattery = b\naccumulator = a\n\nfor s_i in s:\n    if s_i:\n        if battery < b:\n            battery += 1\n        else:\n            if accumulator > 0:\n                accumulator -= 1\n            else:\n                break\n    else:\n        if accumulator > 0:\n            accumulator -= 1\n        else:\n            if battery > 0:\n                battery -= 1\n            else:\n                break\n    max_len += 1\n\nprint(max_len)"
+}
+2022-04-16 19:32:00.295592 REASON stop
+2022-04-16 19:32:00.304055 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef solution(n, b, a, s):\n    \"\"\"\n    Calculate maximum segments.\n\n    Parameters\n    ----------\n    n : int\n        The robot's destination point.\n    b : int\n        The battery capacity.\n    a : int\n        The accumulator capacity.\n    s : list\n        List of segments.\n\n    Returns\n    -------\n    int\n        Maximum segments.\n    \"\"\"\n    max_segments = 0\n    battery = b\n    accumulator = a\n    for i in range(n):\n        if s[i] == 0:\n            if accumulator > 0:\n                accumulator -= 1\n            elif battery > 0:\n                battery -= 1\n            else:\n                break\n        else:\n            if battery > 0:\n                battery -= 1\n                accumulator += 1\n                if accumulator > a:\n                    accumulator = a\n            elif accumulator > 0:\n                accumulator -= 1\n            else:\n                break\n        max_segments += 1\n    return max_segments\n\n# n, b, a = [int(x) for x in input().split()]\n# s = [int(x) for x in input().split()]\n# print(solution(n, b, a, s))"
+}
+2022-04-16 19:32:00.304200 REASON stop
+2022-04-16 19:32:00.305376 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef _get_args():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    return n, b, a, s\n\n\ndef solve(n, b, a, s):\n    # TODO: Solve the problem!\n    return 0\n\n\nif __name__ == '__main__':\n    print(solve(*_get_args()))"
+}
+2022-04-16 19:32:00.305523 REASON stop

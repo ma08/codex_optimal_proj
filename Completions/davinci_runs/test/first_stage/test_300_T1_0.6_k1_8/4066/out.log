@@ -1,0 +1,155 @@
+2022-04-16 19:12:35.492488 """
+You are given an array $a$ consisting of $n$ integers $a_1, a_2, \dots, a_n$.
+
+Your problem is to find such pair of indices $i, j$ ($1 \le i < j \le n$) that $lcm(a_i, a_j)$ is minimum possible.
+
+$lcm(x, y)$ is the least common multiple of $x$ and $y$ (minimum positive number such that both $x$ and $y$ are divisors of this number).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 10^6$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^7$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print two integers $i$ and $j$ ($1 \le i < j \le n$) such that the value of $lcm(a_i, a_j)$ is minimum among all valid pairs $i, j$. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+2 4 8 3 6
+
+Output
+1 2
+
+Input
+5
+5 2 11 3 7
+
+Output
+2 4
+
+Input
+6
+2 5 10 1 10 2
+
+Output
+1 4
+"""
+2022-04-16 19:12:35.492498 --------------------------
+2022-04-16 19:12:54.694159 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef lcm(x, y):\n    return (x * y) // math.gcd(x, y)\n\nmin_lcm = lcm(a[0], a[1])\nmin_i = 1\nmin_j = 2\nfor i in range(n):\n    for j in range(i+1, n):\n        if lcm(a[i], a[j]) < min_lcm:\n            min_lcm = lcm(a[i], a[j])\n            min_i = i+1\n            min_j = j+1\n\nprint(min_i, min_j)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef gcd(x, y):\n    if y == 0:\n        return x\n    return gcd(y, x % y)\n\ndef lcm(x, y):\n    return x * y // gcd(x, y)\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    min_lcm = lcm(a[0], a[1])\n    ans = [1, 2]\n    for i in range(n):\n        for j in range(i + 1, n):\n            curr_lcm = lcm(a[i], a[j])\n            if curr_lcm < min_lcm:\n                min_lcm = curr_lcm\n                ans = [i + 1, j + 1]\n    print(ans[0], ans[1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nfrom sys import stdin\nfrom sys import stdout\n\nfrom math import ceil\nfrom math import gcd\n\ndef lcm(a, b):\n    return a // gcd(a,b) * b\n\ndef min_lcm(a):\n    min_lcm = a[0] * a[1]\n    i_min = i_max = 0\n    for i in range(len(a)):\n        for j in range(i+1, len(a)):\n            b = lcm(a[i], a[j])\n            if b < min_lcm:\n                i_min = i\n                i_max = j\n                min_lcm = b\n    return i_min+1, i_max+1\n\ndef main():\n    n = int(stdin.readline())\n    a = [int(x) for x in stdin.readline().split()]\n    i, j = min_lcm(a)\n    stdout.write(str(i) + ' ' + str(j))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef gcd(a,b):\n    while b:\n        a, b = b, a%b\n    return a\n\ndef lcm(a,b):\n    return a*b//gcd(a,b)\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = [int(x) for x in sys.stdin.readline().strip().split()]\n    a.sort()\n    sol = lcm(a[0],a[1])\n    ans = (1,2)\n    for i in range(n):\n        for j in range(i+1,n):\n            if lcm(a[i],a[j]) < sol:\n                sol = lcm(a[i],a[j])\n                ans = (i+1,j+1)\n    print(ans[0],ans[1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom math import gcd\nfrom functools import reduce\n\ndef lcm(x, y):\n    return x * y // gcd(x, y)\n\ndef lcm_list(list):\n    return reduce(lcm, list)\n\ndef solution(elements):\n    minimum = lcm_list(elements)\n    indexes = []\n    for i in range(len(elements)):\n        for j in range(i+1, len(elements)):\n            if lcm(elements[i], elements[j]) < minimum:\n                minimum = lcm(elements[i], elements[j])\n                indexes = [i+1, j+1]\n            elif lcm(elements[i], elements[j]) == minimum:\n                indexes.append(i+1)\n                indexes.append(j+1)\n    return indexes\n\n# n = int(input())\n# elements = list(map(int, input().split()))\n# print(*solution(elements))\nprint(*solution([2, 4, 8, 3, 6]))\nprint(*solution([5, 2, 11, 3, 7]))\nprint(*solution([2, 5, 10, 1, 10, 2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\nfrom fractions import gcd\nfrom math import log10\nfrom collections import deque\n\n\ndef lcm(a, b):\n    return a * b / gcd(a, b)\n\n\ndef solve(n, a):\n    best_lcm = None\n    best_i = None\n    best_j = None\n    for i, ai in enumerate(a):\n        for j in xrange(i+1, n):\n            aj = a[j]\n            if best_lcm is None or lcm(ai, aj) < best_lcm:\n                best_lcm = lcm(ai, aj)\n                best_i = i\n                best_j = j\n    return best_i+1, best_j+1\n\n\ndef main():\n    n = int(stdin.readline())\n    a = map(int, stdin.readline().split())\n    i, j = solve(n, a)\n    stdout.write('%d %d\\n' % (i, j))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nnext_line = iter(stdin.read().splitlines()).next\n\nn = int(next_line())\na = map(int, next_line().split())\n\ndef gcd(a, b):\n\tif b == 0:\n\t\treturn a\n\treturn gcd(b, a % b)\n\ndef lcm(a, b):\n\treturn a * b / gcd(a, b)\n\ndef solve(a):\n\tbest = (1, 2)\n\tfor i in xrange(n):\n\t\tfor j in xrange(i + 1, n):\n\t\t\tl = lcm(a[i], a[j])\n\t\t\tif l < lcm(a[best[0]], a[best[1]]):\n\t\t\t\tbest = (i, j)\n\treturn best\n\nprint ' '.join(map(str, solve(a) + 1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\nimport sys\nfrom math import gcd\n\nif __name__ == \"__main__\":\n    n = int(sys.stdin.readline())\n    l = list(map(int, sys.stdin.readline().split()))\n    # print(n,l)\n    # for i,x in enumerate(l):\n    #     for j,y in enumerate(l[i+1:]):\n    #         print(i,j+i,gcd(x,y))\n    print(1, 2, gcd(l[0], l[1]))\n    gcd_min = gcd(l[0], l[1])\n    idx = [1, 2]\n    for i, x in enumerate(l):\n        for j, y in enumerate(l[i + 1:]):\n            if gcd(x, y) < gcd_min:\n                gcd_min = gcd(x, y)\n                idx = [i + 1, j + i + 2]\n    print(idx[0], idx[1])"
+    }
+  ],
+  "created": 1650136355,
+  "id": "cmpl-4xi8R2Jf1nwKnAlYHP9pzPVicBPqE",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:12:54.694438 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef lcm(x, y):\n    return (x * y) // math.gcd(x, y)\n\nmin_lcm = lcm(a[0], a[1])\nmin_i = 1\nmin_j = 2\nfor i in range(n):\n    for j in range(i+1, n):\n        if lcm(a[i], a[j]) < min_lcm:\n            min_lcm = lcm(a[i], a[j])\n            min_i = i+1\n            min_j = j+1\n\nprint(min_i, min_j)"
+}
+2022-04-16 19:12:54.694471 REASON stop
+2022-04-16 19:12:54.696029 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef gcd(x, y):\n    if y == 0:\n        return x\n    return gcd(y, x % y)\n\ndef lcm(x, y):\n    return x * y // gcd(x, y)\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    min_lcm = lcm(a[0], a[1])\n    ans = [1, 2]\n    for i in range(n):\n        for j in range(i + 1, n):\n            curr_lcm = lcm(a[i], a[j])\n            if curr_lcm < min_lcm:\n                min_lcm = curr_lcm\n                ans = [i + 1, j + 1]\n    print(ans[0], ans[1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:12:54.696177 REASON stop
+2022-04-16 19:12:54.696568 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nfrom sys import stdin\nfrom sys import stdout\n\nfrom math import ceil\nfrom math import gcd\n\ndef lcm(a, b):\n    return a // gcd(a,b) * b\n\ndef min_lcm(a):\n    min_lcm = a[0] * a[1]\n    i_min = i_max = 0\n    for i in range(len(a)):\n        for j in range(i+1, len(a)):\n            b = lcm(a[i], a[j])\n            if b < min_lcm:\n                i_min = i\n                i_max = j\n                min_lcm = b\n    return i_min+1, i_max+1\n\ndef main():\n    n = int(stdin.readline())\n    a = [int(x) for x in stdin.readline().split()]\n    i, j = min_lcm(a)\n    stdout.write(str(i) + ' ' + str(j))\n\nmain()"
+}
+2022-04-16 19:12:54.696652 REASON stop
+2022-04-16 19:12:54.717264 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef gcd(a,b):\n    while b:\n        a, b = b, a%b\n    return a\n\ndef lcm(a,b):\n    return a*b//gcd(a,b)\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = [int(x) for x in sys.stdin.readline().strip().split()]\n    a.sort()\n    sol = lcm(a[0],a[1])\n    ans = (1,2)\n    for i in range(n):\n        for j in range(i+1,n):\n            if lcm(a[i],a[j]) < sol:\n                sol = lcm(a[i],a[j])\n                ans = (i+1,j+1)\n    print(ans[0],ans[1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:12:54.717366 REASON stop
+2022-04-16 19:12:54.724759 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom math import gcd\nfrom functools import reduce\n\ndef lcm(x, y):\n    return x * y // gcd(x, y)\n\ndef lcm_list(list):\n    return reduce(lcm, list)\n\ndef solution(elements):\n    minimum = lcm_list(elements)\n    indexes = []\n    for i in range(len(elements)):\n        for j in range(i+1, len(elements)):\n            if lcm(elements[i], elements[j]) < minimum:\n                minimum = lcm(elements[i], elements[j])\n                indexes = [i+1, j+1]\n            elif lcm(elements[i], elements[j]) == minimum:\n                indexes.append(i+1)\n                indexes.append(j+1)\n    return indexes\n\n# n = int(input())\n# elements = list(map(int, input().split()))\n# print(*solution(elements))\nprint(*solution([2, 4, 8, 3, 6]))\nprint(*solution([5, 2, 11, 3, 7]))\nprint(*solution([2, 5, 10, 1, 10, 2]))"
+}
+2022-04-16 19:12:54.724863 REASON stop
+2022-04-16 19:12:54.725743 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\nfrom fractions import gcd\nfrom math import log10\nfrom collections import deque\n\n\ndef lcm(a, b):\n    return a * b / gcd(a, b)\n\n\ndef solve(n, a):\n    best_lcm = None\n    best_i = None\n    best_j = None\n    for i, ai in enumerate(a):\n        for j in xrange(i+1, n):\n            aj = a[j]\n            if best_lcm is None or lcm(ai, aj) < best_lcm:\n                best_lcm = lcm(ai, aj)\n                best_i = i\n                best_j = j\n    return best_i+1, best_j+1\n\n\ndef main():\n    n = int(stdin.readline())\n    a = map(int, stdin.readline().split())\n    i, j = solve(n, a)\n    stdout.write('%d %d\\n' % (i, j))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:12:54.725822 REASON stop
+2022-04-16 19:12:54.728658 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nnext_line = iter(stdin.read().splitlines()).next\n\nn = int(next_line())\na = map(int, next_line().split())\n\ndef gcd(a, b):\n\tif b == 0:\n\t\treturn a\n\treturn gcd(b, a % b)\n\ndef lcm(a, b):\n\treturn a * b / gcd(a, b)\n\ndef solve(a):\n\tbest = (1, 2)\n\tfor i in xrange(n):\n\t\tfor j in xrange(i + 1, n):\n\t\t\tl = lcm(a[i], a[j])\n\t\t\tif l < lcm(a[best[0]], a[best[1]]):\n\t\t\t\tbest = (i, j)\n\treturn best\n\nprint ' '.join(map(str, solve(a) + 1))"
+}
+2022-04-16 19:12:54.728732 REASON stop
+2022-04-16 19:12:54.729514 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\nimport sys\nfrom math import gcd\n\nif __name__ == \"__main__\":\n    n = int(sys.stdin.readline())\n    l = list(map(int, sys.stdin.readline().split()))\n    # print(n,l)\n    # for i,x in enumerate(l):\n    #     for j,y in enumerate(l[i+1:]):\n    #         print(i,j+i,gcd(x,y))\n    print(1, 2, gcd(l[0], l[1]))\n    gcd_min = gcd(l[0], l[1])\n    idx = [1, 2]\n    for i, x in enumerate(l):\n        for j, y in enumerate(l[i + 1:]):\n            if gcd(x, y) < gcd_min:\n                gcd_min = gcd(x, y)\n                idx = [i + 1, j + i + 2]\n    print(idx[0], idx[1])"
+}
+2022-04-16 19:12:54.729596 REASON stop

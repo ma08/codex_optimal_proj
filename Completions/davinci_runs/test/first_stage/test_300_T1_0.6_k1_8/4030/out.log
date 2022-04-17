@@ -1,0 +1,174 @@
+2022-04-16 18:58:01.093869 """
+This is a hard version of the problem. The actual problems are different, but the easy version is almost a subtask of the hard version. Note that the constraints and the output format are different.
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+You have to color all its characters the minimum number of colors (each character to exactly one color, the same letters can be colored the same or different colors, i.e. you can choose exactly one color for each index in $s$).
+
+After coloring, you can swap any two neighboring characters of the string that are colored different colors. You can perform such an operation arbitrary (possibly, zero) number of times.
+
+The goal is to make the string sorted, i.e. all characters should be in alphabetical order.
+
+Your task is to find the minimum number of colors which you have to color the given string in so that after coloring it can become sorted by some sequence of swaps. Note that you have to restore only coloring, not the sequence of swaps.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the length of $s$.
+
+The second line of the input contains the string $s$ consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+In the first line print one integer $res$ ($1 \le res \le n$) — the minimum number of colors in which you have to color the given string so that after coloring it can become sorted by some sequence of swaps.
+
+In the second line print any possible coloring that can be used to sort the string using some sequence of swaps described in the problem statement. The coloring is the array $c$ of length $n$, where $1 \le c_i \le res$ and $c_i$ means the color of the $i$-th character.
+
+
+-----Examples-----
+Input
+9
+abacbecfd
+
+Output
+2
+1 1 2 1 2 1 2 1 2 
+
+Input
+8
+aaabbcbb
+
+Output
+2
+1 2 1 2 1 2 1 1
+
+Input
+7
+abcdedc
+
+Output
+3
+1 1 1 1 1 2 3 
+
+Input
+5
+abcde
+
+Output
+1
+1 1 1 1 1
+"""
+2022-04-16 18:58:01.093885 --------------------------
+2022-04-16 18:58:40.768220 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    s = sys.stdin.readline().strip()\n\n    r = [1] * n\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            r[i] = r[i - 1]\n        elif s[i] < s[i - 1]:\n            r[i] = r[i - 1] + 1\n    print(max(r))\n    print(*r)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Read input\nn = int(input())\ns = input()\n\n# Initialize the answer as an empty list\nans = []\n\n# Initialize the current color to 1\ncurr = 1\n\n# Iterate over the characters of s, starting at index 1\nfor i in range(1, n):\n\t# If the previous character and the current character are different\n\tif s[i-1] != s[i]:\n\t\t# Set the color of the current character to the current color\n\t\tans.append(curr)\n\t\t# If the current color is 1, set it to 2, otherwise set it to 1\n\t\tcurr = 2 if curr == 1 else 1\n\t# Otherwise, the previous character and the current character are the same\n\telse:\n\t\t# Set the color of the current character to the current color\n\t\tans.append(curr)\n\n# Print the answer\nprint(max(ans))\nprint(\" \".join(map(str, ans)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ninput = stdin.readline\n#input = lambda: \"9\\nabacbecfd\\n\"\n\nn = int(input())\ns = input()\n\ndef solve():\n    # print(n, s)\n    # print(sorted(s))\n    if s == sorted(s):\n        return 1\n    # print(\"first char\", s[0])\n\n    # pattern\n    # [a-z]?[a-z]?[a-z]?[a-z]?[a-z]?[a-z]?[a-z]\n    prefix = \"\"\n    suffix = \"\"\n    # print(\"s[-1]\", s[-1])\n    for i in range(n-1, -1, -1):\n        # print(\"i\", i)\n        if s[i] < s[-1]:\n            break\n        suffix += s[i]\n    for i in range(n):\n        if s[i] > s[0]:\n            break\n        prefix += s[i]\n    # print(\"prefix, suffix\", prefix, suffix)\n    if len(suffix) == n - 1:\n        return 2\n    if len(suffix) <= 1:\n        return 3\n    if len(suffix) == 2:\n        return 2\n    if len(suffix) == 3 and s[-1] != s[-2] and s[-3] != s[-2]:\n        return 2\n    if len(suffix) == 4 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2]:\n        return 2\n    if len(suffix) == 5 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2]:\n        return 2\n    if len(suffix) == 6 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2]:\n        return 2\n    if len(suffix) == 7 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2]:\n        return 2\n    if len(suffix) == 8 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2] and s[-8] != s[-2]:\n        return 2\n    if len(suffix) == 9 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2] and s[-8] != s[-2] and s[-9] != s[-2]:\n        return 2\n    return 3\n\ndef main():\n    colors = solve()\n    print(colors)\n    if colors == 1:\n        print(*[1 for _ in range(n)])\n    elif colors == 2:\n        print(*[1 if s[i] == s[0] else 2 for i in range(n)])\n    else:\n        print(*[1 if s[i] == s[0] else 2 if s[i] == s[-1] else 3 for i in range(n)])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\nres = 1\nc = [0] * n\nc[0] = 1\nfor i in range(1, n):\n    if s[i] != s[i-1]:\n        c[i] = c[i-1] + 1\n    else:\n        c[i] = c[i-1]\n    res = max(res, c[i])\nprint(res)\nprint(*c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    if n == 1:\n        print(1)\n        print(1)\n        return\n    c = []\n    c.append(1)\n    cnt = 1\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            c.append(c[i - 1])\n        else:\n            cnt += 1\n            c.append(cnt)\n    print(cnt)\n    print(*c)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_input():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    return n,s\n\ndef get_sorted_string(s):\n    return ''.join(sorted(s))\n\ndef get_longest_substring(s):\n    if len(s) == 0 or s == get_sorted_string(s):\n        return s\n    for i in range(len(s)-1,0,-1):\n        if s[i] > s[i-1]:\n            return s[i:]\n\ndef color_string(s, n):\n    if len(s) == 0:\n        return []\n    sorted_s = get_sorted_string(s)\n    longest_substring = get_longest_substring(s)\n    color = 1\n    if longest_substring == sorted_s:\n        color = 2\n    return [color] + color_string(s[:-len(longest_substring)], n)\n\ndef main():\n    n,s = get_input()\n    result = color_string(s,n)\n    print(max(result))\n    print(' '.join(map(str,result)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\n\ndef main():\n    # s = sys.stdin.readline()\n    # nums = [int(n) for n in s.split()]\n    # print(s)\n    # print(nums)\n\n    n = int(sys.stdin.readline())\n    s = [c for c in sys.stdin.readline()]\n    # print(n)\n    # print(s)\n\n    # color\n    colors = [0 for i in range(len(s))]\n    colors[0] = 1\n    colors[1] = 2\n    for i in range(2, len(s)):\n        if s[i - 1] < s[i]:\n            colors[i] = colors[i - 1]\n        else:\n            colors[i] = colors[i - 2] + 1\n    # print(colors)\n    print(max(colors))\n    print(' '.join(str(i) for i in colors))\n\n\nif __name__==\"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\nres = 1\nc = [1]\nfor i in range(1, n):\n    if s[i] > s[i - 1]:\n        c.append(1)\n    else:\n        c.append(c[i - 1] + 1)\n        res = max(res, c[i])\n\nprint(res)\nprint(*c)"
+    }
+  ],
+  "created": 1650135481,
+  "id": "cmpl-4xhuLsFowcwO3BcQVWXyXdPfxFnmw",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 18:58:40.768589 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    s = sys.stdin.readline().strip()\n\n    r = [1] * n\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            r[i] = r[i - 1]\n        elif s[i] < s[i - 1]:\n            r[i] = r[i - 1] + 1\n    print(max(r))\n    print(*r)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:58:40.768630 REASON stop
+2022-04-16 18:58:40.805236 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Read input\nn = int(input())\ns = input()\n\n# Initialize the answer as an empty list\nans = []\n\n# Initialize the current color to 1\ncurr = 1\n\n# Iterate over the characters of s, starting at index 1\nfor i in range(1, n):\n\t# If the previous character and the current character are different\n\tif s[i-1] != s[i]:\n\t\t# Set the color of the current character to the current color\n\t\tans.append(curr)\n\t\t# If the current color is 1, set it to 2, otherwise set it to 1\n\t\tcurr = 2 if curr == 1 else 1\n\t# Otherwise, the previous character and the current character are the same\n\telse:\n\t\t# Set the color of the current character to the current color\n\t\tans.append(curr)\n\n# Print the answer\nprint(max(ans))\nprint(\" \".join(map(str, ans)))"
+}
+2022-04-16 18:58:40.805413 REASON stop
+2022-04-16 18:58:40.805887 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ninput = stdin.readline\n#input = lambda: \"9\\nabacbecfd\\n\"\n\nn = int(input())\ns = input()\n\ndef solve():\n    # print(n, s)\n    # print(sorted(s))\n    if s == sorted(s):\n        return 1\n    # print(\"first char\", s[0])\n\n    # pattern\n    # [a-z]?[a-z]?[a-z]?[a-z]?[a-z]?[a-z]?[a-z]\n    prefix = \"\"\n    suffix = \"\"\n    # print(\"s[-1]\", s[-1])\n    for i in range(n-1, -1, -1):\n        # print(\"i\", i)\n        if s[i] < s[-1]:\n            break\n        suffix += s[i]\n    for i in range(n):\n        if s[i] > s[0]:\n            break\n        prefix += s[i]\n    # print(\"prefix, suffix\", prefix, suffix)\n    if len(suffix) == n - 1:\n        return 2\n    if len(suffix) <= 1:\n        return 3\n    if len(suffix) == 2:\n        return 2\n    if len(suffix) == 3 and s[-1] != s[-2] and s[-3] != s[-2]:\n        return 2\n    if len(suffix) == 4 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2]:\n        return 2\n    if len(suffix) == 5 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2]:\n        return 2\n    if len(suffix) == 6 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2]:\n        return 2\n    if len(suffix) == 7 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2]:\n        return 2\n    if len(suffix) == 8 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2] and s[-8] != s[-2]:\n        return 2\n    if len(suffix) == 9 and s[-1] != s[-2] and s[-3] != s[-2] and s[-4] != s[-2] and s[-5] != s[-2] and s[-6] != s[-2] and s[-7] != s[-2] and s[-8] != s[-2] and s[-9] != s[-2]:\n        return 2\n    return 3\n\ndef main():\n    colors = solve()\n    print(colors)\n    if colors == 1:\n        print(*[1 for _ in range(n)])\n    elif colors == 2:\n        print(*[1 if s[i] == s[0] else 2 for i in range(n)])\n    else:\n        print(*[1 if s[i] == s[0] else 2 if s[i] == s[-1] else 3 for i in range(n)])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:58:40.805954 REASON stop
+2022-04-16 18:58:40.821308 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\nres = 1\nc = [0] * n\nc[0] = 1\nfor i in range(1, n):\n    if s[i] != s[i-1]:\n        c[i] = c[i-1] + 1\n    else:\n        c[i] = c[i-1]\n    res = max(res, c[i])\nprint(res)\nprint(*c)"
+}
+2022-04-16 18:58:40.821420 REASON stop
+2022-04-16 18:58:40.822629 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    if n == 1:\n        print(1)\n        print(1)\n        return\n    c = []\n    c.append(1)\n    cnt = 1\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            c.append(c[i - 1])\n        else:\n            cnt += 1\n            c.append(cnt)\n    print(cnt)\n    print(*c)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:58:40.822719 REASON stop
+2022-04-16 18:58:40.834180 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_input():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    return n,s\n\ndef get_sorted_string(s):\n    return ''.join(sorted(s))\n\ndef get_longest_substring(s):\n    if len(s) == 0 or s == get_sorted_string(s):\n        return s\n    for i in range(len(s)-1,0,-1):\n        if s[i] > s[i-1]:\n            return s[i:]\n\ndef color_string(s, n):\n    if len(s) == 0:\n        return []\n    sorted_s = get_sorted_string(s)\n    longest_substring = get_longest_substring(s)\n    color = 1\n    if longest_substring == sorted_s:\n        color = 2\n    return [color] + color_string(s[:-len(longest_substring)], n)\n\ndef main():\n    n,s = get_input()\n    result = color_string(s,n)\n    print(max(result))\n    print(' '.join(map(str,result)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 18:58:40.834323 REASON stop
+2022-04-16 18:58:40.835595 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\n\ndef main():\n    # s = sys.stdin.readline()\n    # nums = [int(n) for n in s.split()]\n    # print(s)\n    # print(nums)\n\n    n = int(sys.stdin.readline())\n    s = [c for c in sys.stdin.readline()]\n    # print(n)\n    # print(s)\n\n    # color\n    colors = [0 for i in range(len(s))]\n    colors[0] = 1\n    colors[1] = 2\n    for i in range(2, len(s)):\n        if s[i - 1] < s[i]:\n            colors[i] = colors[i - 1]\n        else:\n            colors[i] = colors[i - 2] + 1\n    # print(colors)\n    print(max(colors))\n    print(' '.join(str(i) for i in colors))\n\n\nif __name__==\"__main__\":\n    main()"
+}
+2022-04-16 18:58:40.835718 REASON stop
+2022-04-16 18:58:40.836808 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\nres = 1\nc = [1]\nfor i in range(1, n):\n    if s[i] > s[i - 1]:\n        c.append(1)\n    else:\n        c.append(c[i - 1] + 1)\n        res = max(res, c[i])\n\nprint(res)\nprint(*c)"
+}
+2022-04-16 18:58:40.836909 REASON stop

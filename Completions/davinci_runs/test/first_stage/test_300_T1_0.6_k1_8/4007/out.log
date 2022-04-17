@@ -1,0 +1,166 @@
+2022-04-16 18:48:22.953393 """
+There are $n$ friends who want to give gifts for the New Year to each other. Each friend should give exactly one gift and receive exactly one gift. The friend cannot give the gift to himself.
+
+For each friend the value $f_i$ is known: it is either $f_i = 0$ if the $i$-th friend doesn't know whom he wants to give the gift to or $1 \le f_i \le n$ if the $i$-th friend wants to give the gift to the friend $f_i$.
+
+You want to fill in the unknown values ($f_i = 0$) in such a way that each friend gives exactly one gift and receives exactly one gift and there is no friend who gives the gift to himself. It is guaranteed that the initial information isn't contradictory.
+
+If there are several answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of friends.
+
+The second line of the input contains $n$ integers $f_1, f_2, \dots, f_n$ ($0 \le f_i \le n$, $f_i \ne i$, all $f_i \ne 0$ are distinct), where $f_i$ is the either $f_i = 0$ if the $i$-th friend doesn't know whom he wants to give the gift to or $1 \le f_i \le n$ if the $i$-th friend wants to give the gift to the friend $f_i$. It is also guaranteed that there is at least two values $f_i = 0$.
+
+
+-----Output-----
+
+Print $n$ integers $nf_1, nf_2, \dots, nf_n$, where $nf_i$ should be equal to $f_i$ if $f_i \ne 0$ or the number of friend whom the $i$-th friend wants to give the gift to. All values $nf_i$ should be distinct, $nf_i$ cannot be equal to $i$. Each friend gives exactly one gift and receives exactly one gift and there is no friend who gives the gift to himself.
+
+If there are several answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+5 0 0 2 4
+
+Output
+5 3 1 2 4 
+
+Input
+7
+7 0 0 1 4 0 6
+
+Output
+7 3 2 1 4 5 6 
+
+Input
+7
+7 4 0 3 0 5 1
+
+Output
+7 4 2 3 6 5 1 
+
+Input
+5
+2 1 0 0 0
+
+Output
+2 1 4 5 3
+"""
+2022-04-16 18:48:22.953410 --------------------------
+2022-04-16 18:48:41.496945 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\ngifts = [i for i in range(1, n + 1) if i not in f]\n\nfor i in range(len(f)):\n    if f[i] == 0:\n        f[i] = gifts.pop()\n\nprint(*f)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#WORKS\n\ndef match(l):\n    \"\"\"\n    >>> match([5, 0, 0, 2, 4])\n    [5, 3, 1, 2, 4]\n    >>> match([2, 1, 0, 0, 0])\n    [2, 1, 4, 5, 3]\n    \"\"\"\n    l = list(l)\n    for i in range(len(l)):\n        if not l[i]:\n            l[i] = [x for x in range(1,len(l)+1) if x not in l][0]\n    return l\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    # --- Construct mapping --- #\n    mapping = {}\n    for i in range(n):\n        if f[i] != 0:\n            mapping[i+1] = f[i]\n\n    # --- Fill in missing values --- #\n    for i in range(n):\n        if f[i] == 0:\n            if i+1 not in mapping.keys():\n                mapping[i+1] = i+1\n            else:\n                for j in range(n):\n                    if j+1 not in mapping.keys():\n                        mapping[i+1] = j+1\n                        break\n\n    # --- Print friends --- #\n    for i in range(n):\n        print(mapping[i+1], end=\" \")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    # Count the number of friends who already know who they are giving presents to.\n    p = 0\n    for i in f:\n        if i != 0:\n            p += 1\n\n    # Set up a list of the remaining friends.\n    r = [i for i in range(1, n + 1) if i not in f]\n\n    # Fill in the remaining friend numbers.\n    for i in range(n):\n        if f[i] == 0:\n            f[i] = r[p]\n            p += 1\n\n    # Print the result.\n    print(*f)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(n, l):\n    l2 = [None for _ in range(n)]\n    for i in range(len(l)):\n        if l[i] != 0:\n            l2[l[i] - 1] = i + 1\n    for i in range(len(l)):\n        if l[i] == 0:\n            for j in range(len(l2)):\n                if l2[j] == None:\n                    l2[j] = i + 1\n                    break\n    return l2\n\nn = int(input())\nl = [int(x) for x in input().split()]\n\nprint(\" \".join(map(str, solve(n, l))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n# sys.stdin = open('in.txt', 'r')\n# sys.stdout = open('out.txt', 'w')\n\nn = int(input())\ngifts = list(map(int, input().split()))\n\nfor i in range(n):\n    if gifts[i] == 0:\n        gifts[i] = i + 1\n\nfor i in range(n):\n    if gifts[i] == 0:\n        gifts[i] = 1\n        while gifts[gifts[i] - 1] != 0:\n            gifts[i] += 1\n        gifts[gifts[i] - 1] = i + 1\n\nprint(*gifts)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\nf = list(map(int, input().split()))\n\nfor i in range(n):\n    if f[i] == 0:\n        for j in range(1, n+1):\n            if j not in f and i+1 != j:\n                f[i] = j\n                break\n        else:\n            print('IMPOSSIBLE')\n            exit()\n\nprint(*f)"
+    }
+  ],
+  "created": 1650134904,
+  "id": "cmpl-4xhl2OIWG8uUSbPb6QER08W7ihUOf",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 18:48:41.497220 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\ngifts = [i for i in range(1, n + 1) if i not in f]\n\nfor i in range(len(f)):\n    if f[i] == 0:\n        f[i] = gifts.pop()\n\nprint(*f)"
+}
+2022-04-16 18:48:41.497253 REASON stop
+2022-04-16 18:48:41.518346 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:48:41.518522 REASON stop
+2022-04-16 18:48:41.518996 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#WORKS\n\ndef match(l):\n    \"\"\"\n    >>> match([5, 0, 0, 2, 4])\n    [5, 3, 1, 2, 4]\n    >>> match([2, 1, 0, 0, 0])\n    [2, 1, 4, 5, 3]\n    \"\"\"\n    l = list(l)\n    for i in range(len(l)):\n        if not l[i]:\n            l[i] = [x for x in range(1,len(l)+1) if x not in l][0]\n    return l\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+}
+2022-04-16 18:48:41.519069 REASON stop
+2022-04-16 18:48:41.552221 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    # --- Construct mapping --- #\n    mapping = {}\n    for i in range(n):\n        if f[i] != 0:\n            mapping[i+1] = f[i]\n\n    # --- Fill in missing values --- #\n    for i in range(n):\n        if f[i] == 0:\n            if i+1 not in mapping.keys():\n                mapping[i+1] = i+1\n            else:\n                for j in range(n):\n                    if j+1 not in mapping.keys():\n                        mapping[i+1] = j+1\n                        break\n\n    # --- Print friends --- #\n    for i in range(n):\n        print(mapping[i+1], end=\" \")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 18:48:41.552327 REASON stop
+2022-04-16 18:48:41.553414 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    # Count the number of friends who already know who they are giving presents to.\n    p = 0\n    for i in f:\n        if i != 0:\n            p += 1\n\n    # Set up a list of the remaining friends.\n    r = [i for i in range(1, n + 1) if i not in f]\n\n    # Fill in the remaining friend numbers.\n    for i in range(n):\n        if f[i] == 0:\n            f[i] = r[p]\n            p += 1\n\n    # Print the result.\n    print(*f)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 18:48:41.553544 REASON stop
+2022-04-16 18:48:41.565011 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(n, l):\n    l2 = [None for _ in range(n)]\n    for i in range(len(l)):\n        if l[i] != 0:\n            l2[l[i] - 1] = i + 1\n    for i in range(len(l)):\n        if l[i] == 0:\n            for j in range(len(l2)):\n                if l2[j] == None:\n                    l2[j] = i + 1\n                    break\n    return l2\n\nn = int(input())\nl = [int(x) for x in input().split()]\n\nprint(\" \".join(map(str, solve(n, l))))"
+}
+2022-04-16 18:48:41.565110 REASON stop
+2022-04-16 18:48:41.566392 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n# sys.stdin = open('in.txt', 'r')\n# sys.stdout = open('out.txt', 'w')\n\nn = int(input())\ngifts = list(map(int, input().split()))\n\nfor i in range(n):\n    if gifts[i] == 0:\n        gifts[i] = i + 1\n\nfor i in range(n):\n    if gifts[i] == 0:\n        gifts[i] = 1\n        while gifts[gifts[i] - 1] != 0:\n            gifts[i] += 1\n        gifts[gifts[i] - 1] = i + 1\n\nprint(*gifts)"
+}
+2022-04-16 18:48:41.566479 REASON stop
+2022-04-16 18:48:41.567550 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\nf = list(map(int, input().split()))\n\nfor i in range(n):\n    if f[i] == 0:\n        for j in range(1, n+1):\n            if j not in f and i+1 != j:\n                f[i] = j\n                break\n        else:\n            print('IMPOSSIBLE')\n            exit()\n\nprint(*f)"
+}
+2022-04-16 18:48:41.567647 REASON stop

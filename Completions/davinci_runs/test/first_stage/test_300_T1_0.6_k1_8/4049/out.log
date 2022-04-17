@@ -1,0 +1,192 @@
+2022-04-16 19:06:17.927214 """
+Alice and Bob have decided to play the game "Rock, Paper, Scissors". 
+
+The game consists of several rounds, each round is independent of each other. In each round, both players show one of the following things at the same time: rock, paper or scissors. If both players showed the same things then the round outcome is a draw. Otherwise, the following rules applied:
+
+  if one player showed rock and the other one showed scissors, then the player who showed rock is considered the winner and the other one is considered the loser;  if one player showed scissors and the other one showed paper, then the player who showed scissors is considered the winner and the other one is considered the loser;  if one player showed paper and the other one showed rock, then the player who showed paper is considered the winner and the other one is considered the loser. 
+
+Alice and Bob decided to play exactly $n$ rounds of the game described above. Alice decided to show rock $a_1$ times, show scissors $a_2$ times and show paper $a_3$ times. Bob decided to show rock $b_1$ times, show scissors $b_2$ times and show paper $b_3$ times. Though, both Alice and Bob did not choose the sequence in which they show things. It is guaranteed that $a_1 + a_2 + a_3 = n$ and $b_1 + b_2 + b_3 = n$.
+
+Your task is to find two numbers:
+
+  the minimum number of round Alice can win;  the maximum number of rounds Alice can win. 
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 10^{9}$) — the number of rounds.
+
+The second line of the input contains three integers $a_1, a_2, a_3$ ($0 \le a_i \le n$) — the number of times Alice will show rock, scissors and paper, respectively. It is guaranteed that $a_1 + a_2 + a_3 = n$.
+
+The third line of the input contains three integers $b_1, b_2, b_3$ ($0 \le b_j \le n$) — the number of times Bob will show rock, scissors and paper, respectively. It is guaranteed that $b_1 + b_2 + b_3 = n$.
+
+
+-----Output-----
+
+Print two integers: the minimum and the maximum number of rounds Alice can win.
+
+
+-----Examples-----
+Input
+2
+0 1 1
+1 1 0
+
+Output
+0 1
+
+Input
+15
+5 5 5
+5 5 5
+
+Output
+0 15
+
+Input
+3
+0 0 3
+3 0 0
+
+Output
+3 3
+
+Input
+686
+479 178 29
+11 145 530
+
+Output
+22 334
+
+Input
+319
+10 53 256
+182 103 34
+
+Output
+119 226
+
+
+
+-----Note-----
+
+In the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.
+
+In the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.
+
+In the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.
+"""
+2022-04-16 19:06:17.927231 --------------------------
+2022-04-16 19:08:00.714035 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    rounds = int(input())\n    a = [int(n) for n in input().split(' ')]\n    b = [int(n) for n in input().split(' ')]\n\n    count = 0\n    for i in range(rounds):\n        if a[i % 3] > 0 and b[i % 3] > 0:\n            if a[i % 3] > b[i % 3]:\n                count += b[i % 3]\n                a[i % 3] -= b[i % 3]\n                b[i % 3] = 0\n            else:\n                count += a[i % 3]\n                b[i % 3] -= a[i % 3]\n                a[i % 3] = 0\n\n    print(count, end=' ')\n    \n    count = 0\n    for i in range(rounds):\n        if a[i % 3] > 0 and b[(i + 1) % 3] > 0:\n            if a[i % 3] > b[(i + 1) % 3]:\n                count += b[(i + 1) % 3]\n                a[i % 3] -= b[(i + 1) % 3]\n                b[(i + 1) % 3] = 0\n            else:\n                count += a[i % 3]\n                b[(i + 1) % 3] -= a[i % 3]\n                a[i % 3] = 0\n\n    print(count)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a1,a2,a3 = [int(x) for x in input().split()]\n    b1,b2,b3 = [int(x) for x in input().split()]\n    print(((min(a2,b3)+min(a3,b1)+min(a1,b2)),(max(a2,b3)+max(a3,b1)+max(a1,b2))))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport itertools\n\ndef compare(x,y):\n    if x==y:\n        return 0\n    elif (x=='r' and y=='s') or (x=='s' and y=='p') or (x=='p' and y=='r'):\n        return 1\n    else:\n        return -1\n\ndef minmax(a,b):\n    min = 0\n    max = 0\n    for x,y in zip(a,b):\n        c = compare(x,y)\n        if c==1:\n            max += 1\n        elif c==-1:\n            min += 1\n    return [min,max]\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    b = [int(i) for i in input().split()]\n    a = list(itertools.chain.from_iterable([['r']*a[0],['s']*a[1],['p']*a[2]]))\n    b = list(itertools.chain.from_iterable([['r']*b[0],['s']*b[1],['p']*b[2]]))\n    a.sort()\n    b.sort()\n    print(\" \".join([str(i) for i in minmax(a,b)]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n  # Read input\n  n = int(sys.stdin.readline())\n  a = [int(x) for x in sys.stdin.readline().split()]\n  b = [int(x) for x in sys.stdin.readline().split()]\n  \n  # Compute\n  min_wins = min(a[2], b[0])\n  max_wins = min(a[2], b[0]) + min(a[1], b[2]) + min(a[0], b[1])\n  \n  # Print result\n  print(min_wins, max_wins)\n\nif __name__ == '__main__':\n  main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a1, a2, a3 = map(int, input().split())\n    b1, b2, b3 = map(int, input().split())\n    lo = max(0, a2 - b1, a3 - b2)\n    hi = min(a1, a2, b3, a3, b1, b2)\n    print(lo, hi)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read input\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n\n    # calculate\n    c = [a[0] - b[2], a[1] - b[1], a[2] - b[0]]\n    cmin = max(0, min(c))\n    cmax = min(n, max(c))\n\n    # output\n    print(cmin, cmax)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#%%\nn = int(input())\na = [int(i) for i in input().split()]\nb = [int(i) for i in input().split()]\n\n#%%\na\n\n#%%\nb\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2"
+    }
+  ],
+  "created": 1650135978,
+  "id": "cmpl-4xi2MuVIBbCJGjA8hmJNxJMDW0gDF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:08:00.714451 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    rounds = int(input())\n    a = [int(n) for n in input().split(' ')]\n    b = [int(n) for n in input().split(' ')]\n\n    count = 0\n    for i in range(rounds):\n        if a[i % 3] > 0 and b[i % 3] > 0:\n            if a[i % 3] > b[i % 3]:\n                count += b[i % 3]\n                a[i % 3] -= b[i % 3]\n                b[i % 3] = 0\n            else:\n                count += a[i % 3]\n                b[i % 3] -= a[i % 3]\n                a[i % 3] = 0\n\n    print(count, end=' ')\n    \n    count = 0\n    for i in range(rounds):\n        if a[i % 3] > 0 and b[(i + 1) % 3] > 0:\n            if a[i % 3] > b[(i + 1) % 3]:\n                count += b[(i + 1) % 3]\n                a[i % 3] -= b[(i + 1) % 3]\n                b[(i + 1) % 3] = 0\n            else:\n                count += a[i % 3]\n                b[(i + 1) % 3] -= a[i % 3]\n                a[i % 3] = 0\n\n    print(count)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:08:00.714494 REASON stop
+2022-04-16 19:08:00.754666 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a1,a2,a3 = [int(x) for x in input().split()]\n    b1,b2,b3 = [int(x) for x in input().split()]\n    print(((min(a2,b3)+min(a3,b1)+min(a1,b2)),(max(a2,b3)+max(a3,b1)+max(a1,b2))))\n\nmain()"
+}
+2022-04-16 19:08:00.754847 REASON stop
+2022-04-16 19:08:00.755383 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-16 19:08:00.755452 REASON stop
+2022-04-16 19:08:00.784155 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport itertools\n\ndef compare(x,y):\n    if x==y:\n        return 0\n    elif (x=='r' and y=='s') or (x=='s' and y=='p') or (x=='p' and y=='r'):\n        return 1\n    else:\n        return -1\n\ndef minmax(a,b):\n    min = 0\n    max = 0\n    for x,y in zip(a,b):\n        c = compare(x,y)\n        if c==1:\n            max += 1\n        elif c==-1:\n            min += 1\n    return [min,max]\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n    b = [int(i) for i in input().split()]\n    a = list(itertools.chain.from_iterable([['r']*a[0],['s']*a[1],['p']*a[2]]))\n    b = list(itertools.chain.from_iterable([['r']*b[0],['s']*b[1],['p']*b[2]]))\n    a.sort()\n    b.sort()\n    print(\" \".join([str(i) for i in minmax(a,b)]))\n\nmain()"
+}
+2022-04-16 19:08:00.784259 REASON stop
+2022-04-16 19:08:00.788285 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n  # Read input\n  n = int(sys.stdin.readline())\n  a = [int(x) for x in sys.stdin.readline().split()]\n  b = [int(x) for x in sys.stdin.readline().split()]\n  \n  # Compute\n  min_wins = min(a[2], b[0])\n  max_wins = min(a[2], b[0]) + min(a[1], b[2]) + min(a[0], b[1])\n  \n  # Print result\n  print(min_wins, max_wins)\n\nif __name__ == '__main__':\n  main()"
+}
+2022-04-16 19:08:00.788396 REASON stop
+2022-04-16 19:08:00.790789 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a1, a2, a3 = map(int, input().split())\n    b1, b2, b3 = map(int, input().split())\n    lo = max(0, a2 - b1, a3 - b2)\n    hi = min(a1, a2, b3, a3, b1, b2)\n    print(lo, hi)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:08:00.790961 REASON stop
+2022-04-16 19:08:00.791860 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read input\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n\n    # calculate\n    c = [a[0] - b[2], a[1] - b[1], a[2] - b[0]]\n    cmin = max(0, min(c))\n    cmax = min(n, max(c))\n\n    # output\n    print(cmin, cmax)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:08:00.792032 REASON stop
+2022-04-16 19:08:00.793138 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#%%\nn = int(input())\na = [int(i) for i in input().split()]\nb = [int(i) for i in input().split()]\n\n#%%\na\n\n#%%\nb\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2]*b[0]\n\n#%%\na[1]*b[2]+a[2]*b[1]\n\n#%%\na[0]*b[1]+a[1]*b[0]\n\n#%%\na[0]*b[2]+a[2"
+}
+2022-04-16 19:08:00.793241 REASON length

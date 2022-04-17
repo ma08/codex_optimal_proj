@@ -1,0 +1,150 @@
+2022-04-16 20:05:00.309463 """
+Takahashi is practicing shiritori alone again today.
+Shiritori is a game as follows:
+ - In the first turn, a player announces any one word.
+ - In the subsequent turns, a player announces a word that satisfies the following conditions:
+ - That word is not announced before.
+ - The first character of that word is the same as the last character of the last word announced.
+In this game, he is practicing to announce as many words as possible in ten seconds.
+You are given the number of words Takahashi announced, N, and the i-th word he announced, W_i, for each i. Determine if the rules of shiritori was observed, that is, every word announced by him satisfied the conditions.
+
+-----Constraints-----
+ - N is an integer satisfying 2 \leq N \leq 100.
+ - W_i is a string of length between 1 and 10 (inclusive) consisting of lowercase English letters.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+W_1
+W_2
+:
+W_N
+
+-----Output-----
+If every word announced by Takahashi satisfied the conditions, print Yes; otherwise, print No.
+
+-----Sample Input-----
+4
+hoge
+english
+hoge
+enigma
+
+-----Sample Output-----
+No
+
+As hoge is announced multiple times, the rules of shiritori was not observed.
+"""
+2022-04-16 20:05:00.309484 --------------------------
+2022-04-16 20:05:16.325675 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef shiritori(words):\n    \"\"\"\n    >>> shiritori(['hoge', 'english', 'hoge', 'enigma'])\n    'No'\n    \"\"\"\n    last_word = ''\n    used_words = defaultdict(bool)\n    for word in words:\n        if used_words[word]:\n            return 'No'\n        if word[0] != last_word[-1] and last_word:\n            return 'No'\n        last_word = word\n        used_words[word] = True\n    return 'Yes'\n\n\nif __name__ == '__main__':\n    n = int(stdin.readline().strip())\n    words = [stdin.readline().strip() for _ in range(n)]\n    print(shiritori(words))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef shiritori(N, W_i):\n    list_W_i = []\n    for i in range(N):\n        list_W_i.append(W_i[i])\n    for i in range(N-1):\n        if list_W_i[i] == list_W_i[i+1]:\n            return \"No\"\n        elif list_W_i[i][-1] != list_W_i[i+1][0]:\n            return \"No\"\n    return \"Yes\"\n\ndef main():\n    N = int(sys.stdin.readline())\n    W_i = []\n    for i in range(N):\n        W_i.append(sys.stdin.readline()[:-1])\n    print(shiritori(N, W_i))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#read input\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\n#check last and first character match for each word\nfor i in range(N-1):\n    if words[i+1][0] != words[i][-1]:\n        print(\"No\")\n        exit(0)\n\n#check if words are unique\nfor i in range(N):\n    for j in range(N):\n        if i != j and words[i] == words[j]:\n            print(\"No\")\n            exit(0)\n\n#if all passed\nprint(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\ndef main():\n    num = input()\n    words = []\n    for i in range(num):\n        words.append(input())\n    for i in range(num-1):\n        if words[i] in words[i+1:] or words[i][len(words[i])-1] != words[i+1][0]:\n            print(\"No\")\n            return\n    print(\"Yes\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nword_list = []\n\nfor i in range(n):\n    word_list.append(input())\n\nfor i in range(n-1):\n    if word_list[i] == word_list[i+1]:\n        print('No')\n        exit()\n\nfirst_char_list = []\n\nfor i in range(n):\n    first_char_list.append(word_list[i][0])\n\nfor i in range(n-1):\n    if word_list[i][-1] != first_char_list[i+1]:\n        print('No')\n        exit()\n\nprint('Yes')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\ncurrent = input()\n\nfor i in range(N-1):\n    next = input()\n    if current[-1] != next[0]:\n        print(\"No\")\n        exit()\n    current = next\n\nprint(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nword_list = []\nword_list.append(input())\nfor i in range(1, N):\n    w = input()\n    if w[0] != word_list[-1][-1] or w in word_list:\n        print(\"No\")\n        exit()\n    word_list.append(w)\nprint(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nN = int(input())\nword_set = set()\n\nfor i in range(N):\n    word = str(input())[:-1]\n    if i == 0:\n        word_set.add(word)\n    else:\n        if word in word_set:\n            print(\"No\")\n            exit()\n        elif word[0] == word_set.pop():\n            word_set.add(word)\n        else:\n            print(\"No\")\n            exit()\nprint(\"Yes\")"
+    }
+  ],
+  "created": 1650139500,
+  "id": "cmpl-4xixAiVkKTSswW7Jj7JZzMw0gMqDN",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:05:16.326002 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import defaultdict\n\n\ndef shiritori(words):\n    \"\"\"\n    >>> shiritori(['hoge', 'english', 'hoge', 'enigma'])\n    'No'\n    \"\"\"\n    last_word = ''\n    used_words = defaultdict(bool)\n    for word in words:\n        if used_words[word]:\n            return 'No'\n        if word[0] != last_word[-1] and last_word:\n            return 'No'\n        last_word = word\n        used_words[word] = True\n    return 'Yes'\n\n\nif __name__ == '__main__':\n    n = int(stdin.readline().strip())\n    words = [stdin.readline().strip() for _ in range(n)]\n    print(shiritori(words))"
+}
+2022-04-16 20:05:16.326040 REASON stop
+2022-04-16 20:05:16.356642 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef shiritori(N, W_i):\n    list_W_i = []\n    for i in range(N):\n        list_W_i.append(W_i[i])\n    for i in range(N-1):\n        if list_W_i[i] == list_W_i[i+1]:\n            return \"No\"\n        elif list_W_i[i][-1] != list_W_i[i+1][0]:\n            return \"No\"\n    return \"Yes\"\n\ndef main():\n    N = int(sys.stdin.readline())\n    W_i = []\n    for i in range(N):\n        W_i.append(sys.stdin.readline()[:-1])\n    print(shiritori(N, W_i))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:05:16.356830 REASON stop
+2022-04-16 20:05:16.357322 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#read input\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\n#check last and first character match for each word\nfor i in range(N-1):\n    if words[i+1][0] != words[i][-1]:\n        print(\"No\")\n        exit(0)\n\n#check if words are unique\nfor i in range(N):\n    for j in range(N):\n        if i != j and words[i] == words[j]:\n            print(\"No\")\n            exit(0)\n\n#if all passed\nprint(\"Yes\")"
+}
+2022-04-16 20:05:16.357389 REASON stop
+2022-04-16 20:05:16.389334 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\ndef main():\n    num = input()\n    words = []\n    for i in range(num):\n        words.append(input())\n    for i in range(num-1):\n        if words[i] in words[i+1:] or words[i][len(words[i])-1] != words[i+1][0]:\n            print(\"No\")\n            return\n    print(\"Yes\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:05:16.389462 REASON stop
+2022-04-16 20:05:16.390904 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nword_list = []\n\nfor i in range(n):\n    word_list.append(input())\n\nfor i in range(n-1):\n    if word_list[i] == word_list[i+1]:\n        print('No')\n        exit()\n\nfirst_char_list = []\n\nfor i in range(n):\n    first_char_list.append(word_list[i][0])\n\nfor i in range(n-1):\n    if word_list[i][-1] != first_char_list[i+1]:\n        print('No')\n        exit()\n\nprint('Yes')"
+}
+2022-04-16 20:05:16.391029 REASON stop
+2022-04-16 20:05:16.403321 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\ncurrent = input()\n\nfor i in range(N-1):\n    next = input()\n    if current[-1] != next[0]:\n        print(\"No\")\n        exit()\n    current = next\n\nprint(\"Yes\")"
+}
+2022-04-16 20:05:16.403460 REASON stop
+2022-04-16 20:05:16.405112 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nword_list = []\nword_list.append(input())\nfor i in range(1, N):\n    w = input()\n    if w[0] != word_list[-1][-1] or w in word_list:\n        print(\"No\")\n        exit()\n    word_list.append(w)\nprint(\"Yes\")"
+}
+2022-04-16 20:05:16.405241 REASON stop
+2022-04-16 20:05:16.406276 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nN = int(input())\nword_set = set()\n\nfor i in range(N):\n    word = str(input())[:-1]\n    if i == 0:\n        word_set.add(word)\n    else:\n        if word in word_set:\n            print(\"No\")\n            exit()\n        elif word[0] == word_set.pop():\n            word_set.add(word)\n        else:\n            print(\"No\")\n            exit()\nprint(\"Yes\")"
+}
+2022-04-16 20:05:16.406409 REASON stop

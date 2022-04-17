@@ -1,0 +1,153 @@
+2022-04-16 19:19:23.755251 """
+A string is called diverse if it contains consecutive (adjacent) letters of the Latin alphabet and each letter occurs exactly once. For example, the following strings are diverse: "fced", "xyz", "r" and "dabcef". The following string are not diverse: "az", "aa", "bad" and "babc". Note that the letters 'a' and 'z' are not adjacent.
+
+Formally, consider positions of all letters in the string in the alphabet. These positions should form contiguous segment, i.e. they should come one by one without any gaps. And all letters in the string should be distinct (duplicates are not allowed).
+
+You are given a sequence of strings. For each string, if it is diverse, print "Yes". Otherwise, print "No".
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 100$), denoting the number of strings to process. The following $n$ lines contains strings, one string per line. Each string contains only lowercase Latin letters, its length is between $1$ and $100$, inclusive.
+
+
+-----Output-----
+
+Print $n$ lines, one line per a string in the input. The line should contain "Yes" if the corresponding string is diverse and "No" if the corresponding string is not diverse. You can print each letter in any case (upper or lower). For example, "YeS", "no" and "yES" are all acceptable.
+
+
+-----Example-----
+Input
+8
+fced
+xyz
+r
+dabcef
+az
+aa
+bad
+babc
+
+Output
+Yes
+Yes
+Yes
+Yes
+No
+No
+No
+No
+"""
+2022-04-16 19:19:23.755259 --------------------------
+2022-04-16 19:19:49.319839 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        s = input()\n        print(\"Yes\" if is_diverse(s) else \"No\")\n\ndef is_diverse(s):\n    return len(s) == len(set(s)) and max(map(ord, s)) - min(map(ord, s)) == len(s) - 1\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef diverse_string(s):\n    return s == ''.join(sorted(set(s)))\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        print(\"Yes\" if diverse_string(input()) else \"No\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef is_diverse(text):\n    \"\"\"\n    >>> is_diverse(\"fced\")\n    True\n    >>> is_diverse(\"xyz\")\n    True\n    >>> is_diverse(\"r\")\n    True\n    >>> is_diverse(\"dabcef\")\n    True\n    >>> is_diverse(\"az\")\n    False\n    >>> is_diverse(\"aa\")\n    False\n    >>> is_diverse(\"bad\")\n    False\n    >>> is_diverse(\"babc\")\n    False\n    \"\"\"\n    ord_a = ord(\"a\")\n    ord_z = ord(\"z\")\n    ord_text = [ord(c) for c in text]\n    ord_text.sort()\n    if len(text) != len(set(text)):\n        return False\n    if not (ord_a <= ord_text[0] <= ord_z):\n        return False\n    if not (ord_a <= ord_text[-1] <= ord_z):\n        return False\n    if ord_text[0] == ord_a and ord_text[-1] == ord_z:\n        return True\n    first_ord = ord_text[0]\n    last_ord = ord_text[-1]\n    if (last_ord - first_ord + 1) != len(ord_text):\n        return False\n    for i, ord_char in enumerate(ord_text[:-1]):\n        if ord_char + 1 != ord_text[i + 1]:\n            return False\n    return True\n\ndef main():\n    n = int(sys.stdin.readline())\n    for i in range(n):\n        text = sys.stdin.readline().strip()\n        if is_diverse(text):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef is_diverse(s):\n    return len(s) == len(set(s)) and all(abs(ord(s[i+1]) - ord(s[i])) == 1 for i in range(len(s)-1))\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        s = input()\n        if is_diverse(s):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef isDiverse(s):\n    \"\"\"Returns whether a string is diverse\"\"\"\n    seen = set()\n    for c in s:\n        if c in seen:\n            return False\n        seen.add(c)\n    # Check if the string is contiguous\n    for i in range(len(s) - 1):\n        if ord(s[i]) + 1 != ord(s[i + 1]):\n            return False\n    return True\n\ndef main():\n    \"\"\"Main function\"\"\"\n    n = int(sys.stdin.readline())\n    for _ in range(n):\n        s = sys.stdin.readline().strip()\n        if isDiverse(s):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nfor _ in range(n):\n    s = input()\n    print(\"Yes\" if len(set(s)) == len(s) and len(set(s)) == ord(s[-1]) - ord(s[0]) + 1 else \"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nif __name__ == '__main__':\n    while True:\n        try:\n            n = int(input())\n            for i in range(n):\n                s = input()\n                a = ord(s[0]) - ord('a')\n                for c in s[1:]:\n                    if ord(c) - ord('a') != a + 1:\n                        print(\"No\")\n                        break\n                    a += 1\n                else:\n                    print(\"Yes\")\n        except:\n            break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nfor i in range(n):\n    s = input()\n    if len(s) != len(set(s)):\n        print(\"No\")\n    else:\n        min_ch = min(s)\n        max_ch = max(s)\n        if ord(max_ch) - ord(min_ch) == len(s) - 1:\n            print(\"Yes\")\n        else:\n            print(\"No\")"
+    }
+  ],
+  "created": 1650136763,
+  "id": "cmpl-4xiF1tQCqLuoTfdVC70rEBxum3TF3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:19:49.320203 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        s = input()\n        print(\"Yes\" if is_diverse(s) else \"No\")\n\ndef is_diverse(s):\n    return len(s) == len(set(s)) and max(map(ord, s)) - min(map(ord, s)) == len(s) - 1\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:19:49.320241 REASON stop
+2022-04-16 19:19:49.383148 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef diverse_string(s):\n    return s == ''.join(sorted(set(s)))\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        print(\"Yes\" if diverse_string(input()) else \"No\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:19:49.383589 REASON stop
+2022-04-16 19:19:49.384212 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef is_diverse(text):\n    \"\"\"\n    >>> is_diverse(\"fced\")\n    True\n    >>> is_diverse(\"xyz\")\n    True\n    >>> is_diverse(\"r\")\n    True\n    >>> is_diverse(\"dabcef\")\n    True\n    >>> is_diverse(\"az\")\n    False\n    >>> is_diverse(\"aa\")\n    False\n    >>> is_diverse(\"bad\")\n    False\n    >>> is_diverse(\"babc\")\n    False\n    \"\"\"\n    ord_a = ord(\"a\")\n    ord_z = ord(\"z\")\n    ord_text = [ord(c) for c in text]\n    ord_text.sort()\n    if len(text) != len(set(text)):\n        return False\n    if not (ord_a <= ord_text[0] <= ord_z):\n        return False\n    if not (ord_a <= ord_text[-1] <= ord_z):\n        return False\n    if ord_text[0] == ord_a and ord_text[-1] == ord_z:\n        return True\n    first_ord = ord_text[0]\n    last_ord = ord_text[-1]\n    if (last_ord - first_ord + 1) != len(ord_text):\n        return False\n    for i, ord_char in enumerate(ord_text[:-1]):\n        if ord_char + 1 != ord_text[i + 1]:\n            return False\n    return True\n\ndef main():\n    n = int(sys.stdin.readline())\n    for i in range(n):\n        text = sys.stdin.readline().strip()\n        if is_diverse(text):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:19:49.384335 REASON stop
+2022-04-16 19:19:49.407853 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef is_diverse(s):\n    return len(s) == len(set(s)) and all(abs(ord(s[i+1]) - ord(s[i])) == 1 for i in range(len(s)-1))\n\ndef main():\n    n = int(input())\n    for i in range(n):\n        s = input()\n        if is_diverse(s):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:19:49.407969 REASON stop
+2022-04-16 19:19:49.415607 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef isDiverse(s):\n    \"\"\"Returns whether a string is diverse\"\"\"\n    seen = set()\n    for c in s:\n        if c in seen:\n            return False\n        seen.add(c)\n    # Check if the string is contiguous\n    for i in range(len(s) - 1):\n        if ord(s[i]) + 1 != ord(s[i + 1]):\n            return False\n    return True\n\ndef main():\n    \"\"\"Main function\"\"\"\n    n = int(sys.stdin.readline())\n    for _ in range(n):\n        s = sys.stdin.readline().strip()\n        if isDiverse(s):\n            print(\"Yes\")\n        else:\n            print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:19:49.415732 REASON stop
+2022-04-16 19:19:49.416496 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nfor _ in range(n):\n    s = input()\n    print(\"Yes\" if len(set(s)) == len(s) and len(set(s)) == ord(s[-1]) - ord(s[0]) + 1 else \"No\")"
+}
+2022-04-16 19:19:49.416597 REASON stop
+2022-04-16 19:19:49.417368 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nif __name__ == '__main__':\n    while True:\n        try:\n            n = int(input())\n            for i in range(n):\n                s = input()\n                a = ord(s[0]) - ord('a')\n                for c in s[1:]:\n                    if ord(c) - ord('a') != a + 1:\n                        print(\"No\")\n                        break\n                    a += 1\n                else:\n                    print(\"Yes\")\n        except:\n            break"
+}
+2022-04-16 19:19:49.417446 REASON stop
+2022-04-16 19:19:49.418178 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nfor i in range(n):\n    s = input()\n    if len(s) != len(set(s)):\n        print(\"No\")\n    else:\n        min_ch = min(s)\n        max_ch = max(s)\n        if ord(max_ch) - ord(min_ch) == len(s) - 1:\n            print(\"Yes\")\n        else:\n            print(\"No\")"
+}
+2022-04-16 19:19:49.418272 REASON stop

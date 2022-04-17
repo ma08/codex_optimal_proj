@@ -1,0 +1,168 @@
+2022-04-16 19:12:55.140194 """
+You are given a string $s$ consisting of exactly $n$ characters, and each character is either '0', '1' or '2'. Such strings are called ternary strings.
+
+Your task is to replace minimum number of characters in this string with other characters to obtain a balanced ternary string (balanced ternary string is a ternary string such that the number of characters '0' in this string is equal to the number of characters '1', and the number of characters '1' (and '0' obviously) is equal to the number of characters '2').
+
+Among all possible balanced ternary strings you have to obtain the lexicographically (alphabetically) smallest.
+
+Note that you can neither remove characters from the string nor add characters to the string. Also note that you can replace the given characters only with characters '0', '1' and '2'.
+
+It is guaranteed that the answer exists.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($3 \le n \le 3 \cdot 10^5$, $n$ is divisible by $3$) — the number of characters in $s$.
+
+The second line contains the string $s$ consisting of exactly $n$ characters '0', '1' and '2'.
+
+
+-----Output-----
+
+Print one string — the lexicographically (alphabetically) smallest balanced ternary string which can be obtained from the given one with minimum number of replacements.
+
+Because $n$ is divisible by $3$ it is obvious that the answer exists. And it is obvious that there is only one possible answer.
+
+
+-----Examples-----
+Input
+3
+121
+
+Output
+021
+
+Input
+6
+000000
+
+Output
+001122
+
+Input
+6
+211200
+
+Output
+211200
+
+Input
+6
+120110
+
+Output
+120120
+"""
+2022-04-16 19:12:55.140207 --------------------------
+2022-04-16 19:13:26.201072 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    assert len(s) == n\n    assert n % 3 == 0\n    # assert all(c in '012' for c in s)\n    assert s.count('0') % 3 == 0\n    assert s.count('1') % 3 == 0\n    assert s.count('2') % 3 == 0\n\n    if s.count('0') == n // 3 and s.count('1') == n // 3 and s.count('2') == n // 3:\n        print(s)\n        sys.exit(0)\n\n    if s.count('0') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '0':\n            i += 1\n        s = s[:i] + '1' + s[i+1:]\n    elif s.count('0') < n // 3:\n        i = 0\n        while i < n and s[i] != '1':\n            i += 1\n        s = s[:i] + '0' + s[i+1:]\n\n    if s.count('1') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '1':\n            i += 1\n        s = s[:i] + '2' + s[i+1:]\n    elif s.count('1') < n // 3:\n        i = 0\n        while i < n and s[i] != '2':\n            i += 1\n        s = s[:i] + '1' + s[i+1:]\n\n    if s.count('2') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '2':\n            i += 1\n        s = s[:i] + '0' + s[i+1:]\n    elif s.count('2') < n // 3:\n        i = 0\n        while i < n and s[i] != '0':\n            i += 1\n        s = s[:i] + '2' + s[i+1:]\n\n    print(s)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\nr = [0]*3\nfor c in s:\n    r[int(c)] += 1\n\nres = [\"\"]*n\n\nfor i in range(n):\n    x = min(r)\n    y = r.index(x)\n    res[i] = str(y)\n    r[y] += 1\n\nprint(\"\".join(res))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    if n % 3 == 0:\n        left_most = None\n        for i in range(n):\n            if s[i] != \"0\":\n                left_most = i\n                break\n        res = [\"0\"] * n\n        for i in range(left_most, n):\n            if s[i] == \"0\":\n                res[i] = \"0\"\n            elif s[i] == \"1\":\n                res[i] = \"1\"\n            else:\n                res[i] = \"2\"\n        print(\"\".join(res))\n    else:\n        print(\"No solution\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    input()\n    s = input()\n    r = \"\"\n    if s.count(\"0\") < s.count(\"2\"):\n        for c in s:\n            if c == \"2\":\n                r = r + \"0\"\n            elif c == \"1\":\n                r = r + \"1\"\n            else:\n                r = r + \"2\"\n        print(r)\n    else:\n        print(s)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n\n    n_0 = n // 3\n    n_1 = n // 3\n    n_2 = n // 3\n\n    for i in range(n):\n        if s[i] == '0':\n            n_0 -= 1\n        elif s[i] == '1':\n            n_1 -= 1\n        else:\n            n_2 -= 1\n\n        if n_0 < 0:\n            s = s[:i] + '0' * (-n_0) + s[i:]\n            n_0 = 0\n        elif n_1 < 0:\n            s = s[:i] + '1' * (-n_1) + s[i:]\n            n_1 = 0\n        elif n_2 < 0:\n            s = s[:i] + '2' * (-n_2) + s[i:]\n            n_2 = 0\n\n    print(s)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# n = int(input())\n# s = input()\n\nn = 3\ns = \"121\"\n\n# n = 6\n# s = \"000000\"\n\n# n = 6\n# s = \"211200\"\n\n# n = 6\n# s = \"120110\"\n\n# n = 6\n# s = \"102100\"\n\n\ndef solve(n, s):\n    zeroes = 0\n    ones = 0\n    twos = 0\n\n    for i in range(n):\n        if s[i] == \"0\":\n            zeroes += 1\n        elif s[i] == \"1\":\n            ones += 1\n        else:\n            twos += 1\n\n    if zeroes == ones and ones == twos:\n        return s\n\n    if zeroes > ones:\n        ones += 1\n        zeroes -= 1\n    elif ones > twos:\n        twos += 1\n        ones -= 1\n    else:\n        zeroes += 1\n        twos -= 1\n\n    s = s.replace(\"0\", \"\", zeroes)\n    s = s.replace(\"1\", \"\", ones)\n    s = s.replace(\"2\", \"\", twos)\n\n    return solve(n, s)\n\n\nprint(solve(n, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import Counter\n\nn = int(input())\ns = input()\n\nif n%3 != 0:\n    print(\"Error\")\n    sys.exit(1)\n\nc = Counter(s)\n\nif c['0'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['1'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['2'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['0'] == n//3:\n    print(\"0\"*n)\n    sys.exit(0)\n\nif c['1'] == n//3:\n    print(\"1\"*n)\n    sys.exit(0)\n\nif c['2'] == n//3:\n    print(\"2\"*n)\n    sys.exit(0)\n\nout = \"\"\n\nif c['0'] > 0:\n    out += \"0\"\n    c['0'] -= 1\nif c['1'] > 0:\n    out += \"1\"\n    c['1'] -= 1\nif c['2'] > 0:\n    out += \"2\"\n    c['2'] -= 1\n\nwhile c['0'] != 0 and c['2'] != 0:\n    out += \"02\"\n    c['0'] -= 1\n    c['2'] -= 1\n\nwhile c['0'] != 0 and c['1'] != 0:\n    out += \"01\"\n    c['0'] -= 1\n    c['1'] -= 1\n\nwhile c['1'] != 0 and c['2'] != 0:\n    out += \"12\"\n    c['1'] -= 1\n    c['2'] -= 1\n\nprint(out+(\"0\"*c['0'])+(\"1\"*c['1'])+(\"2\"*c['2']))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\n#substitute each character with 0, 1, or 2\n#if substitution is not possible, then the balanced ternary string is the same as the original\n#the balanced ternary string with the least replacements will be the one with the least 0's, then 1's, then 2's\n#so we start by replacing 2's with 0's, then 1's with 0's, then 2's with 1's, then 1's with 2's\n#the order of replacement is important because we want the least number of replacements\n\nfor i in range(len(s)):\n    if s[i] == '2':\n        s = s[:i] + '0' + s[i+1:]\n\n    elif s[i] == '1':\n        s = s[:i] + '0' + s[i+1:]\n\n    elif s[i] == '0':\n        s = s[:i] + '1' + s[i+1:]\n\nprint(s)"
+    }
+  ],
+  "created": 1650136375,
+  "id": "cmpl-4xi8lg1SYfJTXQhbf95Gx6bOCGYdR",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:13:26.201607 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    assert len(s) == n\n    assert n % 3 == 0\n    # assert all(c in '012' for c in s)\n    assert s.count('0') % 3 == 0\n    assert s.count('1') % 3 == 0\n    assert s.count('2') % 3 == 0\n\n    if s.count('0') == n // 3 and s.count('1') == n // 3 and s.count('2') == n // 3:\n        print(s)\n        sys.exit(0)\n\n    if s.count('0') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '0':\n            i += 1\n        s = s[:i] + '1' + s[i+1:]\n    elif s.count('0') < n // 3:\n        i = 0\n        while i < n and s[i] != '1':\n            i += 1\n        s = s[:i] + '0' + s[i+1:]\n\n    if s.count('1') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '1':\n            i += 1\n        s = s[:i] + '2' + s[i+1:]\n    elif s.count('1') < n // 3:\n        i = 0\n        while i < n and s[i] != '2':\n            i += 1\n        s = s[:i] + '1' + s[i+1:]\n\n    if s.count('2') > n // 3:\n        i = n - n // 3\n        while i < n and s[i] != '2':\n            i += 1\n        s = s[:i] + '0' + s[i+1:]\n    elif s.count('2') < n // 3:\n        i = 0\n        while i < n and s[i] != '0':\n            i += 1\n        s = s[:i] + '2' + s[i+1:]\n\n    print(s)\n\nmain()"
+}
+2022-04-16 19:13:26.201677 REASON stop
+2022-04-16 19:13:26.203364 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\nr = [0]*3\nfor c in s:\n    r[int(c)] += 1\n\nres = [\"\"]*n\n\nfor i in range(n):\n    x = min(r)\n    y = r.index(x)\n    res[i] = str(y)\n    r[y] += 1\n\nprint(\"\".join(res))"
+}
+2022-04-16 19:13:26.203539 REASON stop
+2022-04-16 19:13:26.203982 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    if n % 3 == 0:\n        left_most = None\n        for i in range(n):\n            if s[i] != \"0\":\n                left_most = i\n                break\n        res = [\"0\"] * n\n        for i in range(left_most, n):\n            if s[i] == \"0\":\n                res[i] = \"0\"\n            elif s[i] == \"1\":\n                res[i] = \"1\"\n            else:\n                res[i] = \"2\"\n        print(\"\".join(res))\n    else:\n        print(\"No solution\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:13:26.204043 REASON stop
+2022-04-16 19:13:26.225481 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    input()\n    s = input()\n    r = \"\"\n    if s.count(\"0\") < s.count(\"2\"):\n        for c in s:\n            if c == \"2\":\n                r = r + \"0\"\n            elif c == \"1\":\n                r = r + \"1\"\n            else:\n                r = r + \"2\"\n        print(r)\n    else:\n        print(s)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:13:26.225597 REASON stop
+2022-04-16 19:13:26.226639 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n\n    n_0 = n // 3\n    n_1 = n // 3\n    n_2 = n // 3\n\n    for i in range(n):\n        if s[i] == '0':\n            n_0 -= 1\n        elif s[i] == '1':\n            n_1 -= 1\n        else:\n            n_2 -= 1\n\n        if n_0 < 0:\n            s = s[:i] + '0' * (-n_0) + s[i:]\n            n_0 = 0\n        elif n_1 < 0:\n            s = s[:i] + '1' * (-n_1) + s[i:]\n            n_1 = 0\n        elif n_2 < 0:\n            s = s[:i] + '2' * (-n_2) + s[i:]\n            n_2 = 0\n\n    print(s)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:13:26.226728 REASON stop
+2022-04-16 19:13:26.240770 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# n = int(input())\n# s = input()\n\nn = 3\ns = \"121\"\n\n# n = 6\n# s = \"000000\"\n\n# n = 6\n# s = \"211200\"\n\n# n = 6\n# s = \"120110\"\n\n# n = 6\n# s = \"102100\"\n\n\ndef solve(n, s):\n    zeroes = 0\n    ones = 0\n    twos = 0\n\n    for i in range(n):\n        if s[i] == \"0\":\n            zeroes += 1\n        elif s[i] == \"1\":\n            ones += 1\n        else:\n            twos += 1\n\n    if zeroes == ones and ones == twos:\n        return s\n\n    if zeroes > ones:\n        ones += 1\n        zeroes -= 1\n    elif ones > twos:\n        twos += 1\n        ones -= 1\n    else:\n        zeroes += 1\n        twos -= 1\n\n    s = s.replace(\"0\", \"\", zeroes)\n    s = s.replace(\"1\", \"\", ones)\n    s = s.replace(\"2\", \"\", twos)\n\n    return solve(n, s)\n\n\nprint(solve(n, s))"
+}
+2022-04-16 19:13:26.240929 REASON stop
+2022-04-16 19:13:26.242074 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import Counter\n\nn = int(input())\ns = input()\n\nif n%3 != 0:\n    print(\"Error\")\n    sys.exit(1)\n\nc = Counter(s)\n\nif c['0'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['1'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['2'] > n//3:\n    print(\"Error\")\n    sys.exit(1)\n\nif c['0'] == n//3:\n    print(\"0\"*n)\n    sys.exit(0)\n\nif c['1'] == n//3:\n    print(\"1\"*n)\n    sys.exit(0)\n\nif c['2'] == n//3:\n    print(\"2\"*n)\n    sys.exit(0)\n\nout = \"\"\n\nif c['0'] > 0:\n    out += \"0\"\n    c['0'] -= 1\nif c['1'] > 0:\n    out += \"1\"\n    c['1'] -= 1\nif c['2'] > 0:\n    out += \"2\"\n    c['2'] -= 1\n\nwhile c['0'] != 0 and c['2'] != 0:\n    out += \"02\"\n    c['0'] -= 1\n    c['2'] -= 1\n\nwhile c['0'] != 0 and c['1'] != 0:\n    out += \"01\"\n    c['0'] -= 1\n    c['1'] -= 1\n\nwhile c['1'] != 0 and c['2'] != 0:\n    out += \"12\"\n    c['1'] -= 1\n    c['2'] -= 1\n\nprint(out+(\"0\"*c['0'])+(\"1\"*c['1'])+(\"2\"*c['2']))"
+}
+2022-04-16 19:13:26.242187 REASON stop
+2022-04-16 19:13:26.243057 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\n#substitute each character with 0, 1, or 2\n#if substitution is not possible, then the balanced ternary string is the same as the original\n#the balanced ternary string with the least replacements will be the one with the least 0's, then 1's, then 2's\n#so we start by replacing 2's with 0's, then 1's with 0's, then 2's with 1's, then 1's with 2's\n#the order of replacement is important because we want the least number of replacements\n\nfor i in range(len(s)):\n    if s[i] == '2':\n        s = s[:i] + '0' + s[i+1:]\n\n    elif s[i] == '1':\n        s = s[:i] + '0' + s[i+1:]\n\n    elif s[i] == '0':\n        s = s[:i] + '1' + s[i+1:]\n\nprint(s)"
+}
+2022-04-16 19:13:26.243139 REASON stop

@@ -1,0 +1,172 @@
+2022-04-16 20:16:06.112455 """
+Polycarp likes numbers that are divisible by 3.
+
+He has a huge number $s$. Polycarp wants to cut from it the maximum number of numbers that are divisible by $3$. To do this, he makes an arbitrary number of vertical cuts between pairs of adjacent digits. As a result, after $m$ such cuts, there will be $m+1$ parts in total. Polycarp analyzes each of the obtained numbers and finds the number of those that are divisible by $3$.
+
+For example, if the original number is $s=3121$, then Polycarp can cut it into three parts with two cuts: $3|1|21$. As a result, he will get two numbers that are divisible by $3$.
+
+Polycarp can make an arbitrary number of vertical cuts, where each cut is made between a pair of adjacent digits. The resulting numbers cannot contain extra leading zeroes (that is, the number can begin with 0 if and only if this number is exactly one character '0'). For example, 007, 01 and 00099 are not valid numbers, but 90, 0 and 10001 are valid.
+
+What is the maximum number of numbers divisible by $3$ that Polycarp can obtain?
+
+
+-----Input-----
+
+The first line of the input contains a positive integer $s$. The number of digits of the number $s$ is between $1$ and $2\cdot10^5$, inclusive. The first (leftmost) digit is not equal to 0.
+
+
+-----Output-----
+
+Print the maximum number of numbers divisible by $3$ that Polycarp can get by making vertical cuts in the given number $s$.
+
+
+-----Examples-----
+Input
+3121
+
+Output
+2
+
+Input
+6
+
+Output
+1
+
+Input
+1000000000000000000000000000000000
+
+Output
+33
+
+Input
+201920181
+
+Output
+4
+
+
+
+-----Note-----
+
+In the first example, an example set of optimal cuts on the number is 3|1|21.
+
+In the second example, you do not need to make any cuts. The specified number 6 forms one number that is divisible by $3$.
+
+In the third example, cuts must be made between each pair of digits. As a result, Polycarp gets one digit 1 and $33$ digits 0. Each of the $33$ digits 0 forms a number that is divisible by $3$.
+
+In the fourth example, an example set of optimal cuts is 2|0|1|9|201|81. The numbers $0$, $9$, $201$ and $81$ are divisible by $3$.
+"""
+2022-04-16 20:16:06.112488 --------------------------
+2022-04-16 20:16:37.980374 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ns = input()\ncount = 0\nfor i in range(len(s)):\n    if int(s[i]) % 3 == 0:\n        count += 1\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport re\n\ndef get_divisible_numbers(n):\n    return len(re.findall(r'0|3|6|9', str(n)))\n\ndef get_max_divisible_numbers(n):\n    max_divisible_numbers = get_divisible_numbers(n)\n    for i in range(1, len(str(n))):\n        max_divisible_numbers = max(max_divisible_numbers, get_divisible_numbers(int(str(n)[:i])) + get_divisible_numbers(int(str(n)[i:])))\n    return max_divisible_numbers\n\nn = int(input().strip())\nprint(get_max_divisible_numbers(n))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef count_numbers_divisible_by_3(s):\n    \"\"\"\n    >>> count_numbers_divisible_by_3('3121')\n    2\n    >>> count_numbers_divisible_by_3('6')\n    1\n    >>> count_numbers_divisible_by_3('1000000000000000000000000000000000')\n    33\n    >>> count_numbers_divisible_by_3('201920181')\n    4\n    \"\"\"\n    # TODO: Implement me\n    return 0\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\n\n#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nbool is_valid(const string& number)\n{\n    return number.find_first_not_of('0') != string::npos;\n}\n\nint main()\n{\n    string number;\n    cin >> number;\n\n    int result = 0;\n    for (int i = 1; i < number.size(); ++i)\n    {\n        string prefix = number.substr(0, i);\n        string suffix = number.substr(i);\n\n        if (is_valid(prefix) && stoi(prefix) % 3 == 0)\n        {\n            ++result;\n        }\n        if (is_valid(suffix) && stoi(suffix) % 3 == 0)\n        {\n            ++result;\n        }\n    }\n\n    cout << result << endl;\n\n    return 0;\n}"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_max_divisible_by_3(x):\n    \"\"\"\n    >>> get_max_divisible_by_3(3121)\n    2\n    >>> get_max_divisible_by_3(6)\n    1\n    >>> get_max_divisible_by_3(1000000000000000000000000000000000)\n    33\n    >>> get_max_divisible_by_3(201920181)\n    4\n    \"\"\"\n    x_str = str(x)\n    n = len(x_str)\n    dp = [[0 for _ in range(n)] for _ in range(n)]\n\n    for i in range(n):\n        dp[i][i] = 1 if int(x_str[i]) % 3 == 0 else 0\n\n    for i in range(n - 1):\n        dp[i][i + 1] = 2 if (int(x_str[i]) + int(x_str[i + 1])) % 3 == 0 else 1\n\n    for i in range(2, n):\n        for j in range(i - 1, -1, -1):\n            modulo = int(x_str[j]) % 3\n            dp[j][i] = dp[j][i - 1] + (1 if modulo == 0 else 0)\n            for k in range(j + 1, i):\n                dp[j][i] = max(dp[j][i], dp[j][k - 1] + dp[k][i])\n\n    return dp[0][n - 1]\n\nif __name__ == '__main__':\n    x = int(sys.stdin.read())\n    print(get_max_divisible_by_3(x))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ns = input()\n\ndef check(n):\n    if n % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count(s):\n    sum = 0\n    for i in s:\n        sum += int(i)\n    if sum % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count2(s):\n    if s[0] == '0':\n        return False\n    else:\n        return True\n\ndef count3(s):\n    sum = 0\n    for i in s:\n        sum += int(i)\n    if (sum - int(s[0])) % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count4(s):\n    if s[0] == '0':\n        return False\n    else:\n        return True\n\ndef check2(s):\n    if check(int(s)):\n        return True\n    else:\n        return False\n\ndef check3(s):\n    if count(s) or count2(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check4(s):\n    if count(s) or count3(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check5(s):\n    if count(s) or count4(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check6(s):\n    if count(s) or check2(s):\n        return True\n    else:\n        return False\n\n\n\ndef div_by_3(s):\n    if check(int(s)):\n        return 1\n    elif check3(s):\n        return 2\n    elif check4(s):\n        return 3\n    elif check5(s):\n        return 4\n    elif check6(s):\n        return 5\n    else:\n        return 6\n\n\nprint(div_by_3(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef count_divisible_by_3(s):\n    \"\"\"\n    >>> count_divisible_by_3(201920181)\n    4\n    >>> count_divisible_by_3(1000000000000000000000000000000000)\n    33\n    >>> count_divisible_by_3(6)\n    1\n    >>> count_divisible_by_3(3121)\n    2\n    \"\"\"\n    return 0\n\n\nif __name__ == '__main__':\n    s = int(input())\n    print(count_divisible_by_3(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\nimport sys\nimport math\nfrom collections import Counter, deque, defaultdict\nfrom sys import stdin, stdout\nimport bisect\ninput = stdin.readline\n# print = stdout.write\nlistin = lambda : list(map(int, input().split()))\nmapin = lambda : map(int, input().split())\ndef factor(n):\n    factors = defaultdict(int)\n    for i in range(1, int(math.sqrt(n)+1)):\n        if(n%i==0):\n            factors[i]+=1\n            if(i!=n//i):\n                factors[n//i]+=1\n    return factors\n\ndef set_1(n):\n    s = bin(n)\n    s = s[2:]\n    return s.count('1')\n\ndef gcd(a, b):\n    if(a==0):\n        return b\n    return gcd(b%a,a)\n\ndef sieve(n):\n    prime = [True for i in range(n+1)]\n    p = 2\n    while(p * p <= n): \n        if (prime[p] == True): \n            for i in range(p * p, n+1, p): \n                prime[i] = False\n        p += 1\n    prime[0]= False\n    prime[1]= False\n    s = set()\n    for i in range(len(prime)):\n        if(prime[i]):\n            s.add(i)\n    return s\n\ndef divisors(n) : \n    s = set()\n    for i in range(1, int(math.sqrt(n) + 1)) :\n        if (n % i == 0) : \n            if (n // i == i) : \n                s.add(i) \n            else : \n                s.add(i)\n                s.add(n//i)\n    return s\n\nprime = sieve(1000001)\nfor _ in range(int(input())):\n    n = int(input())\n    s = str(n)\n    x = 0\n    for i in s:\n        x += int(i)\n    if(x%3==0):\n        print(len(s)-1)\n    else:\n        print(len(s))"
+    }
+  ],
+  "created": 1650140166,
+  "id": "cmpl-4xj7uyskJ0pZiIJD1YaxLXVgRUR24",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:16:37.980786 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ns = input()\ncount = 0\nfor i in range(len(s)):\n    if int(s[i]) % 3 == 0:\n        count += 1\nprint(count)"
+}
+2022-04-16 20:16:37.980834 REASON stop
+2022-04-16 20:16:38.000869 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport re\n\ndef get_divisible_numbers(n):\n    return len(re.findall(r'0|3|6|9', str(n)))\n\ndef get_max_divisible_numbers(n):\n    max_divisible_numbers = get_divisible_numbers(n)\n    for i in range(1, len(str(n))):\n        max_divisible_numbers = max(max_divisible_numbers, get_divisible_numbers(int(str(n)[:i])) + get_divisible_numbers(int(str(n)[i:])))\n    return max_divisible_numbers\n\nn = int(input().strip())\nprint(get_max_divisible_numbers(n))"
+}
+2022-04-16 20:16:38.001045 REASON stop
+2022-04-16 20:16:38.001484 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef count_numbers_divisible_by_3(s):\n    \"\"\"\n    >>> count_numbers_divisible_by_3('3121')\n    2\n    >>> count_numbers_divisible_by_3('6')\n    1\n    >>> count_numbers_divisible_by_3('1000000000000000000000000000000000')\n    33\n    >>> count_numbers_divisible_by_3('201920181')\n    4\n    \"\"\"\n    # TODO: Implement me\n    return 0\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+}
+2022-04-16 20:16:38.001544 REASON stop
+2022-04-16 20:16:38.027827 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\n\n#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nbool is_valid(const string& number)\n{\n    return number.find_first_not_of('0') != string::npos;\n}\n\nint main()\n{\n    string number;\n    cin >> number;\n\n    int result = 0;\n    for (int i = 1; i < number.size(); ++i)\n    {\n        string prefix = number.substr(0, i);\n        string suffix = number.substr(i);\n\n        if (is_valid(prefix) && stoi(prefix) % 3 == 0)\n        {\n            ++result;\n        }\n        if (is_valid(suffix) && stoi(suffix) % 3 == 0)\n        {\n            ++result;\n        }\n    }\n\n    cout << result << endl;\n\n    return 0;\n}"
+}
+2022-04-16 20:16:38.027954 REASON stop
+2022-04-16 20:16:38.042236 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_max_divisible_by_3(x):\n    \"\"\"\n    >>> get_max_divisible_by_3(3121)\n    2\n    >>> get_max_divisible_by_3(6)\n    1\n    >>> get_max_divisible_by_3(1000000000000000000000000000000000)\n    33\n    >>> get_max_divisible_by_3(201920181)\n    4\n    \"\"\"\n    x_str = str(x)\n    n = len(x_str)\n    dp = [[0 for _ in range(n)] for _ in range(n)]\n\n    for i in range(n):\n        dp[i][i] = 1 if int(x_str[i]) % 3 == 0 else 0\n\n    for i in range(n - 1):\n        dp[i][i + 1] = 2 if (int(x_str[i]) + int(x_str[i + 1])) % 3 == 0 else 1\n\n    for i in range(2, n):\n        for j in range(i - 1, -1, -1):\n            modulo = int(x_str[j]) % 3\n            dp[j][i] = dp[j][i - 1] + (1 if modulo == 0 else 0)\n            for k in range(j + 1, i):\n                dp[j][i] = max(dp[j][i], dp[j][k - 1] + dp[k][i])\n\n    return dp[0][n - 1]\n\nif __name__ == '__main__':\n    x = int(sys.stdin.read())\n    print(get_max_divisible_by_3(x))"
+}
+2022-04-16 20:16:38.042351 REASON stop
+2022-04-16 20:16:38.043189 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ns = input()\n\ndef check(n):\n    if n % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count(s):\n    sum = 0\n    for i in s:\n        sum += int(i)\n    if sum % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count2(s):\n    if s[0] == '0':\n        return False\n    else:\n        return True\n\ndef count3(s):\n    sum = 0\n    for i in s:\n        sum += int(i)\n    if (sum - int(s[0])) % 3 == 0:\n        return True\n    else:\n        return False\n\ndef count4(s):\n    if s[0] == '0':\n        return False\n    else:\n        return True\n\ndef check2(s):\n    if check(int(s)):\n        return True\n    else:\n        return False\n\ndef check3(s):\n    if count(s) or count2(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check4(s):\n    if count(s) or count3(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check5(s):\n    if count(s) or count4(s) or check2(s):\n        return True\n    else:\n        return False\n\ndef check6(s):\n    if count(s) or check2(s):\n        return True\n    else:\n        return False\n\n\n\ndef div_by_3(s):\n    if check(int(s)):\n        return 1\n    elif check3(s):\n        return 2\n    elif check4(s):\n        return 3\n    elif check5(s):\n        return 4\n    elif check6(s):\n        return 5\n    else:\n        return 6\n\n\nprint(div_by_3(s))"
+}
+2022-04-16 20:16:38.043262 REASON stop
+2022-04-16 20:16:38.044146 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef count_divisible_by_3(s):\n    \"\"\"\n    >>> count_divisible_by_3(201920181)\n    4\n    >>> count_divisible_by_3(1000000000000000000000000000000000)\n    33\n    >>> count_divisible_by_3(6)\n    1\n    >>> count_divisible_by_3(3121)\n    2\n    \"\"\"\n    return 0\n\n\nif __name__ == '__main__':\n    s = int(input())\n    print(count_divisible_by_3(s))"
+}
+2022-04-16 20:16:38.044206 REASON stop
+2022-04-16 20:16:38.045338 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\nimport sys\nimport math\nfrom collections import Counter, deque, defaultdict\nfrom sys import stdin, stdout\nimport bisect\ninput = stdin.readline\n# print = stdout.write\nlistin = lambda : list(map(int, input().split()))\nmapin = lambda : map(int, input().split())\ndef factor(n):\n    factors = defaultdict(int)\n    for i in range(1, int(math.sqrt(n)+1)):\n        if(n%i==0):\n            factors[i]+=1\n            if(i!=n//i):\n                factors[n//i]+=1\n    return factors\n\ndef set_1(n):\n    s = bin(n)\n    s = s[2:]\n    return s.count('1')\n\ndef gcd(a, b):\n    if(a==0):\n        return b\n    return gcd(b%a,a)\n\ndef sieve(n):\n    prime = [True for i in range(n+1)]\n    p = 2\n    while(p * p <= n): \n        if (prime[p] == True): \n            for i in range(p * p, n+1, p): \n                prime[i] = False\n        p += 1\n    prime[0]= False\n    prime[1]= False\n    s = set()\n    for i in range(len(prime)):\n        if(prime[i]):\n            s.add(i)\n    return s\n\ndef divisors(n) : \n    s = set()\n    for i in range(1, int(math.sqrt(n) + 1)) :\n        if (n % i == 0) : \n            if (n // i == i) : \n                s.add(i) \n            else : \n                s.add(i)\n                s.add(n//i)\n    return s\n\nprime = sieve(1000001)\nfor _ in range(int(input())):\n    n = int(input())\n    s = str(n)\n    x = 0\n    for i in s:\n        x += int(i)\n    if(x%3==0):\n        print(len(s)-1)\n    else:\n        print(len(s))"
+}
+2022-04-16 20:16:38.045418 REASON stop
