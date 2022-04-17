@@ -1,0 +1,13 @@
+
+n = int(input())
+a = list(map(int, input().split()))
+
+if n == 2:
+    print(a[1], a[0])
+elif n == 3:
+    if a[0] * 3 == a[1] and a[1] * 2 == a[2]:
+        print(a[0], a[1], a[2])
+    else:
+        print(a[2], a[0], a[1])
+else:
+    print(*sorted(a, key=lambda x: x % 3 == 0))
