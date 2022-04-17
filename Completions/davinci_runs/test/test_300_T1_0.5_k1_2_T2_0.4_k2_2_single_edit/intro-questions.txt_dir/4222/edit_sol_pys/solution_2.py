@@ -1,0 +1,16 @@
+
+
+N, K = map(int, input().split())
+A = []
+from functools import partial
+
+for i in range(K):
+    d = int(input())
+    A.append(list(map(int, input().split())))
+
+A_flat = set()
+for i in range(K):
+    A_flat = A_flat | set(A[i])
+
+ans = N - len(A_flat)
+print(ans)

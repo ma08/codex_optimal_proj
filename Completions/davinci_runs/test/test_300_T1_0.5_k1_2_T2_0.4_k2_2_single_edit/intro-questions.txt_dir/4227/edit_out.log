@@ -1,0 +1,36 @@
+2022-04-17 20:23:55.847067 num operations 1
+2022-04-17 20:23:55.847085 size on input set 1
+2022-04-17 20:24:05.531554 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [[] for _ in range(n)]\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1].append(b - 1)\n    edges[b - 1].append(a - 1)\n\n\ndef dfs(v, p):\n    for u in edges[v]:\n        if u == p:\n            continue\n        dfs(u, v)\n        cnt[v] += cnt[u]\n\n\ncnt = [1] * n\ndfs(0, -1)\nans = 0\nfor v in range(n):\n    ans += cnt[v] * (n - cnt[v])\nprint(ans)\n"
+    },
+    {
+      "index": 1,
+      "text": "\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [0] * n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1] += 1\n    edges[b - 1] += 1\n\n# DP[i][j] = i\u756a\u76ee\u307e\u3067\u306e\u9802\u70b9\u3092\u4f7f\u3063\u3066\u3001j\u3092\u542b\u3080\u5834\u5408\u306e\u30d1\u30bf\u30fc\u30f3\u6570\uff08j\u306f2\u9032\u6570\uff09\ndp = [[0] * (1 << n) for _ in range(n)]\ndp[0][1 << 0] = 1\nfor i in range(1, n):\n    for j in range(1 << n):\n        if j & (1 << i) == 0:\n            continue\n        for k in range(n):\n            if j & (1 << k) == 0 or edges[k] == 0:\n                continue\n            dp[i][j] += dp[i - 1][j ^ (1 << i)]\nprint(dp[n - 1][(1 << n) - 1])\n"
+    }
+  ],
+  "created": 1650227036,
+  "object": "edit"
+}
+2022-04-17 20:24:05.531818 fix syntax errors 2 ['\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [[] for _ in range(n)]\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1].append(b - 1)\n    edges[b - 1].append(a - 1)\n\n\ndef dfs(v, p):\n    for u in edges[v]:\n        if u == p:\n            continue\n        dfs(u, v)\n        cnt[v] += cnt[u]\n\n\ncnt = [1] * n\ndfs(0, -1)\nans = 0\nfor v in range(n):\n    ans += cnt[v] * (n - cnt[v])\nprint(ans)\n', '\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [0] * n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1] += 1\n    edges[b - 1] += 1\n\n# DP[i][j] = i番目までの頂点を使って、jを含む場合のパターン数（jは2進数）\ndp = [[0] * (1 << n) for _ in range(n)]\ndp[0][1 << 0] = 1\nfor i in range(1, n):\n    for j in range(1 << n):\n        if j & (1 << i) == 0:\n            continue\n        for k in range(n):\n            if j & (1 << k) == 0 or edges[k] == 0:\n                continue\n            dp[i][j] += dp[i - 1][j ^ (1 << i)]\nprint(dp[n - 1][(1 << n) - 1])\n']
+2022-04-17 20:24:05.531863 size on output set 2
+2022-04-17 20:24:05.531937 num operations 1
+2022-04-17 20:24:05.531963 size on input set 1
+2022-04-17 20:24:07.741334 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split()) #\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)\n"
+    },
+    {
+      "index": 1,
+      "text": "\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)\n"
+    }
+  ],
+  "created": 1650227045,
+  "object": "edit"
+}
+2022-04-17 20:24:07.741513 fix syntax errors 2 ['\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split()) #\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)\n', '\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)\n']
+2022-04-17 20:24:07.741541 size on output set 2

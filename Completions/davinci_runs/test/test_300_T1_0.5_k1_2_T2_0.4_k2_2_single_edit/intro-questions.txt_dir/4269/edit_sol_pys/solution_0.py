@@ -1,0 +1,8 @@
+
+
+s = input()
+
+if(s[0] == s[1] or s[1] == s[2] or s[2] == s[3] or s[3] == s[4] or s[4] == s[5]):
+    print("Bad")
+else:
+    print("Good")
