@@ -1,0 +1,141 @@
+2022-04-16 19:56:05.478268 """
+You are given N positive integers a_1, a_2, ..., a_N.
+For a non-negative integer m, let f(m) = (m\ mod\ a_1) + (m\ mod\ a_2) + ... + (m\ mod\ a_N).
+Here, X\ mod\ Y denotes the remainder of the division of X by Y.
+Find the maximum value of f.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 3000
+ - 2 \leq a_i \leq 10^5
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+a_1 a_2 ... a_N
+
+-----Output-----
+Print the maximum value of f.
+
+-----Sample Input-----
+3
+3 4 6
+
+-----Sample Output-----
+10
+
+f(11) = (11\ mod\ 3) + (11\ mod\ 4) + (11\ mod\ 6) = 10 is the maximum value of f.
+"""
+2022-04-16 19:56:05.478295 --------------------------
+2022-04-16 19:57:50.118882 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef lcm(*numbers):\n    def _lcm(a,b):\n        return (a*b)//gcd(a,b)\n    return reduce(_lcm,numbers,1)\n\ndef gcd(a,b):\n    while b:\n        a,b = b,a%b\n    return a\n\ndef f(m,a):\n    return sum(m%i for i in a)\n\nN = int(input())\na = [int(i) for i in input().split()]\n\nprint(f(lcm(*a)-1,a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nans = 0\nfor i in range(1, n+1):\n    tmp = 0\n    for ai in a:\n        tmp += i % ai\n    ans = max(ans, tmp)\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\na = list(map(int, input().split(\" \")))\n\na.sort()\n\ndef f(m):\n    return sum([m % a_i for a_i in a])\n\nl, u = 0, a[-1]\n\nwhile l < u:\n    m = (l + u + 1) // 2\n    if f(m) > f(m-1):\n        l = m\n    else:\n        u = m-1\n\nprint(f(l))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef f(m, a):\n    return sum([m % x for x in a])\n\ndef main():\n    N = int(input())\n    a = [int(x) for x in input().split()]\n    print(max([f(m, a) for m in range(10**5)]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# TODO: write solver\n\ndef solve(N, aList):\n    pass"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# \u6841\u6570\u3092\u78ba\u4fdd\u3059\u308b\u305f\u3081\u306e\u5909\u6570\nmax_d = 0\n# \u7d04\u6570\u306e\u30ea\u30b9\u30c8\ndivisors = []\n\nfor a in A:\n    divisor = []\n    for i in range(2, a):\n        if a % i == 0:\n            divisor.append(i)\n    divisor.append(a)\n    divisors.append(divisor)\n    max_d = max(max_d, len(divisor))\n\nans = 0\nfor i in range(2**max_d):\n    total = 0\n    for j, divisor in enumerate(divisors):\n        t = 0\n        for k, d in enumerate(divisor):\n            if ((i >> k) & 1):\n                t += d\n        total += t\n    ans = max(ans, total)\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Solved by GCD\n# Longest Common Divisor\ndef gcd(a, b):\n    return a if b == 0 else gcd(b, a % b)\n\n# Least Common Multiple\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\ndef get_max_f(n, a):\n    # lcm of all a_i\n    l = a[0]\n    for i in range(1, n):\n        l = lcm(l, a[i])\n\n    # sum of all a_i\n    s = sum(a)\n\n    # maximum value of f\n    return (l - 1) * s // l\n\nif __name__ == '__main__':\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(get_max_f(n, a))"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# f(m) = (m\\ mod\\ a_1) + (m\\ mod\\ a_2) + ... + (m\\ mod\\ a_N)\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n"
+    }
+  ],
+  "created": 1650138965,
+  "id": "cmpl-4xioXdgpwFDfDWYnH7MUu3w2NjhzL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:57:50.119310 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef lcm(*numbers):\n    def _lcm(a,b):\n        return (a*b)//gcd(a,b)\n    return reduce(_lcm,numbers,1)\n\ndef gcd(a,b):\n    while b:\n        a,b = b,a%b\n    return a\n\ndef f(m,a):\n    return sum(m%i for i in a)\n\nN = int(input())\na = [int(i) for i in input().split()]\n\nprint(f(lcm(*a)-1,a))"
+}
+2022-04-16 19:57:50.119356 REASON stop
+2022-04-16 19:57:50.173702 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nans = 0\nfor i in range(1, n+1):\n    tmp = 0\n    for ai in a:\n        tmp += i % ai\n    ans = max(ans, tmp)\n\nprint(ans)"
+}
+2022-04-16 19:57:50.173879 REASON stop
+2022-04-16 19:57:50.174597 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\na = list(map(int, input().split(\" \")))\n\na.sort()\n\ndef f(m):\n    return sum([m % a_i for a_i in a])\n\nl, u = 0, a[-1]\n\nwhile l < u:\n    m = (l + u + 1) // 2\n    if f(m) > f(m-1):\n        l = m\n    else:\n        u = m-1\n\nprint(f(l))"
+}
+2022-04-16 19:57:50.174677 REASON stop
+2022-04-16 19:57:50.201845 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef f(m, a):\n    return sum([m % x for x in a])\n\ndef main():\n    N = int(input())\n    a = [int(x) for x in input().split()]\n    print(max([f(m, a) for m in range(10**5)]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:57:50.201961 REASON stop
+2022-04-16 19:57:50.205001 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# TODO: write solver\n\ndef solve(N, aList):\n    pass"
+}
+2022-04-16 19:57:50.205108 REASON stop
+2022-04-16 19:57:50.207740 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# \u6841\u6570\u3092\u78ba\u4fdd\u3059\u308b\u305f\u3081\u306e\u5909\u6570\nmax_d = 0\n# \u7d04\u6570\u306e\u30ea\u30b9\u30c8\ndivisors = []\n\nfor a in A:\n    divisor = []\n    for i in range(2, a):\n        if a % i == 0:\n            divisor.append(i)\n    divisor.append(a)\n    divisors.append(divisor)\n    max_d = max(max_d, len(divisor))\n\nans = 0\nfor i in range(2**max_d):\n    total = 0\n    for j, divisor in enumerate(divisors):\n        t = 0\n        for k, d in enumerate(divisor):\n            if ((i >> k) & 1):\n                t += d\n        total += t\n    ans = max(ans, total)\nprint(ans)"
+}
+2022-04-16 19:57:50.207840 REASON stop
+2022-04-16 19:57:50.210969 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Solved by GCD\n# Longest Common Divisor\ndef gcd(a, b):\n    return a if b == 0 else gcd(b, a % b)\n\n# Least Common Multiple\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\ndef get_max_f(n, a):\n    # lcm of all a_i\n    l = a[0]\n    for i in range(1, n):\n        l = lcm(l, a[i])\n\n    # sum of all a_i\n    s = sum(a)\n\n    # maximum value of f\n    return (l - 1) * s // l\n\nif __name__ == '__main__':\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(get_max_f(n, a))"
+}
+2022-04-16 19:57:50.211067 REASON stop
+2022-04-16 19:57:50.213756 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# f(m) = (m\\ mod\\ a_1) + (m\\ mod\\ a_2) + ... + (m\\ mod\\ a_N)\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n#       = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n\n# f(m) = m * N - \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n# \\sum_{i=1}^{N} \\lfloor \\frac{m}{a_i} \\rfloor * a_i = m * N - f(m)\n"
+}
+2022-04-16 19:57:50.213910 REASON length

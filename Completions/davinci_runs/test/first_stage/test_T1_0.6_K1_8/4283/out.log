@@ -1,0 +1,165 @@
+2022-04-16 20:42:04.294017 """
+You are a coach at your local university. There are $n$ students under your supervision, the programming skill of the $i$-th student is $a_i$.
+
+You have to create a team for a new programming competition. As you know, the more students some team has the more probable its victory is! So you have to create a team with the maximum number of students. But you also know that a team should be balanced. It means that the programming skill of each pair of students in a created team should differ by no more than $5$.
+
+Your task is to report the maximum possible number of students in a balanced team.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of students.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is a programming skill of the $i$-th student.
+
+
+-----Output-----
+
+Print one integer — the maximum possible number of students in a balanced team.
+
+
+-----Examples-----
+Input
+6
+1 10 17 12 15 2
+
+Output
+3
+
+Input
+10
+1337 1337 1337 1337 1337 1337 1337 1337 1337 1337
+
+Output
+10
+
+Input
+6
+1 1000 10000 10 100 1000000000
+
+Output
+1
+
+
+
+-----Note-----
+
+In the first example you can create a team with skills $[12, 17, 15]$.
+
+In the second example you can take all students in a team because their programming skills are equal.
+
+In the third example you can create a team consisting of a single student (and you cannot create a team consisting of at least two students).
+"""
+2022-04-16 20:42:04.294049 --------------------------
+2022-04-16 20:42:21.261932 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n    i = 0\n    j = 0\n    res = 0\n    while i < n:\n        while j < n and a[j] - a[i] <= 5:\n            res = max(res, j - i + 1)\n            j += 1\n        i += 1\n    print(res)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = input().split(\" \")\n\nfor i in range(n):\n    a[i] = int(a[i])\n\n# sorting in ascending order\na = sorted(a)\n\n# print(a)\n\n# \n# a[i] + 5 >= a[j]\n# a[j] - 5 <= a[i]\n# a[j] > a[i] + 5\n\nmax_len = 1\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if a[j] > a[i] + 5:\n            break\n    \n    if j - i > max_len:\n        max_len = j - i\n\nprint(max_len)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    sys.stdin = open(\"in.txt\", \"r\")\n    sys.stdout = open(\"out.txt\", \"w\")\n\n    n = int(input())\n    a = [int(i) for i in input().split()]\n\n    a.sort()\n\n    count = 0\n    prev = -1\n    for i in a:\n        if prev == -1:\n            prev = i\n            count += 1\n        elif i - prev <= 5:\n            prev = i\n        else:\n            prev = i\n            count += 1\n\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\na.sort()\n\n# if n == 1:\n#     print(1)\n# else:\n#     print(n)\n\n# for i in range(len(a)):\n#     if i > 0 and a[i] - a[i-1] > 5:\n#         print(i)\n#         break\n#     if i == len(a)-1:\n#         print(i+1)\n\n# print(max(a.count(x) for x in a))\n\nprint(len(set(a)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    ans = 1\n    max_val = a[0]\n    for i in range(1, n):\n        if a[i] - max_val <= 5:\n            ans += 1\n            max_val = a[i]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n\n    left = 0\n    right = n - 1\n    res = 1\n    while left <= right:\n        if a[left] + 5 >= a[right]:\n            left += 1\n            res += 1\n        right -= 1\n\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nmax_team = 1\nteam = 1\nfor i in range(1, n):\n    if a[i] - a[i - 1] <= 5:\n        team += 1\n    else:\n        team = 1\n    max_team = max(max_team, team)\n\nprint(max_team)"
+    }
+  ],
+  "created": 1650141724,
+  "id": "cmpl-4xjX2bKkNPxxF1SJD33UZdBEcyUVS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:42:21.262224 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:42:21.262256 REASON stop
+2022-04-16 20:42:21.278623 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n    i = 0\n    j = 0\n    res = 0\n    while i < n:\n        while j < n and a[j] - a[i] <= 5:\n            res = max(res, j - i + 1)\n            j += 1\n        i += 1\n    print(res)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:42:21.278801 REASON stop
+2022-04-16 20:42:21.279237 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = input().split(\" \")\n\nfor i in range(n):\n    a[i] = int(a[i])\n\n# sorting in ascending order\na = sorted(a)\n\n# print(a)\n\n# \n# a[i] + 5 >= a[j]\n# a[j] - 5 <= a[i]\n# a[j] > a[i] + 5\n\nmax_len = 1\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if a[j] > a[i] + 5:\n            break\n    \n    if j - i > max_len:\n        max_len = j - i\n\nprint(max_len)"
+}
+2022-04-16 20:42:21.279365 REASON stop
+2022-04-16 20:42:21.306874 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    sys.stdin = open(\"in.txt\", \"r\")\n    sys.stdout = open(\"out.txt\", \"w\")\n\n    n = int(input())\n    a = [int(i) for i in input().split()]\n\n    a.sort()\n\n    count = 0\n    prev = -1\n    for i in a:\n        if prev == -1:\n            prev = i\n            count += 1\n        elif i - prev <= 5:\n            prev = i\n        else:\n            prev = i\n            count += 1\n\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:42:21.306979 REASON stop
+2022-04-16 20:42:21.308177 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\na.sort()\n\n# if n == 1:\n#     print(1)\n# else:\n#     print(n)\n\n# for i in range(len(a)):\n#     if i > 0 and a[i] - a[i-1] > 5:\n#         print(i)\n#         break\n#     if i == len(a)-1:\n#         print(i+1)\n\n# print(max(a.count(x) for x in a))\n\nprint(len(set(a)))"
+}
+2022-04-16 20:42:21.308274 REASON stop
+2022-04-16 20:42:21.309520 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    ans = 1\n    max_val = a[0]\n    for i in range(1, n):\n        if a[i] - max_val <= 5:\n            ans += 1\n            max_val = a[i]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:42:21.309598 REASON stop
+2022-04-16 20:42:21.326429 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n\n    left = 0\n    right = n - 1\n    res = 1\n    while left <= right:\n        if a[left] + 5 >= a[right]:\n            left += 1\n            res += 1\n        right -= 1\n\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:42:21.326583 REASON stop
+2022-04-16 20:42:21.327514 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nmax_team = 1\nteam = 1\nfor i in range(1, n):\n    if a[i] - a[i - 1] <= 5:\n        team += 1\n    else:\n        team = 1\n    max_team = max(max_team, team)\n\nprint(max_team)"
+}
+2022-04-16 20:42:21.327608 REASON stop

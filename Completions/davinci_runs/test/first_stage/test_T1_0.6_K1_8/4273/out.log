@@ -1,0 +1,153 @@
+2022-04-16 20:38:11.312535 """
+There are N people. The name of the i-th person is S_i.
+We would like to choose three people so that the following conditions are met:
+ - The name of every chosen person begins with M, A, R, C or H.
+ - There are no multiple people whose names begin with the same letter.
+How many such ways are there to choose three people, disregarding order?
+Note that the answer may not fit into a 32-bit integer type.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^5
+ - S_i consists of uppercase English letters.
+ - 1 \leq |S_i| \leq 10
+ - S_i \neq S_j (i \neq j)
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+S_1
+:
+S_N
+
+-----Output-----
+If there are x ways to choose three people so that the given conditions are met, print x.
+
+-----Sample Input-----
+5
+MASHIKE
+RUMOI
+OBIRA
+HABORO
+HOROKANAI
+
+-----Sample Output-----
+2
+
+We can choose three people with the following names:
+ - MASHIKE, RUMOI, HABORO
+ - MASHIKE, RUMOI, HOROKANAI
+Thus, we have two ways.
+"""
+2022-04-16 20:38:11.312566 --------------------------
+2022-04-16 20:38:31.857073 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\n\nN = int(input())\nS = [input() for _ in range(N)]\n\ns = [i[0] for i in S]\ns = Counter(s)\n\nans = s['M'] * s['A'] * s['R'] + s['M'] * s['A'] * s['C'] + s['M'] * s['A'] * s['H'] + s['M'] * s['R'] * s['C'] + s['M'] * s['R'] * s['H'] + s['M'] * s['C'] * s['H'] + s['A'] * s['R'] * s['C'] + s['A'] * s['R'] * s['H'] + s['A'] * s['C'] * s['H'] + s['R'] * s['C'] * s['H']\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# \u5165\u529b\nn = int(input())\ns_list = []\nfor i in range(n):\n    s_list.append(input())\n\n# \u5224\u5b9a\n# \u521d\u671f\u5316\nmari_list = [\"M\",\"A\",\"R\",\"C\",\"H\"]\nmari_dict = {}\nfor i in mari_list:\n    mari_dict[i] = 0\n# \u5224\u5b9a\nfor s in s_list:\n    if s[0] in mari_list:\n        mari_dict[s[0]] += 1\n\n# \u51fa\u529b\nans = 0\nfor i in mari_list:\n    for j in mari_list:\n        for k in mari_list:\n            if i != j and j != k and k != i:\n                ans += mari_dict[i] * mari_dict[j] * mari_dict[k]\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport sys\nimport heapq\n\nn = int(sys.stdin.readline())\n\ns = []\nfor i in range(n):\n    s.append(sys.stdin.readline().rstrip())\n\ns = sorted(s)\n\nm = []\na = []\nr = []\nc = []\nh = []\n\nfor i in s:\n    if i[0] == \"M\":\n        m.append(i)\n    elif i[0] == \"A\":\n        a.append(i)\n    elif i[0] == \"R\":\n        r.append(i)\n    elif i[0] == \"C\":\n        c.append(i)\n    elif i[0] == \"H\":\n        h.append(i)\n\nprint(len(m) * len(a) * len(r) + len(m) * len(a) * len(c) + len(m) * len(a) * len(h) + len(m) * len(r) * len(c) + len(m) * len(r) * len(h) + len(m) * len(c) * len(h) + len(a) * len(r) * len(c) + len(a) * len(r) * len(h) + len(a) * len(c) * len(h) + len(r) * len(c) * len(h))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nimport collections\ndef main():\n    n = int(input())\n    names = []\n    for i in range(n):\n        names.append(input())\n    names = list(filter(lambda x: x[0] in ['M', 'A', 'R', 'C', 'H'], names))\n    d = collections.defaultdict(int)\n    for name in names:\n        d[name[0]] += 1\n    print(len(names) * (len(names) - 1) * (len(names) - 2) // 6)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nreadline = sys.stdin.buffer.readline\ndef even(n): return 1 if n%2==0 else 0\nn = int(readline())\n\nnames = [readline().rstrip().decode('utf-8') for _ in range(n)]\n\nstart_chars = ['M', 'A', 'R', 'C', 'H']\ncnts = {c:0 for c in start_chars}\nfor name in names:\n    if name[0] in start_chars:\n        cnts[name[0]] += 1\n\nans = 1\nfor c in start_chars:\n    ans *= cnts[c]\n    ans %= 10**9+7\n\nans *= (n-1)*(n-2)//2\nans %= 10**9+7\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport collections\nimport itertools\n\ndef main():\n    n = int(sys.stdin.readline())\n    names = []\n    for _ in range(n):\n        names.append(sys.stdin.readline().strip())\n\n    # only 5 chars can be first\n    # M, A, R, C, H\n    c = collections.Counter()\n    for name in names:\n        if name[0] in 'MARCH':\n            c[name[0]] += 1\n\n    # permutation with replacement\n    s = 0\n    for x in itertools.combinations_with_replacement(c.values(), 3):\n        s += x[0] * x[1] * x[2]\n\n    print s\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\ndef main():\n    n = int(input())\n    people = [input() for i in range(n)]\n    dic = {}\n    for p in people:\n        if p[0] in dic.keys():\n            dic[p[0]] += 1\n        else:\n            dic[p[0]] = 1\n    key_list = dic.keys()\n    count = 0\n    for i in key_list:\n        for j in key_list:\n            for k in key_list:\n                if i == j or i == k or j == k:\n                    continue\n                count += dic[i] * dic[j] * dic[k]\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nnames = [input() for _ in range(N)]\n\nC = [0] * 5\nfor name in names:\n    if name[0] == 'M':\n        C[0] += 1\n    if name[0] == 'A':\n        C[1] += 1\n    if name[0] == 'R':\n        C[2] += 1\n    if name[0] == 'C':\n        C[3] += 1\n    if name[0] == 'H':\n        C[4] += 1\n\nans = 0\nfor i in range(5):\n    for j in range(i + 1, 5):\n        for k in range(j + 1, 5):\n            ans += C[i] * C[j] * C[k]\n\nprint(ans)"
+    }
+  ],
+  "created": 1650141491,
+  "id": "cmpl-4xjTHvcUGtvhV1snx1FvNze1JBsLn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:38:31.857354 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\n\nN = int(input())\nS = [input() for _ in range(N)]\n\ns = [i[0] for i in S]\ns = Counter(s)\n\nans = s['M'] * s['A'] * s['R'] + s['M'] * s['A'] * s['C'] + s['M'] * s['A'] * s['H'] + s['M'] * s['R'] * s['C'] + s['M'] * s['R'] * s['H'] + s['M'] * s['C'] * s['H'] + s['A'] * s['R'] * s['C'] + s['A'] * s['R'] * s['H'] + s['A'] * s['C'] * s['H'] + s['R'] * s['C'] * s['H']\n\nprint(ans)"
+}
+2022-04-16 20:38:31.857387 REASON stop
+2022-04-16 20:38:31.998557 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# \u5165\u529b\nn = int(input())\ns_list = []\nfor i in range(n):\n    s_list.append(input())\n\n# \u5224\u5b9a\n# \u521d\u671f\u5316\nmari_list = [\"M\",\"A\",\"R\",\"C\",\"H\"]\nmari_dict = {}\nfor i in mari_list:\n    mari_dict[i] = 0\n# \u5224\u5b9a\nfor s in s_list:\n    if s[0] in mari_list:\n        mari_dict[s[0]] += 1\n\n# \u51fa\u529b\nans = 0\nfor i in mari_list:\n    for j in mari_list:\n        for k in mari_list:\n            if i != j and j != k and k != i:\n                ans += mari_dict[i] * mari_dict[j] * mari_dict[k]\nprint(ans)"
+}
+2022-04-16 20:38:31.998739 REASON stop
+2022-04-16 20:38:32.047680 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport sys\nimport heapq\n\nn = int(sys.stdin.readline())\n\ns = []\nfor i in range(n):\n    s.append(sys.stdin.readline().rstrip())\n\ns = sorted(s)\n\nm = []\na = []\nr = []\nc = []\nh = []\n\nfor i in s:\n    if i[0] == \"M\":\n        m.append(i)\n    elif i[0] == \"A\":\n        a.append(i)\n    elif i[0] == \"R\":\n        r.append(i)\n    elif i[0] == \"C\":\n        c.append(i)\n    elif i[0] == \"H\":\n        h.append(i)\n\nprint(len(m) * len(a) * len(r) + len(m) * len(a) * len(c) + len(m) * len(a) * len(h) + len(m) * len(r) * len(c) + len(m) * len(r) * len(h) + len(m) * len(c) * len(h) + len(a) * len(r) * len(c) + len(a) * len(r) * len(h) + len(a) * len(c) * len(h) + len(r) * len(c) * len(h))"
+}
+2022-04-16 20:38:32.047855 REASON stop
+2022-04-16 20:38:32.079239 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nimport collections\ndef main():\n    n = int(input())\n    names = []\n    for i in range(n):\n        names.append(input())\n    names = list(filter(lambda x: x[0] in ['M', 'A', 'R', 'C', 'H'], names))\n    d = collections.defaultdict(int)\n    for name in names:\n        d[name[0]] += 1\n    print(len(names) * (len(names) - 1) * (len(names) - 2) // 6)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:38:32.079396 REASON stop
+2022-04-16 20:38:32.106445 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nreadline = sys.stdin.buffer.readline\ndef even(n): return 1 if n%2==0 else 0\nn = int(readline())\n\nnames = [readline().rstrip().decode('utf-8') for _ in range(n)]\n\nstart_chars = ['M', 'A', 'R', 'C', 'H']\ncnts = {c:0 for c in start_chars}\nfor name in names:\n    if name[0] in start_chars:\n        cnts[name[0]] += 1\n\nans = 1\nfor c in start_chars:\n    ans *= cnts[c]\n    ans %= 10**9+7\n\nans *= (n-1)*(n-2)//2\nans %= 10**9+7\n\nprint(ans)"
+}
+2022-04-16 20:38:32.106583 REASON stop
+2022-04-16 20:38:32.122841 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport collections\nimport itertools\n\ndef main():\n    n = int(sys.stdin.readline())\n    names = []\n    for _ in range(n):\n        names.append(sys.stdin.readline().strip())\n\n    # only 5 chars can be first\n    # M, A, R, C, H\n    c = collections.Counter()\n    for name in names:\n        if name[0] in 'MARCH':\n            c[name[0]] += 1\n\n    # permutation with replacement\n    s = 0\n    for x in itertools.combinations_with_replacement(c.values(), 3):\n        s += x[0] * x[1] * x[2]\n\n    print s\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:38:32.122969 REASON stop
+2022-04-16 20:38:32.144985 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\ndef main():\n    n = int(input())\n    people = [input() for i in range(n)]\n    dic = {}\n    for p in people:\n        if p[0] in dic.keys():\n            dic[p[0]] += 1\n        else:\n            dic[p[0]] = 1\n    key_list = dic.keys()\n    count = 0\n    for i in key_list:\n        for j in key_list:\n            for k in key_list:\n                if i == j or i == k or j == k:\n                    continue\n                count += dic[i] * dic[j] * dic[k]\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:38:32.145100 REASON stop
+2022-04-16 20:38:32.167556 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nnames = [input() for _ in range(N)]\n\nC = [0] * 5\nfor name in names:\n    if name[0] == 'M':\n        C[0] += 1\n    if name[0] == 'A':\n        C[1] += 1\n    if name[0] == 'R':\n        C[2] += 1\n    if name[0] == 'C':\n        C[3] += 1\n    if name[0] == 'H':\n        C[4] += 1\n\nans = 0\nfor i in range(5):\n    for j in range(i + 1, 5):\n        for k in range(j + 1, 5):\n            ans += C[i] * C[j] * C[k]\n\nprint(ans)"
+}
+2022-04-16 20:38:32.167682 REASON stop

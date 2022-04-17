@@ -1,0 +1,154 @@
+2022-04-16 19:38:34.955848 """
+There are N cities on a number line. The i-th city is located at coordinate x_i.
+Your objective is to visit all these cities at least once.
+In order to do so, you will first set a positive integer D.
+Then, you will depart from coordinate X and perform Move 1 and Move 2 below, as many times as you like:
+ - Move 1: travel from coordinate y to coordinate y + D.
+ - Move 2: travel from coordinate y to coordinate y - D.
+Find the maximum value of D that enables you to visit all the cities.
+Here, to visit a city is to travel to the coordinate where that city is located.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq X \leq 10^9
+ - 1 \leq x_i \leq 10^9
+ - x_i are all different.
+ - x_1, x_2, ..., x_N \neq X
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N X
+x_1 x_2 ... x_N
+
+-----Output-----
+Print the maximum value of D that enables you to visit all the cities.
+
+-----Sample Input-----
+3 3
+1 7 11
+
+-----Sample Output-----
+2
+
+Setting D = 2 enables you to visit all the cities as follows, and this is the maximum value of such D.
+ - Perform Move 2 to travel to coordinate 1.
+ - Perform Move 1 to travel to coordinate 3.
+ - Perform Move 1 to travel to coordinate 5.
+ - Perform Move 1 to travel to coordinate 7.
+ - Perform Move 1 to travel to coordinate 9.
+ - Perform Move 1 to travel to coordinate 11.
+"""
+2022-04-16 19:38:34.955855 --------------------------
+2022-04-16 19:39:03.087345 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom bisect import bisect_left\n\nnum_cities, start_coord = map(int, sys.stdin.readline().split())\ncities = sorted(list(map(int, sys.stdin.readline().split())))\n\n# binary search to find the max distance between two cities\ndef binary_search(start, end):\n    if start > end:\n        return start\n    mid = (start + end) // 2\n    min_dist = mid * 2\n    for i in range(num_cities):\n        # binary search to find the first city that is greater than or equal to current city + min_dist\n        idx = bisect_left(cities, cities[i] + mid)\n        if idx == num_cities:\n            continue\n        # update min_dist if the distance between two cities is less\n        min_dist = min(min_dist, cities[idx] - cities[i])\n    if min_dist <= mid:\n        return binary_search(start, mid - 1)\n    else:\n        return binary_search(mid + 1, end)\n\n# if start_coord is in the cities\nif start_coord in cities:\n    print(binary_search(1, 10**9))\nelse:\n    # binary search to find the city that is greater than or equal to start_coord\n    idx = bisect_left(cities, start_coord)\n    if idx == num_cities:\n        # the distance from the last city to start_coord\n        print(binary_search(1, cities[-1] - start_coord))\n    elif idx == 0:\n        # the distance from start_coord to the first city\n        print(binary_search(1, start_coord - cities[0]))\n    else:\n        # the distance between the two cities that are greater than or equal to start_coord\n        print(binary_search(1, (cities[idx] - start_coord) * 2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, x = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ni = 0\n\nwhile True:\n    if a[i] > x:\n        break\n    i += 1\n\nanswer = a[i] - x\n\nfor i in range(n):\n    answer = min(answer, max(x - a[i], a[i] - x))\n\nprint(answer)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xs = list(map(int, input().split()))\n    xs.append(x)\n    xs.sort()\n    idx = xs.index(x)\n    left = xs[:idx]\n    right = xs[idx+1:]\n    if len(left) > len(right):\n        left, right = right, left\n    d = 0\n    for l, r in zip(left, right):\n        d = max(d, (r - l)//2)\n    print(d)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN, X = input().split()\nN, X = int(N), int(X)\nx_list = list(map(int, input().split()))\n\nx_list.append(X)\nx_list.sort()\n\ndistances = []\n\nfor i in range(len(x_list) - 1):\n    distances.append(x_list[i + 1] - x_list[i])\n\nprint(max(distances) // 2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# this is an example of the traveling salesman problem,\n# which is NP-hard, but there are some approximations\n# that can be done to find a solution in polynomial time\n\n# this is the greedy algorithm for the problem\n# we start at point x, and sort all other points by their distance from x\n# we then check if we can reach the next point from x\n# if we can, then we move to that point and repeat\n# if we cannot reach the next point, we add the distance of the next point to x to D\n# and then move to the next point and repeat\n# when we have reached all the points, the value of D is the answer\n# this is a 2-approximation of the optimal solution\n\n# read in the input\nn, x = map(int, input().split())\nxs = list(map(int, input().split()))\n\n# sort the points by their distance from x\nxs.sort(key=lambda y: abs(x - y))\n\n# start at x\nd = 0\nfor y in xs:\n    # check if the next point can be reached from the current point\n    if y - d <= x:\n        # if so, move to the next point and repeat\n        x = y\n    else:\n        # if not, add the distance from the current point to the next point to D\n        # and then move to the next point and repeat\n        d += y - x\n        x = y\n\n# print the answer\nprint(d)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input().split()[0])\nX = int(input().split()[0])\nx = [int(i) for i in input().split()]\n\n# Find the minimum distance between X and other cities\ndist = [abs(i - X) for i in x]\ndist.sort()\n\n# Find the maximum distance between cities\ndiff = [dist[i + 1] - dist[i] for i in range(N - 1)]\ndiff.sort()\n\n# The maximum value of D which enables us to visit all cities is the minimum of the maximum distance between cities\nprint(diff[-1] // 2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport sys\nfrom itertools import accumulate\n\nn, x = map(int, input().split())\ncities = sorted(list(map(int, input().split())))\n\nif x in cities:\n    print(1)\n    sys.exit()\n\ndistances = [abs(x - c) for c in cities]\ndistances.sort()\n\ngaps = [distances[i] - distances[i - 1] for i in range(1, n)]\ngaps.sort()\n\nif len(gaps) == 1:\n    print(distances[0] + distances[-1])\nelse:\n    print(sum(distances) - sum(gaps[:n - 2]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# input\nN, X = map(int, sys.stdin.readline().rstrip().split())\nx = list(map(int, sys.stdin.readline().rstrip().split()))\n\n# solution\nx.sort()\nx = list(map(lambda x: abs(x - X), x))\nprint(math.ceil(max(x) / (N - 1)))"
+    }
+  ],
+  "created": 1650137915,
+  "id": "cmpl-4xiXbHKCK2czNPqLZURHqIXFrSxBg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:39:03.087740 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom bisect import bisect_left\n\nnum_cities, start_coord = map(int, sys.stdin.readline().split())\ncities = sorted(list(map(int, sys.stdin.readline().split())))\n\n# binary search to find the max distance between two cities\ndef binary_search(start, end):\n    if start > end:\n        return start\n    mid = (start + end) // 2\n    min_dist = mid * 2\n    for i in range(num_cities):\n        # binary search to find the first city that is greater than or equal to current city + min_dist\n        idx = bisect_left(cities, cities[i] + mid)\n        if idx == num_cities:\n            continue\n        # update min_dist if the distance between two cities is less\n        min_dist = min(min_dist, cities[idx] - cities[i])\n    if min_dist <= mid:\n        return binary_search(start, mid - 1)\n    else:\n        return binary_search(mid + 1, end)\n\n# if start_coord is in the cities\nif start_coord in cities:\n    print(binary_search(1, 10**9))\nelse:\n    # binary search to find the city that is greater than or equal to start_coord\n    idx = bisect_left(cities, start_coord)\n    if idx == num_cities:\n        # the distance from the last city to start_coord\n        print(binary_search(1, cities[-1] - start_coord))\n    elif idx == 0:\n        # the distance from start_coord to the first city\n        print(binary_search(1, start_coord - cities[0]))\n    else:\n        # the distance between the two cities that are greater than or equal to start_coord\n        print(binary_search(1, (cities[idx] - start_coord) * 2))"
+}
+2022-04-16 19:39:03.087888 REASON stop
+2022-04-16 19:39:03.313962 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, x = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\ni = 0\n\nwhile True:\n    if a[i] > x:\n        break\n    i += 1\n\nanswer = a[i] - x\n\nfor i in range(n):\n    answer = min(answer, max(x - a[i], a[i] - x))\n\nprint(answer)"
+}
+2022-04-16 19:39:03.314192 REASON stop
+2022-04-16 19:39:03.398081 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xs = list(map(int, input().split()))\n    xs.append(x)\n    xs.sort()\n    idx = xs.index(x)\n    left = xs[:idx]\n    right = xs[idx+1:]\n    if len(left) > len(right):\n        left, right = right, left\n    d = 0\n    for l, r in zip(left, right):\n        d = max(d, (r - l)//2)\n    print(d)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:39:03.398193 REASON stop
+2022-04-16 19:39:03.419487 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN, X = input().split()\nN, X = int(N), int(X)\nx_list = list(map(int, input().split()))\n\nx_list.append(X)\nx_list.sort()\n\ndistances = []\n\nfor i in range(len(x_list) - 1):\n    distances.append(x_list[i + 1] - x_list[i])\n\nprint(max(distances) // 2)"
+}
+2022-04-16 19:39:03.419604 REASON stop
+2022-04-16 19:39:03.428121 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# this is an example of the traveling salesman problem,\n# which is NP-hard, but there are some approximations\n# that can be done to find a solution in polynomial time\n\n# this is the greedy algorithm for the problem\n# we start at point x, and sort all other points by their distance from x\n# we then check if we can reach the next point from x\n# if we can, then we move to that point and repeat\n# if we cannot reach the next point, we add the distance of the next point to x to D\n# and then move to the next point and repeat\n# when we have reached all the points, the value of D is the answer\n# this is a 2-approximation of the optimal solution\n\n# read in the input\nn, x = map(int, input().split())\nxs = list(map(int, input().split()))\n\n# sort the points by their distance from x\nxs.sort(key=lambda y: abs(x - y))\n\n# start at x\nd = 0\nfor y in xs:\n    # check if the next point can be reached from the current point\n    if y - d <= x:\n        # if so, move to the next point and repeat\n        x = y\n    else:\n        # if not, add the distance from the current point to the next point to D\n        # and then move to the next point and repeat\n        d += y - x\n        x = y\n\n# print the answer\nprint(d)"
+}
+2022-04-16 19:39:03.428291 REASON stop
+2022-04-16 19:39:03.446617 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input().split()[0])\nX = int(input().split()[0])\nx = [int(i) for i in input().split()]\n\n# Find the minimum distance between X and other cities\ndist = [abs(i - X) for i in x]\ndist.sort()\n\n# Find the maximum distance between cities\ndiff = [dist[i + 1] - dist[i] for i in range(N - 1)]\ndiff.sort()\n\n# The maximum value of D which enables us to visit all cities is the minimum of the maximum distance between cities\nprint(diff[-1] // 2)"
+}
+2022-04-16 19:39:03.446757 REASON stop
+2022-04-16 19:39:03.462624 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport sys\nfrom itertools import accumulate\n\nn, x = map(int, input().split())\ncities = sorted(list(map(int, input().split())))\n\nif x in cities:\n    print(1)\n    sys.exit()\n\ndistances = [abs(x - c) for c in cities]\ndistances.sort()\n\ngaps = [distances[i] - distances[i - 1] for i in range(1, n)]\ngaps.sort()\n\nif len(gaps) == 1:\n    print(distances[0] + distances[-1])\nelse:\n    print(sum(distances) - sum(gaps[:n - 2]))"
+}
+2022-04-16 19:39:03.462749 REASON stop
+2022-04-16 19:39:03.479844 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# input\nN, X = map(int, sys.stdin.readline().rstrip().split())\nx = list(map(int, sys.stdin.readline().rstrip().split()))\n\n# solution\nx.sort()\nx = list(map(lambda x: abs(x - X), x))\nprint(math.ceil(max(x) / (N - 1)))"
+}
+2022-04-16 19:39:03.479991 REASON stop

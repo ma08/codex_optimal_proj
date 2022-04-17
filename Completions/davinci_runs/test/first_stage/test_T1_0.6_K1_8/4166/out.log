@@ -1,0 +1,146 @@
+2022-04-16 20:00:04.517777 """
+If there is an integer not less than 0 satisfying the following conditions, print the smallest such integer; otherwise, print -1.
+ - The integer has exactly N digits in base ten. (We assume 0 to be a 1-digit integer. For other integers, leading zeros are not allowed.)
+ - The s_i-th digit from the left is c_i. \left(i = 1, 2, \cdots, M\right)
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 3
+ - 0 \leq M \leq 5
+ - 1 \leq s_i \leq N
+ - 0 \leq c_i \leq 9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+s_1 c_1
+\vdots
+s_M c_M
+
+-----Output-----
+Print the answer.
+
+-----Sample Input-----
+3 3
+1 7
+3 2
+1 7
+
+-----Sample Output-----
+702
+
+702 satisfies the conditions - its 1-st and 3-rd digits are 7 and 2, respectively - while no non-negative integer less than 702 satisfies them.
+"""
+2022-04-16 20:00:04.517797 --------------------------
+2022-04-16 20:00:27.597396 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nnum = [0]*N\n\nfor i in range(M):\n    s, c = map(int, sys.stdin.readline().split())\n    num[s-1] = c\n\nif num[0] == 0 and N > 1:\n    print(-1)\nelse:\n    print(''.join(map(str, num)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(N, M, s_list, c_list):\n    answer_list = [-1 for i in range(N)]\n    for i in range(M):\n        answer_list[s_list[i]-1] = c_list[i]\n    for i in range(N):\n        if answer_list[i] == -1:\n            answer_list[i] = 0\n    answer = int(''.join(map(str, answer_list)))\n    return answer\n\nN, M = map(int, input().split())\ns_list = []\nc_list = []\nfor i in range(M):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\nprint(solve(N, M, s_list, c_list))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import permutations\n\ndef main():\n    #input\n    n, m = map(int, input().split())\n    s_c = [list(map(int, input().split())) for _ in range(m)]\n\n    #create permutations\n    permutations = list(permutations(range(10), n))\n\n    #filter permutations\n    for s, c in s_c:\n        permutations = [p for p in permutations if p[s-1] == c]\n\n    #output\n    if permutations:\n        print(min(permutations))\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef find_max_num(n, m, s, c):\n    if m == 0:\n        return 0\n    else:\n        idx = 0\n        for i in range(n):\n            if s[idx] == i + 1:\n                if idx < m - 1:\n                    idx += 1\n                else:\n                    break\n        if i == n - 1:\n            return int(''.join(list(map(str, c))))\n        else:\n            return int(''.join(list(map(str, c))) + '0' * (n - i - 1))\n\ndef main():\n    n, m = map(int, sys.stdin.readline().strip().split())\n    s = []\n    c = []\n    for i in range(m):\n        a, b = map(int, sys.stdin.readline().strip().split())\n        s.append(a)\n        c.append(b)\n    num_max = find_max_num(n, m, s, c)\n    print(num_max)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Set max recursion limit\nsys.setrecursionlimit(10000)\n\n\ndef main():\n    # Read input\n    n, m = map(int, input().split())\n    s_c = [list(map(int, input().split())) for _ in range(m)]\n    s_c_dict = dict()\n    for s, c in s_c:\n        if s in s_c_dict:\n            s_c_dict[s].append(c)\n        else:\n            s_c_dict[s] = [c]\n    s_c_dict = dict(sorted(s_c_dict.items()))\n\n    # Check if there is a number that satisfies the conditions\n    if n == 1:\n        if 1 in s_c_dict:\n            print(s_c_dict[1][0])\n        else:\n            print(0)\n    elif n > 1:\n        if 1 in s_c_dict:\n            if 0 in s_c_dict[1]:\n                print(-1)\n            else:\n                print(int(''.join(map(str, dfs(s_c_dict, n, 0, 1)))))\n        else:\n            print(int(''.join(map(str, dfs(s_c_dict, n, 0, 1)))))\n\n\ndef dfs(s_c_dict, n, i, num):\n    if i == n:\n        return []\n    elif i + 1 in s_c_dict:\n        for c in s_c_dict[i + 1]:\n            if c > num:\n                return [c] + dfs(s_c_dict, n, i + 1, c)\n        return [-1]\n    else:\n        if num == 9:\n            return [-1]\n        else:\n            return [num + 1] + dfs(s_c_dict, n, i + 1, num + 1)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\n# \u5168\u63a2\u7d22\u3067\u89e3\u304f\n\nans = -1\nfor i in range(10 ** n):\n    flg = True\n    for j in range(m):\n        s, c = map(int, input().split())\n\n        if i // (10 ** (s - 1)) % 10 != c:\n            flg = False\n            break\n\n    if flg:\n        if ans == -1:\n            ans = i\n        else:\n            ans = min(ans, i)\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\ns_list = []\nc_list = []\nfor i in range(m):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\n\nfor i in range(10**(n-1), 10**n):\n    i_str = str(i)\n    for j in range(m):\n        if i_str[s_list[j]-1] != str(c_list[j]):\n            break\n        if j == m-1:\n            print(i)\n            exit()\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, m = [int(x) for x in input().split()]\n\nN = n\nM = m\n\n# print(N, M)\n\ns = []\nc = []\n\nfor i in range(M):\n    s_i, c_i = [int(x) for x in input().split()]\n    s.append(s_i)\n    c.append(c_i)\n\n# print(s)\n# print(c)\n\nif (N == 1):\n    if (0 in s):\n        if (c[s.index(0)] == 0):\n            print(0)\n        else:\n            print(-1)\n    else:\n        print(-1)\n\nelse:\n    ans = []\n    for i in range(N):\n        if (i+1 in s):\n            ans.append(c[s.index(i+1)])\n        else:\n            if (i == 0):\n                ans.append(1)\n            else:\n                ans.append(0)\n\n    # print(ans)\n\n    ans = [str(x) for x in ans]\n\n    print(\"\".join(ans))"
+    }
+  ],
+  "created": 1650139204,
+  "id": "cmpl-4xisOfMbPDPkbE9wdg0nGHJWIMRA3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:00:27.597689 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nnum = [0]*N\n\nfor i in range(M):\n    s, c = map(int, sys.stdin.readline().split())\n    num[s-1] = c\n\nif num[0] == 0 and N > 1:\n    print(-1)\nelse:\n    print(''.join(map(str, num)))"
+}
+2022-04-16 20:00:27.597725 REASON stop
+2022-04-16 20:00:27.625082 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(N, M, s_list, c_list):\n    answer_list = [-1 for i in range(N)]\n    for i in range(M):\n        answer_list[s_list[i]-1] = c_list[i]\n    for i in range(N):\n        if answer_list[i] == -1:\n            answer_list[i] = 0\n    answer = int(''.join(map(str, answer_list)))\n    return answer\n\nN, M = map(int, input().split())\ns_list = []\nc_list = []\nfor i in range(M):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\nprint(solve(N, M, s_list, c_list))"
+}
+2022-04-16 20:00:27.625255 REASON stop
+2022-04-16 20:00:27.625750 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import permutations\n\ndef main():\n    #input\n    n, m = map(int, input().split())\n    s_c = [list(map(int, input().split())) for _ in range(m)]\n\n    #create permutations\n    permutations = list(permutations(range(10), n))\n\n    #filter permutations\n    for s, c in s_c:\n        permutations = [p for p in permutations if p[s-1] == c]\n\n    #output\n    if permutations:\n        print(min(permutations))\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:00:27.625839 REASON stop
+2022-04-16 20:00:27.641374 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef find_max_num(n, m, s, c):\n    if m == 0:\n        return 0\n    else:\n        idx = 0\n        for i in range(n):\n            if s[idx] == i + 1:\n                if idx < m - 1:\n                    idx += 1\n                else:\n                    break\n        if i == n - 1:\n            return int(''.join(list(map(str, c))))\n        else:\n            return int(''.join(list(map(str, c))) + '0' * (n - i - 1))\n\ndef main():\n    n, m = map(int, sys.stdin.readline().strip().split())\n    s = []\n    c = []\n    for i in range(m):\n        a, b = map(int, sys.stdin.readline().strip().split())\n        s.append(a)\n        c.append(b)\n    num_max = find_max_num(n, m, s, c)\n    print(num_max)\n\nmain()"
+}
+2022-04-16 20:00:27.641477 REASON stop
+2022-04-16 20:00:27.642768 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Set max recursion limit\nsys.setrecursionlimit(10000)\n\n\ndef main():\n    # Read input\n    n, m = map(int, input().split())\n    s_c = [list(map(int, input().split())) for _ in range(m)]\n    s_c_dict = dict()\n    for s, c in s_c:\n        if s in s_c_dict:\n            s_c_dict[s].append(c)\n        else:\n            s_c_dict[s] = [c]\n    s_c_dict = dict(sorted(s_c_dict.items()))\n\n    # Check if there is a number that satisfies the conditions\n    if n == 1:\n        if 1 in s_c_dict:\n            print(s_c_dict[1][0])\n        else:\n            print(0)\n    elif n > 1:\n        if 1 in s_c_dict:\n            if 0 in s_c_dict[1]:\n                print(-1)\n            else:\n                print(int(''.join(map(str, dfs(s_c_dict, n, 0, 1)))))\n        else:\n            print(int(''.join(map(str, dfs(s_c_dict, n, 0, 1)))))\n\n\ndef dfs(s_c_dict, n, i, num):\n    if i == n:\n        return []\n    elif i + 1 in s_c_dict:\n        for c in s_c_dict[i + 1]:\n            if c > num:\n                return [c] + dfs(s_c_dict, n, i + 1, c)\n        return [-1]\n    else:\n        if num == 9:\n            return [-1]\n        else:\n            return [num + 1] + dfs(s_c_dict, n, i + 1, num + 1)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:00:27.642862 REASON stop
+2022-04-16 20:00:27.657494 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\n# \u5168\u63a2\u7d22\u3067\u89e3\u304f\n\nans = -1\nfor i in range(10 ** n):\n    flg = True\n    for j in range(m):\n        s, c = map(int, input().split())\n\n        if i // (10 ** (s - 1)) % 10 != c:\n            flg = False\n            break\n\n    if flg:\n        if ans == -1:\n            ans = i\n        else:\n            ans = min(ans, i)\n\nprint(ans)"
+}
+2022-04-16 20:00:27.657597 REASON stop
+2022-04-16 20:00:27.658961 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\ns_list = []\nc_list = []\nfor i in range(m):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\n\nfor i in range(10**(n-1), 10**n):\n    i_str = str(i)\n    for j in range(m):\n        if i_str[s_list[j]-1] != str(c_list[j]):\n            break\n        if j == m-1:\n            print(i)\n            exit()\nprint(-1)"
+}
+2022-04-16 20:00:27.659057 REASON stop
+2022-04-16 20:00:27.660503 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, m = [int(x) for x in input().split()]\n\nN = n\nM = m\n\n# print(N, M)\n\ns = []\nc = []\n\nfor i in range(M):\n    s_i, c_i = [int(x) for x in input().split()]\n    s.append(s_i)\n    c.append(c_i)\n\n# print(s)\n# print(c)\n\nif (N == 1):\n    if (0 in s):\n        if (c[s.index(0)] == 0):\n            print(0)\n        else:\n            print(-1)\n    else:\n        print(-1)\n\nelse:\n    ans = []\n    for i in range(N):\n        if (i+1 in s):\n            ans.append(c[s.index(i+1)])\n        else:\n            if (i == 0):\n                ans.append(1)\n            else:\n                ans.append(0)\n\n    # print(ans)\n\n    ans = [str(x) for x in ans]\n\n    print(\"\".join(ans))"
+}
+2022-04-16 20:00:27.660596 REASON stop

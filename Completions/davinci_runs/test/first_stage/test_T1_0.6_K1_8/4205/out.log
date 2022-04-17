@@ -1,0 +1,140 @@
+2022-04-16 20:15:46.010432 """
+We have a sequence p = {p_1,\ p_2,\ ...,\ p_N} which is a permutation of {1,\ 2,\ ...,\ N}.
+You can perform the following operation at most once: choose integers i and j (1 \leq i < j \leq N), and swap p_i and p_j. Note that you can also choose not to perform it.
+Print YES if you can sort p in ascending order in this way, and NO otherwise.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 50
+ - p is a permutation of {1,\ 2,\ ...,\ N}.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+p_1 p_2 ... p_N
+
+-----Output-----
+Print YES if you can sort p in ascending order in the way stated in the problem statement, and NO otherwise.
+
+-----Sample Input-----
+5
+5 2 3 4 1
+
+-----Sample Output-----
+YES
+
+You can sort p in ascending order by swapping p_1 and p_5.
+"""
+2022-04-16 20:15:46.010453 --------------------------
+2022-04-16 20:16:05.597307 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    p = [int(x) for x in input().split()]\n    for i in range(n):\n        if p[i] == i + 1:\n            continue\n        elif p[p[i] - 1] == i + 1:\n            p[i], p[p[i] - 1] = p[p[i] - 1], p[i]\n            break\n        else:\n            print(\"NO\")\n            quit()\n    print(\"YES\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# \u6570\u5217\u306e\u5148\u982d\u3068\u672b\u5c3e\u4ee5\u5916\u306e\u6570\u5b57\u306e\u3069\u3053\u304b2\u3064\u3092\u4ea4\u63db\u3057\u3066\n# \u5148\u982d\u3068\u672b\u5c3e\u3092\u4e26\u3073\u66ff\u3048\u308b\u3068\u6607\u9806\u306b\u306a\u308b\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\n# \u6607\u9806\u306b\u306a\u308b\u5834\u5408\u306fYES\u3001\u305d\u3046\u3067\u306a\u3044\u5834\u5408\u306fNO\u3092\u51fa\u529b\u3059\u308b\n\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n\n    # \u6570\u5217\u306e\u5148\u982d\u3068\u672b\u5c3e\u3092\u898b\u3064\u3051\u308b\n    head = 0\n    tail = 0\n    for i in range(n):\n        if p[i] == 1:\n            head = i\n        elif p[i] == n:\n            tail = i\n\n    # \u5148\u982d\u3068\u672b\u5c3e\u3092\u4ea4\u63db\u3057\u3066\u5148\u982d\u3068\u672b\u5c3e\u4ee5\u5916\u306e\u6570\u5217\u304c\u6607\u9806\u306b\u306a\u308b\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\n    if head < tail:\n        for i in range(n):\n            if p[i] != i + 1:\n                print('NO')\n                exit()\n        print('YES')\n    else:\n        for i in range(n):\n            if p[i] != n - i:\n                print('NO')\n                exit()\n        print('YES')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nn = int(input())\np = list(map(int, input().split()))\n\n# 0\u3092\u5165\u308c\u3066\u304a\u304f\np.insert(0, 0)\n\n# 1\u304b\u3089n\u307e\u3067\u306e\u30ea\u30b9\u30c8\u3092\u4f5c\u6210\n# \u9806\u756a\u306b\u8a72\u5f53\u3059\u308bp\u306eindex\u3092\u5165\u308c\u3066\u3044\u304f\n# \u8a72\u5f53\u3059\u308bindex\u306b\u8a72\u5f53\u3059\u308b\u5024\u304c\u5165\u3063\u3066\u3044\u308b\u5834\u5408\u306fOK\n# \u305d\u3046\u3067\u306a\u3044\u5834\u5408\u306fNG\ncheck = [0] * (n + 1)\nfor i in range(1, n + 1):\n    check[i] = p.index(i)\n\nflag = True\nfor i in range(1, n + 1):\n    if i != check[i]:\n        flag = False\n\nif flag:\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main(n, p):\n    \"\"\"\n    >>> main(5, [5, 2, 3, 4, 1])\n    YES\n    >>> main(4, [4, 1, 2, 3])\n    YES\n    >>> main(10, [10, 6, 8, 9, 7, 5, 3, 4, 2, 1])\n    NO\n    \"\"\"\n    if n == 1:\n        print(\"YES\")\n        return\n    if p[0] == 1:\n        if p[1] == 2:\n            main(n-1, p[1:])\n        else:\n            print(\"NO\")\n    else:\n        print(\"NO\")\n\nif __name__ == '__main__':\n    n = int(input())\n    p = list(map(int, input().split()))\n    main(n, p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\nfor i in range(n):\n    if p[i] == i + 1:\n        continue\n    elif p[i] == i + 2:\n        if i + 2 < n:\n            if p[i + 1] == i + 1:\n                p[i], p[i + 1] = p[i + 1], p[i]\n            else:\n                print('NO')\n                exit(0)\n        else:\n            print('NO')\n            exit(0)\n    else:\n        print('NO')\n        exit(0)\n\nprint('YES')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\nans = \"NO\"\nfor i in range(n):\n    if p[i] == i + 1:\n        continue\n    for j in range(i + 1, n):\n        if p[j] == i + 1:\n            ans = \"YES\"\n            break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Author: Ishaan Gupta\n# Date Created: June 1, 2019\n\nn = int(input())\np = list(map(int, input().split()))\n\nfor i in range(n-1):\n    if p[i] == i+1:\n        continue\n    for j in range(i+1, n):\n        if p[j] == i+1:\n            p[i], p[j] = p[j], p[i]\n            print(\"YES\")\n            exit()\nprint(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# print(p)\n\ncnt = 0\nfor i in range(N):\n    if p[i] == i + 1:\n        cnt += 1\n\nif cnt >= 2:\n    print(\"NO\")\nelse:\n    print(\"YES\")"
+    }
+  ],
+  "created": 1650140146,
+  "id": "cmpl-4xj7atGD3zJ1yoTNS1lnbMy3zsfge",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:16:05.597605 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    p = [int(x) for x in input().split()]\n    for i in range(n):\n        if p[i] == i + 1:\n            continue\n        elif p[p[i] - 1] == i + 1:\n            p[i], p[p[i] - 1] = p[p[i] - 1], p[i]\n            break\n        else:\n            print(\"NO\")\n            quit()\n    print(\"YES\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:16:05.597639 REASON stop
+2022-04-16 20:16:05.626846 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# \u6570\u5217\u306e\u5148\u982d\u3068\u672b\u5c3e\u4ee5\u5916\u306e\u6570\u5b57\u306e\u3069\u3053\u304b2\u3064\u3092\u4ea4\u63db\u3057\u3066\n# \u5148\u982d\u3068\u672b\u5c3e\u3092\u4e26\u3073\u66ff\u3048\u308b\u3068\u6607\u9806\u306b\u306a\u308b\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\n# \u6607\u9806\u306b\u306a\u308b\u5834\u5408\u306fYES\u3001\u305d\u3046\u3067\u306a\u3044\u5834\u5408\u306fNO\u3092\u51fa\u529b\u3059\u308b\n\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n\n    # \u6570\u5217\u306e\u5148\u982d\u3068\u672b\u5c3e\u3092\u898b\u3064\u3051\u308b\n    head = 0\n    tail = 0\n    for i in range(n):\n        if p[i] == 1:\n            head = i\n        elif p[i] == n:\n            tail = i\n\n    # \u5148\u982d\u3068\u672b\u5c3e\u3092\u4ea4\u63db\u3057\u3066\u5148\u982d\u3068\u672b\u5c3e\u4ee5\u5916\u306e\u6570\u5217\u304c\u6607\u9806\u306b\u306a\u308b\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\n    if head < tail:\n        for i in range(n):\n            if p[i] != i + 1:\n                print('NO')\n                exit()\n        print('YES')\n    else:\n        for i in range(n):\n            if p[i] != n - i:\n                print('NO')\n                exit()\n        print('YES')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:16:05.627057 REASON stop
+2022-04-16 20:16:05.627618 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nn = int(input())\np = list(map(int, input().split()))\n\n# 0\u3092\u5165\u308c\u3066\u304a\u304f\np.insert(0, 0)\n\n# 1\u304b\u3089n\u307e\u3067\u306e\u30ea\u30b9\u30c8\u3092\u4f5c\u6210\n# \u9806\u756a\u306b\u8a72\u5f53\u3059\u308bp\u306eindex\u3092\u5165\u308c\u3066\u3044\u304f\n# \u8a72\u5f53\u3059\u308bindex\u306b\u8a72\u5f53\u3059\u308b\u5024\u304c\u5165\u3063\u3066\u3044\u308b\u5834\u5408\u306fOK\n# \u305d\u3046\u3067\u306a\u3044\u5834\u5408\u306fNG\ncheck = [0] * (n + 1)\nfor i in range(1, n + 1):\n    check[i] = p.index(i)\n\nflag = True\nfor i in range(1, n + 1):\n    if i != check[i]:\n        flag = False\n\nif flag:\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+}
+2022-04-16 20:16:05.627724 REASON stop
+2022-04-16 20:16:05.652650 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main(n, p):\n    \"\"\"\n    >>> main(5, [5, 2, 3, 4, 1])\n    YES\n    >>> main(4, [4, 1, 2, 3])\n    YES\n    >>> main(10, [10, 6, 8, 9, 7, 5, 3, 4, 2, 1])\n    NO\n    \"\"\"\n    if n == 1:\n        print(\"YES\")\n        return\n    if p[0] == 1:\n        if p[1] == 2:\n            main(n-1, p[1:])\n        else:\n            print(\"NO\")\n    else:\n        print(\"NO\")\n\nif __name__ == '__main__':\n    n = int(input())\n    p = list(map(int, input().split()))\n    main(n, p)"
+}
+2022-04-16 20:16:05.652764 REASON stop
+2022-04-16 20:16:05.676298 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\nfor i in range(n):\n    if p[i] == i + 1:\n        continue\n    elif p[i] == i + 2:\n        if i + 2 < n:\n            if p[i + 1] == i + 1:\n                p[i], p[i + 1] = p[i + 1], p[i]\n            else:\n                print('NO')\n                exit(0)\n        else:\n            print('NO')\n            exit(0)\n    else:\n        print('NO')\n        exit(0)\n\nprint('YES')"
+}
+2022-04-16 20:16:05.676428 REASON stop
+2022-04-16 20:16:05.677646 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\nans = \"NO\"\nfor i in range(n):\n    if p[i] == i + 1:\n        continue\n    for j in range(i + 1, n):\n        if p[j] == i + 1:\n            ans = \"YES\"\n            break\n\nprint(ans)"
+}
+2022-04-16 20:16:05.677722 REASON stop
+2022-04-16 20:16:05.678735 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Author: Ishaan Gupta\n# Date Created: June 1, 2019\n\nn = int(input())\np = list(map(int, input().split()))\n\nfor i in range(n-1):\n    if p[i] == i+1:\n        continue\n    for j in range(i+1, n):\n        if p[j] == i+1:\n            p[i], p[j] = p[j], p[i]\n            print(\"YES\")\n            exit()\nprint(\"NO\")"
+}
+2022-04-16 20:16:05.678799 REASON stop
+2022-04-16 20:16:05.680030 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# print(p)\n\ncnt = 0\nfor i in range(N):\n    if p[i] == i + 1:\n        cnt += 1\n\nif cnt >= 2:\n    print(\"NO\")\nelse:\n    print(\"YES\")"
+}
+2022-04-16 20:16:05.680099 REASON stop

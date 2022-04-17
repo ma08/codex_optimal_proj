@@ -1,0 +1,165 @@
+2022-04-16 19:26:32.724666 """
+You are given a permutation $p_1, p_2, \dots, p_n$. A permutation of length $n$ is a sequence such that each integer between $1$ and $n$ occurs exactly once in the sequence.
+
+Find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+The median of a sequence is the value of the element which is in the middle of the sequence after sorting it in non-decreasing order. If the length of the sequence is even, the left of two middle elements is used.
+
+For example, if $a=[4, 2, 7, 5]$ then its median is $4$ since after sorting the sequence, it will look like $[2, 4, 5, 7]$ and the left of two middle elements is equal to $4$. The median of $[7, 1, 2, 9, 6]$ equals $6$ since after sorting, the value $6$ will be in the middle of the sequence.
+
+Write a program to find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+
+-----Input-----
+
+The first line contains integers $n$ and $m$ ($1 \le n \le 2\cdot10^5$, $1 \le m \le n$) — the length of the given sequence and the required value of the median.
+
+The second line contains a permutation $p_1, p_2, \dots, p_n$ ($1 \le p_i \le n$). Each integer between $1$ and $n$ occurs in $p$ exactly once.
+
+
+-----Output-----
+
+Print the required number.
+
+
+-----Examples-----
+Input
+5 4
+2 4 5 3 1
+
+Output
+4
+
+Input
+5 5
+1 2 3 4 5
+
+Output
+1
+
+Input
+15 8
+1 15 2 14 3 13 4 8 12 5 11 6 10 7 9
+
+Output
+48
+
+
+
+-----Note-----
+
+In the first example, the suitable pairs of indices are: $(1, 3)$, $(2, 2)$, $(2, 3)$ and $(2, 4)$.
+"""
+2022-04-16 19:26:32.724699 --------------------------
+2022-04-16 19:28:12.048468 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport random\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    perm = list(map(int, sys.stdin.readline().split()))\n    assert(len(perm) == n)\n    assert(set(perm) == set(range(1, n+1)))\n\n    cnt = 0\n    lefts = [0] * n\n    rights = [0] * n\n    for i in range(n):\n        if perm[i] < m:\n            lefts[i] = 1\n    for i in range(n-1, -1, -1):\n        if perm[i] > m:\n            rights[i] = 1\n        if i > 0:\n            lefts[i-1] += lefts[i]\n            rights[i-1] += rights[i]\n    for i in range(n):\n        cnt += lefts[i] * rights[i]\n    print(cnt)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Solution\n    \"\"\"\n    n, m = map(int, input().split())\n    p = input().split()\n    p = [int(i) for i in p]\n\n    # p[0], p[1], ... , p[n-1]\n    # p[i] means p_i\n\n    # p_[i] <= p_[i+1]\n    # p_[i] <= m\n    # p_[i] >= m\n\n    # count[i] is the number of p_j that satisfies p_j <= i\n    count = [0] * (n+1)\n    for i in p:\n        count[i] += 1\n\n    # for i in range(1, n + 1):\n    #     count[i] = count[i-1] + count[i]\n\n    for i in range(1, n + 1):\n        count[i] += count[i-1]\n\n    # count[i] is the number of p_j that satisfies p_j <= i\n\n    # count[i] - count[j] is the number of p_k that satisfies j < p_k <= i\n\n    if m > n:\n        return 0\n\n    result = 0\n\n    if n % 2 == 1:\n        # n is odd\n        for i in range(m, n + 1):\n            result += count[i] - count[m-1]\n    else:\n        # n is even\n        for i in range(m, n + 1):\n            result += count[i] - count[m-1]\n        result += count[m] - count[m-1]\n\n    print(result)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    permutation = list(map(int, input().split()))\n\n    # Create an array where the ith element is the number of values less than or equal to i\n    # For example, if permutation = [2, 4, 5, 3, 1], then nums_less_than = [0, 1, 2, 4, 5]\n    nums_less_than = [0] * (n + 1)\n    for i in range(1, n + 1):\n        nums_less_than[i] = nums_less_than[i - 1] + (permutation[i - 1] <= m)\n\n    # Create an array where the ith element is the number of values greater than or equal to i\n    # For example, if permutation = [2, 4, 5, 3, 1], then nums_greater_than = [5, 4, 3, 2, 1]\n    nums_greater_than = [0] * (n + 1)\n    for i in range(n, 0, -1):\n        nums_greater_than[i] = nums_greater_than[i + 1] + (permutation[i - 1] >= m)\n\n    # Let's count the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is m.\n    # Note that if p_l, p_{l+1}, ..., p_r is equal to p_1, p_2, ..., p_n, then the median is m.\n    # Since each integer from 1 to n occurs exactly once in p, we can determine if p_l, p_{l+1}, ..., p_r is equal to p_1, p_2, ..., p_n by comparing the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r\n    # For example, if p = [2, 4, 5, 3, 1], then p_2, p_3, p_4, p_5 = [4, 5, 3, 1] and the number of values less than or equal to 4 and the number of values greater than or equal to 4 is equal to 0 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is m is equal to the number of ways of choosing l and r such that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # For example, if p = [2, 4, 5, 3, 1], then the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p is equal to 2 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # p_l, p_{l+1}, ..., p_r is a subsequence of p_1, p_2, ..., p_n, so p_l, p_{l+1}, ..., p_r contains the same number of values less than or equal to 4 and the same number of values greater than or equal to 4 as p_1, p_2, ..., p_n.\n    # Thus, p_l, p_{l+1}, ..., p_r can have the same number of values less than or equal to 4 and the same number of values greater than or equal to 4 as p_1, p_2, ..., p_n if and only if the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # For example, if p = [2, 4, 5, 3, 1], then the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p is equal to 2 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # The number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively if and only if l is less than or equal to the number of values less than or equal to 4 in p and r is greater than or equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to 2 and r is greater than or equal to 5 - 1 + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to 2 and r is greater than or equal to 5.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 6.\n\n    # Now, we need to determine the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n.\n    # Since p_1, p_2, ..., p_n is sorted, the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n is equal to the number of values less than or equal to m in p_1, p_2, ..., p_n and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to the number of values less than or equal to 4 in p_1, p_2, ..., p_n and r is greater than or equal to n - the number of values greater than or equal to 4 in p_1, p_2, ..., p_n + 1.\n    # Since p_1, p_2, ..., p_n is sorted, the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n is equal to the number of values less than or equal to m in p and the number of values greater than or equal to m in p respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to the number of values less than or equal to 4 in p and r is greater than or equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 6.\n\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively and the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively.\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if l is equal to the number of values less than or equal to m in p and r is equal to n - the number of values greater than or equal to m in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is equal to the number of values less than or equal to 4 in p and r is equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is equal to 2 and r is equal to 5.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 1.\n\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l,"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n    d = dict()\n    for i in range(n):\n        d[a[i]] = d.get(a[i], 0) + 1\n    s = 0\n    for i in range(1, n+1):\n        if i == m:\n            s += d[i]\n        elif i < m:\n            s += d[i] * (d.get(m-i, 0))\n        else:\n            s += d[i] * (d.get(m+i, 0))\n    print(s)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef get_input():\n    n, m = [int(x) for x in input().split()]\n    arr = [int(x) for x in input().split()]\n    return n, m, arr\n\n\ndef get_pairs_for_median(n, arr, m):\n    # count the number of times m is in arr\n    # count the number of times m is on the right side of m\n    # count the number of times m is on the left side of m\n    # count the number of times m is in the middle of m\n\n    # use the following formula:\n    # (n_right * n_left) + (n_left * n_middle) + (n_right * n_middle) + (n_middle * n_middle - 1) / 2\n\n    n_right = 0\n    n_left = 0\n    n_middle = 0\n\n    for num in arr:\n        if num == m:\n            n_middle += 1\n        elif num < m:\n            n_left += 1\n        else:\n            n_right += 1\n\n    # print(n_right, n_middle, n_left)\n    return (n_right * n_left) + (n_left * n_middle) + (n_right * n_middle) + (n_middle * (n_middle - 1) / 2)\n\n\ndef main():\n    n, m, arr = get_input()\n    print(int(get_pairs_for_median(n, arr, m)))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\ndef solve(n, m, p):\n    # Write your code here\n    # To print results to the standard output you can use print\n    # Example: print \"Hello world!\"\n    l = 0\n    r = 0\n    cnt = 0\n    for i in range(n):\n        l = i\n        for j in range(i, n):\n            r = j\n            if p[l] == p[r] and p[l] == m:\n                cnt = cnt + 1\n    print cnt\n\n# n, m = map(int, raw_input().split())\n# p = map(int, raw_input().split())\nn, m = 5, 4\np = [2, 4, 5, 3, 1]\nsolve(n, m, p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef median(arr, n, m):\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if arr[i:j+1] == sorted(arr[i:j+1]):\n                count += 1\n    return count\n\nif __name__ == \"__main__\":\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    print(median(arr, n, m))"
+    }
+  ],
+  "created": 1650137192,
+  "id": "cmpl-4xiLwpSuhJQ6RmoQ7ZmfcIR5SGI97",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:28:12.049017 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-16 19:28:12.049064 REASON stop
+2022-04-16 19:28:12.081640 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport random\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    perm = list(map(int, sys.stdin.readline().split()))\n    assert(len(perm) == n)\n    assert(set(perm) == set(range(1, n+1)))\n\n    cnt = 0\n    lefts = [0] * n\n    rights = [0] * n\n    for i in range(n):\n        if perm[i] < m:\n            lefts[i] = 1\n    for i in range(n-1, -1, -1):\n        if perm[i] > m:\n            rights[i] = 1\n        if i > 0:\n            lefts[i-1] += lefts[i]\n            rights[i-1] += rights[i]\n    for i in range(n):\n        cnt += lefts[i] * rights[i]\n    print(cnt)\n\nmain()"
+}
+2022-04-16 19:28:12.081840 REASON stop
+2022-04-16 19:28:12.082375 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Solution\n    \"\"\"\n    n, m = map(int, input().split())\n    p = input().split()\n    p = [int(i) for i in p]\n\n    # p[0], p[1], ... , p[n-1]\n    # p[i] means p_i\n\n    # p_[i] <= p_[i+1]\n    # p_[i] <= m\n    # p_[i] >= m\n\n    # count[i] is the number of p_j that satisfies p_j <= i\n    count = [0] * (n+1)\n    for i in p:\n        count[i] += 1\n\n    # for i in range(1, n + 1):\n    #     count[i] = count[i-1] + count[i]\n\n    for i in range(1, n + 1):\n        count[i] += count[i-1]\n\n    # count[i] is the number of p_j that satisfies p_j <= i\n\n    # count[i] - count[j] is the number of p_k that satisfies j < p_k <= i\n\n    if m > n:\n        return 0\n\n    result = 0\n\n    if n % 2 == 1:\n        # n is odd\n        for i in range(m, n + 1):\n            result += count[i] - count[m-1]\n    else:\n        # n is even\n        for i in range(m, n + 1):\n            result += count[i] - count[m-1]\n        result += count[m] - count[m-1]\n\n    print(result)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:28:12.082443 REASON stop
+2022-04-16 19:28:12.101707 3 {
+  "finish_reason": "length",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    permutation = list(map(int, input().split()))\n\n    # Create an array where the ith element is the number of values less than or equal to i\n    # For example, if permutation = [2, 4, 5, 3, 1], then nums_less_than = [0, 1, 2, 4, 5]\n    nums_less_than = [0] * (n + 1)\n    for i in range(1, n + 1):\n        nums_less_than[i] = nums_less_than[i - 1] + (permutation[i - 1] <= m)\n\n    # Create an array where the ith element is the number of values greater than or equal to i\n    # For example, if permutation = [2, 4, 5, 3, 1], then nums_greater_than = [5, 4, 3, 2, 1]\n    nums_greater_than = [0] * (n + 1)\n    for i in range(n, 0, -1):\n        nums_greater_than[i] = nums_greater_than[i + 1] + (permutation[i - 1] >= m)\n\n    # Let's count the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is m.\n    # Note that if p_l, p_{l+1}, ..., p_r is equal to p_1, p_2, ..., p_n, then the median is m.\n    # Since each integer from 1 to n occurs exactly once in p, we can determine if p_l, p_{l+1}, ..., p_r is equal to p_1, p_2, ..., p_n by comparing the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r\n    # For example, if p = [2, 4, 5, 3, 1], then p_2, p_3, p_4, p_5 = [4, 5, 3, 1] and the number of values less than or equal to 4 and the number of values greater than or equal to 4 is equal to 0 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is m is equal to the number of ways of choosing l and r such that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # For example, if p = [2, 4, 5, 3, 1], then the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p is equal to 2 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # p_l, p_{l+1}, ..., p_r is a subsequence of p_1, p_2, ..., p_n, so p_l, p_{l+1}, ..., p_r contains the same number of values less than or equal to 4 and the same number of values greater than or equal to 4 as p_1, p_2, ..., p_n.\n    # Thus, p_l, p_{l+1}, ..., p_r can have the same number of values less than or equal to 4 and the same number of values greater than or equal to 4 as p_1, p_2, ..., p_n if and only if the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # For example, if p = [2, 4, 5, 3, 1], then the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p is equal to 2 and 1 respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to 2 and 1 respectively.\n    # The number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively if and only if l is less than or equal to the number of values less than or equal to 4 in p and r is greater than or equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to 2 and r is greater than or equal to 5 - 1 + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to 2 and r is greater than or equal to 5.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 6.\n\n    # Now, we need to determine the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n.\n    # Since p_1, p_2, ..., p_n is sorted, the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n is equal to the number of values less than or equal to m in p_1, p_2, ..., p_n and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to the number of values less than or equal to 4 in p_1, p_2, ..., p_n and r is greater than or equal to n - the number of values greater than or equal to 4 in p_1, p_2, ..., p_n + 1.\n    # Since p_1, p_2, ..., p_n is sorted, the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n is equal to the number of values less than or equal to m in p and the number of values greater than or equal to m in p respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is less than or equal to the number of values less than or equal to 4 in p and r is greater than or equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 6.\n\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively and the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to 4 and the number of values greater than or equal to 4 in p_1, p_2, ..., p_n respectively.\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if l is equal to the number of values less than or equal to m in p and r is equal to n - the number of values greater than or equal to m in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is equal to the number of values less than or equal to 4 in p and r is equal to n - the number of values greater than or equal to 4 in p + 1.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to the number of ways of choosing l and r such that l is equal to 2 and r is equal to 5.\n    # Thus, the number of pairs (l, r) such that the median of p_l, p_{l+1}, ..., p_r is 4 is equal to 1.\n\n    # Note that the number of values less than or equal to m and the number of values greater than or equal to m in p_l, p_{l+1}, ..., p_r is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively if and only if the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_{l - 1} is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively and the number of values less than or equal to m and the number of values greater than or equal to m in p_{r + 1}, p_{r + 2}, ..., p_n is equal to the number of values less than or equal to m and the number of values greater than or equal to m in p_1, p_2, ..., p_n respectively.\n    # Thus, the number of pairs (l, r) such that the median of p_l,"
+}
+2022-04-16 19:28:12.101872 REASON length
+2022-04-16 19:28:12.101909 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n    d = dict()\n    for i in range(n):\n        d[a[i]] = d.get(a[i], 0) + 1\n    s = 0\n    for i in range(1, n+1):\n        if i == m:\n            s += d[i]\n        elif i < m:\n            s += d[i] * (d.get(m-i, 0))\n        else:\n            s += d[i] * (d.get(m+i, 0))\n    print(s)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:28:12.101949 REASON stop
+2022-04-16 19:28:12.113400 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef get_input():\n    n, m = [int(x) for x in input().split()]\n    arr = [int(x) for x in input().split()]\n    return n, m, arr\n\n\ndef get_pairs_for_median(n, arr, m):\n    # count the number of times m is in arr\n    # count the number of times m is on the right side of m\n    # count the number of times m is on the left side of m\n    # count the number of times m is in the middle of m\n\n    # use the following formula:\n    # (n_right * n_left) + (n_left * n_middle) + (n_right * n_middle) + (n_middle * n_middle - 1) / 2\n\n    n_right = 0\n    n_left = 0\n    n_middle = 0\n\n    for num in arr:\n        if num == m:\n            n_middle += 1\n        elif num < m:\n            n_left += 1\n        else:\n            n_right += 1\n\n    # print(n_right, n_middle, n_left)\n    return (n_right * n_left) + (n_left * n_middle) + (n_right * n_middle) + (n_middle * (n_middle - 1) / 2)\n\n\ndef main():\n    n, m, arr = get_input()\n    print(int(get_pairs_for_median(n, arr, m)))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:28:12.113539 REASON stop
+2022-04-16 19:28:12.114507 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\ndef solve(n, m, p):\n    # Write your code here\n    # To print results to the standard output you can use print\n    # Example: print \"Hello world!\"\n    l = 0\n    r = 0\n    cnt = 0\n    for i in range(n):\n        l = i\n        for j in range(i, n):\n            r = j\n            if p[l] == p[r] and p[l] == m:\n                cnt = cnt + 1\n    print cnt\n\n# n, m = map(int, raw_input().split())\n# p = map(int, raw_input().split())\nn, m = 5, 4\np = [2, 4, 5, 3, 1]\nsolve(n, m, p)"
+}
+2022-04-16 19:28:12.114631 REASON stop
+2022-04-16 19:28:12.115500 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef median(arr, n, m):\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if arr[i:j+1] == sorted(arr[i:j+1]):\n                count += 1\n    return count\n\nif __name__ == \"__main__\":\n    n, m = map(int, input().split())\n    arr = list(map(int, input().split()))\n    print(median(arr, n, m))"
+}
+2022-04-16 19:28:12.115629 REASON stop

@@ -1,0 +1,154 @@
+2022-04-16 20:10:45.796248 """
+You are given two arrays $a$ and $b$, both of length $n$. All elements of both arrays are from $0$ to $n-1$.
+
+You can reorder elements of the array $b$ (if you want, you may leave the order of elements as it is). After that, let array $c$ be the array of length $n$, the $i$-th element of this array is $c_i = (a_i + b_i) \% n$, where $x \% y$ is $x$ modulo $y$.
+
+Your task is to reorder elements of the array $b$ to obtain the lexicographically minimum possible array $c$.
+
+Array $x$ of length $n$ is lexicographically less than array $y$ of length $n$, if there exists such $i$ ($1 \le i \le n$), that $x_i < y_i$, and for any $j$ ($1 \le j < i$) $x_j = y_j$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$, $b$ and $c$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($0 \le a_i < n$), where $a_i$ is the $i$-th element of $a$.
+
+The third line of the input contains $n$ integers $b_1, b_2, \dots, b_n$ ($0 \le b_i < n$), where $b_i$ is the $i$-th element of $b$.
+
+
+-----Output-----
+
+Print the lexicographically minimum possible array $c$. Recall that your task is to reorder elements of the array $b$ and obtain the lexicographically minimum possible array $c$, where the $i$-th element of $c$ is $c_i = (a_i + b_i) \% n$.
+
+
+-----Examples-----
+Input
+4
+0 1 2 1
+3 2 1 1
+
+Output
+1 0 0 2 
+
+Input
+7
+2 5 1 5 3 4 3
+2 4 3 5 6 5 1
+
+Output
+0 0 0 1 0 2 4
+"""
+2022-04-16 20:10:45.796282 --------------------------
+2022-04-16 20:11:02.427350 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nb.sort()\nb.append(b[0])\nc = [0] * n\n\nfor i in range(n):\n    c[(a[i] + b[i]) % n] += 1\n\nfor i in range(1, n):\n    c[i] += c[i - 1]\n\nfor i in range(n):\n    if c[i] == 0:\n        print(i, end=' ')\n    elif c[i] == n:\n        print(i, end=' ')\n        break\n    else:\n        print(i, end=' ')\n        c[i] -= 1\n\nfor i in range(n):\n    if c[i] > 0:\n        print(i, end=' ')\n        c[i] -= 1\n\nprint()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nfor i in range(n):\n    a[i] %= n\n    b[i] %= n\n\nc = [0 for i in range(n)]\nfor i in range(n):\n    c[(a[i]+b[i])%n] += 1\n\nfor i in range(1, n):\n    c[i] += c[i-1]\n\nc[0] = 0\nfor i in range(1, n):\n    c[i] = max(c[i], c[i-1])\n\nans = [0 for i in range(n)]\nfor i in range(n):\n    ans[c[(a[i]+b[i])%n]] = i+1\n    c[(a[i]+b[i])%n] += 1\n\nfor i in range(n):\n    print(ans[i], end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n#n = int(input())\n#a = [int(x) for x in input().split()]\n#b = [int(x) for x in input().split()]\n\nn = 7\na = [2, 5, 1, 5, 3, 4, 3]\nb = [2, 4, 3, 5, 6, 5, 1]\n\nc = [0 for _ in range(n)]\n\nfor i in range(n):\n    c[a[i]] += b[i]\n\nd = [None for _ in range(n)]\nfor i in range(n):\n    d[i] = (c[i], i)\n\nd.sort()\n\nfor i in range(n):\n    c[i] = d[i][1]\n\nprint(' '.join([str(x) for x in c]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    c = [(a[i] + b[i]) % n for i in range(n)]\n    print(*c)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef solve(a, b):\n    n = len(a)\n    c = [0] * n\n    for i in range(n):\n        c[(a[i] + b[i]) % n] += 1\n    return c\n\ndef main():\n    _ = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    print(*solve(a, b))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int,input().split()))\n    b = list(map(int,input().split()))\n\n    a_dict = {a[i]:i for i in range(n)}\n    b_dict = {b[i]:i for i in range(n)}\n\n    sorted_a = list(sorted(a_dict.items()))\n    sorted_b = list(sorted(b_dict.items()))\n\n    c = [0 for i in range(n)]\n\n    for i in range(n):\n        c[sorted_a[i][1]] = sorted_b[i][0]\n\n    print(*c)\n    \n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na = sorted(a)\nb = sorted(b)\n\nfor i in range(n):\n    print((a[i] + b[i]) % n, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = [(a[i] + b[i]) % n for i in range(n)]\n    c_count = [0] * n\n    for i in c:\n        c_count[i] += 1\n    b_count = [0] * n\n    for i in b:\n        b_count[i] += 1\n    for i in range(n):\n        for j in range(b_count[i]):\n            if c_count[i] == 0:\n                print(i, end = ' ')\n                b_count[i] -= 1\n                c_count[i] += 1\n    for i in range(n):\n        for j in range(b_count[i]):\n            for k in range(n):\n                if c_count[k] == 0:\n                    print(k, end = ' ')\n                    c_count[k] += 1\n                    break\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650139845,
+  "id": "cmpl-4xj2jldFshb4CeN8mwRgLRusr2DIO",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:11:02.427755 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nb.sort()\nb.append(b[0])\nc = [0] * n\n\nfor i in range(n):\n    c[(a[i] + b[i]) % n] += 1\n\nfor i in range(1, n):\n    c[i] += c[i - 1]\n\nfor i in range(n):\n    if c[i] == 0:\n        print(i, end=' ')\n    elif c[i] == n:\n        print(i, end=' ')\n        break\n    else:\n        print(i, end=' ')\n        c[i] -= 1\n\nfor i in range(n):\n    if c[i] > 0:\n        print(i, end=' ')\n        c[i] -= 1\n\nprint()"
+}
+2022-04-16 20:11:02.427817 REASON stop
+2022-04-16 20:11:02.445409 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nfor i in range(n):\n    a[i] %= n\n    b[i] %= n\n\nc = [0 for i in range(n)]\nfor i in range(n):\n    c[(a[i]+b[i])%n] += 1\n\nfor i in range(1, n):\n    c[i] += c[i-1]\n\nc[0] = 0\nfor i in range(1, n):\n    c[i] = max(c[i], c[i-1])\n\nans = [0 for i in range(n)]\nfor i in range(n):\n    ans[c[(a[i]+b[i])%n]] = i+1\n    c[(a[i]+b[i])%n] += 1\n\nfor i in range(n):\n    print(ans[i], end=' ')"
+}
+2022-04-16 20:11:02.445626 REASON stop
+2022-04-16 20:11:02.446377 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n#n = int(input())\n#a = [int(x) for x in input().split()]\n#b = [int(x) for x in input().split()]\n\nn = 7\na = [2, 5, 1, 5, 3, 4, 3]\nb = [2, 4, 3, 5, 6, 5, 1]\n\nc = [0 for _ in range(n)]\n\nfor i in range(n):\n    c[a[i]] += b[i]\n\nd = [None for _ in range(n)]\nfor i in range(n):\n    d[i] = (c[i], i)\n\nd.sort()\n\nfor i in range(n):\n    c[i] = d[i][1]\n\nprint(' '.join([str(x) for x in c]))"
+}
+2022-04-16 20:11:02.446470 REASON stop
+2022-04-16 20:11:02.459396 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    c = [(a[i] + b[i]) % n for i in range(n)]\n    print(*c)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:11:02.459575 REASON stop
+2022-04-16 20:11:02.461121 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef solve(a, b):\n    n = len(a)\n    c = [0] * n\n    for i in range(n):\n        c[(a[i] + b[i]) % n] += 1\n    return c\n\ndef main():\n    _ = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    print(*solve(a, b))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:11:02.461283 REASON stop
+2022-04-16 20:11:02.476327 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int,input().split()))\n    b = list(map(int,input().split()))\n\n    a_dict = {a[i]:i for i in range(n)}\n    b_dict = {b[i]:i for i in range(n)}\n\n    sorted_a = list(sorted(a_dict.items()))\n    sorted_b = list(sorted(b_dict.items()))\n\n    c = [0 for i in range(n)]\n\n    for i in range(n):\n        c[sorted_a[i][1]] = sorted_b[i][0]\n\n    print(*c)\n    \n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:11:02.476457 REASON stop
+2022-04-16 20:11:02.490807 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na = sorted(a)\nb = sorted(b)\n\nfor i in range(n):\n    print((a[i] + b[i]) % n, end=' ')"
+}
+2022-04-16 20:11:02.490934 REASON stop
+2022-04-16 20:11:02.491748 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    c = [(a[i] + b[i]) % n for i in range(n)]\n    c_count = [0] * n\n    for i in c:\n        c_count[i] += 1\n    b_count = [0] * n\n    for i in b:\n        b_count[i] += 1\n    for i in range(n):\n        for j in range(b_count[i]):\n            if c_count[i] == 0:\n                print(i, end = ' ')\n                b_count[i] -= 1\n                c_count[i] += 1\n    for i in range(n):\n        for j in range(b_count[i]):\n            for k in range(n):\n                if c_count[k] == 0:\n                    print(k, end = ' ')\n                    c_count[k] += 1\n                    break\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:11:02.491855 REASON stop

@@ -1,0 +1,160 @@
+2022-04-16 19:08:48.666257 """
+Everybody knows of spaghetti sort. You decided to implement an analog sorting algorithm yourself, but as you survey your pantry you realize you're out of spaghetti! The only type of pasta you have is ravioli, but you are not going to let this stop you...
+
+You come up with the following algorithm. For each number in the array a_{i}, build a stack of a_{i} ravioli. The image shows the stack for a_{i} = 4.
+
+ [Image] 
+
+Arrange the stacks in one row in the order in which the corresponding numbers appear in the input array. Find the tallest one (if there are several stacks of maximal height, use the leftmost one). Remove it and add its height to the end of the output array. Shift the stacks in the row so that there is no gap between them. Repeat the procedure until all stacks have been removed.
+
+At first you are very happy with your algorithm, but as you try it on more inputs you realize that it doesn't always produce the right sorted array. Turns out when two stacks of ravioli are next to each other (at any step of the process) and differ in height by two or more, the top ravioli of the taller stack slides down on top of the lower stack.
+
+Given an input array, figure out whether the described algorithm will sort it correctly.
+
+
+-----Input-----
+
+The first line of input contains a single number n (1 ≤ n ≤ 10) — the size of the array.
+
+The second line of input contains n space-separated integers a_{i} (1 ≤ a_{i} ≤ 100) — the elements of the array.
+
+
+-----Output-----
+
+Output "YES" if the array can be sorted using the described procedure and "NO" if it can not.
+
+
+-----Examples-----
+Input
+3
+1 2 3
+
+Output
+YES
+
+Input
+3
+3 1 2
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the second example the array will change even before the tallest stack is chosen for the first time: ravioli from stack of height 3 will slide on the stack of height 1, and the algorithm will output an array {2, 2, 2}.
+"""
+2022-04-16 19:08:48.666273 --------------------------
+2022-04-16 19:09:06.274176 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read input\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # build stacks\n    ravioli = [[] for _ in range(n)]\n    for i in range(n):\n        ravioli[i] = [a[i]] * a[i]\n\n    # can it be sorted?\n    can_be_sorted = True\n    for i in range(n):\n        for j in range(i + 1, n):\n            if len(ravioli[i]) == 0 or len(ravioli[j]) == 0:\n                continue\n            height_diff = len(ravioli[j]) - len(ravioli[i])\n            if height_diff > 1:\n                can_be_sorted = False\n                break\n            if height_diff == 1:\n                ravioli[i].extend(ravioli[j])\n                ravioli[j] = []\n\n    # output\n    if can_be_sorted:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef ravioliSort(l):\n    ravioli = [[] for i in range(len(l))]\n    for i in range(len(ravioli)):\n        for j in range(l[i]):\n            ravioli[i].append(True)\n    sortedList = []\n    while len(ravioli) > 0:\n        tallest = max(ravioli)\n        sortedList.append(len(tallest))\n        ravioli.remove(tallest)\n        if len(ravioli) > 0:\n            for i in range(len(ravioli)):\n                if len(tallest) > len(ravioli[i]):\n                    ravioli[i].append(False)\n    return sortedList == l\n\ndef main():\n    l = [int(i) for i in input().split()]\n    print(\"YES\" if ravioliSort(l) else \"NO\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nfor i in range(n-1):\n    if a[i]>a[i+1]+1:\n        print('NO')\n        break\nelse:\n    print('YES')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nl = list(map(int, input().split()))\n\nfor i in range(n):\n    if (l[i] >= l[i+1]) and (l[i+1] >= l[i+2]) and (l[i+2] >= l[i+3]):\n        print(\"YES\")\n        break\n    elif (l[i] <= l[i+1]) and (l[i+1] <= l[i+2]) and (l[i+2] <= l[i+3]):\n        print(\"YES\")\n        break\n    elif (l[i] >= l[i+1]) and (l[i+1] <= l[i+2]) and (l[i+2] >= l[i+3]):\n        print(\"NO\")\n        break\n    elif (l[i] <= l[i+1]) and (l[i+1] >= l[i+2]) and (l[i+2] <= l[i+3]):\n        print(\"NO\")\n        break\n    else:\n        print(\"yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\ndef canBeSorted(arr):\n\tstack = []\n\tfor i in arr:\n\t\tstack.append(i)\n\t\tfor j in range(len(stack)-1):\n\t\t\tif stack[j] < stack[j+1]:\n\t\t\t\tstack[j], stack[j+1] = stack[j+1], stack[j]\n\treturn stack == sorted(arr)\n\nprint(\"YES\" if canBeSorted(a) else \"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a = [0] + a\n    stack = 0\n    for i in range(1, n+1):\n        stack += a[i]\n        if stack > i:\n            print(\"NO\")\n            return\n    print(\"YES\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.reverse()\n    ravioli = [0] * 101\n    for i in a:\n        ravioli[i] += 1\n\n    for i in range(100, 0, -1):\n        if ravioli[i] > 0:\n            ravioli[i-1] += ravioli[i] - 1\n            if ravioli[i-1] > ravioli[i]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650136128,
+  "id": "cmpl-4xi4msSM1qSh8u6CZtY88B5yKzkbk",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:09:06.274450 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read input\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # build stacks\n    ravioli = [[] for _ in range(n)]\n    for i in range(n):\n        ravioli[i] = [a[i]] * a[i]\n\n    # can it be sorted?\n    can_be_sorted = True\n    for i in range(n):\n        for j in range(i + 1, n):\n            if len(ravioli[i]) == 0 or len(ravioli[j]) == 0:\n                continue\n            height_diff = len(ravioli[j]) - len(ravioli[i])\n            if height_diff > 1:\n                can_be_sorted = False\n                break\n            if height_diff == 1:\n                ravioli[i].extend(ravioli[j])\n                ravioli[j] = []\n\n    # output\n    if can_be_sorted:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:09:06.274486 REASON stop
+2022-04-16 19:09:06.290231 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef ravioliSort(l):\n    ravioli = [[] for i in range(len(l))]\n    for i in range(len(ravioli)):\n        for j in range(l[i]):\n            ravioli[i].append(True)\n    sortedList = []\n    while len(ravioli) > 0:\n        tallest = max(ravioli)\n        sortedList.append(len(tallest))\n        ravioli.remove(tallest)\n        if len(ravioli) > 0:\n            for i in range(len(ravioli)):\n                if len(tallest) > len(ravioli[i]):\n                    ravioli[i].append(False)\n    return sortedList == l\n\ndef main():\n    l = [int(i) for i in input().split()]\n    print(\"YES\" if ravioliSort(l) else \"NO\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:09:06.290420 REASON stop
+2022-04-16 19:09:06.290853 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nfor i in range(n-1):\n    if a[i]>a[i+1]+1:\n        print('NO')\n        break\nelse:\n    print('YES')"
+}
+2022-04-16 19:09:06.290936 REASON stop
+2022-04-16 19:09:06.307532 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nl = list(map(int, input().split()))\n\nfor i in range(n):\n    if (l[i] >= l[i+1]) and (l[i+1] >= l[i+2]) and (l[i+2] >= l[i+3]):\n        print(\"YES\")\n        break\n    elif (l[i] <= l[i+1]) and (l[i+1] <= l[i+2]) and (l[i+2] <= l[i+3]):\n        print(\"YES\")\n        break\n    elif (l[i] >= l[i+1]) and (l[i+1] <= l[i+2]) and (l[i+2] >= l[i+3]):\n        print(\"NO\")\n        break\n    elif (l[i] <= l[i+1]) and (l[i+1] >= l[i+2]) and (l[i+2] <= l[i+3]):\n        print(\"NO\")\n        break\n    else:\n        print(\"yes\")"
+}
+2022-04-16 19:09:06.307642 REASON stop
+2022-04-16 19:09:06.317116 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\ndef canBeSorted(arr):\n\tstack = []\n\tfor i in arr:\n\t\tstack.append(i)\n\t\tfor j in range(len(stack)-1):\n\t\t\tif stack[j] < stack[j+1]:\n\t\t\t\tstack[j], stack[j+1] = stack[j+1], stack[j]\n\treturn stack == sorted(arr)\n\nprint(\"YES\" if canBeSorted(a) else \"NO\")"
+}
+2022-04-16 19:09:06.317225 REASON stop
+2022-04-16 19:09:06.318426 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a = [0] + a\n    stack = 0\n    for i in range(1, n+1):\n        stack += a[i]\n        if stack > i:\n            print(\"NO\")\n            return\n    print(\"YES\")\n\nmain()"
+}
+2022-04-16 19:09:06.318514 REASON stop
+2022-04-16 19:09:06.319351 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-16 19:09:06.319437 REASON stop
+2022-04-16 19:09:06.320171 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.reverse()\n    ravioli = [0] * 101\n    for i in a:\n        ravioli[i] += 1\n\n    for i in range(100, 0, -1):\n        if ravioli[i] > 0:\n            ravioli[i-1] += ravioli[i] - 1\n            if ravioli[i-1] > ravioli[i]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:09:06.320267 REASON stop
