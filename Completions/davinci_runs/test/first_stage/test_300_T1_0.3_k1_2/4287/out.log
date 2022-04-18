@@ -1,0 +1,102 @@
+2022-04-18 21:59:39.214989 """
+Polycarp lives on a coordinate line at the point $x = 0$. He goes to his friend that lives at the point $x = a$. Polycarp can move only from left to right, he can pass one unit of length each second.
+
+Now it's raining, so some segments of his way are in the rain. Formally, it's raining on $n$ non-intersecting segments, the $i$-th segment which is in the rain is represented as $[l_i, r_i]$ ($0 \le l_i < r_i \le a$).
+
+There are $m$ umbrellas lying on the line, the $i$-th umbrella is located at point $x_i$ ($0 \le x_i \le a$) and has weight $p_i$. When Polycarp begins his journey, he doesn't have any umbrellas.
+
+During his journey from $x = 0$ to $x = a$ Polycarp can pick up and throw away umbrellas. Polycarp picks up and throws down any umbrella instantly. He can carry any number of umbrellas at any moment of time. Because Polycarp doesn't want to get wet, he must carry at least one umbrella while he moves from $x$ to $x + 1$ if a segment $[x, x + 1]$ is in the rain (i.e. if there exists some $i$ such that $l_i \le x$ and $x + 1 \le r_i$).
+
+The condition above is the only requirement. For example, it is possible to go without any umbrellas to a point where some rain segment starts, pick up an umbrella at this point and move along with an umbrella. Polycarp can swap umbrellas while he is in the rain.
+
+Each unit of length passed increases Polycarp's fatigue by the sum of the weights of umbrellas he carries while moving.
+
+Can Polycarp make his way from point $x = 0$ to point $x = a$? If yes, find the minimum total fatigue after reaching $x = a$, if Polycarp picks up and throws away umbrellas optimally.
+
+
+-----Input-----
+
+The first line contains three integers $a$, $n$ and $m$ ($1 \le a, m \le 2000, 1 \le n \le \lceil\frac{a}{2}\rceil$) — the point at which Polycarp's friend lives, the number of the segments in the rain and the number of umbrellas.
+
+Each of the next $n$ lines contains two integers $l_i$ and $r_i$ ($0 \le l_i < r_i \le a$) — the borders of the $i$-th segment under rain. It is guaranteed that there is no pair of intersecting segments. In other words, for each pair of segments $i$ and $j$ either $r_i < l_j$ or $r_j < l_i$.
+
+Each of the next $m$ lines contains two integers $x_i$ and $p_i$ ($0 \le x_i \le a$, $1 \le p_i \le 10^5$) — the location and the weight of the $i$-th umbrella.
+
+
+-----Output-----
+
+Print "-1" (without quotes) if Polycarp can't make his way from point $x = 0$ to point $x = a$. Otherwise print one integer — the minimum total fatigue after reaching $x = a$, if Polycarp picks up and throws away umbrellas optimally.
+
+
+-----Examples-----
+Input
+10 2 4
+3 7
+8 10
+0 10
+3 4
+8 1
+1 2
+
+Output
+14
+
+Input
+10 1 1
+0 9
+0 5
+
+Output
+45
+
+Input
+10 1 1
+0 9
+1 5
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the only possible strategy is to take the fourth umbrella at the point $x = 1$, keep it till the point $x = 7$ (the total fatigue at $x = 7$ will be equal to $12$), throw it away, move on from $x = 7$ to $x = 8$ without an umbrella, take the third umbrella at $x = 8$ and keep it till the end (the total fatigue at $x = 10$ will be equal to $14$). 
+
+In the second example the only possible strategy is to take the first umbrella, move with it till the point $x = 9$, throw it away and proceed without an umbrella till the end.
+"""
+2022-04-18 21:59:39.215020 --------------------------
+2022-04-18 22:00:10.300679 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\na, n, m = map(int, input().split())\n\nl = [0] * n\nr = [0] * n\n\nfor i in range(n):\n    l[i], r[i] = map(int, input().split())\n\nx = [0] * m\np = [0] * m\n\nfor i in range(m):\n    x[i], p[i] = map(int, input().split())\n\ndp = [0] * (a + 1)\n\nfor i in range(a):\n    dp[i + 1] = dp[i] + 1\n    for j in range(m):\n        if x[j] <= i:\n            dp[i + 1] = min(dp[i + 1], dp[i] + p[j])\n\nfor i in range(n):\n    if dp[l[i]] == dp[r[i]]:\n        print(-1)\n        exit()\n\nprint(dp[a])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(a, n, m, rain, umbrellas):\n    umbrellas = sorted(umbrellas)\n    r = [0] * (a + 1)\n    for l, ri in rain:\n        r[l] += 1\n        r[ri] -= 1\n    for i in range(1, a + 1):\n        r[i] += r[i - 1]\n    dp = [0] * (a + 1)\n    for i in range(1, a + 1):\n        dp[i] = dp[i - 1] + r[i - 1]\n    for i in range(m):\n        x, p = umbrellas[i]\n        dp[x] = min(dp[x], dp[x - 1] + p)\n    for i in range(a - 1, -1, -1):\n        dp[i] = min(dp[i], dp[i + 1])\n    if dp[a] == sys.maxsize:\n        return -1\n    return dp[a]\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = [tuple(map(int, input().split())) for _ in range(n)]\n    umbrellas = [tuple(map(int, input().split())) for _ in range(m)]\n    print(solve(a, n, m, rain, umbrellas))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650319179,
+  "id": "cmpl-4yThDLsrLagIHPA0LGM3EeO7QAjlr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 22:00:10.300970 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\na, n, m = map(int, input().split())\n\nl = [0] * n\nr = [0] * n\n\nfor i in range(n):\n    l[i], r[i] = map(int, input().split())\n\nx = [0] * m\np = [0] * m\n\nfor i in range(m):\n    x[i], p[i] = map(int, input().split())\n\ndp = [0] * (a + 1)\n\nfor i in range(a):\n    dp[i + 1] = dp[i] + 1\n    for j in range(m):\n        if x[j] <= i:\n            dp[i + 1] = min(dp[i + 1], dp[i] + p[j])\n\nfor i in range(n):\n    if dp[l[i]] == dp[r[i]]:\n        print(-1)\n        exit()\n\nprint(dp[a])"
+}
+2022-04-18 22:00:10.301009 REASON stop
+2022-04-18 22:00:10.326828 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(a, n, m, rain, umbrellas):\n    umbrellas = sorted(umbrellas)\n    r = [0] * (a + 1)\n    for l, ri in rain:\n        r[l] += 1\n        r[ri] -= 1\n    for i in range(1, a + 1):\n        r[i] += r[i - 1]\n    dp = [0] * (a + 1)\n    for i in range(1, a + 1):\n        dp[i] = dp[i - 1] + r[i - 1]\n    for i in range(m):\n        x, p = umbrellas[i]\n        dp[x] = min(dp[x], dp[x - 1] + p)\n    for i in range(a - 1, -1, -1):\n        dp[i] = min(dp[i], dp[i + 1])\n    if dp[a] == sys.maxsize:\n        return -1\n    return dp[a]\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = [tuple(map(int, input().split())) for _ in range(n)]\n    umbrellas = [tuple(map(int, input().split())) for _ in range(m)]\n    print(solve(a, n, m, rain, umbrellas))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 22:00:10.326970 REASON stop
