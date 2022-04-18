@@ -1,0 +1,106 @@
+2022-04-18 04:07:55.523390 """
+You are given an undirected graph consisting of $n$ vertices. A number is written on each vertex; the number on vertex $i$ is $a_i$. Initially there are no edges in the graph.
+
+You may add some edges to this graph, but you have to pay for them. The cost of adding an edge between vertices $x$ and $y$ is $a_x + a_y$ coins. There are also $m$ special offers, each of them is denoted by three numbers $x$, $y$ and $w$, and means that you can add an edge connecting vertices $x$ and $y$ and pay $w$ coins for it. You don't have to use special offers: if there is a pair of vertices $x$ and $y$ that has a special offer associated with it, you still may connect these two vertices paying $a_x + a_y$ coins for it.
+
+What is the minimum number of coins you have to spend to make the graph connected? Recall that a graph is connected if it's possible to get from any vertex to any other vertex using only the edges belonging to this graph.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $0 \le m \le 2 \cdot 10^5$) — the number of vertices in the graph and the number of special offers, respectively.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^{12}$) — the numbers written on the vertices.
+
+Then $m$ lines follow, each containing three integers $x$, $y$ and $w$ ($1 \le x, y \le n$, $1 \le w \le 10^{12}$, $x \ne y$) denoting a special offer: you may add an edge connecting vertex $x$ and vertex $y$, and this edge will cost $w$ coins.
+
+
+-----Output-----
+
+Print one integer — the minimum number of coins you have to pay to make the graph connected.
+
+
+-----Examples-----
+Input
+3 2
+1 3 3
+2 3 5
+2 1 1
+
+Output
+5
+
+Input
+4 0
+1 3 3 7
+
+Output
+16
+
+Input
+5 4
+1 2 3 4 5
+1 2 8
+1 3 10
+1 4 7
+1 5 15
+
+Output
+18
+
+
+
+-----Note-----
+
+In the first example it is possible to connect $1$ to $2$ using special offer $2$, and then $1$ to $3$ without using any offers.
+
+In next two examples the optimal answer may be achieved without using special offers.
+"""
+2022-04-18 04:07:55.523409 --------------------------
+2022-04-18 04:08:40.715682 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.edges = [[] for _ in range(n)]\n        self.cost = [[float('inf') for _ in range(n)] for _ in range(n)]\n        self.costs = []\n        self.is_edge = [[False for _ in range(n)] for _ in range(n)]\n\n    def add_edge(self, u, v, w):\n        self.edges[u].append((v, w))\n        self.cost[u][v] = w\n        self.cost[v][u] = w\n        self.is_edge[u][v] = True\n        self.is_edge[v][u] = True\n        self.costs.append(w)\n\n    def get_minimum_spanning_tree(self):\n        visited = [False] * self.n\n        min_heap = []\n        heapq.heappush(min_heap, (0, 0))\n        total_cost = 0\n        while min_heap:\n            weight, u = heapq.heappop(min_heap)\n            if visited[u]:\n                continue\n            visited[u] = True\n            total_cost += weight\n            for v, w in self.edges[u]:\n                if not visited[v]:\n                    heapq.heappush(min_heap, (w, v))\n        return total_cost\n\n    def get_minimum_cost(self):\n        total_cost = self.get_minimum_spanning_tree()\n        min_cost = min(self.costs)\n        return total_cost + (self.n - 1) * min_cost\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    graph = Graph(n)\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        x -= 1\n        y -= 1\n        graph.add_edge(x, y, w)\n    for i in range(n):\n        for j in range(n):\n            if not graph.is_edge[i][j]:\n                graph.add_edge(i, j, a[i] + a[j])\n    print(graph.get_minimum_cost())\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef min_cost(n, m, a, offers):\n    \"\"\"\n    >>> min_cost(3, 2, [1, 3, 3], [(2, 3, 5), (2, 1, 1)])\n    5\n    >>> min_cost(4, 0, [1, 3, 3, 7], [])\n    16\n    >>> min_cost(5, 4, [1, 2, 3, 4, 5], [(1, 2, 8), (1, 3, 10), (1, 4, 7), (1, 5, 15)])\n    18\n    \"\"\"\n    offers = sorted(offers, key=lambda x: x[2])\n    tree = [[i] for i in range(n)]\n    res = 0\n    for u, v, w in offers:\n        for i in range(n):\n            if u in tree[i]:\n                u_idx = i\n            if v in tree[i]:\n                v_idx = i\n        if u_idx != v_idx:\n            res += w\n            tree[u_idx] = tree[u_idx] + tree[v_idx]\n            tree.remove(tree[v_idx])\n    for i in range(n):\n        if len(tree[i]) == 1:\n            res += a[i]\n    return res\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for _ in range(m):\n        offers.append(tuple(map(int, input().split())))\n    print(min_cost(n, m, a, offers))"
+    }
+  ],
+  "created": 1650254875,
+  "id": "cmpl-4yCy33UmfBkf7EqqilUUWunbBYbNF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 04:08:40.715908 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 04:08:40.715944 REASON stop
+2022-04-18 04:08:40.801480 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.edges = [[] for _ in range(n)]\n        self.cost = [[float('inf') for _ in range(n)] for _ in range(n)]\n        self.costs = []\n        self.is_edge = [[False for _ in range(n)] for _ in range(n)]\n\n    def add_edge(self, u, v, w):\n        self.edges[u].append((v, w))\n        self.cost[u][v] = w\n        self.cost[v][u] = w\n        self.is_edge[u][v] = True\n        self.is_edge[v][u] = True\n        self.costs.append(w)\n\n    def get_minimum_spanning_tree(self):\n        visited = [False] * self.n\n        min_heap = []\n        heapq.heappush(min_heap, (0, 0))\n        total_cost = 0\n        while min_heap:\n            weight, u = heapq.heappop(min_heap)\n            if visited[u]:\n                continue\n            visited[u] = True\n            total_cost += weight\n            for v, w in self.edges[u]:\n                if not visited[v]:\n                    heapq.heappush(min_heap, (w, v))\n        return total_cost\n\n    def get_minimum_cost(self):\n        total_cost = self.get_minimum_spanning_tree()\n        min_cost = min(self.costs)\n        return total_cost + (self.n - 1) * min_cost\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    graph = Graph(n)\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        x -= 1\n        y -= 1\n        graph.add_edge(x, y, w)\n    for i in range(n):\n        for j in range(n):\n            if not graph.is_edge[i][j]:\n                graph.add_edge(i, j, a[i] + a[j])\n    print(graph.get_minimum_cost())\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 04:08:40.801568 REASON stop
+2022-04-18 04:08:40.802035 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef min_cost(n, m, a, offers):\n    \"\"\"\n    >>> min_cost(3, 2, [1, 3, 3], [(2, 3, 5), (2, 1, 1)])\n    5\n    >>> min_cost(4, 0, [1, 3, 3, 7], [])\n    16\n    >>> min_cost(5, 4, [1, 2, 3, 4, 5], [(1, 2, 8), (1, 3, 10), (1, 4, 7), (1, 5, 15)])\n    18\n    \"\"\"\n    offers = sorted(offers, key=lambda x: x[2])\n    tree = [[i] for i in range(n)]\n    res = 0\n    for u, v, w in offers:\n        for i in range(n):\n            if u in tree[i]:\n                u_idx = i\n            if v in tree[i]:\n                v_idx = i\n        if u_idx != v_idx:\n            res += w\n            tree[u_idx] = tree[u_idx] + tree[v_idx]\n            tree.remove(tree[v_idx])\n    for i in range(n):\n        if len(tree[i]) == 1:\n            res += a[i]\n    return res\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for _ in range(m):\n        offers.append(tuple(map(int, input().split())))\n    print(min_cost(n, m, a, offers))"
+}
+2022-04-18 04:08:40.802118 REASON stop
