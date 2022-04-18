@@ -1,0 +1,3 @@
+
+
+print(input().count(input()))

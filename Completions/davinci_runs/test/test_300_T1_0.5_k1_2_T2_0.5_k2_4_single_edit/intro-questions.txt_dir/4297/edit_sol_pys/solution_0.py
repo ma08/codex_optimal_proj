@@ -1,0 +1,13 @@
+import sys
+
+def main():
+  n = int(sys.stdin.readline())
+  num = 2*n
+  while True:
+    if num % n == 0:
+      print(num)
+      break
+    num += 2*n
+
+if __name__ == '__main__':
+  main()

@@ -1,0 +1,72 @@
+2022-04-09 18:23:52.337215 """
+We have N switches with "on" and "off" state, and M bulbs. The switches are numbered 1 to N, and the bulbs are numbered 1 to M.
+Bulb i is connected to k_i switches: Switch s_{i1}, s_{i2}, ..., and s_{ik_i}. It is lighted when the number of switches that are "on" among these switches is congruent to p_i modulo 2.
+How many combinations of "on" and "off" states of the switches light all the bulbs?
+
+-----Constraints-----
+ - 1 \leq N, M \leq 10
+ - 1 \leq k_i \leq N
+ - 1 \leq s_{ij} \leq N
+ - s_{ia} \neq s_{ib} (a \neq b)
+ - p_i is 0 or 1.
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+k_1 s_{11} s_{12} ... s_{1k_1}
+:
+k_M s_{M1} s_{M2} ... s_{Mk_M}
+p_1 p_2 ... p_M
+
+-----Output-----
+Print the number of combinations of "on" and "off" states of the switches that light all the bulbs.
+
+-----Sample Input-----
+2 2
+2 1 2
+1 2
+0 1
+
+-----Sample Output-----
+1
+
+ - Bulb 1 is lighted when there is an even number of switches that are "on" among the following: Switch 1 and 2.
+ - Bulb 2 is lighted when there is an odd number of switches that are "on" among the following: Switch 2.
+There are four possible combinations of states of (Switch 1, Switch 2): (on, on), (on, off), (off, on) and (off, off). Among them, only (on, on) lights all the bulbs, so we should print 1.
+"""
+2022-04-09 18:23:52.337270 --------------------------
+2022-04-09 18:24:13.365022 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    bulbs = [list(map(int, input().split())) for _ in range(m)]\n    states = list(map(int, input().split()))\n    switches = [[False] * n for _ in range(m)]\n    for i in range(m):\n        for j in range(1, bulbs[i][0] + 1):\n            switches[i][bulbs[i][j] - 1] = True\n    # print(switches)\n    cnt = 0\n    for i in range(2 ** n):\n        flag = True\n        for j in range(m):\n            c = 0\n            for k in range(n):\n                if switches[j][k] and ((i >> k) & 1):\n                    c += 1\n            if c % 2 != states[j]:\n                flag = False\n                break\n        if flag:\n            cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nk_list = []\ns_list = []\nfor i in range(M):\n    k_list.append(int(sys.stdin.readline().split()[0]))\n    s_list.append(list(map(int, sys.stdin.readline().split())))\n\np_list = list(map(int, sys.stdin.readline().split()))\n\n# print(N, M)\n# print(k_list)\n# print(s_list)\n# print(p_list)\n\ndef make_light(state):\n    # print(state)\n    for i in range(M):\n        odd_even = 0\n        for j in range(k_list[i]):\n            if state[s_list[i][j]-1] == 1:\n                odd_even += 1\n        if odd_even % 2 != p_list[i]:\n            return False\n    return True\n\ndef make_state(state, n):\n    if n == N:\n        if make_light(state):\n            return 1\n        else:\n            return 0\n    else:\n        return make_state(state + [1], n+1) + make_state(state + [0], n+1)\n\nprint(make_state([], 0))"
+    }
+  ],
+  "created": 1649543032,
+  "id": "cmpl-4vDmiAcp8jAGatxrxGlIyKAzn49oc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:24:13.365416 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    bulbs = [list(map(int, input().split())) for _ in range(m)]\n    states = list(map(int, input().split()))\n    switches = [[False] * n for _ in range(m)]\n    for i in range(m):\n        for j in range(1, bulbs[i][0] + 1):\n            switches[i][bulbs[i][j] - 1] = True\n    # print(switches)\n    cnt = 0\n    for i in range(2 ** n):\n        flag = True\n        for j in range(m):\n            c = 0\n            for k in range(n):\n                if switches[j][k] and ((i >> k) & 1):\n                    c += 1\n            if c % 2 != states[j]:\n                flag = False\n                break\n        if flag:\n            cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 18:24:13.365530 REASON stop
+2022-04-09 18:24:13.367675 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nk_list = []\ns_list = []\nfor i in range(M):\n    k_list.append(int(sys.stdin.readline().split()[0]))\n    s_list.append(list(map(int, sys.stdin.readline().split())))\n\np_list = list(map(int, sys.stdin.readline().split()))\n\n# print(N, M)\n# print(k_list)\n# print(s_list)\n# print(p_list)\n\ndef make_light(state):\n    # print(state)\n    for i in range(M):\n        odd_even = 0\n        for j in range(k_list[i]):\n            if state[s_list[i][j]-1] == 1:\n                odd_even += 1\n        if odd_even % 2 != p_list[i]:\n            return False\n    return True\n\ndef make_state(state, n):\n    if n == N:\n        if make_light(state):\n            return 1\n        else:\n            return 0\n    else:\n        return make_state(state + [1], n+1) + make_state(state + [0], n+1)\n\nprint(make_state([], 0))"
+}
+2022-04-09 18:24:13.367832 REASON stop
