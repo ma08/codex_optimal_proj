@@ -1,0 +1,75 @@
+2022-04-09 20:16:37.834793 """
+Authors have come up with the string $s$ consisting of $n$ lowercase Latin letters.
+
+You are given two permutations of its indices (not necessary equal) $p$ and $q$ (both of length $n$). Recall that the permutation is the array of length $n$ which contains each integer from $1$ to $n$ exactly once.
+
+For all $i$ from $1$ to $n-1$ the following properties hold: $s[p_i] \le s[p_{i + 1}]$ and $s[q_i] \le s[q_{i + 1}]$. It means that if you will write down all characters of $s$ in order of permutation indices, the resulting string will be sorted in the non-decreasing order.
+
+Your task is to restore any such string $s$ of length $n$ consisting of at least $k$ distinct lowercase Latin letters which suits the given permutations.
+
+If there are multiple answers, you can print any of them.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5, 1 \le k \le 26$) — the length of the string and the number of distinct characters required.
+
+The second line of the input contains $n$ integers $p_1, p_2, \dots, p_n$ ($1 \le p_i \le n$, all $p_i$ are distinct integers from $1$ to $n$) — the permutation $p$.
+
+The third line of the input contains $n$ integers $q_1, q_2, \dots, q_n$ ($1 \le q_i \le n$, all $q_i$ are distinct integers from $1$ to $n$) — the permutation $q$.
+
+
+-----Output-----
+
+If it is impossible to find the suitable string, print "NO" on the first line.
+
+Otherwise print "YES" on the first line and string $s$ on the second line. It should consist of $n$ lowercase Latin letters, contain at least $k$ distinct characters and suit the given permutations.
+
+If there are multiple answers, you can print any of them.
+
+
+-----Example-----
+Input
+3 2
+1 2 3
+1 3 2
+
+Output
+YES
+abb
+"""
+2022-04-09 20:16:37.834850 --------------------------
+2022-04-09 20:16:57.673036 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    p = list(map(int, input().split()))\n    q = list(map(int, input().split()))\n    p = [i - 1 for i in p]\n    q = [i - 1 for i in q]\n    s = [None for i in range(n)]\n    for i in range(k):\n        s[p[i]] = chr(ord(\"a\") + i)\n        s[q[i]] = chr(ord(\"a\") + i)\n    for i in range(k, n):\n        s[p[i]] = s[q[i]] = s[p[i - 1]]\n    print(\"YES\")\n    print(\"\".join(s))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = [int(x) for x in input().split()]\np = [int(x) for x in input().split()]\nq = [int(x) for x in input().split()]\n\nif k == 1:\n    print(\"YES\")\n    print(n * \"a\")\n    exit(0)\n\nletters = list(map(chr, range(97, 97 + k)))\n\ns = [None] * n\ns[p[0] - 1] = letters[0]\ns[q[0] - 1] = letters[1]\n\nfor i in range(1, n):\n    if s[p[i] - 1] is None:\n        s[p[i] - 1] = s[p[i - 1] - 1]\n    if s[q[i] - 1] is None:\n        s[q[i] - 1] = s[q[i - 1] - 1]\n    if s[p[i] - 1] == s[q[i] - 1]:\n        print(\"NO\")\n        exit(0)\n\nfor i in range(k, n):\n    s[p[i] - 1] = s[q[i] - 1] = letters[i % k]\n\nprint(\"YES\")\nprint(\"\".join(s))"
+    }
+  ],
+  "created": 1649549798,
+  "id": "cmpl-4vFXqyRea2vOCNELv8IjO5ZVAembg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:16:57.673230 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    p = list(map(int, input().split()))\n    q = list(map(int, input().split()))\n    p = [i - 1 for i in p]\n    q = [i - 1 for i in q]\n    s = [None for i in range(n)]\n    for i in range(k):\n        s[p[i]] = chr(ord(\"a\") + i)\n        s[q[i]] = chr(ord(\"a\") + i)\n    for i in range(k, n):\n        s[p[i]] = s[q[i]] = s[p[i - 1]]\n    print(\"YES\")\n    print(\"\".join(s))\n\nmain()"
+}
+2022-04-09 20:16:57.673291 REASON stop
+2022-04-09 20:16:57.684844 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = [int(x) for x in input().split()]\np = [int(x) for x in input().split()]\nq = [int(x) for x in input().split()]\n\nif k == 1:\n    print(\"YES\")\n    print(n * \"a\")\n    exit(0)\n\nletters = list(map(chr, range(97, 97 + k)))\n\ns = [None] * n\ns[p[0] - 1] = letters[0]\ns[q[0] - 1] = letters[1]\n\nfor i in range(1, n):\n    if s[p[i] - 1] is None:\n        s[p[i] - 1] = s[p[i - 1] - 1]\n    if s[q[i] - 1] is None:\n        s[q[i] - 1] = s[q[i - 1] - 1]\n    if s[p[i] - 1] == s[q[i] - 1]:\n        print(\"NO\")\n        exit(0)\n\nfor i in range(k, n):\n    s[p[i] - 1] = s[q[i] - 1] = letters[i % k]\n\nprint(\"YES\")\nprint(\"\".join(s))"
+}
+2022-04-09 20:16:57.684927 REASON stop

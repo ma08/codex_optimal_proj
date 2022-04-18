@@ -1,0 +1,126 @@
+2022-04-13 20:47:25.258651 """
+You are given an array $a$ consisting of $n$ integers. In one move, you can jump from the position $i$ to the position $i - a_i$ (if $1 \le i - a_i$) or to the position $i + a_i$ (if $i + a_i \le n$).
+
+For each position $i$ from $1$ to $n$ you want to know the minimum the number of moves required to reach any position $j$ such that $a_j$ has the opposite parity from $a_i$ (i.e. if $a_i$ is odd then $a_j$ has to be even and vice versa).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le n$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print $n$ integers $d_1, d_2, \dots, d_n$, where $d_i$ is the minimum the number of moves required to reach any position $j$ such that $a_j$ has the opposite parity from $a_i$ (i.e. if $a_i$ is odd then $a_j$ has to be even and vice versa) or -1 if it is impossible to reach such a position.
+
+
+-----Example-----
+Input
+10
+4 5 7 6 7 5 4 4 6 4
+
+Output
+1 1 1 2 -1 1 1 3 1 1
+"""
+2022-04-13 20:47:25.258679 --------------------------
+2022-04-13 20:47:52.639804 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\n\nsys.setrecursionlimit(10**7)\ninput = sys.stdin.readline\n\nn = int(input())\na = list(map(int, input().split()))\n\n# Parity of i-th element\nparity = [0] * n\n\n# Index of the elements with the same parity\nparity_idx = defaultdict(list)\n\nfor i in range(n):\n    parity[i] = a[i] % 2\n    parity_idx[parity[i]].append(i)\n\n# Graph\ngraph = []\nfor i in range(n):\n    graph.append([])\n    for j in range(n):\n        if i == j:\n            continue\n        if abs(i - j) == a[i]:\n            graph[i].append(j)\n\n# Shortest path from i to j\ndef shortest_path(graph, i, j):\n    # Visited nodes\n    visited = set()\n    # Queue\n    queue = []\n    # Distances from i to every node\n    dist = [math.inf] * n\n    # Init\n    dist[i] = 0\n    queue.append(i)\n    visited.add(i)\n    # BFS\n    while queue:\n        curr = queue.pop(0)\n        for adj in graph[curr]:\n            if adj not in visited:\n                visited.add(adj)\n                queue.append(adj)\n                dist[adj] = dist[curr] + 1\n    return dist[j]\n\n# Solve\nans = [0] * n\nfor i in range(n):\n    # Find the closest element with the opposite parity\n    min_dist = math.inf\n    for j in parity_idx[1 - parity[i]]:\n        min_dist = min(min_dist, shortest_path(graph, i, j))\n    if min_dist == math.inf:\n        ans[i] = -1\n    else:\n        ans[i] = min_dist\nprint(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    visited = [False]*n\n    d = [-1]*n\n    for i in range(n):\n        if visited[i]:\n            continue\n        visited[i] = True\n        q = [i]\n        while q:\n            pos = q.pop(0)\n            if a[pos] % 2 == a[i] % 2:\n                d[i] = min(d[i], d[pos]) if d[i] != -1 else d[pos]\n            else:\n                d[i] = min(d[i], d[pos]+1) if d[i] != -1 else d[pos]+1\n            if pos - a[pos] >= 0 and not visited[pos-a[pos]]:\n                q.append(pos-a[pos])\n                visited[pos - a[pos]] = True\n            if pos + a[pos] < n and not visited[pos+a[pos]]:\n                q.append(pos+a[pos])\n                visited[pos + a[pos]] = True\n    print(' '.join(map(str, d)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    d = [0]*n\n    visited = [False]*n\n    queue = []\n\n    for i in range(n):\n        if a[i] % 2 != 0:\n            queue.append(i)\n            visited[i] = True\n\n    while len(queue) > 0:\n        i = queue.pop(0)\n        if i - a[i] >= 0 and not visited[i - a[i]]:\n            d[i - a[i]] = d[i] + 1\n            visited[i - a[i]] = True\n            queue.append(i - a[i])\n        if i + a[i] < n and not visited[i + a[i]]:\n            d[i + a[i]] = d[i] + 1\n            visited[i + a[i]] = True\n            queue.append(i + a[i])\n\n    for i in range(n):\n        if a[i] % 2 == 0 and not visited[i]:\n            d[i] = -1\n\n    print(\" \".join(map(str, d)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.graph = [[] for i in range(n)]\n\n    def add_edge(self, u, v):\n        self.graph[u].append(v)\n\n    def BFS(self, s):\n        visited = [False] * self.n\n        queue = []\n\n        queue.append(s)\n        visited[s] = True\n\n        while queue:\n            s = queue.pop(0)\n            for i in self.graph[s]:\n                if visited[i] == False:\n                    queue.append(i)\n                    visited[i] = True\n\n        return visited\n\nn = int(input())\na = list(map(int, input().split()))\ng = Graph(n)\nfor i in range(n):\n    if i - a[i] > 0:\n        g.add_edge(i, i - a[i])\n    if i + a[i] < n:\n        g.add_edge(i, i + a[i])\n\nfor i in range(n):\n    if a[i] % 2 == 1:\n        visited = g.BFS(i)\n        for j in range(n):\n            if a[j] % 2 == 0 and visited[j] == True:\n                print(1, end=' ')\n                break\n        else:\n            print(-1, end=' ')\n    else:\n        visited = g.BFS(i)\n        for j in range(n):\n            if a[j] % 2 == 1 and visited[j] == True:\n                print(1, end=' ')\n                break\n        else:\n            print(-1, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\nimport sys\nfrom collections import deque\n\ndef main():\n    # parse input\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # build graph\n    graph = {}\n    for i in range(n):\n        graph[i+1] = []\n        if i+1-a[i] >= 1:\n            graph[i+1] += [i+1-a[i]]\n        if i+1+a[i] <= n:\n            graph[i+1] += [i+1+a[i]]\n    \n    # find shortest path to reach opposite parity\n    d = [0]*(n+1)\n    for i in range(1, n+1):\n        # bfs\n        q = deque([i])\n        visited = [False]*(n+1)\n        visited[i] = True\n        found = False\n        while len(q) > 0:\n            curr = q.popleft()\n            for node in graph[curr]:\n                if visited[node]: continue\n                visited[node] = True\n                if a[node-1] % 2 != a[i-1] % 2:\n                    found = True\n                    break\n                q.append(node)\n            if found: break\n        if found:\n            d[i] = d[curr] + 1\n        else:\n            d[i] = -1\n    # print output\n    print(' '.join([str(x) for x in d[1:]]))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nfrom collections import deque\n\nn = int(input())\na = list(map(int, input().split()))\n\n# build graph\ngraph = [[] for _ in range(n+1)]\nfor i in range(1, n+1):\n    if i - a[i-1] >= 1:\n        graph[i].append(i - a[i-1])\n    if i + a[i-1] <= n:\n        graph[i].append(i + a[i-1])\n\n# BFS\nbfs = deque()\nvisited = [False] * (n+1)\n\nfor i in range(1, n+1):\n    visited = [False] * (n+1)\n    bfs.append((i, 0))\n    while bfs:\n        v, d = bfs.popleft()\n        if visited[v]:\n            continue\n        visited[v] = True\n        if a[v-1] % 2 != a[i-1] % 2:\n            print(d)\n            break\n        for w in graph[v]:\n            bfs.append((w, d+1))\n    else:\n        print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    d = [-1 for i in range(n)]\n    for i in range(n):\n        if i + a[i] < n:\n            if a[i + a[i]] % 2 != a[i] % 2:\n                d[i] = 1\n        if i - a[i] >= 0:\n            if a[i - a[i]] % 2 != a[i] % 2:\n                d[i] = 1\n    for i in range(n):\n        if d[i] == -1:\n            continue\n        if i + a[i] < n and d[i + a[i]] == -1:\n            d[i + a[i]] = d[i] + 1\n        if i - a[i] >= 0 and d[i - a[i]] == -1:\n            d[i - a[i]] = d[i] + 1\n    print(*d)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649882845,
+  "id": "cmpl-4weBZqj2IaKTD5Y7rVam75pYfIlRt",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:47:52.640177 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\n\nsys.setrecursionlimit(10**7)\ninput = sys.stdin.readline\n\nn = int(input())\na = list(map(int, input().split()))\n\n# Parity of i-th element\nparity = [0] * n\n\n# Index of the elements with the same parity\nparity_idx = defaultdict(list)\n\nfor i in range(n):\n    parity[i] = a[i] % 2\n    parity_idx[parity[i]].append(i)\n\n# Graph\ngraph = []\nfor i in range(n):\n    graph.append([])\n    for j in range(n):\n        if i == j:\n            continue\n        if abs(i - j) == a[i]:\n            graph[i].append(j)\n\n# Shortest path from i to j\ndef shortest_path(graph, i, j):\n    # Visited nodes\n    visited = set()\n    # Queue\n    queue = []\n    # Distances from i to every node\n    dist = [math.inf] * n\n    # Init\n    dist[i] = 0\n    queue.append(i)\n    visited.add(i)\n    # BFS\n    while queue:\n        curr = queue.pop(0)\n        for adj in graph[curr]:\n            if adj not in visited:\n                visited.add(adj)\n                queue.append(adj)\n                dist[adj] = dist[curr] + 1\n    return dist[j]\n\n# Solve\nans = [0] * n\nfor i in range(n):\n    # Find the closest element with the opposite parity\n    min_dist = math.inf\n    for j in parity_idx[1 - parity[i]]:\n        min_dist = min(min_dist, shortest_path(graph, i, j))\n    if min_dist == math.inf:\n        ans[i] = -1\n    else:\n        ans[i] = min_dist\nprint(*ans)"
+}
+2022-04-13 20:47:52.640228 REASON stop
+2022-04-13 20:47:52.640658 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    visited = [False]*n\n    d = [-1]*n\n    for i in range(n):\n        if visited[i]:\n            continue\n        visited[i] = True\n        q = [i]\n        while q:\n            pos = q.pop(0)\n            if a[pos] % 2 == a[i] % 2:\n                d[i] = min(d[i], d[pos]) if d[i] != -1 else d[pos]\n            else:\n                d[i] = min(d[i], d[pos]+1) if d[i] != -1 else d[pos]+1\n            if pos - a[pos] >= 0 and not visited[pos-a[pos]]:\n                q.append(pos-a[pos])\n                visited[pos - a[pos]] = True\n            if pos + a[pos] < n and not visited[pos+a[pos]]:\n                q.append(pos+a[pos])\n                visited[pos + a[pos]] = True\n    print(' '.join(map(str, d)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:47:52.640762 REASON stop
+2022-04-13 20:47:52.641089 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    d = [0]*n\n    visited = [False]*n\n    queue = []\n\n    for i in range(n):\n        if a[i] % 2 != 0:\n            queue.append(i)\n            visited[i] = True\n\n    while len(queue) > 0:\n        i = queue.pop(0)\n        if i - a[i] >= 0 and not visited[i - a[i]]:\n            d[i - a[i]] = d[i] + 1\n            visited[i - a[i]] = True\n            queue.append(i - a[i])\n        if i + a[i] < n and not visited[i + a[i]]:\n            d[i + a[i]] = d[i] + 1\n            visited[i + a[i]] = True\n            queue.append(i + a[i])\n\n    for i in range(n):\n        if a[i] % 2 == 0 and not visited[i]:\n            d[i] = -1\n\n    print(\" \".join(map(str, d)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:47:52.641131 REASON stop
+2022-04-13 20:47:52.670016 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.graph = [[] for i in range(n)]\n\n    def add_edge(self, u, v):\n        self.graph[u].append(v)\n\n    def BFS(self, s):\n        visited = [False] * self.n\n        queue = []\n\n        queue.append(s)\n        visited[s] = True\n\n        while queue:\n            s = queue.pop(0)\n            for i in self.graph[s]:\n                if visited[i] == False:\n                    queue.append(i)\n                    visited[i] = True\n\n        return visited\n\nn = int(input())\na = list(map(int, input().split()))\ng = Graph(n)\nfor i in range(n):\n    if i - a[i] > 0:\n        g.add_edge(i, i - a[i])\n    if i + a[i] < n:\n        g.add_edge(i, i + a[i])\n\nfor i in range(n):\n    if a[i] % 2 == 1:\n        visited = g.BFS(i)\n        for j in range(n):\n            if a[j] % 2 == 0 and visited[j] == True:\n                print(1, end=' ')\n                break\n        else:\n            print(-1, end=' ')\n    else:\n        visited = g.BFS(i)\n        for j in range(n):\n            if a[j] % 2 == 1 and visited[j] == True:\n                print(1, end=' ')\n                break\n        else:\n            print(-1, end=' ')"
+}
+2022-04-13 20:47:52.670110 REASON stop
+2022-04-13 20:47:52.691593 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\nimport sys\nfrom collections import deque\n\ndef main():\n    # parse input\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # build graph\n    graph = {}\n    for i in range(n):\n        graph[i+1] = []\n        if i+1-a[i] >= 1:\n            graph[i+1] += [i+1-a[i]]\n        if i+1+a[i] <= n:\n            graph[i+1] += [i+1+a[i]]\n    \n    # find shortest path to reach opposite parity\n    d = [0]*(n+1)\n    for i in range(1, n+1):\n        # bfs\n        q = deque([i])\n        visited = [False]*(n+1)\n        visited[i] = True\n        found = False\n        while len(q) > 0:\n            curr = q.popleft()\n            for node in graph[curr]:\n                if visited[node]: continue\n                visited[node] = True\n                if a[node-1] % 2 != a[i-1] % 2:\n                    found = True\n                    break\n                q.append(node)\n            if found: break\n        if found:\n            d[i] = d[curr] + 1\n        else:\n            d[i] = -1\n    # print output\n    print(' '.join([str(x) for x in d[1:]]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:47:52.691714 REASON stop
+2022-04-13 20:47:52.692257 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nfrom collections import deque\n\nn = int(input())\na = list(map(int, input().split()))\n\n# build graph\ngraph = [[] for _ in range(n+1)]\nfor i in range(1, n+1):\n    if i - a[i-1] >= 1:\n        graph[i].append(i - a[i-1])\n    if i + a[i-1] <= n:\n        graph[i].append(i + a[i-1])\n\n# BFS\nbfs = deque()\nvisited = [False] * (n+1)\n\nfor i in range(1, n+1):\n    visited = [False] * (n+1)\n    bfs.append((i, 0))\n    while bfs:\n        v, d = bfs.popleft()\n        if visited[v]:\n            continue\n        visited[v] = True\n        if a[v-1] % 2 != a[i-1] % 2:\n            print(d)\n            break\n        for w in graph[v]:\n            bfs.append((w, d+1))\n    else:\n        print(-1)"
+}
+2022-04-13 20:47:52.692325 REASON stop
+2022-04-13 20:47:52.692891 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    d = [-1 for i in range(n)]\n    for i in range(n):\n        if i + a[i] < n:\n            if a[i + a[i]] % 2 != a[i] % 2:\n                d[i] = 1\n        if i - a[i] >= 0:\n            if a[i - a[i]] % 2 != a[i] % 2:\n                d[i] = 1\n    for i in range(n):\n        if d[i] == -1:\n            continue\n        if i + a[i] < n and d[i + a[i]] == -1:\n            d[i + a[i]] = d[i] + 1\n        if i - a[i] >= 0 and d[i - a[i]] == -1:\n            d[i - a[i]] = d[i] + 1\n    print(*d)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:47:52.692949 REASON stop

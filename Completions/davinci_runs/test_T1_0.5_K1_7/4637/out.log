@@ -1,0 +1,162 @@
+2022-04-13 22:18:19.087004 """
+You are given two arrays $a$ and $b$ both consisting of $n$ positive (greater than zero) integers. You are also given an integer $k$.
+
+In one move, you can choose two indices $i$ and $j$ ($1 \le i, j \le n$) and swap $a_i$ and $b_j$ (i.e. $a_i$ becomes $b_j$ and vice versa). Note that $i$ and $j$ can be equal or different (in particular, swap $a_2$ with $b_2$ or swap $a_3$ and $b_9$ both are acceptable moves).
+
+Your task is to find the maximum possible sum you can obtain in the array $a$ if you can do no more than (i.e. at most) $k$ such moves (swaps).
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 200$) — the number of test cases. Then $t$ test cases follow.
+
+The first line of the test case contains two integers $n$ and $k$ ($1 \le n \le 30; 0 \le k \le n$) — the number of elements in $a$ and $b$ and the maximum number of moves you can do. The second line of the test case contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 30$), where $a_i$ is the $i$-th element of $a$. The third line of the test case contains $n$ integers $b_1, b_2, \dots, b_n$ ($1 \le b_i \le 30$), where $b_i$ is the $i$-th element of $b$.
+
+
+-----Output-----
+
+For each test case, print the answer — the maximum possible sum you can obtain in the array $a$ if you can do no more than (i.e. at most) $k$ swaps.
+
+
+-----Example-----
+Input
+5
+2 1
+1 2
+3 4
+5 5
+5 5 6 6 5
+1 2 5 4 3
+5 3
+1 2 3 4 5
+10 9 10 10 9
+4 0
+2 2 4 3
+2 4 2 3
+4 4
+1 2 2 1
+4 4 5 4
+
+Output
+6
+27
+39
+11
+17
+
+
+
+-----Note-----
+
+In the first test case of the example, you can swap $a_1 = 1$ and $b_2 = 4$, so $a=[4, 2]$ and $b=[3, 1]$.
+
+In the second test case of the example, you don't need to swap anything.
+
+In the third test case of the example, you can swap $a_1 = 1$ and $b_1 = 10$, $a_3 = 3$ and $b_3 = 10$ and $a_2 = 2$ and $b_4 = 10$, so $a=[10, 10, 10, 4, 5]$ and $b=[1, 9, 3, 2, 9]$.
+
+In the fourth test case of the example, you cannot swap anything.
+
+In the fifth test case of the example, you can swap arrays $a$ and $b$, so $a=[4, 4, 5, 4]$ and $b=[1, 2, 2, 1]$.
+"""
+2022-04-13 22:18:19.087030 --------------------------
+2022-04-13 22:18:37.671874 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort(reverse=True)\n    for i in range(n):\n        if k == 0:\n            break\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n            k -= 1\n    print(sum(a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef maxSum(a, b, k):\n    a = sorted(a)\n    b = sorted(b)\n    b = b[::-1]\n    sum = 0\n    for i in range(len(a)):\n        if k > 0:\n            if a[i] < b[i]:\n                sum += b[i]\n                k -= 1\n            else:\n                sum += a[i]\n        else:\n            sum += a[i]\n    return sum\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    print(maxSum(a, b, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    s = sum(a)\n    for i in range(n):\n        if k > 0:\n            if a[i] < b[n - i - 1]:\n                k -= 1\n                s -= a[i]\n                s += b[n - i - 1]\n    print(s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    if k > n:\n        k = n\n    for i in range(k):\n        if a[i] < b[n-i-1]:\n            a[i], b[n-i-1] = b[n-i-1], a[i]\n    print(sum(a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The idea is to sort both arrays in descending order.\n# Then, we iterate from left to right, and compare the values at each index.\n# If the value in array a is smaller than the value in array b, we swap them.\n# We keep track of the number of swaps we have done.\n# If we have done more than k swaps, we return the sum of array a.\n# Else, we return the sum of array b.\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort(reverse=True)\n    b.sort(reverse=True)\n    num_swaps = 0\n    for i in range(n):\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n            num_swaps += 1\n        if num_swaps > k:\n            break\n    if num_swaps > k:\n        print(sum(a))\n    else:\n        print(sum(b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        a = list(map(int, input().split()))\n        b = list(map(int, input().split()))\n        a.sort()\n        b.sort(reverse=True)\n        res = 0\n        for i in range(n):\n            if a[i] < b[i]:\n                if i < k:\n                    res += b[i]\n                else:\n                    res += a[i]\n            else:\n                res += a[i]\n        print(res)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": ""
+    }
+  ],
+  "created": 1649888299,
+  "id": "cmpl-4wfbXOuUC3HF3l3g9Hd45mSrFI4Kf",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:18:37.672124 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort(reverse=True)\n    for i in range(n):\n        if k == 0:\n            break\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n            k -= 1\n    print(sum(a))"
+}
+2022-04-13 22:18:37.672155 REASON stop
+2022-04-13 22:18:37.672586 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef maxSum(a, b, k):\n    a = sorted(a)\n    b = sorted(b)\n    b = b[::-1]\n    sum = 0\n    for i in range(len(a)):\n        if k > 0:\n            if a[i] < b[i]:\n                sum += b[i]\n                k -= 1\n            else:\n                sum += a[i]\n        else:\n            sum += a[i]\n    return sum\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    print(maxSum(a, b, k))"
+}
+2022-04-13 22:18:37.672691 REASON stop
+2022-04-13 22:18:37.673072 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    s = sum(a)\n    for i in range(n):\n        if k > 0:\n            if a[i] < b[n - i - 1]:\n                k -= 1\n                s -= a[i]\n                s += b[n - i - 1]\n    print(s)"
+}
+2022-04-13 22:18:37.673119 REASON stop
+2022-04-13 22:18:37.700403 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    if k > n:\n        k = n\n    for i in range(k):\n        if a[i] < b[n-i-1]:\n            a[i], b[n-i-1] = b[n-i-1], a[i]\n    print(sum(a))"
+}
+2022-04-13 22:18:37.700533 REASON stop
+2022-04-13 22:18:37.722851 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The idea is to sort both arrays in descending order.\n# Then, we iterate from left to right, and compare the values at each index.\n# If the value in array a is smaller than the value in array b, we swap them.\n# We keep track of the number of swaps we have done.\n# If we have done more than k swaps, we return the sum of array a.\n# Else, we return the sum of array b.\n\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort(reverse=True)\n    b.sort(reverse=True)\n    num_swaps = 0\n    for i in range(n):\n        if a[i] < b[i]:\n            a[i], b[i] = b[i], a[i]\n            num_swaps += 1\n        if num_swaps > k:\n            break\n    if num_swaps > k:\n        print(sum(a))\n    else:\n        print(sum(b))"
+}
+2022-04-13 22:18:37.722959 REASON stop
+2022-04-13 22:18:37.723537 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        a = list(map(int, input().split()))\n        b = list(map(int, input().split()))\n        a.sort()\n        b.sort(reverse=True)\n        res = 0\n        for i in range(n):\n            if a[i] < b[i]:\n                if i < k:\n                    res += b[i]\n                else:\n                    res += a[i]\n            else:\n                res += a[i]\n        print(res)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:18:37.723604 REASON stop
+2022-04-13 22:18:37.724337 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 22:18:37.724389 REASON stop

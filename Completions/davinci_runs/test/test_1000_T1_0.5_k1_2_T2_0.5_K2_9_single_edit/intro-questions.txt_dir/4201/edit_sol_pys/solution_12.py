@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+def main():
+    H, W, K = map(int, input().split())
+    c = [input() for _ in range(H)]
+    ans = 0
+    for mask_row in range(1<<H):
+        for mask_col in range(1<<W):
+            cnt = 0
+            for i in range(H):
+                for j in range(W):
+                    if c[i][j] == '#' and ((mask_row>>i)&1) == 1 and ((mask_col>>j)&1) == 1:
+                        cnt += 1
+            if cnt == K:
+                ans += 1
+    print(ans)
+
+
+if __name__ == '__main__':
+    main()

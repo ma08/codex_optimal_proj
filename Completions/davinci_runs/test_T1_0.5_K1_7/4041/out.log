@@ -1,0 +1,157 @@
+2022-04-13 17:40:24.969560 """
+The only difference between easy and hard versions is the length of the string.
+
+You are given a string $s$ and a string $t$, both consisting only of lowercase Latin letters. It is guaranteed that $t$ can be obtained from $s$ by removing some (possibly, zero) number of characters (not necessary contiguous) from $s$ without changing order of remaining characters (in other words, it is guaranteed that $t$ is a subsequence of $s$).
+
+For example, the strings "test", "tst", "tt", "et" and "" are subsequences of the string "test". But the strings "tset", "se", "contest" are not subsequences of the string "test".
+
+You want to remove some substring (contiguous subsequence) from $s$ of maximum possible length such that after removing this substring $t$ will remain a subsequence of $s$.
+
+If you want to remove the substring $s[l;r]$ then the string $s$ will be transformed to $s_1 s_2 \dots s_{l-1} s_{r+1} s_{r+2} \dots s_{|s|-1} s_{|s|}$ (where $|s|$ is the length of $s$).
+
+Your task is to find the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Input-----
+
+The first line of the input contains one string $s$ consisting of at least $1$ and at most $200$ lowercase Latin letters.
+
+The second line of the input contains one string $t$ consisting of at least $1$ and at most $200$ lowercase Latin letters.
+
+It is guaranteed that $t$ is a subsequence of $s$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Examples-----
+Input
+bbaba
+bb
+
+Output
+3
+
+Input
+baaba
+ab
+
+Output
+2
+
+Input
+abcde
+abcde
+
+Output
+0
+
+Input
+asdfasdf
+fasd
+
+Output
+3
+"""
+2022-04-13 17:40:24.969576 --------------------------
+2022-04-13 17:40:58.273264 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef solve(s, t):\n    \"\"\"\n    >>> solve('bbaba', 'bb')\n    3\n    >>> solve('baaba', 'ab')\n    2\n    >>> solve('abcde', 'abcde')\n    0\n    >>> solve('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    t_len = len(t)\n    s_len = len(s)\n    dp = [[0] * (s_len + 1) for _ in range(t_len + 1)]\n    for i in range(1, t_len + 1):\n        for j in range(1, s_len + 1):\n            if t[i - 1] == s[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i][j - 1], dp[i - 1][j])\n    return s_len - dp[-1][-1]\n\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    print(solve(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef subsequence(s, t):\n    if len(t) == 0:\n        return 0\n    if len(s) < len(t):\n        return -1\n    if s[0] != t[0]:\n        return subsequence(s[1:], t)\n    return max(subsequence(s[1:], t), 1 + subsequence(s[1:], t[1:]))\n\ns = sys.stdin.readline().strip()\nt = sys.stdin.readline().strip()\nprint(len(s) - subsequence(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_suffix_array(s):\n    \"\"\"\n    Returns the suffix array of the string text and\n    its suffix array function\n    \"\"\"\n    suffixes = []\n    for i in range(len(s)):\n        suffixes.append((s[i:], i))\n    suffixes.sort()\n    return [suf[1] for suf in suffixes]\n\ndef get_lcp_array(s, suffix_array):\n    \"\"\"\n    Longest common prefixes between adjacent sorted suffixes.\n    \"\"\"\n    lcp = [0] * len(s)\n    inv_suff = [0] * len(s)\n    for i in range(len(s)):\n        inv_suff[suffix_array[i]] = i\n    k = 0\n    for i in range(len(s)):\n        if inv_suff[i] == len(s) - 1:\n            k = 0\n            continue\n        j = suffix_array[inv_suff[i] + 1]\n        while i + k < len(s) and j + k < len(s) and s[i + k] == s[j + k]:\n            k += 1\n        lcp[inv_suff[i]] = k\n        if k > 0:\n            k -= 1\n    return lcp\n\ndef get_substring(lcp_array, suffix_array, s, t):\n    \"\"\"\n    Get the substring of s that will give t after removal.\n    \"\"\"\n    s_index = suffix_array.index(0)\n    t_index = 0\n    lcp_index = 0\n    lcp_max = 0\n    while s_index < len(s) and t_index < len(t):\n        if s[s_index] == t[t_index]:\n            if lcp_array[lcp_index] > lcp_max:\n                lcp_max = lcp_array[lcp_index]\n            t_index += 1\n        s_index += 1\n        lcp_index += 1\n    return lcp_max\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    suffix_array = get_suffix_array(s)\n    lcp_array = get_lcp_array(s, suffix_array)\n    print(get_substring(lcp_array, suffix_array, s, t))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\n# brute force solution\n# def is_subseq(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     if len(t) == 0:\n#         return True\n#     if len(s) == 0:\n#         return False\n#     if t[0] == s[0]:\n#         return is_subseq(s[1:], t[1:])\n#     return is_subseq(s[1:], t)\n\n# def solve(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     max_len = 0\n#     for i in range(len(s)):\n#         for j in range(i, len(s)):\n#             if is_subseq(s[:i] + s[j+1:], t):\n#                 max_len = max(max_len, j-i+1)\n#     return max_len\n\n# O(n^2) solution\n# def solve(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     max_len = 0\n#     for i in range(len(s)):\n#         for j in range(i, len(s)):\n#             if not is_subseq(s[:i] + s[j+1:], t):\n#                 break\n#             max_len = max(max_len, j-i+1)\n#     return max_len\n\n# O(n^2) solution\ndef solve(s, t):\n    \"\"\"\n    s: str\n    t: str\n    \"\"\"\n    max_len = 0\n    for i in range(len(s)):\n        for j in range(i, len(s)):\n            if not is_subseq(s[i:j+1], t):\n                break\n            max_len = max(max_len, j-i+1)\n    return max_len\n\nprint(solve(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef subsequence(s, t):\n    if len(t) == 0:\n        return True\n    if len(s) == 0:\n        return False\n    if s[0] == t[0]:\n        return subsequence(s[1:], t[1:])\n    else:\n        return subsequence(s[1:], t)\n\ndef solve(s, t):\n    for i in range(len(s)):\n        if subsequence(s[:i] + s[i+1:], t):\n            return len(s) - len(t)\n    return 0\n\nprint(solve(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\n# We will use dynamic programming to solve this problem.\n# Let's define dp[i][j] as the maximum length of the substring we can remove from s[:i] so that t[:j] is still a subsequence of s[:i].\n# Then dp[i][0] = i, dp[0][j] = 0 for all j.\n# dp[i][j] = dp[i - 1][j] if s[i - 1] != t[j - 1]\n# dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1]) otherwise.\n\ndp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\nfor i in range(len(s) + 1):\n    dp[i][0] = i\nfor i in range(1, len(s) + 1):\n    for j in range(1, len(t) + 1):\n        if s[i - 1] != t[j - 1]:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1])\nprint(dp[len(s)][len(t)])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\ndef solve(s, t):\n    n = len(s)\n    m = len(t)\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return len(s) - dp[n][m]\n\nprint(solve(s, t))"
+    }
+  ],
+  "created": 1649871625,
+  "id": "cmpl-4wbGbMWiNqJqGBfvsh3rzUQdK12sb",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:40:58.273610 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef solve(s, t):\n    \"\"\"\n    >>> solve('bbaba', 'bb')\n    3\n    >>> solve('baaba', 'ab')\n    2\n    >>> solve('abcde', 'abcde')\n    0\n    >>> solve('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    t_len = len(t)\n    s_len = len(s)\n    dp = [[0] * (s_len + 1) for _ in range(t_len + 1)]\n    for i in range(1, t_len + 1):\n        for j in range(1, s_len + 1):\n            if t[i - 1] == s[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i][j - 1], dp[i - 1][j])\n    return s_len - dp[-1][-1]\n\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    print(solve(input(), input()))"
+}
+2022-04-13 17:40:58.273715 REASON stop
+2022-04-13 17:40:58.274094 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef subsequence(s, t):\n    if len(t) == 0:\n        return 0\n    if len(s) < len(t):\n        return -1\n    if s[0] != t[0]:\n        return subsequence(s[1:], t)\n    return max(subsequence(s[1:], t), 1 + subsequence(s[1:], t[1:]))\n\ns = sys.stdin.readline().strip()\nt = sys.stdin.readline().strip()\nprint(len(s) - subsequence(s, t))"
+}
+2022-04-13 17:40:58.274199 REASON stop
+2022-04-13 17:40:58.274576 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_suffix_array(s):\n    \"\"\"\n    Returns the suffix array of the string text and\n    its suffix array function\n    \"\"\"\n    suffixes = []\n    for i in range(len(s)):\n        suffixes.append((s[i:], i))\n    suffixes.sort()\n    return [suf[1] for suf in suffixes]\n\ndef get_lcp_array(s, suffix_array):\n    \"\"\"\n    Longest common prefixes between adjacent sorted suffixes.\n    \"\"\"\n    lcp = [0] * len(s)\n    inv_suff = [0] * len(s)\n    for i in range(len(s)):\n        inv_suff[suffix_array[i]] = i\n    k = 0\n    for i in range(len(s)):\n        if inv_suff[i] == len(s) - 1:\n            k = 0\n            continue\n        j = suffix_array[inv_suff[i] + 1]\n        while i + k < len(s) and j + k < len(s) and s[i + k] == s[j + k]:\n            k += 1\n        lcp[inv_suff[i]] = k\n        if k > 0:\n            k -= 1\n    return lcp\n\ndef get_substring(lcp_array, suffix_array, s, t):\n    \"\"\"\n    Get the substring of s that will give t after removal.\n    \"\"\"\n    s_index = suffix_array.index(0)\n    t_index = 0\n    lcp_index = 0\n    lcp_max = 0\n    while s_index < len(s) and t_index < len(t):\n        if s[s_index] == t[t_index]:\n            if lcp_array[lcp_index] > lcp_max:\n                lcp_max = lcp_array[lcp_index]\n            t_index += 1\n        s_index += 1\n        lcp_index += 1\n    return lcp_max\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    suffix_array = get_suffix_array(s)\n    lcp_array = get_lcp_array(s, suffix_array)\n    print(get_substring(lcp_array, suffix_array, s, t))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:40:58.274629 REASON stop
+2022-04-13 17:40:58.298271 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\n# brute force solution\n# def is_subseq(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     if len(t) == 0:\n#         return True\n#     if len(s) == 0:\n#         return False\n#     if t[0] == s[0]:\n#         return is_subseq(s[1:], t[1:])\n#     return is_subseq(s[1:], t)\n\n# def solve(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     max_len = 0\n#     for i in range(len(s)):\n#         for j in range(i, len(s)):\n#             if is_subseq(s[:i] + s[j+1:], t):\n#                 max_len = max(max_len, j-i+1)\n#     return max_len\n\n# O(n^2) solution\n# def solve(s, t):\n#     \"\"\"\n#     s: str\n#     t: str\n#     \"\"\"\n#     max_len = 0\n#     for i in range(len(s)):\n#         for j in range(i, len(s)):\n#             if not is_subseq(s[:i] + s[j+1:], t):\n#                 break\n#             max_len = max(max_len, j-i+1)\n#     return max_len\n\n# O(n^2) solution\ndef solve(s, t):\n    \"\"\"\n    s: str\n    t: str\n    \"\"\"\n    max_len = 0\n    for i in range(len(s)):\n        for j in range(i, len(s)):\n            if not is_subseq(s[i:j+1], t):\n                break\n            max_len = max(max_len, j-i+1)\n    return max_len\n\nprint(solve(s, t))"
+}
+2022-04-13 17:40:58.298387 REASON stop
+2022-04-13 17:40:58.299222 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef subsequence(s, t):\n    if len(t) == 0:\n        return True\n    if len(s) == 0:\n        return False\n    if s[0] == t[0]:\n        return subsequence(s[1:], t[1:])\n    else:\n        return subsequence(s[1:], t)\n\ndef solve(s, t):\n    for i in range(len(s)):\n        if subsequence(s[:i] + s[i+1:], t):\n            return len(s) - len(t)\n    return 0\n\nprint(solve(input(), input()))"
+}
+2022-04-13 17:40:58.299320 REASON stop
+2022-04-13 17:40:58.300066 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\n# We will use dynamic programming to solve this problem.\n# Let's define dp[i][j] as the maximum length of the substring we can remove from s[:i] so that t[:j] is still a subsequence of s[:i].\n# Then dp[i][0] = i, dp[0][j] = 0 for all j.\n# dp[i][j] = dp[i - 1][j] if s[i - 1] != t[j - 1]\n# dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1]) otherwise.\n\ndp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\nfor i in range(len(s) + 1):\n    dp[i][0] = i\nfor i in range(1, len(s) + 1):\n    for j in range(1, len(t) + 1):\n        if s[i - 1] != t[j - 1]:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1])\nprint(dp[len(s)][len(t)])"
+}
+2022-04-13 17:40:58.300119 REASON stop
+2022-04-13 17:40:58.300776 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\ndef solve(s, t):\n    n = len(s)\n    m = len(t)\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return len(s) - dp[n][m]\n\nprint(solve(s, t))"
+}
+2022-04-13 17:40:58.300828 REASON stop

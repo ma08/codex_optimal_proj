@@ -1,0 +1,146 @@
+2022-04-16 20:39:16.214940 """
+We will call a string obtained by arranging the characters contained in a string a in some order, an anagram of a.
+For example, greenbin is an anagram of beginner. As seen here, when the same character occurs multiple times, that character must be used that number of times.
+Given are N strings s_1, s_2, \ldots, s_N. Each of these strings has a length of 10 and consists of lowercase English characters. Additionally, all of these strings are distinct. Find the number of pairs of integers i, j (1 \leq i < j \leq N) such that s_i is an anagram of s_j.
+
+-----Constraints-----
+ - 2 \leq N \leq 10^5
+ - s_i is a string of length 10.
+ - Each character in s_i is a lowercase English letter.
+ - s_1, s_2, \ldots, s_N are all distinct.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+s_1
+s_2
+:
+s_N
+
+-----Output-----
+Print the number of pairs of integers i, j (1 \leq i < j \leq N) such that s_i is an anagram of s_j.
+
+-----Sample Input-----
+3
+acornistnt
+peanutbomb
+constraint
+
+-----Sample Output-----
+1
+
+s_1 = acornistnt is an anagram of s_3 = constraint. There are no other pairs i, j such that s_i is an anagram of s_j, so the answer is 1.
+"""
+2022-04-16 20:39:16.214959 --------------------------
+2022-04-16 20:39:35.312589 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport collections\n\nN = int(input())\nanagrams = collections.defaultdict(list)\n\nfor i in range(N):\n    s = input()\n    anagrams[''.join(sorted(s))].append(i)\n\nans = 0\nfor i in anagrams:\n    ans += len(anagrams[i]) * (len(anagrams[i])-1) // 2\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# My Answer\nN = int(input())\ns = []\nfor i in range(N):\n    s.append(input())\n\ncount = 0\nfor i in range(len(s)):\n    for j in range(i+1, len(s)):\n        if (sorted(s[i]) == sorted(s[j])) :\n            count += 1\n\nprint(count)\n\n# Answer\nn = int(input())\ns = [input() for _ in range(n)]\n\nfrom collections import Counter\n\nc = [Counter(ss) for ss in s]\nans = 0\nfor i in range(n):\n    for j in range(i+1, n):\n        if c[i] == c[j]:\n            ans += 1\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\n\nN = int(input())\nS = []\n\nfor i in range(N):\n    S.append(input())\n\nans = 0\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if Counter(S[i]) == Counter(S[j]):\n            ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import Counter\n\ndef main():\n    \"\"\"\n    Main function.\n    \"\"\"\n    # Read the number of lines.\n    num_lines = int(sys.stdin.readline())\n\n    # Read all strings.\n    strings = []\n    for _ in range(num_lines):\n        strings.append(sys.stdin.readline())\n\n    # Solve.\n    print(solve(strings))\n\ndef solve(strings):\n    \"\"\"\n    Solve the problem.\n    \"\"\"\n    # Count the number of each character.\n    count = Counter()\n    for string in strings:\n        count += Counter(string)\n\n    # Count the number of distinct anagrams.\n    num_anagrams = 0\n    for key in count:\n        num_anagrams += count[key] * (count[key] - 1) // 2\n\n    return num_anagrams\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = [input() for _ in range(n)]\n\n# \u65b9\u91dd\n# \u6587\u5b57\u5217\u3092\u30bd\u30fc\u30c8\u3057\u3066\u3001\u305d\u308c\u305e\u308c\u306e\u6587\u5b57\u5217\u3092\u30ad\u30fc\u3068\u3057\u3066\u3001\u767b\u5834\u56de\u6570\u3092\u683c\u7d0d\u3057\u305f\u8f9e\u66f8\u3092\u4f5c\u6210\u3059\u308b\n# \u767b\u5834\u56de\u6570\u304c1\u4ee5\u4e0a\u306e\u5834\u5408\u3001\u7d44\u307f\u5408\u308f\u305b\u3092\u6570\u3048\u4e0a\u3052\u308b\n\n# \u8f9e\u66f8\u306e\u4f5c\u6210\nd = {}\nfor i in range(n):\n    k = ''.join(sorted(s[i]))\n    d[k] = d[k] + 1 if k in d else 1\n\n# \u7d44\u307f\u5408\u308f\u305b\u3092\u6570\u3048\u4e0a\u3052\u308b\nans = 0\nfor v in d.values():\n    if v > 1:\n        ans += v * (v - 1) // 2\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport collections\n\n# input\nnum_strings = int(input())\nstr_list = []\nfor i in range(num_strings):\n    str_list.append(input())\n\n# sort the strings and put them in a dict\nstr_dict = collections.defaultdict(list)\nfor s in str_list:\n    str_dict[''.join(sorted(s))].append(s)\n\ncount = 0\nfor key in str_dict:\n    count += len(str_dict[key]) * (len(str_dict[key]) - 1) // 2\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\ns = []\nfor i in range(N):\n    s.append(input())\n\nans = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        if sorted(s[i]) == sorted(s[j]):\n            ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    d = []\n    for i in range(n):\n        d.append(input())\n    count = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if sorted(d[i]) == sorted(d[j]):\n                count += 1\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650141556,
+  "id": "cmpl-4xjUKzgodsBIWn4tckrh8Rrpxjpsj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:39:35.312914 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport collections\n\nN = int(input())\nanagrams = collections.defaultdict(list)\n\nfor i in range(N):\n    s = input()\n    anagrams[''.join(sorted(s))].append(i)\n\nans = 0\nfor i in anagrams:\n    ans += len(anagrams[i]) * (len(anagrams[i])-1) // 2\n\nprint(ans)"
+}
+2022-04-16 20:39:35.312955 REASON stop
+2022-04-16 20:39:35.597148 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# My Answer\nN = int(input())\ns = []\nfor i in range(N):\n    s.append(input())\n\ncount = 0\nfor i in range(len(s)):\n    for j in range(i+1, len(s)):\n        if (sorted(s[i]) == sorted(s[j])) :\n            count += 1\n\nprint(count)\n\n# Answer\nn = int(input())\ns = [input() for _ in range(n)]\n\nfrom collections import Counter\n\nc = [Counter(ss) for ss in s]\nans = 0\nfor i in range(n):\n    for j in range(i+1, n):\n        if c[i] == c[j]:\n            ans += 1\nprint(ans)"
+}
+2022-04-16 20:39:35.597323 REASON stop
+2022-04-16 20:39:35.699654 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\n\nN = int(input())\nS = []\n\nfor i in range(N):\n    S.append(input())\n\nans = 0\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if Counter(S[i]) == Counter(S[j]):\n            ans += 1\n\nprint(ans)"
+}
+2022-04-16 20:39:35.699770 REASON stop
+2022-04-16 20:39:35.754396 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import Counter\n\ndef main():\n    \"\"\"\n    Main function.\n    \"\"\"\n    # Read the number of lines.\n    num_lines = int(sys.stdin.readline())\n\n    # Read all strings.\n    strings = []\n    for _ in range(num_lines):\n        strings.append(sys.stdin.readline())\n\n    # Solve.\n    print(solve(strings))\n\ndef solve(strings):\n    \"\"\"\n    Solve the problem.\n    \"\"\"\n    # Count the number of each character.\n    count = Counter()\n    for string in strings:\n        count += Counter(string)\n\n    # Count the number of distinct anagrams.\n    num_anagrams = 0\n    for key in count:\n        num_anagrams += count[key] * (count[key] - 1) // 2\n\n    return num_anagrams\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:39:35.754523 REASON stop
+2022-04-16 20:39:35.800635 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = [input() for _ in range(n)]\n\n# \u65b9\u91dd\n# \u6587\u5b57\u5217\u3092\u30bd\u30fc\u30c8\u3057\u3066\u3001\u305d\u308c\u305e\u308c\u306e\u6587\u5b57\u5217\u3092\u30ad\u30fc\u3068\u3057\u3066\u3001\u767b\u5834\u56de\u6570\u3092\u683c\u7d0d\u3057\u305f\u8f9e\u66f8\u3092\u4f5c\u6210\u3059\u308b\n# \u767b\u5834\u56de\u6570\u304c1\u4ee5\u4e0a\u306e\u5834\u5408\u3001\u7d44\u307f\u5408\u308f\u305b\u3092\u6570\u3048\u4e0a\u3052\u308b\n\n# \u8f9e\u66f8\u306e\u4f5c\u6210\nd = {}\nfor i in range(n):\n    k = ''.join(sorted(s[i]))\n    d[k] = d[k] + 1 if k in d else 1\n\n# \u7d44\u307f\u5408\u308f\u305b\u3092\u6570\u3048\u4e0a\u3052\u308b\nans = 0\nfor v in d.values():\n    if v > 1:\n        ans += v * (v - 1) // 2\n\nprint(ans)"
+}
+2022-04-16 20:39:35.800824 REASON stop
+2022-04-16 20:39:35.840124 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport collections\n\n# input\nnum_strings = int(input())\nstr_list = []\nfor i in range(num_strings):\n    str_list.append(input())\n\n# sort the strings and put them in a dict\nstr_dict = collections.defaultdict(list)\nfor s in str_list:\n    str_dict[''.join(sorted(s))].append(s)\n\ncount = 0\nfor key in str_dict:\n    count += len(str_dict[key]) * (len(str_dict[key]) - 1) // 2\n\nprint(count)"
+}
+2022-04-16 20:39:35.840310 REASON stop
+2022-04-16 20:39:35.880137 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\ns = []\nfor i in range(N):\n    s.append(input())\n\nans = 0\nfor i in range(N):\n    for j in range(i + 1, N):\n        if sorted(s[i]) == sorted(s[j]):\n            ans += 1\n\nprint(ans)"
+}
+2022-04-16 20:39:35.880263 REASON stop
+2022-04-16 20:39:35.907642 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    d = []\n    for i in range(n):\n        d.append(input())\n    count = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            if sorted(d[i]) == sorted(d[j]):\n                count += 1\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:39:35.907781 REASON stop

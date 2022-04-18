@@ -1,0 +1,142 @@
+2022-04-13 23:46:57.005659 """
+The famous Arora-Mitchell approximation algorithm for the Euclidean Travelling Salesman Problem (Euclidean TSP) was discovered independently by Sanjeev Arora and Joseph S. B. Mitchell in 1998. It can approximate the value of an optimal TSP tour in $d$ dimensions within a factor of $1+1/c$ in running time \[ n (\log n)^{O((c\sqrt {d})^{d-1})}, \]
+
+where $n$ is the number of nodes in the tour.
+
+Miroslava works for a computer security company and it is time to renew a shared cryptographic key in many data centres across Europe. To do this, Miroslava is going to rent a private jet and deliver the key to employees waiting at all major European airports. She wants to be back as soon as possible.
+
+Miroslava’s company has a computer that is able to execute $p$ billions of operations per second. Since we can approximate Europe by a two-dimensional plane, we assume that the Arora-Mitchell algorithm runs for exactly\[ \frac{n (\log _2 n)^{c\sqrt {2}}}{p \cdot 10^9} \]
+
+seconds on this computer to produce the exact $(1+1/c)$-approximation of the optimal tour.
+
+Miroslava noticed that $c$ is a parameter of the algorithm that can be used to her advantage, but one also needs to be very careful when choosing the right value. If she sets $c$ too low, the algorithm will finish very fast but the time she spends flying around Europe will be too long. On the other hand, setting it too high will force her to wait for an answer from the computer, while she could be flying instead.
+
+Miroslava used to work in a different company and from there she knows that the optimal tour of all major European airports is $s$ meters long, but she wasn’t ranked high enough in the company to know the actual tour. Given the speed $v$ of the private jet in meters per second, Miroslava needs $s(1 + 1 / c) / v$ seconds to complete the tour produced by the algorithm run with parameter $c$. For the sake of simplicity, we assume that Miroslava can land, leave a copy of the private key and take off from each airport in an instant.
+
+How long does it take Miroslava to first run the algorithm and then distribute all the keys, assuming that she chooses the optimal parameter $c$?
+
+-----Input-----
+The input consists of one line with four numbers:
+ - an integer $n$ ($4 \le n \le 1000000$), the number of airports;
+ - a real number $p$ ($0.001 \le p \le 5000$), the number of billions of operations the computer can execute per second;
+ - a real number $s$ ($10^6 \le s \le 10^9$), the length of the optimal tour of all European airports in meters;
+ - a real number $v$ ($50 \le v \le 900$), the speed of the private jet in meters per second.
+
+All real numbers will have at most 10 digits after the decimal point.
+
+-----Output-----
+Output one line with the shortest possible time $t$ in seconds to distribute the keys and the value of the parameter $c$ Miroslava should use to achieve time $t$. Your answer should have an absolute or relative error of at most $10^{-6}$.
+
+-----Examples-----
+Sample Input:
+10 8.9 40075000 272.1
+Sample Output:
+157079.04857106 15.598261092309
+"""
+2022-04-13 23:46:57.005675 --------------------------
+2022-04-13 23:47:19.684730 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef solve(n, p, s, v):\n    c = 0.000000000001\n    while True:\n        c *= 2\n        t = (n * math.log(n, 2) ** c) / (p * 10 ** 9) + s * (1 + 1 / c) / v\n        if t > s / v:\n            break\n    while True:\n        c_new = (c + c / 2)\n        t_new = (n * math.log(n, 2) ** c_new) / (p * 10 ** 9) + s * (1 + 1 / c_new) / v\n        if t_new > s / v:\n            break\n        c = c_new\n        t = t_new\n    return t, c\n\ndef main():\n    n, p, s, v = map(float, input().split())\n    print(*solve(n, p, s, v))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, p, s, v = map(float, raw_input().strip().split())\n\ndef f(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) + s * (1 + 1/c) / v\n\ndef fprime(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) * (1.0/c**2 - 1.0/c) + s / (v * c**2)\n\ndef fprimeprime(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) * (-2.0/c**3 + 3.0/c**2) + 2 * s / (v * c**3)\n\ndef newton(x, f, fprime, fprimeprime, epsilon=0.00001):\n    while abs(f(x)) > epsilon:\n        x = x - f(x) / fprime(x)\n    return x\n\nc = newton(1, f, fprime, fprimeprime)\n\nprint '%f %f' % (f(c), c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport math\n\nn, p, s, v = map(float, input().split())\n\ndef f(c):\n    return math.log(n, 2) ** (c * math.sqrt(2))\n\ndef f_inv(x):\n    return math.log(x, n) ** (1 / (c * math.sqrt(2)))\n\ndef g(c):\n    return s * (1 + 1 / c) / v\n\ndef h(c):\n    return f_inv(p) + g(c)\n\nc_min = 1\nc_max = 2\n\nwhile h(c_max) < h(c_min):\n    c_min = c_max\n    c_max *= 2\n\nwhile c_max - c_min > 0.000001:\n    c_mid = (c_min + c_max) / 2\n    if h(c_mid) < h(c_min):\n        c_min = c_mid\n    else:\n        c_max = c_mid\n\nprint(h(c_min))\nprint(c_min)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n### TODO: UNDERSTAND THE PROBLEM\n### TODO: PRECISION\n\nimport sys\nimport math\n\ndef readNumber(type):\n\tline = sys.stdin.readline()\n\treturn type(line)\n\ndef readNumbers(type):\n\treturn list(map(type, sys.stdin.readline().split()))\n\ndef main():\n\tn, p, s, v = readNumbers(float)\n\tc = 1\n\tt = s * (1 + 1 / c) / v\n\twhile t > (n * (math.log(n, 2) ** c * math.sqrt(2)) / (p * 10 ** 9)):\n\t\tc += 1\n\t\tt = s * (1 + 1 / c) / v\n\tprint(\"{:.6f} {:.6f}\".format(t, c))\n\nif __name__ == \"__main__\":\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main(n, p, s, v):\n    \"\"\"\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    \"\"\"\n\n    if __name__ == \"__main__\":\n        n, p, s, v = [float(i) for i in input().split()]\n\n    # print(n, p, s, v)\n\n    # t = (n * math.log(n)**(c * math.sqrt(2))) / (p * 10**9)\n    # t = (s * (1 + 1/c)) / v\n\n    c = 0.00001\n    c_max = math.sqrt(2) * math.log(n, 2)\n    t_min = n * math.log(n)**(c_max * math.sqrt(2)) / (p * 10**9) + (s * (1 + 1/c_max)) / v\n\n    while c < c_max:\n        t = n * math.log(n)**(c * math.sqrt(2)) / (p * 10**9) + (s * (1 + 1/c)) / v\n        if t < t_min:\n            t_min = t\n            c_min = c\n        c += 0.00001\n\n    print(t_min, c_min)\n\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, p, s, v = map(float, sys.stdin.readline().split())\n    c = (n * (log(n) / log(2)) ** 0.5) / p\n    time = s * (1 + 1 / c) / v\n    print(time, c)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, p, s, v = [float(x) for x in sys.stdin.read().split()]\n\n    # compute the minimum time to distribute the keys\n    # t = s(1 + 1/c) / v = s / v + s / (cv) = s / v + t_algo\n    # t_algo = s / (cv)\n    # t_algo = n * (log(n)**(c*sqrt(2))) / (p*10**9)\n    # n * (log(n)**(c*sqrt(2))) = s * p * 10**9 / (v * c)\n    # log(n)**(c*sqrt(2)) = (s * p * 10**9 / (v * c)) / n\n    # log(n) = ((s * p * 10**9 / (v * c)) / n)**(1/(c*sqrt(2)))\n    # n = exp(((s * p * 10**9 / (v * c)) / n)**(1/(c*sqrt(2))))\n    # n**(c*sqrt(2)) = exp(s * p * 10**9 / (v * c))\n    # (c*sqrt(2)) * log(n) = s * p * 10**9 / (v * c)\n    # c * sqrt(2) = (s * p * 10**9) / (v * n * log(n))\n    # c = (s * p * 10**9) / (v * n * log(n)) / sqrt(2)\n    c = (s * p * 10**9) / (v * n * math.log(n)) / math.sqrt(2)\n    t_algo = n * (math.log(n)**(c*math.sqrt(2))) / (p*10**9)\n    t = s / v + t_algo\n\n    # print the solution\n    print(\"{:.10f} {:.10f}\".format(t, c))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649893617,
+  "id": "cmpl-4wgzJljMZu3SFaeRlWDtw6RuFCG5w",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:47:19.685092 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef solve(n, p, s, v):\n    c = 0.000000000001\n    while True:\n        c *= 2\n        t = (n * math.log(n, 2) ** c) / (p * 10 ** 9) + s * (1 + 1 / c) / v\n        if t > s / v:\n            break\n    while True:\n        c_new = (c + c / 2)\n        t_new = (n * math.log(n, 2) ** c_new) / (p * 10 ** 9) + s * (1 + 1 / c_new) / v\n        if t_new > s / v:\n            break\n        c = c_new\n        t = t_new\n    return t, c\n\ndef main():\n    n, p, s, v = map(float, input().split())\n    print(*solve(n, p, s, v))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:47:19.685131 REASON stop
+2022-04-13 23:47:19.685508 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.685528 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, p, s, v = map(float, raw_input().strip().split())\n\ndef f(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) + s * (1 + 1/c) / v\n\ndef fprime(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) * (1.0/c**2 - 1.0/c) + s / (v * c**2)\n\ndef fprimeprime(c):\n    return (n * (log(n, 2)**(c * sqrt(2))) / p) * (-2.0/c**3 + 3.0/c**2) + 2 * s / (v * c**3)\n\ndef newton(x, f, fprime, fprimeprime, epsilon=0.00001):\n    while abs(f(x)) > epsilon:\n        x = x - f(x) / fprime(x)\n    return x\n\nc = newton(1, f, fprime, fprimeprime)\n\nprint '%f %f' % (f(c), c)"
+}
+2022-04-13 23:47:19.685643 REASON stop
+2022-04-13 23:47:19.685884 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.685896 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport math\n\nn, p, s, v = map(float, input().split())\n\ndef f(c):\n    return math.log(n, 2) ** (c * math.sqrt(2))\n\ndef f_inv(x):\n    return math.log(x, n) ** (1 / (c * math.sqrt(2)))\n\ndef g(c):\n    return s * (1 + 1 / c) / v\n\ndef h(c):\n    return f_inv(p) + g(c)\n\nc_min = 1\nc_max = 2\n\nwhile h(c_max) < h(c_min):\n    c_min = c_max\n    c_max *= 2\n\nwhile c_max - c_min > 0.000001:\n    c_mid = (c_min + c_max) / 2\n    if h(c_mid) < h(c_min):\n        c_min = c_mid\n    else:\n        c_max = c_mid\n\nprint(h(c_min))\nprint(c_min)"
+}
+2022-04-13 23:47:19.685935 REASON stop
+2022-04-13 23:47:19.705138 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.705166 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n### TODO: UNDERSTAND THE PROBLEM\n### TODO: PRECISION\n\nimport sys\nimport math\n\ndef readNumber(type):\n\tline = sys.stdin.readline()\n\treturn type(line)\n\ndef readNumbers(type):\n\treturn list(map(type, sys.stdin.readline().split()))\n\ndef main():\n\tn, p, s, v = readNumbers(float)\n\tc = 1\n\tt = s * (1 + 1 / c) / v\n\twhile t > (n * (math.log(n, 2) ** c * math.sqrt(2)) / (p * 10 ** 9)):\n\t\tc += 1\n\t\tt = s * (1 + 1 / c) / v\n\tprint(\"{:.6f} {:.6f}\".format(t, c))\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-13 23:47:19.705235 REASON stop
+2022-04-13 23:47:19.720224 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.720252 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main(n, p, s, v):\n    \"\"\"\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    >>> main(10, 8.9, 40075000, 272.1)\n    157079.04857106 15.598261092309\n    \"\"\"\n\n    if __name__ == \"__main__\":\n        n, p, s, v = [float(i) for i in input().split()]\n\n    # print(n, p, s, v)\n\n    # t = (n * math.log(n)**(c * math.sqrt(2))) / (p * 10**9)\n    # t = (s * (1 + 1/c)) / v\n\n    c = 0.00001\n    c_max = math.sqrt(2) * math.log(n, 2)\n    t_min = n * math.log(n)**(c_max * math.sqrt(2)) / (p * 10**9) + (s * (1 + 1/c_max)) / v\n\n    while c < c_max:\n        t = n * math.log(n)**(c * math.sqrt(2)) / (p * 10**9) + (s * (1 + 1/c)) / v\n        if t < t_min:\n            t_min = t\n            c_min = c\n        c += 0.00001\n\n    print(t_min, c_min)\n\n\n\nif __name__ == \"__main__\":\n    import doctest\n    doctest.testmod()"
+}
+2022-04-13 23:47:19.720324 REASON stop
+2022-04-13 23:47:19.752245 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.752274 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, p, s, v = map(float, sys.stdin.readline().split())\n    c = (n * (log(n) / log(2)) ** 0.5) / p\n    time = s * (1 + 1 / c) / v\n    print(time, c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:47:19.752345 REASON stop
+2022-04-13 23:47:19.752883 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'
+2022-04-13 23:47:19.752899 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, p, s, v = [float(x) for x in sys.stdin.read().split()]\n\n    # compute the minimum time to distribute the keys\n    # t = s(1 + 1/c) / v = s / v + s / (cv) = s / v + t_algo\n    # t_algo = s / (cv)\n    # t_algo = n * (log(n)**(c*sqrt(2))) / (p*10**9)\n    # n * (log(n)**(c*sqrt(2))) = s * p * 10**9 / (v * c)\n    # log(n)**(c*sqrt(2)) = (s * p * 10**9 / (v * c)) / n\n    # log(n) = ((s * p * 10**9 / (v * c)) / n)**(1/(c*sqrt(2)))\n    # n = exp(((s * p * 10**9 / (v * c)) / n)**(1/(c*sqrt(2))))\n    # n**(c*sqrt(2)) = exp(s * p * 10**9 / (v * c))\n    # (c*sqrt(2)) * log(n) = s * p * 10**9 / (v * c)\n    # c * sqrt(2) = (s * p * 10**9) / (v * n * log(n))\n    # c = (s * p * 10**9) / (v * n * log(n)) / sqrt(2)\n    c = (s * p * 10**9) / (v * n * math.log(n)) / math.sqrt(2)\n    t_algo = n * (math.log(n)**(c*math.sqrt(2))) / (p*10**9)\n    t = s / v + t_algo\n\n    # print the solution\n    print(\"{:.10f} {:.10f}\".format(t, c))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:47:19.752958 REASON stop
+2022-04-13 23:47:19.753557 test/intro-questions.txt_dir/4861/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4861/solutions.json'

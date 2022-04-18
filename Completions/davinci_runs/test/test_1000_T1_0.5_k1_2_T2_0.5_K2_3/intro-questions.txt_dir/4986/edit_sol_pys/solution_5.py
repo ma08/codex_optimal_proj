@@ -1,0 +1,9 @@
+
+
+s = raw_input()
+t = raw_input()
+
+for i in range(len(s)):
+    if s[i] != t[i*2]:  # i*2
+        print(s[i], end='')
+print()

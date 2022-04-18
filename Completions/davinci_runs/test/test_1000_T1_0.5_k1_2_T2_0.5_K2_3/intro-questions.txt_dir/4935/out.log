@@ -1,0 +1,148 @@
+2022-04-09 23:54:35.360759 """
+Mount Snowdon, the tallest place in Wales, is a major attraction for mountain bikers far and wide. To take advantage of the popularity of this thrilling sport, an enterprising new venture plans to open several new bike repair shops throughout the rolling foothills.
+
+The cunning small business owner’s financial success relates directly to the velocity of the average biker: the faster a biker is going at the foot of the hill the more likely they are to encounter a problem and have to walk — or sometimes limp — into the shop.
+
+Snowdon, like most mountains, has a very angular sort of shape. In fact, the profile of the mountain can be represented as $N$ connected line segments pointing downward at various angles, each starting where the last left off. Given this highly scientific representation of the landscape, we need to find the likely speeds of bikers given that they may start off from the top of any of the $N$ segments.
+
+As we all know, a biker on a $\theta $-degree slope from the vertical will accelerate at a rate of precisely $g \cdot \cos (\theta ) \; \; \textrm{m} \textrm{s}^{-2}$ along the slope.
+
+-----Input-----
+ - One line containing a positive integer $N$ ($1 \le N \le 4$), the number of line segments making up the mountain, followed by a space and then a real number $g$ ($1 \le g \le 100$), the coefficient of acceleration due to gravity.
+ - $N$ more lines each containing two integers $D_ i$ and then $\theta _ i$ ($1 \le D \le 10^4; 1 \le \theta \le 89$): the sloped distance in metres and absolute angle in degrees of this line segment from the vertical respectively. The segments are ordered from the top of the hill to its bottom.
+
+-----Output-----
+Each of the $N$ lines of output should contain one real number: the velocity of a biker starting at the $i^{\text {th}}$-most segment from the top and finishing at the foot of the mountain.
+
+Answers will be judged as correct if they are printed to within an absolute or relative difference of $10^{-6}$ from their exact values.
+
+-----Examples-----
+Sample Input:
+2 9
+69 60
+100 60
+Sample Output:
+39.0
+30.0
+"""
+2022-04-09 23:54:35.360806 --------------------------
+2022-04-09 23:55:06.363458 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#g: gravity\n#D: distance\n#theta: angle\n\nimport sys\nimport math\n\ndef main():\n    line = sys.stdin.readline()\n    N, g = map(float, line.split())\n\n    for i in range(int(N)):\n        line = sys.stdin.readline()\n        D, theta = map(int, line.split())\n        if i == 0:\n            v = math.sqrt(2 * g * D * math.cos(math.radians(theta)))\n            print(\"%.1f\" % v)\n        else:\n            v = math.sqrt(2 * g * D * math.cos(math.radians(theta)) + v ** 2)\n            print(\"%.1f\" % v)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_velocity(dist, angle, gravity):\n    \"\"\"\n    Returns the velocity of an object with a given starting angle, distance,\n    and gravitational acceleration.\n\n    :param dist: The distance of the slope.\n    :param angle: The angle of the slope.\n    :param gravity: The gravitational acceleration.\n    :return: The velocity of the object.\n    \"\"\"\n\n    # Velocity is the square root of the acceleration times the distance of the slope times the sine of the angle.\n    velocity = math.sqrt(gravity * dist * math.sin(math.radians(angle)))\n\n    return velocity\n\ndef main():\n\n    # Get the number of segments and the gravitational acceleration.\n    num_segments, gravity = [float(x) for x in input().split()]\n\n    # Create a list to store the velocities.\n    velocities = []\n\n    # Get the distance and angle for each segment.\n    for i in range(int(num_segments)):\n\n        # Get the distance and angle.\n        dist, angle = [int(x) for x in input().split()]\n\n        # Get the velocity and add it to the list.\n        velocities.append(get_velocity(dist, angle, gravity))\n\n    # Print the velocities.\n    for velocity in velocities:\n        print(velocity)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    input_line = input()\n    input_line = input_line.split()\n    num_seg = int(input_line[0])\n    g = float(input_line[1])\n    seg_lengths = []\n    seg_angles = []\n    for i in range(num_seg):\n        input_line = input()\n        input_line = input_line.split()\n        seg_lengths.append(int(input_line[0]))\n        seg_angles.append(int(input_line[1]))\n\n    for i in range(num_seg):\n        v = 0\n        for j in range(i, num_seg):\n            v += math.sqrt(2*g*seg_lengths[j]/math.cos(math.radians(seg_angles[j])))\n        print(v)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    # Read lines from stdin\n    lines = [line.strip() for line in sys.stdin]\n\n    # Parse first line\n    N, g = map(float, lines[0].split())\n\n    # Parse remaining lines\n    dist, angles = [], []\n    for i in range(1, len(lines)):\n        D, angle = map(int, lines[i].split())\n        dist.append(D)\n        angles.append(angle)\n\n    # Calculate velocity for each segment\n    for i in range(int(N)):\n        v = math.sqrt(2 * g * dist[i] * math.cos(math.radians(angles[i])))\n        print(v)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Input:\n    - One line containing a positive integer $N$ ($1 \\le N \\le 4$), the number of line segments making up the mountain, followed by a space and then a real number $g$ ($1 \\le g \\le 100$), the coefficient of acceleration due to gravity.\n    - $N$ more lines each containing two integers $D_ i$ and then $\\theta _ i$ ($1 \\le D \\le 10^4; 1 \\le \\theta \\le 89$): the sloped distance in metres and absolute angle in degrees of this line segment from the vertical respectively. The segments are ordered from the top of the hill to its bottom.\n    Output:\n    Each of the $N$ lines of output should contain one real number: the velocity of a biker starting at the $i^{\\text {th}}$-most segment from the top and finishing at the foot of the mountain.\n    \"\"\"\n    from math import radians, cos, sqrt\n    N, g = map(float, input().split())\n    for i in range(int(N)):\n        D, theta = map(int, input().split())\n        print(sqrt(2*g*D*cos(radians(theta))))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    numSegments, gravity = map(float, input().split())\n    segmentData = []\n    for _ in range(int(numSegments)):\n        segmentData.append(list(map(float, input().split())))\n    segmentData.reverse()\n    speeds = []\n    segmentData[0].append(0)\n    for i in range(1, int(numSegments)):\n        segmentData[i].append(segmentData[i-1][2] + (segmentData[i-1][0] * math.tan(math.radians(segmentData[i-1][1]))))\n    for segment in segmentData:\n        speeds.append(math.sqrt(2 * gravity * segment[2]))\n    speeds.reverse()\n    for speed in speeds:\n        print(speed)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom math import sqrt\n\n\ndef solve(segments, g):\n    speeds = []\n    for i in range(len(segments)):\n        s = segments[i]\n        if i == 0:\n            speeds.append(sqrt(2 * g * s[0]))\n        else:\n            speeds.append(sqrt(speeds[i - 1] ** 2 + 2 * g * s[0] * (1 - cos(s[1]))))\n    return speeds\n\n\nif __name__ == '__main__':\n    for line in sys.stdin:\n        n, g = map(float, line.split())\n        segments = []\n        for line in sys.stdin:\n            segments.append(map(float, line.split()))\n            if len(segments) == n:\n                break\n        print('\\n'.join(map(str, solve(segments, g))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom math import sin, cos, radians\n\nN, g = map(float, input().split())\n\ndef get_velocity(D, theta):\n    g_theta = g * cos(radians(theta))\n    return ((2 * D * g_theta) / g) ** 0.5\n\nfor i in range(int(N)):\n    D, theta = map(int, input().split())\n    print(get_velocity(D, theta))"
+    }
+  ],
+  "created": 1649562875,
+  "id": "cmpl-4vIwlgdKhcfF0nZqSV2bf0lSZqzKa",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:55:06.364104 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#g: gravity\n#D: distance\n#theta: angle\n\nimport sys\nimport math\n\ndef main():\n    line = sys.stdin.readline()\n    N, g = map(float, line.split())\n\n    for i in range(int(N)):\n        line = sys.stdin.readline()\n        D, theta = map(int, line.split())\n        if i == 0:\n            v = math.sqrt(2 * g * D * math.cos(math.radians(theta)))\n            print(\"%.1f\" % v)\n        else:\n            v = math.sqrt(2 * g * D * math.cos(math.radians(theta)) + v ** 2)\n            print(\"%.1f\" % v)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:55:06.364235 REASON stop
+2022-04-09 23:55:06.365769 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.365825 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_velocity(dist, angle, gravity):\n    \"\"\"\n    Returns the velocity of an object with a given starting angle, distance,\n    and gravitational acceleration.\n\n    :param dist: The distance of the slope.\n    :param angle: The angle of the slope.\n    :param gravity: The gravitational acceleration.\n    :return: The velocity of the object.\n    \"\"\"\n\n    # Velocity is the square root of the acceleration times the distance of the slope times the sine of the angle.\n    velocity = math.sqrt(gravity * dist * math.sin(math.radians(angle)))\n\n    return velocity\n\ndef main():\n\n    # Get the number of segments and the gravitational acceleration.\n    num_segments, gravity = [float(x) for x in input().split()]\n\n    # Create a list to store the velocities.\n    velocities = []\n\n    # Get the distance and angle for each segment.\n    for i in range(int(num_segments)):\n\n        # Get the distance and angle.\n        dist, angle = [int(x) for x in input().split()]\n\n        # Get the velocity and add it to the list.\n        velocities.append(get_velocity(dist, angle, gravity))\n\n    # Print the velocities.\n    for velocity in velocities:\n        print(velocity)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:55:06.366037 REASON stop
+2022-04-09 23:55:06.366869 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.366925 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    input_line = input()\n    input_line = input_line.split()\n    num_seg = int(input_line[0])\n    g = float(input_line[1])\n    seg_lengths = []\n    seg_angles = []\n    for i in range(num_seg):\n        input_line = input()\n        input_line = input_line.split()\n        seg_lengths.append(int(input_line[0]))\n        seg_angles.append(int(input_line[1]))\n\n    for i in range(num_seg):\n        v = 0\n        for j in range(i, num_seg):\n            v += math.sqrt(2*g*seg_lengths[j]/math.cos(math.radians(seg_angles[j])))\n        print(v)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:55:06.367036 REASON stop
+2022-04-09 23:55:06.367636 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.367680 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    # Read lines from stdin\n    lines = [line.strip() for line in sys.stdin]\n\n    # Parse first line\n    N, g = map(float, lines[0].split())\n\n    # Parse remaining lines\n    dist, angles = [], []\n    for i in range(1, len(lines)):\n        D, angle = map(int, lines[i].split())\n        dist.append(D)\n        angles.append(angle)\n\n    # Calculate velocity for each segment\n    for i in range(int(N)):\n        v = math.sqrt(2 * g * dist[i] * math.cos(math.radians(angles[i])))\n        print(v)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:55:06.367788 REASON stop
+2022-04-09 23:55:06.368180 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.368233 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Input:\n    - One line containing a positive integer $N$ ($1 \\le N \\le 4$), the number of line segments making up the mountain, followed by a space and then a real number $g$ ($1 \\le g \\le 100$), the coefficient of acceleration due to gravity.\n    - $N$ more lines each containing two integers $D_ i$ and then $\\theta _ i$ ($1 \\le D \\le 10^4; 1 \\le \\theta \\le 89$): the sloped distance in metres and absolute angle in degrees of this line segment from the vertical respectively. The segments are ordered from the top of the hill to its bottom.\n    Output:\n    Each of the $N$ lines of output should contain one real number: the velocity of a biker starting at the $i^{\\text {th}}$-most segment from the top and finishing at the foot of the mountain.\n    \"\"\"\n    from math import radians, cos, sqrt\n    N, g = map(float, input().split())\n    for i in range(int(N)):\n        D, theta = map(int, input().split())\n        print(sqrt(2*g*D*cos(radians(theta))))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:55:06.368332 REASON stop
+2022-04-09 23:55:06.368603 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.368624 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    numSegments, gravity = map(float, input().split())\n    segmentData = []\n    for _ in range(int(numSegments)):\n        segmentData.append(list(map(float, input().split())))\n    segmentData.reverse()\n    speeds = []\n    segmentData[0].append(0)\n    for i in range(1, int(numSegments)):\n        segmentData[i].append(segmentData[i-1][2] + (segmentData[i-1][0] * math.tan(math.radians(segmentData[i-1][1]))))\n    for segment in segmentData:\n        speeds.append(math.sqrt(2 * gravity * segment[2]))\n    speeds.reverse()\n    for speed in speeds:\n        print(speed)\n\nmain()"
+}
+2022-04-09 23:55:06.368707 REASON stop
+2022-04-09 23:55:06.368916 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.368927 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom math import sqrt\n\n\ndef solve(segments, g):\n    speeds = []\n    for i in range(len(segments)):\n        s = segments[i]\n        if i == 0:\n            speeds.append(sqrt(2 * g * s[0]))\n        else:\n            speeds.append(sqrt(speeds[i - 1] ** 2 + 2 * g * s[0] * (1 - cos(s[1]))))\n    return speeds\n\n\nif __name__ == '__main__':\n    for line in sys.stdin:\n        n, g = map(float, line.split())\n        segments = []\n        for line in sys.stdin:\n            segments.append(map(float, line.split()))\n            if len(segments) == n:\n                break\n        print('\\n'.join(map(str, solve(segments, g))))"
+}
+2022-04-09 23:55:06.368984 REASON stop
+2022-04-09 23:55:06.369208 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'
+2022-04-09 23:55:06.369223 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom math import sin, cos, radians\n\nN, g = map(float, input().split())\n\ndef get_velocity(D, theta):\n    g_theta = g * cos(radians(theta))\n    return ((2 * D * g_theta) / g) ** 0.5\n\nfor i in range(int(N)):\n    D, theta = map(int, input().split())\n    print(get_velocity(D, theta))"
+}
+2022-04-09 23:55:06.369292 REASON stop
+2022-04-09 23:55:06.369538 test/intro-questions.txt_dir/4935/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4935/solutions.json'

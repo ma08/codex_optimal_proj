@@ -1,0 +1,165 @@
+2022-04-13 20:26:35.591470 """
+You are given an integer array of length $n$.
+
+You have to choose some subsequence of this array of maximum length such that this subsequence forms a increasing sequence of consecutive integers. In other words the required sequence should be equal to $[x, x + 1, \dots, x + k - 1]$ for some value $x$ and length $k$.
+
+Subsequence of an array can be obtained by erasing some (possibly zero) elements from the array. You can erase any elements, not necessarily going successively. The remaining elements preserve their order. For example, for the array $[5, 3, 1, 2, 4]$ the following arrays are subsequences: $[3]$, $[5, 3, 1, 2, 4]$, $[5, 1, 4]$, but the array $[1, 3]$ is not.
+
+
+-----Input-----
+
+The first line of the input containing integer number $n$ ($1 \le n \le 2 \cdot 10^5$) — the length of the array. The second line of the input containing $n$ integer numbers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$) — the array itself.
+
+
+-----Output-----
+
+On the first line print $k$ — the maximum length of the subsequence of the given array that forms an increasing sequence of consecutive integers.
+
+On the second line print the sequence of the indices of the any maximum length subsequence of the given array that forms an increasing sequence of consecutive integers.
+
+
+-----Examples-----
+Input
+7
+3 3 4 7 5 6 8
+
+Output
+4
+2 3 5 6 
+
+Input
+6
+1 3 5 2 4 6
+
+Output
+2
+1 4 
+
+Input
+4
+10 9 8 7
+
+Output
+1
+1 
+
+Input
+9
+6 7 8 3 4 5 9 10 11
+
+Output
+6
+1 2 3 7 8 9 
+
+
+
+-----Note-----
+
+All valid answers for the first example (as sequences of indices):   $[1, 3, 5, 6]$  $[2, 3, 5, 6]$ 
+
+All valid answers for the second example:   $[1, 4]$  $[2, 5]$  $[3, 6]$ 
+
+All valid answers for the third example:   $[1]$  $[2]$  $[3]$  $[4]$ 
+
+All valid answers for the fourth example:   $[1, 2, 3, 7, 8, 9]$
+"""
+2022-04-13 20:26:35.591482 --------------------------
+2022-04-13 20:26:56.484839 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    dp = [1 for i in range(n)]\n    for i in range(1, n):\n        for j in range(i):\n            if a[i] >= a[j]:\n                dp[i] = max(dp[i], dp[j] + 1)\n    print(max(dp))\n\n    ans = []\n    for i in range(n):\n        if dp[i] == max(dp):\n            ans.append(i + 1)\n    print(\" \".join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    max_len = 0\n    max_seq = []\n    seq = []\n    for i in range(n):\n        if not seq:\n            seq.append(i + 1)\n        elif a[i] == a[i - 1] + 1:\n            seq.append(i + 1)\n        elif a[i] > a[i - 1] + 1:\n            if len(seq) > max_len:\n                max_seq = seq\n                max_len = len(seq)\n            seq = [i + 1]\n    if len(seq) > max_len:\n        max_seq = seq\n        max_len = len(seq)\n    print(max_len)\n    print(*max_seq)\n\nif __name__ == '__main__':\n    sys.exit(main())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    b = [0] * n\n    for i in range(n):\n        b[i] = a[i] - i\n    d = {}\n    m = 0\n    for i in range(n):\n        if b[i] in d:\n            d[b[i]] = i\n        else:\n            d[b[i]] = i\n            m = max(m, i - d[b[i] - 1])\n    print(m)\n    for i in range(n):\n        if a[i] - i == b[i] - m + 1:\n            print(i + 1, end=' ')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# read\nn = int(input())\na = [int(i) for i in input().split()]\n\n# solve\nb = [0] * n\nb[0] = 1\nfor i in range(1, n):\n    if a[i] > a[i - 1]:\n        b[i] = b[i - 1] + 1\n    else:\n        b[i] = 1\n\n# print\nprint(max(b))\nfor i in range(n):\n    if b[i] == max(b):\n        print(i + 1, end=' ')\n        break\nfor i in range(i + 1, n):\n    if b[i] == b[i - 1] + 1:\n        print(i + 1, end=' ')\n    elif b[i] == 1:\n        break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# parse input\nn = int(input())\na = list(map(int, input().split()))\n\n# init vars\nprev = 1\nmax_len = 1\nmax_ind = [1]\n\n# iterate\nfor i in range(1, n):\n    if a[i] == a[i - 1] + 1:\n        prev += 1\n        max_ind.append(i + 1)\n    else:\n        prev = 1\n        max_ind = [i + 1]\n    if prev > max_len:\n        max_len = prev\n\nprint(max_len)\nprint(*max_ind)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    dp = [1] * n\n    prev = [-1] * n\n    for i in range(1, n):\n        for j in range(i):\n            if arr[i] > arr[j] and dp[i] < dp[j] + 1:\n                dp[i] = dp[j] + 1\n                prev[i] = j\n    max_len = max(dp)\n    max_ind = dp.index(max_len)\n    print(max_len)\n    # print(dp)\n    # print(prev)\n    ans = []\n    while max_ind >= 0:\n        ans.append(max_ind + 1)\n        max_ind = prev[max_ind]\n    print(*ans[::-1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef get_longest_increasing_subseq(arr):\n    \"\"\"\n    arr: list of integers\n    returns: list of indices of longest increasing subseq\n    \"\"\"\n    n = len(arr)\n    dp = [1] * n\n    prev = [-1] * n\n    for i in range(n):\n        for j in range(i):\n            if arr[i] == arr[j] + 1:\n                if dp[i] < dp[j] + 1:\n                    dp[i] = dp[j] + 1\n                    prev[i] = j\n    max_ind = 0\n    for i in range(1, n):\n        if dp[max_ind] < dp[i]:\n            max_ind = i\n    ans = []\n    while max_ind != -1:\n        ans.append(max_ind)\n        max_ind = prev[max_ind]\n    return ans[::-1]\n\n\nif __name__ == '__main__':\n    n = int(input())\n    arr = list(map(int, input().split()))\n    ans = get_longest_increasing_subseq(arr)\n    print(len(ans))\n    print(*ans)"
+    }
+  ],
+  "created": 1649881596,
+  "id": "cmpl-4wdrQUQiXubkAB5gAmkkDIkQ3evIS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:26:56.485133 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    dp = [1 for i in range(n)]\n    for i in range(1, n):\n        for j in range(i):\n            if a[i] >= a[j]:\n                dp[i] = max(dp[i], dp[j] + 1)\n    print(max(dp))\n\n    ans = []\n    for i in range(n):\n        if dp[i] == max(dp):\n            ans.append(i + 1)\n    print(\" \".join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:26:56.485170 REASON stop
+2022-04-13 20:26:56.485704 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    max_len = 0\n    max_seq = []\n    seq = []\n    for i in range(n):\n        if not seq:\n            seq.append(i + 1)\n        elif a[i] == a[i - 1] + 1:\n            seq.append(i + 1)\n        elif a[i] > a[i - 1] + 1:\n            if len(seq) > max_len:\n                max_seq = seq\n                max_len = len(seq)\n            seq = [i + 1]\n    if len(seq) > max_len:\n        max_seq = seq\n        max_len = len(seq)\n    print(max_len)\n    print(*max_seq)\n\nif __name__ == '__main__':\n    sys.exit(main())"
+}
+2022-04-13 20:26:56.485818 REASON stop
+2022-04-13 20:26:56.486186 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    b = [0] * n\n    for i in range(n):\n        b[i] = a[i] - i\n    d = {}\n    m = 0\n    for i in range(n):\n        if b[i] in d:\n            d[b[i]] = i\n        else:\n            d[b[i]] = i\n            m = max(m, i - d[b[i] - 1])\n    print(m)\n    for i in range(n):\n        if a[i] - i == b[i] - m + 1:\n            print(i + 1, end=' ')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:26:56.486272 REASON stop
+2022-04-13 20:26:56.530550 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# read\nn = int(input())\na = [int(i) for i in input().split()]\n\n# solve\nb = [0] * n\nb[0] = 1\nfor i in range(1, n):\n    if a[i] > a[i - 1]:\n        b[i] = b[i - 1] + 1\n    else:\n        b[i] = 1\n\n# print\nprint(max(b))\nfor i in range(n):\n    if b[i] == max(b):\n        print(i + 1, end=' ')\n        break\nfor i in range(i + 1, n):\n    if b[i] == b[i - 1] + 1:\n        print(i + 1, end=' ')\n    elif b[i] == 1:\n        break"
+}
+2022-04-13 20:26:56.530642 REASON stop
+2022-04-13 20:26:56.555968 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# parse input\nn = int(input())\na = list(map(int, input().split()))\n\n# init vars\nprev = 1\nmax_len = 1\nmax_ind = [1]\n\n# iterate\nfor i in range(1, n):\n    if a[i] == a[i - 1] + 1:\n        prev += 1\n        max_ind.append(i + 1)\n    else:\n        prev = 1\n        max_ind = [i + 1]\n    if prev > max_len:\n        max_len = prev\n\nprint(max_len)\nprint(*max_ind)"
+}
+2022-04-13 20:26:56.556066 REASON stop
+2022-04-13 20:26:56.556733 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    dp = [1] * n\n    prev = [-1] * n\n    for i in range(1, n):\n        for j in range(i):\n            if arr[i] > arr[j] and dp[i] < dp[j] + 1:\n                dp[i] = dp[j] + 1\n                prev[i] = j\n    max_len = max(dp)\n    max_ind = dp.index(max_len)\n    print(max_len)\n    # print(dp)\n    # print(prev)\n    ans = []\n    while max_ind >= 0:\n        ans.append(max_ind + 1)\n        max_ind = prev[max_ind]\n    print(*ans[::-1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:26:56.556799 REASON stop
+2022-04-13 20:26:56.557333 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef get_longest_increasing_subseq(arr):\n    \"\"\"\n    arr: list of integers\n    returns: list of indices of longest increasing subseq\n    \"\"\"\n    n = len(arr)\n    dp = [1] * n\n    prev = [-1] * n\n    for i in range(n):\n        for j in range(i):\n            if arr[i] == arr[j] + 1:\n                if dp[i] < dp[j] + 1:\n                    dp[i] = dp[j] + 1\n                    prev[i] = j\n    max_ind = 0\n    for i in range(1, n):\n        if dp[max_ind] < dp[i]:\n            max_ind = i\n    ans = []\n    while max_ind != -1:\n        ans.append(max_ind)\n        max_ind = prev[max_ind]\n    return ans[::-1]\n\n\nif __name__ == '__main__':\n    n = int(input())\n    arr = list(map(int, input().split()))\n    ans = get_longest_increasing_subseq(arr)\n    print(len(ans))\n    print(*ans)"
+}
+2022-04-13 20:26:56.557419 REASON stop

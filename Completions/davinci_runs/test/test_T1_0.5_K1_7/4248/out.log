@@ -1,0 +1,191 @@
+2022-04-13 19:33:50.354312 """
+-----Input-----
+
+The first line contains a single integer n (1 ≤ n ≤ 1000) — the number of points on a plane.
+
+Each of the next n lines contains two real coordinates x_{i} and y_{i} of the $i^{\text{th}}$ point, specified with exactly 2 fractional digits. All coordinates are between  - 1000 and 1000, inclusive.
+
+
+-----Output-----
+
+Output a single real number θ — the answer to the problem statement. The absolute or relative error of your answer should be at most 10^{ - 2}.
+
+
+-----Examples-----
+Input
+8
+-2.14 2.06
+-1.14 2.04
+-2.16 1.46
+-2.14 0.70
+-1.42 0.40
+-0.94 -0.48
+-1.42 -1.28
+-2.16 -1.62
+
+Output
+5.410
+
+Input
+5
+2.26 1.44
+2.28 0.64
+2.30 -0.30
+1.58 0.66
+3.24 0.66
+
+Output
+5.620
+
+Input
+8
+6.98 2.06
+6.40 1.12
+5.98 0.24
+5.54 -0.60
+7.16 0.30
+7.82 1.24
+8.34 0.24
+8.74 -0.76
+
+Output
+5.480
+
+Input
+5
+10.44 2.06
+10.90 0.80
+11.48 -0.48
+12.06 0.76
+12.54 2.06
+
+Output
+6.040
+
+Input
+8
+16.94 2.42
+15.72 2.38
+14.82 1.58
+14.88 0.50
+15.76 -0.16
+16.86 -0.20
+17.00 0.88
+16.40 0.92
+
+Output
+6.040
+
+Input
+7
+20.62 3.00
+21.06 2.28
+21.56 1.36
+21.66 0.56
+21.64 -0.52
+22.14 2.32
+22.62 3.04
+
+Output
+6.720
+"""
+2022-04-13 19:33:50.354321 --------------------------
+2022-04-13 19:35:49.844635 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef find_angle_between_3_points(p1, p2):\n    \"\"\"\n    Find the angle between the line created by the two points and the x-axis\n    \"\"\"\n    x1, y1 = p1\n    x2, y2 = p2\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef find_area(p1, p2, p3):\n    \"\"\"\n    Find the area of the triangle created by the three points\n    \"\"\"\n    x1, y1 = p1\n    x2, y2 = p2\n    x3, y3 = p3\n\n    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)\n\ndef find_area_of_polygon(points):\n    \"\"\"\n    Find the area of the polygon created by the points\n    \"\"\"\n    n = len(points)\n    area = 0.0\n    p1 = 0\n    p2 = 1\n    p3 = 2\n    while p3 < n:\n        area += find_area(points[p1], points[p2], points[p3])\n        p1 += 1\n        p2 += 1\n        p3 += 1\n    return area\n\ndef find_angle_of_polygon(points):\n    \"\"\"\n    Find the angle of the polygon created by the points\n    \"\"\"\n    n = len(points)\n    p1 = 0\n    p2 = 1\n    p3 = 2\n    sum_of_angles = 0.0\n    while p3 < n:\n        angle = find_angle_between_3_points(points[p1], points[p2])\n        sum_of_angles += angle\n        p1 += 1\n        p2 += 1\n        p3 += 1\n    return sum_of_angles\n\ndef find_theta(points):\n    \"\"\"\n    Find the theta value\n    \"\"\"\n    area = find_area_of_polygon(points)\n    angle = find_angle_of_polygon(points)\n\n    theta = area / angle\n    return theta / 2\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    n = int(input())\n\n    points = []\n    for _ in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    theta = find_theta(points)\n\n    print(round(theta, 3))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nn = int(input())\n\nx = []\ny = []\n\nfor i in range(n):\n    x_i, y_i = list(map(float, input().split()))\n    x.append(x_i)\n    y.append(y_i)\n\n# print(x)\n# print(y)\n\ndef get_theta(x, y):\n    # print(x)\n    # print(y)\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_2(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_3(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_4(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_5(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_6(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_7(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_8(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_9(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_10(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_11(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_12(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_13(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_14(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_15(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_16(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_17(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_18(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_19(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_20(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_21(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_22(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_23(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_24(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_25(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_26(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_27(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_28(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_29(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_30(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_31(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_32(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_33(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_34(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_35(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_36(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_37(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_38(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_39(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n#Modulus of a vector\ndef modulus(v):\n    return math.sqrt(v[0]*v[0] + v[1]*v[1])\n\n#Dot product of two vectors\ndef dot(v1, v2):\n    return v1[0]*v2[0] + v1[1]*v2[1]\n\n#Cross product of two vectors\ndef cross(v1, v2):\n    return v1[0]*v2[1] - v1[1]*v2[0]\n\n#Angle between two vectors\ndef angle(v1, v2):\n    return math.acos(dot(v1, v2)/(modulus(v1)*modulus(v2)))\n\n#Angle of a vector from the x-axis\ndef angle_from_x(v):\n    return math.atan2(v[1], v[0])\n\n#Vector from point p0 to point p1\ndef vector(p0, p1):\n    return [p1[0] - p0[0], p1[1] - p0[1]]\n\n#Distance between two points\ndef distance(p0, p1):\n    return modulus(vector(p0, p1))\n\n#Signed angle between two points\ndef signed_angle(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return angle(v1, v2)\n\n#Signed angle between two points\ndef signed_angle_from_x(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return angle_from_x(v2) - angle_from_x(v1)\n\n#Area of a triangle\ndef triangle_area(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return 0.5*abs(cross(v1, v2))\n\n#Area of a polygon\ndef polygon_area(points):\n    n = len(points)\n    area = 0.0\n    for i in range(n):\n        area += triangle_area(points[0], points[i], points[(i+1)%n])\n    return area\n\n#Signed area of a polygon\ndef signed_polygon_area(points):\n    n = len(points)\n    area = 0.0\n    for i in range(n):\n        area += cross(vector(points[0], points[i]), vector(points[0], points[(i+1)%n]))\n    return 0.5*area\n\n#Find the maximum angle between two consecutive points\ndef max_angle(points):\n    n = len(points)\n    max_angle = 0.0\n    for i in range(n):\n        angle = math.pi - signed_angle(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle > max_angle:\n            max_angle = angle\n    return max_angle\n\n#Find the maximum angle between two consecutive points\ndef max_angle_from_x(points):\n    n = len(points)\n    max_angle = 0.0\n    for i in range(n):\n        angle = math.pi - signed_angle_from_x(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle > max_angle:\n            max_angle = angle\n    return max_angle\n\n#Find the minimum angle between two consecutive points\ndef min_angle(points):\n    n = len(points)\n    min_angle = 2*math.pi\n    for i in range(n):\n        angle = signed_angle(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle < min_angle:\n            min_angle = angle\n    return min_angle\n\n#Find the minimum angle between two consecutive points\ndef min_angle_from_x(points):\n    n = len(points)\n    min_angle = 2*math.pi\n    for i in range(n):\n        angle = signed_angle_from_x(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle < min_angle:\n            min_angle = angle\n    return min_angle\n\n#Read points from input\nn = int(sys.stdin.readline())\npoints = []\nfor i in range(n):\n    line = sys.stdin.readline().split()\n    points.append([float(line[0]), float(line[1])])\n\n#Find the maximum angle\nmax_angle = 0.0\nfor i in range(n):\n    angle = max_angle_from_x(points[i:] + points[:i])\n    if angle > max_angle:\n        max_angle = angle\n\n#Print the result\nprint('%.3f' % max_angle)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\nimport math\n\nn = int(input())\n\nx = []\ny = []\n\nfor i in range(n):\n    a, b = map(float, input().split())\n    x.append(a)\n    y.append(b)\n\nx.sort()\ny.sort()\n\nif n % 2 == 0:\n    x_med = (x[n//2] + x[n//2-1])/2\n    y_med = (y[n//2] + y[n//2-1])/2\nelse:\n    x_med = x[n//2]\n    y_med = y[n//2]\n\nmax_dist = 0\n\nfor i in range(n):\n    dist = math.sqrt((x[i] - x_med)**2 + (y[i] - y_med)**2)\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = []\n    for _ in range(n):\n        points.append(list(map(float, input().split())))\n    points.sort(key=lambda x: x[0])\n    points.sort(key=lambda x: x[1])\n    x1, y1 = points[0]\n    x2, y2 = points[-1]\n    theta = math.degrees(math.atan2(y2 - y1, x2 - x1))\n    print(round(theta, 3))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# Functions\ndef get_input():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = float(input())\n        points.append((x, y))\n    return points\n\n\ndef get_angles(points):\n    angles = []\n    for i in range(len(points)):\n        xi, yi = points[i]\n        for j in range(i):\n            xj, yj = points[j]\n            angle = math.atan2(yi - yj, xi - xj)\n            angles.append(angle)\n    return angles\n\n\ndef get_median_angle(angles):\n    angles.sort()\n    n = len(angles)\n    median = angles[n // 2]\n    return median\n\n\ndef get_median_angle_degrees(median):\n    return math.degrees(median)\n\n\ndef get_median_angle_degrees_formatted(median):\n    return \"{0:.3f}\".format(median)\n\n\n# Main\ndef main():\n    points = get_input()\n    angles = get_angles(points)\n    median = get_median_angle(angles)\n    median_degrees = get_median_angle_degrees(median)\n    median_degrees_formatted = get_median_angle_degrees_formatted(median_degrees)\n    print(median_degrees_formatted)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport math\n\npoints = []\n\ndef cross(o, a, b):\n    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])\n\ndef convex_hull(points):\n    points = sorted(set(points))\n\n    if len(points) <= 1:\n        return points\n\n    # Build lower hull\n    lower = []\n    for p in points:\n        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:\n            lower.pop()\n        lower.append(p)\n\n    # Build upper hull\n    upper = []\n    for p in reversed(points):\n        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:\n            upper.pop()\n        upper.append(p)\n\n    # Concatenation of the lower and upper hulls gives the convex hull.\n    # Last point of each list is omitted because it is repeated at the beginning of the other list.\n    return lower[:-1] + upper[:-1]\n\ndef distance(point1, point2):\n    return math.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)\n\ndef get_perimeter(points):\n    perimeter = 0\n    for i in range(len(points)):\n        if i == len(points) - 1:\n            perimeter += distance(points[i], points[0])\n        else:\n            perimeter += distance(points[i], points[i+1])\n    return perimeter\n\nn = int(input())\nfor i in range(n):\n    points.append(list(map(float, input().split())))\n\nconvex_points = convex_hull(points)\nprint(round(get_perimeter(convex_points), 3))"
+    }
+  ],
+  "created": 1649878430,
+  "id": "cmpl-4wd2MeC9dKhwml55KX4g5rpnzrIUT",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:35:49.845041 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef find_angle_between_3_points(p1, p2):\n    \"\"\"\n    Find the angle between the line created by the two points and the x-axis\n    \"\"\"\n    x1, y1 = p1\n    x2, y2 = p2\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef find_area(p1, p2, p3):\n    \"\"\"\n    Find the area of the triangle created by the three points\n    \"\"\"\n    x1, y1 = p1\n    x2, y2 = p2\n    x3, y3 = p3\n\n    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)\n\ndef find_area_of_polygon(points):\n    \"\"\"\n    Find the area of the polygon created by the points\n    \"\"\"\n    n = len(points)\n    area = 0.0\n    p1 = 0\n    p2 = 1\n    p3 = 2\n    while p3 < n:\n        area += find_area(points[p1], points[p2], points[p3])\n        p1 += 1\n        p2 += 1\n        p3 += 1\n    return area\n\ndef find_angle_of_polygon(points):\n    \"\"\"\n    Find the angle of the polygon created by the points\n    \"\"\"\n    n = len(points)\n    p1 = 0\n    p2 = 1\n    p3 = 2\n    sum_of_angles = 0.0\n    while p3 < n:\n        angle = find_angle_between_3_points(points[p1], points[p2])\n        sum_of_angles += angle\n        p1 += 1\n        p2 += 1\n        p3 += 1\n    return sum_of_angles\n\ndef find_theta(points):\n    \"\"\"\n    Find the theta value\n    \"\"\"\n    area = find_area_of_polygon(points)\n    angle = find_angle_of_polygon(points)\n\n    theta = area / angle\n    return theta / 2\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    n = int(input())\n\n    points = []\n    for _ in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    theta = find_theta(points)\n\n    print(round(theta, 3))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:35:49.845086 REASON stop
+2022-04-13 19:35:49.845609 1 {
+  "finish_reason": "length",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nn = int(input())\n\nx = []\ny = []\n\nfor i in range(n):\n    x_i, y_i = list(map(float, input().split()))\n    x.append(x_i)\n    y.append(y_i)\n\n# print(x)\n# print(y)\n\ndef get_theta(x, y):\n    # print(x)\n    # print(y)\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_2(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_3(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_4(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_5(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_6(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_7(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_8(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_9(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_10(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_11(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_12(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_13(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_14(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_15(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_16(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_17(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_18(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_19(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_20(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_21(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_22(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_23(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_24(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_25(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_26(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_27(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_28(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_29(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_30(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_31(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_32(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_33(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_34(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_35(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_36(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_37(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_38(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y[i+1]\n    return math.atan2(num, den)\n\ndef get_theta_39(x, y):\n    num = 0\n    den = 0\n    for i in range(len(x)-1):\n        num += x[i] * y[i+1] - x[i+1] * y[i]\n        den += x[i] * x[i+1] + y[i] * y"
+}
+2022-04-13 19:35:49.845781 REASON length
+2022-04-13 19:35:49.845789 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n#Modulus of a vector\ndef modulus(v):\n    return math.sqrt(v[0]*v[0] + v[1]*v[1])\n\n#Dot product of two vectors\ndef dot(v1, v2):\n    return v1[0]*v2[0] + v1[1]*v2[1]\n\n#Cross product of two vectors\ndef cross(v1, v2):\n    return v1[0]*v2[1] - v1[1]*v2[0]\n\n#Angle between two vectors\ndef angle(v1, v2):\n    return math.acos(dot(v1, v2)/(modulus(v1)*modulus(v2)))\n\n#Angle of a vector from the x-axis\ndef angle_from_x(v):\n    return math.atan2(v[1], v[0])\n\n#Vector from point p0 to point p1\ndef vector(p0, p1):\n    return [p1[0] - p0[0], p1[1] - p0[1]]\n\n#Distance between two points\ndef distance(p0, p1):\n    return modulus(vector(p0, p1))\n\n#Signed angle between two points\ndef signed_angle(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return angle(v1, v2)\n\n#Signed angle between two points\ndef signed_angle_from_x(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return angle_from_x(v2) - angle_from_x(v1)\n\n#Area of a triangle\ndef triangle_area(p0, p1, p2):\n    v1 = vector(p0, p1)\n    v2 = vector(p0, p2)\n    return 0.5*abs(cross(v1, v2))\n\n#Area of a polygon\ndef polygon_area(points):\n    n = len(points)\n    area = 0.0\n    for i in range(n):\n        area += triangle_area(points[0], points[i], points[(i+1)%n])\n    return area\n\n#Signed area of a polygon\ndef signed_polygon_area(points):\n    n = len(points)\n    area = 0.0\n    for i in range(n):\n        area += cross(vector(points[0], points[i]), vector(points[0], points[(i+1)%n]))\n    return 0.5*area\n\n#Find the maximum angle between two consecutive points\ndef max_angle(points):\n    n = len(points)\n    max_angle = 0.0\n    for i in range(n):\n        angle = math.pi - signed_angle(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle > max_angle:\n            max_angle = angle\n    return max_angle\n\n#Find the maximum angle between two consecutive points\ndef max_angle_from_x(points):\n    n = len(points)\n    max_angle = 0.0\n    for i in range(n):\n        angle = math.pi - signed_angle_from_x(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle > max_angle:\n            max_angle = angle\n    return max_angle\n\n#Find the minimum angle between two consecutive points\ndef min_angle(points):\n    n = len(points)\n    min_angle = 2*math.pi\n    for i in range(n):\n        angle = signed_angle(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle < min_angle:\n            min_angle = angle\n    return min_angle\n\n#Find the minimum angle between two consecutive points\ndef min_angle_from_x(points):\n    n = len(points)\n    min_angle = 2*math.pi\n    for i in range(n):\n        angle = signed_angle_from_x(points[i], points[(i+1)%n], points[(i+2)%n])\n        if angle < min_angle:\n            min_angle = angle\n    return min_angle\n\n#Read points from input\nn = int(sys.stdin.readline())\npoints = []\nfor i in range(n):\n    line = sys.stdin.readline().split()\n    points.append([float(line[0]), float(line[1])])\n\n#Find the maximum angle\nmax_angle = 0.0\nfor i in range(n):\n    angle = max_angle_from_x(points[i:] + points[:i])\n    if angle > max_angle:\n        max_angle = angle\n\n#Print the result\nprint('%.3f' % max_angle)"
+}
+2022-04-13 19:35:49.845829 REASON stop
+2022-04-13 19:35:49.846197 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\nimport math\n\nn = int(input())\n\nx = []\ny = []\n\nfor i in range(n):\n    a, b = map(float, input().split())\n    x.append(a)\n    y.append(b)\n\nx.sort()\ny.sort()\n\nif n % 2 == 0:\n    x_med = (x[n//2] + x[n//2-1])/2\n    y_med = (y[n//2] + y[n//2-1])/2\nelse:\n    x_med = x[n//2]\n    y_med = y[n//2]\n\nmax_dist = 0\n\nfor i in range(n):\n    dist = math.sqrt((x[i] - x_med)**2 + (y[i] - y_med)**2)\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+}
+2022-04-13 19:35:49.846244 REASON stop
+2022-04-13 19:35:49.872814 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = []\n    for _ in range(n):\n        points.append(list(map(float, input().split())))\n    points.sort(key=lambda x: x[0])\n    points.sort(key=lambda x: x[1])\n    x1, y1 = points[0]\n    x2, y2 = points[-1]\n    theta = math.degrees(math.atan2(y2 - y1, x2 - x1))\n    print(round(theta, 3))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:35:49.872919 REASON stop
+2022-04-13 19:35:49.900343 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# Functions\ndef get_input():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = float(input())\n        points.append((x, y))\n    return points\n\n\ndef get_angles(points):\n    angles = []\n    for i in range(len(points)):\n        xi, yi = points[i]\n        for j in range(i):\n            xj, yj = points[j]\n            angle = math.atan2(yi - yj, xi - xj)\n            angles.append(angle)\n    return angles\n\n\ndef get_median_angle(angles):\n    angles.sort()\n    n = len(angles)\n    median = angles[n // 2]\n    return median\n\n\ndef get_median_angle_degrees(median):\n    return math.degrees(median)\n\n\ndef get_median_angle_degrees_formatted(median):\n    return \"{0:.3f}\".format(median)\n\n\n# Main\ndef main():\n    points = get_input()\n    angles = get_angles(points)\n    median = get_median_angle(angles)\n    median_degrees = get_median_angle_degrees(median)\n    median_degrees_formatted = get_median_angle_degrees_formatted(median_degrees)\n    print(median_degrees_formatted)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:35:49.900444 REASON stop
+2022-04-13 19:35:49.901543 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport math\n\npoints = []\n\ndef cross(o, a, b):\n    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])\n\ndef convex_hull(points):\n    points = sorted(set(points))\n\n    if len(points) <= 1:\n        return points\n\n    # Build lower hull\n    lower = []\n    for p in points:\n        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:\n            lower.pop()\n        lower.append(p)\n\n    # Build upper hull\n    upper = []\n    for p in reversed(points):\n        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:\n            upper.pop()\n        upper.append(p)\n\n    # Concatenation of the lower and upper hulls gives the convex hull.\n    # Last point of each list is omitted because it is repeated at the beginning of the other list.\n    return lower[:-1] + upper[:-1]\n\ndef distance(point1, point2):\n    return math.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)\n\ndef get_perimeter(points):\n    perimeter = 0\n    for i in range(len(points)):\n        if i == len(points) - 1:\n            perimeter += distance(points[i], points[0])\n        else:\n            perimeter += distance(points[i], points[i+1])\n    return perimeter\n\nn = int(input())\nfor i in range(n):\n    points.append(list(map(float, input().split())))\n\nconvex_points = convex_hull(points)\nprint(round(get_perimeter(convex_points), 3))"
+}
+2022-04-13 19:35:49.901635 REASON stop

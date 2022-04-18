@@ -1,0 +1,143 @@
+2022-04-10 00:35:32.555246 """
+One of the most well-known and classic methods of encryption is the Vigenère cipher. Given a message and key of equal length, all you need to do to encrypt the message is shift each character forward by a certain number of characters in the alphabet.
+
+For example, if your string is CALGARY and key is ALBERTA, the number of letters to shift the $i$-th letter in the message is given by the position in the alphabet of the $i$-th letter in the key, using $0$-based indexing. So the first character in our message C is shifted $0$ letters forward since the first character in our key is A. Likewise, A is shifted $11$ characters since L is the $11$-th letter in the alphabet. Repeating for each character, we’ll find the encrypted message ends up being CLMKRKY.
+
+Of course since this is such a well known encryption method, it isn’t very safe so your friend Yraglac has come up with a brilliant idea: for each even-indexed character in your message, you do the usual encryption as described above, but for the odd-indexed characters, instead of shifting forwards by the key, you actually shift backwards. Thus, our example above would actually be encrypted as CPMCRYY. That’ll throw off any pesky hackers trying to read your secrets!
+
+Of course Yraglac has left the implementation up to you. Given an encrypted message and the key, can you write a program to decrypt it? Don’t forget that everything is using $0$-based indexing.
+
+-----Input-----
+Input consists of two lines. The first contains the encrypted message $C$ and the second contains the key $K$. $C$ and $K$ are always of equal length between $1$ and $200$ characters long and consists only of uppercase alphabetic letters.
+
+-----Output-----
+Output the decrypted message.
+
+-----Examples-----
+Sample Input:
+CPMCRYY
+ALBERTA
+Sample Output:
+CALGARY
+"""
+2022-04-10 00:35:32.555276 --------------------------
+2022-04-10 00:35:56.836282 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# get input\nmessage = input()\nkey = input()\n\n# create the alphabet list\nalphabet = []\nfor i in range(26):\n    alphabet.append(chr(65+i))\n\n# create the decrypted message\ndecrypted = \"\"\nfor i in range(len(message)):\n    if i % 2 == 0:\n        decrypted += alphabet[(alphabet.index(message[i]) - alphabet.index(key[i]) + 26) % 26]\n    else:\n        decrypted += alphabet[(alphabet.index(message[i]) + alphabet.index(key[i]) + 26) % 26]\n\n# print the decrypted message\nprint(decrypted)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nmessage = input()\nkey = input()\n\ndecrypted = []\n\nfor i in range(len(message)):\n    shift = ord(key[i]) - 65\n    if i % 2 == 0:\n        decrypted.append(chr((ord(message[i]) - shift - 65) % 26 + 65))\n    else:\n        decrypted.append(chr((ord(message[i]) + shift - 65) % 26 + 65))\n\nprint(''.join(decrypted))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef shift(c, key, i):\n    if i % 2 == 0:\n        return chr((ord(c) - ord('A') + ord(key[i]) - ord('A')) % 26 + ord('A'))\n    else:\n        return chr((ord(c) - ord('A') - (ord(key[i]) - ord('A'))) % 26 + ord('A'))\n\nc = input()\nk = input()\nprint(\"\".join(shift(c[i], k, i) for i in range(len(c))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef decrypt(message, key):\n    decrypted = \"\"\n    for i in range(len(message)):\n        if i % 2 == 0:\n            decrypted = decrypted + chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted = decrypted + chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\n    return decrypted\n\nprint(decrypt(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef decrypt(c, k):\n    decrypted = \"\"\n    for i in range(len(c)):\n        if i % 2 == 0:\n            decrypted += chr((ord(c[i]) - ord(k[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted += chr((ord(c[i]) - ord(k[i]) - 26) % 26 + ord('A'))\n    return decrypted\n\nprint(decrypt(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nmessage = sys.stdin.readline().strip()\nkey = sys.stdin.readline().strip()\n\noutput = \"\"\nfor i in range(len(message)):\n    if (i % 2 == 0):\n        output += chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n    else:\n        output += chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\nprint(output)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    message = input()\n    key = input()\n    decrypted = \"\"\n    for i in range(len(message)):\n        if i % 2 == 0:\n            decrypted += chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted += chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\n    print(decrypted)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef vigenereCipherDecrypt(cipher, key):\n    i = 0\n    decrypted = \"\"\n    for char in cipher:\n        if i % 2 == 0:\n            decrypted += chr(ord(char) + (ord(key[i]) - ord('A')))\n        else:\n            decrypted += chr(ord(char) - (ord(key[i]) - ord('A')))\n        i += 1\n    return decrypted\n\nprint(vigenereCipherDecrypt(input(), input()))"
+    }
+  ],
+  "created": 1649565332,
+  "id": "cmpl-4vJaOhGnbmPL3my95lubkVWVrIBEz",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:35:56.836656 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# get input\nmessage = input()\nkey = input()\n\n# create the alphabet list\nalphabet = []\nfor i in range(26):\n    alphabet.append(chr(65+i))\n\n# create the decrypted message\ndecrypted = \"\"\nfor i in range(len(message)):\n    if i % 2 == 0:\n        decrypted += alphabet[(alphabet.index(message[i]) - alphabet.index(key[i]) + 26) % 26]\n    else:\n        decrypted += alphabet[(alphabet.index(message[i]) + alphabet.index(key[i]) + 26) % 26]\n\n# print the decrypted message\nprint(decrypted)"
+}
+2022-04-10 00:35:56.836698 REASON stop
+2022-04-10 00:35:56.837547 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.837580 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nmessage = input()\nkey = input()\n\ndecrypted = []\n\nfor i in range(len(message)):\n    shift = ord(key[i]) - 65\n    if i % 2 == 0:\n        decrypted.append(chr((ord(message[i]) - shift - 65) % 26 + 65))\n    else:\n        decrypted.append(chr((ord(message[i]) + shift - 65) % 26 + 65))\n\nprint(''.join(decrypted))"
+}
+2022-04-10 00:35:56.837644 REASON stop
+2022-04-10 00:35:56.838008 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.838046 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef shift(c, key, i):\n    if i % 2 == 0:\n        return chr((ord(c) - ord('A') + ord(key[i]) - ord('A')) % 26 + ord('A'))\n    else:\n        return chr((ord(c) - ord('A') - (ord(key[i]) - ord('A'))) % 26 + ord('A'))\n\nc = input()\nk = input()\nprint(\"\".join(shift(c[i], k, i) for i in range(len(c))))"
+}
+2022-04-10 00:35:56.838113 REASON stop
+2022-04-10 00:35:56.838516 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.838551 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef decrypt(message, key):\n    decrypted = \"\"\n    for i in range(len(message)):\n        if i % 2 == 0:\n            decrypted = decrypted + chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted = decrypted + chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\n    return decrypted\n\nprint(decrypt(input(), input()))"
+}
+2022-04-10 00:35:56.838684 REASON stop
+2022-04-10 00:35:56.839080 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.839118 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef decrypt(c, k):\n    decrypted = \"\"\n    for i in range(len(c)):\n        if i % 2 == 0:\n            decrypted += chr((ord(c[i]) - ord(k[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted += chr((ord(c[i]) - ord(k[i]) - 26) % 26 + ord('A'))\n    return decrypted\n\nprint(decrypt(input(), input()))"
+}
+2022-04-10 00:35:56.839184 REASON stop
+2022-04-10 00:35:56.839518 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.839532 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nmessage = sys.stdin.readline().strip()\nkey = sys.stdin.readline().strip()\n\noutput = \"\"\nfor i in range(len(message)):\n    if (i % 2 == 0):\n        output += chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n    else:\n        output += chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\nprint(output)"
+}
+2022-04-10 00:35:56.839572 REASON stop
+2022-04-10 00:35:56.839842 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.839854 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    message = input()\n    key = input()\n    decrypted = \"\"\n    for i in range(len(message)):\n        if i % 2 == 0:\n            decrypted += chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))\n        else:\n            decrypted += chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))\n    print(decrypted)\n\nmain()"
+}
+2022-04-10 00:35:56.839890 REASON stop
+2022-04-10 00:35:56.840122 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'
+2022-04-10 00:35:56.840134 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef vigenereCipherDecrypt(cipher, key):\n    i = 0\n    decrypted = \"\"\n    for char in cipher:\n        if i % 2 == 0:\n            decrypted += chr(ord(char) + (ord(key[i]) - ord('A')))\n        else:\n            decrypted += chr(ord(char) - (ord(key[i]) - ord('A')))\n        i += 1\n    return decrypted\n\nprint(vigenereCipherDecrypt(input(), input()))"
+}
+2022-04-10 00:35:56.840175 REASON stop
+2022-04-10 00:35:56.840540 test/intro-questions.txt_dir/4996/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4996/solutions.json'

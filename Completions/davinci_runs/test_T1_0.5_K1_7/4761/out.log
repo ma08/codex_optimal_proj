@@ -1,0 +1,140 @@
+2022-04-13 23:11:46.956333 """
+Your favorite uncle has passed away, leaving you a large estate. Bank account numbers, locations of safe deposit boxes, and GPS coordinates to buried treasures are all locked in an electronic safe in your uncle’s office behind a picture of dogs playing poker. One day he showed you the safe with its $9$ digit keypad (digits $1$ through $9$). He told you he wasn’t worried about anyone breaking into his safe because it’s equipped with a self-destruct mechanism that will destroy the contents if anyone attempts a forced entry.
+
+The combination is a sequence of six decimal digits. If an incorrect combination is entered the safe enforces a thirty-second delay before accepting another combination. So a brute-force effort to try all six-digit combinations could take months.
+
+Your uncle had planned to give you, his sole heir, the combination one day, but due to an unfortunate hang-gliding accident in Kansas, you now must rely on your deductive and programming skills to access the key to your inheritance.
+
+Here’s what you know:
+ - The combination $c$ is a sequence of six non-zero decimal digits.
+ - Your mother recalls that she heard your uncle mention that all the digits are different.
+ - You remember that your uncle once said that the six digit number was divisible by each of its individual digits.
+
+An example satisfying these conditions is $123864$: all six digits differ, and you can check that $123864$ is divisible by each of $1$, $2$, $3$, $8$, $6$ and $4$.
+
+Even with the helpful data, it could take a while to get to open the safe, so the task is likely to be split into several sessions with separate ranges being tested. How many combinations are there to try in the range given?
+
+-----Input-----
+The input is a line with two space-separated integers $L$ and $H$, where $123456 \leq L < H \leq 987654$
+
+-----Output-----
+Print one integer, the total number of possible combinations to the safe, where each combination $c$ must satisfy the three constraints above, and lie in the range $L \leq c \leq H$.
+
+-----Examples-----
+Sample Input 1:
+123864 123865
+Sample Output 1:
+1
+
+Sample Input 2:
+198765 198769
+Sample Output 2:
+0
+"""
+2022-04-13 23:11:46.956349 --------------------------
+2022-04-13 23:12:02.645411 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    L, H = map(int, input().split())\n    count = 0\n    for i in range(L, H+1):\n        if check(i):\n            count += 1\n    print(count)\n\ndef check(i):\n    s = str(i)\n    if len(s) != 6:\n        return False\n    for j in range(1, 10):\n        if str(j) not in s:\n            continue\n        if i % j != 0:\n            return False\n    return True\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#Input\nL,H = map(int,input().split())\n\n#Solution\ndef is_divisible(n):\n    #Checks if n is divisible by each digit\n    for i in range(1,10):\n        if n%i != 0:\n            return False\n    return True\n\ndef is_valid(n):\n    #Checks if n is valid\n    n = str(n)\n    if len(n) != 6:\n        return False\n    if len(set(n)) != 6:\n        return False\n    return True\n\n#Initialize total\ntotal = 0\n\n#Iterate through range\nfor i in range(L,H+1):\n    #If i is valid, check if divisible\n    if is_valid(i):\n        if is_divisible(i):\n            total += 1\n\nprint(total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # l, h = 123864, 123865\n    # l, h = 198765, 198769\n    # l, h = 123456, 987654\n    l, h = map(int, sys.stdin.readline().strip().split())\n    print(count_combinations(l, h))\n\ndef count_combinations(l, h):\n    count = 0\n    for i in range(l, h + 1):\n        if is_valid(i):\n            count += 1\n    return count\n\ndef is_valid(i):\n    if len(set(str(i))) != 6:\n        return False\n    for j in range(1, 7):\n        if i % j != 0:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"Main function\"\"\"\n    lower_range, upper_range = map(int, input().split())\n    count = 0\n    for i in range(lower_range, upper_range+1):\n        if is_valid(i):\n            count += 1\n    print(count)\n\ndef is_valid(num):\n    \"\"\"Returns True if num is a valid combination\"\"\"\n    digits = []\n    while num > 0:\n        digit = num % 10\n        if digit == 0:\n            return False\n        if digit in digits:\n            return False\n        digits.append(digit)\n        num //= 10\n    for digit in digits:\n        if num % digit != 0:\n            return False\n    return True\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    L, H = input().split()\n    L = int(L)\n    H = int(H)\n    count = 0\n    for i in range(L, H+1):\n        s = str(i)\n        if len(set(s)) == len(s) and all(i % int(d) == 0 for d in s):\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef test(n):\n    \"\"\"\n    Tests whether an integer satisfies the constraints in the problem.\n    \"\"\"\n    s = set(str(n))\n    if len(s) != 6:\n        return False\n    for i in s:\n        if n % int(i) != 0:\n            return False\n    return True\n\ndef main():\n    L, H = map(int, input().split())\n    count = 0\n    for n in range(L, H+1):\n        if test(n):\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef is_valid(n):\n    num = str(n)\n    if len(num) != 6 or len(set(num)) != 6 or num[0] == '0':\n        return False\n    for i in num:\n        if int(i) == 0:\n            return False\n        if n % int(i) != 0:\n            return False\n    return True\n\nL, H = [int(i) for i in input().split()]\n\ncount = 0\nfor i in range(L, H+1):\n    if is_valid(i):\n        count += 1\n\nprint(count)"
+    }
+  ],
+  "created": 1649891507,
+  "id": "cmpl-4wgRHxOPuevwECHPFSHIp3eZwmqlu",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:12:02.645784 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    L, H = map(int, input().split())\n    count = 0\n    for i in range(L, H+1):\n        if check(i):\n            count += 1\n    print(count)\n\ndef check(i):\n    s = str(i)\n    if len(s) != 6:\n        return False\n    for j in range(1, 10):\n        if str(j) not in s:\n            continue\n        if i % j != 0:\n            return False\n    return True\n\nmain()"
+}
+2022-04-13 23:12:02.645840 REASON stop
+2022-04-13 23:12:02.646277 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.646303 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#Input\nL,H = map(int,input().split())\n\n#Solution\ndef is_divisible(n):\n    #Checks if n is divisible by each digit\n    for i in range(1,10):\n        if n%i != 0:\n            return False\n    return True\n\ndef is_valid(n):\n    #Checks if n is valid\n    n = str(n)\n    if len(n) != 6:\n        return False\n    if len(set(n)) != 6:\n        return False\n    return True\n\n#Initialize total\ntotal = 0\n\n#Iterate through range\nfor i in range(L,H+1):\n    #If i is valid, check if divisible\n    if is_valid(i):\n        if is_divisible(i):\n            total += 1\n\nprint(total)"
+}
+2022-04-13 23:12:02.646516 REASON stop
+2022-04-13 23:12:02.646897 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.646920 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # l, h = 123864, 123865\n    # l, h = 198765, 198769\n    # l, h = 123456, 987654\n    l, h = map(int, sys.stdin.readline().strip().split())\n    print(count_combinations(l, h))\n\ndef count_combinations(l, h):\n    count = 0\n    for i in range(l, h + 1):\n        if is_valid(i):\n            count += 1\n    return count\n\ndef is_valid(i):\n    if len(set(str(i))) != 6:\n        return False\n    for j in range(1, 7):\n        if i % j != 0:\n            return False\n    return True\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:12:02.647029 REASON stop
+2022-04-13 23:12:02.647949 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.647974 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"Main function\"\"\"\n    lower_range, upper_range = map(int, input().split())\n    count = 0\n    for i in range(lower_range, upper_range+1):\n        if is_valid(i):\n            count += 1\n    print(count)\n\ndef is_valid(num):\n    \"\"\"Returns True if num is a valid combination\"\"\"\n    digits = []\n    while num > 0:\n        digit = num % 10\n        if digit == 0:\n            return False\n        if digit in digits:\n            return False\n        digits.append(digit)\n        num //= 10\n    for digit in digits:\n        if num % digit != 0:\n            return False\n    return True\n\nmain()"
+}
+2022-04-13 23:12:02.648044 REASON stop
+2022-04-13 23:12:02.648639 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.648666 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    L, H = input().split()\n    L = int(L)\n    H = int(H)\n    count = 0\n    for i in range(L, H+1):\n        s = str(i)\n        if len(set(s)) == len(s) and all(i % int(d) == 0 for d in s):\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:12:02.648732 REASON stop
+2022-04-13 23:12:02.649201 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.649221 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef test(n):\n    \"\"\"\n    Tests whether an integer satisfies the constraints in the problem.\n    \"\"\"\n    s = set(str(n))\n    if len(s) != 6:\n        return False\n    for i in s:\n        if n % int(i) != 0:\n            return False\n    return True\n\ndef main():\n    L, H = map(int, input().split())\n    count = 0\n    for n in range(L, H+1):\n        if test(n):\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:12:02.649285 REASON stop
+2022-04-13 23:12:02.649848 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'
+2022-04-13 23:12:02.649871 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef is_valid(n):\n    num = str(n)\n    if len(num) != 6 or len(set(num)) != 6 or num[0] == '0':\n        return False\n    for i in num:\n        if int(i) == 0:\n            return False\n        if n % int(i) != 0:\n            return False\n    return True\n\nL, H = [int(i) for i in input().split()]\n\ncount = 0\nfor i in range(L, H+1):\n    if is_valid(i):\n        count += 1\n\nprint(count)"
+}
+2022-04-13 23:12:02.649938 REASON stop
+2022-04-13 23:12:02.650388 test/intro-questions.txt_dir/4761/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4761/solutions.json'

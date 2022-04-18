@@ -1,0 +1,164 @@
+2022-04-13 17:23:16.296104 """
+Petya studies at university. The current academic year finishes with $n$ special days. Petya needs to pass $m$ exams in those special days. The special days in this problem are numbered from $1$ to $n$.
+
+There are three values about each exam:  $s_i$ — the day, when questions for the $i$-th exam will be published,  $d_i$ — the day of the $i$-th exam ($s_i < d_i$),  $c_i$ — number of days Petya needs to prepare for the $i$-th exam. For the $i$-th exam Petya should prepare in days between $s_i$ and $d_i-1$, inclusive. 
+
+There are three types of activities for Petya in each day: to spend a day doing nothing (taking a rest), to spend a day passing exactly one exam or to spend a day preparing for exactly one exam. So he can't pass/prepare for multiple exams in a day. He can't mix his activities in a day. If he is preparing for the $i$-th exam in day $j$, then $s_i \le j < d_i$.
+
+It is allowed to have breaks in a preparation to an exam and to alternate preparations for different exams in consecutive days. So preparation for an exam is not required to be done in consecutive days.
+
+Find the schedule for Petya to prepare for all exams and pass them, or report that it is impossible.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ $(2 \le n \le 100, 1 \le m \le n)$ — the number of days and the number of exams.
+
+Each of the following $m$ lines contains three integers $s_i$, $d_i$, $c_i$ $(1 \le s_i < d_i \le n, 1 \le c_i \le n)$ — the day, when questions for the $i$-th exam will be given, the day of the $i$-th exam, number of days Petya needs to prepare for the $i$-th exam. 
+
+Guaranteed, that all the exams will be in different days. Questions for different exams can be given in the same day. It is possible that, in the day of some exam, the questions for other exams are given.
+
+
+-----Output-----
+
+If Petya can not prepare and pass all the exams, print -1. In case of positive answer, print $n$ integers, where the $j$-th number is:  $(m + 1)$, if the $j$-th day is a day of some exam (recall that in each day no more than one exam is conducted),  zero, if in the $j$-th day Petya will have a rest,  $i$ ($1 \le i \le m$), if Petya will prepare for the $i$-th exam in the day $j$ (the total number of days Petya prepares for each exam should be strictly equal to the number of days needed to prepare for it).
+
+Assume that the exams are numbered in order of appearing in the input, starting from $1$.
+
+If there are multiple schedules, print any of them.
+
+
+-----Examples-----
+Input
+5 2
+1 3 1
+1 5 1
+
+Output
+1 2 3 0 3 
+
+Input
+3 2
+1 3 1
+1 2 1
+
+Output
+-1
+
+Input
+10 3
+4 7 2
+1 10 3
+8 9 1
+
+Output
+2 2 2 1 1 0 4 3 4 4 
+
+
+
+-----Note-----
+
+In the first example Petya can, for example, prepare for exam $1$ in the first day, prepare for exam $2$ in the second day, pass exam $1$ in the third day, relax in the fourth day, and pass exam $2$ in the fifth day. So, he can prepare and pass all exams.
+
+In the second example, there are three days and two exams. So, Petya can prepare in only one day (because in two other days he should pass exams). Then Petya can not prepare and pass all exams.
+"""
+2022-04-13 17:23:16.296121 --------------------------
+2022-04-13 17:23:45.251724 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    exams = []\n    for i in range(m):\n        exams.append(list(map(int, input().split())))\n    exams.sort(key=lambda x: x[1])\n    schedule = [0] * n\n    for i in range(m):\n        if exams[i][2] > exams[i][1] - exams[i][0]:\n            print(-1)\n            return\n    for i in range(m):\n        for j in range(exams[i][0], exams[i][1]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = i+1\n    for i in range(m):\n        for j in range(exams[i][0], exams[i][0]+exams[i][2]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = -(i+1)\n    for i in range(m):\n        for j in range(exams[i][1], exams[i][1]+exams[i][2]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = -(i+1)\n    for i in range(n):\n        if schedule[i] == 0:\n            schedule[i] = -(m+1)\n        elif schedule[i] < 0:\n            schedule[i] = -schedule[i]\n    print(*schedule)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    days = [0]*n\n    for i in range(m):\n        s, d, c = map(int, input().split())\n        if c > d - s:\n            print(-1)\n            return\n        for j in range(s, d):\n            if days[j] != 0:\n                print(-1)\n                return\n            days[j] = i + 1\n        for j in range(c):\n            days[s + j - 1] = i + m + 1\n    print(*days)\n    \nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, raw_input().split())\n    s = []\n    d = []\n    c = []\n    for i in xrange(m):\n        s_i, d_i, c_i = map(int, raw_input().split())\n        s.append(s_i)\n        d.append(d_i)\n        c.append(c_i)\n    #print n, m, s, d, c\n    schedule = [-1] * n\n    for i in xrange(n):\n        if i in s:\n            schedule[i] = 0\n        if i in d:\n            schedule[i] = m + 1\n    #print schedule\n    for i in xrange(m):\n        if c[i] == 0:\n            continue\n        if schedule[s[i]] != 0:\n            print -1\n            return\n        if schedule[d[i] - 1] != m + 1:\n            print -1\n            return\n        if d[i] - s[i] < c[i]:\n            print -1\n            return\n        for j in xrange(s[i], d[i]):\n            if schedule[j] != 0:\n                print -1\n                return\n            schedule[j] = i + 1\n    for i in xrange(n):\n        if schedule[i] == -1:\n            print -1\n            return\n    print \" \".join(map(str, schedule))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, m, exams):\n    days = [0] * n\n    for s, d, c in exams:\n        for i in range(s, d):\n            days[i] += 1\n    for i in range(1, n):\n        if days[i] > 1:\n            return -1\n    return days\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    exams = [tuple(map(int, input().split())) for i in range(m)]\n    days = solve(n, m, exams)\n    if days == -1:\n        print(days)\n    else:\n        for i in range(n):\n            if days[i] == 0:\n                print(0, end=' ')\n            elif days[i] == 1:\n                print(1, end=' ')\n            else:\n                print(m + 1, end=' ')\n        print('')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\ns = []\nd = []\nc = []\n\nfor i in range(m):\n    a, b, ci = map(int, input().split())\n    s.append(a)\n    d.append(b)\n    c.append(ci)\n\n#print(s, d, c)\n\n# 0: rest\n# 1: prepare\n# 2: pass\n\n# -1: impossible\n\ndef compute_schedule(n, m, s, d, c):\n\n    #print(s, d, c)\n\n    if c[0] > n - 1:\n        return [-1]\n\n    schedule = [0] * n\n\n    for i in range(m):\n        #print(i)\n        for j in range(s[i] - 1, d[i] - 1):\n            if schedule[j] != 0:\n                return [-1]\n            schedule[j] = 1\n\n    #print(schedule)\n\n    for i in range(m):\n        count = 0\n        for j in range(s[i] - 1, d[i] - 1):\n            if schedule[j] == 1:\n                count += 1\n        if count < c[i]:\n            return [-1]\n\n    #print(schedule)\n\n    for i in range(m):\n        count = 0\n        for j in range(s[i] - 1, d[i] - 1):\n            if count == c[i]:\n                break\n            if schedule[j] == 1:\n                schedule[j] = i + 1\n                count += 1\n\n    #print(schedule)\n\n    for i in range(m):\n        schedule[d[i] - 1] = m + 1\n\n    #print(schedule)\n\n    return schedule\n\nschedule = compute_schedule(n, m, s, d, c)\n\nif schedule[0] == -1:\n    print(-1)\nelse:\n    for i in schedule:\n        print(i, end = ' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    exams = []\n    for i in range(m):\n        s, d, c = map(int, input().split())\n        exams.append((s, d, c))\n    exams.sort()\n    #print(exams)\n    for i in range(m):\n        s, d, c = exams[i]\n        #print(s, d, c)\n        if (d - s) < c:\n            #print(i, \"Impossible\")\n            return -1\n    #print(\"Possible\")\n    days = [0] * n\n    for i in range(m):\n        s, d, c = exams[i]\n        #print(s, d, c)\n        if c == 0:\n            days[d-1] = i+1\n        else:\n            for j in range(s-1, d-1):\n                if days[j] == 0:\n                    days[j] = i+1\n                    c -= 1\n                    if c == 0:\n                        break\n    #print(days)\n    for i in range(m):\n        s, d, c = exams[i]\n        if days[d-1] != i+1:\n            #print(i, \"Impossible\")\n            return -1\n    #print(days)\n    return days\n\nif __name__ == \"__main__\":\n    days = main()\n    if days == -1:\n        print(-1)\n    else:\n        for day in days:\n            print(day, end=\" \")\n        print()"
+    }
+  ],
+  "created": 1649870596,
+  "id": "cmpl-4wb005Ia7Mg0FcNsqFvKIKvyhlP4c",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:23:45.252061 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    exams = []\n    for i in range(m):\n        exams.append(list(map(int, input().split())))\n    exams.sort(key=lambda x: x[1])\n    schedule = [0] * n\n    for i in range(m):\n        if exams[i][2] > exams[i][1] - exams[i][0]:\n            print(-1)\n            return\n    for i in range(m):\n        for j in range(exams[i][0], exams[i][1]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = i+1\n    for i in range(m):\n        for j in range(exams[i][0], exams[i][0]+exams[i][2]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = -(i+1)\n    for i in range(m):\n        for j in range(exams[i][1], exams[i][1]+exams[i][2]):\n            if schedule[j] != 0:\n                print(-1)\n                return\n            schedule[j] = -(i+1)\n    for i in range(n):\n        if schedule[i] == 0:\n            schedule[i] = -(m+1)\n        elif schedule[i] < 0:\n            schedule[i] = -schedule[i]\n    print(*schedule)\n\nmain()"
+}
+2022-04-13 17:23:45.252103 REASON stop
+2022-04-13 17:23:45.252509 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    days = [0]*n\n    for i in range(m):\n        s, d, c = map(int, input().split())\n        if c > d - s:\n            print(-1)\n            return\n        for j in range(s, d):\n            if days[j] != 0:\n                print(-1)\n                return\n            days[j] = i + 1\n        for j in range(c):\n            days[s + j - 1] = i + m + 1\n    print(*days)\n    \nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:23:45.252625 REASON stop
+2022-04-13 17:23:45.253035 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, raw_input().split())\n    s = []\n    d = []\n    c = []\n    for i in xrange(m):\n        s_i, d_i, c_i = map(int, raw_input().split())\n        s.append(s_i)\n        d.append(d_i)\n        c.append(c_i)\n    #print n, m, s, d, c\n    schedule = [-1] * n\n    for i in xrange(n):\n        if i in s:\n            schedule[i] = 0\n        if i in d:\n            schedule[i] = m + 1\n    #print schedule\n    for i in xrange(m):\n        if c[i] == 0:\n            continue\n        if schedule[s[i]] != 0:\n            print -1\n            return\n        if schedule[d[i] - 1] != m + 1:\n            print -1\n            return\n        if d[i] - s[i] < c[i]:\n            print -1\n            return\n        for j in xrange(s[i], d[i]):\n            if schedule[j] != 0:\n                print -1\n                return\n            schedule[j] = i + 1\n    for i in xrange(n):\n        if schedule[i] == -1:\n            print -1\n            return\n    print \" \".join(map(str, schedule))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:23:45.253088 REASON stop
+2022-04-13 17:23:45.306163 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, m, exams):\n    days = [0] * n\n    for s, d, c in exams:\n        for i in range(s, d):\n            days[i] += 1\n    for i in range(1, n):\n        if days[i] > 1:\n            return -1\n    return days\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    exams = [tuple(map(int, input().split())) for i in range(m)]\n    days = solve(n, m, exams)\n    if days == -1:\n        print(days)\n    else:\n        for i in range(n):\n            if days[i] == 0:\n                print(0, end=' ')\n            elif days[i] == 1:\n                print(1, end=' ')\n            else:\n                print(m + 1, end=' ')\n        print('')"
+}
+2022-04-13 17:23:45.306277 REASON stop
+2022-04-13 17:23:45.307384 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:23:45.307475 REASON stop
+2022-04-13 17:23:45.318405 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\ns = []\nd = []\nc = []\n\nfor i in range(m):\n    a, b, ci = map(int, input().split())\n    s.append(a)\n    d.append(b)\n    c.append(ci)\n\n#print(s, d, c)\n\n# 0: rest\n# 1: prepare\n# 2: pass\n\n# -1: impossible\n\ndef compute_schedule(n, m, s, d, c):\n\n    #print(s, d, c)\n\n    if c[0] > n - 1:\n        return [-1]\n\n    schedule = [0] * n\n\n    for i in range(m):\n        #print(i)\n        for j in range(s[i] - 1, d[i] - 1):\n            if schedule[j] != 0:\n                return [-1]\n            schedule[j] = 1\n\n    #print(schedule)\n\n    for i in range(m):\n        count = 0\n        for j in range(s[i] - 1, d[i] - 1):\n            if schedule[j] == 1:\n                count += 1\n        if count < c[i]:\n            return [-1]\n\n    #print(schedule)\n\n    for i in range(m):\n        count = 0\n        for j in range(s[i] - 1, d[i] - 1):\n            if count == c[i]:\n                break\n            if schedule[j] == 1:\n                schedule[j] = i + 1\n                count += 1\n\n    #print(schedule)\n\n    for i in range(m):\n        schedule[d[i] - 1] = m + 1\n\n    #print(schedule)\n\n    return schedule\n\nschedule = compute_schedule(n, m, s, d, c)\n\nif schedule[0] == -1:\n    print(-1)\nelse:\n    for i in schedule:\n        print(i, end = ' ')"
+}
+2022-04-13 17:23:45.318509 REASON stop
+2022-04-13 17:23:45.319525 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    exams = []\n    for i in range(m):\n        s, d, c = map(int, input().split())\n        exams.append((s, d, c))\n    exams.sort()\n    #print(exams)\n    for i in range(m):\n        s, d, c = exams[i]\n        #print(s, d, c)\n        if (d - s) < c:\n            #print(i, \"Impossible\")\n            return -1\n    #print(\"Possible\")\n    days = [0] * n\n    for i in range(m):\n        s, d, c = exams[i]\n        #print(s, d, c)\n        if c == 0:\n            days[d-1] = i+1\n        else:\n            for j in range(s-1, d-1):\n                if days[j] == 0:\n                    days[j] = i+1\n                    c -= 1\n                    if c == 0:\n                        break\n    #print(days)\n    for i in range(m):\n        s, d, c = exams[i]\n        if days[d-1] != i+1:\n            #print(i, \"Impossible\")\n            return -1\n    #print(days)\n    return days\n\nif __name__ == \"__main__\":\n    days = main()\n    if days == -1:\n        print(-1)\n    else:\n        for day in days:\n            print(day, end=\" \")\n        print()"
+}
+2022-04-13 17:23:45.319613 REASON stop

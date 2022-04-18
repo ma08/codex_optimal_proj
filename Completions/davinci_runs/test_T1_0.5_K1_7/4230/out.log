@@ -1,0 +1,128 @@
+2022-04-13 19:21:36.001284 """
+Given are an integer X and an integer sequence of length N: p_1, \ldots, p_N.
+Among the integers not contained in the sequence p_1, \ldots, p_N (not necessarily positive), find the integer nearest to X, that is, find the integer whose absolute difference with X is the minimum. If there are multiple such integers, report the smallest such integer.
+
+-----Constraints-----
+ - 1 \leq X \leq 100
+ - 0 \leq N \leq 100
+ - 1 \leq p_i \leq 100
+ - p_1, \ldots, p_N are all distinct.
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+X N
+p_1 ... p_N
+
+-----Output-----
+Print the answer.
+
+-----Sample Input-----
+6 5
+4 7 10 6 5
+
+-----Sample Output-----
+8
+
+Among the integers not contained in the sequence 4, 7, 10, 6, 5, the one nearest to 6 is 8.
+"""
+2022-04-13 19:21:36.001292 --------------------------
+2022-04-13 19:22:10.486871 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    x, n = map(int, input().split())\n    p = list(map(int, input().split()))\n\n    # \u4e0e\u3048\u3089\u308c\u305f\u6570\u5217\u3092\u30bd\u30fc\u30c8\u3057\u3066\u304a\u304f\n    p.sort()\n\n    # \u4e0e\u3048\u3089\u308c\u305f\u6570\u5217\u306e\u6700\u521d\u3068\u6700\u5f8c\u304b\u3089X\u3068\u306e\u5dee\u3092\u8a08\u7b97\u3057\u3001\u5c0f\u3055\u3044\u307b\u3046\u3092\u7b54\u3048\u3068\u3059\u308b\n    ans = p[0] - x\n    for i in range(n - 1):\n        # \u540c\u3058\u6570\u5b57\u304c\u8907\u6570\u3042\u308b\u5834\u5408\u3092\u8003\u616e\u3057\u3066\u3001\u4e00\u3064\u524d\u306e\u6570\u3068\u306e\u5dee\u3092\u8a08\u7b97\u3059\u308b\n        if p[i + 1] - p[i] > 1:\n            ans = min(ans, p[i + 1] - x, x - p[i])\n    ans = min(ans, x - p[-1])\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()\n\n\ndef _test():\n    \"\"\"\n    >>> as_input('''6 5\n    ... 4 7 10 6 5\n    ... ''')\n    >>> main()\n    8\n    \"\"\"\n    import doctest\n    doctest.testmod()\n\n\ndef as_input(s):\n    \"use in test, use given string as input file\"\n    import io\n    global read, input\n    f = io.StringIO(s.strip())\n\n    def input():\n        return bytes(f.readline(), \"ascii\")\n\n    def read():\n        return bytes(f.read(), \"ascii\")\n\n\nUSE_NUMBA = False\nif (USE_NUMBA and sys.argv[-1] == 'ONLINE_JUDGE') or sys.argv[-1] == '-c':\n    print(\"compiling\")\n    from numba.pycc import CC\n    cc = CC('my_module')\n    cc.export('main', 'i8(i8, i8, i8[:])')(main)\n    cc.compile()\n    exit()\nelse:\n    input = sys.stdin.buffer.readline\n    read = sys.stdin.buffer.read\n\n    if (USE_NUMBA and sys.argv[-1] != '-p') or sys.argv[-1] == \"--numba\":\n        # -p: pure python mode\n        # if not -p, import compiled module\n        from my_module import main"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nx = int(input().split()[0])\np = list(map(int, input().split()))\n\nans = 100\nfor i in range(1, 101):\n    if i not in p:\n        ans = min(ans, abs(i - x))\n\nprint(ans + x)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nX = int(input())\nN = int(input())\np = list(map(int, input().split()))\n\nfor i in range(1, 101):\n    if i not in p:\n        if abs(X - i) < abs(X - ans):\n            ans = i\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    x, n = map(int, input().split())\n    p = set(map(int, input().split()))\n    ans = float('inf')\n    for i in range(101):\n        if i not in p:\n            if abs(x-i) < abs(x-ans):\n                ans = i\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef nearest(x, p):\n    p = set(p)\n    a = min(p, key=lambda q: abs(x - q))\n    b = max(p, key=lambda q: abs(x - q))\n    return a if abs(x - a) < abs(x - b) else b\n\nx = int(input())\nn = int(input())\np = [int(x) for x in input().split()]\nprint(nearest(x, p))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    x, n = map(int, input().split())\n    p = set(map(int, input().split()))\n    if x in p:\n        x += 1\n    while x in p:\n        x += 1\n    if x - 1 not in p:\n        print(x-1)\n    else:\n        print(x)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nX, N = map(int, input().split())\np_list = list(map(int, input().split()))\n\nfor i in range(0, 101):\n    if i not in p_list:\n        if abs(X - i) < abs(X - ans):\n            ans = i\n\nprint(ans)"
+    }
+  ],
+  "created": 1649877696,
+  "id": "cmpl-4wcqWt49u8zXaZ3ieM1QWH0T4IWpP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:22:10.487172 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    x, n = map(int, input().split())\n    p = list(map(int, input().split()))\n\n    # \u4e0e\u3048\u3089\u308c\u305f\u6570\u5217\u3092\u30bd\u30fc\u30c8\u3057\u3066\u304a\u304f\n    p.sort()\n\n    # \u4e0e\u3048\u3089\u308c\u305f\u6570\u5217\u306e\u6700\u521d\u3068\u6700\u5f8c\u304b\u3089X\u3068\u306e\u5dee\u3092\u8a08\u7b97\u3057\u3001\u5c0f\u3055\u3044\u307b\u3046\u3092\u7b54\u3048\u3068\u3059\u308b\n    ans = p[0] - x\n    for i in range(n - 1):\n        # \u540c\u3058\u6570\u5b57\u304c\u8907\u6570\u3042\u308b\u5834\u5408\u3092\u8003\u616e\u3057\u3066\u3001\u4e00\u3064\u524d\u306e\u6570\u3068\u306e\u5dee\u3092\u8a08\u7b97\u3059\u308b\n        if p[i + 1] - p[i] > 1:\n            ans = min(ans, p[i + 1] - x, x - p[i])\n    ans = min(ans, x - p[-1])\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()\n\n\ndef _test():\n    \"\"\"\n    >>> as_input('''6 5\n    ... 4 7 10 6 5\n    ... ''')\n    >>> main()\n    8\n    \"\"\"\n    import doctest\n    doctest.testmod()\n\n\ndef as_input(s):\n    \"use in test, use given string as input file\"\n    import io\n    global read, input\n    f = io.StringIO(s.strip())\n\n    def input():\n        return bytes(f.readline(), \"ascii\")\n\n    def read():\n        return bytes(f.read(), \"ascii\")\n\n\nUSE_NUMBA = False\nif (USE_NUMBA and sys.argv[-1] == 'ONLINE_JUDGE') or sys.argv[-1] == '-c':\n    print(\"compiling\")\n    from numba.pycc import CC\n    cc = CC('my_module')\n    cc.export('main', 'i8(i8, i8, i8[:])')(main)\n    cc.compile()\n    exit()\nelse:\n    input = sys.stdin.buffer.readline\n    read = sys.stdin.buffer.read\n\n    if (USE_NUMBA and sys.argv[-1] != '-p') or sys.argv[-1] == \"--numba\":\n        # -p: pure python mode\n        # if not -p, import compiled module\n        from my_module import main"
+}
+2022-04-13 19:22:10.487215 REASON stop
+2022-04-13 19:22:10.487771 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nx = int(input().split()[0])\np = list(map(int, input().split()))\n\nans = 100\nfor i in range(1, 101):\n    if i not in p:\n        ans = min(ans, abs(i - x))\n\nprint(ans + x)"
+}
+2022-04-13 19:22:10.487927 REASON stop
+2022-04-13 19:22:10.488401 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nX = int(input())\nN = int(input())\np = list(map(int, input().split()))\n\nfor i in range(1, 101):\n    if i not in p:\n        if abs(X - i) < abs(X - ans):\n            ans = i\nprint(ans)"
+}
+2022-04-13 19:22:10.488451 REASON stop
+2022-04-13 19:22:10.509993 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    x, n = map(int, input().split())\n    p = set(map(int, input().split()))\n    ans = float('inf')\n    for i in range(101):\n        if i not in p:\n            if abs(x-i) < abs(x-ans):\n                ans = i\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:22:10.510099 REASON stop
+2022-04-13 19:22:10.511385 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef nearest(x, p):\n    p = set(p)\n    a = min(p, key=lambda q: abs(x - q))\n    b = max(p, key=lambda q: abs(x - q))\n    return a if abs(x - a) < abs(x - b) else b\n\nx = int(input())\nn = int(input())\np = [int(x) for x in input().split()]\nprint(nearest(x, p))"
+}
+2022-04-13 19:22:10.511486 REASON stop
+2022-04-13 19:22:10.525231 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    x, n = map(int, input().split())\n    p = set(map(int, input().split()))\n    if x in p:\n        x += 1\n    while x in p:\n        x += 1\n    if x - 1 not in p:\n        print(x-1)\n    else:\n        print(x)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:22:10.525309 REASON stop
+2022-04-13 19:22:10.526301 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nX, N = map(int, input().split())\np_list = list(map(int, input().split()))\n\nfor i in range(0, 101):\n    if i not in p_list:\n        if abs(X - i) < abs(X - ans):\n            ans = i\n\nprint(ans)"
+}
+2022-04-13 19:22:10.526378 REASON stop

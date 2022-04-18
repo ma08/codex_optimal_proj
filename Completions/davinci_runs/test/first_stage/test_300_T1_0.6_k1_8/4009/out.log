@@ -1,0 +1,156 @@
+2022-04-16 18:48:58.890470 """
+You are given a huge decimal number consisting of $n$ digits. It is guaranteed that this number has no leading zeros. Each digit of this number is either 0 or 1.
+
+You may perform several (possibly zero) operations with this number. During each operation you are allowed to change any digit of your number; you may change 0 to 1 or 1 to 0. It is possible that after some operation you can obtain a number with leading zeroes, but it does not matter for this problem.
+
+You are also given two integers $0 \le y < x < n$. Your task is to calculate the minimum number of operations you should perform to obtain the number that has remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, x, y$ ($0 \le y < x < n \le 2 \cdot 10^5$) — the length of the number and the integers $x$ and $y$, respectively.
+
+The second line of the input contains one decimal number consisting of $n$ digits, each digit of this number is either 0 or 1. It is guaranteed that the first digit of the number is 1.
+
+
+-----Output-----
+
+Print one integer — the minimum number of operations you should perform to obtain the number having remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Examples-----
+Input
+11 5 2
+11010100101
+
+Output
+1
+
+Input
+11 5 1
+11010100101
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the number will be $11010100100$ after performing one operation. It has remainder $100$ modulo $100000$.
+
+In the second example the number will be $11010100010$ after performing three operations. It has remainder $10$ modulo $100000$.
+"""
+2022-04-16 18:48:58.890488 --------------------------
+2022-04-16 18:49:20.826918 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = list(map(int, input()))\n    res = [0] * n\n    for i in range(n):\n        res[i] = s[i] ^ 1\n    for i in range(y):\n        res[n - x + i] = s[n - x + i] ^ 1\n    print(sum(res))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    n, x, y = map(int, sys.stdin.readline().split())\n\n    number = sys.stdin.readline().rstrip()\n\n    # find where the 10^y starts\n    start = n - y - 1\n    # find where the 10^x starts\n    end = n - x\n\n    # if 10^y is in the 10^x range\n    if end <= start:\n        print(0)\n        return\n\n    # if 10^y is not in the 10^x range\n    else:\n        # if 10^y is in the 10^x range, but not in the beginning\n        # find where the number of 1's are in 10^y range\n        ones = number[start:end].count('1')\n        # count the number of 1's in the 10^x range\n        x_ones = number[end:].count('1')\n        # if the number of 1's in the 10^y range is even,\n        # it will be congruent to 0 in the 10^x range\n        # and we need to change x_ones 1's to 0's\n        if ones % 2 == 0:\n            print(x_ones)\n        # if the number of 1's in the 10^y range is odd,\n        # it will be congruent to 10^y in the 10^x range\n        # and we need to change x_ones 0's to 1's\n        else:\n            print(x_ones)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, x, y = map(int, input().split())\nnumber = input()\n\nnumber = number[::-1]\n\nones = 0\n\nfor i in range(y):\n    if number[i] == '1':\n        ones += 1\n\nif ones % 2 == 0:\n    print(0)\nelse:\n    print(1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = [int(x) for x in input().split()]\n    the_string = input()\n    the_string = list(the_string)\n    if the_string[-y:] == ['1']*y:\n        print(0)\n    else:\n        the_string[-y:] = ['1']*y\n        print(n-y)\n        print(''.join(the_string))\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom itertools import product\n\nn, x, y = [int(i) for i in stdin.readline().split()]\ns = stdin.readline().strip()\n\nif int(s[:x]) % 10**x == 10**y:\n    print(0)\n    exit()\n\ndef flip(s, i):\n    return s[:i] + str(1-int(s[i])) + s[i+1:]\n\ndef check(s, x, y):\n    return int(s[:x]) % 10**x == 10**y\n\ndef solve(s, x, y):\n    best = float(\"inf\")\n    for i in range(n):\n        if check(s, x, y):\n            best = min(best, i)\n        else:\n            if i+x < n:\n                best = min(best, i + solve(flip(s, i+x), x, y))\n            if i+x+1 < n:\n                best = min(best, i + solve(flip(s, i+x+1), x, y))\n    return best\n\nprint(solve(s, x, y))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, x, y = map(int, input().split())\nn, x, y = int(n), int(x), int(y)\nstring = input()\n\n# the only way to change the remainder is to change the last y digits\n# we want the remainder to be 10^y, so we want to change the last y digits to 10^y\n# we can do this by changing the last y 1s to 0s.\n\n# if there are less than y 1s in the last x digits, then we need to change some digits before the last x digits\n# because the first digit is 1, we can change the first digit to 0 to change the last y digits to 0\n\n# the number of operations is the number of 1s in the last x digits\n\ndef get_num_ones(string):\n    num_ones = 0\n    for i in range(len(string)):\n        if string[i] == '1':\n            num_ones += 1\n    return num_ones\n\nnum_ones = get_num_ones(string[-x:])\nif num_ones < y:\n    print(num_ones + 1)\nelse:\n    print(num_ones)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,x,y = [int(i) for i in input().split()]\n    a = input()\n    if y == 0:\n        if a[0] == '0':\n            print(1)\n        else:\n            print(0)\n    else:\n        print(min(1, int(a[y-1]) + int(a[x-1])))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif y==0:\n    print(0)\nelse:\n    count = 0\n    for i in range(y,0,-1):\n        if s[i] != '1':\n            count += 1\n    print(count)"
+    }
+  ],
+  "created": 1650134939,
+  "id": "cmpl-4xhlbV2QUhBR59dUYYBOdks8kEY9B",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 18:49:20.827213 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = list(map(int, input()))\n    res = [0] * n\n    for i in range(n):\n        res[i] = s[i] ^ 1\n    for i in range(y):\n        res[n - x + i] = s[n - x + i] ^ 1\n    print(sum(res))\n\nmain()"
+}
+2022-04-16 18:49:20.827250 REASON stop
+2022-04-16 18:49:20.890007 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    n, x, y = map(int, sys.stdin.readline().split())\n\n    number = sys.stdin.readline().rstrip()\n\n    # find where the 10^y starts\n    start = n - y - 1\n    # find where the 10^x starts\n    end = n - x\n\n    # if 10^y is in the 10^x range\n    if end <= start:\n        print(0)\n        return\n\n    # if 10^y is not in the 10^x range\n    else:\n        # if 10^y is in the 10^x range, but not in the beginning\n        # find where the number of 1's are in 10^y range\n        ones = number[start:end].count('1')\n        # count the number of 1's in the 10^x range\n        x_ones = number[end:].count('1')\n        # if the number of 1's in the 10^y range is even,\n        # it will be congruent to 0 in the 10^x range\n        # and we need to change x_ones 1's to 0's\n        if ones % 2 == 0:\n            print(x_ones)\n        # if the number of 1's in the 10^y range is odd,\n        # it will be congruent to 10^y in the 10^x range\n        # and we need to change x_ones 0's to 1's\n        else:\n            print(x_ones)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 18:49:20.890231 REASON stop
+2022-04-16 18:49:20.890690 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, x, y = map(int, input().split())\nnumber = input()\n\nnumber = number[::-1]\n\nones = 0\n\nfor i in range(y):\n    if number[i] == '1':\n        ones += 1\n\nif ones % 2 == 0:\n    print(0)\nelse:\n    print(1)"
+}
+2022-04-16 18:49:20.890750 REASON stop
+2022-04-16 18:49:20.892088 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = [int(x) for x in input().split()]\n    the_string = input()\n    the_string = list(the_string)\n    if the_string[-y:] == ['1']*y:\n        print(0)\n    else:\n        the_string[-y:] = ['1']*y\n        print(n-y)\n        print(''.join(the_string))\nmain()"
+}
+2022-04-16 18:49:20.892174 REASON stop
+2022-04-16 18:49:20.920331 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom itertools import product\n\nn, x, y = [int(i) for i in stdin.readline().split()]\ns = stdin.readline().strip()\n\nif int(s[:x]) % 10**x == 10**y:\n    print(0)\n    exit()\n\ndef flip(s, i):\n    return s[:i] + str(1-int(s[i])) + s[i+1:]\n\ndef check(s, x, y):\n    return int(s[:x]) % 10**x == 10**y\n\ndef solve(s, x, y):\n    best = float(\"inf\")\n    for i in range(n):\n        if check(s, x, y):\n            best = min(best, i)\n        else:\n            if i+x < n:\n                best = min(best, i + solve(flip(s, i+x), x, y))\n            if i+x+1 < n:\n                best = min(best, i + solve(flip(s, i+x+1), x, y))\n    return best\n\nprint(solve(s, x, y))"
+}
+2022-04-16 18:49:20.920447 REASON stop
+2022-04-16 18:49:20.921501 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, x, y = map(int, input().split())\nn, x, y = int(n), int(x), int(y)\nstring = input()\n\n# the only way to change the remainder is to change the last y digits\n# we want the remainder to be 10^y, so we want to change the last y digits to 10^y\n# we can do this by changing the last y 1s to 0s.\n\n# if there are less than y 1s in the last x digits, then we need to change some digits before the last x digits\n# because the first digit is 1, we can change the first digit to 0 to change the last y digits to 0\n\n# the number of operations is the number of 1s in the last x digits\n\ndef get_num_ones(string):\n    num_ones = 0\n    for i in range(len(string)):\n        if string[i] == '1':\n            num_ones += 1\n    return num_ones\n\nnum_ones = get_num_ones(string[-x:])\nif num_ones < y:\n    print(num_ones + 1)\nelse:\n    print(num_ones)"
+}
+2022-04-16 18:49:20.921621 REASON stop
+2022-04-16 18:49:20.959479 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,x,y = [int(i) for i in input().split()]\n    a = input()\n    if y == 0:\n        if a[0] == '0':\n            print(1)\n        else:\n            print(0)\n    else:\n        print(min(1, int(a[y-1]) + int(a[x-1])))\n\nmain()"
+}
+2022-04-16 18:49:20.959588 REASON stop
+2022-04-16 18:49:20.960861 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif y==0:\n    print(0)\nelse:\n    count = 0\n    for i in range(y,0,-1):\n        if s[i] != '1':\n            count += 1\n    print(count)"
+}
+2022-04-16 18:49:20.961078 REASON stop

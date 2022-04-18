@@ -1,0 +1,140 @@
+2022-04-16 20:29:08.731917 """
+You are given positive integers A and B.
+Find the K-th largest positive integer that divides both A and B.
+The input guarantees that there exists such a number.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq A, B \leq 100
+ - The K-th largest positive integer that divides both A and B exists.
+ - K \geq 1
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A B K
+
+-----Output-----
+Print the K-th largest positive integer that divides both A and B.
+
+-----Sample Input-----
+8 12 2
+
+-----Sample Output-----
+2
+
+Three positive integers divides both 8 and 12: 1, 2 and 4.
+Among them, the second largest is 2.
+"""
+2022-04-16 20:29:08.731940 --------------------------
+2022-04-16 20:29:32.996155 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# My answer\nA, B, K = map(int, input().split())\n\ndef gcd(a, b):\n    \"\"\"Find the greatest common divisor of a and b.\"\"\"\n    while b != 0:\n        a, b = b, a % b\n    return a\n\ndef lcm(a, b):\n    \"\"\"Find the least common multiple of a and b.\"\"\"\n    return a * b // gcd(a, b)\n\ndef common_divisor(a, b):\n    \"\"\"Find common divisors of a and b.\"\"\"\n    common_divisor = []\n    for i in range(1, int(lcm(a, b) ** 0.5) + 1):\n        if lcm(a, b) % i == 0:\n            common_divisor.append(i)\n            if i != lcm(a, b) // i:\n                common_divisor.append(lcm(a, b) // i)\n    return common_divisor\n\nprint(sorted(common_divisor(A, B), reverse=True)[K - 1])\n\n# Other answers\na, b, k = map(int, input().split())\n\nlcm_ab = a * b // gcd(a, b)\n\ndef common_divisor(a, b):\n    \"\"\"Find common divisors of a and b.\"\"\"\n    common_divisor = []\n    for i in range(1, int(lcm(a, b) ** 0.5) + 1):\n        if lcm(a, b) % i == 0:\n            common_divisor.append(i)\n            if i != lcm(a, b) // i:\n                common_divisor.append(lcm(a, b) // i)\n    return common_divisor\n\nprint(sorted(common_divisor(a, b), reverse=True)[k - 1])\n\n# Other answers\na, b, k = map(int, input().split())\nlcm_ab = a * b // gcd(a, b)\nprint(sorted([i for i in range(1, int(lcm_ab ** 0.5) + 1) if lcm_ab % i == 0] + [lcm_ab // i for i in range(1, int(lcm_ab ** 0.5) + 1) if lcm_ab % i == 0])[k - 1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Get the input\nA, B, K = map(int, input().split())\n\n# Get the number of positive integers that divide both A and B\ndivisors = 1\nfor i in range(2, min(A, B) + 1):\n    if A % i == B % i == 0:\n        divisors += 1\n\n# Define the function to find the K-th largest positive integer\ndef get_divisor(K):\n    # Use the binary search algorithm\n    divisor = 1\n    left = 1\n    right = min(A, B)\n    while left <= right:\n        mid = (left + right) // 2\n        if A % mid == B % mid == 0:\n            divisor = mid\n            right = mid - 1\n        elif A % mid == B % mid == 1:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return divisor\n\n# Print the K-th largest positive integer\nprint(get_divisor(K))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nfrom functools import reduce\nfrom fractions import gcd\n\n\ndef get_divisors(n):\n    divisors = set()\n    for i in range(1, int(n ** 0.5) + 1):\n        if n % i == 0:\n            divisors.add(i)\n            divisors.add(n // i)\n    return list(divisors)\n\n\ndef main():\n    a, b, k = map(int, input().split())\n    divisors_a = get_divisors(a)\n    divisors_b = get_divisors(b)\n    divisors = set(divisors_a) & set(divisors_b)\n    divisors.remove(1)\n    divisors = list(divisors)\n    divisors.sort()\n    print(divisors[-k])\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef get_divisors(num):\n    \"\"\"\n    Returns a list of integers that are divisors of num\n    \"\"\"\n    divisors = []\n    for i in range(1, num + 1):\n        if num % i == 0:\n            divisors.append(i)\n    return divisors\n\ndef get_common_divisors(num1, num2):\n    \"\"\"\n    Returns a list of integers that are divisors of both num1 and num2\n    \"\"\"\n    divisors1 = get_divisors(num1)\n    divisors2 = get_divisors(num2)\n    common_divisors = []\n    for d1 in divisors1:\n        if d1 in divisors2:\n            common_divisors.append(d1)\n    return common_divisors\n\ndef main():\n    a, b, k = [int(x) for x in input().split(\" \")]\n    cd = get_common_divisors(a, b)\n    print(cd[-k])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# My solution\ndef gcd(a, b):\n    \"\"\"\n    Returns the greatest common divisor of the integers a and b\n    \"\"\"\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\ndef lcm(a, b):\n    \"\"\"\n    Returns the least common multiple of the integers a and b\n    \"\"\"\n    return a * b // gcd(a, b)\n\ndef main():\n    a, b, k = map(int, input().split())\n    lcm_ab = lcm(a, b)\n    divisors = []\n    for i in range(1, int(lcm_ab**0.5) + 1):\n        if lcm_ab % i == 0:\n            divisors.extend([i, lcm_ab // i])\n    divisors.sort(reverse=True)\n    print(divisors[k - 1])\n\nif __name__ == '__main__':\n    main()\n\n# Shortest solution\nprint(sorted(set(i for i in range(1, int(int(input().split()[0]) * int(input().split()[1]) ** .5) + 1) if not int(input().split()[0]) % i and not int(input().split()[1]) % i))[int(input().split()[2]) - 1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import product\n\ndef main():\n    a, b, k = (int(x) for x in input().split())\n    divisors = sorted(list(set(x for x in range(1, min(a, b) + 1) if a % x == 0 and b % x == 0)))\n    print(divisors[-k])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# Read and parse integers from standard input\nnumbers = str(sys.stdin.readline().rstrip())\nnumbers = numbers.split(' ')\nA = int(numbers[0])\nB = int(numbers[1])\nK = int(numbers[2])\n\n# Get the list of all common factors\nfactors = []\nfor i in range(1, int(math.sqrt(A))+1):\n    if A % i == 0:\n        if B % i == 0:\n            factors.append(i)\n            if i != A // i:\n                factors.append(A//i)\nfor i in range(1, int(math.sqrt(B))+1):\n    if B % i == 0:\n        if A % i == 0:\n            factors.append(i)\n            if i != B // i:\n                factors.append(B//i)\n\n# Sort and print the required factor\nfactors.sort()\nprint(factors[-K])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef gcd(a, b):\n    \"\"\"\n    Calculate the Greatest Common Divisor of a and b.\n    Unless b==0, the result will have the same sign as b (so that when\n    b is divided by it, the result comes out positive).\n    \"\"\"\n    while b:\n        a, b = b, a%b\n    return a\n\ndef lcm(a, b):\n    return (a*b)/gcd(a, b)\n\ndef get_divisors(n):\n    \"\"\"\n    Get all divisors of n.\n    \"\"\"\n    divisors = []\n    for i in range(1, int(math.sqrt(n))+1):\n        if n % i == 0:\n            divisors.append(i)\n            if i != n // i:\n                divisors.append(n//i)\n    return divisors\n\ndef main():\n    a, b, k = map(int, sys.stdin.readline().split())\n    l = lcm(a, b)\n    divs = get_divisors(l)\n    divs.sort(reverse=True)\n    print(divs[k-1])\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650140948,
+  "id": "cmpl-4xjKWdmC7RK8q2f2B3dt6uN0fLtbx",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:29:32.996445 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# My answer\nA, B, K = map(int, input().split())\n\ndef gcd(a, b):\n    \"\"\"Find the greatest common divisor of a and b.\"\"\"\n    while b != 0:\n        a, b = b, a % b\n    return a\n\ndef lcm(a, b):\n    \"\"\"Find the least common multiple of a and b.\"\"\"\n    return a * b // gcd(a, b)\n\ndef common_divisor(a, b):\n    \"\"\"Find common divisors of a and b.\"\"\"\n    common_divisor = []\n    for i in range(1, int(lcm(a, b) ** 0.5) + 1):\n        if lcm(a, b) % i == 0:\n            common_divisor.append(i)\n            if i != lcm(a, b) // i:\n                common_divisor.append(lcm(a, b) // i)\n    return common_divisor\n\nprint(sorted(common_divisor(A, B), reverse=True)[K - 1])\n\n# Other answers\na, b, k = map(int, input().split())\n\nlcm_ab = a * b // gcd(a, b)\n\ndef common_divisor(a, b):\n    \"\"\"Find common divisors of a and b.\"\"\"\n    common_divisor = []\n    for i in range(1, int(lcm(a, b) ** 0.5) + 1):\n        if lcm(a, b) % i == 0:\n            common_divisor.append(i)\n            if i != lcm(a, b) // i:\n                common_divisor.append(lcm(a, b) // i)\n    return common_divisor\n\nprint(sorted(common_divisor(a, b), reverse=True)[k - 1])\n\n# Other answers\na, b, k = map(int, input().split())\nlcm_ab = a * b // gcd(a, b)\nprint(sorted([i for i in range(1, int(lcm_ab ** 0.5) + 1) if lcm_ab % i == 0] + [lcm_ab // i for i in range(1, int(lcm_ab ** 0.5) + 1) if lcm_ab % i == 0])[k - 1])"
+}
+2022-04-16 20:29:32.996559 REASON stop
+2022-04-16 20:29:32.997626 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Get the input\nA, B, K = map(int, input().split())\n\n# Get the number of positive integers that divide both A and B\ndivisors = 1\nfor i in range(2, min(A, B) + 1):\n    if A % i == B % i == 0:\n        divisors += 1\n\n# Define the function to find the K-th largest positive integer\ndef get_divisor(K):\n    # Use the binary search algorithm\n    divisor = 1\n    left = 1\n    right = min(A, B)\n    while left <= right:\n        mid = (left + right) // 2\n        if A % mid == B % mid == 0:\n            divisor = mid\n            right = mid - 1\n        elif A % mid == B % mid == 1:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return divisor\n\n# Print the K-th largest positive integer\nprint(get_divisor(K))"
+}
+2022-04-16 20:29:32.997777 REASON stop
+2022-04-16 20:29:32.998202 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nfrom functools import reduce\nfrom fractions import gcd\n\n\ndef get_divisors(n):\n    divisors = set()\n    for i in range(1, int(n ** 0.5) + 1):\n        if n % i == 0:\n            divisors.add(i)\n            divisors.add(n // i)\n    return list(divisors)\n\n\ndef main():\n    a, b, k = map(int, input().split())\n    divisors_a = get_divisors(a)\n    divisors_b = get_divisors(b)\n    divisors = set(divisors_a) & set(divisors_b)\n    divisors.remove(1)\n    divisors = list(divisors)\n    divisors.sort()\n    print(divisors[-k])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:29:32.998256 REASON stop
+2022-04-16 20:29:32.999180 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef get_divisors(num):\n    \"\"\"\n    Returns a list of integers that are divisors of num\n    \"\"\"\n    divisors = []\n    for i in range(1, num + 1):\n        if num % i == 0:\n            divisors.append(i)\n    return divisors\n\ndef get_common_divisors(num1, num2):\n    \"\"\"\n    Returns a list of integers that are divisors of both num1 and num2\n    \"\"\"\n    divisors1 = get_divisors(num1)\n    divisors2 = get_divisors(num2)\n    common_divisors = []\n    for d1 in divisors1:\n        if d1 in divisors2:\n            common_divisors.append(d1)\n    return common_divisors\n\ndef main():\n    a, b, k = [int(x) for x in input().split(\" \")]\n    cd = get_common_divisors(a, b)\n    print(cd[-k])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:29:32.999237 REASON stop
+2022-04-16 20:29:33.000104 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# My solution\ndef gcd(a, b):\n    \"\"\"\n    Returns the greatest common divisor of the integers a and b\n    \"\"\"\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\ndef lcm(a, b):\n    \"\"\"\n    Returns the least common multiple of the integers a and b\n    \"\"\"\n    return a * b // gcd(a, b)\n\ndef main():\n    a, b, k = map(int, input().split())\n    lcm_ab = lcm(a, b)\n    divisors = []\n    for i in range(1, int(lcm_ab**0.5) + 1):\n        if lcm_ab % i == 0:\n            divisors.extend([i, lcm_ab // i])\n    divisors.sort(reverse=True)\n    print(divisors[k - 1])\n\nif __name__ == '__main__':\n    main()\n\n# Shortest solution\nprint(sorted(set(i for i in range(1, int(int(input().split()[0]) * int(input().split()[1]) ** .5) + 1) if not int(input().split()[0]) % i and not int(input().split()[1]) % i))[int(input().split()[2]) - 1])"
+}
+2022-04-16 20:29:33.000169 REASON stop
+2022-04-16 20:29:33.016927 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import product\n\ndef main():\n    a, b, k = (int(x) for x in input().split())\n    divisors = sorted(list(set(x for x in range(1, min(a, b) + 1) if a % x == 0 and b % x == 0)))\n    print(divisors[-k])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:29:33.017043 REASON stop
+2022-04-16 20:29:33.017523 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# Read and parse integers from standard input\nnumbers = str(sys.stdin.readline().rstrip())\nnumbers = numbers.split(' ')\nA = int(numbers[0])\nB = int(numbers[1])\nK = int(numbers[2])\n\n# Get the list of all common factors\nfactors = []\nfor i in range(1, int(math.sqrt(A))+1):\n    if A % i == 0:\n        if B % i == 0:\n            factors.append(i)\n            if i != A // i:\n                factors.append(A//i)\nfor i in range(1, int(math.sqrt(B))+1):\n    if B % i == 0:\n        if A % i == 0:\n            factors.append(i)\n            if i != B // i:\n                factors.append(B//i)\n\n# Sort and print the required factor\nfactors.sort()\nprint(factors[-K])"
+}
+2022-04-16 20:29:33.017598 REASON stop
+2022-04-16 20:29:33.033793 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef gcd(a, b):\n    \"\"\"\n    Calculate the Greatest Common Divisor of a and b.\n    Unless b==0, the result will have the same sign as b (so that when\n    b is divided by it, the result comes out positive).\n    \"\"\"\n    while b:\n        a, b = b, a%b\n    return a\n\ndef lcm(a, b):\n    return (a*b)/gcd(a, b)\n\ndef get_divisors(n):\n    \"\"\"\n    Get all divisors of n.\n    \"\"\"\n    divisors = []\n    for i in range(1, int(math.sqrt(n))+1):\n        if n % i == 0:\n            divisors.append(i)\n            if i != n // i:\n                divisors.append(n//i)\n    return divisors\n\ndef main():\n    a, b, k = map(int, sys.stdin.readline().split())\n    l = lcm(a, b)\n    divs = get_divisors(l)\n    divs.sort(reverse=True)\n    print(divs[k-1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:29:33.033939 REASON stop

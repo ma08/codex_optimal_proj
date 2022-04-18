@@ -1,0 +1,130 @@
+2022-04-13 21:47:22.075730 """
+Print all the integers that satisfies the following in ascending order:
+ - Among the integers between A and B (inclusive), it is either within the K smallest integers or within the K largest integers.
+
+-----Constraints-----
+ - 1 \leq A \leq B \leq 10^9
+ - 1 \leq K \leq 100
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A B K
+
+-----Output-----
+Print all the integers that satisfies the condition above in ascending order.
+
+-----Sample Input-----
+3 8 2
+
+-----Sample Output-----
+3
+4
+7
+8
+
+ - 3 is the first smallest integer among the integers between 3 and 8.
+ - 4 is the second smallest integer among the integers between 3 and 8.
+ - 7 is the second largest integer among the integers between 3 and 8.
+ - 8 is the first largest integer among the integers between 3 and 8.
+"""
+2022-04-13 21:47:22.075738 --------------------------
+2022-04-13 21:47:46.398687 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\na, b, k = list(map(int, sys.stdin.readline().split()))\n\nnumbers = list(range(a, b+1))\n\ndef partition(A, p, r):\n    x = A[r]\n    i = p - 1\n    for j in range(p, r):\n        if A[j] <= x:\n            i += 1\n            A[i], A[j] = A[j], A[i]\n    A[i+1], A[r] = A[r], A[i+1]\n    return i+1\n\ndef select(A, p, r, i):\n    if p == r:\n        return A[p]\n    q = partition(A, p, r)\n    k = q - p + 1\n    if i == k:\n        return A[q]\n    elif i < k:\n        return select(A, p, q-1, i)\n    else:\n        return select(A, q+1, r, i-k)\n\nn = len(numbers)\n\nif k > n:\n    print(numbers)\nelse:\n    for i in range(1, k+1):\n        print(select(numbers, 0, n-1, i))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#The main function\ndef main():\n    #Get the input\n    A, B, K = map(int, input().split())\n    #Create a list of numbers from A to B\n    numbers = [i for i in range(A, B+1)]\n    #Sort the list in ascending order\n    numbers.sort()\n    #Print the first K numbers\n    for i in range(K):\n        print(numbers[i])\n    #Print the last K numbers\n    for i in range(len(numbers)-K, len(numbers)):\n        print(numbers[i])\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\na, b, k = map(int, input().split())\n\nnums = [i for i in range(a, b+1)]\n\nnums = sorted(nums)\n\nprint(\"\\n\".join(map(str, nums[:k] + nums[-k:])))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nA, B, K = map(int, input().split())\n\nfor i in range(A, B+1):\n    if i <= A + K - 1:\n        print(i)\n    elif i >= B - K + 1:\n        print(i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\na, b, k = map(int, input().split())\n\nresult = []\n\nfor i in range(a, b+1):\n    result.append(i)\n\nresult.sort()\n\nfor i in range(k):\n    print(result[i])\n\nfor i in range(k):\n    print(result[len(result)-i-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# input\na, b, k = map(int, input().split())\n\n# initialize\nnums = list(range(a, b+1))\n\n# sort\nnums.sort()\n\n# output\nfor i in range(k):\n    print(nums[i])\nfor i in range(k):\n    print(nums[len(nums)-1-i])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\n\ndef main():\n    A, B, K = map(int, input().split())\n    smaller = []\n    larger = []\n    for i in range(A, B+1):\n        if len(smaller) < K:\n            heapq.heappush(smaller, i)\n        else:\n            heapq.heappushpop(smaller, i)\n        if len(larger) < K:\n            heapq.heappush(larger, -i)\n        else:\n            heapq.heappushpop(larger, -i)\n    for i in range(K):\n        print(smaller[i])\n    for i in range(K):\n        print(-larger[i])\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649886442,
+  "id": "cmpl-4wf7afHUbrJgX4HGVwbcg5kr7mKcJ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:47:46.398973 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\na, b, k = list(map(int, sys.stdin.readline().split()))\n\nnumbers = list(range(a, b+1))\n\ndef partition(A, p, r):\n    x = A[r]\n    i = p - 1\n    for j in range(p, r):\n        if A[j] <= x:\n            i += 1\n            A[i], A[j] = A[j], A[i]\n    A[i+1], A[r] = A[r], A[i+1]\n    return i+1\n\ndef select(A, p, r, i):\n    if p == r:\n        return A[p]\n    q = partition(A, p, r)\n    k = q - p + 1\n    if i == k:\n        return A[q]\n    elif i < k:\n        return select(A, p, q-1, i)\n    else:\n        return select(A, q+1, r, i-k)\n\nn = len(numbers)\n\nif k > n:\n    print(numbers)\nelse:\n    for i in range(1, k+1):\n        print(select(numbers, 0, n-1, i))"
+}
+2022-04-13 21:47:46.399016 REASON stop
+2022-04-13 21:47:46.399479 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#The main function\ndef main():\n    #Get the input\n    A, B, K = map(int, input().split())\n    #Create a list of numbers from A to B\n    numbers = [i for i in range(A, B+1)]\n    #Sort the list in ascending order\n    numbers.sort()\n    #Print the first K numbers\n    for i in range(K):\n        print(numbers[i])\n    #Print the last K numbers\n    for i in range(len(numbers)-K, len(numbers)):\n        print(numbers[i])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:47:46.399596 REASON stop
+2022-04-13 21:47:46.399980 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\na, b, k = map(int, input().split())\n\nnums = [i for i in range(a, b+1)]\n\nnums = sorted(nums)\n\nprint(\"\\n\".join(map(str, nums[:k] + nums[-k:])))"
+}
+2022-04-13 21:47:46.400026 REASON stop
+2022-04-13 21:47:46.425287 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nA, B, K = map(int, input().split())\n\nfor i in range(A, B+1):\n    if i <= A + K - 1:\n        print(i)\n    elif i >= B - K + 1:\n        print(i)"
+}
+2022-04-13 21:47:46.425406 REASON stop
+2022-04-13 21:47:46.440525 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\na, b, k = map(int, input().split())\n\nresult = []\n\nfor i in range(a, b+1):\n    result.append(i)\n\nresult.sort()\n\nfor i in range(k):\n    print(result[i])\n\nfor i in range(k):\n    print(result[len(result)-i-1])"
+}
+2022-04-13 21:47:46.440632 REASON stop
+2022-04-13 21:47:46.441339 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# input\na, b, k = map(int, input().split())\n\n# initialize\nnums = list(range(a, b+1))\n\n# sort\nnums.sort()\n\n# output\nfor i in range(k):\n    print(nums[i])\nfor i in range(k):\n    print(nums[len(nums)-1-i])"
+}
+2022-04-13 21:47:46.441449 REASON stop
+2022-04-13 21:47:46.442428 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\n\ndef main():\n    A, B, K = map(int, input().split())\n    smaller = []\n    larger = []\n    for i in range(A, B+1):\n        if len(smaller) < K:\n            heapq.heappush(smaller, i)\n        else:\n            heapq.heappushpop(smaller, i)\n        if len(larger) < K:\n            heapq.heappush(larger, -i)\n        else:\n            heapq.heappushpop(larger, -i)\n    for i in range(K):\n        print(smaller[i])\n    for i in range(K):\n        print(-larger[i])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:47:46.442481 REASON stop

@@ -1,0 +1,62 @@
+import sys
+
+def get_input():
+    """
+    Reads the input from stdin and returns it as a list.
+
+    :return: int[]
+    """
+    return list(map(int, sys.stdin.readline().strip().split())) # pylint: disable=bad-builtin
+
+def get_cards(numbers):
+    """
+    Returns a list of cards based on the input list.
+
+    :param numbers: int[]
+    :return: int[]
+    """
+    cards = []
+    for i in range(len(numbers)):
+        cards += [i+1] * numbers[i]
+    return cards
+
+def get_num_permutations(cards, K):
+    """
+    Returns the number of permutations of the cards.
+
+    :param cards: int[]
+    :param K: int
+    :return: int
+    """
+    return len(get_permutations(cards, K))
+
+def get_permutations(cards, K):
+    """
+    Returns a list of permutations of the cards.
+
+    :param cards: int[]
+    :param K: int
+    :return: int[]
+    """
+    if K == 1: return cards
+    permutations = []
+    for i in range(len(cards)): # pylint: disable=consider-using-enumerate
+        card = cards[i] # pylint: disable=invalid-name
+        sub_cards = cards[:i] + cards[i+1:] # pylint: disable=invalid-name
+        sub_permutations = get_permutations(sub_cards, K-1) # pylint: disable=invalid-name
+        for sub_permutation in sub_permutations: # pylint: disable=invalid-name
+            if card < sub_permutation[0]: permutations.append([card] + sub_permutation) # pylint: disable=invalid-name
+    return permutations
+
+def main():
+    """
+    Main function.
+    """
+    numbers = get_input() # pylint: disable=invalid-name
+    K = int(sys.stdin.readline().strip()) # pylint: disable=invalid-name
+    cards = get_cards(numbers) # pylint: disable=invalid-name
+    num_permutations = get_num_permutations(cards, K) # pylint: disable=invalid-name
+    print(num_permutations)
+
+if __name__ == "__main__":
+    main()

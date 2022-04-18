@@ -1,0 +1,136 @@
+2022-04-13 21:54:05.425892 """
+We have two desks: A and B. Desk A has a vertical stack of N books on it, and Desk B similarly has M books on it.
+It takes us A_i minutes to read the i-th book from the top on Desk A (1 \leq i \leq N), and B_i minutes to read the i-th book from the top on Desk B (1 \leq i \leq M).
+Consider the following action:
+ - Choose a desk with a book remaining, read the topmost book on that desk, and remove it from the desk.
+How many books can we read at most by repeating this action so that it takes us at most K minutes in total? We ignore the time it takes to do anything other than reading.
+
+-----Constraints-----
+ - 1 \leq N, M \leq 200000
+ - 1 \leq K \leq 10^9
+ - 1 \leq A_i, B_i \leq 10^9
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M K
+A_1 A_2 \ldots A_N
+B_1 B_2 \ldots B_M
+
+-----Output-----
+Print an integer representing the maximum number of books that can be read.
+
+-----Sample Input-----
+3 4 240
+60 90 120
+80 150 80 150
+
+-----Sample Output-----
+3
+
+In this case, it takes us 60, 90, 120 minutes to read the 1-st, 2-nd, 3-rd books from the top on Desk A, and 80, 150, 80, 150 minutes to read the 1-st, 2-nd, 3-rd, 4-th books from the top on Desk B, respectively.
+We can read three books in 230 minutes, as shown below, and this is the maximum number of books we can read within 240 minutes.
+ - Read the topmost book on Desk A in 60 minutes, and remove that book from the desk.
+ - Read the topmost book on Desk B in 80 minutes, and remove that book from the desk.
+ - Read the topmost book on Desk A in 90 minutes, and remove that book from the desk.
+"""
+2022-04-13 21:54:05.425899 --------------------------
+2022-04-13 21:54:32.133485 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, k = list(map(int, sys.stdin.readline().split()))\n    a = list(map(int, sys.stdin.readline().split()))\n    b = list(map(int, sys.stdin.readline().split()))\n\n    a = sorted(a)\n    b = sorted(b)\n\n    count = 0\n    i = 0\n    j = 0\n\n    while i < n and j < m:\n        if a[i] + b[j] <= k:\n            count += 1\n            i += 1\n            j += 1\n        elif a[i] > b[j]:\n            j += 1\n        else:\n            i += 1\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nif sum(a) <= k:\n    print(n)\n    exit()\nif sum(b) <= k:\n    print(m)\n    exit()\n\nsa = 0\nea = 0\nsb = 0\neb = 0\n\ncount = 0\n\nwhile sa < n and sb < m:\n    if a[sa] < b[sb]:\n        if sa == ea:\n            ea += 1\n            sa += 1\n        else:\n            if a[sa] + a[ea] <= k:\n                count += ea - sa + 1\n                ea += 1\n                sa += 1\n            else:\n                break\n    else:\n        if sb == eb:\n            eb += 1\n            sb += 1\n        else:\n            if b[sb] + b[eb] <= k:\n                count += eb - sb + 1\n                eb += 1\n                sb += 1\n            else:\n                break\n\nif sa == n:\n    while sb < m:\n        if sb == eb:\n            eb += 1\n            sb += 1\n        else:\n            if b[sb] + b[eb] <= k:\n                count += eb - sb + 1\n                eb += 1\n                sb += 1\n            else:\n                break\nelse:\n    while sa < n:\n        if sa == ea:\n            ea += 1\n            sa += 1\n        else:\n            if a[sa] + a[ea] <= k:\n                count += ea - sa + 1\n                ea += 1\n                sa += 1\n            else:\n                break\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport sys\n\nN, M, K = map(int, sys.stdin.readline().split())\nA = list(map(int, sys.stdin.readline().split()))\nB = list(map(int, sys.stdin.readline().split()))\n\nA.sort()\nB.sort()\n\na = 0\nb = 0\nans = 0\n\nwhile a < N and b < M and K >= 0:\n    if A[a] < B[b]:\n        K -= A[a]\n        a += 1\n    else:\n        K -= B[b]\n        b += 1\n    if K >= 0:\n        ans += 1\n\nwhile a < N and K >= 0:\n    K -= A[a]\n    a += 1\n    if K >= 0:\n        ans += 1\n\nwhile b < M and K >= 0:\n    K -= B[b]\n    b += 1\n    if K >= 0:\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read the input\nn, m, k = (int(x) for x in sys.stdin.readline().split())\na = [int(x) for x in sys.stdin.readline().split()]\nb = [int(x) for x in sys.stdin.readline().split()]\n\n# Sort the books on both desks in the order of decreasing time to read.\na.sort(reverse=True)\nb.sort(reverse=True)\n\n# Keep track of the number of books read, and the time taken to read them.\ncount = 0\ntime = 0\n\n# Read books from both desks until you run out of time, or books.\nwhile count < n + m and time + max(a[count], b[count]) <= k:\n    time += max(a[count], b[count])\n    count += 1\n\n# Print the number of books read.\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read lines from standard input\n    lines = sys.stdin.readlines()\n\n    # Parse input\n    n, m, k = map(int, lines[0].split())\n    a = list(map(int, lines[1].split()))\n    b = list(map(int, lines[2].split()))\n\n    # Initialize\n    i, j = 0, 0\n    ans = 0\n    a_sum, b_sum = 0, 0\n\n    # Read books until we run out of time\n    while a_sum + a[i] <= k and b_sum + b[j] <= k:\n        if a_sum + a[i] < b_sum + b[j]:\n            a_sum += a[i]\n            i += 1\n        else:\n            b_sum += b[j]\n            j += 1\n        ans += 1\n\n    # Print answer\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\nN, M, K = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nheapq.heapify(A)\nheapq.heapify(B)\n\nans = 0\nwhile A and B and K > 0:\n    a = heapq.heappop(A)\n    b = heapq.heappop(B)\n    if a < b:\n        if a <= K:\n            ans += 1\n            K -= a\n        else:\n            break\n    else:\n        if b <= K:\n            ans += 1\n            K -= b\n        else:\n            break\n\nwhile A and K > 0:\n    a = heapq.heappop(A)\n    if a <= K:\n        ans += 1\n        K -= a\n    else:\n        break\n\nwhile B and K > 0:\n    b = heapq.heappop(B)\n    if b <= K:\n        ans += 1\n        K -= b\n    else:\n        break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN, M, K = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\n# \u6b8b\u308a\u6642\u9593K\u304b\u3089A,B\u306e1\u3064\u3092\u9078\u3093\u3067\u8aad\u3080\u6642\u9593\u3092\u5f15\u3044\u3066\u3044\u304f\n# \u6b8b\u308a\u6642\u9593\u304c0\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n# \u6b8b\u308a\u6642\u9593\u304c\u8ca0\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n# A,B\u3069\u3061\u3089\u30820\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n\n# \u6642\u9593\u3092\u6c42\u3081\u308b\nans = 0\nfor i in range(N + M):\n    if A and B:\n        if A[0] < B[0]:\n            K -= A[0]\n            A.pop(0)\n        else:\n            K -= B[0]\n            B.pop(0)\n    elif A:\n        K -= A[0]\n        A.pop(0)\n    elif B:\n        K -= B[0]\n        B.pop(0)\n    else:\n        break\n    if K < 0:\n        break\n    ans += 1\nprint(ans)"
+    }
+  ],
+  "created": 1649886845,
+  "id": "cmpl-4wfE5we2UM9otzqpAfjqQxxnTEBYS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:54:32.133748 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, k = list(map(int, sys.stdin.readline().split()))\n    a = list(map(int, sys.stdin.readline().split()))\n    b = list(map(int, sys.stdin.readline().split()))\n\n    a = sorted(a)\n    b = sorted(b)\n\n    count = 0\n    i = 0\n    j = 0\n\n    while i < n and j < m:\n        if a[i] + b[j] <= k:\n            count += 1\n            i += 1\n            j += 1\n        elif a[i] > b[j]:\n            j += 1\n        else:\n            i += 1\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:54:32.133854 REASON stop
+2022-04-13 21:54:32.134297 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nif sum(a) <= k:\n    print(n)\n    exit()\nif sum(b) <= k:\n    print(m)\n    exit()\n\nsa = 0\nea = 0\nsb = 0\neb = 0\n\ncount = 0\n\nwhile sa < n and sb < m:\n    if a[sa] < b[sb]:\n        if sa == ea:\n            ea += 1\n            sa += 1\n        else:\n            if a[sa] + a[ea] <= k:\n                count += ea - sa + 1\n                ea += 1\n                sa += 1\n            else:\n                break\n    else:\n        if sb == eb:\n            eb += 1\n            sb += 1\n        else:\n            if b[sb] + b[eb] <= k:\n                count += eb - sb + 1\n                eb += 1\n                sb += 1\n            else:\n                break\n\nif sa == n:\n    while sb < m:\n        if sb == eb:\n            eb += 1\n            sb += 1\n        else:\n            if b[sb] + b[eb] <= k:\n                count += eb - sb + 1\n                eb += 1\n                sb += 1\n            else:\n                break\nelse:\n    while sa < n:\n        if sa == ea:\n            ea += 1\n            sa += 1\n        else:\n            if a[sa] + a[ea] <= k:\n                count += ea - sa + 1\n                ea += 1\n                sa += 1\n            else:\n                break\n\nprint(count)"
+}
+2022-04-13 21:54:32.134421 REASON stop
+2022-04-13 21:54:32.134854 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport sys\n\nN, M, K = map(int, sys.stdin.readline().split())\nA = list(map(int, sys.stdin.readline().split()))\nB = list(map(int, sys.stdin.readline().split()))\n\nA.sort()\nB.sort()\n\na = 0\nb = 0\nans = 0\n\nwhile a < N and b < M and K >= 0:\n    if A[a] < B[b]:\n        K -= A[a]\n        a += 1\n    else:\n        K -= B[b]\n        b += 1\n    if K >= 0:\n        ans += 1\n\nwhile a < N and K >= 0:\n    K -= A[a]\n    a += 1\n    if K >= 0:\n        ans += 1\n\nwhile b < M and K >= 0:\n    K -= B[b]\n    b += 1\n    if K >= 0:\n        ans += 1\n\nprint(ans)"
+}
+2022-04-13 21:54:32.134905 REASON stop
+2022-04-13 21:54:32.136243 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read the input\nn, m, k = (int(x) for x in sys.stdin.readline().split())\na = [int(x) for x in sys.stdin.readline().split()]\nb = [int(x) for x in sys.stdin.readline().split()]\n\n# Sort the books on both desks in the order of decreasing time to read.\na.sort(reverse=True)\nb.sort(reverse=True)\n\n# Keep track of the number of books read, and the time taken to read them.\ncount = 0\ntime = 0\n\n# Read books from both desks until you run out of time, or books.\nwhile count < n + m and time + max(a[count], b[count]) <= k:\n    time += max(a[count], b[count])\n    count += 1\n\n# Print the number of books read.\nprint(count)"
+}
+2022-04-13 21:54:32.136296 REASON stop
+2022-04-13 21:54:32.144680 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Read lines from standard input\n    lines = sys.stdin.readlines()\n\n    # Parse input\n    n, m, k = map(int, lines[0].split())\n    a = list(map(int, lines[1].split()))\n    b = list(map(int, lines[2].split()))\n\n    # Initialize\n    i, j = 0, 0\n    ans = 0\n    a_sum, b_sum = 0, 0\n\n    # Read books until we run out of time\n    while a_sum + a[i] <= k and b_sum + b[j] <= k:\n        if a_sum + a[i] < b_sum + b[j]:\n            a_sum += a[i]\n            i += 1\n        else:\n            b_sum += b[j]\n            j += 1\n        ans += 1\n\n    # Print answer\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:54:32.144747 REASON stop
+2022-04-13 21:54:32.156031 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\nN, M, K = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nheapq.heapify(A)\nheapq.heapify(B)\n\nans = 0\nwhile A and B and K > 0:\n    a = heapq.heappop(A)\n    b = heapq.heappop(B)\n    if a < b:\n        if a <= K:\n            ans += 1\n            K -= a\n        else:\n            break\n    else:\n        if b <= K:\n            ans += 1\n            K -= b\n        else:\n            break\n\nwhile A and K > 0:\n    a = heapq.heappop(A)\n    if a <= K:\n        ans += 1\n        K -= a\n    else:\n        break\n\nwhile B and K > 0:\n    b = heapq.heappop(B)\n    if b <= K:\n        ans += 1\n        K -= b\n    else:\n        break\n\nprint(ans)"
+}
+2022-04-13 21:54:32.156105 REASON stop
+2022-04-13 21:54:32.157151 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN, M, K = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\n# \u6b8b\u308a\u6642\u9593K\u304b\u3089A,B\u306e1\u3064\u3092\u9078\u3093\u3067\u8aad\u3080\u6642\u9593\u3092\u5f15\u3044\u3066\u3044\u304f\n# \u6b8b\u308a\u6642\u9593\u304c0\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n# \u6b8b\u308a\u6642\u9593\u304c\u8ca0\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n# A,B\u3069\u3061\u3089\u30820\u306b\u306a\u3063\u305f\u3089\u7d42\u4e86\n\n# \u6642\u9593\u3092\u6c42\u3081\u308b\nans = 0\nfor i in range(N + M):\n    if A and B:\n        if A[0] < B[0]:\n            K -= A[0]\n            A.pop(0)\n        else:\n            K -= B[0]\n            B.pop(0)\n    elif A:\n        K -= A[0]\n        A.pop(0)\n    elif B:\n        K -= B[0]\n        B.pop(0)\n    else:\n        break\n    if K < 0:\n        break\n    ans += 1\nprint(ans)"
+}
+2022-04-13 21:54:32.157218 REASON stop

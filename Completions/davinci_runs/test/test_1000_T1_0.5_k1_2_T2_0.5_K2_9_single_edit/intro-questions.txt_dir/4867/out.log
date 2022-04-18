@@ -1,0 +1,150 @@
+2022-04-09 23:11:11.614053 """
+Mirko has assembled an excellent crossword puzzle and now he wants to frame it. Mirko’s crossword puzzle consists of $M \times N$ letters, and the frame around it should be $U$ characters wide on top, $L$ characters on the left, $R$ characters on the right and $D$ characters on the bottom side.
+
+The frame consists of characters # (hash) and . (dot) which alternate like fields on a chessboard. These characters should be arranged in a way that, if the frame is expanded to cover the entire crossword puzzle and we treat these characters as a chessboard, the # characters should be placed as the red fields on a chessboard (i.e. the top left field). See the examples below for a better understanding of the task.
+
+-----Input-----
+The first line of input contains two integers $M$ and $N$ ($1 \leq M, N \leq 10$). The second line of input contains integers $U$, $L$, $R$, $D$ ($0 \leq U, L, R, D \leq 5$). The following $M$ lines of input contains $N$ characters — lowercase letters of the English alphabet. These lines represent Mirko’s crossword puzzle.
+
+-----Output-----
+Output the framed crossword puzzle as stated in the text.
+
+-----Examples-----
+Sample Input:
+4 4
+2 2 2 2
+honi
+oker
+nera
+irak
+Sample Output:
+#.#.#.#.
+.#.#.#.#
+#.honi#.
+.#oker.#
+#.nera#.
+.#irak.#
+#.#.#.#.
+.#.#.#.#
+"""
+2022-04-09 23:11:11.614080 --------------------------
+2022-04-09 23:11:43.882350 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nfor i in range(u):\n    print(\"#.\" * n + \"#\" + \".\" * r)\n\nfor i in range(m):\n    print(\"#\" + input() + \"#\" + \".\" * r)\n\nfor i in range(d):\n    print(\"#.\" * n + \"#\" + \".\" * r)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    # Get input\n    m, n = map(int, input().split())\n    u, l, r, d = map(int, input().split())\n    puzzle = []\n    for _ in range(m):\n        puzzle.append(list(input()))\n\n    # Print top\n    print(\"#\" * (n + l + r) + \".\" * (l + r))\n    for _ in range(u):\n        print(\".\" * (l + r) + \"#\" * (n + l + r) + \".\" * (l + r))\n    for i in range(m):\n        # Print left\n        print(\".\" * (l + r), end=\"\")\n        # Print puzzle\n        print(\"\".join(puzzle[i]), end=\"\")\n        # Print right\n        print(\".\" * (l + r))\n    for _ in range(d):\n        print(\".\" * (l + r) + \"#\" * (n + l + r) + \".\" * (l + r))\n    # Print bottom\n    print(\"#\" * (n + l + r) + \".\" * (l + r))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main(m, n, u, l, r, d):\n    out = \"\"\n    for i in range(u):\n        out += \"#.\" * (l + n + r) + \"#\\n\"\n    for i in range(m):\n        out += \"#.\" + \".\".join(input()) + \".#\\n\"\n    for i in range(d):\n        out += \"#.\" * (l + n + r) + \"#\\n\"\n    print(out)\n\nif __name__ == \"__main__\":\n    m, n = map(int, input().split())\n    u, l, r, d = map(int, input().split())\n    main(m, n, u, l, r, d)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nprint(\"#\"*(l+r+n)+\".\"*(l+r))\nfor _ in range(u):\n    print(\"#\"*(l+r+n)+\".\"*(l+r))\nfor _ in range(m):\n    print(\"#\"*l+input()+\"#\"*r)\nfor _ in range(d):\n    print(\"#\"*(l+r+n)+\".\"*(l+r))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\npuzzle = [list(input()) for _ in range(m)]\n\nfor i in range(u):\n    print('#' + '.' * (n + l + r) + '#')\nfor i in range(m):\n    print('#' + '.' * l + ''.join(puzzle[i]) + '.' * r + '#')\nfor i in range(d):\n    print('#' + '.' * (n + l + r) + '#')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# Grab the pellets as fast as you can!\n\n# width: size of the grid\n# height: top left corner is (x=0, y=0)\nwidth, height = [int(i) for i in input().split()]\n\n# Print an error message, because the maze is too small\nif width < 10 or height < 10:\n    print(\"The maze is too small!\")\n    sys.exit(0)\n\n# game loop\nwhile True:\n    # x: Pac-Man's x position\n    # y: Pac-Man's y position\n    # pac_id: Pac-Man's unique id\n    # mine: true if this Pac-Man is powered up, false otherwise\n    x, y, pac_id, mine = [int(j) for j in input().split()]\n\n    # visible_pac_count: all your pacs and enemy pacs in sight\n    # mine_count: number of visible pellets in sight\n    visible_pac_count, mine_count = [int(i) for i in input().split()]\n    for i in range(visible_pac_count):\n        # pac_id: pac number (unique within a team)\n        # mine: true if this pac is yours\n        # x: position in the grid\n        # y: position in the grid\n        # type_id: unused in wood leagues\n        # speed_turns_left: unused in wood leagues\n        # ability_cooldown: unused in wood leagues\n        pac_id, mine, x, y, type_id, speed_turns_left, ability_cooldown = input().split()\n        pac_id = int(pac_id)\n        mine = mine != \"0\"\n        x = int(x)\n        y = int(y)\n        speed_turns_left = int(speed_turns_left)\n        ability_cooldown = int(ability_cooldown)\n\n    # visible_pellet_count: all pellets in sight\n    visible_pellet_count = int(input())\n    pellets = []\n    for i in range(visible_pellet_count):\n        # value: amount of points this pellet is worth\n        x, y, value = [int(j) for j in input().split()]\n        pellets.append((x, y, value))\n\n    # Write an action using print\n    # To debug: print(\"Debug messages...\", file=sys.stderr)\n\n    # MOVE <pacId> <x> <y>\n    print(\"MOVE %d %d %d\" % (pac_id, x+1, y))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#Getting input\nM, N = [int(x) for x in input().split()]\nU, L, R, D = [int(x) for x in input().split()]\n\n#Creating the crossword\ncrossword = [input() for x in range(M)]\n\n#Creating the frame\nframe = []\nfor i in range(U):\n    frame.append(\"#.\"*(N+L+R-1)+\"#\")\nframe.append(\".\"*L+crossword[0]+\".\"*R)\nfor i in range(1,M):\n    frame.append(\".\"*L+crossword[i]+\".\"*R)\nfor i in range(D):\n    frame.append(\"#.\"*(N+L+R-1)+\"#\")\n\n#Printing the frame\nfor line in frame:\n    print(line)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nprint('#' * (l + r + n) + '.' * (d + u))\nprint('.' * (l + r + n) + '#' * (d + u))\nfor i in range(m):\n    print('#' * l + input() + '#' * r)\nprint('.' * (l + r + n) + '#' * (d + u))\nprint('#' * (l + r + n) + '.' * (d + u))"
+    }
+  ],
+  "created": 1649560272,
+  "id": "cmpl-4vIGmBCvljwqUzKHqkWtMULRPq9Qy",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:11:43.882639 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nfor i in range(u):\n    print(\"#.\" * n + \"#\" + \".\" * r)\n\nfor i in range(m):\n    print(\"#\" + input() + \"#\" + \".\" * r)\n\nfor i in range(d):\n    print(\"#.\" * n + \"#\" + \".\" * r)"
+}
+2022-04-09 23:11:43.882674 REASON stop
+2022-04-09 23:11:43.894053 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.894090 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    # Get input\n    m, n = map(int, input().split())\n    u, l, r, d = map(int, input().split())\n    puzzle = []\n    for _ in range(m):\n        puzzle.append(list(input()))\n\n    # Print top\n    print(\"#\" * (n + l + r) + \".\" * (l + r))\n    for _ in range(u):\n        print(\".\" * (l + r) + \"#\" * (n + l + r) + \".\" * (l + r))\n    for i in range(m):\n        # Print left\n        print(\".\" * (l + r), end=\"\")\n        # Print puzzle\n        print(\"\".join(puzzle[i]), end=\"\")\n        # Print right\n        print(\".\" * (l + r))\n    for _ in range(d):\n        print(\".\" * (l + r) + \"#\" * (n + l + r) + \".\" * (l + r))\n    # Print bottom\n    print(\"#\" * (n + l + r) + \".\" * (l + r))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:11:43.894237 REASON stop
+2022-04-09 23:11:43.894765 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.894802 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main(m, n, u, l, r, d):\n    out = \"\"\n    for i in range(u):\n        out += \"#.\" * (l + n + r) + \"#\\n\"\n    for i in range(m):\n        out += \"#.\" + \".\".join(input()) + \".#\\n\"\n    for i in range(d):\n        out += \"#.\" * (l + n + r) + \"#\\n\"\n    print(out)\n\nif __name__ == \"__main__\":\n    m, n = map(int, input().split())\n    u, l, r, d = map(int, input().split())\n    main(m, n, u, l, r, d)"
+}
+2022-04-09 23:11:43.894880 REASON stop
+2022-04-09 23:11:43.895374 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.895414 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nprint(\"#\"*(l+r+n)+\".\"*(l+r))\nfor _ in range(u):\n    print(\"#\"*(l+r+n)+\".\"*(l+r))\nfor _ in range(m):\n    print(\"#\"*l+input()+\"#\"*r)\nfor _ in range(d):\n    print(\"#\"*(l+r+n)+\".\"*(l+r))"
+}
+2022-04-09 23:11:43.895492 REASON stop
+2022-04-09 23:11:43.895959 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.895995 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\npuzzle = [list(input()) for _ in range(m)]\n\nfor i in range(u):\n    print('#' + '.' * (n + l + r) + '#')\nfor i in range(m):\n    print('#' + '.' * l + ''.join(puzzle[i]) + '.' * r + '#')\nfor i in range(d):\n    print('#' + '.' * (n + l + r) + '#')"
+}
+2022-04-09 23:11:43.896061 REASON stop
+2022-04-09 23:11:43.896532 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.896568 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# Grab the pellets as fast as you can!\n\n# width: size of the grid\n# height: top left corner is (x=0, y=0)\nwidth, height = [int(i) for i in input().split()]\n\n# Print an error message, because the maze is too small\nif width < 10 or height < 10:\n    print(\"The maze is too small!\")\n    sys.exit(0)\n\n# game loop\nwhile True:\n    # x: Pac-Man's x position\n    # y: Pac-Man's y position\n    # pac_id: Pac-Man's unique id\n    # mine: true if this Pac-Man is powered up, false otherwise\n    x, y, pac_id, mine = [int(j) for j in input().split()]\n\n    # visible_pac_count: all your pacs and enemy pacs in sight\n    # mine_count: number of visible pellets in sight\n    visible_pac_count, mine_count = [int(i) for i in input().split()]\n    for i in range(visible_pac_count):\n        # pac_id: pac number (unique within a team)\n        # mine: true if this pac is yours\n        # x: position in the grid\n        # y: position in the grid\n        # type_id: unused in wood leagues\n        # speed_turns_left: unused in wood leagues\n        # ability_cooldown: unused in wood leagues\n        pac_id, mine, x, y, type_id, speed_turns_left, ability_cooldown = input().split()\n        pac_id = int(pac_id)\n        mine = mine != \"0\"\n        x = int(x)\n        y = int(y)\n        speed_turns_left = int(speed_turns_left)\n        ability_cooldown = int(ability_cooldown)\n\n    # visible_pellet_count: all pellets in sight\n    visible_pellet_count = int(input())\n    pellets = []\n    for i in range(visible_pellet_count):\n        # value: amount of points this pellet is worth\n        x, y, value = [int(j) for j in input().split()]\n        pellets.append((x, y, value))\n\n    # Write an action using print\n    # To debug: print(\"Debug messages...\", file=sys.stderr)\n\n    # MOVE <pacId> <x> <y>\n    print(\"MOVE %d %d %d\" % (pac_id, x+1, y))"
+}
+2022-04-09 23:11:43.896702 REASON stop
+2022-04-09 23:11:43.897347 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.897380 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#Getting input\nM, N = [int(x) for x in input().split()]\nU, L, R, D = [int(x) for x in input().split()]\n\n#Creating the crossword\ncrossword = [input() for x in range(M)]\n\n#Creating the frame\nframe = []\nfor i in range(U):\n    frame.append(\"#.\"*(N+L+R-1)+\"#\")\nframe.append(\".\"*L+crossword[0]+\".\"*R)\nfor i in range(1,M):\n    frame.append(\".\"*L+crossword[i]+\".\"*R)\nfor i in range(D):\n    frame.append(\"#.\"*(N+L+R-1)+\"#\")\n\n#Printing the frame\nfor line in frame:\n    print(line)"
+}
+2022-04-09 23:11:43.897451 REASON stop
+2022-04-09 23:11:43.897948 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'
+2022-04-09 23:11:43.897984 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nm, n = map(int, input().split())\nu, l, r, d = map(int, input().split())\n\nprint('#' * (l + r + n) + '.' * (d + u))\nprint('.' * (l + r + n) + '#' * (d + u))\nfor i in range(m):\n    print('#' * l + input() + '#' * r)\nprint('.' * (l + r + n) + '#' * (d + u))\nprint('#' * (l + r + n) + '.' * (d + u))"
+}
+2022-04-09 23:11:43.898062 REASON stop
+2022-04-09 23:11:43.898552 test/intro-questions.txt_dir/4867/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4867/solutions.json'

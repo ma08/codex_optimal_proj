@@ -1,0 +1,124 @@
+2022-04-13 21:11:58.454766 """
+Snuke has N dogs and M monkeys. He wants them to line up in a row.
+As a Japanese saying goes, these dogs and monkeys are on bad terms. ("ken'en no naka", literally "the relationship of dogs and monkeys", means a relationship of mutual hatred.) Snuke is trying to reconsile them, by arranging the animals so that there are neither two adjacent dogs nor two adjacent monkeys.
+How many such arrangements there are? Find the count modulo 10^9+7 (since animals cannot understand numbers larger than that).
+Here, dogs and monkeys are both distinguishable. Also, two arrangements that result from reversing each other are distinguished.
+
+-----Constraints-----
+ - 1 ≤ N,M ≤ 10^5
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+
+-----Output-----
+Print the number of possible arrangements, modulo 10^9+7.
+
+-----Sample Input-----
+2 2
+
+-----Sample Output-----
+8
+
+We will denote the dogs by A and B, and the monkeys by C and D. There are eight possible arrangements: ACBD, ADBC, BCAD, BDAC, CADB, CBDA, DACB and DBCA.
+"""
+2022-04-13 21:11:58.454775 --------------------------
+2022-04-13 21:12:15.411102 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\ndef solve(n, m):\n    if n < m:\n        return solve(m, n)\n    if m == 0:\n        return 1\n    if n == m:\n        return 0\n    if n == 0:\n        return 1\n    mod = 10**9 + 7\n    dp = [0] * (n+1)\n    dp[1] = 1\n    dp[2] = 1\n    for i in range(3, n+1):\n        dp[i] = (dp[i-1] + dp[i-2]) % mod\n    return dp[n] * dp[m] % mod\n\ndef main():\n    n, m = map(int, input().split())\n    print(solve(n, m))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_numbers():\n    return [int(x) for x in sys.stdin.readline().split()]\n\ndef solve(n, m):\n    return pow(2, n+m, 10**9+7)\n\ndef main():\n    n, m = read_numbers()\n    print(solve(n, m))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_ints():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef main():\n    n, m = read_ints()\n    # dp[i][j] = # of ways to arrange i dogs and j monkeys\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % 1000000007\n    print(dp[n][m])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N, M = map(int, sys.stdin.readline().rstrip().split())\n    print(solve(N, M))\n\ndef solve(N, M):\n    MOD = 10**9 + 7\n    if N == 0 and M == 0:\n        return 1\n    elif N == 0:\n        return (M + 1) % MOD\n    elif M == 0:\n        return (N + 1) % MOD\n    else:\n        return (solve(N - 1, M) + solve(N, M - 1)) % MOD\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, input().split())\n\nMOD = 10**9 + 7\n\n# dp[i][j] = i\u500b\u306e\u72ac\u3068j\u500b\u306e\u733f\u3092\u4e26\u3079\u308b\u3068\u304d\u306e\u7d44\u307f\u5408\u308f\u305b\u6570\ndp = [[0] * (M + 1) for _ in range(N + 1)]\n\nfor i in range(N + 1):\n    for j in range(M + 1):\n        if i == 0 and j == 0:\n            dp[i][j] = 1\n        elif i == 0:\n            dp[i][j] = dp[i][j - 1]\n        elif j == 0:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % MOD\n\nprint(dp[N][M])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    mod = 10**9 + 7\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(n+1):\n        for j in range(m+1):\n            if i+1 <= n:\n                dp[i+1][j] = (dp[i+1][j] + dp[i][j]) % mod\n            if j+1 <= m:\n                dp[i][j+1] = (dp[i][j+1] + dp[i][j]) % mod\n    print(dp[n][m])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = list(map(int, sys.stdin.readline().strip().split()))\n\nMOD = 10**9 + 7\n\n# dp[i][j]: number of ways to line up i dogs and j monkeys\ndp = [[0 for _ in range(m+1)] for _ in range(n+1)]\ndp[0][0] = 1\n\nfor i in range(n+1):\n    for j in range(m+1):\n        # If the last animal was a dog, the next animal must be a monkey\n        if i > 0:\n            dp[i][j] += dp[i-1][j] * j\n            dp[i][j] %= MOD\n        # If the last animal was a monkey, the next animal must be a dog\n        if j > 0:\n            dp[i][j] += dp[i][j-1] * i\n            dp[i][j] %= MOD\n\nprint(dp[n][m])"
+    }
+  ],
+  "created": 1649884318,
+  "id": "cmpl-4weZKEJnC1ylGIP6398slJAe2ZKDd",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:12:15.411395 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\ndef solve(n, m):\n    if n < m:\n        return solve(m, n)\n    if m == 0:\n        return 1\n    if n == m:\n        return 0\n    if n == 0:\n        return 1\n    mod = 10**9 + 7\n    dp = [0] * (n+1)\n    dp[1] = 1\n    dp[2] = 1\n    for i in range(3, n+1):\n        dp[i] = (dp[i-1] + dp[i-2]) % mod\n    return dp[n] * dp[m] % mod\n\ndef main():\n    n, m = map(int, input().split())\n    print(solve(n, m))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:12:15.411431 REASON stop
+2022-04-13 21:12:15.411925 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_numbers():\n    return [int(x) for x in sys.stdin.readline().split()]\n\ndef solve(n, m):\n    return pow(2, n+m, 10**9+7)\n\ndef main():\n    n, m = read_numbers()\n    print(solve(n, m))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:12:15.412042 REASON stop
+2022-04-13 21:12:15.412432 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_ints():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef main():\n    n, m = read_ints()\n    # dp[i][j] = # of ways to arrange i dogs and j monkeys\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % 1000000007\n    print(dp[n][m])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:12:15.412479 REASON stop
+2022-04-13 21:12:15.436099 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N, M = map(int, sys.stdin.readline().rstrip().split())\n    print(solve(N, M))\n\ndef solve(N, M):\n    MOD = 10**9 + 7\n    if N == 0 and M == 0:\n        return 1\n    elif N == 0:\n        return (M + 1) % MOD\n    elif M == 0:\n        return (N + 1) % MOD\n    else:\n        return (solve(N - 1, M) + solve(N, M - 1)) % MOD\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:12:15.436190 REASON stop
+2022-04-13 21:12:15.446849 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, input().split())\n\nMOD = 10**9 + 7\n\n# dp[i][j] = i\u500b\u306e\u72ac\u3068j\u500b\u306e\u733f\u3092\u4e26\u3079\u308b\u3068\u304d\u306e\u7d44\u307f\u5408\u308f\u305b\u6570\ndp = [[0] * (M + 1) for _ in range(N + 1)]\n\nfor i in range(N + 1):\n    for j in range(M + 1):\n        if i == 0 and j == 0:\n            dp[i][j] = 1\n        elif i == 0:\n            dp[i][j] = dp[i][j - 1]\n        elif j == 0:\n            dp[i][j] = dp[i - 1][j]\n        else:\n            dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % MOD\n\nprint(dp[N][M])"
+}
+2022-04-13 21:12:15.446970 REASON stop
+2022-04-13 21:12:15.448066 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    mod = 10**9 + 7\n    dp = [[0 for _ in range(m+1)] for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(n+1):\n        for j in range(m+1):\n            if i+1 <= n:\n                dp[i+1][j] = (dp[i+1][j] + dp[i][j]) % mod\n            if j+1 <= m:\n                dp[i][j+1] = (dp[i][j+1] + dp[i][j]) % mod\n    print(dp[n][m])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:12:15.448131 REASON stop
+2022-04-13 21:12:15.449020 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = list(map(int, sys.stdin.readline().strip().split()))\n\nMOD = 10**9 + 7\n\n# dp[i][j]: number of ways to line up i dogs and j monkeys\ndp = [[0 for _ in range(m+1)] for _ in range(n+1)]\ndp[0][0] = 1\n\nfor i in range(n+1):\n    for j in range(m+1):\n        # If the last animal was a dog, the next animal must be a monkey\n        if i > 0:\n            dp[i][j] += dp[i-1][j] * j\n            dp[i][j] %= MOD\n        # If the last animal was a monkey, the next animal must be a dog\n        if j > 0:\n            dp[i][j] += dp[i][j-1] * i\n            dp[i][j] %= MOD\n\nprint(dp[n][m])"
+}
+2022-04-13 21:12:15.449079 REASON stop

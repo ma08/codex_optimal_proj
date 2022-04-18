@@ -1,0 +1,34 @@
+
+
+from sys import stdin
+
+def read():
+    return stdin.readline()
+
+def main():
+    n, m = (int(x) for x in read().split())
+    a = [int(x) for x in read().split()][:n]
+    a.sort()
+    min_val = a[0]
+    max_val = a[n-1]
+    max_moves = max_val - min_val
+    min_moves = 0
+    for i in range(1, n):
+        if i % m == 0:
+            min_moves += a[i-1] - min_val
+    if min_moves > max_moves:
+        print(min_moves, end='\n')
+        for i in range(n):
+            if i % m == 0:
+                print(max_val, end=' ' if i < n-1 else '\n')
+            else:
+                print(min_val, end=' ' if i < n-1 else '\n')
+    else:
+        print(max_moves, end='\n')
+        for i in range(n):
+            if i % m == 0:
+                print(min_val, end=' ' if i < n-1 else '\n')
+            else:
+                print(max_val, end=' ' if i < n-1 else '\n')
+
+main()

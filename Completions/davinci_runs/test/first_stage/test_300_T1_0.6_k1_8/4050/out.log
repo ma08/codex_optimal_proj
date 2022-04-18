@@ -1,0 +1,168 @@
+2022-04-16 19:08:01.226190 """
+This problem is given in two editions, which differ exclusively in the constraints on the number $n$.
+
+You are given an array of integers $a[1], a[2], \dots, a[n].$ A block is a sequence of contiguous (consecutive) elements $a[l], a[l+1], \dots, a[r]$ ($1 \le l \le r \le n$). Thus, a block is defined by a pair of indices $(l, r)$.
+
+Find a set of blocks $(l_1, r_1), (l_2, r_2), \dots, (l_k, r_k)$ such that:
+
+  They do not intersect (i.e. they are disjoint). Formally, for each pair of blocks $(l_i, r_i)$ and $(l_j, r_j$) where $i \neq j$ either $r_i < l_j$ or $r_j < l_i$.  For each block the sum of its elements is the same. Formally, $$a[l_1]+a[l_1+1]+\dots+a[r_1]=a[l_2]+a[l_2+1]+\dots+a[r_2]=$$ $$\dots =$$ $$a[l_k]+a[l_k+1]+\dots+a[r_k].$$  The number of the blocks in the set is maximum. Formally, there does not exist a set of blocks $(l_1', r_1'), (l_2', r_2'), \dots, (l_{k'}', r_{k'}')$ satisfying the above two requirements with $k' > k$. 
+
+ $\left. \begin{array}{|l|l|l|l|l|l|} \hline 4 & {1} & {2} & {2} & {1} & {5} & {3} \\ \hline \end{array} \right.$ The picture corresponds to the first example. Blue boxes illustrate blocks. 
+
+Write a program to find such a set of blocks.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 50$) — the length of the given array. The second line contains the sequence of elements $a[1], a[2], \dots, a[n]$ ($-10^5 \le a_i \le 10^5$).
+
+
+-----Output-----
+
+In the first line print the integer $k$ ($1 \le k \le n$). The following $k$ lines should contain blocks, one per line. In each line print a pair of indices $l_i, r_i$ ($1 \le l_i \le r_i \le n$) — the bounds of the $i$-th block. You can print blocks in any order. If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+7
+4 1 2 2 1 5 3
+
+Output
+3
+7 7
+2 3
+4 5
+
+Input
+11
+-5 -4 -3 -2 -1 0 1 2 3 4 5
+
+Output
+2
+3 4
+1 1
+
+Input
+4
+1 1 1 1
+
+Output
+4
+4 4
+1 1
+2 2
+3 3
+"""
+2022-04-16 19:08:01.226207 --------------------------
+2022-04-16 19:08:48.150462 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef maxblocks(n,a):\n    s=0\n    for i in a:\n        s+=i\n    if s%n==0:\n        s=s/n\n        r=[]\n        sum=0\n        for i in xrange(n):\n            if sum+a[i]>s:\n                r.append([i,i])\n                sum=a[i]\n            else:\n                sum+=a[i]\n            if sum==s:\n                r.append([i+1,i+1])\n                sum=0\n        print(len(r))\n        for i in r:\n            print(i[0]+1,i[1]+1)\n    else:\n        print(-1)\n\nn=int(raw_input())\na=map(int,raw_input().split())\nmaxblocks(n,a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find all the possible sums of contiguous elements\nsums = []\nfor i in range(1, n + 1):\n    for j in range(i, n + 1):\n        sums.append(sum(a[i - 1:j]))\n\n# get the set of sums\nsums = sorted(list(set(sums)))\n\n# for each sum, find all the possible blocks\nblocks = []\nfor s in sums:\n    for i in range(1, n + 1):\n        for j in range(i, n + 1):\n            if sum(a[i - 1:j]) == s:\n                blocks.append((i, j))\n\n# sort the blocks according to the left bound\nblocks = sorted(blocks, key=lambda b: b[0])\n\n# find the largest set of non-intersecting blocks\nmax_blocks = []\ncurr_blocks = []\nfor b in blocks:\n    if not curr_blocks:\n        curr_blocks.append(b)\n    else:\n        if b[0] > curr_blocks[-1][1]:\n            curr_blocks.append(b)\n        elif len(curr_blocks) > len(max_blocks):\n            max_blocks = curr_blocks\n            curr_blocks = [b]\n\nif len(curr_blocks) > len(max_blocks):\n    max_blocks = curr_blocks\n\n# print the result\nprint(len(max_blocks))\nfor b in max_blocks:\n    print(b[0], b[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef get_blocks(array):\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        blocks = []\n        i = 1\n        while i < len(array):\n            blocks.append([i,i])\n            i += 1\n        return blocks\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            #print(array[j:i])\n            return [j,i]\n        i -= 1\n\n\n#get the number of blocks\ndef get_number_of_blocks(array):\n    num_blocks = -1\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        return len(array)\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            num_blocks += 1\n        i -= 1\n\n    return num_blocks\n\n\ndef get_all_blocks(array):\n    blocks = []\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        i = 1\n        while i < len(array):\n            blocks.append([i,i])\n            i += 1\n        return blocks\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            #print(array[j:i])\n            blocks.append([j,i])\n        i -= 1\n\n    return blocks\n\n\ndef main():\n    array = [int(x) for x in input().split()]\n    #print(array)\n    #print(get_blocks(array))\n    #print(get_number_of_blocks(array))\n    print(get_number_of_blocks(array))\n    for block in get_all_blocks(array):\n        print(str(block[0]) + \" \" + str(block[1]))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef blocksum(a, n):\n    result = []\n    for i in range(n):\n        for j in range(i, n):\n            block = (i, j)\n            block_sum = sum(a[i:j+1])\n            result.append((block_sum, block))\n    return result\n\ndef max_blocks(b, n):\n    b = sorted(b, key=lambda x: x[0])\n    result = []\n    for i in range(n):\n        if b[i][0] == b[i+1][0]:\n            result.append(b[i][1])\n    return result\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = blocksum(a, n)\n    result = max_blocks(b, n)\n    print(len(result))\n    for i in result:\n        print(i[0]+1, i[1]+1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n#------------------------------------------------------------------------------#\n\ndef read_int():\n    return int(input())\n\n\ndef read_ints():\n    return [int(x) for x in input().split()]\n#------------------------------------------------------------------------------#\n\ndef solve(n, arr):\n    arr = list(map(abs, arr))\n    if sum(arr) % 2 == 1:\n        return \"IMPOSSIBLE\"\n    target = sum(arr) // 2\n    dp = [False] * (target + 1)\n    dp[0] = True\n    for a in arr:\n        for t in range(target, a - 1, -1):\n            dp[t] = dp[t] or dp[t - a]\n    if not dp[target]:\n        return \"IMPOSSIBLE\"\n    ans = []\n    a = 0\n    while a < n:\n        while a < n and arr[a] == 0:\n            a += 1\n        b = a\n        while b < n and sum(arr[a:b + 1]) != target:\n            b += 1\n        for i in range(a, b + 1):\n            arr[i] = 0\n        ans.append((a + 1, b + 1))\n        a = b + 1\n    return len(ans)\n\n\ndef main():\n    n = read_int()\n    arr = read_ints()\n    res = solve(n, arr)\n    if res == \"IMPOSSIBLE\":\n        print(res)\n    else:\n        print(res)\n        for r in res:\n            print(r[0], r[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = []\ne = []\n\nfor i in range(n):\n    s.append(a[i])\n    for j in range(i+1, n):\n        s.append(s[-1]+a[j])\n    e.append(s)\n    s = []\n\nans = []\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if e[i][j] not in ans:\n            ans.append(e[i][j])\n\nans.sort()\nans = ans[::-1]\n\nfor i in ans:\n    count = 0\n    for j in range(n):\n        for k in range(j+1, n):\n            if e[j][k] == i:\n                count += 1\n                print(j+1, k+1)\n    if count == 0:\n        break"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_block_sums(arr):\n    return [sum(arr[i:j+1]) for i in range(len(arr)) for j in range(i, len(arr))]\n\ndef get_unique_block_sums(arr):\n    return list(set(get_block_sums(arr)))\n\ndef get_number_of_blocks(arr):\n    return len(get_block_sums(arr))\n\ndef get_max_number_of_blocks(arr):\n    return max(get_number_of_blocks(arr[:i]) + get_number_of_blocks(arr[i+1:]) for i in range(len(arr)))\n\ndef get_blocks(arr):\n    block_sums = get_block_sums(arr)\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in unique_block_sums]\n\ndef get_blocks_by_sums(arr, sums):\n    block_sums = get_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in sums]\n\ndef get_blocks_by_sums_2(arr, sums):\n    block_sums = get_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in sums]\n\ndef get_blocks_2(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef get_blocks_3(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef get_blocks_4(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef main():\n    n = int(sys.stdin.readline())\n\n    arr = list(map(int, sys.stdin.readline().split()))\n\n    if len(arr) != n:\n        return\n\n    blocks = get_blocks(arr)\n\n    print(len(blocks))\n\n    for block in blocks:\n        print(str(block[0] + 1) + \" \" + str(block[1] + 1))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\ndef find_sets(arr):\n    \"\"\"\n    Find the sets of blocks with the same sum as described in the problem.\n\n    Parameters\n    ----------\n    arr: array of int\n        The array of integers.\n\n    Returns\n    -------\n    sets: list of lists\n        A list of sets of blocks.\n    \"\"\"\n    sets = []\n    for i in range(len(arr)):\n        for j in range(i, len(arr)):\n            sets.append([[i, j], sum(arr[i:j + 1])])\n    sets = sorted(sets, key=lambda x: x[1])\n    sets = [x[0] for x in sets]\n    return sets\n\ndef find_max_disjoint_sets(sets):\n    \"\"\"\n    Find the maximum number of disjoint sets.\n\n    Parameters\n    ----------\n    sets: list of lists\n        A list of sets of blocks.\n\n    Returns\n    -------\n    max_disjoint_sets: list of lists\n        A list of maximum number of disjoint sets.\n    \"\"\"\n    max_disjoint_sets = []\n    for i in range(len(sets)):\n        if len(max_disjoint_sets) == 0:\n            max_disjoint_sets.append(sets[i])\n        else:\n            if sets[i][0] > max_disjoint_sets[-1][1]:\n                max_disjoint_sets.append(sets[i])\n    return max_disjoint_sets\n\nn = int(input())\narr = [int(x) for x in input().split()]\nsets = find_sets(arr)\nmax_disjoint_sets = find_max_disjoint_sets(sets)\nprint(len(max_disjoint_sets))\nfor i in max_disjoint_sets:\n    print(i[0] + 1, i[1] + 1)"
+    }
+  ],
+  "created": 1650136081,
+  "id": "cmpl-4xi41r8eFGp3qILGbDxeUx7K29l7q",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 19:08:48.150864 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef maxblocks(n,a):\n    s=0\n    for i in a:\n        s+=i\n    if s%n==0:\n        s=s/n\n        r=[]\n        sum=0\n        for i in xrange(n):\n            if sum+a[i]>s:\n                r.append([i,i])\n                sum=a[i]\n            else:\n                sum+=a[i]\n            if sum==s:\n                r.append([i+1,i+1])\n                sum=0\n        print(len(r))\n        for i in r:\n            print(i[0]+1,i[1]+1)\n    else:\n        print(-1)\n\nn=int(raw_input())\na=map(int,raw_input().split())\nmaxblocks(n,a)"
+}
+2022-04-16 19:08:48.150909 REASON stop
+2022-04-16 19:08:48.188034 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find all the possible sums of contiguous elements\nsums = []\nfor i in range(1, n + 1):\n    for j in range(i, n + 1):\n        sums.append(sum(a[i - 1:j]))\n\n# get the set of sums\nsums = sorted(list(set(sums)))\n\n# for each sum, find all the possible blocks\nblocks = []\nfor s in sums:\n    for i in range(1, n + 1):\n        for j in range(i, n + 1):\n            if sum(a[i - 1:j]) == s:\n                blocks.append((i, j))\n\n# sort the blocks according to the left bound\nblocks = sorted(blocks, key=lambda b: b[0])\n\n# find the largest set of non-intersecting blocks\nmax_blocks = []\ncurr_blocks = []\nfor b in blocks:\n    if not curr_blocks:\n        curr_blocks.append(b)\n    else:\n        if b[0] > curr_blocks[-1][1]:\n            curr_blocks.append(b)\n        elif len(curr_blocks) > len(max_blocks):\n            max_blocks = curr_blocks\n            curr_blocks = [b]\n\nif len(curr_blocks) > len(max_blocks):\n    max_blocks = curr_blocks\n\n# print the result\nprint(len(max_blocks))\nfor b in max_blocks:\n    print(b[0], b[1])"
+}
+2022-04-16 19:08:48.188216 REASON stop
+2022-04-16 19:08:48.188729 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef get_blocks(array):\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        blocks = []\n        i = 1\n        while i < len(array):\n            blocks.append([i,i])\n            i += 1\n        return blocks\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            #print(array[j:i])\n            return [j,i]\n        i -= 1\n\n\n#get the number of blocks\ndef get_number_of_blocks(array):\n    num_blocks = -1\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        return len(array)\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            num_blocks += 1\n        i -= 1\n\n    return num_blocks\n\n\ndef get_all_blocks(array):\n    blocks = []\n    #get the sum of the array first\n    array_sum = sum(array)\n    #if array_sum is zero, then there is a block at each number\n    if array_sum == 0:\n        i = 1\n        while i < len(array):\n            blocks.append([i,i])\n            i += 1\n        return blocks\n\n    #if the sum is not zero, we need to find the numbers that add up to the sum\n    #we can do this with a greedy approach, starting at the last number and adding\n    #numbers until the sum is reached, then moving down one in the array\n    #at each iteration, we need to account for the fact that there may be multiple\n    #blocks at a given number\n    #print(array_sum)\n    i = len(array)\n    while i > 0:\n        j = i\n        block_sum = 0\n        while block_sum != array_sum and j > 0:\n            block_sum += array[j-1]\n            j -= 1\n        if block_sum == array_sum:\n            #print(array[j:i])\n            blocks.append([j,i])\n        i -= 1\n\n    return blocks\n\n\ndef main():\n    array = [int(x) for x in input().split()]\n    #print(array)\n    #print(get_blocks(array))\n    #print(get_number_of_blocks(array))\n    print(get_number_of_blocks(array))\n    for block in get_all_blocks(array):\n        print(str(block[0]) + \" \" + str(block[1]))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:08:48.188806 REASON stop
+2022-04-16 19:08:48.210317 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef blocksum(a, n):\n    result = []\n    for i in range(n):\n        for j in range(i, n):\n            block = (i, j)\n            block_sum = sum(a[i:j+1])\n            result.append((block_sum, block))\n    return result\n\ndef max_blocks(b, n):\n    b = sorted(b, key=lambda x: x[0])\n    result = []\n    for i in range(n):\n        if b[i][0] == b[i+1][0]:\n            result.append(b[i][1])\n    return result\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = blocksum(a, n)\n    result = max_blocks(b, n)\n    print(len(result))\n    for i in result:\n        print(i[0]+1, i[1]+1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:08:48.210424 REASON stop
+2022-04-16 19:08:48.224966 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n#------------------------------------------------------------------------------#\n\ndef read_int():\n    return int(input())\n\n\ndef read_ints():\n    return [int(x) for x in input().split()]\n#------------------------------------------------------------------------------#\n\ndef solve(n, arr):\n    arr = list(map(abs, arr))\n    if sum(arr) % 2 == 1:\n        return \"IMPOSSIBLE\"\n    target = sum(arr) // 2\n    dp = [False] * (target + 1)\n    dp[0] = True\n    for a in arr:\n        for t in range(target, a - 1, -1):\n            dp[t] = dp[t] or dp[t - a]\n    if not dp[target]:\n        return \"IMPOSSIBLE\"\n    ans = []\n    a = 0\n    while a < n:\n        while a < n and arr[a] == 0:\n            a += 1\n        b = a\n        while b < n and sum(arr[a:b + 1]) != target:\n            b += 1\n        for i in range(a, b + 1):\n            arr[i] = 0\n        ans.append((a + 1, b + 1))\n        a = b + 1\n    return len(ans)\n\n\ndef main():\n    n = read_int()\n    arr = read_ints()\n    res = solve(n, arr)\n    if res == \"IMPOSSIBLE\":\n        print(res)\n    else:\n        print(res)\n        for r in res:\n            print(r[0], r[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 19:08:48.225166 REASON stop
+2022-04-16 19:08:48.226607 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = []\ne = []\n\nfor i in range(n):\n    s.append(a[i])\n    for j in range(i+1, n):\n        s.append(s[-1]+a[j])\n    e.append(s)\n    s = []\n\nans = []\n\nfor i in range(n):\n    for j in range(i+1, n):\n        if e[i][j] not in ans:\n            ans.append(e[i][j])\n\nans.sort()\nans = ans[::-1]\n\nfor i in ans:\n    count = 0\n    for j in range(n):\n        for k in range(j+1, n):\n            if e[j][k] == i:\n                count += 1\n                print(j+1, k+1)\n    if count == 0:\n        break"
+}
+2022-04-16 19:08:48.226786 REASON stop
+2022-04-16 19:08:48.227563 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_block_sums(arr):\n    return [sum(arr[i:j+1]) for i in range(len(arr)) for j in range(i, len(arr))]\n\ndef get_unique_block_sums(arr):\n    return list(set(get_block_sums(arr)))\n\ndef get_number_of_blocks(arr):\n    return len(get_block_sums(arr))\n\ndef get_max_number_of_blocks(arr):\n    return max(get_number_of_blocks(arr[:i]) + get_number_of_blocks(arr[i+1:]) for i in range(len(arr)))\n\ndef get_blocks(arr):\n    block_sums = get_block_sums(arr)\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in unique_block_sums]\n\ndef get_blocks_by_sums(arr, sums):\n    block_sums = get_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in sums]\n\ndef get_blocks_by_sums_2(arr, sums):\n    block_sums = get_block_sums(arr)\n\n    return [[i, j] for i in range(len(arr)) for j in range(i, len(arr)) if block_sums[i * len(arr) + j] in sums]\n\ndef get_blocks_2(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef get_blocks_3(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef get_blocks_4(arr):\n    unique_block_sums = get_unique_block_sums(arr)\n\n    return get_blocks_by_sums(arr, unique_block_sums)\n\ndef main():\n    n = int(sys.stdin.readline())\n\n    arr = list(map(int, sys.stdin.readline().split()))\n\n    if len(arr) != n:\n        return\n\n    blocks = get_blocks(arr)\n\n    print(len(blocks))\n\n    for block in blocks:\n        print(str(block[0] + 1) + \" \" + str(block[1] + 1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 19:08:48.227640 REASON stop
+2022-04-16 19:08:48.228572 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\ndef find_sets(arr):\n    \"\"\"\n    Find the sets of blocks with the same sum as described in the problem.\n\n    Parameters\n    ----------\n    arr: array of int\n        The array of integers.\n\n    Returns\n    -------\n    sets: list of lists\n        A list of sets of blocks.\n    \"\"\"\n    sets = []\n    for i in range(len(arr)):\n        for j in range(i, len(arr)):\n            sets.append([[i, j], sum(arr[i:j + 1])])\n    sets = sorted(sets, key=lambda x: x[1])\n    sets = [x[0] for x in sets]\n    return sets\n\ndef find_max_disjoint_sets(sets):\n    \"\"\"\n    Find the maximum number of disjoint sets.\n\n    Parameters\n    ----------\n    sets: list of lists\n        A list of sets of blocks.\n\n    Returns\n    -------\n    max_disjoint_sets: list of lists\n        A list of maximum number of disjoint sets.\n    \"\"\"\n    max_disjoint_sets = []\n    for i in range(len(sets)):\n        if len(max_disjoint_sets) == 0:\n            max_disjoint_sets.append(sets[i])\n        else:\n            if sets[i][0] > max_disjoint_sets[-1][1]:\n                max_disjoint_sets.append(sets[i])\n    return max_disjoint_sets\n\nn = int(input())\narr = [int(x) for x in input().split()]\nsets = find_sets(arr)\nmax_disjoint_sets = find_max_disjoint_sets(sets)\nprint(len(max_disjoint_sets))\nfor i in max_disjoint_sets:\n    print(i[0] + 1, i[1] + 1)"
+}
+2022-04-16 19:08:48.228692 REASON stop

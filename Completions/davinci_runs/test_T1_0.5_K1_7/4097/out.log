@@ -1,0 +1,165 @@
+2022-04-13 18:14:49.589075 """
+Polycarp likes arithmetic progressions. A sequence $[a_1, a_2, \dots, a_n]$ is called an arithmetic progression if for each $i$ ($1 \le i < n$) the value $a_{i+1} - a_i$ is the same. For example, the sequences $[42]$, $[5, 5, 5]$, $[2, 11, 20, 29]$ and $[3, 2, 1, 0]$ are arithmetic progressions, but $[1, 0, 1]$, $[1, 3, 9]$ and $[2, 3, 1]$ are not.
+
+It follows from the definition that any sequence of length one or two is an arithmetic progression.
+
+Polycarp found some sequence of positive integers $[b_1, b_2, \dots, b_n]$. He agrees to change each element by at most one. In the other words, for each element there are exactly three options: an element can be decreased by $1$, an element can be increased by $1$, an element can be left unchanged.
+
+Determine a minimum possible number of elements in $b$ which can be changed (by exactly one), so that the sequence $b$ becomes an arithmetic progression, or report that it is impossible.
+
+It is possible that the resulting sequence contains element equals $0$.
+
+
+-----Input-----
+
+The first line contains a single integer $n$ $(1 \le n \le 100\,000)$ — the number of elements in $b$.
+
+The second line contains a sequence $b_1, b_2, \dots, b_n$ $(1 \le b_i \le 10^{9})$.
+
+
+-----Output-----
+
+If it is impossible to make an arithmetic progression with described operations, print -1. In the other case, print non-negative integer — the minimum number of elements to change to make the given sequence becomes an arithmetic progression. The only allowed operation is to add/to subtract one from an element (can't use operation twice to the same position).
+
+
+-----Examples-----
+Input
+4
+24 21 14 10
+
+Output
+3
+
+Input
+2
+500 500
+
+Output
+0
+
+Input
+3
+14 5 1
+
+Output
+-1
+
+Input
+5
+1 3 6 9 12
+
+Output
+1
+
+
+
+-----Note-----
+
+In the first example Polycarp should increase the first number on $1$, decrease the second number on $1$, increase the third number on $1$, and the fourth number should left unchanged. So, after Polycarp changed three elements by one, his sequence became equals to $[25, 20, 15, 10]$, which is an arithmetic progression.
+
+In the second example Polycarp should not change anything, because his sequence is an arithmetic progression.
+
+In the third example it is impossible to make an arithmetic progression.
+
+In the fourth example Polycarp should change only the first element, he should decrease it on one. After that his sequence will looks like $[0, 3, 6, 9, 12]$, which is an arithmetic progression.
+"""
+2022-04-13 18:14:49.589090 --------------------------
+2022-04-13 18:15:17.596580 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nb = [int(x) for x in input().split()]\nb_diff = [b[i+1] - b[i] for i in range(len(b)-1)]\nif len(set(b_diff)) == 1:\n    print(0)\nelif len(set(b_diff)) == 2:\n    if b_diff.count(b_diff[0]) == 1 or b_diff.count(b_diff[0]) == len(b_diff)-1:\n        print(1)\n    else:\n        print(-1)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    if n == 1:\n        print(0)\n        return\n    if n == 2:\n        print(0)\n        return\n    if n == 3:\n        if arr[0] + arr[2] == 2 * arr[1]:\n            print(0)\n        else:\n            print(-1)\n        return\n    \n    diffs = []\n    for i in range(n - 1):\n        diffs.append(arr[i+1] - arr[i])\n    \n    diff = diffs[0]\n    for i in diffs:\n        if i != diff:\n            print(-1)\n            return\n    \n    count = 0\n    for i in range(n - 1):\n        if arr[i+1] - arr[i] != diff:\n            count += 1\n    \n    print(count)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# TODO:"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    lst = [int(x) for x in input().split()]\n    if n == 1:\n        print(0)\n    elif n == 2:\n        if lst[0] == lst[1]:\n            print(0)\n        else:\n            print(1)\n    else:\n        check = True\n        diff = lst[1] - lst[0]\n        for i in range(1, n - 1):\n            if lst[i + 1] - lst[i] != diff:\n                check = False\n                break\n        if check:\n            print(0)\n        else:\n            check = True\n            for i in range(n - 1):\n                if lst[i + 1] - lst[i] != diff or lst[i + 1] - lst[i] != diff + 1 or lst[i + 1] - lst[i] != diff - 1:\n                    check = False\n                    break\n            if check:\n                print(1)\n            else:\n                print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef min_changes_to_arithmetic_progression(n, b):\n    if n <= 2:\n        return 0\n    b.sort()\n    if n % 2 == 0:\n        d = (b[-1] - b[0]) // (n - 1)\n        if b[0] + d * (n - 1) != b[-1]:\n            return -1\n        changes_left = 0\n        for i in range(n):\n            if b[i] != b[0] + d * i:\n                changes_left += 1\n        changes_right = 0\n        for i in range(n):\n            if b[i] != b[-1] - d * (n - 1 - i):\n                changes_right += 1\n        return min(changes_left, changes_right)\n    else:\n        d = (b[n // 2] - b[0]) // (n // 2)\n        d2 = (b[-1] - b[n // 2]) // (n // 2)\n        if b[0] + d * (n // 2) != b[n // 2] or b[n // 2] + d2 * (n // 2) != b[-1]:\n            return -1\n        changes_left = 0\n        for i in range(n // 2):\n            if b[i] != b[0] + d * i:\n                changes_left += 1\n        changes_right = 0\n        for i in range(n // 2):\n            if b[i + n // 2] != b[n // 2] + d2 * i:\n                changes_right += 1\n        return min(changes_left, changes_right)\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    b = list(map(int, input().split()))\n    print(min_changes_to_arithmetic_progression(n, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nb = list(map(int, input().split()))\n\nb = [b[i] - i for i in range(n)]\n\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += abs(b[i] - b[n//2])\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport math\n\ndef main():\n    n = int(input())\n    seq = [int(x) for x in input().split()]\n    seq.sort()\n    if n == 1:\n        print(0)\n        return\n    if n == 2:\n        if seq[0] == seq[1]:\n            print(0)\n        else:\n            print(1)\n        return\n    diff = seq[1] - seq[0]\n    for i in range(1, n-1):\n        if seq[i+1] - seq[i] != diff:\n            diff = math.gcd(diff, seq[i+1] - seq[i])\n    if diff == 1:\n        print(2)\n        return\n    if n == 3:\n        if (seq[1] - seq[0]) % diff == 0 and (seq[2] - seq[1]) % diff == 0:\n            print(1)\n        else:\n            print(2)\n        return\n    if (seq[1] - seq[0]) % diff == 0 and (seq[2] - seq[1]) % diff == 0:\n        print(1)\n        return\n    if (seq[2] - seq[1]) % diff == 0 and (seq[3] - seq[2]) % diff == 0:\n        print(1)\n        return\n    print(2)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649873689,
+  "id": "cmpl-4wbntkox15XnwhyNPoxvoFJNWNaQ3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:15:17.596884 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nb = [int(x) for x in input().split()]\nb_diff = [b[i+1] - b[i] for i in range(len(b)-1)]\nif len(set(b_diff)) == 1:\n    print(0)\nelif len(set(b_diff)) == 2:\n    if b_diff.count(b_diff[0]) == 1 or b_diff.count(b_diff[0]) == len(b_diff)-1:\n        print(1)\n    else:\n        print(-1)\nelse:\n    print(-1)"
+}
+2022-04-13 18:15:17.596926 REASON stop
+2022-04-13 18:15:17.597487 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    if n == 1:\n        print(0)\n        return\n    if n == 2:\n        print(0)\n        return\n    if n == 3:\n        if arr[0] + arr[2] == 2 * arr[1]:\n            print(0)\n        else:\n            print(-1)\n        return\n    \n    diffs = []\n    for i in range(n - 1):\n        diffs.append(arr[i+1] - arr[i])\n    \n    diff = diffs[0]\n    for i in diffs:\n        if i != diff:\n            print(-1)\n            return\n    \n    count = 0\n    for i in range(n - 1):\n        if arr[i+1] - arr[i] != diff:\n            count += 1\n    \n    print(count)\n    return\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:15:17.597630 REASON stop
+2022-04-13 18:15:17.598104 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# TODO:"
+}
+2022-04-13 18:15:17.598155 REASON stop
+2022-04-13 18:15:17.614592 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    lst = [int(x) for x in input().split()]\n    if n == 1:\n        print(0)\n    elif n == 2:\n        if lst[0] == lst[1]:\n            print(0)\n        else:\n            print(1)\n    else:\n        check = True\n        diff = lst[1] - lst[0]\n        for i in range(1, n - 1):\n            if lst[i + 1] - lst[i] != diff:\n                check = False\n                break\n        if check:\n            print(0)\n        else:\n            check = True\n            for i in range(n - 1):\n                if lst[i + 1] - lst[i] != diff or lst[i + 1] - lst[i] != diff + 1 or lst[i + 1] - lst[i] != diff - 1:\n                    check = False\n                    break\n            if check:\n                print(1)\n            else:\n                print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:15:17.614696 REASON stop
+2022-04-13 18:15:17.637619 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef min_changes_to_arithmetic_progression(n, b):\n    if n <= 2:\n        return 0\n    b.sort()\n    if n % 2 == 0:\n        d = (b[-1] - b[0]) // (n - 1)\n        if b[0] + d * (n - 1) != b[-1]:\n            return -1\n        changes_left = 0\n        for i in range(n):\n            if b[i] != b[0] + d * i:\n                changes_left += 1\n        changes_right = 0\n        for i in range(n):\n            if b[i] != b[-1] - d * (n - 1 - i):\n                changes_right += 1\n        return min(changes_left, changes_right)\n    else:\n        d = (b[n // 2] - b[0]) // (n // 2)\n        d2 = (b[-1] - b[n // 2]) // (n // 2)\n        if b[0] + d * (n // 2) != b[n // 2] or b[n // 2] + d2 * (n // 2) != b[-1]:\n            return -1\n        changes_left = 0\n        for i in range(n // 2):\n            if b[i] != b[0] + d * i:\n                changes_left += 1\n        changes_right = 0\n        for i in range(n // 2):\n            if b[i + n // 2] != b[n // 2] + d2 * i:\n                changes_right += 1\n        return min(changes_left, changes_right)\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    b = list(map(int, input().split()))\n    print(min_changes_to_arithmetic_progression(n, b))"
+}
+2022-04-13 18:15:17.637725 REASON stop
+2022-04-13 18:15:17.638674 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nb = list(map(int, input().split()))\n\nb = [b[i] - i for i in range(n)]\n\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += abs(b[i] - b[n//2])\n\nprint(ans)"
+}
+2022-04-13 18:15:17.638737 REASON stop
+2022-04-13 18:15:17.639684 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport math\n\ndef main():\n    n = int(input())\n    seq = [int(x) for x in input().split()]\n    seq.sort()\n    if n == 1:\n        print(0)\n        return\n    if n == 2:\n        if seq[0] == seq[1]:\n            print(0)\n        else:\n            print(1)\n        return\n    diff = seq[1] - seq[0]\n    for i in range(1, n-1):\n        if seq[i+1] - seq[i] != diff:\n            diff = math.gcd(diff, seq[i+1] - seq[i])\n    if diff == 1:\n        print(2)\n        return\n    if n == 3:\n        if (seq[1] - seq[0]) % diff == 0 and (seq[2] - seq[1]) % diff == 0:\n            print(1)\n        else:\n            print(2)\n        return\n    if (seq[1] - seq[0]) % diff == 0 and (seq[2] - seq[1]) % diff == 0:\n        print(1)\n        return\n    if (seq[2] - seq[1]) % diff == 0 and (seq[3] - seq[2]) % diff == 0:\n        print(1)\n        return\n    print(2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:15:17.639754 REASON stop

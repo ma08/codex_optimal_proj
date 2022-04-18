@@ -1,0 +1,7 @@
+N, L = map(int, input().split())
+
+apple_flavors = [L + i for i in range(N)] #リスト内包表記でリストを作成
+
+apple_flavors.remove(max(apple_flavors))
+
+print(sum(apple_flavors))

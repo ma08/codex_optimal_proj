@@ -1,0 +1,156 @@
+2022-04-13 20:28:36.993602 """
+You are given an array $a$ of length $n$.
+
+You are also given a set of distinct positions $p_1, p_2, \dots, p_m$, where $1 \le p_i < n$. The position $p_i$ means that you can swap elements $a[p_i]$ and $a[p_i + 1]$. You can apply this operation any number of times for each of the given positions.
+
+Your task is to determine if it is possible to sort the initial array in non-decreasing order ($a_1 \le a_2 \le \dots \le a_n$) using only allowed swaps.
+
+For example, if $a = [3, 2, 1]$ and $p = [1, 2]$, then we can first swap elements $a[2]$ and $a[3]$ (because position $2$ is contained in the given set $p$). We get the array $a = [3, 1, 2]$. Then we swap $a[1]$ and $a[2]$ (position $1$ is also contained in $p$). We get the array $a = [1, 3, 2]$. Finally, we swap $a[2]$ and $a[3]$ again and get the array $a = [1, 2, 3]$, sorted in non-decreasing order.
+
+You can see that if $a = [4, 1, 2, 3]$ and $p = [3, 2]$ then you cannot sort the array.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases.
+
+Then $t$ test cases follow. The first line of each test case contains two integers $n$ and $m$ ($1 \le m < n \le 100$) — the number of elements in $a$ and the number of elements in $p$. The second line of the test case contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 100$). The third line of the test case contains $m$ integers $p_1, p_2, \dots, p_m$ ($1 \le p_i < n$, all $p_i$ are distinct) — the set of positions described in the problem statement.
+
+
+-----Output-----
+
+For each test case, print the answer — "YES" (without quotes) if you can sort the initial array in non-decreasing order ($a_1 \le a_2 \le \dots \le a_n$) using only allowed swaps. Otherwise, print "NO".
+
+
+-----Example-----
+Input
+6
+3 2
+3 2 1
+1 2
+4 2
+4 1 2 3
+3 2
+5 1
+1 2 3 4 5
+1
+4 2
+2 1 4 3
+1 3
+4 2
+4 3 2 1
+1 3
+5 2
+2 1 2 3 3
+1 4
+
+Output
+YES
+NO
+YES
+YES
+NO
+YES
+"""
+2022-04-13 20:28:36.993619 --------------------------
+2022-04-13 20:29:07.521980 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The idea is to use a graph where the vertices are the elements of the array and the edges are the positions where the swaps are allowed.\n# If we can sort the array in non-decreasing order, then the graph must be a directed acyclic graph.\n# We can check if the graph is a directed acyclic graph using a topological sort algorithm.\n# If we can sort the graph in non-decreasing order, then we can sort the array in non-decreasing order too.\n# Otherwise, we cannot sort the array in non-decreasing order.\n\nfrom collections import defaultdict\n\ndef topological_sort(graph):\n    in_degree = defaultdict(int)\n    for u in graph:\n        for v in graph[u]:\n            in_degree[v] += 1\n    queue = [u for u in graph if in_degree[u] == 0]\n    sorted_nodes = []\n    while queue:\n        u = queue.pop()\n        sorted_nodes.append(u)\n        for v in graph[u]:\n            in_degree[v] -= 1\n            if in_degree[v] == 0:\n                queue.append(v)\n    return sorted_nodes\n\ndef can_sort_array(n, m, a, p):\n    graph = defaultdict(list)\n    for i in range(n - 1):\n        if i + 1 in p:\n            graph[a[i]].append(a[i + 1])\n    sorted_nodes = topological_sort(graph)\n    if len(sorted_nodes) != n:\n        return False\n    for i in range(n - 1):\n        if sorted_nodes[i] > sorted_nodes[i + 1]:\n            return False\n    return True\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = set(map(int, input().split()))\n        if can_sort_array(n, m, a, p):\n            print(\"YES\")\n        else:\n            print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"main function\"\"\"\n    t_c = int(input())\n    for _ in range(t_c):\n        _, m = map(int, input().split())\n        a_list = list(map(int, input().split()))\n        p_list = list(map(int, input().split()))\n        if m == 0:\n            print(\"YES\" if all(a_list[i] <= a_list[i+1] for i in range(len(a_list) - 1)) else \"NO\")\n            continue\n        # print(a_list, p_list)\n        flag = True\n        for i, _ in enumerate(p_list):\n            if i == 0:\n                if a_list[p_list[i]] > a_list[p_list[i]+1]:\n                    a_list[p_list[i]], a_list[p_list[i]+1] = a_list[p_list[i]+1], a_list[p_list[i]]\n                    flag = True\n                else:\n                    flag = False\n            else:\n                if flag:\n                    if a_list[p_list[i]] > a_list[p_list[i]+1]:\n                        a_list[p_list[i]], a_list[p_list[i]+1] = a_list[p_list[i]+1], a_list[p_list[i]]\n                        flag = True\n                    else:\n                        flag = False\n        print(\"YES\" if flag else \"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef swap(arr, i):\n    arr[i], arr[i + 1] = arr[i + 1], arr[i]\n\n\ndef solve(arr, positions):\n    for position in positions:\n        if position == 0:\n            if arr[0] > arr[1]:\n                swap(arr, 0)\n        elif position == len(arr) - 1:\n            if arr[-1] < arr[-2]:\n                swap(arr, -1)\n        else:\n            if arr[position] > arr[position - 1] and arr[position] > arr[position + 1]:\n                swap(arr, position)\n            elif arr[position] < arr[position - 1] and arr[position] < arr[position + 1]:\n                swap(arr, position)\n\n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i + 1]:\n            return \"NO\"\n    return \"YES\"\n\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        arr = list(map(int, input().split()))\n        positions = list(map(int, input().split()))\n        print(solve(arr, positions))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, m, a, p):\n    for i in range(m):\n        if a[p[i]] > a[p[i]+1]:\n            a[p[i]], a[p[i]+1] = a[p[i]+1], a[p[i]]\n\n    for i in range(n-1):\n        if a[i] > a[i+1]:\n            return False\n    return True\n\nif __name__ == '__main__':\n    t = int(input())\n    for i in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = list(map(int, input().split()))\n        if solve(n, m, a, p):\n            print(\"YES\")\n        else:\n            print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(a, p):\n    n, m = len(a), len(p)\n\n    # Sort the positions in ascending order\n    p.sort()\n\n    # Initialize the next position to swap with\n    next_position = p[0]\n\n    # Iterate over all positions\n    for i in range(m):\n        # If the current position is not the next position\n        if p[i] != next_position:\n            # The array cannot be sorted\n            return False\n\n        # Update the next position\n        next_position = p[i] + 1\n\n        # If the next position is out of bounds\n        if next_position >= n:\n            # The array cannot be sorted\n            return False\n\n        # If the next position is not the next position in the set of positions\n        if next_position not in p:\n            # The array cannot be sorted\n            return False\n\n    # The array can be sorted\n    return True\n\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = list(map(int, input().split()))\n        if solve(a, p):\n            print('YES')\n        else:\n            print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    test_cases = int(sys.stdin.readline())\n    for _ in range(test_cases):\n        n, m = map(int, sys.stdin.readline().split())\n        a = list(map(int, sys.stdin.readline().split()))\n        p = list(map(int, sys.stdin.readline().split()))\n        # print(a, p)\n\n        if len(p) == 0:\n            print(\"YES\")\n            continue\n\n        # print(a, p)\n        for i in p:\n            if i < len(a) - 1 and a[i] > a[i+1]:\n                a[i], a[i+1] = a[i+1], a[i]\n        # print(a)\n\n        if sorted(a) == a:\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef solve(a, p):\n    for i in range(len(a)):\n        for j in range(len(a)-1):\n            if a[j] > a[j+1] and j+1 in p:\n                a[j], a[j+1] = a[j+1], a[j]\n    return a\n\nt = int(input())\nfor i in range(t):\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    p = set(map(int, input().split()))\n    a = solve(a, p)\n    if all(a[i] <= a[i+1] for i in range(len(a)-1)):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    }
+  ],
+  "created": 1649881717,
+  "id": "cmpl-4wdtNHNZDoWdVdP4ZoZrsBJDLdqHy",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:29:07.522376 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The idea is to use a graph where the vertices are the elements of the array and the edges are the positions where the swaps are allowed.\n# If we can sort the array in non-decreasing order, then the graph must be a directed acyclic graph.\n# We can check if the graph is a directed acyclic graph using a topological sort algorithm.\n# If we can sort the graph in non-decreasing order, then we can sort the array in non-decreasing order too.\n# Otherwise, we cannot sort the array in non-decreasing order.\n\nfrom collections import defaultdict\n\ndef topological_sort(graph):\n    in_degree = defaultdict(int)\n    for u in graph:\n        for v in graph[u]:\n            in_degree[v] += 1\n    queue = [u for u in graph if in_degree[u] == 0]\n    sorted_nodes = []\n    while queue:\n        u = queue.pop()\n        sorted_nodes.append(u)\n        for v in graph[u]:\n            in_degree[v] -= 1\n            if in_degree[v] == 0:\n                queue.append(v)\n    return sorted_nodes\n\ndef can_sort_array(n, m, a, p):\n    graph = defaultdict(list)\n    for i in range(n - 1):\n        if i + 1 in p:\n            graph[a[i]].append(a[i + 1])\n    sorted_nodes = topological_sort(graph)\n    if len(sorted_nodes) != n:\n        return False\n    for i in range(n - 1):\n        if sorted_nodes[i] > sorted_nodes[i + 1]:\n            return False\n    return True\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = set(map(int, input().split()))\n        if can_sort_array(n, m, a, p):\n            print(\"YES\")\n        else:\n            print(\"NO\")"
+}
+2022-04-13 20:29:07.522447 REASON stop
+2022-04-13 20:29:07.543245 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"main function\"\"\"\n    t_c = int(input())\n    for _ in range(t_c):\n        _, m = map(int, input().split())\n        a_list = list(map(int, input().split()))\n        p_list = list(map(int, input().split()))\n        if m == 0:\n            print(\"YES\" if all(a_list[i] <= a_list[i+1] for i in range(len(a_list) - 1)) else \"NO\")\n            continue\n        # print(a_list, p_list)\n        flag = True\n        for i, _ in enumerate(p_list):\n            if i == 0:\n                if a_list[p_list[i]] > a_list[p_list[i]+1]:\n                    a_list[p_list[i]], a_list[p_list[i]+1] = a_list[p_list[i]+1], a_list[p_list[i]]\n                    flag = True\n                else:\n                    flag = False\n            else:\n                if flag:\n                    if a_list[p_list[i]] > a_list[p_list[i]+1]:\n                        a_list[p_list[i]], a_list[p_list[i]+1] = a_list[p_list[i]+1], a_list[p_list[i]]\n                        flag = True\n                    else:\n                        flag = False\n        print(\"YES\" if flag else \"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:29:07.543407 REASON stop
+2022-04-13 20:29:07.543767 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef swap(arr, i):\n    arr[i], arr[i + 1] = arr[i + 1], arr[i]\n\n\ndef solve(arr, positions):\n    for position in positions:\n        if position == 0:\n            if arr[0] > arr[1]:\n                swap(arr, 0)\n        elif position == len(arr) - 1:\n            if arr[-1] < arr[-2]:\n                swap(arr, -1)\n        else:\n            if arr[position] > arr[position - 1] and arr[position] > arr[position + 1]:\n                swap(arr, position)\n            elif arr[position] < arr[position - 1] and arr[position] < arr[position + 1]:\n                swap(arr, position)\n\n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i + 1]:\n            return \"NO\"\n    return \"YES\"\n\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        arr = list(map(int, input().split()))\n        positions = list(map(int, input().split()))\n        print(solve(arr, positions))"
+}
+2022-04-13 20:29:07.543825 REASON stop
+2022-04-13 20:29:07.561772 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, m, a, p):\n    for i in range(m):\n        if a[p[i]] > a[p[i]+1]:\n            a[p[i]], a[p[i]+1] = a[p[i]+1], a[p[i]]\n\n    for i in range(n-1):\n        if a[i] > a[i+1]:\n            return False\n    return True\n\nif __name__ == '__main__':\n    t = int(input())\n    for i in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = list(map(int, input().split()))\n        if solve(n, m, a, p):\n            print(\"YES\")\n        else:\n            print(\"NO\")"
+}
+2022-04-13 20:29:07.561863 REASON stop
+2022-04-13 20:29:07.564957 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(a, p):\n    n, m = len(a), len(p)\n\n    # Sort the positions in ascending order\n    p.sort()\n\n    # Initialize the next position to swap with\n    next_position = p[0]\n\n    # Iterate over all positions\n    for i in range(m):\n        # If the current position is not the next position\n        if p[i] != next_position:\n            # The array cannot be sorted\n            return False\n\n        # Update the next position\n        next_position = p[i] + 1\n\n        # If the next position is out of bounds\n        if next_position >= n:\n            # The array cannot be sorted\n            return False\n\n        # If the next position is not the next position in the set of positions\n        if next_position not in p:\n            # The array cannot be sorted\n            return False\n\n    # The array can be sorted\n    return True\n\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n, m = map(int, input().split())\n        a = list(map(int, input().split()))\n        p = list(map(int, input().split()))\n        if solve(a, p):\n            print('YES')\n        else:\n            print('NO')"
+}
+2022-04-13 20:29:07.565051 REASON stop
+2022-04-13 20:29:07.565797 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    test_cases = int(sys.stdin.readline())\n    for _ in range(test_cases):\n        n, m = map(int, sys.stdin.readline().split())\n        a = list(map(int, sys.stdin.readline().split()))\n        p = list(map(int, sys.stdin.readline().split()))\n        # print(a, p)\n\n        if len(p) == 0:\n            print(\"YES\")\n            continue\n\n        # print(a, p)\n        for i in p:\n            if i < len(a) - 1 and a[i] > a[i+1]:\n                a[i], a[i+1] = a[i+1], a[i]\n        # print(a)\n\n        if sorted(a) == a:\n            print(\"YES\")\n        else:\n            print(\"NO\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:29:07.565855 REASON stop
+2022-04-13 20:29:07.566656 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef solve(a, p):\n    for i in range(len(a)):\n        for j in range(len(a)-1):\n            if a[j] > a[j+1] and j+1 in p:\n                a[j], a[j+1] = a[j+1], a[j]\n    return a\n\nt = int(input())\nfor i in range(t):\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    p = set(map(int, input().split()))\n    a = solve(a, p)\n    if all(a[i] <= a[i+1] for i in range(len(a)-1)):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+2022-04-13 20:29:07.566711 REASON stop

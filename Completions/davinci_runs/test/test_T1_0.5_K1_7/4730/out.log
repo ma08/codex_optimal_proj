@@ -1,0 +1,154 @@
+2022-04-13 22:57:21.628306 """
+Whenever a programmer starts to learn a Lisp, they think that there are too many parentheses in it. Sophia thinks there are too few, so she is making a programming language with only parentheses. To spice it up a bit, she is also adding square brackets (‘[]’) and curly braces (‘{}’) to the language.
+
+Right now, she is struggling to make people use it for production code. Obviously, it has to be because of the bad error messages you get when you mess up the delimiters! Right now, you only get the error message ‘syntax error’ when you mess them up.
+
+Any opening delimiter must be closed by the same type of delimiter: ‘(’ is closed with ‘)’, ‘[’ is closed by ‘]’, etc.
+
+Sophia wants to improve the error message so that you at least get some help finding out where it all went wrong.
+
+-----Input-----
+The input consists of two lines. The first line contains an integer $|L|$, the length of the next line. The next line contains $L$, the program you want to validate.
+
+-----Output-----
+Output the character and the $0$-indexed location of the first closing delimiter that does not match with the opening delimiter.
+
+If there are no errors, or there are more opening delimiters than closing delimiters, print ‘ok so far’ instead.
+
+-----Limits-----
+ - $1 \leq |L| \leq 200$
+ - $L$ contains only the characters ‘()[]{}’ and spaces
+ - $L$ does not start with a space character
+
+-----Examples-----
+Sample Input 1:
+8
+([] [] ]
+Sample Output 1:
+] 7
+
+Sample Input 2:
+13
+(([] [[]] ())
+Sample Output 2:
+ok so far
+
+Sample Input 3:
+21
+[ { { () () () () } ]
+Sample Output 3:
+] 20
+
+Sample Input 4:
+27
+[ { [[()]] (({})) } ] () {}
+Sample Output 4:
+ok so far
+"""
+2022-04-13 22:57:21.628320 --------------------------
+2022-04-13 22:57:45.196918 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # read lines\n    line1 = input()\n    line2 = input()\n\n    # initialize stack\n    stack = []\n\n    # loop through line2 characters\n    for i in range(len(line2)):\n        # check if character is opening delimiter\n        if line2[i] == '(' or line2[i] == '[' or line2[i] == '{':\n            # push character to stack\n            stack.append(line2[i])\n        # check if character is closing delimiter\n        elif line2[i] == ')' or line2[i] == ']' or line2[i] == '}':\n            # check if stack is empty\n            if len(stack) == 0:\n                # print closing delimiter and index\n                print(line2[i], i)\n                # exit program\n                sys.exit()\n            # check if closing delimiter matches with opening delimiter on top of stack\n            elif line2[i] == ')' and stack[-1] == '(' or line2[i] == ']' and stack[-1] == '[' or line2[i] == '}' and stack[-1] == '{':\n                # pop opening delimiter from stack\n                stack.pop()\n            # closing delimiter does not match with opening delimiter on top of stack\n            else:\n                # print closing delimiter and index\n                print(line2[i], i)\n                # exit program\n                sys.exit()\n\n    # check if stack is empty\n    if len(stack) == 0:\n        # print 'ok so far'\n        print('ok so far')\n    # stack is not empty\n    else:\n        # print 'ok so far'\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    f = sys.stdin\n    if len(sys.argv) >= 2:\n        fn = sys.argv[1]\n        if fn != '-':\n            f = open(fn)\n\n    delimiters = {\n        '{': '}',\n        '[': ']',\n        '(': ')',\n    }\n\n    open_delimiters = delimiters.keys()\n    close_delimiters = delimiters.values()\n    all_delimiters = open_delimiters + close_delimiters\n\n    stack = []\n    for i, c in enumerate(f.readline()):\n        if c in all_delimiters:\n            if c in open_delimiters:\n                stack.append(c)\n            else:\n                if stack and delimiters[stack[-1]] == c:\n                    stack.pop()\n                else:\n                    print(c, i)\n                    return\n    if stack:\n        print('ok so far')\n    else:\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    l = int(input())\n    program = input()\n\n    stack = []\n    for i in range(len(program)):\n        c = program[i]\n        if c == '(' or c == '[' or c == '{':\n            stack.append(c)\n        elif c == ')' or c == ']' or c == '}':\n            if len(stack) == 0 or match(stack[-1], c) == False:\n                print(c, i)\n                return\n            else:\n                stack.pop()\n    if len(stack) == 0:\n        print(\"ok so far\")\n    else:\n        print(stack[0], 0)\n\ndef match(a, b):\n    if a == '(' and b == ')':\n        return True\n    elif a == '[' and b == ']':\n        return True\n    elif a == '{' and b == '}':\n        return True\n    else:\n        return False\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    length = int(sys.stdin.readline().strip())\n    line = sys.stdin.readline().strip()\n\n    # check if the number of opening brackets matches the number of closing brackets\n    if line.count('(') == line.count(')') and line.count('[') == line.count(']') and line.count('{') == line.count('}'):\n        print(\"ok so far\")\n        return\n\n    # check if there are more opening brackets than closing brackets\n    if line.count('(') > line.count(')') or line.count('[') > line.count(']') or line.count('{') > line.count('}'):\n        print(\"ok so far\")\n        return\n\n    # the number of closing brackets is greater than the number of opening brackets\n    # find the first unmatched closing bracket and output its index\n    for i in range(length):\n        if line[i] == ')':\n            print(\"%c %d\" % (line[i], i))\n            return\n        elif line[i] == ']':\n            print(\"%c %d\" % (line[i], i))\n            return\n        elif line[i] == '}':\n            print(\"%c %d\" % (line[i], i))\n            return\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef validate(line):\n    line = line.strip()\n    stack = []\n    for i, c in enumerate(line):\n        if c in ['(', '[', '{']:\n            stack.append(c)\n        elif c in [')', ']', '}']:\n            if len(stack) == 0:\n                return (c, i)\n            else:\n                prev = stack.pop()\n                if prev == '(' and c != ')' or prev == '[' and c != ']' or prev == '{' and c != '}':\n                    return (c, i)\n    if len(stack) == 0:\n        return 'ok so far'\n    else:\n        return (stack[0], line.index(stack[0]))\n\ndef main():\n    length = int(sys.stdin.readline().strip())\n    line = sys.stdin.readline().strip()\n    print(validate(line))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    num = int(input())\n    line = input().strip()\n    stack = []\n    for i in range(num):\n        if line[i] in \"([{\":\n            stack.append(line[i])\n        elif line[i] == \")\":\n            if stack[-1] != \"(\":\n                print(\")\", i)\n                break\n            else:\n                stack.pop()\n        elif line[i] == \"]\":\n            if stack[-1] != \"[\":\n                print(\"]\", i)\n                break\n            else:\n                stack.pop()\n        elif line[i] == \"}\":\n            if stack[-1] != \"{\":\n                print(\"}\", i)\n                break\n            else:\n                stack.pop()\n    else:\n        print(\"ok so far\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\ndef get_closing(character):\n    if character == '(':\n        return ')'\n    elif character == '[':\n        return ']'\n    elif character == '{':\n        return '}'\n    else:\n        raise ValueError(\"Invalid character: {}\".format(character))\n\ndef get_opening(character):\n    if character == ')':\n        return '('\n    elif character == ']':\n        return '['\n    elif character == '}':\n        return '{'\n    else:\n        raise ValueError(\"Invalid character: {}\".format(character))\n\ndef main():\n    length = int(input())\n    line = input()\n    stack = []\n    for i, char in enumerate(line):\n        if char in '([{':\n            stack.append(char)\n        elif char in ')]}':\n            if stack and stack[-1] == get_opening(char):\n                stack.pop()\n            else:\n                print(char, i)\n                return\n    if stack:\n        print(get_closing(stack.pop()), i)\n    else:\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649890641,
+  "id": "cmpl-4wgDJ3tFhloVXkBDz5zJQfNPFINYg",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:57:45.197293 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # read lines\n    line1 = input()\n    line2 = input()\n\n    # initialize stack\n    stack = []\n\n    # loop through line2 characters\n    for i in range(len(line2)):\n        # check if character is opening delimiter\n        if line2[i] == '(' or line2[i] == '[' or line2[i] == '{':\n            # push character to stack\n            stack.append(line2[i])\n        # check if character is closing delimiter\n        elif line2[i] == ')' or line2[i] == ']' or line2[i] == '}':\n            # check if stack is empty\n            if len(stack) == 0:\n                # print closing delimiter and index\n                print(line2[i], i)\n                # exit program\n                sys.exit()\n            # check if closing delimiter matches with opening delimiter on top of stack\n            elif line2[i] == ')' and stack[-1] == '(' or line2[i] == ']' and stack[-1] == '[' or line2[i] == '}' and stack[-1] == '{':\n                # pop opening delimiter from stack\n                stack.pop()\n            # closing delimiter does not match with opening delimiter on top of stack\n            else:\n                # print closing delimiter and index\n                print(line2[i], i)\n                # exit program\n                sys.exit()\n\n    # check if stack is empty\n    if len(stack) == 0:\n        # print 'ok so far'\n        print('ok so far')\n    # stack is not empty\n    else:\n        # print 'ok so far'\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:57:45.197393 REASON stop
+2022-04-13 22:57:45.197696 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.197710 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    f = sys.stdin\n    if len(sys.argv) >= 2:\n        fn = sys.argv[1]\n        if fn != '-':\n            f = open(fn)\n\n    delimiters = {\n        '{': '}',\n        '[': ']',\n        '(': ')',\n    }\n\n    open_delimiters = delimiters.keys()\n    close_delimiters = delimiters.values()\n    all_delimiters = open_delimiters + close_delimiters\n\n    stack = []\n    for i, c in enumerate(f.readline()):\n        if c in all_delimiters:\n            if c in open_delimiters:\n                stack.append(c)\n            else:\n                if stack and delimiters[stack[-1]] == c:\n                    stack.pop()\n                else:\n                    print(c, i)\n                    return\n    if stack:\n        print('ok so far')\n    else:\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:57:45.197814 REASON stop
+2022-04-13 22:57:45.198057 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.198069 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    l = int(input())\n    program = input()\n\n    stack = []\n    for i in range(len(program)):\n        c = program[i]\n        if c == '(' or c == '[' or c == '{':\n            stack.append(c)\n        elif c == ')' or c == ']' or c == '}':\n            if len(stack) == 0 or match(stack[-1], c) == False:\n                print(c, i)\n                return\n            else:\n                stack.pop()\n    if len(stack) == 0:\n        print(\"ok so far\")\n    else:\n        print(stack[0], 0)\n\ndef match(a, b):\n    if a == '(' and b == ')':\n        return True\n    elif a == '[' and b == ']':\n        return True\n    elif a == '{' and b == '}':\n        return True\n    else:\n        return False\n\nmain()"
+}
+2022-04-13 22:57:45.198108 REASON stop
+2022-04-13 22:57:45.199259 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.199275 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    length = int(sys.stdin.readline().strip())\n    line = sys.stdin.readline().strip()\n\n    # check if the number of opening brackets matches the number of closing brackets\n    if line.count('(') == line.count(')') and line.count('[') == line.count(']') and line.count('{') == line.count('}'):\n        print(\"ok so far\")\n        return\n\n    # check if there are more opening brackets than closing brackets\n    if line.count('(') > line.count(')') or line.count('[') > line.count(']') or line.count('{') > line.count('}'):\n        print(\"ok so far\")\n        return\n\n    # the number of closing brackets is greater than the number of opening brackets\n    # find the first unmatched closing bracket and output its index\n    for i in range(length):\n        if line[i] == ')':\n            print(\"%c %d\" % (line[i], i))\n            return\n        elif line[i] == ']':\n            print(\"%c %d\" % (line[i], i))\n            return\n        elif line[i] == '}':\n            print(\"%c %d\" % (line[i], i))\n            return\n\nmain()"
+}
+2022-04-13 22:57:45.199321 REASON stop
+2022-04-13 22:57:45.211595 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.211615 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef validate(line):\n    line = line.strip()\n    stack = []\n    for i, c in enumerate(line):\n        if c in ['(', '[', '{']:\n            stack.append(c)\n        elif c in [')', ']', '}']:\n            if len(stack) == 0:\n                return (c, i)\n            else:\n                prev = stack.pop()\n                if prev == '(' and c != ')' or prev == '[' and c != ']' or prev == '{' and c != '}':\n                    return (c, i)\n    if len(stack) == 0:\n        return 'ok so far'\n    else:\n        return (stack[0], line.index(stack[0]))\n\ndef main():\n    length = int(sys.stdin.readline().strip())\n    line = sys.stdin.readline().strip()\n    print(validate(line))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:57:45.211672 REASON stop
+2022-04-13 22:57:45.212219 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.212233 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    num = int(input())\n    line = input().strip()\n    stack = []\n    for i in range(num):\n        if line[i] in \"([{\":\n            stack.append(line[i])\n        elif line[i] == \")\":\n            if stack[-1] != \"(\":\n                print(\")\", i)\n                break\n            else:\n                stack.pop()\n        elif line[i] == \"]\":\n            if stack[-1] != \"[\":\n                print(\"]\", i)\n                break\n            else:\n                stack.pop()\n        elif line[i] == \"}\":\n            if stack[-1] != \"{\":\n                print(\"}\", i)\n                break\n            else:\n                stack.pop()\n    else:\n        print(\"ok so far\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:57:45.212294 REASON stop
+2022-04-13 22:57:45.225186 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'
+2022-04-13 22:57:45.225214 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\ndef get_closing(character):\n    if character == '(':\n        return ')'\n    elif character == '[':\n        return ']'\n    elif character == '{':\n        return '}'\n    else:\n        raise ValueError(\"Invalid character: {}\".format(character))\n\ndef get_opening(character):\n    if character == ')':\n        return '('\n    elif character == ']':\n        return '['\n    elif character == '}':\n        return '{'\n    else:\n        raise ValueError(\"Invalid character: {}\".format(character))\n\ndef main():\n    length = int(input())\n    line = input()\n    stack = []\n    for i, char in enumerate(line):\n        if char in '([{':\n            stack.append(char)\n        elif char in ')]}':\n            if stack and stack[-1] == get_opening(char):\n                stack.pop()\n            else:\n                print(char, i)\n                return\n    if stack:\n        print(get_closing(stack.pop()), i)\n    else:\n        print('ok so far')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:57:45.225311 REASON stop
+2022-04-13 22:57:45.225989 test/intro-questions.txt_dir/4730/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4730/solutions.json'

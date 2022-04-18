@@ -1,0 +1,132 @@
+2022-04-13 23:24:30.430204 """
+Peter is expecting a large shipment of fuel oil, but he has a small problem (doesn’t everyone in these programming problems!). The only containers he has are a set of large bottles (each with the same volume) and a set of smaller bottles (also each with the same, but smaller volume). Given the volume of the shipment of oil, he would like to store the oil in the bottles so that
+ - all of the oil is stored,
+ - each bottle is filled to the top, and
+ - the minimum number of bottles is used.
+
+While Peter thinks he has solved this problem for his given bottle sizes, he often spends hours wondering what would happen if his bottles had different volumes (apparently Peter doesn’t lead the most exciting life).
+
+-----Input-----
+The input consists of a single line containing three positive integers $s$$v_1$ $v_2$, where $s \leq 10^6$ is the volume of the shipment, and $v_1, v_2 \leq 10^6$ are the volumes of the two types of bottles, with $v_1 > v_2$.
+
+-----Output-----
+Output the number of bottles of size $v_1$ and the number of bottles of size $v_2$ which satisfy Peter’s two conditions. If the conditions cannot be met, output Impossible.
+
+-----Examples-----
+Sample Input 1:
+1000 9 7
+Sample Output 1:
+108 4
+
+Sample Input 2:
+1000 900 7
+Sample Output 2:
+Impossible
+"""
+2022-04-13 23:24:30.430214 --------------------------
+2022-04-13 23:24:47.065614 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().split()]\n    if (s % v2 == 0):\n        print(s // v2, 0)\n    else:\n        min_bottles = s // v1\n        if (s % v1 == 0):\n            print(min_bottles, 0)\n        else:\n            curr_bottles = min_bottles\n            while (curr_bottles >= 0):\n                if ((s - (curr_bottles * v1)) % v2 == 0):\n                    print(curr_bottles, (s - (curr_bottles * v1)) // v2)\n                    return\n                curr_bottles -= 1\n            print(\"Impossible\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef min_bottles(s, v1, v2):\n    bottles = [0, 0]\n    if s % v1 == 0:\n        bottles[0] = s / v1\n    else:\n        bottles[0] = s / v1 + 1\n        s -= (bottles[0] - 1) * v1\n        bottles[1] = s / v2\n        if s % v2 != 0:\n            bottles[1] += 1\n    return bottles\n\ndef main():\n    s, v1, v2 = map(int, sys.stdin.readline().split())\n    bottles = min_bottles(s, v1, v2)\n    if bottles[0] * v1 + bottles[1] * v2 == s:\n        print \"%d %d\" % (bottles[0], bottles[1])\n    else:\n        print \"Impossible\"\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().strip().split()]\n    #print(s, v1, v2)\n    if s % v2 == 0:\n        print(s // v1, 0)\n    elif s < v2:\n        print(0, 1)\n    elif s % v2 != 0 and (s % v2) % v1 == 0:\n        print((s % v2) // v1, s // v2)\n    else:\n        print(\"Impossible\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    s, v1, v2 = map(int, input().split())\n    n1, n2 = 0, 0\n    while n1*v1 + n2*v2 < s:\n        if n1*v1 + n2*v2 + v1 <= s:\n            n1 += 1\n        else:\n            n2 += 1\n    if n1*v1 + n2*v2 == s:\n        print(n1, n2)\n    else:\n        print(\"Impossible\")\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().strip().split()]\n    if v1 > v2:\n        v1, v2 = v2, v1\n    if s % v2 == 0:\n        n2 = s // v2\n        if n2 % v1 == 0:\n            n1 = n2 // v1\n            n2 = 0\n        else:\n            n1 = n2 // v1 + 1\n            n2 = n2 % v1\n    else:\n        n2 = s // v2\n        if n2 % v1 == 0:\n            n1 = n2 // v1\n            n2 = 0\n        else:\n            n1 = n2 // v1 + 1\n            n2 = n2 % v1\n    if n1 == 0 and n2 == 0:\n        print(\"Impossible\")\n    else:\n        print(n1, n2)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ns, v1, v2 = map(int, input().split())\n\nif s % v1 == 0:\n    print(s // v1, 0)\nelif s % v2 == 0:\n    print(0, s // v2)\nelif s < v1:\n    print(0, s // v2)\nelse:\n    for i in range(s // v1, -1, -1):\n        if (s - i * v1) % v2 == 0:\n            print(i, (s - i * v1) // v2)\n            break\n    else:\n        print(\"Impossible\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef bottle_fill(s, v1, v2):\n    if s % v2 == 0:\n        return (0, s // v2)\n    else:\n        if s < v1:\n            return (\"Impossible\", \"\")\n        else:\n            return (s // v1, (s % v1) // v2)\n\n\ndef main():\n    s, v1, v2 = map(int, sys.stdin.readline().split())\n    v1, v2 = max(v1, v2), min(v1, v2)\n    res = bottle_fill(s, v1, v2)\n    if type(res[0]) == str:\n        print(res[0])\n    else:\n        print(res[0], res[1])\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649892270,
+  "id": "cmpl-4wgda8Iz4mUFqyApBO43ks5EjSuiH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:24:47.065891 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().split()]\n    if (s % v2 == 0):\n        print(s // v2, 0)\n    else:\n        min_bottles = s // v1\n        if (s % v1 == 0):\n            print(min_bottles, 0)\n        else:\n            curr_bottles = min_bottles\n            while (curr_bottles >= 0):\n                if ((s - (curr_bottles * v1)) % v2 == 0):\n                    print(curr_bottles, (s - (curr_bottles * v1)) // v2)\n                    return\n                curr_bottles -= 1\n            print(\"Impossible\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:24:47.065928 REASON stop
+2022-04-13 23:24:47.066267 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.066283 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef min_bottles(s, v1, v2):\n    bottles = [0, 0]\n    if s % v1 == 0:\n        bottles[0] = s / v1\n    else:\n        bottles[0] = s / v1 + 1\n        s -= (bottles[0] - 1) * v1\n        bottles[1] = s / v2\n        if s % v2 != 0:\n            bottles[1] += 1\n    return bottles\n\ndef main():\n    s, v1, v2 = map(int, sys.stdin.readline().split())\n    bottles = min_bottles(s, v1, v2)\n    if bottles[0] * v1 + bottles[1] * v2 == s:\n        print \"%d %d\" % (bottles[0], bottles[1])\n    else:\n        print \"Impossible\"\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:24:47.066405 REASON stop
+2022-04-13 23:24:47.066642 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.066653 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().strip().split()]\n    #print(s, v1, v2)\n    if s % v2 == 0:\n        print(s // v1, 0)\n    elif s < v2:\n        print(0, 1)\n    elif s % v2 != 0 and (s % v2) % v1 == 0:\n        print((s % v2) // v1, s // v2)\n    else:\n        print(\"Impossible\")\n\nmain()"
+}
+2022-04-13 23:24:47.066689 REASON stop
+2022-04-13 23:24:47.086530 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.086556 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    s, v1, v2 = map(int, input().split())\n    n1, n2 = 0, 0\n    while n1*v1 + n2*v2 < s:\n        if n1*v1 + n2*v2 + v1 <= s:\n            n1 += 1\n        else:\n            n2 += 1\n    if n1*v1 + n2*v2 == s:\n        print(n1, n2)\n    else:\n        print(\"Impossible\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:24:47.086647 REASON stop
+2022-04-13 23:24:47.087342 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.087358 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s, v1, v2 = [int(x) for x in sys.stdin.readline().strip().split()]\n    if v1 > v2:\n        v1, v2 = v2, v1\n    if s % v2 == 0:\n        n2 = s // v2\n        if n2 % v1 == 0:\n            n1 = n2 // v1\n            n2 = 0\n        else:\n            n1 = n2 // v1 + 1\n            n2 = n2 % v1\n    else:\n        n2 = s // v2\n        if n2 % v1 == 0:\n            n1 = n2 // v1\n            n2 = 0\n        else:\n            n1 = n2 // v1 + 1\n            n2 = n2 % v1\n    if n1 == 0 and n2 == 0:\n        print(\"Impossible\")\n    else:\n        print(n1, n2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:24:47.087413 REASON stop
+2022-04-13 23:24:47.107124 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.107147 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ns, v1, v2 = map(int, input().split())\n\nif s % v1 == 0:\n    print(s // v1, 0)\nelif s % v2 == 0:\n    print(0, s // v2)\nelif s < v1:\n    print(0, s // v2)\nelse:\n    for i in range(s // v1, -1, -1):\n        if (s - i * v1) % v2 == 0:\n            print(i, (s - i * v1) // v2)\n            break\n    else:\n        print(\"Impossible\")"
+}
+2022-04-13 23:24:47.107207 REASON stop
+2022-04-13 23:24:47.107892 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'
+2022-04-13 23:24:47.107906 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef bottle_fill(s, v1, v2):\n    if s % v2 == 0:\n        return (0, s // v2)\n    else:\n        if s < v1:\n            return (\"Impossible\", \"\")\n        else:\n            return (s // v1, (s % v1) // v2)\n\n\ndef main():\n    s, v1, v2 = map(int, sys.stdin.readline().split())\n    v1, v2 = max(v1, v2), min(v1, v2)\n    res = bottle_fill(s, v1, v2)\n    if type(res[0]) == str:\n        print(res[0])\n    else:\n        print(res[0], res[1])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:24:47.107955 REASON stop
+2022-04-13 23:24:47.108628 test/intro-questions.txt_dir/4793/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4793/solutions.json'

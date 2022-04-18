@@ -1,0 +1,165 @@
+2022-04-13 21:20:02.384092 """
+You are given an undirected tree consisting of $n$ vertices. An undirected tree is a connected undirected graph with $n - 1$ edges.
+
+Your task is to add the minimum number of edges in such a way that the length of the shortest path from the vertex $1$ to any other vertex is at most $2$. Note that you are not allowed to add loops and multiple edges.
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of vertices in the tree.
+
+The following $n - 1$ lines contain edges: edge $i$ is given as a pair of vertices $u_i, v_i$ ($1 \le u_i, v_i \le n$). It is guaranteed that the given edges form a tree. It is guaranteed that there are no loops and multiple edges in the given edges.
+
+
+-----Output-----
+
+Print a single integer — the minimum number of edges you have to add in order to make the shortest distance from the vertex $1$ to any other vertex at most $2$. Note that you are not allowed to add loops and multiple edges.
+
+
+-----Examples-----
+Input
+7
+1 2
+2 3
+2 4
+4 5
+4 6
+5 7
+
+Output
+2
+
+Input
+7
+1 2
+1 3
+2 4
+2 5
+3 6
+1 7
+
+Output
+0
+
+Input
+7
+1 2
+2 3
+3 4
+3 5
+3 6
+3 7
+
+Output
+1
+
+
+
+-----Note-----
+
+The tree corresponding to the first example: [Image] The answer is $2$, some of the possible answers are the following: $[(1, 5), (1, 6)]$, $[(1, 4), (1, 7)]$, $[(1, 6), (1, 7)]$.
+
+The tree corresponding to the second example: [Image] The answer is $0$.
+
+The tree corresponding to the third example: [Image] The answer is $1$, only one possible way to reach it is to add the edge $(1, 3)$.
+"""
+2022-04-13 21:20:02.384113 --------------------------
+2022-04-13 21:20:38.442120 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef bfs(G, s):\n    Q, dist = [s], {s: 0}\n    while Q:\n        u = Q.pop(0)\n        for v in G[u]:\n            if v not in dist:\n                dist[v] = dist[u] + 1\n                Q.append(v)\n    return dist\n\ndef solve(N, G):\n    dist = bfs(G, 1)\n    return sum(d > 2 for d in dist.values())\n\ndef main():\n    N = int(input())\n    G = defaultdict(list)\n    for i in range(N-1):\n        u, v = map(int, input().split())\n        G[u].append(v)\n        G[v].append(u)\n    print(solve(N, G))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nimport heapq\nimport bisect\nimport itertools\nimport string\nimport queue\nimport copy\nimport time\n\nsys.setrecursionlimit(10000)\n\ndef readString():\n    return sys.stdin.readline()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \")[:n]\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [lambda _: readIntegerSet(m) for _ in range(0, n)]\n\ninf = float(\"inf\")\nmod = 1000000007\n\n#---------------------------------------------\n\ndef main():\n    n = readInteger()\n    edges = [None] * (n - 1)\n    for i in range(0, n - 1):\n        edges[i] = readIntegerSet(2)\n    graph = [[] for i in range(0, n + 1)]\n    for e in edges:\n        graph[e[0]].append(e[1])\n        graph[e[1]].append(e[0])\n    def dfs(v, p):\n        if v == 1:\n            return 0\n        for u in graph[v]:\n            if u != p:\n                return 1 + dfs(u, v)\n    res = 0\n    for e in edges:\n        a = dfs(e[0], e[1])\n        b = dfs(e[1], e[0])\n        if a > 1 or b > 1:\n            res += 1\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n-1):\n        u, v = map(int, input().split())\n        adj[u].append(v)\n        adj[v].append(u)\n    visited = [False for _ in range(n + 1)]\n    dfs(adj, visited, 1)\n    print(ans)\n\ndef dfs(adj, visited, v):\n    global ans\n    visited[v] = True\n    for u in adj[v]:\n        if not visited[u]:\n            dfs(adj, visited, u)\n    # check if v is a leaf\n    if len(adj[v]) == 1:\n        ans += 1\n\nans = 0\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef get_graph():\n    n = int(input())\n    graph = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        u, v = [int(x) for x in input().split()]\n        graph[u - 1].append(v - 1)\n        graph[v - 1].append(u - 1)\n    return graph\n\ndef dfs(graph, v, p):\n    if v == 0:\n        return 0, 0\n    else:\n        d1 = d2 = math.inf\n        for u in graph[v]:\n            if u == p:\n                continue\n            d, d_ = dfs(graph, u, v)\n            d += 1\n            d_ += 1\n            if d < d1:\n                d1, d2 = d, d1\n            elif d < d2:\n                d2 = d\n        return d1, d2\n\ndef main():\n    graph = get_graph()\n    d1, d2 = dfs(graph, 0, -1)\n    print(d1 + d2)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\nfrom collections import defaultdict\nfrom queue import Queue\n\ndef main():\n    n = int(stdin.readline())\n    graph = defaultdict(list)\n    for _ in range(n - 1):\n        u, v = map(int, stdin.readline().split())\n        graph[u].append(v)\n        graph[v].append(u)\n    \n    q = Queue()\n    q.put(1)\n    visited = set()\n    visited.add(1)\n    count = 0\n    while not q.empty():\n        size = q.qsize()\n        while size:\n            size -= 1\n            curr = q.get()\n            for neighbor in graph[curr]:\n                if neighbor not in visited:\n                    visited.add(neighbor)\n                    q.put(neighbor)\n        count += 1\n        if count == 2:\n            break\n    stdout.write(str(n - len(visited)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport os\nimport heapq\nfrom collections import deque,defaultdict\nfrom itertools import permutations,combinations,product\nfrom copy import deepcopy\n\nint_input=lambda : int(sys.stdin.readline())\nstring_input=lambda : sys.stdin.readline()\nmulti_int_input =lambda : map(int, sys.stdin.readline().split())\nmulti_input = lambda : sys.stdin.readline().split()\nlist_input=lambda : list(map(int,sys.stdin.readline().split()))\nstring_list_input=lambda: list(string_input())\nMOD = pow(10,9)+7\n\nclass Graph:\n    def __init__(self,size):\n        self.size = size\n        self.edges = defaultdict(list)\n        self.weights = {}\n    \n    def add_edge(self,from_node,to_node,weight):\n        # check if edge already exists\n        for i,edge in enumerate(self.edges[from_node]):\n            if edge == to_node:\n                self.weights[(from_node,to_node)] = weight\n                return\n        self.edges[from_node].append(to_node)\n        self.edges[to_node].append(from_node)\n        self.weights[(from_node,to_node)] = weight\n        self.weights[(to_node,from_node)] = weight\n\n    def bfs(self,start,end):\n        visited = [False]*(self.size+1)\n        visited[start] = True\n        queue = deque()\n        queue.append(start)\n        while queue:\n            node = queue.popleft()\n            if node == end:\n                return True\n            for neighbour in self.edges[node]:\n                if not visited[neighbour]:\n                    visited[neighbour] = True\n                    queue.append(neighbour)\n        return False\n\ndef main():\n    n = int_input()\n    graph = Graph(n)\n    for i in range(n-1):\n        a,b = multi_int_input()\n        graph.add_edge(a,b,1)\n\n    if graph.bfs(1,n):\n        print(0)\n        return\n\n    for i in range(1,n+1):\n        for neighbour in graph.edges[i]:\n            if graph.bfs(i,n):\n                print(1)\n                return\n    print(2)\n    return\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649884802,
+  "id": "cmpl-4weh8bzhFFghgtLq3L8z8FHQf3vRO",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:20:38.442500 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef bfs(G, s):\n    Q, dist = [s], {s: 0}\n    while Q:\n        u = Q.pop(0)\n        for v in G[u]:\n            if v not in dist:\n                dist[v] = dist[u] + 1\n                Q.append(v)\n    return dist\n\ndef solve(N, G):\n    dist = bfs(G, 1)\n    return sum(d > 2 for d in dist.values())\n\ndef main():\n    N = int(input())\n    G = defaultdict(list)\n    for i in range(N-1):\n        u, v = map(int, input().split())\n        G[u].append(v)\n        G[v].append(u)\n    print(solve(N, G))\n\nmain()"
+}
+2022-04-13 21:20:38.442567 REASON stop
+2022-04-13 21:20:38.444037 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nimport heapq\nimport bisect\nimport itertools\nimport string\nimport queue\nimport copy\nimport time\n\nsys.setrecursionlimit(10000)\n\ndef readString():\n    return sys.stdin.readline()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \")[:n]\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [lambda _: readIntegerSet(m) for _ in range(0, n)]\n\ninf = float(\"inf\")\nmod = 1000000007\n\n#---------------------------------------------\n\ndef main():\n    n = readInteger()\n    edges = [None] * (n - 1)\n    for i in range(0, n - 1):\n        edges[i] = readIntegerSet(2)\n    graph = [[] for i in range(0, n + 1)]\n    for e in edges:\n        graph[e[0]].append(e[1])\n        graph[e[1]].append(e[0])\n    def dfs(v, p):\n        if v == 1:\n            return 0\n        for u in graph[v]:\n            if u != p:\n                return 1 + dfs(u, v)\n    res = 0\n    for e in edges:\n        a = dfs(e[0], e[1])\n        b = dfs(e[1], e[0])\n        if a > 1 or b > 1:\n            res += 1\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:20:38.444242 REASON stop
+2022-04-13 21:20:38.444647 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n-1):\n        u, v = map(int, input().split())\n        adj[u].append(v)\n        adj[v].append(u)\n    visited = [False for _ in range(n + 1)]\n    dfs(adj, visited, 1)\n    print(ans)\n\ndef dfs(adj, visited, v):\n    global ans\n    visited[v] = True\n    for u in adj[v]:\n        if not visited[u]:\n            dfs(adj, visited, u)\n    # check if v is a leaf\n    if len(adj[v]) == 1:\n        ans += 1\n\nans = 0\nmain()"
+}
+2022-04-13 21:20:38.444698 REASON stop
+2022-04-13 21:20:38.463898 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef get_graph():\n    n = int(input())\n    graph = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        u, v = [int(x) for x in input().split()]\n        graph[u - 1].append(v - 1)\n        graph[v - 1].append(u - 1)\n    return graph\n\ndef dfs(graph, v, p):\n    if v == 0:\n        return 0, 0\n    else:\n        d1 = d2 = math.inf\n        for u in graph[v]:\n            if u == p:\n                continue\n            d, d_ = dfs(graph, u, v)\n            d += 1\n            d_ += 1\n            if d < d1:\n                d1, d2 = d, d1\n            elif d < d2:\n                d2 = d\n        return d1, d2\n\ndef main():\n    graph = get_graph()\n    d1, d2 = dfs(graph, 0, -1)\n    print(d1 + d2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:20:38.463984 REASON stop
+2022-04-13 21:20:38.464491 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 21:20:38.464549 REASON stop
+2022-04-13 21:20:38.465196 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\nfrom collections import defaultdict\nfrom queue import Queue\n\ndef main():\n    n = int(stdin.readline())\n    graph = defaultdict(list)\n    for _ in range(n - 1):\n        u, v = map(int, stdin.readline().split())\n        graph[u].append(v)\n        graph[v].append(u)\n    \n    q = Queue()\n    q.put(1)\n    visited = set()\n    visited.add(1)\n    count = 0\n    while not q.empty():\n        size = q.qsize()\n        while size:\n            size -= 1\n            curr = q.get()\n            for neighbor in graph[curr]:\n                if neighbor not in visited:\n                    visited.add(neighbor)\n                    q.put(neighbor)\n        count += 1\n        if count == 2:\n            break\n    stdout.write(str(n - len(visited)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:20:38.465252 REASON stop
+2022-04-13 21:20:38.465847 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport os\nimport heapq\nfrom collections import deque,defaultdict\nfrom itertools import permutations,combinations,product\nfrom copy import deepcopy\n\nint_input=lambda : int(sys.stdin.readline())\nstring_input=lambda : sys.stdin.readline()\nmulti_int_input =lambda : map(int, sys.stdin.readline().split())\nmulti_input = lambda : sys.stdin.readline().split()\nlist_input=lambda : list(map(int,sys.stdin.readline().split()))\nstring_list_input=lambda: list(string_input())\nMOD = pow(10,9)+7\n\nclass Graph:\n    def __init__(self,size):\n        self.size = size\n        self.edges = defaultdict(list)\n        self.weights = {}\n    \n    def add_edge(self,from_node,to_node,weight):\n        # check if edge already exists\n        for i,edge in enumerate(self.edges[from_node]):\n            if edge == to_node:\n                self.weights[(from_node,to_node)] = weight\n                return\n        self.edges[from_node].append(to_node)\n        self.edges[to_node].append(from_node)\n        self.weights[(from_node,to_node)] = weight\n        self.weights[(to_node,from_node)] = weight\n\n    def bfs(self,start,end):\n        visited = [False]*(self.size+1)\n        visited[start] = True\n        queue = deque()\n        queue.append(start)\n        while queue:\n            node = queue.popleft()\n            if node == end:\n                return True\n            for neighbour in self.edges[node]:\n                if not visited[neighbour]:\n                    visited[neighbour] = True\n                    queue.append(neighbour)\n        return False\n\ndef main():\n    n = int_input()\n    graph = Graph(n)\n    for i in range(n-1):\n        a,b = multi_int_input()\n        graph.add_edge(a,b,1)\n\n    if graph.bfs(1,n):\n        print(0)\n        return\n\n    for i in range(1,n+1):\n        for neighbour in graph.edges[i]:\n            if graph.bfs(i,n):\n                print(1)\n                return\n    print(2)\n    return\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:20:38.465907 REASON stop

@@ -1,0 +1,167 @@
+2022-04-09 23:35:06.897838 """
+MyTunes, a new music application from Mapple, allows you to display and sort your music according to many different attributes. Attributes like album name, song title, artist, and song length are available, among others. One feature MyTunes does NOT have is stable sorting. You need to write the software which does this. Stable sorting would allow the user to do something like this: first sort the whole list by song title, and then sort the whole list by artist. The result is that the list of songs are sorted primarily by artist (since it’s the last thing used to sort), then within each artist they are sorted by song name (since before the artist sort, the songs were ordered by song name). When sorting two songs with equal attribute values they should remain in their relative order prior to sorting (giving stable sorting).
+
+The first sort starts from the order of songs as given in the input. Each subsequent sort starts from the order given by the previous sort, rather than starting from the initial order. All sorting should be done least to greatest, in lexicographic order (using ASCII values, even for numeric data).
+
+-----Input-----
+The first line contains a list of $1$ to $20$ unique attributes, separated by single spaces. The next line contains an integer $1 \leq m \leq 100$ giving the number of songs that follow, one song per line. Each song has the values for all the attributes, separated by single spaces. The next line contains an integer $1 \leq n \leq 20$ giving the number of sorting commands. The following $n$ lines each contain one sort command, which is the name of an attribute. Initially, the song list is in the order given on the input. All attributes and values are between $1$ and $30$ characters, using only a–z, A–Z, $0$–$9$, and underscore (_).
+
+-----Output-----
+After each sort command, print the list of attributes followed by the song list in the order given by the sort command, one song per line. Print a space between adjacent fields. Between each pair of printed lists, print a blank line.
+
+-----Examples-----
+Sample Input:
+Artist Album Song_Title Length_seconds
+5
+Tchaikovsky Piano_Favorites November 163
+James_Taylor Dad_Loves_His_Work Hard_Times 192
+James_Taylor Dad_Loves_His_Work London_Town 236
+James_Taylor Dad_Loves_His_Work Summers_Here 163
+George_Winston Summer Lullaby 215
+3
+Artist
+Album
+Song_Title
+Sample Output:
+Artist Album Song_Title Length_seconds
+George_Winston Summer Lullaby 215
+James_Taylor Dad_Loves_His_Work Hard_Times 192
+James_Taylor Dad_Loves_His_Work London_Town 236
+James_Taylor Dad_Loves_His_Work Summers_Here 163
+Tchaikovsky Piano_Favorites November 163
+
+Artist Album Song_Title Length_seconds
+James_Taylor Dad_Loves_His_Work Hard_Times 192
+James_Taylor Dad_Loves_His_Work London_Town 236
+James_Taylor Dad_Loves_His_Work Summers_Here 163
+Tchaikovsky Piano_Favorites November 163
+George_Winston Summer Lullaby 215
+
+Artist Album Song_Title Length_seconds
+James_Taylor Dad_Loves_His_Work Hard_Times 192
+James_Taylor Dad_Loves_His_Work London_Town 236
+George_Winston Summer Lullaby 215
+Tchaikovsky Piano_Favorites November 163
+James_Taylor Dad_Loves_His_Work Summers_Here 163
+"""
+2022-04-09 23:35:06.897861 --------------------------
+2022-04-09 23:35:34.267659 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass Song:\n    def __init__(self, attributes):\n        self.attributes = attributes\n    def __repr__(self):\n        return ' '.join(self.attributes)\n\ndef stable_sort(songs, attribute):\n    return sorted(songs, key=lambda song: song.attributes[attribute])\n\ndef main():\n    attributes = sys.stdin.readline().strip().split()\n    m = int(sys.stdin.readline())\n    songs = []\n    for _ in range(m):\n        songs.append(Song(sys.stdin.readline().strip().split()))\n    n = int(sys.stdin.readline())\n    for _ in range(n):\n        attribute = sys.stdin.readline().strip()\n        print(' '.join(attributes))\n        for song in stable_sort(songs, attributes.index(attribute)):\n            print(song)\n        print()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    attr = input().split()\n    m = int(input())\n    songs = []\n    for _ in range(m):\n        songs.append(input().split())\n    n = int(input())\n    for _ in range(n):\n        attr_sort = input()\n        attr_sort_in = attr.index(attr_sort)\n        songs.sort(key=lambda x: x[attr_sort_in])\n        print(*attr)\n        for song in songs:\n            print(*song)\n        print()\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    attributes = sys.stdin.readline().rstrip().split()\n    songs = []\n    for i in range(int(sys.stdin.readline())):\n        songs.append(sys.stdin.readline().rstrip().split())\n    for i in range(int(sys.stdin.readline())):\n        attribute = sys.stdin.readline().rstrip()\n        songs.sort(key=lambda x: x[attributes.index(attribute)])\n        print(' '.join(attributes))\n        for song in songs:\n            print(' '.join(song))\n        print()\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom itertools import islice\nfrom operator import itemgetter\n\ndef main():\n    attributes = next(stdin).rstrip().split()\n    n_songs = int(next(stdin))\n    songs = [dict(zip(attributes, next(stdin).rstrip().split())) for _ in range(n_songs)]\n    n_commands = int(next(stdin))\n    commands = list(islice(stdin, n_commands))\n    print(' '.join(attributes))\n    for command in commands:\n        songs.sort(key=itemgetter(command.rstrip()))\n        print('\\n'.join(' '.join(song[attr] for attr in attributes) for song in songs))\n        print()\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef stable_sort(songs, attribute):\n    return sorted(songs, key=lambda x: x.split()[attribute])\n\ndef main():\n    attributes = input().split()\n    num_songs = int(input())\n    songs = []\n    for i in range(num_songs):\n        songs.append(input())\n    num_sorts = int(input())\n    sorts = []\n    for i in range(num_songs):\n        sorts.append(input())\n    for sort in sorts:\n        print(' '.join(attributes))\n        for song in stable_sort(songs, attributes.index(sort)):\n            print(song)\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\ndef main():\n    #read input\n    attr_list = input().split(\" \")\n    num_songs = int(input())\n    songs = []\n    for i in range(num_songs):\n        songs.append(input().split(\" \"))\n    num_commands = int(input())\n    commands = []\n    for i in range(num_commands):\n        commands.append(input())\n    #sort\n    for command in commands:\n        songs = sorted(songs, key=lambda x: x[attr_list.index(command)])\n        #print\n        print(\" \".join(attr_list))\n        for song in songs:\n            print(\" \".join(song))\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom operator import itemgetter\n\ndef main():\n    attrs = stdin.readline().strip().split()\n    songs = []\n    for _ in range(int(stdin.readline())):\n        songs.append(stdin.readline().strip().split())\n    for _ in range(int(stdin.readline())):\n        attr = stdin.readline().strip()\n        print(' '.join(attrs))\n        for song in sorted(songs, key=itemgetter(attrs.index(attr))):\n            print(' '.join(song))\n        print()\n\nmain()"
+    }
+  ],
+  "created": 1649561707,
+  "id": "cmpl-4vIdvfqh5CtLlBVFTfN4zj1t4PKU0",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:35:34.268064 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass Song:\n    def __init__(self, attributes):\n        self.attributes = attributes\n    def __repr__(self):\n        return ' '.join(self.attributes)\n\ndef stable_sort(songs, attribute):\n    return sorted(songs, key=lambda song: song.attributes[attribute])\n\ndef main():\n    attributes = sys.stdin.readline().strip().split()\n    m = int(sys.stdin.readline())\n    songs = []\n    for _ in range(m):\n        songs.append(Song(sys.stdin.readline().strip().split()))\n    n = int(sys.stdin.readline())\n    for _ in range(n):\n        attribute = sys.stdin.readline().strip()\n        print(' '.join(attributes))\n        for song in stable_sort(songs, attributes.index(attribute)):\n            print(song)\n        print()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:35:34.268117 REASON stop
+2022-04-09 23:35:34.279436 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.279488 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"main\"\"\"\n    attr = input().split()\n    m = int(input())\n    songs = []\n    for _ in range(m):\n        songs.append(input().split())\n    n = int(input())\n    for _ in range(n):\n        attr_sort = input()\n        attr_sort_in = attr.index(attr_sort)\n        songs.sort(key=lambda x: x[attr_sort_in])\n        print(*attr)\n        for song in songs:\n            print(*song)\n        print()\n\nmain()"
+}
+2022-04-09 23:35:34.279580 REASON stop
+2022-04-09 23:35:34.280033 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.280058 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    attributes = sys.stdin.readline().rstrip().split()\n    songs = []\n    for i in range(int(sys.stdin.readline())):\n        songs.append(sys.stdin.readline().rstrip().split())\n    for i in range(int(sys.stdin.readline())):\n        attribute = sys.stdin.readline().rstrip()\n        songs.sort(key=lambda x: x[attributes.index(attribute)])\n        print(' '.join(attributes))\n        for song in songs:\n            print(' '.join(song))\n        print()\n\nmain()"
+}
+2022-04-09 23:35:34.280107 REASON stop
+2022-04-09 23:35:34.280469 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.280496 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom itertools import islice\nfrom operator import itemgetter\n\ndef main():\n    attributes = next(stdin).rstrip().split()\n    n_songs = int(next(stdin))\n    songs = [dict(zip(attributes, next(stdin).rstrip().split())) for _ in range(n_songs)]\n    n_commands = int(next(stdin))\n    commands = list(islice(stdin, n_commands))\n    print(' '.join(attributes))\n    for command in commands:\n        songs.sort(key=itemgetter(command.rstrip()))\n        print('\\n'.join(' '.join(song[attr] for attr in attributes) for song in songs))\n        print()\n\nmain()"
+}
+2022-04-09 23:35:34.280579 REASON stop
+2022-04-09 23:35:34.281031 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.281055 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef stable_sort(songs, attribute):\n    return sorted(songs, key=lambda x: x.split()[attribute])\n\ndef main():\n    attributes = input().split()\n    num_songs = int(input())\n    songs = []\n    for i in range(num_songs):\n        songs.append(input())\n    num_sorts = int(input())\n    sorts = []\n    for i in range(num_songs):\n        sorts.append(input())\n    for sort in sorts:\n        print(' '.join(attributes))\n        for song in stable_sort(songs, attributes.index(sort)):\n            print(song)\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:35:34.281102 REASON stop
+2022-04-09 23:35:34.281469 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.281494 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\ndef main():\n    #read input\n    attr_list = input().split(\" \")\n    num_songs = int(input())\n    songs = []\n    for i in range(num_songs):\n        songs.append(input().split(\" \"))\n    num_commands = int(input())\n    commands = []\n    for i in range(num_commands):\n        commands.append(input())\n    #sort\n    for command in commands:\n        songs = sorted(songs, key=lambda x: x[attr_list.index(command)])\n        #print\n        print(\" \".join(attr_list))\n        for song in songs:\n            print(\" \".join(song))\n        print()\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:35:34.281541 REASON stop
+2022-04-09 23:35:34.281893 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.281937 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:35:34.281997 REASON stop
+2022-04-09 23:35:34.282309 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'
+2022-04-09 23:35:34.282339 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom operator import itemgetter\n\ndef main():\n    attrs = stdin.readline().strip().split()\n    songs = []\n    for _ in range(int(stdin.readline())):\n        songs.append(stdin.readline().strip().split())\n    for _ in range(int(stdin.readline())):\n        attr = stdin.readline().strip()\n        print(' '.join(attrs))\n        for song in sorted(songs, key=itemgetter(attrs.index(attr))):\n            print(' '.join(song))\n        print()\n\nmain()"
+}
+2022-04-09 23:35:34.282388 REASON stop
+2022-04-09 23:35:34.282777 test/intro-questions.txt_dir/4911/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4911/solutions.json'

@@ -7,7 +7,7 @@ function echo_ts
 }
 
 COUNTER=$(( 0 ))
-LIMIT=$(( 2640 ))
+LIMIT=$(( 1500 ))
 CONTINUE_FROM=$(( 0 ))
 
 # input_set=train/intro-questions.txt
@@ -22,6 +22,9 @@ echo_ts "Runnin completion API (first stage) for "
 echo_ts "input directory $input_dir"
 echo_ts "temperature  T1 $temp"
 echo_ts "k  K1 $k"
+echo_ts "CONTINUE_FROM  $CONTINUE_FROM"
+echo_ts "LIMIT $LIMIT"
+echo_ts "sleep_time $sleep_time"
 
 # for input_set in $test_or_train/*.txt; do 
 
@@ -32,8 +35,7 @@ for question in $input_dir/*/question.txt; do
     num=${arrIN[2]}                  #
     echo_ts $num
     num_question=$(expr $num+0)
-    echo_ts $num_question
-    num_question=$(expr $num+0)
+    #echo_ts $num_question
     if (( num_question <= CONTINUE_FROM )); then
         continue 
     fi
@@ -41,8 +43,9 @@ for question in $input_dir/*/question.txt; do
     # echo question $question
 
 
-    out_dir=davinci_runs/$input_dir/$num
+    out_dir=davinci_runs/test_T1_"$temp"_K1_"$k"/$num
     echo_ts "output directory: $out_dir"
+    #continue
     mkdir -p $out_dir
     # echo out_directory $out_dir
 

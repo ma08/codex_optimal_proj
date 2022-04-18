@@ -1,0 +1,130 @@
+2022-04-13 21:09:55.446612 """
+Given an array A of integers, we must modify the array in the following way: we choose an i and replace A[i] with -A[i], and we repeat this process K times in total.  (We may choose the same index i multiple times.)
+Return the largest possible sum of the array after modifying it in this way.
+ 
+Example 1:
+Input: A = [4,2,3], K = 1
+Output: 5
+Explanation: Choose indices (1,) and A becomes [4,-2,3].
+
+
+Example 2:
+Input: A = [3,-1,0,2], K = 3
+Output: 6
+Explanation: Choose indices (1, 2, 2) and A becomes [3,1,0,2].
+
+
+Example 3:
+Input: A = [2,-3,-1,5,-4], K = 2
+Output: 13
+Explanation: Choose indices (1, 4) and A becomes [2,3,-1,5,4].
+
+
+
+ 
+Note:
+
+1 <= A.length <= 10000
+1 <= K <= 10000
+-100 <= A[i] <= 100
+"""
+2022-04-13 21:09:55.446621 --------------------------
+2022-04-13 21:10:22.056941 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n            K -= 1\n        if K % 2 == 1:\n            A.sort()\n            A[0] = -A[0]\n        return sum(A)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        # \u5148\u628a\u8d1f\u6570\u53d8\u6210\u6b63\u6570\uff0c\u7136\u540e\u6392\u5e8f\uff0c\u6bcf\u6b21\u53d6\u6700\u5c0f\u7684\u6570\u52a0\u4e0a1\uff0c\u628a\u6700\u5c0f\u6570\u53d8\u62100\uff0c\u6bcf\u6b21\u52a01\u5c31\u662f\u5c06\u6700\u5c0f\u7684\u6570\u53d8\u6210\u6700\u5927\u7684\u6570\uff0c\u76f4\u5230K\u4e3a0\n        A = [i if i>0 else -i for i in A]\n        A.sort()\n        for i in range(len(A)):\n            if K == 0:\n                return sum(A)\n            else:\n                A[i] += 1\n                K -= 1\n        return sum(A)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        for i in range(K):\n            if A[i] < 0:\n                A[i] = -A[i]\n            else:\n                if i != 0 and A[i] > A[i-1]:\n                    A[i-1] = -A[i-1]\n                else:\n                    A[i] = -A[i]\n        return sum(A)\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n            K -= 1\n        if K % 2 == 0:\n            return sum(A)\n        else:\n            return sum(A) - 2 * min(A)\n\n\n\nif __name__ == '__main__':\n    A = [4, 2, 3]\n    K = 1\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [3, -1, 0, 2]\n    K = 3\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [2, -3, -1, 5, -4]\n    K = 2\n    print(Solution().largestSumAfterKNegations(A, K))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        if not A:\n            return 0\n        A.sort()\n        i = 0\n        while i < len(A) and i < K and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n        if i == len(A):\n            return sum(A) - 2 * min(A)\n        if i == K:\n            return sum(A)\n        if (K - i) % 2 == 1:\n            if A[i] < A[i-1]:\n                A[i] = -A[i]\n            else:\n                A[i-1] = -A[i-1]\n        return sum(A)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            K -= 1\n            i += 1\n        if K % 2 == 1:\n            A.sort()\n            A[0] = -A[0]\n        return sum(A)\n\n\nif __name__ == '__main__':\n    A = [4, 2, 3]\n    K = 1\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [3, -1, 0, 2]\n    K = 3\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [2, -3, -1, 5, -4]\n    K = 2\n    print(Solution().largestSumAfterKNegations(A, K))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        A.sort()\n        for i in range(len(A)):\n            if A[i] < 0 and K > 0:\n                A[i] = -A[i]\n                K -= 1\n        if K > 0:\n            if K % 2 == 1:\n                A.sort()\n                A[0] = -A[0]\n        return sum(A)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0:\n            if A[i] < 0:\n                A[i] = -A[i]\n                K -= 1\n            else:\n                break\n            i += 1\n\n        return sum(A) - (K%2)*min(A)*2"
+    }
+  ],
+  "created": 1649884195,
+  "id": "cmpl-4weXLsJRFFfujF9mwQvJskFMfuoKs",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:10:22.057254 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n            K -= 1\n        if K % 2 == 1:\n            A.sort()\n            A[0] = -A[0]\n        return sum(A)"
+}
+2022-04-13 21:10:22.057287 REASON stop
+2022-04-13 21:10:22.057855 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        # \u5148\u628a\u8d1f\u6570\u53d8\u6210\u6b63\u6570\uff0c\u7136\u540e\u6392\u5e8f\uff0c\u6bcf\u6b21\u53d6\u6700\u5c0f\u7684\u6570\u52a0\u4e0a1\uff0c\u628a\u6700\u5c0f\u6570\u53d8\u62100\uff0c\u6bcf\u6b21\u52a01\u5c31\u662f\u5c06\u6700\u5c0f\u7684\u6570\u53d8\u6210\u6700\u5927\u7684\u6570\uff0c\u76f4\u5230K\u4e3a0\n        A = [i if i>0 else -i for i in A]\n        A.sort()\n        for i in range(len(A)):\n            if K == 0:\n                return sum(A)\n            else:\n                A[i] += 1\n                K -= 1\n        return sum(A)"
+}
+2022-04-13 21:10:22.057981 REASON stop
+2022-04-13 21:10:22.058407 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        for i in range(K):\n            if A[i] < 0:\n                A[i] = -A[i]\n            else:\n                if i != 0 and A[i] > A[i-1]:\n                    A[i-1] = -A[i-1]\n                else:\n                    A[i] = -A[i]\n        return sum(A)\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n            K -= 1\n        if K % 2 == 0:\n            return sum(A)\n        else:\n            return sum(A) - 2 * min(A)\n\n\n\nif __name__ == '__main__':\n    A = [4, 2, 3]\n    K = 1\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [3, -1, 0, 2]\n    K = 3\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [2, -3, -1, 5, -4]\n    K = 2\n    print(Solution().largestSumAfterKNegations(A, K))"
+}
+2022-04-13 21:10:22.058491 REASON stop
+2022-04-13 21:10:22.086154 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        if not A:\n            return 0\n        A.sort()\n        i = 0\n        while i < len(A) and i < K and A[i] < 0:\n            A[i] = -A[i]\n            i += 1\n        if i == len(A):\n            return sum(A) - 2 * min(A)\n        if i == K:\n            return sum(A)\n        if (K - i) % 2 == 1:\n            if A[i] < A[i-1]:\n                A[i] = -A[i]\n            else:\n                A[i-1] = -A[i-1]\n        return sum(A)"
+}
+2022-04-13 21:10:22.086253 REASON stop
+2022-04-13 21:10:22.089824 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\nclass Solution(object):\n    def largestSumAfterKNegations(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0 and A[i] < 0:\n            A[i] = -A[i]\n            K -= 1\n            i += 1\n        if K % 2 == 1:\n            A.sort()\n            A[0] = -A[0]\n        return sum(A)\n\n\nif __name__ == '__main__':\n    A = [4, 2, 3]\n    K = 1\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [3, -1, 0, 2]\n    K = 3\n    print(Solution().largestSumAfterKNegations(A, K))\n    A = [2, -3, -1, 5, -4]\n    K = 2\n    print(Solution().largestSumAfterKNegations(A, K))"
+}
+2022-04-13 21:10:22.089910 REASON stop
+2022-04-13 21:10:22.090894 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        A.sort()\n        for i in range(len(A)):\n            if A[i] < 0 and K > 0:\n                A[i] = -A[i]\n                K -= 1\n        if K > 0:\n            if K % 2 == 1:\n                A.sort()\n                A[0] = -A[0]\n        return sum(A)"
+}
+2022-04-13 21:10:22.090946 REASON stop
+2022-04-13 21:10:22.091676 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nclass Solution:\n    def largestSumAfterKNegations(self, A: List[int], K: int) -> int:\n        A.sort()\n        i = 0\n        while i < len(A) and K > 0:\n            if A[i] < 0:\n                A[i] = -A[i]\n                K -= 1\n            else:\n                break\n            i += 1\n\n        return sum(A) - (K%2)*min(A)*2"
+}
+2022-04-13 21:10:22.091730 REASON stop

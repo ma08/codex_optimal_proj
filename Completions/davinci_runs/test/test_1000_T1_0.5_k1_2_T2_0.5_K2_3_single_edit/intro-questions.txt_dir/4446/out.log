@@ -1,0 +1,81 @@
+2022-04-09 20:13:27.308386 """
+There are $n$ monsters standing in a row numbered from $1$ to $n$. The $i$-th monster has $h_i$ health points (hp). You have your attack power equal to $a$ hp and your opponent has his attack power equal to $b$ hp.
+
+You and your opponent are fighting these monsters. Firstly, you and your opponent go to the first monster and fight it till his death, then you and your opponent go the second monster and fight it till his death, and so on. A monster is considered dead if its hp is less than or equal to $0$.
+
+The fight with a monster happens in turns.   You hit the monster by $a$ hp. If it is dead after your hit, you gain one point and you both proceed to the next monster.  Your opponent hits the monster by $b$ hp. If it is dead after his hit, nobody gains a point and you both proceed to the next monster. 
+
+You have some secret technique to force your opponent to skip his turn. You can use this technique at most $k$ times in total (for example, if there are two monsters and $k=4$, then you can use the technique $2$ times on the first monster and $1$ time on the second monster, but not $2$ times on the first monster and $3$ times on the second monster).
+
+Your task is to determine the maximum number of points you can gain if you use the secret technique optimally.
+
+
+-----Input-----
+
+The first line of the input contains four integers $n, a, b$ and $k$ ($1 \le n \le 2 \cdot 10^5, 1 \le a, b, k \le 10^9$) — the number of monsters, your attack power, the opponent's attack power and the number of times you can use the secret technique.
+
+The second line of the input contains $n$ integers $h_1, h_2, \dots, h_n$ ($1 \le h_i \le 10^9$), where $h_i$ is the health points of the $i$-th monster.
+
+
+-----Output-----
+
+Print one integer — the maximum number of points you can gain if you use the secret technique optimally.
+
+
+-----Examples-----
+Input
+6 2 3 3
+7 10 50 12 1 8
+
+Output
+5
+
+Input
+1 1 100 99
+100
+
+Output
+1
+
+Input
+7 4 2 1
+1 3 5 4 2 7 6
+
+Output
+6
+"""
+2022-04-09 20:13:27.308406 --------------------------
+2022-04-09 20:13:58.044260 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, a, b, k = map(int, input().split())\n    h = list(map(int, input().split()))\n    dp = [[0] * (k + 1) for _ in range(n)]\n    for i in range(n):\n        for j in range(k + 1):\n            if j == 0:\n                dp[i][j] = dp[i - 1][j] + (h[i] - 1) // a\n            else:\n                dp[i][j] = dp[i - 1][j] + (h[i] - 1) // a + (h[i] - 1) // b\n                if i > 0:\n                    dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + (h[i] - b) // a)\n    print(dp[n - 1][k])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, a, b, k = map(int, input().split())\nhp = list(map(int, input().split()))\n\n# We will use a greedy approach to solve this problem.\n# We want to use our secret technique as many times as possible.\n# We also want to use our secret technique on the monsters with the lowest health points.\n# This is because we want to use our secret technique on monsters that we can't kill in one turn.\n# If we use our secret technique on a monster with high health points,\n# we will run out of secret technique uses before we can use it on a monster with low health points.\n# This is why we sort the monsters by their health points in descending order.\nhp.sort(reverse=True)\n\n# We will use a list to keep track of which monsters we can kill in one turn.\n# If we can kill a monster in one turn, we don't need to use our secret technique on it.\n# If we can't kill a monster in one turn, we will use our secret technique on it.\n# We start by assuming that we can kill every monster in one turn.\n# If we later find out that we can't kill a monster in one turn, we will change the corresponding value in this list to False.\n# We will also keep track of the number of points we will get from killing monsters.\n# We start by assuming that we will get a point for killing every monster.\n# If we later find out that we won't get a point for killing a monster, we will decrease the value in this list by one.\n# We will also keep track of the number of secret technique uses we have left.\ncan_kill_in_one_turn = [True for _ in range(n)]\npoints = n\nsecret_technique_uses_left = k\n\n# We will now loop through the monsters.\n# We will check if we can kill the monster in one turn.\n# If we can't, we will use our secret technique on it.\n# If we can, we will check if our opponent can kill the monster in one turn.\n# If he can, we will not get a point for killing the monster.\n# If he can't, we will get a point for killing the monster.\nfor i in range(n):\n    if hp[i] > a:\n        can_kill_in_one_turn[i] = False\n        if secret_technique_uses_left == 0:\n            break\n        secret_technique_uses_left -= 1\n    if hp[i] > b:\n        points -= 1\n\nprint(points)"
+    }
+  ],
+  "created": 1649549607,
+  "id": "cmpl-4vFUlEYaWYkKemYroWazUx5oIHOP6",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:13:58.044544 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, a, b, k = map(int, input().split())\n    h = list(map(int, input().split()))\n    dp = [[0] * (k + 1) for _ in range(n)]\n    for i in range(n):\n        for j in range(k + 1):\n            if j == 0:\n                dp[i][j] = dp[i - 1][j] + (h[i] - 1) // a\n            else:\n                dp[i][j] = dp[i - 1][j] + (h[i] - 1) // a + (h[i] - 1) // b\n                if i > 0:\n                    dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + (h[i] - b) // a)\n    print(dp[n - 1][k])\n\nmain()"
+}
+2022-04-09 20:13:58.044617 REASON stop
+2022-04-09 20:13:58.045807 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, a, b, k = map(int, input().split())\nhp = list(map(int, input().split()))\n\n# We will use a greedy approach to solve this problem.\n# We want to use our secret technique as many times as possible.\n# We also want to use our secret technique on the monsters with the lowest health points.\n# This is because we want to use our secret technique on monsters that we can't kill in one turn.\n# If we use our secret technique on a monster with high health points,\n# we will run out of secret technique uses before we can use it on a monster with low health points.\n# This is why we sort the monsters by their health points in descending order.\nhp.sort(reverse=True)\n\n# We will use a list to keep track of which monsters we can kill in one turn.\n# If we can kill a monster in one turn, we don't need to use our secret technique on it.\n# If we can't kill a monster in one turn, we will use our secret technique on it.\n# We start by assuming that we can kill every monster in one turn.\n# If we later find out that we can't kill a monster in one turn, we will change the corresponding value in this list to False.\n# We will also keep track of the number of points we will get from killing monsters.\n# We start by assuming that we will get a point for killing every monster.\n# If we later find out that we won't get a point for killing a monster, we will decrease the value in this list by one.\n# We will also keep track of the number of secret technique uses we have left.\ncan_kill_in_one_turn = [True for _ in range(n)]\npoints = n\nsecret_technique_uses_left = k\n\n# We will now loop through the monsters.\n# We will check if we can kill the monster in one turn.\n# If we can't, we will use our secret technique on it.\n# If we can, we will check if our opponent can kill the monster in one turn.\n# If he can, we will not get a point for killing the monster.\n# If he can't, we will get a point for killing the monster.\nfor i in range(n):\n    if hp[i] > a:\n        can_kill_in_one_turn[i] = False\n        if secret_technique_uses_left == 0:\n            break\n        secret_technique_uses_left -= 1\n    if hp[i] > b:\n        points -= 1\n\nprint(points)"
+}
+2022-04-09 20:13:58.045901 REASON stop

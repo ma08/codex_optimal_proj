@@ -1,0 +1,195 @@
+2022-04-12 18:47:33.016155 num operations 2
+2022-04-12 18:47:33.016165 size on input set 1
+2022-04-12 18:47:54.058590 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "print(\"hello\")\n"
+    },
+    {
+      "index": 1,
+      "text": "#include<stdio.h>\n#include<stdlib.h>\n#include<string.h>\n#include<time.h>\n#include<sys/stat.h>\n#include<unistd.h>\n#include<dirent.h>\nvoid create_file(char *name);\nvoid create_dir(char *name);\nvoid create_file_tree(char *name,int level,int max_level,int *count,int *dir_count);\nint get_rand(int min,int max);\nint get_rand_file_name(char *name,int len);\nint main(int argc,char *argv[])\n{\n\tint count=0,dir_count=0;\n\tsrand((unsigned int)time(NULL));\n\tcreate_file_tree(\".\",1,3,&count,&dir_count);\n\tprintf(\"%d file,%d dir\\n\",count,dir_count);\n\treturn 0;\n}\nvoid create_file_tree(char *name,int level,int max_level,int *count,int *dir_count)\n{\n\tDIR *dp;\n\tstruct dirent *dent;\n\tint i,n;\n\tchar path[1024];\n\tif(level>max_level)\n\t\treturn;\n\tif((dp=opendir(name))==NULL){\n\t\tperror(\"opendir\");\n\t\treturn;\n\t}\n\twhile((dent=readdir(dp))!=NULL){\n\t\tif(strcmp(dent->d_name,\".\")==0||strcmp(dent->d_name,\"..\")==0)\n\t\t\tcontinue;\n\t\tsnprintf(path,sizeof(path),\"%s/%s\",name,dent->d_name);\n\t\tif(dent->d_type==DT_DIR){\n\t\t\tcreate_file_tree(path,level+1,max_level,count,dir_count);\n\t\t\t(*dir_count)++;\n\t\t}else if(dent->d_type==DT_REG){\n\t\t\t(*count)++;\n\t\t}\n\t}\n\tclosedir(dp);\n\tif(level==1){\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_dir(name);\n\t\t\t(*dir_count)++;\n\t\t}\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_file(name);\n\t\t\t(*count)++;\n\t\t}\n\t}else{\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_dir(name);\n\t\t\t(*dir_count)++;\n\t\t}\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_file(name);\n\t\t\t(*count)++;\n\t\t}\n\t}\n}\nvoid create_file(char *name)\n{\n\tchar path[1024];\n\tsnprintf(path,sizeof(path),\"%s/%s\",name,get_rand_file_name(NULL,0));\n\tclose(open(path,O_CREAT|O_RDWR,S_IRUSR|S_IWUSR));\n}\nvoid create_dir(char *name)\n{\n\tchar path[1024];\n\tsnprintf(path,sizeof(path),\"%s/%s\",name,get_rand_file_name(NULL,0));\n\tmkdir(path,0700);\n}\nint get_rand_file_name(char *name,int len)\n{\n\tint i;\n\tchar *p;\n\tif(name==NULL){\n\t\tp=malloc(len+1);\n\t\tif(p==NULL){\n\t\t\tperror(\"malloc\");\n\t\t\texit(1);\n\t\t}\n\t}else{\n\t\tp=name;\n\t}\n\tfor(i=0;i<len;i++){\n\t\tp[i]=get_rand('a','z');\n\t}\n\tp[i]='\\0';\n\treturn 0;\n}\nint get_rand(int min,int max)\n{\n\treturn min+(int)((max-min+1.0)*rand()/(RAND_MAX+1.0));\n}\n"
+    },
+    {
+      "index": 2,
+      "text": "from sys import argv\n\nscript, filename = argv\n\nprint(f\"We're going to erase {filename}.\")\nprint(\"If you don't want that, hit CTRL-C (^C).\")\nprint(\"If you do want that, hit RETURN.\")\n\ninput(\"?\")\n\nprint(\"Opening the file...\")\ntarget = open(filename, 'w')\n\nprint(\"Truncating the file. Goodbye!\")\ntarget.truncate()\n\nprint(\"Now I'm going to ask you for three lines.\")\n\nline1 = input(\"line 1: \")\nline2 = input(\"line 2: \")\nline3 = input(\"line 3: \")\n\nprint(\"I'm going to write these to the file.\")\n\ntarget.write(line1)\ntarget.write(\"\\n\")\ntarget.write(line2)\ntarget.write(\"\\n\")\ntarget.write(line3)\ntarget.write(\"\\n\")\n\nprint(\"And finally, we close it.\")\ntarget.close()\n"
+    }
+  ],
+  "created": 1649789253,
+  "object": "edit"
+}
+2022-04-12 18:47:54.058816 fix spelling mistakes 3 ['print("hello")\n', '#include<stdio.h>\n#include<stdlib.h>\n#include<string.h>\n#include<time.h>\n#include<sys/stat.h>\n#include<unistd.h>\n#include<dirent.h>\nvoid create_file(char *name);\nvoid create_dir(char *name);\nvoid create_file_tree(char *name,int level,int max_level,int *count,int *dir_count);\nint get_rand(int min,int max);\nint get_rand_file_name(char *name,int len);\nint main(int argc,char *argv[])\n{\n\tint count=0,dir_count=0;\n\tsrand((unsigned int)time(NULL));\n\tcreate_file_tree(".",1,3,&count,&dir_count);\n\tprintf("%d file,%d dir\\n",count,dir_count);\n\treturn 0;\n}\nvoid create_file_tree(char *name,int level,int max_level,int *count,int *dir_count)\n{\n\tDIR *dp;\n\tstruct dirent *dent;\n\tint i,n;\n\tchar path[1024];\n\tif(level>max_level)\n\t\treturn;\n\tif((dp=opendir(name))==NULL){\n\t\tperror("opendir");\n\t\treturn;\n\t}\n\twhile((dent=readdir(dp))!=NULL){\n\t\tif(strcmp(dent->d_name,".")==0||strcmp(dent->d_name,"..")==0)\n\t\t\tcontinue;\n\t\tsnprintf(path,sizeof(path),"%s/%s",name,dent->d_name);\n\t\tif(dent->d_type==DT_DIR){\n\t\t\tcreate_file_tree(path,level+1,max_level,count,dir_count);\n\t\t\t(*dir_count)++;\n\t\t}else if(dent->d_type==DT_REG){\n\t\t\t(*count)++;\n\t\t}\n\t}\n\tclosedir(dp);\n\tif(level==1){\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_dir(name);\n\t\t\t(*dir_count)++;\n\t\t}\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_file(name);\n\t\t\t(*count)++;\n\t\t}\n\t}else{\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_dir(name);\n\t\t\t(*dir_count)++;\n\t\t}\n\t\tn=get_rand(0,3);\n\t\tfor(i=0;i<n;i++){\n\t\t\tcreate_file(name);\n\t\t\t(*count)++;\n\t\t}\n\t}\n}\nvoid create_file(char *name)\n{\n\tchar path[1024];\n\tsnprintf(path,sizeof(path),"%s/%s",name,get_rand_file_name(NULL,0));\n\tclose(open(path,O_CREAT|O_RDWR,S_IRUSR|S_IWUSR));\n}\nvoid create_dir(char *name)\n{\n\tchar path[1024];\n\tsnprintf(path,sizeof(path),"%s/%s",name,get_rand_file_name(NULL,0));\n\tmkdir(path,0700);\n}\nint get_rand_file_name(char *name,int len)\n{\n\tint i;\n\tchar *p;\n\tif(name==NULL){\n\t\tp=malloc(len+1);\n\t\tif(p==NULL){\n\t\t\tperror("malloc");\n\t\t\texit(1);\n\t\t}\n\t}else{\n\t\tp=name;\n\t}\n\tfor(i=0;i<len;i++){\n\t\tp[i]=get_rand(\'a\',\'z\');\n\t}\n\tp[i]=\'\\0\';\n\treturn 0;\n}\nint get_rand(int min,int max)\n{\n\treturn min+(int)((max-min+1.0)*rand()/(RAND_MAX+1.0));\n}\n', 'from sys import argv\n\nscript, filename = argv\n\nprint(f"We\'re going to erase {filename}.")\nprint("If you don\'t want that, hit CTRL-C (^C).")\nprint("If you do want that, hit RETURN.")\n\ninput("?")\n\nprint("Opening the file...")\ntarget = open(filename, \'w\')\n\nprint("Truncating the file. Goodbye!")\ntarget.truncate()\n\nprint("Now I\'m going to ask you for three lines.")\n\nline1 = input("line 1: ")\nline2 = input("line 2: ")\nline3 = input("line 3: ")\n\nprint("I\'m going to write these to the file.")\n\ntarget.write(line1)\ntarget.write("\\n")\ntarget.write(line2)\ntarget.write("\\n")\ntarget.write(line3)\ntarget.write("\\n")\n\nprint("And finally, we close it.")\ntarget.close()\n']
+2022-04-12 18:47:54.058859 size on output set 3
+2022-04-12 18:47:54.058871 size on input set 3
+2022-04-12 18:47:56.860996 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "from sys import argv\n\nscript, filename = argv\n\nprint(f\"We're going to erase {filename}.\")\nprint(\"If you don't want that, hit CTRL-C (^C).\")\nprint(\"If you do want that, hit RETURN.\")\n\ninput(\"?\")\n\nprint(\"Opening the file...\")\ntarget = open(filename, 'w')\n\nprint(\"Truncating the file. Goodbye!\")\ntarget.truncate()\n\nprint(\"Now I'm going to ask you for three lines.\")\n\nline1 = input(\"line 1: \")\nline2 = input(\"line 2: \")\nline3 = input(\"line 3: \")\n\nprint(\"I'm going to write these to the file.\")\n\ntarget.write(f\"{line1}\\n{line2}\\n{line3}\\n\")\n\nprint(\"And finally, we close it.\")\ntarget.close()\n"
+    },
+    {
+      "index": 1,
+      "text": "from sys import argv\n\nscript, filename = argv\n\nprint(f\"We're going to erase {filename}.\")\nprint(\"If you don't want that, hit CTRL-C (^C).\")\nprint(\"If you do want that, hit RETURN.\")\n\ninput(\"?\")\n\nprint(\"Opening the file...\")\ntarget = open(filename, 'w')\n\nprint(\"Truncating the file. Goodbye!\")\ntarget.truncate()\n\nprint(\"Now I'm going to ask you for three lines.\")\n\nline1 = input(\"line 1: \")\nline2 = input(\"line 2: \")\nline3 = input(\"line 3: \")\n\nprint(\"I'm going to write these to the file.\")\n\ntarget.write(f\"{line1}\\n{line2}\\n{line3}\\n\")\n\nprint(\"And finally, we close it.\")\ntarget.close()\n"
+    },
+    {
+      "index": 2,
+      "text": "from sys import argv\n\nscript, filename = argv\n\nprint(f\"We're going to erase {filename}.\")\nprint(\"If you don't want that, hit CTRL-C (^C).\")\nprint(\"If you do want that, hit RETURN.\")\n\ninput(\"?\")\n\nprint(\"Opening the file...\")\ntarget = open(filename, 'w')\n\nprint(\"Truncating the file. Goodbye!\")\ntarget.truncate()\n\nprint(\"Now I'm going to ask you for three lines.\")\n\nline1 = input(\"line 1: \")\nline2 = input(\"line 2: \")\nline3 = input(\"line 3: \")\n\nprint(\"I'm going to write these to the file.\")\n\ntarget.write(line1 + \"\\n\" + line2 + \"\\n\" + line3 + \"\\n\")\n\nprint(\"And finally, we close it.\")\ntarget.close()\n"
+    }
+  ],
+  "created": 1649789274,
+  "object": "edit"
+}
+2022-04-12 18:47:56.861265 fix syntax errors 3 ['from sys import argv\n\nscript, filename = argv\n\nprint(f"We\'re going to erase {filename}.")\nprint("If you don\'t want that, hit CTRL-C (^C).")\nprint("If you do want that, hit RETURN.")\n\ninput("?")\n\nprint("Opening the file...")\ntarget = open(filename, \'w\')\n\nprint("Truncating the file. Goodbye!")\ntarget.truncate()\n\nprint("Now I\'m going to ask you for three lines.")\n\nline1 = input("line 1: ")\nline2 = input("line 2: ")\nline3 = input("line 3: ")\n\nprint("I\'m going to write these to the file.")\n\ntarget.write(f"{line1}\\n{line2}\\n{line3}\\n")\n\nprint("And finally, we close it.")\ntarget.close()\n', 'from sys import argv\n\nscript, filename = argv\n\nprint(f"We\'re going to erase {filename}.")\nprint("If you don\'t want that, hit CTRL-C (^C).")\nprint("If you do want that, hit RETURN.")\n\ninput("?")\n\nprint("Opening the file...")\ntarget = open(filename, \'w\')\n\nprint("Truncating the file. Goodbye!")\ntarget.truncate()\n\nprint("Now I\'m going to ask you for three lines.")\n\nline1 = input("line 1: ")\nline2 = input("line 2: ")\nline3 = input("line 3: ")\n\nprint("I\'m going to write these to the file.")\n\ntarget.write(f"{line1}\\n{line2}\\n{line3}\\n")\n\nprint("And finally, we close it.")\ntarget.close()\n', 'from sys import argv\n\nscript, filename = argv\n\nprint(f"We\'re going to erase {filename}.")\nprint("If you don\'t want that, hit CTRL-C (^C).")\nprint("If you do want that, hit RETURN.")\n\ninput("?")\n\nprint("Opening the file...")\ntarget = open(filename, \'w\')\n\nprint("Truncating the file. Goodbye!")\ntarget.truncate()\n\nprint("Now I\'m going to ask you for three lines.")\n\nline1 = input("line 1: ")\nline2 = input("line 2: ")\nline3 = input("line 3: ")\n\nprint("I\'m going to write these to the file.")\n\ntarget.write(line1 + "\\n" + line2 + "\\n" + line3 + "\\n")\n\nprint("And finally, we close it.")\ntarget.close()\n']
+2022-04-12 18:48:09.131673 fix syntax errors {
+  "choices": [
+    {
+      "error": {
+        "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+        "type": "invalid_edit"
+      },
+      "index": 0
+    },
+    {
+      "error": {
+        "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+        "type": "invalid_edit"
+      },
+      "index": 1
+    },
+    {
+      "error": {
+        "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+        "type": "invalid_edit"
+      },
+      "index": 2
+    }
+  ],
+  "created": 1649789276,
+  "object": "edit"
+}
+2022-04-12 18:48:09.131870 NO RESULT
+2022-04-12 18:48:09.131878 {
+  "error": {
+    "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+    "type": "invalid_edit"
+  },
+  "index": 0
+}
+2022-04-12 18:48:09.131981 NO RESULT
+2022-04-12 18:48:09.131986 {
+  "error": {
+    "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+    "type": "invalid_edit"
+  },
+  "index": 1
+}
+2022-04-12 18:48:09.132011 NO RESULT
+2022-04-12 18:48:09.132015 {
+  "error": {
+    "message": "Could not edit text. Please sample again or try with a different temperature setting, input, or instruction.",
+    "type": "invalid_edit"
+  },
+  "index": 2
+}
+2022-04-12 18:48:09.132042 fix syntax errors 0 []
+2022-04-12 18:48:10.895062 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "print(\"hello world\")\n"
+    },
+    {
+      "index": 1,
+      "text": "def helloworld():\n    print(\"hello\")\n\nhelloworld()\n"
+    },
+    {
+      "index": 2,
+      "text": "print(\"hello world\")\n"
+    }
+  ],
+  "created": 1649789289,
+  "object": "edit"
+}
+2022-04-12 18:48:10.895236 fix syntax errors 3 ['print("hello world")\n', 'def helloworld():\n    print("hello")\n\nhelloworld()\n', 'print("hello world")\n']
+2022-04-12 18:48:10.895254 size on output set 4
+2022-04-12 18:48:10.895264 num operations 2
+2022-04-12 18:48:10.895268 size on input set 1
+2022-04-12 18:48:13.600035 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A + 1))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    A, B, T = map(int, input().split())  # type: int, int, int\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A + 1))\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649789290,
+  "object": "edit"
+}
+2022-04-12 18:48:13.600219 fix spelling mistakes 3 ["# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A + 1))\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    A, B, T = map(int, input().split())  # type: int, int, int\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A + 1))\n\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-12 18:48:13.600241 size on output set 3
+2022-04-12 18:48:13.600248 size on input set 3
+2022-04-12 18:48:16.938728 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    N, M = map(int, input().split())\n    AC_count = 0\n    penalty_count = 0\n    for i in range(M):\n        p, s = input().split()\n        if s == \"AC\":\n            AC_count += 1\n            penalty_count += int(p)\n    print(AC_count, penalty_count)\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B = map(int, input().split())\n    print(B * (A // B + 1))\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649789293,
+  "object": "edit"
+}
+2022-04-12 18:48:16.938897 fix syntax errors 3 ['# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    N, M = map(int, input().split())\n    AC_count = 0\n    penalty_count = 0\n    for i in range(M):\n        p, s = input().split()\n        if s == "AC":\n            AC_count += 1\n            penalty_count += int(p)\n    print(AC_count, penalty_count)\n\n\nif __name__ == \'__main__\':\n    main()\n', "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n", "# https://atcoder.jp/contests/abc151/tasks/abc151_c\n\n\ndef main():\n    A, B = map(int, input().split())\n    print(B * (A // B + 1))\n\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-12 18:48:19.035989 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649789296,
+  "object": "edit"
+}
+2022-04-12 18:48:19.036205 fix syntax errors 3 ["\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * (T // A))\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-12 18:48:22.130815 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    ans = 0\n\n    for i in range(N):\n        ans = max(ans, A[i] - A[i-1])\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * ((T + A - 1) // A))\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\ndef main():\n    a, b, t = map(int, input().split())\n    print(b * (t // a + 1))\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1649789299,
+  "object": "edit"
+}
+2022-04-12 18:48:22.130995 fix syntax errors 3 ["\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    ans = 0\n\n    for i in range(N):\n        ans = max(ans, A[i] - A[i-1])\n\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    A, B, T = map(int, input().split())\n    print(B * ((T + A - 1) // A))\n\n\nif __name__ == '__main__':\n    main()\n", "\ndef main():\n    a, b, t = map(int, input().split())\n    print(b * (t // a + 1))\n\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-12 18:48:22.131018 size on output set 8

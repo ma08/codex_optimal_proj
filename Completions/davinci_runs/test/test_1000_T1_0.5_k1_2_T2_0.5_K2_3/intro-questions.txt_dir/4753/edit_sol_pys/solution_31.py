@@ -1,0 +1,27 @@
+
+
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+
+# SOLUTION
+
+# Accept the number of vertex
+n = int(input())
+
+# Initialize the number of intersections
+intersections = 0
+
+# Initialize the number of intersections
+i = n - 3
+
+# Initialize the count of diagonals that intersect
+d_i = 0
+
+# For each diagonal
+for _ in range(d):
+    # Add the number of intersections for this diagonal
+    d_i += i
+    # Decrement the number of intersections
+    i -= 1
+
+# Print the number of intersections
+print(d_i)

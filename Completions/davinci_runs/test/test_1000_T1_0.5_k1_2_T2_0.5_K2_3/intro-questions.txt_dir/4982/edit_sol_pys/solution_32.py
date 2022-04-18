@@ -1,0 +1,53 @@
+
+
+import sys
+
+def main():
+    lines = sys.stdin.readlines()
+
+    # Parse the lines
+    commands = []
+    for line in lines:
+        line = line.strip().split()
+
+        if line[0] == "buy":
+            commands.append(["buy", int(line[1]), int(line[2])])
+        elif line[0] == "sell":
+            commands.append(["sell", int(line[1]), int(line[2])])
+        elif line[0] == "split":
+            commands.append(["split", int(line[1])])
+        elif line[0] == "merge": 
+            commands.append(["merge", int(line[1])]) 
+        elif line[0] == "die":
+            commands.append(["die", int(line[1])])
+        else:
+            print("Error: Invalid command " + line[0])
+            return
+
+    shares = 0
+    total_cost = 0
+    total_price = 0
+    for command in commands:
+        if command[0] == "buy":
+            shares += command[1]
+            total_cost += command[1] * command[2]
+        elif command[0] == "sell":
+            shares -= command[1]
+            total_price += command[1] * command[2]
+        elif command[0] == "split":
+            shares *= command[1]
+            total_cost *= command[1]
+        elif command[0] == "merge":
+            if shares % command[1] != 0:
+                total_price += (shares % command[1]) * (total_cost / shares)
+                shares -= (shares % command[1])
+            shares //= command[1]
+            total_cost //= command[1]
+        elif command[0] == "die":
+            total_price += shares * command[1]
+            total_price -= total_price * 0.3
+            break
+
+    print(total_price - total_cost)
+
+main()

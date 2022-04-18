@@ -1,0 +1,156 @@
+2022-04-13 17:36:49.056674 """
+The only difference between easy and hard versions is that you should complete all the projects in easy version but this is not necessary in hard version.
+
+Polycarp is a very famous freelancer. His current rating is $r$ units.
+
+Some very rich customers asked him to complete some projects for their companies. To complete the $i$-th project, Polycarp needs to have at least $a_i$ units of rating; after he completes this project, his rating will change by $b_i$ (his rating will increase or decrease by $b_i$) ($b_i$ can be positive or negative). Polycarp's rating should not fall below zero because then people won't trust such a low rated freelancer.
+
+Polycarp can choose the order in which he completes projects. Furthermore, he can even skip some projects altogether.
+
+To gain more experience (and money, of course) Polycarp wants to choose the subset of projects having maximum possible size and the order in which he will complete them, so he has enough rating before starting each project, and has non-negative rating after completing each project.
+
+Your task is to calculate the maximum possible size of such subset of projects.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $r$ ($1 \le n \le 100, 1 \le r \le 30000$) — the number of projects and the initial rating of Polycarp, respectively.
+
+The next $n$ lines contain projects, one per line. The $i$-th project is represented as a pair of integers $a_i$ and $b_i$ ($1 \le a_i \le 30000$, $-300 \le b_i \le 300$) — the rating required to complete the $i$-th project and the rating change after the project completion.
+
+
+-----Output-----
+
+Print one integer — the size of the maximum possible subset (possibly, empty) of projects Polycarp can choose.
+
+
+-----Examples-----
+Input
+3 4
+4 6
+10 -2
+8 -1
+
+Output
+3
+
+Input
+5 20
+45 -6
+34 -15
+10 34
+1 27
+40 -45
+
+Output
+5
+
+Input
+3 2
+300 -300
+1 299
+1 123
+
+Output
+3
+"""
+2022-04-13 17:36:49.056689 --------------------------
+2022-04-13 17:37:07.096318 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, r = map(int, input().split())\nprojects = []\nfor i in range(n):\n    projects.append(list(map(int, input().split())))\n\nprojects.sort(key=lambda x: x[1])\n\ncount = 0\nfor project in projects:\n    if r >= project[0]:\n        count += 1\n        r += project[1]\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef Polycarp_and_the_best_offers(n, r, a, b):\n\tdp = [0] * (r + 1)\n\n\tfor i in range(n):\n\t\tfor j in range(r, a[i] - 1, -1):\n\t\t\tdp[j] = max(dp[j], dp[j - a[i]] + b[i])\n\n\treturn sum(1 for x in dp if x >= 0)\n\nn, r = map(int, sys.stdin.readline().split())\na = []\nb = []\n\nfor i in range(n):\n\tai, bi = map(int, sys.stdin.readline().split())\n\ta.append(ai)\n\tb.append(bi)\n\nprint(Polycarp_and_the_best_offers(n, r, a, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, r = map(int, input().split())\n\n# a[i] = [a_i, b_i]\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# sort a by a_i\na.sort(key=lambda x: x[0])\n\n# max_n = max number of projects\nmax_n = 0\n# r_max = max rating after completing projects\nr_max = r\n\nfor i in range(n):\n    if r_max >= a[i][0]:\n        r_max += a[i][1]\n        max_n += 1\n    else:\n        break\n\nprint(max_n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nn, r = [int(x) for x in stdin.readline().split()]\na = []\nb = []\nfor i in range(n):\n    ai, bi = [int(x) for x in stdin.readline().split()]\n    a.append(ai)\n    b.append(bi)\n\ndp = [0] * (r + 1)\nfor i in range(r + 1):\n    for j in range(n):\n        if i >= a[j] and dp[i - a[j]] + b[j] > 0:\n            dp[i] = max(dp[i], dp[i - a[j]] + b[j])\n\nprint(max(dp))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, r = map(int, sys.stdin.readline().split())\n    a = [0] * n\n    b = [0] * n\n    for i in range(n):\n        a[i], b[i] = map(int, sys.stdin.readline().split())\n\n    dp = [0] * (r + 1)\n    for i in range(n):\n        for j in range(r, a[i] - 1, -1):\n            dp[j] = max(dp[j], dp[j - a[i]] + b[i])\n\n    cnt = 0\n    for i in range(r + 1):\n        if dp[i] >= 0:\n            cnt += 1\n\n    print(cnt)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, r = [int(x) for x in input().split()]\n    projects = []\n    for i in range(n):\n        projects.append([int(x) for x in input().split()])\n    projects.sort(key=lambda x: x[0], reverse=True)\n    count = 0\n    for a,b in projects:\n        if r - a >= 0:\n            r += b\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, r = map(int, input().split())\n    projects = []\n    for i in range(n):\n        a, b = map(int, input().split())\n        projects.append((a, b))\n    projects.sort()\n    num_proj = 0\n    for p in projects:\n        if r >= p[0]:\n            r += p[1]\n            num_proj += 1\n        else:\n            break\n    print(num_proj)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649871409,
+  "id": "cmpl-4wbD7QlsXM2NqG5RKnis9PlbrlfKz",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:37:07.096575 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, r = map(int, input().split())\nprojects = []\nfor i in range(n):\n    projects.append(list(map(int, input().split())))\n\nprojects.sort(key=lambda x: x[1])\n\ncount = 0\nfor project in projects:\n    if r >= project[0]:\n        count += 1\n        r += project[1]\nprint(count)"
+}
+2022-04-13 17:37:07.096615 REASON stop
+2022-04-13 17:37:07.110514 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef Polycarp_and_the_best_offers(n, r, a, b):\n\tdp = [0] * (r + 1)\n\n\tfor i in range(n):\n\t\tfor j in range(r, a[i] - 1, -1):\n\t\t\tdp[j] = max(dp[j], dp[j - a[i]] + b[i])\n\n\treturn sum(1 for x in dp if x >= 0)\n\nn, r = map(int, sys.stdin.readline().split())\na = []\nb = []\n\nfor i in range(n):\n\tai, bi = map(int, sys.stdin.readline().split())\n\ta.append(ai)\n\tb.append(bi)\n\nprint(Polycarp_and_the_best_offers(n, r, a, b))"
+}
+2022-04-13 17:37:07.110684 REASON stop
+2022-04-13 17:37:07.111066 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, r = map(int, input().split())\n\n# a[i] = [a_i, b_i]\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# sort a by a_i\na.sort(key=lambda x: x[0])\n\n# max_n = max number of projects\nmax_n = 0\n# r_max = max rating after completing projects\nr_max = r\n\nfor i in range(n):\n    if r_max >= a[i][0]:\n        r_max += a[i][1]\n        max_n += 1\n    else:\n        break\n\nprint(max_n)"
+}
+2022-04-13 17:37:07.111116 REASON stop
+2022-04-13 17:37:07.131094 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nn, r = [int(x) for x in stdin.readline().split()]\na = []\nb = []\nfor i in range(n):\n    ai, bi = [int(x) for x in stdin.readline().split()]\n    a.append(ai)\n    b.append(bi)\n\ndp = [0] * (r + 1)\nfor i in range(r + 1):\n    for j in range(n):\n        if i >= a[j] and dp[i - a[j]] + b[j] > 0:\n            dp[i] = max(dp[i], dp[i - a[j]] + b[j])\n\nprint(max(dp))"
+}
+2022-04-13 17:37:07.131203 REASON stop
+2022-04-13 17:37:07.147772 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, r = map(int, sys.stdin.readline().split())\n    a = [0] * n\n    b = [0] * n\n    for i in range(n):\n        a[i], b[i] = map(int, sys.stdin.readline().split())\n\n    dp = [0] * (r + 1)\n    for i in range(n):\n        for j in range(r, a[i] - 1, -1):\n            dp[j] = max(dp[j], dp[j - a[i]] + b[i])\n\n    cnt = 0\n    for i in range(r + 1):\n        if dp[i] >= 0:\n            cnt += 1\n\n    print(cnt)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:37:07.147901 REASON stop
+2022-04-13 17:37:07.148745 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, r = [int(x) for x in input().split()]\n    projects = []\n    for i in range(n):\n        projects.append([int(x) for x in input().split()])\n    projects.sort(key=lambda x: x[0], reverse=True)\n    count = 0\n    for a,b in projects:\n        if r - a >= 0:\n            r += b\n            count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:37:07.148802 REASON stop
+2022-04-13 17:37:07.150007 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, r = map(int, input().split())\n    projects = []\n    for i in range(n):\n        a, b = map(int, input().split())\n        projects.append((a, b))\n    projects.sort()\n    num_proj = 0\n    for p in projects:\n        if r >= p[0]:\n            r += p[1]\n            num_proj += 1\n        else:\n            break\n    print(num_proj)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:37:07.150081 REASON stop

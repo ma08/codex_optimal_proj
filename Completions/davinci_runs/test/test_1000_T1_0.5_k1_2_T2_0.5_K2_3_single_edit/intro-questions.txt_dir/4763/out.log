@@ -1,0 +1,147 @@
+2022-04-09 22:03:38.222684 """
+In a game of darts a player throws darts at a board consisting of 20 different sections labelled $1$ to $20$. When the dart hits section $i$ the player scores $i$ points. Each section also contains a double area and a triple area. When the dart hits the double area of section $i$ the player scores $2 i$ points, and when the dart hits the triple area the player scores $3 i$ points, instead of $i$ points. When throwing three darts, the player can therefore score a total of at most $180$ points by throwing all three darts in the triple area of section $20$. 
+
+Given a target score, output at most three throw scores such that their sum is equal to the given target score. Note that the centre of the dartboard, which is usually called bullseye, is not taken into account is this problem.
+
+-----Input-----
+The input consists of a single integer $n$ ($1\leq n \leq 180$), the target score.
+
+-----Output-----
+If the target score can be achieved, output at most three lines, each of the form “single $d$”, “double $d$”, or “triple $d$”, where $d$ is an integer between $1$ and $20$ (inclusive), such that the sum of these scores is equal to $n$. Otherwise, output “impossible”. If there are multiple valid answers you may output any of them.
+
+-----Examples-----
+Sample Input 1:
+180
+Sample Output 1:
+triple 20
+triple 20
+triple 20
+
+Sample Input 2:
+96
+Sample Output 2:
+triple 19
+double 15
+single 9
+"""
+2022-04-09 22:03:38.222707 --------------------------
+2022-04-09 22:04:08.477212 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nif N < 1 or N > 180:\n    print(\"impossible\")\nelse:\n    for i in range(20, 0, -1):\n        if N >= i*3:\n            print(\"triple\", i)\n            N -= i*3\n            break\n    for i in range(20, 0, -1):\n        if N >= i*2:\n            print(\"double\", i)\n            N -= i*2\n            break\n    for i in range(20, 0, -1):\n        if N >= i:\n            print(\"single\", i)\n            N -= i\n            break\n    if N != 0:\n        print(\"impossible\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    target_score = int(input())\n\n    # Check if target score is impossible\n    if target_score > 180:\n        print(\"impossible\")\n        return\n\n    # Loop through scores of single, double, and triple\n    while target_score > 0:\n        # Find the highest single score\n        if target_score >= 20:\n            single = 20\n        else:\n            single = target_score\n\n        # Find the highest double score\n        if target_score >= 40:\n            double = 40\n        else:\n            double = target_score // 2\n\n        # Find the highest triple score\n        if target_score >= 60:\n            triple = 60\n        else:\n            triple = target_score // 3\n\n        # Print the highest score\n        if single >= double and single >= triple:\n            print(\"single\", single)\n            target_score -= single\n        elif double >= single and double >= triple:\n            print(\"double\", double)\n            target_score -= double * 2\n        else:\n            print(\"triple\", triple)\n            target_score -= triple * 3\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n\n    if n <= 60:\n        print(\"impossible\")\n        return\n\n    # Find the largest number of triples that can be used\n    num_triples = n // 60\n    num_triples = min(num_triples, 3)\n    n -= num_triples * 60\n\n    # Find the largest number of doubles that can be used\n    num_doubles = n // 30\n    num_doubles = min(num_doubles, 3-num_triples)\n    n -= num_doubles * 30\n\n    # Find the largest number of singles that can be used\n    num_singles = n // 10\n    num_singles = min(num_singles, 3-num_triples-num_doubles)\n    n -= num_singles * 10\n\n    if n > 0:\n        print(\"impossible\")\n        return\n\n    for i in range(num_triples):\n        print(\"triple 20\")\n    for i in range(num_doubles):\n        print(\"double 20\")\n    for i in range(num_singles):\n        print(\"single 20\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    if n == 180:\n        print('triple 20')\n        print('triple 20')\n        print('triple 20')\n        return\n    if n % 3 == 0:\n        print('triple ' + str(n // 3))\n        return\n    if n % 2 == 0:\n        print('double ' + str(n // 2))\n        return\n    print('single ' + str(n))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nif n <= 60:\n    print(\"impossible\")\nelse:\n    if n % 3 == 0:\n        print(\"triple\", n // 3)\n        print(\"triple\", n // 3)\n        print(\"triple\", n // 3)\n    elif n % 3 == 1:\n        print(\"triple\", n // 3 - 1)\n        print(\"triple\", n // 3 - 1)\n        print(\"double\", n // 3 + 6)\n    else:\n        print(\"triple\", n // 3 - 1)\n        print(\"triple\", n // 3 - 1)\n        print(\"single\", n // 3 + 7)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nif n % 3 != 0:\n    print(\"impossible\")\nelse:\n    n //= 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"impossible\")\n    else:\n        if n % 2 == 0:\n            print(\"double\", n // 2)\n        else:\n            print(\"single\", n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nif n % 3 == 0:\n    print(\"triple\", n // 3)\nelif n % 2 == 0:\n    print(\"double\", n // 2)\nelse:\n    print(\"single\", n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    if n == 0:\n        print(\"impossible\")\n    elif n <= 20:\n        print(\"single\", n)\n    elif n <= 40:\n        print(\"double\", n//2)\n    elif n <= 60:\n        print(\"single\", 20)\n        print(\"double\", (n-20)//2)\n    elif n <= 80:\n        print(\"double\", 20)\n        print(\"single\", (n-40)//2)\n    elif n <= 90:\n        print(\"triple\", n//3)\n    elif n <= 110:\n        print(\"single\", 20)\n        print(\"triple\", (n-20)//3)\n    elif n <= 130:\n        print(\"double\", 20)\n        print(\"triple\", (n-40)//3)\n    elif n <= 150:\n        print(\"triple\", 20)\n        print(\"single\", (n-60)//3)\n    elif n <= 180:\n        print(\"triple\", 20)\n        print(\"double\", (n-60)//3)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649556218,
+  "id": "cmpl-4vHDOJbnM7RiEgPtjqbw8D3VrYL42",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:04:08.477773 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nif N < 1 or N > 180:\n    print(\"impossible\")\nelse:\n    for i in range(20, 0, -1):\n        if N >= i*3:\n            print(\"triple\", i)\n            N -= i*3\n            break\n    for i in range(20, 0, -1):\n        if N >= i*2:\n            print(\"double\", i)\n            N -= i*2\n            break\n    for i in range(20, 0, -1):\n        if N >= i:\n            print(\"single\", i)\n            N -= i\n            break\n    if N != 0:\n        print(\"impossible\")"
+}
+2022-04-09 22:04:08.477835 REASON stop
+2022-04-09 22:04:08.479222 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.479296 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    target_score = int(input())\n\n    # Check if target score is impossible\n    if target_score > 180:\n        print(\"impossible\")\n        return\n\n    # Loop through scores of single, double, and triple\n    while target_score > 0:\n        # Find the highest single score\n        if target_score >= 20:\n            single = 20\n        else:\n            single = target_score\n\n        # Find the highest double score\n        if target_score >= 40:\n            double = 40\n        else:\n            double = target_score // 2\n\n        # Find the highest triple score\n        if target_score >= 60:\n            triple = 60\n        else:\n            triple = target_score // 3\n\n        # Print the highest score\n        if single >= double and single >= triple:\n            print(\"single\", single)\n            target_score -= single\n        elif double >= single and double >= triple:\n            print(\"double\", double)\n            target_score -= double * 2\n        else:\n            print(\"triple\", triple)\n            target_score -= triple * 3\n\nmain()"
+}
+2022-04-09 22:04:08.479500 REASON stop
+2022-04-09 22:04:08.480177 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.480252 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n\n    if n <= 60:\n        print(\"impossible\")\n        return\n\n    # Find the largest number of triples that can be used\n    num_triples = n // 60\n    num_triples = min(num_triples, 3)\n    n -= num_triples * 60\n\n    # Find the largest number of doubles that can be used\n    num_doubles = n // 30\n    num_doubles = min(num_doubles, 3-num_triples)\n    n -= num_doubles * 30\n\n    # Find the largest number of singles that can be used\n    num_singles = n // 10\n    num_singles = min(num_singles, 3-num_triples-num_doubles)\n    n -= num_singles * 10\n\n    if n > 0:\n        print(\"impossible\")\n        return\n\n    for i in range(num_triples):\n        print(\"triple 20\")\n    for i in range(num_doubles):\n        print(\"double 20\")\n    for i in range(num_singles):\n        print(\"single 20\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:04:08.480407 REASON stop
+2022-04-09 22:04:08.480960 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.480972 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    if n == 180:\n        print('triple 20')\n        print('triple 20')\n        print('triple 20')\n        return\n    if n % 3 == 0:\n        print('triple ' + str(n // 3))\n        return\n    if n % 2 == 0:\n        print('double ' + str(n // 2))\n        return\n    print('single ' + str(n))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:04:08.481019 REASON stop
+2022-04-09 22:04:08.481787 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.481827 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nif n <= 60:\n    print(\"impossible\")\nelse:\n    if n % 3 == 0:\n        print(\"triple\", n // 3)\n        print(\"triple\", n // 3)\n        print(\"triple\", n // 3)\n    elif n % 3 == 1:\n        print(\"triple\", n // 3 - 1)\n        print(\"triple\", n // 3 - 1)\n        print(\"double\", n // 3 + 6)\n    else:\n        print(\"triple\", n // 3 - 1)\n        print(\"triple\", n // 3 - 1)\n        print(\"single\", n // 3 + 7)"
+}
+2022-04-09 22:04:08.481924 REASON stop
+2022-04-09 22:04:08.482467 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.482511 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nif n % 3 != 0:\n    print(\"impossible\")\nelse:\n    n //= 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"triple\", n // 3)\n        n = n % 3\n    if n > 20:\n        print(\"impossible\")\n    else:\n        if n % 2 == 0:\n            print(\"double\", n // 2)\n        else:\n            print(\"single\", n)"
+}
+2022-04-09 22:04:08.482596 REASON stop
+2022-04-09 22:04:08.483168 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.483207 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nif n % 3 == 0:\n    print(\"triple\", n // 3)\nelif n % 2 == 0:\n    print(\"double\", n // 2)\nelse:\n    print(\"single\", n)"
+}
+2022-04-09 22:04:08.483274 REASON stop
+2022-04-09 22:04:08.483804 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'
+2022-04-09 22:04:08.483840 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    if n == 0:\n        print(\"impossible\")\n    elif n <= 20:\n        print(\"single\", n)\n    elif n <= 40:\n        print(\"double\", n//2)\n    elif n <= 60:\n        print(\"single\", 20)\n        print(\"double\", (n-20)//2)\n    elif n <= 80:\n        print(\"double\", 20)\n        print(\"single\", (n-40)//2)\n    elif n <= 90:\n        print(\"triple\", n//3)\n    elif n <= 110:\n        print(\"single\", 20)\n        print(\"triple\", (n-20)//3)\n    elif n <= 130:\n        print(\"double\", 20)\n        print(\"triple\", (n-40)//3)\n    elif n <= 150:\n        print(\"triple\", 20)\n        print(\"single\", (n-60)//3)\n    elif n <= 180:\n        print(\"triple\", 20)\n        print(\"double\", (n-60)//3)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:04:08.483921 REASON stop
+2022-04-09 22:04:08.484271 test/intro-questions.txt_dir/4763/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4763/solutions.json'

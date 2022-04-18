@@ -1,0 +1,102 @@
+2022-04-09 20:05:18.794839 """
+Easy and hard versions are actually different problems, so read statements of both problems completely and carefully.
+
+Summer vacation has started so Alice and Bob want to play and joy, but... Their mom doesn't think so. She says that they have to read some amount of books before all entertainments. Alice and Bob will read each book together to end this exercise faster.
+
+There are $n$ books in the family library. The $i$-th book is described by three integers: $t_i$ — the amount of time Alice and Bob need to spend to read it, $a_i$ (equals $1$ if Alice likes the $i$-th book and $0$ if not), and $b_i$ (equals $1$ if Bob likes the $i$-th book and $0$ if not).
+
+So they need to choose some books from the given $n$ books in such a way that:
+
+  Alice likes at least $k$ books from the chosen set and Bob likes at least $k$ books from the chosen set;  the total reading time of these books is minimized (they are children and want to play and joy as soon a possible). 
+
+The set they choose is the same for both Alice an Bob (it's shared between them) and they read all books together, so the total reading time is the sum of $t_i$ over all books that are in the chosen set.
+
+Your task is to help them and find any suitable set of books or determine that it is impossible to find such a set.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 2 \cdot 10^5$).
+
+The next $n$ lines contain descriptions of books, one description per line: the $i$-th line contains three integers $t_i$, $a_i$ and $b_i$ ($1 \le t_i \le 10^4$, $0 \le a_i, b_i \le 1$), where:
+
+  $t_i$ — the amount of time required for reading the $i$-th book;  $a_i$ equals $1$ if Alice likes the $i$-th book and $0$ otherwise;  $b_i$ equals $1$ if Bob likes the $i$-th book and $0$ otherwise. 
+
+
+-----Output-----
+
+If there is no solution, print only one integer -1. Otherwise print one integer $T$ — the minimum total reading time of the suitable set of books.
+
+
+-----Examples-----
+Input
+8 4
+7 1 1
+2 1 1
+4 0 1
+8 1 1
+1 0 1
+1 1 1
+1 0 1
+3 0 0
+
+Output
+18
+
+Input
+5 2
+6 0 0
+9 0 0
+1 0 1
+2 1 1
+5 1 0
+
+Output
+8
+
+Input
+5 3
+3 0 0
+2 1 0
+3 1 0
+5 0 1
+3 0 1
+
+Output
+-1
+"""
+2022-04-09 20:05:18.794859 --------------------------
+2022-04-09 20:05:52.608240 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    reader = (tuple(map(int, line.split())) for line in sys.stdin)\n    n, k = next(reader)\n    books = sorted(reader, key=lambda x: x[0])\n\n    # if there are enough books that Alice likes, then the optimal solution\n    # will be the k books that Alice likes with the smallest cost\n    alice_likes = [t for t, a, b in books if a == 1]\n    if len(alice_likes) >= k:\n        print(sum(alice_likes[:k]))\n        return\n\n    # otherwise, we need to find the minimum number of books\n    # that Bob likes and add them to the books that Alice likes\n    bob_likes = [t for t, a, b in books if b == 1]\n    num_extra_bob = k - len(alice_likes)\n    print(sum(alice_likes) + sum(bob_likes[:num_extra_bob]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\nSolution outline\n\t- Let X and Y be the number of books liked by Alice and Bob respectively.\n\t- We need to find a set of books with X >= k, Y >= k and sum(t_i) is minimized.\n\t  This means, we need to find a set of books with X >= k and sum(t_i) is minimized.\n\t  Then, we find a set of books with Y >= k and sum(t_i) is minimized.\n\t- For the first set, we can keep track of the number of books like by Alice in a sliding window of size k.\n\t  We can keep track of the sum of t_i in the window as well, and keep track of the minimum sum seen so far.\n\t  This can be done in linear time.\n\t- For the second set, we can keep track of the number of books like by Bob in a sliding window of size k.\n\t  We can keep track of the sum of t_i in the window as well, and keep track of the minimum sum seen so far.\n\t  This can be done in linear time.\n\t- We return the minimum of the two sums.\n\"\"\"\ndef min_books_to_read(t, a, b, k):\n\t# Find minimum sum of t_i, such that sum(a_i) >= k\n\tmin_sum = sum(t[:k])\n\ta_sum = sum(a[:k])\n\tif a_sum < k:\n\t\treturn -1\n\n\tfor i in xrange(k, len(t)):\n\t\ta_sum += a[i] - a[i-k]\n\t\tif a_sum < k:\n\t\t\tbreak\n\n\t\tmin_sum = min(min_sum, sum(t[i-k+1:i+1]))\n\n\t# Find minimum sum of t_i, such that sum(b_i) >= k\n\tmin_sum2 = sum(t[:k])\n\tb_sum = sum(b[:k])\n\tif b_sum < k:\n\t\treturn -1\n\n\tfor i in xrange(k, len(t)):\n\t\tb_sum += b[i] - b[i-k]\n\t\tif b_sum < k:\n\t\t\tbreak\n\n\t\tmin_sum2 = min(min_sum2, sum(t[i-k+1:i+1]))\n\n\treturn min(min_sum, min_sum2)\n\nif __name__ == '__main__':\n\tn,k = map(int, raw_input().strip().split())\n\tt = []\n\ta = []\n\tb = []\n\tfor i in xrange(n):\n\t\tt_i, a_i, b_i = map(int, raw_input().strip().split())\n\t\tt.append(t_i)\n\t\ta.append(a_i)\n\t\tb.append(b_i)\n\n\tprint min_books_to_read(t, a, b, k)"
+    }
+  ],
+  "created": 1649549119,
+  "id": "cmpl-4vFMtUxhsOPNLmTfPrKD5OKXe1erh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:05:52.608490 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    reader = (tuple(map(int, line.split())) for line in sys.stdin)\n    n, k = next(reader)\n    books = sorted(reader, key=lambda x: x[0])\n\n    # if there are enough books that Alice likes, then the optimal solution\n    # will be the k books that Alice likes with the smallest cost\n    alice_likes = [t for t, a, b in books if a == 1]\n    if len(alice_likes) >= k:\n        print(sum(alice_likes[:k]))\n        return\n\n    # otherwise, we need to find the minimum number of books\n    # that Bob likes and add them to the books that Alice likes\n    bob_likes = [t for t, a, b in books if b == 1]\n    num_extra_bob = k - len(alice_likes)\n    print(sum(alice_likes) + sum(bob_likes[:num_extra_bob]))\n\nmain()"
+}
+2022-04-09 20:05:52.608555 REASON stop
+2022-04-09 20:05:52.609881 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\nSolution outline\n\t- Let X and Y be the number of books liked by Alice and Bob respectively.\n\t- We need to find a set of books with X >= k, Y >= k and sum(t_i) is minimized.\n\t  This means, we need to find a set of books with X >= k and sum(t_i) is minimized.\n\t  Then, we find a set of books with Y >= k and sum(t_i) is minimized.\n\t- For the first set, we can keep track of the number of books like by Alice in a sliding window of size k.\n\t  We can keep track of the sum of t_i in the window as well, and keep track of the minimum sum seen so far.\n\t  This can be done in linear time.\n\t- For the second set, we can keep track of the number of books like by Bob in a sliding window of size k.\n\t  We can keep track of the sum of t_i in the window as well, and keep track of the minimum sum seen so far.\n\t  This can be done in linear time.\n\t- We return the minimum of the two sums.\n\"\"\"\ndef min_books_to_read(t, a, b, k):\n\t# Find minimum sum of t_i, such that sum(a_i) >= k\n\tmin_sum = sum(t[:k])\n\ta_sum = sum(a[:k])\n\tif a_sum < k:\n\t\treturn -1\n\n\tfor i in xrange(k, len(t)):\n\t\ta_sum += a[i] - a[i-k]\n\t\tif a_sum < k:\n\t\t\tbreak\n\n\t\tmin_sum = min(min_sum, sum(t[i-k+1:i+1]))\n\n\t# Find minimum sum of t_i, such that sum(b_i) >= k\n\tmin_sum2 = sum(t[:k])\n\tb_sum = sum(b[:k])\n\tif b_sum < k:\n\t\treturn -1\n\n\tfor i in xrange(k, len(t)):\n\t\tb_sum += b[i] - b[i-k]\n\t\tif b_sum < k:\n\t\t\tbreak\n\n\t\tmin_sum2 = min(min_sum2, sum(t[i-k+1:i+1]))\n\n\treturn min(min_sum, min_sum2)\n\nif __name__ == '__main__':\n\tn,k = map(int, raw_input().strip().split())\n\tt = []\n\ta = []\n\tb = []\n\tfor i in xrange(n):\n\t\tt_i, a_i, b_i = map(int, raw_input().strip().split())\n\t\tt.append(t_i)\n\t\ta.append(a_i)\n\t\tb.append(b_i)\n\n\tprint min_books_to_read(t, a, b, k)"
+}
+2022-04-09 20:05:52.609958 REASON stop

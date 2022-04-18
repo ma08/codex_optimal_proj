@@ -1,0 +1,36 @@
+
+
+n, m = [int(x) for x in input().split()]
+
+times = []
+for i in range(n):
+    times.append([int(x) for x in input().split()])
+
+#print(times)
+
+# sort the times by the first stage of the race
+times.sort(key = lambda x: x[0])
+
+#print(times)
+
+# sort the times by the second stage of the race
+times.sort(key = lambda x: x[1])
+
+#print(times)
+
+# sort the times by the third stage of the race
+times.sort(key = lambda x: x[2])
+
+#print(times)
+
+# now we can just add up the times
+total_times = []
+for i in range(n):
+    total_time = 0
+    for j in range(m):
+        total_time += times[i][j]
+    total_times.append(total_time)
+
+for i in range(n):
+    print(total_times[i], end=" ")
+print()

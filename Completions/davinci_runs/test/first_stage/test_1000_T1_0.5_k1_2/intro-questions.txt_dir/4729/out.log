@@ -1,0 +1,171 @@
+2022-04-09 21:39:50.435469 """
+Insecure Inc. has decided to shift directions after a failed attempt at developing a new encryption standard. Their new effort is a password system used to hide a password inside another string of characters we denote as a message. However, it is important that the message has a certain property relative to the hidden password.
+
+Let us assume that we denote the characters of the password as $ c_1 c_2 \ldots c_ P$ (although those characters need not be distinct). To be a valid message for the password, if you start from the beginning of the message and search for any character from the set $\{ c_1, \ldots , c_ P \} $, it must be that $c_1$ is the first that you find. Subsequently, if you continue looking from that point of the message for any character from the set $\{ c_2, \ldots , c_ P \} $, it must be that $c_2$ is the next that you find. Continuing in that manner, $c_3$ must be the next character from the set $\{ c_3, \ldots , c_ P\} $, and so on until reaching $c_ P$.
+
+For example, if the password is ABC, then the string HAPPYBIRTHDAYCACEY is a valid message.
+ - Notice that A is the first of the set $\{ $A, B, C$\} $ to appear in the message. (The initial H is not relevant.)
+ - Following the A that was found, the next occurrence from the set $\{ $B, C$\} $ is B.
+ - Following the B that was found, the next occurrence from the set $\{ $C$\} $ is indeed C.
+
+ (Note that the A in DAY is not relevant, since we are only looking for a C at this point, and the additional A and C in CACEY are not relevant, because we have already completed the password with the first C.)
+
+However, for the password ABC, the string TRAGICBIRTHDAYCACEY is not a valid message.
+ - While the A is the first of the set $\{ $A, B, C$\} $ to appear in the string,
+
+ the next occurrence from the set $\{ $B, C$\} $ is C rather than B.
+
+Also, the string HAPPYBIRTHDAY is not a valid message for the password ABC because the C never appears.
+
+As an example with duplicate letters in the password, consider the password SECRET. For this password, the string SOMECHORESARETOUGH is a valid message. In contrast, the string SOMECHEERSARETOUGH is not a valid message, because an extraneous E is found at the point when an R is first expected.
+
+-----Input-----
+The input consists of a single line containing two strings. The first string is the password, having length $P$, with $3 \leq P \leq 8$. The second string has length $S$, with $10 \leq S \leq 40$. Both strings will consist solely of uppercase letters. (That is, neither string can include whitespace, lowercase letters, digits, or other special characters.)
+
+-----Output-----
+Output a single line with the word PASS if the second string is a valid message for the password, or FAIL otherwise.
+
+
+
+-----Examples-----
+Sample Input 1:
+ABC HAPPYBIRTHDAYCACEY
+Sample Output 1:
+PASS
+
+Sample Input 2:
+ABC TRAGICBIRTHDAYCACEY
+Sample Output 2:
+FAIL
+
+Sample Input 3:
+ABC HAPPYBIRTHDAY
+Sample Output 3:
+FAIL
+
+Sample Input 4:
+SECRET SOMECHORESARETOUGH
+Sample Output 4:
+PASS
+"""
+2022-04-09 21:39:50.435495 --------------------------
+2022-04-09 21:40:17.829087 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    pw, msg = sys.stdin.readline().split()\n    pw_i = 0\n    for i in range(len(msg)):\n        if pw_i < len(pw) and msg[i] == pw[pw_i]:\n            pw_i += 1\n    if pw_i == len(pw):\n        print('PASS')\n    else:\n        print('FAIL')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Gets the input from the user\npassword = input().strip()\nmessage = input().strip()\n\n# Sets up the variables for the for loop\nj = 0\ni = 0\n\n# For loop that loops until the end of the password is reached\nwhile i < len(password):\n\n    # If the character at index i is found in the message, it sets the variable j to that index and adds 1 to i\n    if password[i] in message[j:]:\n        j = message[j:].index(password[i]) + j + 1\n        i += 1\n\n    # If the character at index i is not found in the message, it prints fail and breaks out of the loop\n    else:\n        print(\"FAIL\")\n        break\n\n# If the loop completes, it prints pass\nelse:\n    print(\"PASS\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION\n\np,s = input().split()\ni = 0\nfor c in p:\n    i = s.find(c, i)\n    if i == -1:\n        print('FAIL')\n        break\nelse:\n    print('PASS')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\npassword, message = input().split()\n\nfor i in range(len(password)):\n    if message.find(password[i]) == -1:\n        print(\"FAIL\")\n        break\n    else:\n        message = message[message.find(password[i])+1:]\nelse:\n    print(\"PASS\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    password = input()\n    message = input()\n\n    # Check if the password is valid\n    password_validity = check_password_validity(password)\n    if not password_validity:\n        print(\"FAIL\")\n        return\n\n    # Check if the message is valid\n    message_validity = check_message_validity(password, message)\n    if message_validity:\n        print(\"PASS\")\n    else:\n        print(\"FAIL\")\n\ndef check_password_validity(password):\n    # Check if the password is valid\n    if len(password) < 3 or len(password) > 8:\n        return False\n    return True\n\ndef check_message_validity(password, message):\n    # Check if the message is valid\n    if len(message) < 10 or len(message) > 40:\n        return False\n\n    # Check if the message is valid for the password\n    password_index = 0\n    for character in message:\n        if character == password[password_index]:\n            password_index += 1\n            if password_index == len(password):\n                return True\n    return False\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef check_password(password, message):\n    password = list(password)\n    for i in range(len(password)):\n        try:\n            index = message.index(password[i])\n        except ValueError:\n            return \"FAIL\"\n        message = message[index+1:]\n    return \"PASS\"\n\nprint(check_password(input(), input()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport fileinput\n\ndef main():\n    for line in fileinput.input():\n        line = line.strip()\n        password, message = line.split()\n        if is_valid_message(password, message):\n            print(\"PASS\")\n        else:\n            print(\"FAIL\")\n\ndef is_valid_message(password, message):\n    for letter in password:\n        if letter not in message:\n            return False\n    for i in range(len(password)-1):\n        if message.index(password[i])>message.index(password[i+1]):\n            return False\n    return True\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass_string, message_string = input().split()\n    pass_index = 0\n    for char in message_string:\n        if char == pass_string[pass_index]:\n            pass_index += 1\n        if pass_index == len(pass_string):\n            print('PASS')\n            return\n    print('FAIL')\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649554790,
+  "id": "cmpl-4vGqM8tlLBqMa9hhW2hDe5rqmrNkX",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:40:17.829609 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    pw, msg = sys.stdin.readline().split()\n    pw_i = 0\n    for i in range(len(msg)):\n        if pw_i < len(pw) and msg[i] == pw[pw_i]:\n            pw_i += 1\n    if pw_i == len(pw):\n        print('PASS')\n    else:\n        print('FAIL')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 21:40:17.829811 REASON stop
+2022-04-09 21:40:17.831461 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.831513 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Gets the input from the user\npassword = input().strip()\nmessage = input().strip()\n\n# Sets up the variables for the for loop\nj = 0\ni = 0\n\n# For loop that loops until the end of the password is reached\nwhile i < len(password):\n\n    # If the character at index i is found in the message, it sets the variable j to that index and adds 1 to i\n    if password[i] in message[j:]:\n        j = message[j:].index(password[i]) + j + 1\n        i += 1\n\n    # If the character at index i is not found in the message, it prints fail and breaks out of the loop\n    else:\n        print(\"FAIL\")\n        break\n\n# If the loop completes, it prints pass\nelse:\n    print(\"PASS\")"
+}
+2022-04-09 21:40:17.831625 REASON stop
+2022-04-09 21:40:17.832065 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.832097 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION\n\np,s = input().split()\ni = 0\nfor c in p:\n    i = s.find(c, i)\n    if i == -1:\n        print('FAIL')\n        break\nelse:\n    print('PASS')"
+}
+2022-04-09 21:40:17.832156 REASON stop
+2022-04-09 21:40:17.832379 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.832391 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\npassword, message = input().split()\n\nfor i in range(len(password)):\n    if message.find(password[i]) == -1:\n        print(\"FAIL\")\n        break\n    else:\n        message = message[message.find(password[i])+1:]\nelse:\n    print(\"PASS\")"
+}
+2022-04-09 21:40:17.832426 REASON stop
+2022-04-09 21:40:17.832675 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.832687 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    password = input()\n    message = input()\n\n    # Check if the password is valid\n    password_validity = check_password_validity(password)\n    if not password_validity:\n        print(\"FAIL\")\n        return\n\n    # Check if the message is valid\n    message_validity = check_message_validity(password, message)\n    if message_validity:\n        print(\"PASS\")\n    else:\n        print(\"FAIL\")\n\ndef check_password_validity(password):\n    # Check if the password is valid\n    if len(password) < 3 or len(password) > 8:\n        return False\n    return True\n\ndef check_message_validity(password, message):\n    # Check if the message is valid\n    if len(message) < 10 or len(message) > 40:\n        return False\n\n    # Check if the message is valid for the password\n    password_index = 0\n    for character in message:\n        if character == password[password_index]:\n            password_index += 1\n            if password_index == len(password):\n                return True\n    return False\n\nmain()"
+}
+2022-04-09 21:40:17.832736 REASON stop
+2022-04-09 21:40:17.832964 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.832975 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef check_password(password, message):\n    password = list(password)\n    for i in range(len(password)):\n        try:\n            index = message.index(password[i])\n        except ValueError:\n            return \"FAIL\"\n        message = message[index+1:]\n    return \"PASS\"\n\nprint(check_password(input(), input()))"
+}
+2022-04-09 21:40:17.833113 REASON stop
+2022-04-09 21:40:17.833755 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.833780 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport fileinput\n\ndef main():\n    for line in fileinput.input():\n        line = line.strip()\n        password, message = line.split()\n        if is_valid_message(password, message):\n            print(\"PASS\")\n        else:\n            print(\"FAIL\")\n\ndef is_valid_message(password, message):\n    for letter in password:\n        if letter not in message:\n            return False\n    for i in range(len(password)-1):\n        if message.index(password[i])>message.index(password[i+1]):\n            return False\n    return True\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:40:17.833852 REASON stop
+2022-04-09 21:40:17.834095 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'
+2022-04-09 21:40:17.834115 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass_string, message_string = input().split()\n    pass_index = 0\n    for char in message_string:\n        if char == pass_string[pass_index]:\n            pass_index += 1\n        if pass_index == len(pass_string):\n            print('PASS')\n            return\n    print('FAIL')\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 21:40:17.834208 REASON stop
+2022-04-09 21:40:17.834519 test/intro-questions.txt_dir/4729/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4729/solutions.json'

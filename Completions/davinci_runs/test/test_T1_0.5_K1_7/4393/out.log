@@ -1,0 +1,144 @@
+2022-04-13 20:29:07.931183 """
+Polycarp loves ciphers. He has invented his own cipher called repeating.
+
+Repeating cipher is used for strings. To encrypt the string $s=s_{1}s_{2} \dots s_{m}$ ($1 \le m \le 10$), Polycarp uses the following algorithm:
+
+  he writes down $s_1$ ones,  he writes down $s_2$ twice,  he writes down $s_3$ three times,  ...  he writes down $s_m$ $m$ times. 
+
+For example, if $s$="bab" the process is: "b" $\to$ "baa" $\to$ "baabbb". So the encrypted $s$="bab" is "baabbb".
+
+Given string $t$ — the result of encryption of some string $s$. Your task is to decrypt it, i. e. find the string $s$.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 55$) — the length of the encrypted string. The second line of the input contains $t$ — the result of encryption of some string $s$. It contains only lowercase Latin letters. The length of $t$ is exactly $n$.
+
+It is guaranteed that the answer to the test exists.
+
+
+-----Output-----
+
+Print such string $s$ that after encryption it equals $t$.
+
+
+-----Examples-----
+Input
+6
+baabbb
+
+Output
+bab
+Input
+10
+ooopppssss
+
+Output
+oops
+Input
+1
+z
+
+Output
+z
+"""
+2022-04-13 20:29:07.931193 --------------------------
+2022-04-13 20:29:25.210174 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef repeatingCipher(s):\n    num_list = []\n    letter_list = []\n    current_letter = s[0]\n    current_count = 1\n    for i in range(1, len(s)):\n        if s[i] == current_letter:\n            current_count += 1\n        else:\n            num_list.append(current_count)\n            letter_list.append(current_letter)\n            current_letter = s[i]\n            current_count = 1\n    num_list.append(current_count)\n    letter_list.append(current_letter)\n\n    result = \"\"\n    for i in range(len(letter_list)):\n        result += letter_list[i] * num_list[i]\n    return result\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    print(repeatingCipher(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nt = input()\n\ns = ''\nfor i in range(1, n+1):\n    if n%i != 0:\n        continue\n    for j in range(i):\n        if t[:n//i] == t[j*n//i:(j+1)*n//i]:\n            s += t[:n//i]\n            break\n    if len(s) == i:\n        break\n        \nprint(s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\nt = input()\ns = []\n\nfor i in range(n):\n    letter = t[i]\n    s.append(letter)\n    count = 1\n    while i < n-1 and t[i+1] == letter:\n        count += 1\n        i += 1\n    s.append(str(count))\n\nprint(''.join(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nt = input()\n\ns = \"\"\nfor i in range(n):\n    s += t[i]\n    t = t.replace(t[i], \"\")\n\nprint(s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef repeating_cipher(n, t):\n    s = \"\"\n    i = 1\n    while i <= n:\n        j = 0\n        while t[i+j] == t[i]:\n            j += 1\n        s += t[i]*(j+1)\n        i += j+1\n    return s\n\ndef main():\n    n = int(sys.stdin.readline())\n    t = sys.stdin.readline()\n    s = repeating_cipher(n, t)\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nt = input()\n\ndef decrypt(t):\n    \"\"\"\n    Decrypts string t, assuming it is encrypted by the repeating cipher\n    \"\"\"\n    s = \"\"\n    for i in range(1, n + 1):\n        char = t[i - 1]\n        occurences = t.count(char)\n        if occurences == i:\n            s += char\n            t = t.replace(char, \"\")\n    return s\n\nprint(decrypt(t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#input\nn = input()\nt = raw_input()\n\n#solution\ndef decrypt(n,t):\n    s = ''\n    for i in range(1,n+1):\n        count = n/i\n        if n%i == 0:\n            count -= 1\n        s += t[i-1]*count\n    return s\n\nprint decrypt(n,t)"
+    }
+  ],
+  "created": 1649881748,
+  "id": "cmpl-4wdtsYCB4Iyz757Ba2WJI5DjWqJdh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:29:25.210455 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef repeatingCipher(s):\n    num_list = []\n    letter_list = []\n    current_letter = s[0]\n    current_count = 1\n    for i in range(1, len(s)):\n        if s[i] == current_letter:\n            current_count += 1\n        else:\n            num_list.append(current_count)\n            letter_list.append(current_letter)\n            current_letter = s[i]\n            current_count = 1\n    num_list.append(current_count)\n    letter_list.append(current_letter)\n\n    result = \"\"\n    for i in range(len(letter_list)):\n        result += letter_list[i] * num_list[i]\n    return result\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    print(repeatingCipher(s))"
+}
+2022-04-13 20:29:25.210493 REASON stop
+2022-04-13 20:29:25.210909 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nt = input()\n\ns = ''\nfor i in range(1, n+1):\n    if n%i != 0:\n        continue\n    for j in range(i):\n        if t[:n//i] == t[j*n//i:(j+1)*n//i]:\n            s += t[:n//i]\n            break\n    if len(s) == i:\n        break\n        \nprint(s)"
+}
+2022-04-13 20:29:25.211025 REASON stop
+2022-04-13 20:29:25.211403 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\nt = input()\ns = []\n\nfor i in range(n):\n    letter = t[i]\n    s.append(letter)\n    count = 1\n    while i < n-1 and t[i+1] == letter:\n        count += 1\n        i += 1\n    s.append(str(count))\n\nprint(''.join(s))"
+}
+2022-04-13 20:29:25.211449 REASON stop
+2022-04-13 20:29:25.212562 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nt = input()\n\ns = \"\"\nfor i in range(n):\n    s += t[i]\n    t = t.replace(t[i], \"\")\n\nprint(s)"
+}
+2022-04-13 20:29:25.212608 REASON stop
+2022-04-13 20:29:25.224724 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef repeating_cipher(n, t):\n    s = \"\"\n    i = 1\n    while i <= n:\n        j = 0\n        while t[i+j] == t[i]:\n            j += 1\n        s += t[i]*(j+1)\n        i += j+1\n    return s\n\ndef main():\n    n = int(sys.stdin.readline())\n    t = sys.stdin.readline()\n    s = repeating_cipher(n, t)\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:29:25.224798 REASON stop
+2022-04-13 20:29:25.225397 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nt = input()\n\ndef decrypt(t):\n    \"\"\"\n    Decrypts string t, assuming it is encrypted by the repeating cipher\n    \"\"\"\n    s = \"\"\n    for i in range(1, n + 1):\n        char = t[i - 1]\n        occurences = t.count(char)\n        if occurences == i:\n            s += char\n            t = t.replace(char, \"\")\n    return s\n\nprint(decrypt(t))"
+}
+2022-04-13 20:29:25.225446 REASON stop
+2022-04-13 20:29:25.234862 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#input\nn = input()\nt = raw_input()\n\n#solution\ndef decrypt(n,t):\n    s = ''\n    for i in range(1,n+1):\n        count = n/i\n        if n%i == 0:\n            count -= 1\n        s += t[i-1]*count\n    return s\n\nprint decrypt(n,t)"
+}
+2022-04-13 20:29:25.234935 REASON stop

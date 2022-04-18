@@ -1,0 +1,163 @@
+2022-04-13 19:04:49.591439 """
+You are given a rectangular matrix of size $n \times m$ consisting of integers from $1$ to $2 \cdot 10^5$.
+
+In one move, you can:  choose any element of the matrix and change its value to any integer between $1$ and $n \cdot m$, inclusive;  take any column and shift it one cell up cyclically (see the example of such cyclic shift below). 
+
+A cyclic shift is an operation such that you choose some $j$ ($1 \le j \le m$) and set $a_{1, j} := a_{2, j}, a_{2, j} := a_{3, j}, \dots, a_{n, j} := a_{1, j}$ simultaneously. [Image] Example of cyclic shift of the first column 
+
+You want to perform the minimum number of moves to make this matrix look like this: $\left. \begin{array}{|c c c c|} \hline 1 & {2} & {\ldots} & {m} \\{m + 1} & {m + 2} & {\ldots} & {2m} \\{\vdots} & {\vdots} & {\ddots} & {\vdots} \\{(n - 1) m + 1} & {(n - 1) m + 2} & {\ldots} & {nm} \\ \hline \end{array} \right.$ 
+
+In other words, the goal is to obtain the matrix, where $a_{1, 1} = 1, a_{1, 2} = 2, \dots, a_{1, m} = m, a_{2, 1} = m + 1, a_{2, 2} = m + 2, \dots, a_{n, m} = n \cdot m$ (i.e. $a_{i, j} = (i - 1) \cdot m + j$) with the minimum number of moves performed.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 2 \cdot 10^5, n \cdot m \le 2 \cdot 10^5$) — the size of the matrix.
+
+The next $n$ lines contain $m$ integers each. The number at the line $i$ and position $j$ is $a_{i, j}$ ($1 \le a_{i, j} \le 2 \cdot 10^5$).
+
+
+-----Output-----
+
+Print one integer — the minimum number of moves required to obtain the matrix, where $a_{1, 1} = 1, a_{1, 2} = 2, \dots, a_{1, m} = m, a_{2, 1} = m + 1, a_{2, 2} = m + 2, \dots, a_{n, m} = n \cdot m$ ($a_{i, j} = (i - 1)m + j$).
+
+
+-----Examples-----
+Input
+3 3
+3 2 1
+1 2 3
+4 5 6
+
+Output
+6
+
+Input
+4 3
+1 2 3
+4 5 6
+7 8 9
+10 11 12
+
+Output
+0
+
+Input
+3 4
+1 6 3 4
+5 10 7 8
+9 2 11 12
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example, you can set $a_{1, 1} := 7, a_{1, 2} := 8$ and $a_{1, 3} := 9$ then shift the first, the second and the third columns cyclically, so the answer is $6$. It can be shown that you cannot achieve a better answer.
+
+In the second example, the matrix is already good so the answer is $0$.
+
+In the third example, it is enough to shift the second column cyclically twice to obtain a good matrix, so the answer is $2$.
+"""
+2022-04-13 19:04:49.591453 --------------------------
+2022-04-13 19:05:15.442181 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (i * m + j + 1):\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    res = 0\n    for j in range(m):\n        cnt = [0] * (n * m)\n        for i in range(n):\n            cnt[a[i][j] - 1] += 1\n        for i in range(1, n * m):\n            cnt[i] += cnt[i - 1]\n        for i in range(n):\n            a[i][j] = cnt[a[i][j] - 1]\n            res += abs(a[i][j] - ((i * m + j) % (n * m) + 1))\n    print(res // 2)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nimport math\nfor _ in range(int(input())):\n    n,m=map(int,input().split())\n    l=[]\n    for i in range(n):\n        l.append(list(map(int,input().split())))\n    c=0\n    for i in range(n):\n        for j in range(m):\n            if l[i][j]!=(i*m)+j+1:\n                c+=1\n    print(c//2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\ndef is_sorted(matrix, n, m):\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != (i*m + j + 1):\n                return False\n    return True\n\ndef get_column(matrix, n, m, j):\n    column = list()\n    for i in range(n):\n        column.append(matrix[i][j])\n    return column\n\ndef shift_column(matrix, n, m, j):\n    for i in range(n-1):\n        matrix[i][j] = matrix[i+1][j]\n    matrix[n-1][j] = matrix[0][j]\n    return matrix\n\ndef get_min_moves(matrix, n, m):\n    if is_sorted(matrix, n, m):\n        return 0\n    min_moves = 0\n    for j in range(m):\n        column = get_column(matrix, n, m, j)\n        for i in range(n):\n            if column[i] != (i*m + j + 1):\n                min_moves += 1\n                matrix = shift_column(matrix, n, m, j)\n                i -= 1\n    return min_moves\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = list()\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(get_min_moves(matrix, n, m))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, m = map(int, input().split())\n\na = [list(map(int, input().split())) for i in range(n)]\n\nc = [0 for i in range(n * m + 1)]\n\nfor i in range(n):\n    for j in range(m):\n        c[a[i][j]] += 1\n\nfor i in range(1, n * m + 1):\n    c[i] += c[i - 1]\n\nans = 0\n\nfor i in range(n):\n    for j in range(m):\n        ans += abs(c[(i) * m + j] - c[(i) * m + j - 1])\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\nimport sys\nsys.stdin = open('input.txt', 'r')\n\nn, m = map(int, input().split())\nmatrix = []\nfor _ in range(n):\n    matrix.append(list(map(int, input().split())))\n\ndef check(matrix):\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != (i * m + j + 1):\n                return False\n    return True\n\ndef shift(matrix, col):\n    for i in range(n):\n        x = matrix[i][col]\n        if i == n - 1:\n            matrix[i][col] = x\n        else:\n            matrix[i][col] = matrix[i+1][col]\n    return matrix\n\ndef solve(matrix):\n    if check(matrix):\n        return 0\n    else:\n        for col in range(m):\n            for i in range(n):\n                if matrix[i][col] == (i * m + col + 1):\n                    continue\n                else:\n                    matrix[i][col] = (i * m + col + 1)\n                    return 1 + solve(shift(matrix, col))\n\nprint(solve(matrix))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport itertools\n\ndef is_good(m):\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (i * m + j + 1) % (n * m):\n                return False\n    return True\n\ndef shift(c):\n    for i in range(n - 1):\n        a[i][c] = a[i + 1][c]\n    a[n - 1][c] = tmp[c]\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\nif is_good(m):\n    print(0)\nelse:\n    tmp = a[n - 1]\n    for i in range(1, m + 1):\n        for c in itertools.combinations(range(m), i):\n            for _ in range(n):\n                for j in c:\n                    shift(j)\n            if is_good(m):\n                print(i)\n                exit()\n            else:\n                for j in range(n):\n                    a[j] = list(map(int, input().split()))\n                tmp = a[n - 1]"
+    }
+  ],
+  "created": 1649876689,
+  "id": "cmpl-4wcaH6hwHPxo9qJTANZOD175Ec7Mf",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:05:15.442462 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (i * m + j + 1):\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:05:15.442495 REASON stop
+2022-04-13 19:05:15.442901 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    res = 0\n    for j in range(m):\n        cnt = [0] * (n * m)\n        for i in range(n):\n            cnt[a[i][j] - 1] += 1\n        for i in range(1, n * m):\n            cnt[i] += cnt[i - 1]\n        for i in range(n):\n            a[i][j] = cnt[a[i][j] - 1]\n            res += abs(a[i][j] - ((i * m + j) % (n * m) + 1))\n    print(res // 2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:05:15.443008 REASON stop
+2022-04-13 19:05:15.443427 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nimport math\nfor _ in range(int(input())):\n    n,m=map(int,input().split())\n    l=[]\n    for i in range(n):\n        l.append(list(map(int,input().split())))\n    c=0\n    for i in range(n):\n        for j in range(m):\n            if l[i][j]!=(i*m)+j+1:\n                c+=1\n    print(c//2)"
+}
+2022-04-13 19:05:15.443474 REASON stop
+2022-04-13 19:05:15.470815 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\ndef is_sorted(matrix, n, m):\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != (i*m + j + 1):\n                return False\n    return True\n\ndef get_column(matrix, n, m, j):\n    column = list()\n    for i in range(n):\n        column.append(matrix[i][j])\n    return column\n\ndef shift_column(matrix, n, m, j):\n    for i in range(n-1):\n        matrix[i][j] = matrix[i+1][j]\n    matrix[n-1][j] = matrix[0][j]\n    return matrix\n\ndef get_min_moves(matrix, n, m):\n    if is_sorted(matrix, n, m):\n        return 0\n    min_moves = 0\n    for j in range(m):\n        column = get_column(matrix, n, m, j)\n        for i in range(n):\n            if column[i] != (i*m + j + 1):\n                min_moves += 1\n                matrix = shift_column(matrix, n, m, j)\n                i -= 1\n    return min_moves\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = list()\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(get_min_moves(matrix, n, m))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:05:15.470912 REASON stop
+2022-04-13 19:05:15.486032 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, m = map(int, input().split())\n\na = [list(map(int, input().split())) for i in range(n)]\n\nc = [0 for i in range(n * m + 1)]\n\nfor i in range(n):\n    for j in range(m):\n        c[a[i][j]] += 1\n\nfor i in range(1, n * m + 1):\n    c[i] += c[i - 1]\n\nans = 0\n\nfor i in range(n):\n    for j in range(m):\n        ans += abs(c[(i) * m + j] - c[(i) * m + j - 1])\n\nprint(ans)"
+}
+2022-04-13 19:05:15.486136 REASON stop
+2022-04-13 19:05:15.486915 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\nimport sys\nsys.stdin = open('input.txt', 'r')\n\nn, m = map(int, input().split())\nmatrix = []\nfor _ in range(n):\n    matrix.append(list(map(int, input().split())))\n\ndef check(matrix):\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != (i * m + j + 1):\n                return False\n    return True\n\ndef shift(matrix, col):\n    for i in range(n):\n        x = matrix[i][col]\n        if i == n - 1:\n            matrix[i][col] = x\n        else:\n            matrix[i][col] = matrix[i+1][col]\n    return matrix\n\ndef solve(matrix):\n    if check(matrix):\n        return 0\n    else:\n        for col in range(m):\n            for i in range(n):\n                if matrix[i][col] == (i * m + col + 1):\n                    continue\n                else:\n                    matrix[i][col] = (i * m + col + 1)\n                    return 1 + solve(shift(matrix, col))\n\nprint(solve(matrix))"
+}
+2022-04-13 19:05:15.487000 REASON stop
+2022-04-13 19:05:15.488410 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport itertools\n\ndef is_good(m):\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (i * m + j + 1) % (n * m):\n                return False\n    return True\n\ndef shift(c):\n    for i in range(n - 1):\n        a[i][c] = a[i + 1][c]\n    a[n - 1][c] = tmp[c]\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\nif is_good(m):\n    print(0)\nelse:\n    tmp = a[n - 1]\n    for i in range(1, m + 1):\n        for c in itertools.combinations(range(m), i):\n            for _ in range(n):\n                for j in c:\n                    shift(j)\n            if is_good(m):\n                print(i)\n                exit()\n            else:\n                for j in range(n):\n                    a[j] = list(map(int, input().split()))\n                tmp = a[n - 1]"
+}
+2022-04-13 19:05:15.488473 REASON stop

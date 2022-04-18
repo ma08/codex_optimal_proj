@@ -1,0 +1,89 @@
+2022-04-09 20:21:31.417263 """
+You are given four integers $a$, $b$, $x$ and $y$. Initially, $a \ge x$ and $b \ge y$. You can do the following operation no more than $n$ times:
+
+  Choose either $a$ or $b$ and decrease it by one. However, as a result of this operation, value of $a$ cannot become less than $x$, and value of $b$ cannot become less than $y$. 
+
+Your task is to find the minimum possible product of $a$ and $b$ ($a \cdot b$) you can achieve by applying the given operation no more than $n$ times.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 2 \cdot 10^4$) — the number of test cases. Then $t$ test cases follow.
+
+The only line of the test case contains five integers $a$, $b$, $x$, $y$ and $n$ ($1 \le a, b, x, y, n \le 10^9$). Additional constraint on the input: $a \ge x$ and $b \ge y$ always holds.
+
+
+-----Output-----
+
+For each test case, print one integer: the minimum possible product of $a$ and $b$ ($a \cdot b$) you can achieve by applying the given operation no more than $n$ times.
+
+
+-----Example-----
+Input
+7
+10 10 8 5 3
+12 8 8 7 2
+12343 43 4543 39 123212
+1000000000 1000000000 1 1 1
+1000000000 1000000000 1 1 1000000000
+10 11 2 1 5
+10 11 9 1 10
+
+Output
+70
+77
+177177
+999999999000000000
+999999999
+55
+10
+
+
+
+-----Note-----
+
+In the first test case of the example, you need to decrease $b$ three times and obtain $10 \cdot 7 = 70$.
+
+In the second test case of the example, you need to decrease $a$ one time, $b$ one time and obtain $11 \cdot 7 = 77$.
+
+In the sixth test case of the example, you need to decrease $a$ five times and obtain $5 \cdot 11 = 55$.
+
+In the seventh test case of the example, you need to decrease $b$ ten times and obtain $10 \cdot 1 = 10$.
+"""
+2022-04-09 20:21:31.417280 --------------------------
+2022-04-09 20:21:49.453256 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n\tt = int(input())\n\tfor i in range(t):\n\t\ta, b, x, y, n = map(int, input().split())\n\t\tif a == x:\n\t\t\tb = max(y, b - n)\n\t\telif b == y:\n\t\t\ta = max(x, a - n)\n\t\telse:\n\t\t\tn1 = n\n\t\t\ta1 = a\n\t\t\tb1 = b\n\t\t\twhile n > 0 and a > x and b > y:\n\t\t\t\tif a - x > b - y:\n\t\t\t\t\ta -= 1\n\t\t\t\t\tn -= 1\n\t\t\t\telse:\n\t\t\t\t\tb -= 1\n\t\t\t\t\tn -= 1\n\t\t\tif n > 0:\n\t\t\t\tif a > x:\n\t\t\t\t\ta -= n\n\t\t\t\telse:\n\t\t\t\t\tb -= n\n\t\t\ta = max(x, a)\n\t\t\tb = max(y, b)\n\t\t\tn1 -= n\n\t\t\ta1 = max(x, a1 - n1)\n\t\t\tb1 = max(y, b1 - n1)\n\t\t\tprint(min(a * b, a1 * b1))\n\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, x, y, n = map(int, input().split())\n        if a - x > b - y:\n            a -= min(n, a - x)\n            n -= min(n, a - x)\n            b -= min(n, b - y)\n        else:\n            b -= min(n, b - y)\n            n -= min(n, b - y)\n            a -= min(n, a - x)\n        print(a * b)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649550091,
+  "id": "cmpl-4vFcZ25VSTazIHaXUdfXfVOLiSWw1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:21:49.453527 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n\tt = int(input())\n\tfor i in range(t):\n\t\ta, b, x, y, n = map(int, input().split())\n\t\tif a == x:\n\t\t\tb = max(y, b - n)\n\t\telif b == y:\n\t\t\ta = max(x, a - n)\n\t\telse:\n\t\t\tn1 = n\n\t\t\ta1 = a\n\t\t\tb1 = b\n\t\t\twhile n > 0 and a > x and b > y:\n\t\t\t\tif a - x > b - y:\n\t\t\t\t\ta -= 1\n\t\t\t\t\tn -= 1\n\t\t\t\telse:\n\t\t\t\t\tb -= 1\n\t\t\t\t\tn -= 1\n\t\t\tif n > 0:\n\t\t\t\tif a > x:\n\t\t\t\t\ta -= n\n\t\t\t\telse:\n\t\t\t\t\tb -= n\n\t\t\ta = max(x, a)\n\t\t\tb = max(y, b)\n\t\t\tn1 -= n\n\t\t\ta1 = max(x, a1 - n1)\n\t\t\tb1 = max(y, b1 - n1)\n\t\t\tprint(min(a * b, a1 * b1))\n\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-09 20:21:49.453604 REASON stop
+2022-04-09 20:21:49.465302 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        a, b, x, y, n = map(int, input().split())\n        if a - x > b - y:\n            a -= min(n, a - x)\n            n -= min(n, a - x)\n            b -= min(n, b - y)\n        else:\n            b -= min(n, b - y)\n            n -= min(n, b - y)\n            a -= min(n, a - x)\n        print(a * b)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 20:21:49.465401 REASON stop

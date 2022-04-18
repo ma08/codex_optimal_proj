@@ -1,0 +1,150 @@
+2022-04-13 18:02:58.096708 """
+You are given an array $a$ consisting of $n$ integers.
+
+You can remove at most one element from this array. Thus, the final length of the array is $n-1$ or $n$.
+
+Your task is to calculate the maximum possible length of the strictly increasing contiguous subarray of the remaining array.
+
+Recall that the contiguous subarray $a$ with indices from $l$ to $r$ is $a[l \dots r] = a_l, a_{l + 1}, \dots, a_r$. The subarray $a[l \dots r]$ is called strictly increasing if $a_l < a_{l+1} < \dots < a_r$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the strictly increasing contiguous subarray of the array $a$ after removing at most one element.
+
+
+-----Examples-----
+Input
+5
+1 2 5 3 4
+
+Output
+4
+
+Input
+2
+1 2
+
+Output
+2
+
+Input
+7
+6 5 4 3 2 4 3
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example, you can delete $a_3=5$. Then the resulting array will be equal to $[1, 2, 3, 4]$ and the length of its largest increasing subarray will be equal to $4$.
+"""
+2022-04-13 18:02:58.096719 --------------------------
+2022-04-13 18:03:26.186906 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    a = list(map(int, input().split()))\n    if n == 2:\n        print(2)\n        return\n\n    if a[0] < a[1]:\n        curr = 2\n        best = 2\n    else:\n        curr = 1\n        best = 1\n    for i in range(1, n):\n        if a[i - 1] < a[i]:\n            curr += 1\n        else:\n            best = max(best, curr)\n            curr = 1\n    best = max(best, curr)\n\n    print(best)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nbest_len = 1\ncurrent_len = 1\n\nfor i in range(1, n):\n    if a[i] > a[i - 1]:\n        current_len += 1\n    else:\n        best_len = max(best_len, current_len)\n        current_len = 1\n\nbest_len = max(best_len, current_len)\n\nbest_len_without_removed = best_len\n\nfor i in range(n):\n    if i == 0:\n        if a[i] < a[i + 1]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\n    elif i == n - 1:\n        if a[i - 1] < a[i]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\n    else:\n        if a[i - 1] < a[i + 1]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\nprint(best_len_without_removed)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef get_max_increasing_subarray(input_list):\n    \"\"\"\n    Get the maximum length of the increasing subarray\n    :param input_list: list of integers\n    :return: maximum length of the increasing subarray\n    \"\"\"\n    max_length = 0\n    current_length = 1\n    previous_value = input_list[0]\n    for i in range(1, len(input_list)):\n        if input_list[i] > previous_value:\n            current_length += 1\n        else:\n            if current_length > max_length:\n                max_length = current_length\n            current_length = 1\n        previous_value = input_list[i]\n    if current_length > max_length:\n        max_length = current_length\n    return max_length\n\nif __name__ == '__main__':\n    input_list = [int(x) for x in input().split()]\n    print(get_max_increasing_subarray(input_list))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\n# Approach 1: O(n) Time | O(1) Space\ndef longestIncreasingSubsequence(array):\n    if len(array) == 0:\n        return 0\n    maxLength = 1\n    currentLength = 1\n    for i in range(1, len(array)):\n        if array[i] > array[i - 1]:\n            currentLength += 1\n        else:\n            maxLength = max(maxLength, currentLength)\n            currentLength = 1\n    return max(maxLength, currentLength)\n\n# Approach 2: O(n^2) Time | O(n) Space\ndef longestIncreasingSubsequence(array):\n    lengths = [1 for x in array]\n    for i in range(1, len(array)):\n        for j in range(i):\n            if array[j] < array[i]:\n                lengths[i] = max(lengths[i], lengths[j] + 1)\n    return max(lengths)\n\n# Approach 3: O(n log n) Time | O(n) Space\ndef longestIncreasingSubsequence(array):\n    sequences = []\n    for i in range(len(array)):\n        newSequence = binarySearch(sequences, array[i])\n        if newSequence == len(sequences):\n            sequences.append([array[i]])\n        else:\n            sequences[newSequence] = [array[i]]\n    return len(sequences)\n\ndef binarySearch(array, target):\n    low = 0\n    high = len(array) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        potentialMatch = array[mid][0]\n        if target < potentialMatch:\n            high = mid - 1\n        elif target > potentialMatch:\n            low = mid + 1\n        else:\n            return mid\n    return low\n\nprint(longestIncreasingSubsequence(arr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\ndef solve(n, a):\n    ans = 1\n    cur = 1\n    for i in range(1, n):\n        if a[i] > a[i - 1]:\n            cur += 1\n        else:\n            ans = max(ans, cur)\n            cur = 1\n    ans = max(ans, cur)\n    return ans\n\nprint(solve(n, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main(n, a):\n    max_len = 1\n    for i in range(n):\n        if i==0:\n            if a[i]<a[i+1]:\n                max_len = 2\n        elif i==n-1:\n            if a[i]>a[i-1]:\n                max_len = 2\n        else:\n            if a[i]>a[i-1] and a[i]<a[i+1]:\n                max_len = 3\n    print(max_len)\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    main(n, a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ncurr = 1\nmx = 1\nfor i in range(1, n):\n    if a[i] > a[i-1]:\n        curr += 1\n        mx = max(mx, curr)\n    else:\n        curr = 1\n\nprint(mx)"
+    }
+  ],
+  "created": 1649872978,
+  "id": "cmpl-4wbcQcoQ1ztkamr4cwkudp3cKBpD3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:03:26.187185 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    n = int(input())\n    a = list(map(int, input().split()))\n    if n == 2:\n        print(2)\n        return\n\n    if a[0] < a[1]:\n        curr = 2\n        best = 2\n    else:\n        curr = 1\n        best = 1\n    for i in range(1, n):\n        if a[i - 1] < a[i]:\n            curr += 1\n        else:\n            best = max(best, curr)\n            curr = 1\n    best = max(best, curr)\n\n    print(best)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:03:26.187220 REASON stop
+2022-04-13 18:03:26.187638 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nbest_len = 1\ncurrent_len = 1\n\nfor i in range(1, n):\n    if a[i] > a[i - 1]:\n        current_len += 1\n    else:\n        best_len = max(best_len, current_len)\n        current_len = 1\n\nbest_len = max(best_len, current_len)\n\nbest_len_without_removed = best_len\n\nfor i in range(n):\n    if i == 0:\n        if a[i] < a[i + 1]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\n    elif i == n - 1:\n        if a[i - 1] < a[i]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\n    else:\n        if a[i - 1] < a[i + 1]:\n            best_len_without_removed = max(best_len_without_removed, current_len - 1)\nprint(best_len_without_removed)"
+}
+2022-04-13 18:03:26.187813 REASON stop
+2022-04-13 18:03:26.188199 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef get_max_increasing_subarray(input_list):\n    \"\"\"\n    Get the maximum length of the increasing subarray\n    :param input_list: list of integers\n    :return: maximum length of the increasing subarray\n    \"\"\"\n    max_length = 0\n    current_length = 1\n    previous_value = input_list[0]\n    for i in range(1, len(input_list)):\n        if input_list[i] > previous_value:\n            current_length += 1\n        else:\n            if current_length > max_length:\n                max_length = current_length\n            current_length = 1\n        previous_value = input_list[i]\n    if current_length > max_length:\n        max_length = current_length\n    return max_length\n\nif __name__ == '__main__':\n    input_list = [int(x) for x in input().split()]\n    print(get_max_increasing_subarray(input_list))"
+}
+2022-04-13 18:03:26.188251 REASON stop
+2022-04-13 18:03:26.189654 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\n# Approach 1: O(n) Time | O(1) Space\ndef longestIncreasingSubsequence(array):\n    if len(array) == 0:\n        return 0\n    maxLength = 1\n    currentLength = 1\n    for i in range(1, len(array)):\n        if array[i] > array[i - 1]:\n            currentLength += 1\n        else:\n            maxLength = max(maxLength, currentLength)\n            currentLength = 1\n    return max(maxLength, currentLength)\n\n# Approach 2: O(n^2) Time | O(n) Space\ndef longestIncreasingSubsequence(array):\n    lengths = [1 for x in array]\n    for i in range(1, len(array)):\n        for j in range(i):\n            if array[j] < array[i]:\n                lengths[i] = max(lengths[i], lengths[j] + 1)\n    return max(lengths)\n\n# Approach 3: O(n log n) Time | O(n) Space\ndef longestIncreasingSubsequence(array):\n    sequences = []\n    for i in range(len(array)):\n        newSequence = binarySearch(sequences, array[i])\n        if newSequence == len(sequences):\n            sequences.append([array[i]])\n        else:\n            sequences[newSequence] = [array[i]]\n    return len(sequences)\n\ndef binarySearch(array, target):\n    low = 0\n    high = len(array) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        potentialMatch = array[mid][0]\n        if target < potentialMatch:\n            high = mid - 1\n        elif target > potentialMatch:\n            low = mid + 1\n        else:\n            return mid\n    return low\n\nprint(longestIncreasingSubsequence(arr))"
+}
+2022-04-13 18:03:26.189732 REASON stop
+2022-04-13 18:03:26.207047 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\ndef solve(n, a):\n    ans = 1\n    cur = 1\n    for i in range(1, n):\n        if a[i] > a[i - 1]:\n            cur += 1\n        else:\n            ans = max(ans, cur)\n            cur = 1\n    ans = max(ans, cur)\n    return ans\n\nprint(solve(n, a))"
+}
+2022-04-13 18:03:26.207152 REASON stop
+2022-04-13 18:03:26.207969 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main(n, a):\n    max_len = 1\n    for i in range(n):\n        if i==0:\n            if a[i]<a[i+1]:\n                max_len = 2\n        elif i==n-1:\n            if a[i]>a[i-1]:\n                max_len = 2\n        else:\n            if a[i]>a[i-1] and a[i]<a[i+1]:\n                max_len = 3\n    print(max_len)\n\nif __name__ == \"__main__\":\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    main(n, a)"
+}
+2022-04-13 18:03:26.208038 REASON stop
+2022-04-13 18:03:26.221026 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ncurr = 1\nmx = 1\nfor i in range(1, n):\n    if a[i] > a[i-1]:\n        curr += 1\n        mx = max(mx, curr)\n    else:\n        curr = 1\n\nprint(mx)"
+}
+2022-04-13 18:03:26.221137 REASON stop

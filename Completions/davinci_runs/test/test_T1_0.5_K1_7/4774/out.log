@@ -1,0 +1,144 @@
+2022-04-13 23:16:38.608616 """
+The scientists Mildra and Gloisa have been responsible for exploring Luyten 726-8, but have ended up with an issue: Their fusion reactor has stopped working! In order to continue their work, they need to get some materials from the closest asteroid. To do that though, they need to start up the chemical engines, which haven’t been started for multiple centuries.
+
+Gloisa has been reading the manual for the last three weeks, and is almost able to start it up. However, there is one equation she needs that has some operators smudged out. That equation is\[ a~ ?~ b~ =~ c~ ?~ d \]
+
+where the question marks are the unknown operators. So far, Gloisa has only managed to narrow the operators down to $+$, $-$, $*$ and $/$ (integer division).
+
+Although there may be multiple valid sets of operators for this equation, Mildra wants to help out by making a program that narrows the possibility space for Gloisa.
+
+-----Input-----
+The first line and only line consist of $4$ integers, $a$, $b$, $c$ and $d$, the values in the expression above.
+
+-----Output-----
+Print out all the expressions that evaluate to true, separated by a newline and sorted alphanumerically. ($\texttt{`*'} < \texttt{`+'} < \texttt{`-'} < \texttt{`/'}$)
+
+A valid expression must have a space between the integers, operators and the equal sign. Note that expression including division by zero is not a valid expression.
+
+If none of the expressions are valid, print out “problems ahead” (without the quotes).
+
+-----Limits-----
+ - $0 \leq a,b,c,d \leq 100$
+
+-----Examples-----
+Sample Input 1:
+1 2 3 4
+Sample Output 1:
+1 - 2 = 3 - 4
+1 / 2 = 3 / 4
+
+Sample Input 2:
+0 4 2 2
+Sample Output 2:
+0 * 4 = 2 - 2
+0 + 4 = 2 * 2
+0 + 4 = 2 + 2
+0 / 4 = 2 - 2
+"""
+2022-04-13 23:16:38.608632 --------------------------
+2022-04-13 23:17:13.385759 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\na, b, c, d = map(int, input().split())\nops = [\"+\", \"-\", \"*\", \"/\"]\n\nsolutions = []\n\nfor i in range(4):\n    for j in range(4):\n        for k in range(4):\n            for l in range(4):\n                if eval(\"%s %s %s %s %s %s %s %s %s %s\" % (a, ops[i], b, ops[j], \"==\", c, ops[k], d, ops[l], \"and\", ops[i] + ops[j] != \"*/\")) == True:\n                    solutions.append(\"%s %s %s %s %s %s %s %s %s\" % (a, ops[i], b, ops[j], \"=\", c, ops[k], d, ops[l]))\n\nif len(solutions) > 0:\n    for solution in sorted(solutions):\n        print(solution)\nelse:\n    print(\"problems ahead\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\na,b,c,d = map(int, input().split())\n\ndef is_valid(op1, op2):\n    if op1 == '+' and op2 == '+':\n        return a+b == c+d\n    elif op1 == '+' and op2 == '-':\n        return a+b == c-d\n    elif op1 == '+' and op2 == '*':\n        return a+b == c*d\n    elif op1 == '+' and op2 == '/':\n        return a+b == c//d if d != 0 else False\n    elif op1 == '-' and op2 == '+':\n        return a-b == c+d\n    elif op1 == '-' and op2 == '-':\n        return a-b == c-d\n    elif op1 == '-' and op2 == '*':\n        return a-b == c*d\n    elif op1 == '-' and op2 == '/':\n        return a-b == c//d if d != 0 else False\n    elif op1 == '*' and op2 == '+':\n        return a*b == c+d\n    elif op1 == '*' and op2 == '-':\n        return a*b == c-d\n    elif op1 == '*' and op2 == '*':\n        return a*b == c*d\n    elif op1 == '*' and op2 == '/':\n        return a*b == c//d if d != 0 else False\n    elif op1 == '/' and op2 == '+':\n        return a//b == c+d if b != 0 else False\n    elif op1 == '/' and op2 == '-':\n        return a//b == c-d if b != 0 else False\n    elif op1 == '/' and op2 == '*':\n        return a//b == c*d if b != 0 else False\n    elif op1 == '/' and op2 == '/':\n        return a//b == c//d if b != 0 and d != 0 else False\n\nops = ['+', '-', '*', '/']\n\nvalid_ops = []\n\nfor op1 in ops:\n    for op2 in ops:\n        if is_valid(op1, op2):\n            valid_ops.append(op1+op2)\n\nif len(valid_ops) == 0:\n    print(\"problems ahead\")\nelse:\n    valid_ops.sort()\n    for op in valid_ops:\n        print(f\"{a} {op[0]} {b} = {c} {op[1]} {d}\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\na,b,c,d = [int(i) for i in input().split()]\n\ndef check(a,b,c,d,op1,op2):\n    if op1 == '*':\n        a = a*b\n    elif op1 == '+':\n        a = a+b\n    elif op1 == '-':\n        a = a-b\n    elif op1 == '/':\n        if b == 0:\n            return False\n        a = a//b\n    if op2 == '*':\n        c = c*d\n    elif op2 == '+':\n        c = c+d\n    elif op2 == '-':\n        c = c-d\n    elif op2 == '/':\n        if d == 0:\n            return False\n        c = c//d\n    return a == c\n\nout = []\nfor op1 in ['*','+','-']:\n    for op2 in ['*','+','-']:\n        if check(a,b,c,d,op1,op2):\n            out.append(str(a) + \" \" + op1 + \" \" + str(b) + \" = \" + str(c) + \" \" + op2 + \" \" + str(d))\nif out == []:\n    print(\"problems ahead\")\nelse:\n    for i in sorted(out):\n        print(i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\na, b, c, d = map(int, input().split())\n\ndef check(op1, op2):\n    if op1 == '+':\n        if op2 == '+':\n            return a + b == c + d\n        elif op2 == '-':\n            return a + b == c - d\n        elif op2 == '*':\n            return a + b == c * d\n        else:\n            return a + b == c / d\n    elif op1 == '-':\n        if op2 == '+':\n            return a - b == c + d\n        elif op2 == '-':\n            return a - b == c - d\n        elif op2 == '*':\n            return a - b == c * d\n        else:\n            return a - b == c / d\n    elif op1 == '*':\n        if op2 == '+':\n            return a * b == c + d\n        elif op2 == '-':\n            return a * b == c - d\n        elif op2 == '*':\n            return a * b == c * d\n        else:\n            return a * b == c / d\n    else:\n        if op2 == '+':\n            return a / b == c + d\n        elif op2 == '-':\n            return a / b == c - d\n        elif op2 == '*':\n            return a / b == c * d\n        else:\n            return a / b == c / d\n\nops = ['/', '*', '-', '+']\n\nans = []\nfor op1 in ops:\n    for op2 in ops:\n        if check(op1, op2):\n            ans.append(str(a) + ' ' + op1 + ' ' + str(b) + ' = ' + str(c) + ' ' + op2 + ' ' + str(d))\n\nif len(ans) == 0:\n    print('problems ahead')\nelse:\n    for a in ans:\n        print(a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\na, b, c, d = map(int, input().split())\n\ndef add(x, y):\n    return x + y\n\ndef sub(x, y):\n    return x - y\n\ndef mul(x, y):\n    return x * y\n\ndef div(x, y):\n    if y == 0:\n        return None\n    return x // y\n\noperators = [add, sub, mul, div]\n\nvalid_equations = []\n\nfor op1 in operators:\n    for op2 in operators:\n        if op1(a, b) == op2(c, d):\n            valid_equations.append(str(a) + \" \" + op1.__name__ + \" \" + str(b) + \" = \" + str(c) + \" \" + op2.__name__ + \" \" + str(d))\n\nif len(valid_equations) == 0:\n    print(\"problems ahead\")\nelse:\n    for equation in sorted(valid_equations):\n        print(equation)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    a,b,c,d = [int(i) for i in sys.stdin.readline().split()]\n    s = []\n    if a+b == c+d:\n        s.append(\"{} + {} = {} + {}\".format(a,b,c,d))\n    if a+b == c-d:\n        s.append(\"{} + {} = {} - {}\".format(a,b,c,d))\n    if a+b == c*d:\n        s.append(\"{} + {} = {} * {}\".format(a,b,c,d))\n    if a+b == c/d and c%d == 0:\n        s.append(\"{} + {} = {} / {}\".format(a,b,c,d))\n    if a-b == c+d:\n        s.append(\"{} - {} = {} + {}\".format(a,b,c,d))\n    if a-b == c-d:\n        s.append(\"{} - {} = {} - {}\".format(a,b,c,d))\n    if a-b == c*d:\n        s.append(\"{} - {} = {} * {}\".format(a,b,c,d))\n    if a-b == c/d and c%d == 0:\n        s.append(\"{} - {} = {} / {}\".format(a,b,c,d))\n    if a*b == c+d:\n        s.append(\"{} * {} = {} + {}\".format(a,b,c,d))\n    if a*b == c-d:\n        s.append(\"{} * {} = {} - {}\".format(a,b,c,d))\n    if a*b == c*d:\n        s.append(\"{} * {} = {} * {}\".format(a,b,c,d))\n    if a*b == c/d and c%d == 0:\n        s.append(\"{} * {} = {} / {}\".format(a,b,c,d))\n    if a/b == c+d and a%b == 0:\n        s.append(\"{} / {} = {} + {}\".format(a,b,c,d))\n    if a/b == c-d and a%b == 0:\n        s.append(\"{} / {} = {} - {}\".format(a,b,c,d))\n    if a/b == c*d and a%b == 0:\n        s.append(\"{} / {} = {} * {}\".format(a,b,c,d))\n    if a/b == c/d and a%b == 0 and c%d == 0:\n        s.append(\"{} / {} = {} / {}\".format(a,b,c,d))\n    s.sort()\n    if len(s) == 0:\n        print(\"problems ahead\")\n    else:\n        for i in s:\n            print(i)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Accepted:\ndef main():\n    a, b, c, d = [int(x) for x in input().split()]\n    valid = []\n\n    if a + b == c + d:\n        valid.append(f\"{a} + {b} = {c} + {d}\")\n    if a - b == c - d:\n        valid.append(f\"{a} - {b} = {c} - {d}\")\n    if a * b == c * d:\n        valid.append(f\"{a} * {b} = {c} * {d}\")\n    if b != 0 and a / b == c / d:\n        valid.append(f\"{a} / {b} = {c} / {d}\")\n\n    if valid:\n        print(\"\\n\".join(valid))\n    else:\n        print(\"problems ahead\")\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649891798,
+  "id": "cmpl-4wgVyvf0k44z23IsXWmNu8rrycxMh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:17:13.386128 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\na, b, c, d = map(int, input().split())\nops = [\"+\", \"-\", \"*\", \"/\"]\n\nsolutions = []\n\nfor i in range(4):\n    for j in range(4):\n        for k in range(4):\n            for l in range(4):\n                if eval(\"%s %s %s %s %s %s %s %s %s %s\" % (a, ops[i], b, ops[j], \"==\", c, ops[k], d, ops[l], \"and\", ops[i] + ops[j] != \"*/\")) == True:\n                    solutions.append(\"%s %s %s %s %s %s %s %s %s\" % (a, ops[i], b, ops[j], \"=\", c, ops[k], d, ops[l]))\n\nif len(solutions) > 0:\n    for solution in sorted(solutions):\n        print(solution)\nelse:\n    print(\"problems ahead\")"
+}
+2022-04-13 23:17:13.386170 REASON stop
+2022-04-13 23:17:13.386475 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.386489 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\na,b,c,d = map(int, input().split())\n\ndef is_valid(op1, op2):\n    if op1 == '+' and op2 == '+':\n        return a+b == c+d\n    elif op1 == '+' and op2 == '-':\n        return a+b == c-d\n    elif op1 == '+' and op2 == '*':\n        return a+b == c*d\n    elif op1 == '+' and op2 == '/':\n        return a+b == c//d if d != 0 else False\n    elif op1 == '-' and op2 == '+':\n        return a-b == c+d\n    elif op1 == '-' and op2 == '-':\n        return a-b == c-d\n    elif op1 == '-' and op2 == '*':\n        return a-b == c*d\n    elif op1 == '-' and op2 == '/':\n        return a-b == c//d if d != 0 else False\n    elif op1 == '*' and op2 == '+':\n        return a*b == c+d\n    elif op1 == '*' and op2 == '-':\n        return a*b == c-d\n    elif op1 == '*' and op2 == '*':\n        return a*b == c*d\n    elif op1 == '*' and op2 == '/':\n        return a*b == c//d if d != 0 else False\n    elif op1 == '/' and op2 == '+':\n        return a//b == c+d if b != 0 else False\n    elif op1 == '/' and op2 == '-':\n        return a//b == c-d if b != 0 else False\n    elif op1 == '/' and op2 == '*':\n        return a//b == c*d if b != 0 else False\n    elif op1 == '/' and op2 == '/':\n        return a//b == c//d if b != 0 and d != 0 else False\n\nops = ['+', '-', '*', '/']\n\nvalid_ops = []\n\nfor op1 in ops:\n    for op2 in ops:\n        if is_valid(op1, op2):\n            valid_ops.append(op1+op2)\n\nif len(valid_ops) == 0:\n    print(\"problems ahead\")\nelse:\n    valid_ops.sort()\n    for op in valid_ops:\n        print(f\"{a} {op[0]} {b} = {c} {op[1]} {d}\")"
+}
+2022-04-13 23:17:13.386588 REASON stop
+2022-04-13 23:17:13.386836 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.386848 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\na,b,c,d = [int(i) for i in input().split()]\n\ndef check(a,b,c,d,op1,op2):\n    if op1 == '*':\n        a = a*b\n    elif op1 == '+':\n        a = a+b\n    elif op1 == '-':\n        a = a-b\n    elif op1 == '/':\n        if b == 0:\n            return False\n        a = a//b\n    if op2 == '*':\n        c = c*d\n    elif op2 == '+':\n        c = c+d\n    elif op2 == '-':\n        c = c-d\n    elif op2 == '/':\n        if d == 0:\n            return False\n        c = c//d\n    return a == c\n\nout = []\nfor op1 in ['*','+','-']:\n    for op2 in ['*','+','-']:\n        if check(a,b,c,d,op1,op2):\n            out.append(str(a) + \" \" + op1 + \" \" + str(b) + \" = \" + str(c) + \" \" + op2 + \" \" + str(d))\nif out == []:\n    print(\"problems ahead\")\nelse:\n    for i in sorted(out):\n        print(i)"
+}
+2022-04-13 23:17:13.386887 REASON stop
+2022-04-13 23:17:13.388006 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.388021 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\na, b, c, d = map(int, input().split())\n\ndef check(op1, op2):\n    if op1 == '+':\n        if op2 == '+':\n            return a + b == c + d\n        elif op2 == '-':\n            return a + b == c - d\n        elif op2 == '*':\n            return a + b == c * d\n        else:\n            return a + b == c / d\n    elif op1 == '-':\n        if op2 == '+':\n            return a - b == c + d\n        elif op2 == '-':\n            return a - b == c - d\n        elif op2 == '*':\n            return a - b == c * d\n        else:\n            return a - b == c / d\n    elif op1 == '*':\n        if op2 == '+':\n            return a * b == c + d\n        elif op2 == '-':\n            return a * b == c - d\n        elif op2 == '*':\n            return a * b == c * d\n        else:\n            return a * b == c / d\n    else:\n        if op2 == '+':\n            return a / b == c + d\n        elif op2 == '-':\n            return a / b == c - d\n        elif op2 == '*':\n            return a / b == c * d\n        else:\n            return a / b == c / d\n\nops = ['/', '*', '-', '+']\n\nans = []\nfor op1 in ops:\n    for op2 in ops:\n        if check(op1, op2):\n            ans.append(str(a) + ' ' + op1 + ' ' + str(b) + ' = ' + str(c) + ' ' + op2 + ' ' + str(d))\n\nif len(ans) == 0:\n    print('problems ahead')\nelse:\n    for a in ans:\n        print(a)"
+}
+2022-04-13 23:17:13.388064 REASON stop
+2022-04-13 23:17:13.398894 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.398927 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\na, b, c, d = map(int, input().split())\n\ndef add(x, y):\n    return x + y\n\ndef sub(x, y):\n    return x - y\n\ndef mul(x, y):\n    return x * y\n\ndef div(x, y):\n    if y == 0:\n        return None\n    return x // y\n\noperators = [add, sub, mul, div]\n\nvalid_equations = []\n\nfor op1 in operators:\n    for op2 in operators:\n        if op1(a, b) == op2(c, d):\n            valid_equations.append(str(a) + \" \" + op1.__name__ + \" \" + str(b) + \" = \" + str(c) + \" \" + op2.__name__ + \" \" + str(d))\n\nif len(valid_equations) == 0:\n    print(\"problems ahead\")\nelse:\n    for equation in sorted(valid_equations):\n        print(equation)"
+}
+2022-04-13 23:17:13.399006 REASON stop
+2022-04-13 23:17:13.399646 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.399663 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    a,b,c,d = [int(i) for i in sys.stdin.readline().split()]\n    s = []\n    if a+b == c+d:\n        s.append(\"{} + {} = {} + {}\".format(a,b,c,d))\n    if a+b == c-d:\n        s.append(\"{} + {} = {} - {}\".format(a,b,c,d))\n    if a+b == c*d:\n        s.append(\"{} + {} = {} * {}\".format(a,b,c,d))\n    if a+b == c/d and c%d == 0:\n        s.append(\"{} + {} = {} / {}\".format(a,b,c,d))\n    if a-b == c+d:\n        s.append(\"{} - {} = {} + {}\".format(a,b,c,d))\n    if a-b == c-d:\n        s.append(\"{} - {} = {} - {}\".format(a,b,c,d))\n    if a-b == c*d:\n        s.append(\"{} - {} = {} * {}\".format(a,b,c,d))\n    if a-b == c/d and c%d == 0:\n        s.append(\"{} - {} = {} / {}\".format(a,b,c,d))\n    if a*b == c+d:\n        s.append(\"{} * {} = {} + {}\".format(a,b,c,d))\n    if a*b == c-d:\n        s.append(\"{} * {} = {} - {}\".format(a,b,c,d))\n    if a*b == c*d:\n        s.append(\"{} * {} = {} * {}\".format(a,b,c,d))\n    if a*b == c/d and c%d == 0:\n        s.append(\"{} * {} = {} / {}\".format(a,b,c,d))\n    if a/b == c+d and a%b == 0:\n        s.append(\"{} / {} = {} + {}\".format(a,b,c,d))\n    if a/b == c-d and a%b == 0:\n        s.append(\"{} / {} = {} - {}\".format(a,b,c,d))\n    if a/b == c*d and a%b == 0:\n        s.append(\"{} / {} = {} * {}\".format(a,b,c,d))\n    if a/b == c/d and a%b == 0 and c%d == 0:\n        s.append(\"{} / {} = {} / {}\".format(a,b,c,d))\n    s.sort()\n    if len(s) == 0:\n        print(\"problems ahead\")\n    else:\n        for i in s:\n            print(i)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:17:13.399738 REASON stop
+2022-04-13 23:17:13.414731 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'
+2022-04-13 23:17:13.414765 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Accepted:\ndef main():\n    a, b, c, d = [int(x) for x in input().split()]\n    valid = []\n\n    if a + b == c + d:\n        valid.append(f\"{a} + {b} = {c} + {d}\")\n    if a - b == c - d:\n        valid.append(f\"{a} - {b} = {c} - {d}\")\n    if a * b == c * d:\n        valid.append(f\"{a} * {b} = {c} * {d}\")\n    if b != 0 and a / b == c / d:\n        valid.append(f\"{a} / {b} = {c} / {d}\")\n\n    if valid:\n        print(\"\\n\".join(valid))\n    else:\n        print(\"problems ahead\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:17:13.414841 REASON stop
+2022-04-13 23:17:13.415528 test/intro-questions.txt_dir/4774/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4774/solutions.json'

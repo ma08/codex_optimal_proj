@@ -1,0 +1,160 @@
+2022-04-09 23:17:22.220691 """
+By now you have probably heard that there is a spectacular stone sculpture featuring four famous U.S. presidents at Mount Rushmore. However, very few people know that this monument contains a secret chamber. This sounds like something out of a plot of a Hollywood movie, but the chamber really exists. It can be found behind the head of Abraham Lincoln and was designed to serve as a Hall of Records to store important historical U.S. documents and artifacts. Historians claim that the construction of the hall was halted in 1939 and the uncompleted chamber was left untouched until the late 1990s, but this is not the whole truth. 
+
+In 1982, the famous archaeologist S. Dakota Jones secretly visited the monument and found that the chamber actually was completed, but it was kept confidential. This seemed suspicious and after some poking around, she found a hidden vault and some documents inside. Unfortunately, these documents did not make any sense and were all gibberish. She suspected that they had been written in a code, but she could not decipher them despite all her efforts.
+
+Earlier this week when she was in the area to follow the ACM-ICPC World Finals, Dr. Jones finally discovered the key to deciphering the documents, in Connolly Hall of SDSM&T. She found a document that contains a list of translations of letters. Some letters may have more than one translation, and others may have no translation. By repeatedly applying some of these translations to individual letters in the gibberish documents, she might be able to decipher them to yield historical U.S. documents such as the Declaration of Independence and the Constitution. She needs your help.
+
+You are given the possible translations of letters and a list of pairs of original and deciphered words. Your task is to verify whether the words in each pair match. Two words match if they have the same length and if each letter of the first word can be turned into the corresponding letter of the second word by using the available translations zero or more times.
+
+-----Input-----
+The first line of input contains two integers $m$ ($1 \le m \le 500$) and $n$ ($1 \le n \le 50$), where $m$ is the number of translations of letters and $n$ is the number of word pairs. Each of the next $m$ lines contains two distinct space-separated letters $a$ and $b$, indicating that the letter $a$ can be translated to the letter $b$. Each ordered pair of letters $(a, b)$ appears at most once. Following this are $n$ lines, each containing a word pair to check. Translations and words use only lowercase letters ‘a’–‘z’, and each word contains at least $1$ and at most $50$ letters.
+
+-----Output-----
+For each pair of words, display yes if the two words match, and no otherwise.
+
+-----Examples-----
+Sample Input:
+9 5
+c t
+i r
+k p
+o c
+r o
+t e
+t f
+u h
+w p
+we we
+can the
+work people
+it of
+out the
+Sample Output:
+yes
+no
+no
+yes
+yes
+"""
+2022-04-09 23:17:22.220714 --------------------------
+2022-04-09 23:17:52.226519 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    m, n = map(int, input().split())\n    d = dict()\n    for _ in range(m):\n        a, b = input().split()\n        d[a] = b\n    for _ in range(n):\n        a, b = input().split()\n        if len(a) != len(b):\n            print('no')\n            continue\n        flag = True\n        for i in range(len(a)):\n            if a[i] not in d or b[i] not in d or d[a[i]] != b[i]:\n                flag = False\n                break\n        if flag:\n            print('yes')\n        else:\n            print('no')\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    m = int(lines[0].split()[0])\n    n = int(lines[0].split()[1])\n    translations = {}\n    for i in range(1, m+1):\n        translations[lines[i][0]] = lines[i][2]\n        translations[lines[i][2]] = lines[i][0]\n    for i in range(m+1, m+1+n):\n        word1 = lines[i].split()[0]\n        word2 = lines[i].split()[1]\n        if len(word1) != len(word2):\n            print(\"no\")\n            continue\n        else:\n            for j in range(len(word1)):\n                if word1[j] != word2[j]:\n                    # Try to translate\n                    if word1[j] in translations:\n                        if translations[word1[j]] == word2[j]:\n                            continue\n                        else:\n                            print(\"no\")\n                            break\n                    else:\n                        print(\"no\")\n                        break\n                else:\n                    continue\n            else:\n                print(\"yes\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    m, n = [int(x) for x in input().split()]\n    translations = {}\n    for i in range(m):\n        a, b = input().split()\n        translations[a] = b\n    for i in range(n):\n        a, b = input().split()\n        match = True\n        if len(a) != len(b):\n            match = False\n        else:\n            for j in range(len(a)):\n                if a[j] not in translations and a[j] != b[j]:\n                    match = False\n                    break\n                elif a[j] in translations and translations[a[j]] != b[j]:\n                    match = False\n                    break\n        if match:\n            print(\"yes\")\n        else:\n            print(\"no\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Translation\ntrans_dict = {}\n\n# Input\nm, n = [int(x) for x in input().split()]\nfor _ in range(m):\n    a, b = input().split()\n    if a not in trans_dict:\n        trans_dict[a] = []\n    trans_dict[a].append(b)\n\nfor _ in range(n):\n    w1, w2 = input().split()\n    if len(w1) != len(w2):\n        print('no')\n        continue\n    # Check if words match\n    for a, b in zip(w1, w2):\n        if a in trans_dict:\n            if b not in trans_dict[a]:\n                print('no')\n                break\n        elif a != b:\n            print('no')\n            break\n    else:\n        print('yes')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    m, n = map(int, sys.stdin.readline().split())\n    d = {}\n    for i in range(m):\n        a, b = sys.stdin.readline().split()\n        if a not in d:\n            d[a] = [b]\n        else:\n            d[a].append(b)\n    for i in range(n):\n        a, b = sys.stdin.readline().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        a = list(a)\n        b = list(b)\n        for i in range(len(a)):\n            if a[i] in d:\n                if b[i] in d[a[i]]:\n                    continue\n                else:\n                    print(\"no\")\n                    break\n            else:\n                print(\"no\")\n                break\n        else:\n            print(\"yes\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    m, n = map(int, sys.stdin.readline().split())\n    codes = {}\n    for i in range(m):\n        line = sys.stdin.readline().split()\n        codes[line[0]] = line[1]\n    for i in range(n):\n        line = sys.stdin.readline().split()\n        if translate(line[0], codes) == translate(line[1], codes):\n            print(\"yes\")\n        else:\n            print(\"no\")\n\ndef translate(word, codes):\n    res = \"\"\n    for char in word:\n        if char in codes:\n            res += codes[char]\n        else:\n            res += char\n    return res\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    lookup = {}\n    for _ in range(n):\n        a, b = sys.stdin.readline().split()\n        lookup[a] = b\n    for _ in range(m):\n        a, b = sys.stdin.readline().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        for i in range(len(a)):\n            if a[i] not in lookup or lookup[a[i]] != b[i]:\n                print(\"no\")\n                break\n        else:\n            print(\"yes\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.readline\n    m, n = map(int, input().split())\n    d = defaultdict(set)\n    for _ in range(m):\n        a, b = input().split()\n        d[a].add(b)\n    for _ in range(n):\n        a, b = input().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        a = list(a)\n        b = list(b)\n        q = deque()\n        visited = set()\n        q.append((0, a[0], b[0]))\n        while q:\n            i, c1, c2 = q.popleft()\n            if i == len(a) - 1:\n                if c1 == c2:\n                    print(\"yes\")\n                    break\n                else:\n                    print(\"no\")\n                    break\n            if (i, c1, c2) in visited:\n                continue\n            visited.add((i, c1, c2))\n            if c1 == c2:\n                q.append((i + 1, a[i + 1], b[i + 1]))\n            else:\n                if c1 in d:\n                    for c in d[c1]:\n                        q.append((i, c, c2))\n                if c2 in d:\n                    for c in d[c2]:\n                        q.append((i, c1, c))\n\nmain()"
+    }
+  ],
+  "created": 1649560642,
+  "id": "cmpl-4vIMkhpeMhllujfHndnCLwNeUafeK",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:17:52.226878 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input = sys.stdin.readline\n    m, n = map(int, input().split())\n    d = dict()\n    for _ in range(m):\n        a, b = input().split()\n        d[a] = b\n    for _ in range(n):\n        a, b = input().split()\n        if len(a) != len(b):\n            print('no')\n            continue\n        flag = True\n        for i in range(len(a)):\n            if a[i] not in d or b[i] not in d or d[a[i]] != b[i]:\n                flag = False\n                break\n        if flag:\n            print('yes')\n        else:\n            print('no')\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:17:52.226928 REASON stop
+2022-04-09 23:17:52.265098 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.265136 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = sys.stdin.readlines()\n    m = int(lines[0].split()[0])\n    n = int(lines[0].split()[1])\n    translations = {}\n    for i in range(1, m+1):\n        translations[lines[i][0]] = lines[i][2]\n        translations[lines[i][2]] = lines[i][0]\n    for i in range(m+1, m+1+n):\n        word1 = lines[i].split()[0]\n        word2 = lines[i].split()[1]\n        if len(word1) != len(word2):\n            print(\"no\")\n            continue\n        else:\n            for j in range(len(word1)):\n                if word1[j] != word2[j]:\n                    # Try to translate\n                    if word1[j] in translations:\n                        if translations[word1[j]] == word2[j]:\n                            continue\n                        else:\n                            print(\"no\")\n                            break\n                    else:\n                        print(\"no\")\n                        break\n                else:\n                    continue\n            else:\n                print(\"yes\")\n\nmain()"
+}
+2022-04-09 23:17:52.265260 REASON stop
+2022-04-09 23:17:52.265592 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.265606 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    m, n = [int(x) for x in input().split()]\n    translations = {}\n    for i in range(m):\n        a, b = input().split()\n        translations[a] = b\n    for i in range(n):\n        a, b = input().split()\n        match = True\n        if len(a) != len(b):\n            match = False\n        else:\n            for j in range(len(a)):\n                if a[j] not in translations and a[j] != b[j]:\n                    match = False\n                    break\n                elif a[j] in translations and translations[a[j]] != b[j]:\n                    match = False\n                    break\n        if match:\n            print(\"yes\")\n        else:\n            print(\"no\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:17:52.265649 REASON stop
+2022-04-09 23:17:52.265906 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.265920 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Translation\ntrans_dict = {}\n\n# Input\nm, n = [int(x) for x in input().split()]\nfor _ in range(m):\n    a, b = input().split()\n    if a not in trans_dict:\n        trans_dict[a] = []\n    trans_dict[a].append(b)\n\nfor _ in range(n):\n    w1, w2 = input().split()\n    if len(w1) != len(w2):\n        print('no')\n        continue\n    # Check if words match\n    for a, b in zip(w1, w2):\n        if a in trans_dict:\n            if b not in trans_dict[a]:\n                print('no')\n                break\n        elif a != b:\n            print('no')\n            break\n    else:\n        print('yes')"
+}
+2022-04-09 23:17:52.265958 REASON stop
+2022-04-09 23:17:52.266208 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.266220 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    m, n = map(int, sys.stdin.readline().split())\n    d = {}\n    for i in range(m):\n        a, b = sys.stdin.readline().split()\n        if a not in d:\n            d[a] = [b]\n        else:\n            d[a].append(b)\n    for i in range(n):\n        a, b = sys.stdin.readline().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        a = list(a)\n        b = list(b)\n        for i in range(len(a)):\n            if a[i] in d:\n                if b[i] in d[a[i]]:\n                    continue\n                else:\n                    print(\"no\")\n                    break\n            else:\n                print(\"no\")\n                break\n        else:\n            print(\"yes\")\n\nmain()"
+}
+2022-04-09 23:17:52.266264 REASON stop
+2022-04-09 23:17:52.266622 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.266650 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    m, n = map(int, sys.stdin.readline().split())\n    codes = {}\n    for i in range(m):\n        line = sys.stdin.readline().split()\n        codes[line[0]] = line[1]\n    for i in range(n):\n        line = sys.stdin.readline().split()\n        if translate(line[0], codes) == translate(line[1], codes):\n            print(\"yes\")\n        else:\n            print(\"no\")\n\ndef translate(word, codes):\n    res = \"\"\n    for char in word:\n        if char in codes:\n            res += codes[char]\n        else:\n            res += char\n    return res\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:17:52.266714 REASON stop
+2022-04-09 23:17:52.266916 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.266923 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    lookup = {}\n    for _ in range(n):\n        a, b = sys.stdin.readline().split()\n        lookup[a] = b\n    for _ in range(m):\n        a, b = sys.stdin.readline().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        for i in range(len(a)):\n            if a[i] not in lookup or lookup[a[i]] != b[i]:\n                print(\"no\")\n                break\n        else:\n            print(\"yes\")\n\nmain()"
+}
+2022-04-09 23:17:52.266941 REASON stop
+2022-04-09 23:17:52.267055 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'
+2022-04-09 23:17:52.267061 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.readline\n    m, n = map(int, input().split())\n    d = defaultdict(set)\n    for _ in range(m):\n        a, b = input().split()\n        d[a].add(b)\n    for _ in range(n):\n        a, b = input().split()\n        if len(a) != len(b):\n            print(\"no\")\n            continue\n        a = list(a)\n        b = list(b)\n        q = deque()\n        visited = set()\n        q.append((0, a[0], b[0]))\n        while q:\n            i, c1, c2 = q.popleft()\n            if i == len(a) - 1:\n                if c1 == c2:\n                    print(\"yes\")\n                    break\n                else:\n                    print(\"no\")\n                    break\n            if (i, c1, c2) in visited:\n                continue\n            visited.add((i, c1, c2))\n            if c1 == c2:\n                q.append((i + 1, a[i + 1], b[i + 1]))\n            else:\n                if c1 in d:\n                    for c in d[c1]:\n                        q.append((i, c, c2))\n                if c2 in d:\n                    for c in d[c2]:\n                        q.append((i, c1, c))\n\nmain()"
+}
+2022-04-09 23:17:52.267083 REASON stop
+2022-04-09 23:17:52.267195 test/intro-questions.txt_dir/4883/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4883/solutions.json'

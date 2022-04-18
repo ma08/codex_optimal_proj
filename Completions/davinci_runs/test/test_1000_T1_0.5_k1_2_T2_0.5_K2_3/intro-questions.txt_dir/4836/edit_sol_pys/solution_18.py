@@ -1,0 +1,12 @@
+from sys import stdin
+from collections import deque
+
+n, k = map(int, stdin.readline().split())
+weights = deque(map(int, stdin.readline().split()))[::-1]
+
+eaten = set()
+while weights and k >= weights[0]:
+    k -= weights.popleft()
+    eaten.add(k)
+
+print(len(eaten))

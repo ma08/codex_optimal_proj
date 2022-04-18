@@ -1,0 +1,20 @@
+
+
+def main():
+    n, m = map(int, input().split())
+    a = [0] * (n+1)
+    for i in range(m):
+        s, c = map(int, input().split())
+        a[s] = c
+    for i in range(n+1):
+        if i == 1 and a[i] == 0:
+            print(-1)
+            return
+        elif i == 1 and a[i] != 0:
+            print(a[i], end="")
+        else:
+            print(a[i], end="")
+    print("")
+
+if __name__ == '__main__':
+    main()

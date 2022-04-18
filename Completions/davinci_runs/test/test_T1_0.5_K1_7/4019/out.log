@@ -1,0 +1,169 @@
+2022-04-13 17:26:33.703625 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$ (or say that there are no such spanning trees). Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains three integers $n$, $m$ and $D$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2}), 1 \le D < n$) — the number of vertices, the number of edges and required degree of the first vertex, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+If there is no spanning tree satisfying the condition from the problem statement, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and then print $n-1$ lines describing the edges of a spanning tree such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+4 5 1
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+2 1
+2 3
+3 4
+
+Input
+4 5 3
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+1 2
+1 3
+4 1
+
+Input
+4 4 3
+1 2
+1 4
+2 3
+3 4
+
+Output
+NO
+
+
+
+-----Note-----
+
+The picture corresponding to the first and second examples: [Image]
+
+The picture corresponding to the third example: [Image]
+"""
+2022-04-13 17:26:33.703640 --------------------------
+2022-04-13 17:27:01.849425 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m, d = [int(x) for x in input().split()]\n\nif d == 0:\n    print(\"NO\")\n    quit()\n\nedges = {}\nfor i in range(1, n+1):\n    edges[i] = []\n\nfor i in range(m):\n    v, u = [int(x) for x in input().split()]\n    edges[v].append(u)\n    edges[u].append(v)\n\ndef dfs(v, p, d):\n    if d == 0:\n        return True\n    for u in edges[v]:\n        if u != p:\n            if dfs(u, v, d-1):\n                print(v, u)\n                return True\n    return False\n\nif dfs(1, 1, d):\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#------------------------------------------------------------------------------#\n\nimport sys\nimport heapq\n\ndef main():\n    n, m, D = map(int, sys.stdin.readline().split())\n    graph = [[] for _ in range(n+1)]\n    for _ in range(m):\n        v, u = map(int, sys.stdin.readline().split())\n        graph[v].append(u)\n        graph[u].append(v)\n\n    # find any spanning tree\n    visited = set()\n    queue = [1]\n    visited.add(1)\n    while queue:\n        v = queue.pop(0)\n        for u in graph[v]:\n            if u not in visited:\n                queue.append(u)\n                visited.add(u)\n\n    # check if spanning tree exists\n    if len(visited) != n:\n        print('NO')\n        return\n\n    # check if there is a spanning tree with degree D\n    if len(graph[1]) == D:\n        print('YES')\n        for u in graph[1]:\n            print(1, u)\n        return\n\n    # find a spanning tree with degree D\n    # try to remove edges from the first vertex\n    for u in graph[1]:\n        if u in visited:\n            visited.remove(u)\n        for v in graph[u]:\n            if v in visited:\n                visited.remove(v)\n\n        if len(visited) == n - 1:\n            break\n\n        visited.add(u)\n        for v in graph[u]:\n            visited.add(v)\n\n    if len(visited) == n - 1:\n        print('YES')\n        for u in graph[1]:\n            if u in visited:\n                print(1, u)\n    else:\n        print('NO')\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, m, d = [int(x) for x in input().split()]\n\ngraph = [[] for i in range(n)]\n\nfor i in range(m):\n    a, b = [int(x) for x in input().split()]\n    graph[a-1].append(b-1)\n    graph[b-1].append(a-1)\n\nif (d == n-1):\n    print(\"YES\")\n    for i in graph[0]:\n        print(1, i+1)\n    exit()\n\nif (d == 0):\n    print(\"YES\")\n    for i in graph[0]:\n        print(i+1, 1)\n    exit()\n\nif (d > n-1):\n    print(\"NO\")\n    exit()\n\nif (d > len(graph[0])):\n    print(\"NO\")\n    exit()\n\nprint(\"YES\")\n\nfor i in graph[0]:\n    print(1, i+1)\n    d -= 1\n    if (d == 0):\n        break\n\nfor i in range(1, n):\n    if (i in graph[0]):\n        continue\n    print(1, i+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, d = [int(x) for x in input().split()]\n    edges = []\n    for i in range(m):\n        a, b = [int(x) for x in input().split()]\n        edges.append((a, b))\n    edges.sort()\n\n    # Check if there is a solution\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i+1))\n    elif d == n-1:\n        print(\"YES\")\n        for i in range(n-1):\n            print(\"{} {}\".format(1, i+2))\n    else:\n        # Check if we can use the input edges\n        if m == n-1:\n            print(\"YES\")\n            for a, b in edges:\n                print(\"{} {}\".format(a, b))\n            return\n\n        # Check if we can construct a solution\n        if n-1-d > d:\n            print(\"NO\")\n            return\n        print(\"YES\")\n        for i in range(d):\n            print(\"{} {}\".format(1, i+2))\n        for i in range(d+1, n):\n            print(\"{} {}\".format(i, i+1))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\nclass Graph(object):\n    def __init__(self, n, edges):\n        self.n = n\n        self.edges = edges\n        self.graph = defaultdict(list)\n        self.visited = [False] * n\n        self.degree = [0] * n\n        for i, j in self.edges:\n            self.graph[i].append(j)\n            self.graph[j].append(i)\n            self.degree[i] += 1\n            self.degree[j] += 1\n        self.ans = []\n\n    def dfs(self, v):\n        self.visited[v] = True\n        for i in self.graph[v]:\n            if not self.visited[i]:\n                self.ans.append((v, i))\n                self.dfs(i)\n\n    def check(self, D):\n        if D == 0:\n            return True\n        for i in range(1, self.n):\n            if self.degree[i] == D:\n                self.dfs(i)\n                if len(self.ans) == self.n - 1:\n                    return True\n                else:\n                    self.ans.clear()\n                    self.visited = [False] * self.n\n        return False\n\n\nif __name__ == \"__main__\":\n    n, m, D = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = Graph(n, edges)\n    if graph.check(D):\n        print(\"YES\")\n        for i in graph.ans:\n            print(i[0], i[1])\n    else:\n        print(\"NO\")"
+    }
+  ],
+  "created": 1649870793,
+  "id": "cmpl-4wb3BJ3J4x8rW0EqQjEoqViUWzRDP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:27:01.849842 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m, d = [int(x) for x in input().split()]\n\nif d == 0:\n    print(\"NO\")\n    quit()\n\nedges = {}\nfor i in range(1, n+1):\n    edges[i] = []\n\nfor i in range(m):\n    v, u = [int(x) for x in input().split()]\n    edges[v].append(u)\n    edges[u].append(v)\n\ndef dfs(v, p, d):\n    if d == 0:\n        return True\n    for u in edges[v]:\n        if u != p:\n            if dfs(u, v, d-1):\n                print(v, u)\n                return True\n    return False\n\nif dfs(1, 1, d):\n    print(\"YES\")\nelse:\n    print(\"NO\")"
+}
+2022-04-13 17:27:01.849906 REASON stop
+2022-04-13 17:27:01.850450 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#------------------------------------------------------------------------------#\n\nimport sys\nimport heapq\n\ndef main():\n    n, m, D = map(int, sys.stdin.readline().split())\n    graph = [[] for _ in range(n+1)]\n    for _ in range(m):\n        v, u = map(int, sys.stdin.readline().split())\n        graph[v].append(u)\n        graph[u].append(v)\n\n    # find any spanning tree\n    visited = set()\n    queue = [1]\n    visited.add(1)\n    while queue:\n        v = queue.pop(0)\n        for u in graph[v]:\n            if u not in visited:\n                queue.append(u)\n                visited.add(u)\n\n    # check if spanning tree exists\n    if len(visited) != n:\n        print('NO')\n        return\n\n    # check if there is a spanning tree with degree D\n    if len(graph[1]) == D:\n        print('YES')\n        for u in graph[1]:\n            print(1, u)\n        return\n\n    # find a spanning tree with degree D\n    # try to remove edges from the first vertex\n    for u in graph[1]:\n        if u in visited:\n            visited.remove(u)\n        for v in graph[u]:\n            if v in visited:\n                visited.remove(v)\n\n        if len(visited) == n - 1:\n            break\n\n        visited.add(u)\n        for v in graph[u]:\n            visited.add(v)\n\n    if len(visited) == n - 1:\n        print('YES')\n        for u in graph[1]:\n            if u in visited:\n                print(1, u)\n    else:\n        print('NO')\n\nmain()"
+}
+2022-04-13 17:27:01.850612 REASON stop
+2022-04-13 17:27:01.851248 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, m, d = [int(x) for x in input().split()]\n\ngraph = [[] for i in range(n)]\n\nfor i in range(m):\n    a, b = [int(x) for x in input().split()]\n    graph[a-1].append(b-1)\n    graph[b-1].append(a-1)\n\nif (d == n-1):\n    print(\"YES\")\n    for i in graph[0]:\n        print(1, i+1)\n    exit()\n\nif (d == 0):\n    print(\"YES\")\n    for i in graph[0]:\n        print(i+1, 1)\n    exit()\n\nif (d > n-1):\n    print(\"NO\")\n    exit()\n\nif (d > len(graph[0])):\n    print(\"NO\")\n    exit()\n\nprint(\"YES\")\n\nfor i in graph[0]:\n    print(1, i+1)\n    d -= 1\n    if (d == 0):\n        break\n\nfor i in range(1, n):\n    if (i in graph[0]):\n        continue\n    print(1, i+1)"
+}
+2022-04-13 17:27:01.851326 REASON stop
+2022-04-13 17:27:01.875845 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:27:01.875964 REASON stop
+2022-04-13 17:27:01.901612 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:27:01.901742 REASON stop
+2022-04-13 17:27:01.903157 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, d = [int(x) for x in input().split()]\n    edges = []\n    for i in range(m):\n        a, b = [int(x) for x in input().split()]\n        edges.append((a, b))\n    edges.sort()\n\n    # Check if there is a solution\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i+1))\n    elif d == n-1:\n        print(\"YES\")\n        for i in range(n-1):\n            print(\"{} {}\".format(1, i+2))\n    else:\n        # Check if we can use the input edges\n        if m == n-1:\n            print(\"YES\")\n            for a, b in edges:\n                print(\"{} {}\".format(a, b))\n            return\n\n        # Check if we can construct a solution\n        if n-1-d > d:\n            print(\"NO\")\n            return\n        print(\"YES\")\n        for i in range(d):\n            print(\"{} {}\".format(1, i+2))\n        for i in range(d+1, n):\n            print(\"{} {}\".format(i, i+1))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:27:01.903258 REASON stop
+2022-04-13 17:27:01.904526 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\nclass Graph(object):\n    def __init__(self, n, edges):\n        self.n = n\n        self.edges = edges\n        self.graph = defaultdict(list)\n        self.visited = [False] * n\n        self.degree = [0] * n\n        for i, j in self.edges:\n            self.graph[i].append(j)\n            self.graph[j].append(i)\n            self.degree[i] += 1\n            self.degree[j] += 1\n        self.ans = []\n\n    def dfs(self, v):\n        self.visited[v] = True\n        for i in self.graph[v]:\n            if not self.visited[i]:\n                self.ans.append((v, i))\n                self.dfs(i)\n\n    def check(self, D):\n        if D == 0:\n            return True\n        for i in range(1, self.n):\n            if self.degree[i] == D:\n                self.dfs(i)\n                if len(self.ans) == self.n - 1:\n                    return True\n                else:\n                    self.ans.clear()\n                    self.visited = [False] * self.n\n        return False\n\n\nif __name__ == \"__main__\":\n    n, m, D = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = Graph(n, edges)\n    if graph.check(D):\n        print(\"YES\")\n        for i in graph.ans:\n            print(i[0], i[1])\n    else:\n        print(\"NO\")"
+}
+2022-04-13 17:27:01.904629 REASON stop

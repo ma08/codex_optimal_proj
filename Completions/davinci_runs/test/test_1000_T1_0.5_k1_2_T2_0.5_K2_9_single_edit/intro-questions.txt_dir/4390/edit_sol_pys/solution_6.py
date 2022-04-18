@@ -1,0 +1,13 @@
+# PROBLEM
+# https://www.codechef.com/problems/FLOW018
+
+# SOLUTION
+# This is just a simple application of modulo operation.
+# The minimum number of moves will be the difference between
+# a and the remainder when a is divided by b.
+# Runtime: O(t)
+
+t = int(input())
+for _ in range(t):
+    a, b = map(int, input().split())
+    print(a % b)

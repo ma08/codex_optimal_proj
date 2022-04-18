@@ -1,0 +1,170 @@
+2022-04-09 22:16:56.325426 """
+Electoral systems across the world can vary widely. In some systems, such as winner-take-all, the winner is determined by the plurality of votes—the candidate that receives the most votes wins, and the loser(s) do not get a position.
+
+Such elections can have “wasted votes.” Conceptually, a wasted vote is a vote that did not affect the election outcome. While the exact definition of a wasted vote varies, we’ll adopt the following definition: in an election with $V$ voters, every vote for a losing candidate is wasted (these are called lost votes), and every vote for a winning candidate beyond the strict majority of $\lfloor V/2\rfloor + 1$ votes the candidate needs to win is wasted (these are called excess votes). For this problem we’ll consider a two-party system (let’s call the parties A and B) with elections that always involve one candidate from each party.
+
+Let’s illustrate wasted votes with a simple example between two candidates in a district. Suppose that the candidate for party A receives $100$ votes and the candidate for party B receives $200$ votes. All $100$ votes for party A are wasted (lost votes for A), and $49$ votes for party B are wasted (excess votes for B). This is because B needs $151$ ($\lfloor (100 + 200) / 2 \rfloor + 1$) votes to win (over A), so the remaining $49$ are wasted.
+
+Political scientists use wasted votes to compute the efficiency gap, a single number that summarizes wasted votes. Suppose we have a number of races in different districts, where each district elects one person. Across all districts there are $V$ total votes cast, with $w_ A$ total wasted votes for party A and $w_ B$ total wasted votes for party B. Then the efficiency gap is:\[ E(V, w_ A, w_ B) = \frac{|w_ A - w_ B|}{V}. \]
+
+A low efficiency gap indicates that the elections are competitive, and that the number of candidates elected from each party is representative of the total voting share for each party. When the efficiency gap is high, this can be an indication of gerrymandering. Gerrymandering refers to organizing voting districts in a way that favors a particular political outcome. Two common ways of doing this are to “pack” similar voters into districts, or “crack” them across multiple districts; both ways tend to diminish those voters’ influence in electing candidates they would like to win.
+
+In an election, districts are made up of precincts. A precinct is an indivisible group of voters. The votes for all precincts in a district are added together to find the results for that district. In this problem you are given a description of a number of precincts: the party vote totals for each precinct, and how those precincts have been grouped into districts. For each district, determine the party that wins and the wasted votes for each party. Then determine the efficiency gap between the two parties over all the districts.
+
+-----Input-----
+The input describes one election. The first line contains two integers $P$ and $D$, where $1 \le P \le 10000$ and $1 \le D \le \min (1000, P)$. These indicate, respectively, the number of voting precincts and districts. Following this are $P$ lines describing the precincts. Line $i$ contains $3$ numbers: the district $d_ i$ that precinct $i$ is assigned to ($1 \le d_ i \le D$), the number of votes for the candidate from party A ($0 \le a_ i \le 100000$), and the number of votes for the candidate from party B ($0 \le b_ i \le 100000$). It is guaranteed that:
+ - for each precinct $i$, $0 < a_ i + b_ i$,
+ - each district is assigned at least one precinct, and
+ - there are no ties within any district.
+
+-----Output-----
+For each of the districts from $1$ to $D$, print which party wins (a single character, either A or B). Then print the number of wasted votes for party A and for party B, in order. Finally, after reporting on all the districts, print the efficiency gap as measured over all the districts. The efficiency gap should be accurate to within an absolute error of $10^{-6}$.
+
+-----Examples-----
+Sample Input 1:
+5 3
+1 100 200
+2 100 99
+3 100 50
+3 100 50
+2 100 98
+Sample Output 1:
+B 100 49
+A 1 197
+A 49 100
+0.1965897693
+
+Sample Input 2:
+4 4
+3 100 99
+2 100 99
+1 100 99
+4 100 99
+Sample Output 2:
+A 0 99
+A 0 99
+A 0 99
+A 0 99
+0.4974874372
+"""
+2022-04-09 22:16:56.325451 --------------------------
+2022-04-09 22:17:38.465151 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef efficiencyGap(precincts, districts):\n    # A is party A, B is party B\n    A, B = 0, 0\n    for d in range(1, districts+1):\n        # Find the winning party\n        votesA, votesB = 0, 0\n        for p in precincts:\n            if p[0] == d:\n                votesA += p[1]\n                votesB += p[2]\n        if votesA > votesB:\n            A += 1\n        else:\n            B += 1\n        # Find the wasted votes\n        if votesA > votesB:\n            print(\"A\", votesB, votesA-votesB-1)\n        else:\n            print(\"B\", votesA, votesB-votesA-1)\n    V = sum([sum(p[1:3]) for p in precincts])\n    wA = sum([p[2] for p in precincts if p[1] > p[2]])\n    wB = sum([p[1] for p in precincts if p[1] < p[2]])\n    print(\"{0:.10f}\".format(abs(wA-wB)/V))\n\nefficiencyGap([[1, 100, 200], [2, 100, 99], [3, 100, 50], [3, 100, 50], [2, 100, 98]], 3)\nefficiencyGap([[3, 100, 99], [2, 100, 99], [1, 100, 99], [4, 100, 99]], 4)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main entry point for the script.\n    \"\"\"\n    # Read the input data.\n    precincts, districts = [int(x) for x in input().split()]\n    data = [[int(x) for x in input().split()] for _ in range(precincts)]\n\n    # Get the total votes per district.\n    total_votes = [[0, 0] for _ in range(districts)]\n    for precinct in data:\n        total_votes[precinct[0] - 1][0] += precinct[1]\n        total_votes[precinct[0] - 1][1] += precinct[2]\n\n    # Get the winners and wasted votes per district.\n    winners = []\n    wasted_votes = [[0, 0] for _ in range(districts)]\n    for district in range(districts):\n        if total_votes[district][0] > total_votes[district][1]:\n            winners.append('A')\n            wasted_votes[district][0] = total_votes[district][0] - (total_votes[district][0] // 2 + 1)\n            wasted_votes[district][1] = total_votes[district][1]\n        else:\n            winners.append('B')\n            wasted_votes[district][0] = total_votes[district][0]\n            wasted_votes[district][1] = total_votes[district][1] - (total_votes[district][1] // 2 + 1)\n\n    # Print the output.\n    for district in range(districts):\n        print(winners[district], wasted_votes[district][0], wasted_votes[district][1])\n\n    # Calculate and print the efficiency gap.\n    efficiency_gap = sum([wasted_votes[district][0] for district in range(districts)]) - sum([wasted_votes[district][1] for district in range(districts)])\n    efficiency_gap /= sum([total_votes[district][0] + total_votes[district][1] for district in range(districts)])\n    print(abs(efficiency_gap))\n\n# Execute the main function.\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef efficiency_gap(votes):\n    \"\"\"\n    votes: a list of tuples of the form (district, party_a_votes, party_b_votes)\n    \"\"\"\n    # Get the total votes\n    total_votes = sum([votes[i][1] + votes[i][2] for i in range(len(votes))])\n    # Get the total votes for each party\n    total_votes_a = sum([votes[i][1] for i in range(len(votes))])\n    total_votes_b = sum([votes[i][2] for i in range(len(votes))])\n    # Get the total votes for each district\n    district_votes = {}\n    for i in range(len(votes)):\n        district = votes[i][0]\n        if district not in district_votes:\n            district_votes[district] = votes[i][1] + votes[i][2]\n        else:\n            district_votes[district] += votes[i][1] + votes[i][2]\n    # Get the winner and wasted votes in each district\n    district_results = {}\n    for district in district_votes:\n        votes_a = sum([votes[i][1] for i in range(len(votes)) if votes[i][0] == district])\n        votes_b = sum([votes[i][2] for i in range(len(votes)) if votes[i][0] == district])\n        if votes_a > votes_b:\n            district_results[district] = ('A', votes_b, votes_a - (district_votes[district] // 2) - 1)\n        else:\n            district_results[district] = ('B', votes_a, votes_b - (district_votes[district] // 2) - 1)\n    # Get the wasted votes for each party\n    wasted_votes_a = sum([district_results[district][1] for district in district_results])\n    wasted_votes_b = sum([district_results[district][2] for district in district_results])\n    # Print the results\n    for district in sorted(district_results):\n        print(district_results[district][0], district_results[district][1], district_results[district][2])\n    print(abs(wasted_votes_a - wasted_votes_b) / total_votes)\n\ndef main():\n    # Read the input\n    lines = sys.stdin.readlines()\n    votes = []\n    for i in range(1, len(lines)):\n        votes.append(tuple(map(int, lines[i].split(' '))))\n    # Get the efficiency gap\n    efficiency_gap(votes)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    line = sys.stdin.readline()\n    P, D = list(map(int, line.split()))\n    precincts = []\n    for i in range(P):\n        line = sys.stdin.readline()\n        d, a, b = list(map(int, line.split()))\n        precincts.append((d, a, b))\n    districts = [None] * D\n    for i in range(D):\n        districts[i] = []\n    for i in range(P):\n        districts[precincts[i][0] - 1].append(precincts[i])\n    efficiency_gap = 0\n    for i in range(D):\n        district = districts[i]\n        P = len(district)\n        V = 0\n        w_A = 0\n        w_B = 0\n        for j in range(P):\n            V += district[j][1] + district[j][2]\n        A_votes = 0\n        B_votes = 0\n        for j in range(P):\n            A_votes += district[j][1]\n            B_votes += district[j][2]\n        if A_votes > B_votes:\n            w_B = B_votes\n            if A_votes > V/2 + 1:\n                w_A = A_votes - V/2 - 1\n            else:\n                w_A = 0\n            print('A', int(w_A), int(w_B))\n        else:\n            w_A = A_votes\n            if B_votes > V/2 + 1:\n                w_B = B_votes - V/2 - 1\n            else:\n                w_B = 0\n            print('B', int(w_A), int(w_B))\n        efficiency_gap += abs(w_A - w_B)\n    efficiency_gap /= V\n    print('{:.12f}'.format(efficiency_gap))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    # Get input\n    p, d = [int(x) for x in input().split()]\n    precincts = []\n    for i in range(p):\n        precincts.append([int(x) for x in input().split()])\n    # Get the districts\n    districts = []\n    for i in range(d):\n        districts.append([])\n    for precinct in precincts:\n        districts[precinct[0]-1].append(precinct)\n    # Get the results\n    results = []\n    for district in districts:\n        a_votes = sum([precinct[1] for precinct in district])\n        b_votes = sum([precinct[2] for precinct in district])\n        if a_votes > b_votes:\n            winner = 'A'\n            lost_votes = b_votes\n            excess_votes = a_votes - (len(district)//2 + 1)\n        else:\n            winner = 'B'\n            lost_votes = a_votes\n            excess_votes = b_votes - (len(district)//2 + 1)\n        results.append([winner, lost_votes, excess_votes])\n    # Print the results\n    for result in results:\n        print(result[0], result[1], result[2])\n    # Print the efficiency gap\n    total_votes = sum([sum([precinct[1] + precinct[2] for precinct in district]) for district in districts])\n    total_lost_votes = sum([result[1] for result in results])\n    total_excess_votes = sum([result[2] for result in results])\n    print(abs(total_lost_votes - total_excess_votes)/total_votes)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\ndef efficiency_gap(precincts):\n    \"\"\"\n    The efficiency gap is a measure of how fair the districting is.\n    It is the difference between the total number of wasted votes for\n    the party that won the most seats and the party that won the fewest\n    seats, divided by the total number of votes cast.\n    \"\"\"\n    num_votes = sum(sum(p) for p in precincts.values())\n    wasted_votes = defaultdict(int)\n    for district, precinct_votes in precincts.items():\n        if precinct_votes[0] > precinct_votes[1]:\n            wasted_votes[district] = precinct_votes[0] - (sum(precinct_votes) // 2 + 1)\n        else:\n            wasted_votes[district] = precinct_votes[1] - (sum(precinct_votes) // 2 + 1)\n    if sum(wasted_votes.values()) == 0:\n        return 0\n    return abs(sum(wasted_votes.values())) / num_votes\n\n\ndef main():\n    P, D = [int(x) for x in input().strip().split()]\n    precincts = defaultdict(list)\n    for i in range(P):\n        d, a, b = [int(x) for x in input().strip().split()]\n        precincts[d].append((a, b))\n\n    for district, precinct_votes in precincts.items():\n        votes_a = sum(p[0] for p in precinct_votes)\n        votes_b = sum(p[1] for p in precinct_votes)\n        if votes_a > votes_b:\n            print('A', votes_a - (votes_a // 2 + 1), votes_b - (votes_b // 2 + 1))\n        else:\n            print('B', votes_a - (votes_a // 2 + 1), votes_b - (votes_b // 2 + 1))\n\n    print(efficiency_gap(precincts))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef solve(input):\n    \"\"\"\n    >>> solve('5 3\\\\n1 100 200\\\\n2 100 99\\\\n3 100 50\\\\n3 100 50\\\\n2 100 98')\n    'B 100 49\\\\nA 1 197\\\\nA 49 100\\\\n0.1965897693'\n    >>> solve('4 4\\\\n3 100 99\\\\n2 100 99\\\\n1 100 99\\\\n4 100 99')\n    'A 0 99\\\\nA 0 99\\\\nA 0 99\\\\nA 0 99\\\\n0.4974874372'\n    \"\"\"\n    P, D = [int(x) for x in input.split()[0:2]]\n    precincts = []\n    for i in range(P):\n        precincts.append([int(x) for x in input.split()[2:5]])\n    districts = {}\n    for precinct in precincts:\n        if precinct[0] not in districts:\n            districts[precinct[0]] = [[precinct[1], precinct[2]]]\n        else:\n            districts[precinct[0]].append([precinct[1], precinct[2]])\n    districts_results = []\n    for district in districts:\n        votes = districts[district]\n        votes_a = sum([v[0] for v in votes])\n        votes_b = sum([v[1] for v in votes])\n        if votes_a > votes_b:\n            districts_results.append(['A', votes_a - (votes_a + votes_b) / 2 - 1, votes_b])\n        else:\n            districts_results.append(['B', votes_a, votes_b - (votes_a + votes_b) / 2 - 1])\n    total_votes = sum([districts_results[i][1] + districts_results[i][2] for i in range(len(districts_results))])\n    total_wasted_a = sum([districts_results[i][1] for i in range(len(districts_results))])\n    total_wasted_b = sum([districts_results[i][2] for i in range(len(districts_results))])\n    output = ''\n    for district in districts_results:\n        output = output + district[0] + ' ' + str(district[1]) + ' ' + str(district[2]) + '\\\\n'\n    output = output + str(abs(total_wasted_a - total_wasted_b) / float(total_votes))\n    return output\n\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\nfrom math import floor\n\ndef main():\n    P, D = [int(i) for i in stdin.readline().split()]\n    districts = [[] for i in range(0, D)]\n    for i in range(0, P):\n        district, A, B = [int(i) for i in stdin.readline().split()]\n        districts[district-1].append([A, B])\n    totalVotes = 0\n    wA, wB = 0, 0\n    for district in districts:\n        totalVotes += sum([sum(precinct) for precinct in district])\n        votesA, votesB = sum([precinct[0] for precinct in district]), sum([precinct[1] for precinct in district])\n        if votesA > votesB:\n            stdout.write(\"A\\n\")\n            wA += votesB\n            wB += votesA - floor((votesA+votesB)/2) - 1\n        else:\n            stdout.write(\"B\\n\")\n            wA += votesA\n            wB += votesB - floor((votesA+votesB)/2) - 1\n    stdout.write(\"{0} {1}\\n\".format(wA, wB))\n    stdout.write(\"{0}\\n\".format(abs(wA-wB)/totalVotes))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649557016,
+  "id": "cmpl-4vHQGbskKjcesbGjPRGy7jHoxxNwQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:17:38.465745 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef efficiencyGap(precincts, districts):\n    # A is party A, B is party B\n    A, B = 0, 0\n    for d in range(1, districts+1):\n        # Find the winning party\n        votesA, votesB = 0, 0\n        for p in precincts:\n            if p[0] == d:\n                votesA += p[1]\n                votesB += p[2]\n        if votesA > votesB:\n            A += 1\n        else:\n            B += 1\n        # Find the wasted votes\n        if votesA > votesB:\n            print(\"A\", votesB, votesA-votesB-1)\n        else:\n            print(\"B\", votesA, votesB-votesA-1)\n    V = sum([sum(p[1:3]) for p in precincts])\n    wA = sum([p[2] for p in precincts if p[1] > p[2]])\n    wB = sum([p[1] for p in precincts if p[1] < p[2]])\n    print(\"{0:.10f}\".format(abs(wA-wB)/V))\n\nefficiencyGap([[1, 100, 200], [2, 100, 99], [3, 100, 50], [3, 100, 50], [2, 100, 98]], 3)\nefficiencyGap([[3, 100, 99], [2, 100, 99], [1, 100, 99], [4, 100, 99]], 4)"
+}
+2022-04-09 22:17:38.465807 REASON stop
+2022-04-09 22:17:38.477221 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.477247 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main entry point for the script.\n    \"\"\"\n    # Read the input data.\n    precincts, districts = [int(x) for x in input().split()]\n    data = [[int(x) for x in input().split()] for _ in range(precincts)]\n\n    # Get the total votes per district.\n    total_votes = [[0, 0] for _ in range(districts)]\n    for precinct in data:\n        total_votes[precinct[0] - 1][0] += precinct[1]\n        total_votes[precinct[0] - 1][1] += precinct[2]\n\n    # Get the winners and wasted votes per district.\n    winners = []\n    wasted_votes = [[0, 0] for _ in range(districts)]\n    for district in range(districts):\n        if total_votes[district][0] > total_votes[district][1]:\n            winners.append('A')\n            wasted_votes[district][0] = total_votes[district][0] - (total_votes[district][0] // 2 + 1)\n            wasted_votes[district][1] = total_votes[district][1]\n        else:\n            winners.append('B')\n            wasted_votes[district][0] = total_votes[district][0]\n            wasted_votes[district][1] = total_votes[district][1] - (total_votes[district][1] // 2 + 1)\n\n    # Print the output.\n    for district in range(districts):\n        print(winners[district], wasted_votes[district][0], wasted_votes[district][1])\n\n    # Calculate and print the efficiency gap.\n    efficiency_gap = sum([wasted_votes[district][0] for district in range(districts)]) - sum([wasted_votes[district][1] for district in range(districts)])\n    efficiency_gap /= sum([total_votes[district][0] + total_votes[district][1] for district in range(districts)])\n    print(abs(efficiency_gap))\n\n# Execute the main function.\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:17:38.477299 REASON stop
+2022-04-09 22:17:38.477493 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.477500 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef efficiency_gap(votes):\n    \"\"\"\n    votes: a list of tuples of the form (district, party_a_votes, party_b_votes)\n    \"\"\"\n    # Get the total votes\n    total_votes = sum([votes[i][1] + votes[i][2] for i in range(len(votes))])\n    # Get the total votes for each party\n    total_votes_a = sum([votes[i][1] for i in range(len(votes))])\n    total_votes_b = sum([votes[i][2] for i in range(len(votes))])\n    # Get the total votes for each district\n    district_votes = {}\n    for i in range(len(votes)):\n        district = votes[i][0]\n        if district not in district_votes:\n            district_votes[district] = votes[i][1] + votes[i][2]\n        else:\n            district_votes[district] += votes[i][1] + votes[i][2]\n    # Get the winner and wasted votes in each district\n    district_results = {}\n    for district in district_votes:\n        votes_a = sum([votes[i][1] for i in range(len(votes)) if votes[i][0] == district])\n        votes_b = sum([votes[i][2] for i in range(len(votes)) if votes[i][0] == district])\n        if votes_a > votes_b:\n            district_results[district] = ('A', votes_b, votes_a - (district_votes[district] // 2) - 1)\n        else:\n            district_results[district] = ('B', votes_a, votes_b - (district_votes[district] // 2) - 1)\n    # Get the wasted votes for each party\n    wasted_votes_a = sum([district_results[district][1] for district in district_results])\n    wasted_votes_b = sum([district_results[district][2] for district in district_results])\n    # Print the results\n    for district in sorted(district_results):\n        print(district_results[district][0], district_results[district][1], district_results[district][2])\n    print(abs(wasted_votes_a - wasted_votes_b) / total_votes)\n\ndef main():\n    # Read the input\n    lines = sys.stdin.readlines()\n    votes = []\n    for i in range(1, len(lines)):\n        votes.append(tuple(map(int, lines[i].split(' '))))\n    # Get the efficiency gap\n    efficiency_gap(votes)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:17:38.477521 REASON stop
+2022-04-09 22:17:38.477645 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.477651 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    line = sys.stdin.readline()\n    P, D = list(map(int, line.split()))\n    precincts = []\n    for i in range(P):\n        line = sys.stdin.readline()\n        d, a, b = list(map(int, line.split()))\n        precincts.append((d, a, b))\n    districts = [None] * D\n    for i in range(D):\n        districts[i] = []\n    for i in range(P):\n        districts[precincts[i][0] - 1].append(precincts[i])\n    efficiency_gap = 0\n    for i in range(D):\n        district = districts[i]\n        P = len(district)\n        V = 0\n        w_A = 0\n        w_B = 0\n        for j in range(P):\n            V += district[j][1] + district[j][2]\n        A_votes = 0\n        B_votes = 0\n        for j in range(P):\n            A_votes += district[j][1]\n            B_votes += district[j][2]\n        if A_votes > B_votes:\n            w_B = B_votes\n            if A_votes > V/2 + 1:\n                w_A = A_votes - V/2 - 1\n            else:\n                w_A = 0\n            print('A', int(w_A), int(w_B))\n        else:\n            w_A = A_votes\n            if B_votes > V/2 + 1:\n                w_B = B_votes - V/2 - 1\n            else:\n                w_B = 0\n            print('B', int(w_A), int(w_B))\n        efficiency_gap += abs(w_A - w_B)\n    efficiency_gap /= V\n    print('{:.12f}'.format(efficiency_gap))\n\nmain()"
+}
+2022-04-09 22:17:38.477671 REASON stop
+2022-04-09 22:17:38.477780 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.477786 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    # Get input\n    p, d = [int(x) for x in input().split()]\n    precincts = []\n    for i in range(p):\n        precincts.append([int(x) for x in input().split()])\n    # Get the districts\n    districts = []\n    for i in range(d):\n        districts.append([])\n    for precinct in precincts:\n        districts[precinct[0]-1].append(precinct)\n    # Get the results\n    results = []\n    for district in districts:\n        a_votes = sum([precinct[1] for precinct in district])\n        b_votes = sum([precinct[2] for precinct in district])\n        if a_votes > b_votes:\n            winner = 'A'\n            lost_votes = b_votes\n            excess_votes = a_votes - (len(district)//2 + 1)\n        else:\n            winner = 'B'\n            lost_votes = a_votes\n            excess_votes = b_votes - (len(district)//2 + 1)\n        results.append([winner, lost_votes, excess_votes])\n    # Print the results\n    for result in results:\n        print(result[0], result[1], result[2])\n    # Print the efficiency gap\n    total_votes = sum([sum([precinct[1] + precinct[2] for precinct in district]) for district in districts])\n    total_lost_votes = sum([result[1] for result in results])\n    total_excess_votes = sum([result[2] for result in results])\n    print(abs(total_lost_votes - total_excess_votes)/total_votes)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:17:38.477821 REASON stop
+2022-04-09 22:17:38.477934 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.477940 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\ndef efficiency_gap(precincts):\n    \"\"\"\n    The efficiency gap is a measure of how fair the districting is.\n    It is the difference between the total number of wasted votes for\n    the party that won the most seats and the party that won the fewest\n    seats, divided by the total number of votes cast.\n    \"\"\"\n    num_votes = sum(sum(p) for p in precincts.values())\n    wasted_votes = defaultdict(int)\n    for district, precinct_votes in precincts.items():\n        if precinct_votes[0] > precinct_votes[1]:\n            wasted_votes[district] = precinct_votes[0] - (sum(precinct_votes) // 2 + 1)\n        else:\n            wasted_votes[district] = precinct_votes[1] - (sum(precinct_votes) // 2 + 1)\n    if sum(wasted_votes.values()) == 0:\n        return 0\n    return abs(sum(wasted_votes.values())) / num_votes\n\n\ndef main():\n    P, D = [int(x) for x in input().strip().split()]\n    precincts = defaultdict(list)\n    for i in range(P):\n        d, a, b = [int(x) for x in input().strip().split()]\n        precincts[d].append((a, b))\n\n    for district, precinct_votes in precincts.items():\n        votes_a = sum(p[0] for p in precinct_votes)\n        votes_b = sum(p[1] for p in precinct_votes)\n        if votes_a > votes_b:\n            print('A', votes_a - (votes_a // 2 + 1), votes_b - (votes_b // 2 + 1))\n        else:\n            print('B', votes_a - (votes_a // 2 + 1), votes_b - (votes_b // 2 + 1))\n\n    print(efficiency_gap(precincts))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:17:38.477960 REASON stop
+2022-04-09 22:17:38.478069 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.478075 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef solve(input):\n    \"\"\"\n    >>> solve('5 3\\\\n1 100 200\\\\n2 100 99\\\\n3 100 50\\\\n3 100 50\\\\n2 100 98')\n    'B 100 49\\\\nA 1 197\\\\nA 49 100\\\\n0.1965897693'\n    >>> solve('4 4\\\\n3 100 99\\\\n2 100 99\\\\n1 100 99\\\\n4 100 99')\n    'A 0 99\\\\nA 0 99\\\\nA 0 99\\\\nA 0 99\\\\n0.4974874372'\n    \"\"\"\n    P, D = [int(x) for x in input.split()[0:2]]\n    precincts = []\n    for i in range(P):\n        precincts.append([int(x) for x in input.split()[2:5]])\n    districts = {}\n    for precinct in precincts:\n        if precinct[0] not in districts:\n            districts[precinct[0]] = [[precinct[1], precinct[2]]]\n        else:\n            districts[precinct[0]].append([precinct[1], precinct[2]])\n    districts_results = []\n    for district in districts:\n        votes = districts[district]\n        votes_a = sum([v[0] for v in votes])\n        votes_b = sum([v[1] for v in votes])\n        if votes_a > votes_b:\n            districts_results.append(['A', votes_a - (votes_a + votes_b) / 2 - 1, votes_b])\n        else:\n            districts_results.append(['B', votes_a, votes_b - (votes_a + votes_b) / 2 - 1])\n    total_votes = sum([districts_results[i][1] + districts_results[i][2] for i in range(len(districts_results))])\n    total_wasted_a = sum([districts_results[i][1] for i in range(len(districts_results))])\n    total_wasted_b = sum([districts_results[i][2] for i in range(len(districts_results))])\n    output = ''\n    for district in districts_results:\n        output = output + district[0] + ' ' + str(district[1]) + ' ' + str(district[2]) + '\\\\n'\n    output = output + str(abs(total_wasted_a - total_wasted_b) / float(total_votes))\n    return output\n\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+}
+2022-04-09 22:17:38.478095 REASON stop
+2022-04-09 22:17:38.478204 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'
+2022-04-09 22:17:38.478211 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\nfrom math import floor\n\ndef main():\n    P, D = [int(i) for i in stdin.readline().split()]\n    districts = [[] for i in range(0, D)]\n    for i in range(0, P):\n        district, A, B = [int(i) for i in stdin.readline().split()]\n        districts[district-1].append([A, B])\n    totalVotes = 0\n    wA, wB = 0, 0\n    for district in districts:\n        totalVotes += sum([sum(precinct) for precinct in district])\n        votesA, votesB = sum([precinct[0] for precinct in district]), sum([precinct[1] for precinct in district])\n        if votesA > votesB:\n            stdout.write(\"A\\n\")\n            wA += votesB\n            wB += votesA - floor((votesA+votesB)/2) - 1\n        else:\n            stdout.write(\"B\\n\")\n            wA += votesA\n            wB += votesB - floor((votesA+votesB)/2) - 1\n    stdout.write(\"{0} {1}\\n\".format(wA, wB))\n    stdout.write(\"{0}\\n\".format(abs(wA-wB)/totalVotes))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:17:38.478231 REASON stop
+2022-04-09 22:17:38.478344 test/intro-questions.txt_dir/4778/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4778/solutions.json'

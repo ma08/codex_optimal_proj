@@ -1,0 +1,89 @@
+2022-04-18 03:42:02.939476 """
+You are given a connected undirected graph consisting of $n$ vertices and $m$ edges. There are no self-loops or multiple edges in the given graph.
+
+You have to direct its edges in such a way that the obtained directed graph does not contain any paths of length two or greater (where the length of path is denoted as the number of traversed edges).
+
+
+-----Input-----
+
+The first line contains two integer numbers $n$ and $m$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le 2 \cdot 10^5$) — the number of vertices and edges, respectively.
+
+The following $m$ lines contain edges: edge $i$ is given as a pair of vertices $u_i$, $v_i$ ($1 \le u_i, v_i \le n$, $u_i \ne v_i$). There are no multiple edges in the given graph, i. e. for each pair ($u_i, v_i$) there are no other pairs ($u_i, v_i$) and ($v_i, u_i$) in the list of edges. It is also guaranteed that the given graph is connected (there is a path between any pair of vertex in the given graph).
+
+
+-----Output-----
+
+If it is impossible to direct edges of the given graph in such a way that the obtained directed graph does not contain paths of length at least two, print "NO" in the first line.
+
+Otherwise print "YES" in the first line, and then print any suitable orientation of edges: a binary string (the string consisting only of '0' and '1') of length $m$. The $i$-th element of this string should be '0' if the $i$-th edge of the graph should be directed from $u_i$ to $v_i$, and '1' otherwise. Edges are numbered in the order they are given in the input.
+
+
+-----Example-----
+Input
+6 5
+1 5
+2 1
+1 4
+3 1
+6 1
+
+Output
+YES
+10100
+
+
+
+-----Note-----
+
+The picture corresponding to the first example: [Image]
+
+And one of possible answers: $\text{of}$
+"""
+2022-04-18 03:42:02.939509 --------------------------
+2022-04-18 03:42:51.792236 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nimport sys\n\n\ndef dfs(graph, v, parent, used, color):\n    used[v] = True\n    for u in graph[v]:\n        if u == parent:\n            continue\n        if used[u]:\n            continue\n        if dfs(graph, u, v, used, 1 - color):\n            return True\n    return False\n\n\ndef solve(n, m, edges):\n    graph = [[] for _ in range(n)]\n    for u, v in edges:\n        graph[u - 1].append(v - 1)\n        graph[v - 1].append(u - 1)\n    used = [False] * n\n    if dfs(graph, 0, -1, used, 0):\n        print('NO')\n        return\n    color = [None] * n\n    for i in range(n):\n        if color[i] is None:\n            color[i] = 0\n            stack = [i]\n            while stack:\n                v = stack.pop()\n                for u in graph[v]:\n                    if color[u] is None:\n                        color[u] = 1 - color[v]\n                        stack.append(u)\n    for u, v in edges:\n        if color[u - 1] == color[v - 1]:\n            print('NO')\n            return\n    print('YES')\n    for u, v in edges:\n        if color[u - 1] < color[v - 1]:\n            print(0, end='')\n        else:\n            print(1, end='')\n\n\ndef main():\n    reader = (int(x) for x in sys.stdin.readline().split())\n    n, m = next(reader), next(reader)\n    edges = [[next(reader), next(reader)] for _ in range(m)]\n    solve(n, m, edges)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(n, m, edges):\n    graph = [[] for _ in range(n + 1)]\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)\n    # print(graph)\n\n    # DFS\n    seen = [False for _ in range(n + 1)]\n    def dfs(graph, source):\n        seen[source] = True\n        for v in graph[source]:\n            if not seen[v]:\n                dfs(graph, v)\n\n    dfs(graph, 1)\n\n    if not all(seen):\n        return False\n\n    # find a cycle\n    cycle = [False for _ in range(m)]\n    seen = [False for _ in range(n + 1)]\n    seen[1] = True\n    for i in range(m):\n        u, v = edges[i]\n        if seen[u] and seen[v]:\n            cycle[i] = True\n        seen[u] = True\n        seen[v] = True\n\n    # print(cycle)\n\n    # find a cycle that has at least one even degree node\n    def dfs2(graph, source, cycle, even_degree_count):\n        seen[source] = True\n        if len(graph[source]) % 2 == 0:\n            even_degree_count += 1\n        if len(graph[source]) > 1 and even_degree_count > 1:\n            return True\n        if len(graph[source]) == 1 and even_degree_count > 0:\n            return True\n        if len(graph[source]) == 0:\n            return even_degree_count > 0\n        for v in graph[source]:\n            if not seen[v]:\n                if dfs2(graph, v, cycle, even_degree_count):\n                    for u, v in edges:\n                        if u == source:\n                            cycle[u - 1] = False\n                    return True\n        return False\n\n    # print(cycle)\n    for i in range(m):\n        if cycle[i]:\n            u, v = edges[i]\n            graph[u].remove(v)\n            graph[v].remove(u)\n            seen = [False for _ in range(n + 1)]\n            if dfs2(graph, u, cycle, 0):\n                cycle[i] = False\n            graph[u].append(v)\n            graph[v].append(u)\n\n    # print(cycle)\n    return cycle\n\n\nif __name__ == \"__main__\":\n    n, m = map(int, sys.stdin.readline().strip().split())\n    edges = [None for _ in range(m)]\n    for i in range(m):\n        edges[i] = tuple(map(int, sys.stdin.readline().strip().split()))\n    cycle = solve(n, m, edges)\n    if cycle is False:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(\"\".join(map(str, map(int, cycle))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    }
+  ],
+  "created": 1650253323,
+  "id": "cmpl-4yCZ12LcMpH3eG2cmGwfHw7N02Hj1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 03:42:51.792453 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nimport sys\n\n\ndef dfs(graph, v, parent, used, color):\n    used[v] = True\n    for u in graph[v]:\n        if u == parent:\n            continue\n        if used[u]:\n            continue\n        if dfs(graph, u, v, used, 1 - color):\n            return True\n    return False\n\n\ndef solve(n, m, edges):\n    graph = [[] for _ in range(n)]\n    for u, v in edges:\n        graph[u - 1].append(v - 1)\n        graph[v - 1].append(u - 1)\n    used = [False] * n\n    if dfs(graph, 0, -1, used, 0):\n        print('NO')\n        return\n    color = [None] * n\n    for i in range(n):\n        if color[i] is None:\n            color[i] = 0\n            stack = [i]\n            while stack:\n                v = stack.pop()\n                for u in graph[v]:\n                    if color[u] is None:\n                        color[u] = 1 - color[v]\n                        stack.append(u)\n    for u, v in edges:\n        if color[u - 1] == color[v - 1]:\n            print('NO')\n            return\n    print('YES')\n    for u, v in edges:\n        if color[u - 1] < color[v - 1]:\n            print(0, end='')\n        else:\n            print(1, end='')\n\n\ndef main():\n    reader = (int(x) for x in sys.stdin.readline().split())\n    n, m = next(reader), next(reader)\n    edges = [[next(reader), next(reader)] for _ in range(m)]\n    solve(n, m, edges)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 03:42:51.792493 REASON stop
+2022-04-18 03:42:51.814245 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(n, m, edges):\n    graph = [[] for _ in range(n + 1)]\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)\n    # print(graph)\n\n    # DFS\n    seen = [False for _ in range(n + 1)]\n    def dfs(graph, source):\n        seen[source] = True\n        for v in graph[source]:\n            if not seen[v]:\n                dfs(graph, v)\n\n    dfs(graph, 1)\n\n    if not all(seen):\n        return False\n\n    # find a cycle\n    cycle = [False for _ in range(m)]\n    seen = [False for _ in range(n + 1)]\n    seen[1] = True\n    for i in range(m):\n        u, v = edges[i]\n        if seen[u] and seen[v]:\n            cycle[i] = True\n        seen[u] = True\n        seen[v] = True\n\n    # print(cycle)\n\n    # find a cycle that has at least one even degree node\n    def dfs2(graph, source, cycle, even_degree_count):\n        seen[source] = True\n        if len(graph[source]) % 2 == 0:\n            even_degree_count += 1\n        if len(graph[source]) > 1 and even_degree_count > 1:\n            return True\n        if len(graph[source]) == 1 and even_degree_count > 0:\n            return True\n        if len(graph[source]) == 0:\n            return even_degree_count > 0\n        for v in graph[source]:\n            if not seen[v]:\n                if dfs2(graph, v, cycle, even_degree_count):\n                    for u, v in edges:\n                        if u == source:\n                            cycle[u - 1] = False\n                    return True\n        return False\n\n    # print(cycle)\n    for i in range(m):\n        if cycle[i]:\n            u, v = edges[i]\n            graph[u].remove(v)\n            graph[v].remove(u)\n            seen = [False for _ in range(n + 1)]\n            if dfs2(graph, u, cycle, 0):\n                cycle[i] = False\n            graph[u].append(v)\n            graph[v].append(u)\n\n    # print(cycle)\n    return cycle\n\n\nif __name__ == \"__main__\":\n    n, m = map(int, sys.stdin.readline().strip().split())\n    edges = [None for _ in range(m)]\n    for i in range(m):\n        edges[i] = tuple(map(int, sys.stdin.readline().strip().split()))\n    cycle = solve(n, m, edges)\n    if cycle is False:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(\"\".join(map(str, map(int, cycle))))"
+}
+2022-04-18 03:42:51.814373 REASON stop
+2022-04-18 03:42:51.814895 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-18 03:42:51.814942 REASON stop

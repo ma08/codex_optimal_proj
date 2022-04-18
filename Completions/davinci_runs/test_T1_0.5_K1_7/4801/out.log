@@ -1,0 +1,138 @@
+2022-04-13 23:26:28.197679 """
+Given a permutation $A = (a_1, a_2, \dots , a_ N)$ of the integers $1, 2, \dots , N$, we define the greedily increasing subsequence (GIS) in the following way.
+
+Let $g_1 = a_1$. For every $i > 1$, let $g_ i$ be the leftmost integer in $A$ that is strictly larger than $g_{i-1}$. If there for a given $i$ is no such integer, we say that the GIS of the sequence is the sequence $(g_1, g_2, ..., g_{i - 1})$.
+
+Your task is to, given a permutation $A$, compute the GIS of $A$.
+
+-----Input-----
+The first line of input contains an integer $1 \le N \le 10^6$, the number of elements of the permutation $A$. The next line contains $N$ distinct integers between $1$ and $N$, the elements $a_1, \dots , a_ N$ of the permutation $A$.
+
+-----Output-----
+First, output a line containing the length $l$ of the GIS of $A$. Then, output $l$ integers, containing (in order) the elements of the GIS.
+
+-----Explanation of sample 1-----
+In this case, we have the permutation $2, 3, 1, 5, 4, 7, 6$. First, we have $g_1 = 2$. The leftmost integer larger than $2$ is $3$, so $g_2 = 3$. The leftmost integer larger than $3$ is $5$ ($1$ is too small), so $g_3 = 5$. The leftmost integer larger than $5$ is $7$, so $g_4 = 7$. Finally, there is no integer larger than $7$. Thus, the GIS of $2, 3, 1, 5, 4, 7, 6$ is $2, 3, 5, 7$.
+
+-----Examples-----
+Sample Input 1:
+7
+2 3 1 5 4 7 6
+Sample Output 1:
+4
+2 3 5 7
+
+Sample Input 2:
+5
+1 2 3 4 5
+Sample Output 2:
+5
+1 2 3 4 5
+"""
+2022-04-13 23:26:28.197691 --------------------------
+2022-04-13 23:27:05.481136 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ng = []\ng.append(a[0])\nfor i in range(1, n):\n    if a[i] > g[-1]:\n        g.append(a[i])\n\nprint(len(g))\nprint(*g)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# DP solution\n# O(N^2) time, O(N) space\n\n# dp = [1] * N\n# dp[0] = 1\n# for i in range(1, N):\n#     for j in range(i):\n#         if A[j] < A[i] and dp[j] + 1 > dp[i]:\n#             dp[i] = dp[j] + 1\n#\n# max_len = max(dp)\n# print(max_len)\n#\n# print(A[dp.index(max_len)], end=' ')\n# for i in range(dp.index(max_len) + 1, N):\n#     if dp[i] == max_len:\n#         print(A[i], end=' ')\n#         max_len -= 1\n#     if max_len == 1:\n#         break\n# print()\n\n# O(N log N) time, O(N) space\n\n# dp = [0] * N\n# prev = [0] * N\n# dp[0] = 0\n# prev[0] = -1\n#\n# max_len = 1\n# max_len_index = 0\n# for i in range(1, N):\n#     if A[i] > A[dp[max_len - 1]]:\n#         dp[max_len] = i\n#         prev[i] = dp[max_len - 1]\n#         max_len += 1\n#     else:\n#         low = 0\n#         high = max_len - 1\n#         while low < high:\n#             mid = (low + high) // 2\n#             if A[dp[mid]] < A[i]:\n#                 low = mid + 1\n#             else:\n#                 high = mid\n#         if A[i] < A[dp[low]]:\n#             if low > 0:\n#                 prev[i] = dp[low - 1]\n#             else:\n#                 prev[i] = -1\n#             dp[low] = i\n#\n# print(max_len)\n#\n# while max_len_index != -1:\n#     print(A[max_len_index], end=' ')\n#     max_len_index = prev[max_len_index]\n# print()\n\n# O(N log N) time, O(N) space\n\ndp = [0] * N\nprev = [0] * N\ndp[0] = 0\nprev[0] = -1\n\nmax_len = 1\nmax_len_index = 0\nfor i in range(1, N):\n    if A[i] > A[dp[max_len - 1]]:\n        dp[max_len] = i\n        prev[i] = dp[max_len - 1]\n        max_len += 1\n    else:\n        low = 0\n        high = max_len - 1\n        while low < high:\n            mid = (low + high) // 2\n            if A[dp[mid]] < A[i]:\n                low = mid + 1\n            else:\n                high = mid\n        if A[i] < A[dp[low]]:\n            if low > 0:\n                prev[i] = dp[low - 1]\n            else:\n                prev[i] = -1\n            dp[low] = i\n\nprint(max_len)\n\nseq = []\nwhile max_len_index != -1:\n    seq.append(A[max_len_index])\n    max_len_index = prev[max_len_index]\nfor i in range(len(seq) - 1, -1, -1):\n    print(seq[i], end=' ')\nprint()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\ngis = []\ngis.append(A[0])\nfor i in range(1, N):\n    if A[i] > gis[-1]:\n        gis.append(A[i])\n\nprint(len(gis))\nprint(*gis)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nb = [0] * n\nb[0] = a[0]\n\nfor i in range(1, n):\n    if a[i] > b[-1]:\n        b.append(a[i])\n    else:\n        for j in range(len(b)):\n            if b[j] >= a[i]:\n                b[j] = a[i]\n                break\n\nprint(len(b))\nprint(*b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = [int(x) for x in sys.stdin.readline().strip().split()]\n    b = [0]*n\n    b[0] = a[0]\n    c = 1\n    for i in range(1, n):\n        if a[i] > b[c-1]:\n            b[c] = a[i]\n            c += 1\n        else:\n            for j in range(c-1, -1, -1):\n                if a[i] > b[j]:\n                    b[j+1] = a[i]\n                    break\n    print(c)\n    print(\" \".join(str(x) for x in b[:c]))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef get_gis(n, l):\n    lis = [1] * n\n    for i in range(1, n):\n        for j in range(i):\n            if l[i] > l[j] and lis[i] < lis[j] + 1:\n                lis[i] = lis[j] + 1\n    return max(lis)\n\ndef main():\n    n = int(input())\n    l = list(map(int, input().split()))\n    print(get_gis(n, l))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    dp = [0] * n\n    dp[0] = 1\n    for i in range(1, n):\n        max_d = 0\n        for j in range(0, i):\n            if a[i] > a[j] and dp[j] > max_d:\n                max_d = dp[j]\n        dp[i] = max_d + 1\n    print(max(dp))\n    print(' '.join(map(str, dp)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649892388,
+  "id": "cmpl-4wgfUETTvGYA8yiy4zdJfBQuHoQNq",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:27:05.481456 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ng = []\ng.append(a[0])\nfor i in range(1, n):\n    if a[i] > g[-1]:\n        g.append(a[i])\n\nprint(len(g))\nprint(*g)"
+}
+2022-04-13 23:27:05.481496 REASON stop
+2022-04-13 23:27:05.483541 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.483561 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\n# DP solution\n# O(N^2) time, O(N) space\n\n# dp = [1] * N\n# dp[0] = 1\n# for i in range(1, N):\n#     for j in range(i):\n#         if A[j] < A[i] and dp[j] + 1 > dp[i]:\n#             dp[i] = dp[j] + 1\n#\n# max_len = max(dp)\n# print(max_len)\n#\n# print(A[dp.index(max_len)], end=' ')\n# for i in range(dp.index(max_len) + 1, N):\n#     if dp[i] == max_len:\n#         print(A[i], end=' ')\n#         max_len -= 1\n#     if max_len == 1:\n#         break\n# print()\n\n# O(N log N) time, O(N) space\n\n# dp = [0] * N\n# prev = [0] * N\n# dp[0] = 0\n# prev[0] = -1\n#\n# max_len = 1\n# max_len_index = 0\n# for i in range(1, N):\n#     if A[i] > A[dp[max_len - 1]]:\n#         dp[max_len] = i\n#         prev[i] = dp[max_len - 1]\n#         max_len += 1\n#     else:\n#         low = 0\n#         high = max_len - 1\n#         while low < high:\n#             mid = (low + high) // 2\n#             if A[dp[mid]] < A[i]:\n#                 low = mid + 1\n#             else:\n#                 high = mid\n#         if A[i] < A[dp[low]]:\n#             if low > 0:\n#                 prev[i] = dp[low - 1]\n#             else:\n#                 prev[i] = -1\n#             dp[low] = i\n#\n# print(max_len)\n#\n# while max_len_index != -1:\n#     print(A[max_len_index], end=' ')\n#     max_len_index = prev[max_len_index]\n# print()\n\n# O(N log N) time, O(N) space\n\ndp = [0] * N\nprev = [0] * N\ndp[0] = 0\nprev[0] = -1\n\nmax_len = 1\nmax_len_index = 0\nfor i in range(1, N):\n    if A[i] > A[dp[max_len - 1]]:\n        dp[max_len] = i\n        prev[i] = dp[max_len - 1]\n        max_len += 1\n    else:\n        low = 0\n        high = max_len - 1\n        while low < high:\n            mid = (low + high) // 2\n            if A[dp[mid]] < A[i]:\n                low = mid + 1\n            else:\n                high = mid\n        if A[i] < A[dp[low]]:\n            if low > 0:\n                prev[i] = dp[low - 1]\n            else:\n                prev[i] = -1\n            dp[low] = i\n\nprint(max_len)\n\nseq = []\nwhile max_len_index != -1:\n    seq.append(A[max_len_index])\n    max_len_index = prev[max_len_index]\nfor i in range(len(seq) - 1, -1, -1):\n    print(seq[i], end=' ')\nprint()"
+}
+2022-04-13 23:27:05.483708 REASON stop
+2022-04-13 23:27:05.483956 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.483994 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\ngis = []\ngis.append(A[0])\nfor i in range(1, N):\n    if A[i] > gis[-1]:\n        gis.append(A[i])\n\nprint(len(gis))\nprint(*gis)"
+}
+2022-04-13 23:27:05.484058 REASON stop
+2022-04-13 23:27:05.496681 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.496705 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nb = [0] * n\nb[0] = a[0]\n\nfor i in range(1, n):\n    if a[i] > b[-1]:\n        b.append(a[i])\n    else:\n        for j in range(len(b)):\n            if b[j] >= a[i]:\n                b[j] = a[i]\n                break\n\nprint(len(b))\nprint(*b)"
+}
+2022-04-13 23:27:05.496756 REASON stop
+2022-04-13 23:27:05.497442 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.497455 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = [int(x) for x in sys.stdin.readline().strip().split()]\n    b = [0]*n\n    b[0] = a[0]\n    c = 1\n    for i in range(1, n):\n        if a[i] > b[c-1]:\n            b[c] = a[i]\n            c += 1\n        else:\n            for j in range(c-1, -1, -1):\n                if a[i] > b[j]:\n                    b[j+1] = a[i]\n                    break\n    print(c)\n    print(\" \".join(str(x) for x in b[:c]))\n\nmain()"
+}
+2022-04-13 23:27:05.497500 REASON stop
+2022-04-13 23:27:05.516474 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.516508 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef get_gis(n, l):\n    lis = [1] * n\n    for i in range(1, n):\n        for j in range(i):\n            if l[i] > l[j] and lis[i] < lis[j] + 1:\n                lis[i] = lis[j] + 1\n    return max(lis)\n\ndef main():\n    n = int(input())\n    l = list(map(int, input().split()))\n    print(get_gis(n, l))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:27:05.516575 REASON stop
+2022-04-13 23:27:05.517341 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'
+2022-04-13 23:27:05.517380 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    dp = [0] * n\n    dp[0] = 1\n    for i in range(1, n):\n        max_d = 0\n        for j in range(0, i):\n            if a[i] > a[j] and dp[j] > max_d:\n                max_d = dp[j]\n        dp[i] = max_d + 1\n    print(max(dp))\n    print(' '.join(map(str, dp)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:27:05.517445 REASON stop
+2022-04-13 23:27:05.518031 test/intro-questions.txt_dir/4801/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4801/solutions.json'

@@ -1,0 +1,159 @@
+2022-04-13 19:13:49.295251 """
+Polycarp likes numbers that are divisible by 3.
+
+He has a huge number $s$. Polycarp wants to cut from it the maximum number of numbers that are divisible by $3$. To do this, he makes an arbitrary number of vertical cuts between pairs of adjacent digits. As a result, after $m$ such cuts, there will be $m+1$ parts in total. Polycarp analyzes each of the obtained numbers and finds the number of those that are divisible by $3$.
+
+For example, if the original number is $s=3121$, then Polycarp can cut it into three parts with two cuts: $3|1|21$. As a result, he will get two numbers that are divisible by $3$.
+
+Polycarp can make an arbitrary number of vertical cuts, where each cut is made between a pair of adjacent digits. The resulting numbers cannot contain extra leading zeroes (that is, the number can begin with 0 if and only if this number is exactly one character '0'). For example, 007, 01 and 00099 are not valid numbers, but 90, 0 and 10001 are valid.
+
+What is the maximum number of numbers divisible by $3$ that Polycarp can obtain?
+
+
+-----Input-----
+
+The first line of the input contains a positive integer $s$. The number of digits of the number $s$ is between $1$ and $2\cdot10^5$, inclusive. The first (leftmost) digit is not equal to 0.
+
+
+-----Output-----
+
+Print the maximum number of numbers divisible by $3$ that Polycarp can get by making vertical cuts in the given number $s$.
+
+
+-----Examples-----
+Input
+3121
+
+Output
+2
+
+Input
+6
+
+Output
+1
+
+Input
+1000000000000000000000000000000000
+
+Output
+33
+
+Input
+201920181
+
+Output
+4
+
+
+
+-----Note-----
+
+In the first example, an example set of optimal cuts on the number is 3|1|21.
+
+In the second example, you do not need to make any cuts. The specified number 6 forms one number that is divisible by $3$.
+
+In the third example, cuts must be made between each pair of digits. As a result, Polycarp gets one digit 1 and $33$ digits 0. Each of the $33$ digits 0 forms a number that is divisible by $3$.
+
+In the fourth example, an example set of optimal cuts is 2|0|1|9|201|81. The numbers $0$, $9$, $201$ and $81$ are divisible by $3$.
+"""
+2022-04-13 19:13:49.295259 --------------------------
+2022-04-13 19:14:13.442691 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\ndef is_divisible_by_three(n):\n    if n == 0:\n        return True\n    if n == 1:\n        return False\n    if n == 2:\n        return False\n    if n == 3:\n        return True\n    if n == 4:\n        return False\n    if n == 5:\n        return False\n    if n == 6:\n        return True\n    if n == 7:\n        return False\n    if n == 8:\n        return False\n    if n == 9:\n        return True\n\ndef get_count_of_divisible_by_three(n):\n    count = 0\n    num = n\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n    return count\n\ndef get_max_count_of_divisible_by_three(n):\n    num = n\n    count = 0\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n\n    return count\n\ndef get_max_count_of_divisible_by_three_with_cuts(n):\n    num = n\n    count = 0\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n\n    return count\n\ndef main():\n    n = int(input())\n    print(get_max_count_of_divisible_by_three_with_cuts(n))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\nfrom functools import reduce\n\ndef solve(s):\n    n = len(s)\n    dp = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            dp[i][j] = 0\n    for i in range(n):\n        if s[i] == \"0\":\n            dp[i][i] = 1\n        else:\n            dp[i][i] = 0\n\n    for i in range(n):\n        for j in range(i+1, n):\n            dp[i][j] = dp[i][j-1]\n            if s[j] == \"0\":\n                dp[i][j] += 1\n            else:\n                dp[i][j] += 0\n            if (int(s[i:j+1]) % 3) == 0:\n                dp[i][j] += 1\n\n\n    return dp[0][n-1]\n\n\ndef main():\n    s = stdin.readline().strip()\n    stdout.write(str(solve(s))+\"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    s = s[::-1]\n    s = [int(i) for i in s]\n    dp = [0 for _ in range(len(s))]\n    dp[0] = s[0] % 3\n    for i in range(1, len(s)):\n        dp[i] = (dp[i-1] + s[i]) % 3\n        if dp[i] == 0:\n            dp[i] = 3\n    print(dp.count(0))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ns = input()\n\ndef count_divisible_by_3(s):\n    \"\"\"\n    >>> count_divisible_by_3('3121')\n    2\n    >>> count_divisible_by_3('6')\n    1\n    >>> count_divisible_by_3('1000000000000000000000000000000000')\n    33\n    >>> count_divisible_by_3('201920181')\n    4\n    \"\"\"\n    s = list(s)\n    result = 0\n    for i, c in enumerate(s):\n        if i == 0:\n            continue\n        if int(c) % 3 == 0:\n            result += 1\n    return result + len(s) - 1\n\n\nif __name__ == '__main__':\n    print(count_divisible_by_3(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\ndef is_divisible_by_3(number):\n    if number == 0:\n        return True\n    if number == 1:\n        return False\n    if number == 2:\n        return False\n    if number == 3:\n        return True\n    if number == 4:\n        return False\n    if number == 5:\n        return False\n    if number == 6:\n        return True\n    if number == 7:\n        return False\n    if number == 8:\n        return False\n    if number == 9:\n        return True\n\ndef split_number(number):\n    # returns a list with the digits of the number\n    number = str(number)\n    list_of_digits = []\n    for digit in number:\n        list_of_digits.append(int(digit))\n    return list_of_digits\n\ndef join_number(list_of_digits):\n    # returns a number from a list of digits\n    number = \"\"\n    for digit in list_of_digits:\n        number += str(digit)\n    return int(number)\n\ndef max_cuts(number):\n    list_of_digits = split_number(number)\n    number_of_cuts = 0\n    for digit in list_of_digits:\n        if is_divisible_by_3(digit):\n            number_of_cuts += 1\n    for i in range(len(list_of_digits)-1):\n        if is_divisible_by_3(join_number(list_of_digits[i:])):\n            number_of_cuts += 1\n    return number_of_cuts\n\ns = int(input())\nprint(max_cuts(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef is_divisible_by_three(s):\n    return sum(int(d) for d in s) % 3 == 0\n\ndef get_max_divisible_by_three(s):\n    return sum(1 for i in range(1, len(s)) for j in range(i) if is_divisible_by_three(s[j:i]) and is_divisible_by_three(s[i:])) + 1\n\nif __name__ == \"__main__\":\n    s = input()\n    print(get_max_divisible_by_three(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef polycarp(s):\n    \"\"\"\n    >>> polycarp(3121)\n    2\n    >>> polycarp(6)\n    1\n    >>> polycarp(1000000000000000000000000000000000)\n    33\n    >>> polycarp(201920181)\n    4\n    \"\"\"\n    # first, get the number of cuts we need to make\n    # we need to make as many cuts as possible, so we can divide by 3 as much as possible\n    # we can divide by 3 as much as possible if we have as many 0s as possible\n    # so we need to count the number of 0s in the number\n    # the number of cuts we need to make is the number of 0s + 1\n    # so, the number of numbers divisible by 3 is the number of 0s + 1\n    # therefore, the answer is the number of 0s + 1\n    return s.count('0') + 1\n\nif __name__ == '__main__':\n    s = sys.stdin.readline().rstrip()\n    print(polycarp(s))"
+    }
+  ],
+  "created": 1649877229,
+  "id": "cmpl-4wcizysBs8IhCVbc0YLZO7Jo67VV4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:14:13.443041 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\ndef is_divisible_by_three(n):\n    if n == 0:\n        return True\n    if n == 1:\n        return False\n    if n == 2:\n        return False\n    if n == 3:\n        return True\n    if n == 4:\n        return False\n    if n == 5:\n        return False\n    if n == 6:\n        return True\n    if n == 7:\n        return False\n    if n == 8:\n        return False\n    if n == 9:\n        return True\n\ndef get_count_of_divisible_by_three(n):\n    count = 0\n    num = n\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n    return count\n\ndef get_max_count_of_divisible_by_three(n):\n    num = n\n    count = 0\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n\n    return count\n\ndef get_max_count_of_divisible_by_three_with_cuts(n):\n    num = n\n    count = 0\n    while num > 0:\n        if is_divisible_by_three(num%10):\n            count += 1\n        num = num // 10\n\n    return count\n\ndef main():\n    n = int(input())\n    print(get_max_count_of_divisible_by_three_with_cuts(n))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:14:13.443102 REASON stop
+2022-04-13 19:14:13.443486 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\nfrom functools import reduce\n\ndef solve(s):\n    n = len(s)\n    dp = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            dp[i][j] = 0\n    for i in range(n):\n        if s[i] == \"0\":\n            dp[i][i] = 1\n        else:\n            dp[i][i] = 0\n\n    for i in range(n):\n        for j in range(i+1, n):\n            dp[i][j] = dp[i][j-1]\n            if s[j] == \"0\":\n                dp[i][j] += 1\n            else:\n                dp[i][j] += 0\n            if (int(s[i:j+1]) % 3) == 0:\n                dp[i][j] += 1\n\n\n    return dp[0][n-1]\n\n\ndef main():\n    s = stdin.readline().strip()\n    stdout.write(str(solve(s))+\"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:14:13.443594 REASON stop
+2022-04-13 19:14:13.443997 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    s = s[::-1]\n    s = [int(i) for i in s]\n    dp = [0 for _ in range(len(s))]\n    dp[0] = s[0] % 3\n    for i in range(1, len(s)):\n        dp[i] = (dp[i-1] + s[i]) % 3\n        if dp[i] == 0:\n            dp[i] = 3\n    print(dp.count(0))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:14:13.444047 REASON stop
+2022-04-13 19:14:13.461829 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ns = input()\n\ndef count_divisible_by_3(s):\n    \"\"\"\n    >>> count_divisible_by_3('3121')\n    2\n    >>> count_divisible_by_3('6')\n    1\n    >>> count_divisible_by_3('1000000000000000000000000000000000')\n    33\n    >>> count_divisible_by_3('201920181')\n    4\n    \"\"\"\n    s = list(s)\n    result = 0\n    for i, c in enumerate(s):\n        if i == 0:\n            continue\n        if int(c) % 3 == 0:\n            result += 1\n    return result + len(s) - 1\n\n\nif __name__ == '__main__':\n    print(count_divisible_by_3(s))"
+}
+2022-04-13 19:14:13.461923 REASON stop
+2022-04-13 19:14:13.488646 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\ndef is_divisible_by_3(number):\n    if number == 0:\n        return True\n    if number == 1:\n        return False\n    if number == 2:\n        return False\n    if number == 3:\n        return True\n    if number == 4:\n        return False\n    if number == 5:\n        return False\n    if number == 6:\n        return True\n    if number == 7:\n        return False\n    if number == 8:\n        return False\n    if number == 9:\n        return True\n\ndef split_number(number):\n    # returns a list with the digits of the number\n    number = str(number)\n    list_of_digits = []\n    for digit in number:\n        list_of_digits.append(int(digit))\n    return list_of_digits\n\ndef join_number(list_of_digits):\n    # returns a number from a list of digits\n    number = \"\"\n    for digit in list_of_digits:\n        number += str(digit)\n    return int(number)\n\ndef max_cuts(number):\n    list_of_digits = split_number(number)\n    number_of_cuts = 0\n    for digit in list_of_digits:\n        if is_divisible_by_3(digit):\n            number_of_cuts += 1\n    for i in range(len(list_of_digits)-1):\n        if is_divisible_by_3(join_number(list_of_digits[i:])):\n            number_of_cuts += 1\n    return number_of_cuts\n\ns = int(input())\nprint(max_cuts(s))"
+}
+2022-04-13 19:14:13.488768 REASON stop
+2022-04-13 19:14:13.489656 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef is_divisible_by_three(s):\n    return sum(int(d) for d in s) % 3 == 0\n\ndef get_max_divisible_by_three(s):\n    return sum(1 for i in range(1, len(s)) for j in range(i) if is_divisible_by_three(s[j:i]) and is_divisible_by_three(s[i:])) + 1\n\nif __name__ == \"__main__\":\n    s = input()\n    print(get_max_divisible_by_three(s))"
+}
+2022-04-13 19:14:13.489723 REASON stop
+2022-04-13 19:14:13.490585 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef polycarp(s):\n    \"\"\"\n    >>> polycarp(3121)\n    2\n    >>> polycarp(6)\n    1\n    >>> polycarp(1000000000000000000000000000000000)\n    33\n    >>> polycarp(201920181)\n    4\n    \"\"\"\n    # first, get the number of cuts we need to make\n    # we need to make as many cuts as possible, so we can divide by 3 as much as possible\n    # we can divide by 3 as much as possible if we have as many 0s as possible\n    # so we need to count the number of 0s in the number\n    # the number of cuts we need to make is the number of 0s + 1\n    # so, the number of numbers divisible by 3 is the number of 0s + 1\n    # therefore, the answer is the number of 0s + 1\n    return s.count('0') + 1\n\nif __name__ == '__main__':\n    s = sys.stdin.readline().rstrip()\n    print(polycarp(s))"
+}
+2022-04-13 19:14:13.490651 REASON stop

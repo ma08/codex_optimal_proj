@@ -1,0 +1,143 @@
+2022-04-13 17:21:47.539330 """
+You are given a huge decimal number consisting of $n$ digits. It is guaranteed that this number has no leading zeros. Each digit of this number is either 0 or 1.
+
+You may perform several (possibly zero) operations with this number. During each operation you are allowed to change any digit of your number; you may change 0 to 1 or 1 to 0. It is possible that after some operation you can obtain a number with leading zeroes, but it does not matter for this problem.
+
+You are also given two integers $0 \le y < x < n$. Your task is to calculate the minimum number of operations you should perform to obtain the number that has remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, x, y$ ($0 \le y < x < n \le 2 \cdot 10^5$) — the length of the number and the integers $x$ and $y$, respectively.
+
+The second line of the input contains one decimal number consisting of $n$ digits, each digit of this number is either 0 or 1. It is guaranteed that the first digit of the number is 1.
+
+
+-----Output-----
+
+Print one integer — the minimum number of operations you should perform to obtain the number having remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Examples-----
+Input
+11 5 2
+11010100101
+
+Output
+1
+
+Input
+11 5 1
+11010100101
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the number will be $11010100100$ after performing one operation. It has remainder $100$ modulo $100000$.
+
+In the second example the number will be $11010100010$ after performing three operations. It has remainder $10$ modulo $100000$.
+"""
+2022-04-13 17:21:47.539345 --------------------------
+2022-04-13 17:22:08.044543 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = (int(x) for x in input().split())\n    number = input()\n    print(min(number[:x].count('1'), n - x + number[x:].count('1')))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif y == 0:\n    print(0)\nelif y == 1:\n    print(1)\nelse:\n    print(2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, x, y = [int(x) for x in input().split()]\n    digits = [int(x) for x in input()]\n    remainder = int(''.join(map(str, digits[-y:])))\n    if remainder == 0:\n        print(0)\n        return\n    digits_to_change = x - y\n    current_remainder = 0\n    for i in range(digits_to_change):\n        current_remainder *= 2\n        current_remainder += digits[n - y - i - 1]\n        current_remainder %= remainder\n    if current_remainder == 0:\n        print(digits_to_change)\n        return\n    for i in range(digits_to_change):\n        if current_remainder + remainder >= 2**(digits_to_change - i):\n            print(i + 1)\n            return\n        current_remainder *= 2\n        current_remainder += digits[n - y - i - 1]\n        current_remainder %= remainder\n    print(-1)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,x,y = [int(x) for x in input().split()]\n    num = input()\n    num = num[::-1]\n    num = num[y:x]\n    num = num[::-1]\n    num = int(num)\n    ans = 0\n    while num > 0:\n        if num & 1:\n            num -= 1\n        else:\n            num //= 2\n        ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn, x, y = [int(x) for x in input().split()]\n\ts = input()\n\tif s[x] == '0':\n\t\tprint(1)\n\telse:\n\t\tprint(2)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, x, y = map(int, input().split())\nnumber = input()\n\n# print(n, x, y)\n# print(number)\n\nif y == 0:\n    if number[x] == '0':\n        print(1)\n    else:\n        print(0)\n    exit()\n\nif number[x] == '0':\n    print(1)\n    exit()\n\nif number[y - 1] == '0':\n    if number[y] == '0':\n        print(1)\n    else:\n        print(0)\n    exit()\n\nif number[y] == '0':\n    print(2)\n    exit()\n\nprint(0)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn,x,y = map(int,input().split())\n\td = input()\n\tif d[-x:] == '0'*(x-y) + '1'*y:\n\t\tprint(0)\n\telif d[-x:] == '1'*(x-y) + '0'*y:\n\t\tprint(1)\n\telse:\n\t\tprint(2)\n\nmain()"
+    }
+  ],
+  "created": 1649870508,
+  "id": "cmpl-4wayaMqyDkOpwBj6UvmdvfjtITJhX",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:22:08.044823 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = (int(x) for x in input().split())\n    number = input()\n    print(min(number[:x].count('1'), n - x + number[x:].count('1')))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:22:08.044864 REASON stop
+2022-04-13 17:22:08.045443 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,x,y = map(int,input().split())\ns = input()\n\nif y == 0:\n    print(0)\nelif y == 1:\n    print(1)\nelse:\n    print(2)"
+}
+2022-04-13 17:22:08.045587 REASON stop
+2022-04-13 17:22:08.046019 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, x, y = [int(x) for x in input().split()]\n    digits = [int(x) for x in input()]\n    remainder = int(''.join(map(str, digits[-y:])))\n    if remainder == 0:\n        print(0)\n        return\n    digits_to_change = x - y\n    current_remainder = 0\n    for i in range(digits_to_change):\n        current_remainder *= 2\n        current_remainder += digits[n - y - i - 1]\n        current_remainder %= remainder\n    if current_remainder == 0:\n        print(digits_to_change)\n        return\n    for i in range(digits_to_change):\n        if current_remainder + remainder >= 2**(digits_to_change - i):\n            print(i + 1)\n            return\n        current_remainder *= 2\n        current_remainder += digits[n - y - i - 1]\n        current_remainder %= remainder\n    print(-1)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:22:08.046072 REASON stop
+2022-04-13 17:22:08.064701 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,x,y = [int(x) for x in input().split()]\n    num = input()\n    num = num[::-1]\n    num = num[y:x]\n    num = num[::-1]\n    num = int(num)\n    ans = 0\n    while num > 0:\n        if num & 1:\n            num -= 1\n        else:\n            num //= 2\n        ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:22:08.064822 REASON stop
+2022-04-13 17:22:08.070690 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn, x, y = [int(x) for x in input().split()]\n\ts = input()\n\tif s[x] == '0':\n\t\tprint(1)\n\telse:\n\t\tprint(2)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 17:22:08.070794 REASON stop
+2022-04-13 17:22:08.071885 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, x, y = map(int, input().split())\nnumber = input()\n\n# print(n, x, y)\n# print(number)\n\nif y == 0:\n    if number[x] == '0':\n        print(1)\n    else:\n        print(0)\n    exit()\n\nif number[x] == '0':\n    print(1)\n    exit()\n\nif number[y - 1] == '0':\n    if number[y] == '0':\n        print(1)\n    else:\n        print(0)\n    exit()\n\nif number[y] == '0':\n    print(2)\n    exit()\n\nprint(0)"
+}
+2022-04-13 17:22:08.071957 REASON stop
+2022-04-13 17:22:08.072665 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn,x,y = map(int,input().split())\n\td = input()\n\tif d[-x:] == '0'*(x-y) + '1'*y:\n\t\tprint(0)\n\telif d[-x:] == '1'*(x-y) + '0'*y:\n\t\tprint(1)\n\telse:\n\t\tprint(2)\n\nmain()"
+}
+2022-04-13 17:22:08.072773 REASON stop

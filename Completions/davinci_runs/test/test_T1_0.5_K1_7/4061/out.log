@@ -1,0 +1,157 @@
+2022-04-13 17:55:22.252509 """
+The only difference between easy and hard versions is the length of the string.
+
+You are given a string $s$ and a string $t$, both consisting only of lowercase Latin letters. It is guaranteed that $t$ can be obtained from $s$ by removing some (possibly, zero) number of characters (not necessary contiguous) from $s$ without changing order of remaining characters (in other words, it is guaranteed that $t$ is a subsequence of $s$).
+
+For example, the strings "test", "tst", "tt", "et" and "" are subsequences of the string "test". But the strings "tset", "se", "contest" are not subsequences of the string "test".
+
+You want to remove some substring (contiguous subsequence) from $s$ of maximum possible length such that after removing this substring $t$ will remain a subsequence of $s$.
+
+If you want to remove the substring $s[l;r]$ then the string $s$ will be transformed to $s_1 s_2 \dots s_{l-1} s_{r+1} s_{r+2} \dots s_{|s|-1} s_{|s|}$ (where $|s|$ is the length of $s$).
+
+Your task is to find the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Input-----
+
+The first line of the input contains one string $s$ consisting of at least $1$ and at most $2 \cdot 10^5$ lowercase Latin letters.
+
+The second line of the input contains one string $t$ consisting of at least $1$ and at most $2 \cdot 10^5$ lowercase Latin letters.
+
+It is guaranteed that $t$ is a subsequence of $s$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Examples-----
+Input
+bbaba
+bb
+
+Output
+3
+
+Input
+baaba
+ab
+
+Output
+2
+
+Input
+abcde
+abcde
+
+Output
+0
+
+Input
+asdfasdf
+fasd
+
+Output
+3
+"""
+2022-04-13 17:55:22.252524 --------------------------
+2022-04-13 17:55:46.779121 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef solve(s, t):\n    ans = 0\n    i = 0\n    j = 0\n    while i < len(s) and j < len(t):\n        if s[i] == t[j]:\n            j += 1\n        i += 1\n    ans = len(s) - i\n    return ans\n\ndef main():\n    lines = sys.stdin.readlines()\n    s = lines[0].strip()\n    t = lines[1].strip()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# s = input()\n# t = input()\n\ns = \"asdfasdf\"\nt = \"fasd\"\n\n# s = \"bbaba\"\n# t = \"bb\"\n\n# s = \"baaba\"\n# t = \"ab\"\n\n# s = \"abcde\"\n# t = \"abcde\"\n\ndef is_subsequence(s, t):\n    # t = list(t)\n    # for c in s:\n    #     if c in t:\n    #         t.remove(c)\n    #     if not t:\n    #         return True\n    # return False\n    i = 0\n    for c in s:\n        if i < len(t) and t[i] == c:\n            i += 1\n    return i == len(t)\n\ndef get_substrings(s):\n    substrings = []\n    for i in range(len(s)):\n        for j in range(i, len(s)):\n            substrings.append(s[i:j+1])\n    return substrings\n\ndef get_max_substring_len(s, t):\n    substrings = get_substrings(s)\n    # print(substrings)\n    max_len = 0\n    for substring in substrings:\n        if is_subsequence(s.replace(substring, \"\"), t):\n            if len(substring) > max_len:\n                max_len = len(substring)\n    return max_len\n\nprint(get_max_substring_len(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef subsequence_length(s, t):\n    \"\"\"\n    >>> subsequence_length('bbaba', 'bb')\n    3\n    >>> subsequence_length('baaba', 'ab')\n    2\n    >>> subsequence_length('abcde', 'abcde')\n    0\n    >>> subsequence_length('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    s_index = 0\n    t_index = 0\n    while t_index < len(t):\n        if s_index >= len(s):\n            return len(t) - t_index\n        if s[s_index] == t[t_index]:\n            t_index += 1\n        s_index += 1\n    return len(t) - t_index\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    s = input()\n    t = input()\n    print(subsequence_length(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(s, t):\n    n, m = len(s), len(t)\n    dp = [[0] * m for _ in range(n)]\n    dp[0][0] = 1 if s[0] == t[0] else 0\n    for i in range(1, n):\n        dp[i][0] = dp[i - 1][0]\n        if s[i] == t[0]:\n            dp[i][0] += 1\n    for i in range(1, m):\n        dp[0][i] = 0\n    for i in range(1, n):\n        for j in range(1, m):\n            dp[i][j] = dp[i - 1][j]\n            if s[i] == t[j]:\n                dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1)\n    return n - dp[n - 1][m - 1]\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef find_longest_substring(s, t):\n    dp = [[0 for i in range(len(t)+1)] for j in range(len(s)+1)]\n    for i in range(len(s)):\n        for j in range(len(t)):\n            if s[i] == t[j]:\n                dp[i+1][j+1] = dp[i][j] + 1\n            else:\n                dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])\n    return len(s) - dp[len(s)][len(t)]\n\nif __name__ == '__main__':\n    s = input()\n    t = input()\n    print(find_longest_substring(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#SOLUTION:\n\ns, t = input(), input()\n\ndef lcs(X, Y):\n    m = len(X)\n    n = len(Y)\n    L = [[0 for x in range(n+1)] for x in range(m+1)]\n    for i in range(m+1):\n        for j in range(n+1):\n            if i == 0 or j == 0:\n                L[i][j] = 0\n            elif X[i-1] == Y[j-1]:\n                L[i][j] = L[i-1][j-1] + 1\n            else:\n                L[i][j] = max(L[i-1][j], L[i][j-1])\n    return L[m][n]\n\nprint(len(s)-lcs(s,t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport fileinput\n\ndef main():\n\t# input\n\tinp = fileinput.input()\n\ts = inp[0].strip(\"\\n\")\n\tt = inp[1].strip(\"\\n\")\n\n\t# solve\n\t# we can remove all chars that are not in t\n\t# if we do so, t will still be a subsequence of s\n\t# so the answer is |s| - |t|\n\tprint(len(s) - len(t))\n\nmain()"
+    }
+  ],
+  "created": 1649872522,
+  "id": "cmpl-4wbV4qolrT3pYuTSwXGs2fDGGhpwq",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:55:46.779419 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef solve(s, t):\n    ans = 0\n    i = 0\n    j = 0\n    while i < len(s) and j < len(t):\n        if s[i] == t[j]:\n            j += 1\n        i += 1\n    ans = len(s) - i\n    return ans\n\ndef main():\n    lines = sys.stdin.readlines()\n    s = lines[0].strip()\n    t = lines[1].strip()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:55:46.779458 REASON stop
+2022-04-13 17:55:46.779873 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# s = input()\n# t = input()\n\ns = \"asdfasdf\"\nt = \"fasd\"\n\n# s = \"bbaba\"\n# t = \"bb\"\n\n# s = \"baaba\"\n# t = \"ab\"\n\n# s = \"abcde\"\n# t = \"abcde\"\n\ndef is_subsequence(s, t):\n    # t = list(t)\n    # for c in s:\n    #     if c in t:\n    #         t.remove(c)\n    #     if not t:\n    #         return True\n    # return False\n    i = 0\n    for c in s:\n        if i < len(t) and t[i] == c:\n            i += 1\n    return i == len(t)\n\ndef get_substrings(s):\n    substrings = []\n    for i in range(len(s)):\n        for j in range(i, len(s)):\n            substrings.append(s[i:j+1])\n    return substrings\n\ndef get_max_substring_len(s, t):\n    substrings = get_substrings(s)\n    # print(substrings)\n    max_len = 0\n    for substring in substrings:\n        if is_subsequence(s.replace(substring, \"\"), t):\n            if len(substring) > max_len:\n                max_len = len(substring)\n    return max_len\n\nprint(get_max_substring_len(s, t))"
+}
+2022-04-13 17:55:46.780005 REASON stop
+2022-04-13 17:55:46.780384 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef subsequence_length(s, t):\n    \"\"\"\n    >>> subsequence_length('bbaba', 'bb')\n    3\n    >>> subsequence_length('baaba', 'ab')\n    2\n    >>> subsequence_length('abcde', 'abcde')\n    0\n    >>> subsequence_length('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    s_index = 0\n    t_index = 0\n    while t_index < len(t):\n        if s_index >= len(s):\n            return len(t) - t_index\n        if s[s_index] == t[t_index]:\n            t_index += 1\n        s_index += 1\n    return len(t) - t_index\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    s = input()\n    t = input()\n    print(subsequence_length(s, t))"
+}
+2022-04-13 17:55:46.780435 REASON stop
+2022-04-13 17:55:46.794007 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(s, t):\n    n, m = len(s), len(t)\n    dp = [[0] * m for _ in range(n)]\n    dp[0][0] = 1 if s[0] == t[0] else 0\n    for i in range(1, n):\n        dp[i][0] = dp[i - 1][0]\n        if s[i] == t[0]:\n            dp[i][0] += 1\n    for i in range(1, m):\n        dp[0][i] = 0\n    for i in range(1, n):\n        for j in range(1, m):\n            dp[i][j] = dp[i - 1][j]\n            if s[i] == t[j]:\n                dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1)\n    return n - dp[n - 1][m - 1]\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 17:55:46.794103 REASON stop
+2022-04-13 17:55:46.816681 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef find_longest_substring(s, t):\n    dp = [[0 for i in range(len(t)+1)] for j in range(len(s)+1)]\n    for i in range(len(s)):\n        for j in range(len(t)):\n            if s[i] == t[j]:\n                dp[i+1][j+1] = dp[i][j] + 1\n            else:\n                dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])\n    return len(s) - dp[len(s)][len(t)]\n\nif __name__ == '__main__':\n    s = input()\n    t = input()\n    print(find_longest_substring(s, t))"
+}
+2022-04-13 17:55:46.816783 REASON stop
+2022-04-13 17:55:46.817837 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#SOLUTION:\n\ns, t = input(), input()\n\ndef lcs(X, Y):\n    m = len(X)\n    n = len(Y)\n    L = [[0 for x in range(n+1)] for x in range(m+1)]\n    for i in range(m+1):\n        for j in range(n+1):\n            if i == 0 or j == 0:\n                L[i][j] = 0\n            elif X[i-1] == Y[j-1]:\n                L[i][j] = L[i-1][j-1] + 1\n            else:\n                L[i][j] = max(L[i-1][j], L[i][j-1])\n    return L[m][n]\n\nprint(len(s)-lcs(s,t))"
+}
+2022-04-13 17:55:46.817917 REASON stop
+2022-04-13 17:55:46.818692 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport fileinput\n\ndef main():\n\t# input\n\tinp = fileinput.input()\n\ts = inp[0].strip(\"\\n\")\n\tt = inp[1].strip(\"\\n\")\n\n\t# solve\n\t# we can remove all chars that are not in t\n\t# if we do so, t will still be a subsequence of s\n\t# so the answer is |s| - |t|\n\tprint(len(s) - len(t))\n\nmain()"
+}
+2022-04-13 17:55:46.818774 REASON stop

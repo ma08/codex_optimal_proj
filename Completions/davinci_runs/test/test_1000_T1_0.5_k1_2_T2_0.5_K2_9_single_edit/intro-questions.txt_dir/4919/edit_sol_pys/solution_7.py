@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+
+import sys
+
+def main():
+    n = int(sys.stdin.readline())
+    trips = {}
+    for _ in range(n):
+        country, year = sys.stdin.readline().split() #split 함수는 공백으로 구분하여 문자열을 나눈다
+        if country in trips:
+            trips[country].append(year)
+        else:
+            trips[country] = [year]
+    q = int(sys.stdin.readline())
+    for _ in range(q):
+        country, k = sys.stdin.readline().split() #split 함수는 공백으로 구분하여 문자열을 나눈다
+        print(trips[country][int(k) - 1])
+
+if __name__ == "__main__":
+    main()

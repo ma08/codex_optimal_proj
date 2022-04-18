@@ -1,0 +1,3 @@
+
+input()
+print(input()) if input().startswith("Simon says") else 0

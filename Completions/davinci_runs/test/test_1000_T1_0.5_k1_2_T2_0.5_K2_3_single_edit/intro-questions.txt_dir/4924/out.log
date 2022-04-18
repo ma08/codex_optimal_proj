@@ -1,0 +1,143 @@
+2022-04-09 23:48:37.738733 """
+After an unsuccessful attempt at claiming power peacefully, Borko has decided to tear down Mirko’s village hall, which was built for him out of cardboard by his loyal servants.
+
+For this he will use Mirko’s microprocessor (which was stolen from him by Borko’s friend Zvonko), a bucket of water and a bag of sodium. He will enter the time of the “explosion” into the microprocessor, and it will drop the sodium in the water after the time is up.
+
+Borko knows the current time and when he wants the explosion. He is not very fond of arithmetic and Zvonko is currently playing with marbles in his back yard so he can’t help him.
+
+Write a program that calculates the time to the explosion (this is the time Borko will enter into the microprocessor). The time Borko wants is at least one second and at most 24 hours.
+
+-----Input-----
+The first line of input contains the current time in hh:mm:ss format (hours, minutes, seconds). The hours will be between $0$ and $23$ (inclusive) and the minutes and seconds between $0$ and $59$. The second line contains the time of the explosion in the same format.
+
+-----Output-----
+Output the desired time on a single line, in the same format as the times in the input.
+
+-----Examples-----
+Sample Input:
+20:00:00
+04:00:00
+Sample Output:
+08:00:00
+"""
+2022-04-09 23:48:37.738760 --------------------------
+2022-04-09 23:49:09.504019 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ncur_time = sys.stdin.readline().strip().split(':')\nexp_time = sys.stdin.readline().strip().split(':')\n\n# convert to seconds\ncur_time = int(cur_time[0])*3600 + int(cur_time[1])*60 + int(cur_time[2])\nexp_time = int(exp_time[0])*3600 + int(exp_time[1])*60 + int(exp_time[2])\n\n# if the explosion time is less than current time, add 24 hours\nif exp_time < cur_time:\n    exp_time += 24*3600\n\n# convert back to hh:mm:ss format\nexp_time = exp_time - cur_time\nhours = exp_time//3600\nminutes = exp_time%3600//60\nseconds = exp_time%3600%60\n\n# print out the result\nprint(str(hours).zfill(2) + ':' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\n\ncurrent_time = input()\nexplosion_time = input()\n\ncurrent_hour, current_minute, current_second = map(int,current_time.split(\":\"))\nexplosion_hour, explosion_minute, explosion_second = map(int,explosion_time.split(\":\"))\n\nif explosion_hour<current_hour:\n    explosion_hour+=24\n\nif explosion_hour==current_hour and explosion_minute<current_minute:\n    explosion_hour+=24\n\nif explosion_hour==current_hour and explosion_minute==current_minute and explosion_second<current_second:\n    explosion_hour+=24\n\nexplosion_hour-=current_hour\nexplosion_minute-=current_minute\nexplosion_second-=current_second\n\nif explosion_second<0:\n    explosion_second+=60\n    explosion_minute-=1\n\nif explosion_minute<0:\n    explosion_minute+=60\n    explosion_hour-=1\n\nprint(str(explosion_hour)+\":\"+str(explosion_minute)+\":\"+str(explosion_second))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport datetime\n\ndef main():\n    current_time = [int(x) for x in sys.stdin.readline().strip().split(':')]\n    desired_time = [int(x) for x in sys.stdin.readline().strip().split(':')]\n    current_time = datetime.time(current_time[0], current_time[1], current_time[2])\n    desired_time = datetime.time(desired_time[0], desired_time[1], desired_time[2])\n    if desired_time < current_time:\n        desired_time = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), desired_time)\n    else:\n        desired_time = datetime.datetime.combine(datetime.date.today(), desired_time)\n    print(desired_time - datetime.datetime.combine(datetime.date.today(), current_time))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nif __name__ == \"__main__\":\n    current_time = [int(i) for i in input().split(\":\")]\n    time_to_explode = [int(i) for i in input().split(\":\")]\n    current_time_in_seconds = current_time[0]*3600 + current_time[1]*60 + current_time[2]\n    time_to_explode_in_seconds = time_to_explode[0]*3600 + time_to_explode[1]*60 + time_to_explode[2]\n    if time_to_explode_in_seconds < current_time_in_seconds:\n        time_to_explode_in_seconds += 24*3600\n    time_to_explode_in_seconds -= current_time_in_seconds\n    hours = time_to_explode_in_seconds // 3600\n    time_to_explode_in_seconds %= 3600\n    minutes = time_to_explode_in_seconds // 60\n    time_to_explode_in_seconds %= 60\n    seconds = time_to_explode_in_seconds\n    print(str(hours).zfill(2) + \":\" + str(minutes).zfill(2) + \":\" + str(seconds).zfill(2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef parseTime(time_str):\n    h,m,s = time_str.split(\":\")\n    return int(h), int(m), int(s)\n\ndef getTimeDiff(current_time, desired_time):\n    h1,m1,s1 = parseTime(current_time)\n    h2,m2,s2 = parseTime(desired_time)\n    h_diff = h2 - h1\n    m_diff = m2 - m1\n    s_diff = s2 - s1\n    if s_diff < 0:\n        s_diff += 60\n        m_diff -= 1\n    if m_diff < 0:\n        m_diff += 60\n        h_diff -= 1\n    if h_diff < 0:\n        h_diff += 24\n    return h_diff, m_diff, s_diff\n\ndef formatTime(h,m,s):\n    return \"{:02}:{:02}:{:02}\".format(h,m,s)\n\ndef main():\n    current_time = input()\n    desired_time = input()\n    h,m,s = getTimeDiff(current_time, desired_time)\n    print(formatTime(h,m,s))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef calcTime(currTime, targetTime):\n    #calculate the difference between the current time and the target time\n    #if the difference is negative, add 24 hours\n    #this will give us the time until the target time\n    #if the difference is greater than 24 hours, subtract 24 hours\n    #this will give us the time until the target time\n    #return the time until the target time\n    currTime = currTime.split(':')\n    targetTime = targetTime.split(':')\n    currTime = [int(currTime[0]), int(currTime[1]), int(currTime[2])]\n    targetTime = [int(targetTime[0]), int(targetTime[1]), int(targetTime[2])]\n    diff = [targetTime[0] - currTime[0], targetTime[1] - currTime[1], targetTime[2] - currTime[2]]\n    if diff[0] < 0:\n        diff[0] += 24\n    if diff[1] < 0:\n        diff[0] -= 1\n        diff[1] += 60\n    if diff[2] < 0:\n        diff[1] -= 1\n        diff[2] += 60\n    if diff[0] > 24:\n        diff[0] -= 24\n    return ':'.join(map(str, diff))\n\ndef main():\n    currTime = sys.stdin.readline().strip()\n    targetTime = sys.stdin.readline().strip()\n    print(calcTime(currTime, targetTime))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    time_now = sys.stdin.readline()\n    time_now = time_now.strip().split(\":\")\n    time_now = [int(x) for x in time_now]\n\n    time_explosion = sys.stdin.readline()\n    time_explosion = time_explosion.strip().split(\":\")\n    time_explosion = [int(x) for x in time_explosion]\n\n    if time_explosion[0] < time_now[0]:\n        time_explosion[0] += 24\n\n    if time_explosion[1] < time_now[1]:\n        time_explosion[0] -= 1\n        time_explosion[1] += 60\n\n    if time_explosion[2] < time_now[2]:\n        time_explosion[1] -= 1\n        time_explosion[2] += 60\n\n    time_explosion = [str(x) for x in time_explosion]\n    print(\":\".join(time_explosion))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nfrom datetime import datetime\n\ndef main():\n    current_time = datetime.strptime(input(), '%H:%M:%S')\n    explosion_time = datetime.strptime(input(), '%H:%M:%S')\n    explosion_time += (current_time - datetime.strptime('00:00:00', '%H:%M:%S'))\n    print(explosion_time.strftime('%H:%M:%S'))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649562518,
+  "id": "cmpl-4vIr0Ft6uB2Q5CelC4PF2z1Tsp6oj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 23:49:09.504422 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ncur_time = sys.stdin.readline().strip().split(':')\nexp_time = sys.stdin.readline().strip().split(':')\n\n# convert to seconds\ncur_time = int(cur_time[0])*3600 + int(cur_time[1])*60 + int(cur_time[2])\nexp_time = int(exp_time[0])*3600 + int(exp_time[1])*60 + int(exp_time[2])\n\n# if the explosion time is less than current time, add 24 hours\nif exp_time < cur_time:\n    exp_time += 24*3600\n\n# convert back to hh:mm:ss format\nexp_time = exp_time - cur_time\nhours = exp_time//3600\nminutes = exp_time%3600//60\nseconds = exp_time%3600%60\n\n# print out the result\nprint(str(hours).zfill(2) + ':' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2))"
+}
+2022-04-09 23:49:09.504447 REASON stop
+2022-04-09 23:49:09.505685 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.505745 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\n\ncurrent_time = input()\nexplosion_time = input()\n\ncurrent_hour, current_minute, current_second = map(int,current_time.split(\":\"))\nexplosion_hour, explosion_minute, explosion_second = map(int,explosion_time.split(\":\"))\n\nif explosion_hour<current_hour:\n    explosion_hour+=24\n\nif explosion_hour==current_hour and explosion_minute<current_minute:\n    explosion_hour+=24\n\nif explosion_hour==current_hour and explosion_minute==current_minute and explosion_second<current_second:\n    explosion_hour+=24\n\nexplosion_hour-=current_hour\nexplosion_minute-=current_minute\nexplosion_second-=current_second\n\nif explosion_second<0:\n    explosion_second+=60\n    explosion_minute-=1\n\nif explosion_minute<0:\n    explosion_minute+=60\n    explosion_hour-=1\n\nprint(str(explosion_hour)+\":\"+str(explosion_minute)+\":\"+str(explosion_second))"
+}
+2022-04-09 23:49:09.505955 REASON stop
+2022-04-09 23:49:09.506743 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.506787 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport datetime\n\ndef main():\n    current_time = [int(x) for x in sys.stdin.readline().strip().split(':')]\n    desired_time = [int(x) for x in sys.stdin.readline().strip().split(':')]\n    current_time = datetime.time(current_time[0], current_time[1], current_time[2])\n    desired_time = datetime.time(desired_time[0], desired_time[1], desired_time[2])\n    if desired_time < current_time:\n        desired_time = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=1), desired_time)\n    else:\n        desired_time = datetime.datetime.combine(datetime.date.today(), desired_time)\n    print(desired_time - datetime.datetime.combine(datetime.date.today(), current_time))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:49:09.506890 REASON stop
+2022-04-09 23:49:09.507268 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.507310 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nif __name__ == \"__main__\":\n    current_time = [int(i) for i in input().split(\":\")]\n    time_to_explode = [int(i) for i in input().split(\":\")]\n    current_time_in_seconds = current_time[0]*3600 + current_time[1]*60 + current_time[2]\n    time_to_explode_in_seconds = time_to_explode[0]*3600 + time_to_explode[1]*60 + time_to_explode[2]\n    if time_to_explode_in_seconds < current_time_in_seconds:\n        time_to_explode_in_seconds += 24*3600\n    time_to_explode_in_seconds -= current_time_in_seconds\n    hours = time_to_explode_in_seconds // 3600\n    time_to_explode_in_seconds %= 3600\n    minutes = time_to_explode_in_seconds // 60\n    time_to_explode_in_seconds %= 60\n    seconds = time_to_explode_in_seconds\n    print(str(hours).zfill(2) + \":\" + str(minutes).zfill(2) + \":\" + str(seconds).zfill(2))"
+}
+2022-04-09 23:49:09.507402 REASON stop
+2022-04-09 23:49:09.507680 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.507719 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef parseTime(time_str):\n    h,m,s = time_str.split(\":\")\n    return int(h), int(m), int(s)\n\ndef getTimeDiff(current_time, desired_time):\n    h1,m1,s1 = parseTime(current_time)\n    h2,m2,s2 = parseTime(desired_time)\n    h_diff = h2 - h1\n    m_diff = m2 - m1\n    s_diff = s2 - s1\n    if s_diff < 0:\n        s_diff += 60\n        m_diff -= 1\n    if m_diff < 0:\n        m_diff += 60\n        h_diff -= 1\n    if h_diff < 0:\n        h_diff += 24\n    return h_diff, m_diff, s_diff\n\ndef formatTime(h,m,s):\n    return \"{:02}:{:02}:{:02}\".format(h,m,s)\n\ndef main():\n    current_time = input()\n    desired_time = input()\n    h,m,s = getTimeDiff(current_time, desired_time)\n    print(formatTime(h,m,s))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 23:49:09.507805 REASON stop
+2022-04-09 23:49:09.508683 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.508746 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef calcTime(currTime, targetTime):\n    #calculate the difference between the current time and the target time\n    #if the difference is negative, add 24 hours\n    #this will give us the time until the target time\n    #if the difference is greater than 24 hours, subtract 24 hours\n    #this will give us the time until the target time\n    #return the time until the target time\n    currTime = currTime.split(':')\n    targetTime = targetTime.split(':')\n    currTime = [int(currTime[0]), int(currTime[1]), int(currTime[2])]\n    targetTime = [int(targetTime[0]), int(targetTime[1]), int(targetTime[2])]\n    diff = [targetTime[0] - currTime[0], targetTime[1] - currTime[1], targetTime[2] - currTime[2]]\n    if diff[0] < 0:\n        diff[0] += 24\n    if diff[1] < 0:\n        diff[0] -= 1\n        diff[1] += 60\n    if diff[2] < 0:\n        diff[1] -= 1\n        diff[2] += 60\n    if diff[0] > 24:\n        diff[0] -= 24\n    return ':'.join(map(str, diff))\n\ndef main():\n    currTime = sys.stdin.readline().strip()\n    targetTime = sys.stdin.readline().strip()\n    print(calcTime(currTime, targetTime))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:49:09.508865 REASON stop
+2022-04-09 23:49:09.509575 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.509633 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    time_now = sys.stdin.readline()\n    time_now = time_now.strip().split(\":\")\n    time_now = [int(x) for x in time_now]\n\n    time_explosion = sys.stdin.readline()\n    time_explosion = time_explosion.strip().split(\":\")\n    time_explosion = [int(x) for x in time_explosion]\n\n    if time_explosion[0] < time_now[0]:\n        time_explosion[0] += 24\n\n    if time_explosion[1] < time_now[1]:\n        time_explosion[0] -= 1\n        time_explosion[1] += 60\n\n    if time_explosion[2] < time_now[2]:\n        time_explosion[1] -= 1\n        time_explosion[2] += 60\n\n    time_explosion = [str(x) for x in time_explosion]\n    print(\":\".join(time_explosion))\n\nmain()"
+}
+2022-04-09 23:49:09.509760 REASON stop
+2022-04-09 23:49:09.510595 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'
+2022-04-09 23:49:09.510655 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nfrom datetime import datetime\n\ndef main():\n    current_time = datetime.strptime(input(), '%H:%M:%S')\n    explosion_time = datetime.strptime(input(), '%H:%M:%S')\n    explosion_time += (current_time - datetime.strptime('00:00:00', '%H:%M:%S'))\n    print(explosion_time.strftime('%H:%M:%S'))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 23:49:09.510841 REASON stop
+2022-04-09 23:49:09.511395 test/intro-questions.txt_dir/4924/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4924/solutions.json'

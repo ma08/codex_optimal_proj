@@ -1,0 +1,136 @@
+2022-04-13 18:50:08.060440 """
+We have N ID cards, and there are M gates.
+We can pass the i-th gate if we have one of the following ID cards: the L_i-th, (L_i+1)-th, ..., and R_i-th ID cards.
+How many of the ID cards allow us to pass all the gates alone?
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq M \leq 10^5
+ - 1 \leq L_i \leq R_i \leq N
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+L_1 R_1
+L_2 R_2
+\vdots
+L_M R_M
+
+-----Output-----
+Print the number of ID cards that allow us to pass all the gates alone.
+
+-----Sample Input-----
+4 2
+1 3
+2 4
+
+-----Sample Output-----
+2
+
+Two ID cards allow us to pass all the gates alone, as follows:
+ - The first ID card does not allow us to pass the second gate.
+ - The second ID card allows us to pass all the gates.
+ - The third ID card allows us to pass all the gates.
+ - The fourth ID card does not allow us to pass the first gate.
+"""
+2022-04-13 18:50:08.060449 --------------------------
+2022-04-13 18:50:56.407039 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\nl_list = [0] * (n + 1)\nr_list = [0] * (n + 1)\n\nfor _ in range(m):\n    l, r = map(int, input().split())\n    l_list[l] += 1\n    r_list[r] += 1\n\nfor i in range(1, n+1):\n    l_list[i] += l_list[i-1]\n    r_list[i] += r_list[i-1]\n\nans = 0\nfor i in range(1, n+1):\n    if l_list[i] == r_list[i]:\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# My answer\nN, M = map(int, input().split())\n\ncard_list = [0] * N\n\nfor i in range(M):\n    L, R = map(int, input().split())\n    for j in range(L-1, R):\n        card_list[j] += 1\n\nprint(card_list.count(M))\n\n# Short answer\nn, m = map(int, input().split())\na = [0] * (n + 1)\nfor _ in range(m):\n    l, r = map(int, input().split())\n    a[l - 1] += 1\n    a[r] -= 1\nfor i in range(n):\n    a[i + 1] += a[i]\nprint(a.count(m))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\n# initialize\ncard_list = [0 for _ in range(N)]\n\n# fill in the card_list\nfor _ in range(M):\n    L, R = map(int, input().split())\n    for i in range(L-1, R):\n        card_list[i] = 1\n\n# count the number of the cards\nprint(card_list.count(1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    gates = [[] for _ in range(n)]\n    for _ in range(m):\n        l, r = map(int, input().split())\n        gates[l-1].append(r)\n    gates_count = [0] * n\n    for i in range(n):\n        gates_count[i] = len(gates[i])\n    gates_count.sort()\n    print(gates_count[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\nl, r = [], []\nfor i in range(m):\n    lr = list(map(int, input().split()))\n    l.append(lr[0])\n    r.append(lr[1])\n\nminimum = min(l)\nmaximum = max(r)\n\nprint(maximum - minimum + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#f = open('input.txt', 'r')\n#N, M = map(int, f.readline().split())\nN, M = map(int, input().split())\n#Gates = [list(map(int, f.readline().split())) for _ in range(M)]\nGates = [list(map(int, input().split())) for _ in range(M)]\n\n# 1. Build the graph\n#    - Node: ID card\n#    - Edge: Connects two ID cards that allow us to pass the same gate\n#    - Graph: Directed\n#    - Edge weight: 1\n#    - Nodes: 1~N\n#    - Edges: M\n#    - Edge list: [(L_i, R_i), ...]\n\n# 2. Find strongly connected components\n#    - Use Kosaraju's algorithm\n#    - Time complexity: O(N + M)\n\n# 3. Find the number of ID cards that allow us to pass all the gates alone\n#    - The number of ID cards that allow us to pass all the gates alone is the same as the number of SCCs\n\n# Build the graph\nG = [[] for _ in range(N+1)]\nfor L, R in Gates:\n    G[L].append(R)\n\n# Find strongly connected components\n# 1. Get the reverse of G\n#    - Time complexity: O(N + M)\n# 2. Find the order of nodes in G by DFS\n#    - Time complexity: O(N + M)\n# 3. Find the order of nodes in G_reverse by DFS\n#    - Time complexity: O(N + M)\n# 4. Find the SCCs\n#    - Time complexity: O(N + M)\n\ndef dfs(G, visited, order, v):\n    visited[v] = True\n    for u in G[v]:\n        if not visited[u]:\n            dfs(G, visited, order, u)\n    order.append(v)\n\ndef rdfs(G, visited, v, c):\n    visited[v] = True\n    c[v] = True\n    for u in G[v]:\n        if not visited[u]:\n            rdfs(G, visited, u, c)\n\ndef kosaraju(G, G_reverse):\n    # Get the reverse of G\n    visited = [False for _ in range(N+1)]\n    for v in range(1, N+1):\n        if not visited[v]:\n            dfs(G, visited, [], v)\n    order = visited[:]\n    G_reverse = [[] for _ in range(N+1)]\n    for L, R in Gates:\n        G_reverse[R].append(L)\n    # Find the order of nodes in G by DFS\n    visited = [False for _ in range(N+1)]\n    order = []\n    for v in range(1, N+1):\n        if not visited[v]:\n            dfs(G, visited, order, v)\n    # Find the order of nodes in G_reverse by DFS\n    visited = [False for _ in range(N+1)]\n    c = [False for _ in range(N+1)]\n    for v in reversed(order):\n        if not visited[v]:\n            rdfs(G_reverse, visited, v, c)\n            c = [False for _ in range(N+1)]\n    return c\n\nc = kosaraju(G, [])\nprint(c.count(True))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\n# The number of ID cards that allow us to pass the i-th gate.\n# The j-th element of the list represents the number of ID cards that allow us to pass the i-th gate and do not allow us to pass the j-th gate.\n# For example, if the list is [1, 2, 3], it means that the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the i-th gate is 1, and the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+1)-th gate is 2, and the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+2)-th gate is 3.\n# The number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+j)-th gate for j > 2 is 0.\ncards = [0 for _ in range(m)]\n\nfor i in range(m):\n    l, r = map(int, input().split())\n    cards[i] = r - l + 1\n\n# The number of ID cards that allow us to pass all the gates alone is the number of ID cards that allow us to pass the first gate, and do not allow us to pass the (i+1)-th gate, and do not allow us to pass the (i+2)-th gate, ..., and do not allow us to pass the last gate.\nprint(cards[0] - sum(cards[1:]))"
+    }
+  ],
+  "created": 1649875808,
+  "id": "cmpl-4wcM4lm4I499jWPLDdPgVox7COVYD",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:50:56.407347 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\nl_list = [0] * (n + 1)\nr_list = [0] * (n + 1)\n\nfor _ in range(m):\n    l, r = map(int, input().split())\n    l_list[l] += 1\n    r_list[r] += 1\n\nfor i in range(1, n+1):\n    l_list[i] += l_list[i-1]\n    r_list[i] += r_list[i-1]\n\nans = 0\nfor i in range(1, n+1):\n    if l_list[i] == r_list[i]:\n        ans += 1\n\nprint(ans)"
+}
+2022-04-13 18:50:56.407385 REASON stop
+2022-04-13 18:50:56.417800 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# My answer\nN, M = map(int, input().split())\n\ncard_list = [0] * N\n\nfor i in range(M):\n    L, R = map(int, input().split())\n    for j in range(L-1, R):\n        card_list[j] += 1\n\nprint(card_list.count(M))\n\n# Short answer\nn, m = map(int, input().split())\na = [0] * (n + 1)\nfor _ in range(m):\n    l, r = map(int, input().split())\n    a[l - 1] += 1\n    a[r] -= 1\nfor i in range(n):\n    a[i + 1] += a[i]\nprint(a.count(m))"
+}
+2022-04-13 18:50:56.417992 REASON stop
+2022-04-13 18:50:56.521501 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\n# initialize\ncard_list = [0 for _ in range(N)]\n\n# fill in the card_list\nfor _ in range(M):\n    L, R = map(int, input().split())\n    for i in range(L-1, R):\n        card_list[i] = 1\n\n# count the number of the cards\nprint(card_list.count(1))"
+}
+2022-04-13 18:50:56.521619 REASON stop
+2022-04-13 18:50:56.559473 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    gates = [[] for _ in range(n)]\n    for _ in range(m):\n        l, r = map(int, input().split())\n        gates[l-1].append(r)\n    gates_count = [0] * n\n    for i in range(n):\n        gates_count[i] = len(gates[i])\n    gates_count.sort()\n    print(gates_count[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:50:56.559591 REASON stop
+2022-04-13 18:50:56.599525 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\nl, r = [], []\nfor i in range(m):\n    lr = list(map(int, input().split()))\n    l.append(lr[0])\n    r.append(lr[1])\n\nminimum = min(l)\nmaximum = max(r)\n\nprint(maximum - minimum + 1)"
+}
+2022-04-13 18:50:56.599642 REASON stop
+2022-04-13 18:50:56.649863 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#f = open('input.txt', 'r')\n#N, M = map(int, f.readline().split())\nN, M = map(int, input().split())\n#Gates = [list(map(int, f.readline().split())) for _ in range(M)]\nGates = [list(map(int, input().split())) for _ in range(M)]\n\n# 1. Build the graph\n#    - Node: ID card\n#    - Edge: Connects two ID cards that allow us to pass the same gate\n#    - Graph: Directed\n#    - Edge weight: 1\n#    - Nodes: 1~N\n#    - Edges: M\n#    - Edge list: [(L_i, R_i), ...]\n\n# 2. Find strongly connected components\n#    - Use Kosaraju's algorithm\n#    - Time complexity: O(N + M)\n\n# 3. Find the number of ID cards that allow us to pass all the gates alone\n#    - The number of ID cards that allow us to pass all the gates alone is the same as the number of SCCs\n\n# Build the graph\nG = [[] for _ in range(N+1)]\nfor L, R in Gates:\n    G[L].append(R)\n\n# Find strongly connected components\n# 1. Get the reverse of G\n#    - Time complexity: O(N + M)\n# 2. Find the order of nodes in G by DFS\n#    - Time complexity: O(N + M)\n# 3. Find the order of nodes in G_reverse by DFS\n#    - Time complexity: O(N + M)\n# 4. Find the SCCs\n#    - Time complexity: O(N + M)\n\ndef dfs(G, visited, order, v):\n    visited[v] = True\n    for u in G[v]:\n        if not visited[u]:\n            dfs(G, visited, order, u)\n    order.append(v)\n\ndef rdfs(G, visited, v, c):\n    visited[v] = True\n    c[v] = True\n    for u in G[v]:\n        if not visited[u]:\n            rdfs(G, visited, u, c)\n\ndef kosaraju(G, G_reverse):\n    # Get the reverse of G\n    visited = [False for _ in range(N+1)]\n    for v in range(1, N+1):\n        if not visited[v]:\n            dfs(G, visited, [], v)\n    order = visited[:]\n    G_reverse = [[] for _ in range(N+1)]\n    for L, R in Gates:\n        G_reverse[R].append(L)\n    # Find the order of nodes in G by DFS\n    visited = [False for _ in range(N+1)]\n    order = []\n    for v in range(1, N+1):\n        if not visited[v]:\n            dfs(G, visited, order, v)\n    # Find the order of nodes in G_reverse by DFS\n    visited = [False for _ in range(N+1)]\n    c = [False for _ in range(N+1)]\n    for v in reversed(order):\n        if not visited[v]:\n            rdfs(G_reverse, visited, v, c)\n            c = [False for _ in range(N+1)]\n    return c\n\nc = kosaraju(G, [])\nprint(c.count(True))"
+}
+2022-04-13 18:50:56.649981 REASON stop
+2022-04-13 18:50:56.723989 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\n# The number of ID cards that allow us to pass the i-th gate.\n# The j-th element of the list represents the number of ID cards that allow us to pass the i-th gate and do not allow us to pass the j-th gate.\n# For example, if the list is [1, 2, 3], it means that the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the i-th gate is 1, and the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+1)-th gate is 2, and the number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+2)-th gate is 3.\n# The number of ID cards that allow us to pass the i-th gate, and do not allow us to pass the (i+j)-th gate for j > 2 is 0.\ncards = [0 for _ in range(m)]\n\nfor i in range(m):\n    l, r = map(int, input().split())\n    cards[i] = r - l + 1\n\n# The number of ID cards that allow us to pass all the gates alone is the number of ID cards that allow us to pass the first gate, and do not allow us to pass the (i+1)-th gate, and do not allow us to pass the (i+2)-th gate, ..., and do not allow us to pass the last gate.\nprint(cards[0] - sum(cards[1:]))"
+}
+2022-04-13 18:50:56.724111 REASON stop

@@ -1,0 +1,166 @@
+2022-04-13 20:34:51.875281 """
+Polycarp and his friends want to visit a new restaurant. The restaurant has $n$ tables arranged along a straight line. People are already sitting at some tables. The tables are numbered from $1$ to $n$ in the order from left to right. The state of the restaurant is described by a string of length $n$ which contains characters "1" (the table is occupied) and "0" (the table is empty).
+
+Restaurant rules prohibit people to sit at a distance of $k$ or less from each other. That is, if a person sits at the table number $i$, then all tables with numbers from $i-k$ to $i+k$ (except for the $i$-th) should be free. In other words, the absolute difference of the numbers of any two occupied tables must be strictly greater than $k$.
+
+For example, if $n=8$ and $k=2$, then:  strings "10010001", "10000010", "00000000", "00100000" satisfy the rules of the restaurant;  strings "10100100", "10011001", "11111111" do not satisfy to the rules of the restaurant, since each of them has a pair of "1" with a distance less than or equal to $k=2$. 
+
+In particular, if the state of the restaurant is described by a string without "1" or a string with one "1", then the requirement of the restaurant is satisfied.
+
+You are given a binary string $s$ that describes the current state of the restaurant. It is guaranteed that the rules of the restaurant are satisfied for the string $s$.
+
+Find the maximum number of free tables that you can occupy so as not to violate the rules of the restaurant. Formally, what is the maximum number of "0" that can be replaced by "1" such that the requirement will still be satisfied?
+
+For example, if $n=6$, $k=1$, $s=$ "100010", then the answer to the problem will be $1$, since only the table at position $3$ can be occupied such that the rules are still satisfied.
+
+
+-----Input-----
+
+The first line contains a single integer $t$ ($1 \le t \le 10^4$) — the number of test cases in the test. Then $t$ test cases follow.
+
+Each test case starts with a line containing two integers $n$ and $k$ ($1 \le k \le n \le 2\cdot 10^5$) — the number of tables in the restaurant and the minimum allowed distance between two people.
+
+The second line of each test case contains a binary string $s$ of length $n$ consisting of "0" and "1" — a description of the free and occupied tables in the restaurant. The given string satisfy to the rules of the restaurant — the difference between indices of any two "1" is more than $k$.
+
+The sum of $n$ for all test cases in one test does not exceed $2\cdot 10^5$.
+
+
+-----Output-----
+
+For each test case output one integer — the number of tables that you can occupy so as not to violate the rules of the restaurant. If additional tables cannot be taken, then, obviously, you need to output $0$.
+
+
+-----Example-----
+Input
+6
+6 1
+100010
+6 2
+000000
+5 1
+10101
+3 1
+001
+2 2
+00
+1 1
+0
+
+Output
+1
+2
+0
+1
+1
+1
+
+
+
+-----Note-----
+
+The first test case is explained in the statement.
+
+In the second test case, the answer is $2$, since you can choose the first and the sixth table.
+
+In the third test case, you cannot take any free table without violating the rules of the restaurant.
+"""
+2022-04-13 20:34:51.875297 --------------------------
+2022-04-13 20:35:27.630655 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    s=input()\n    c=0\n    for j in range(n):\n        if s[j]==\"0\":\n            if j-k>=0 and s[j-k]==\"0\":\n                c+=1\n                s=s[:j]+\"1\"+s[j+1:]\n            elif j+k<n and s[j+k]==\"0\":\n                c+=1\n                s=s[:j]+\"1\"+s[j+1:]\n    print(c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\n#!/usr/bin/python3\n\nfor _ in range(int(input())):\n    n,k = map(int, input().split())\n    s = input()\n    cnt = 0\n    for i in range(n):\n        if s[i] == '0':\n            if i == 0:\n                if (s[i+1] == '0'):\n                    cnt += 1\n                    s = s[:i] + '1' + s[i+1:]\n            elif i == n-1:\n                if (s[i-1] == '0'):\n                    cnt += 1\n                    s = s[:i] + '1' + s[i+1:]\n            elif s[i-1] == '0' and s[i+1] == '0':\n                cnt += 1\n                s = s[:i] + '1' + s[i+1:]\n    print(cnt)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    for i in range(n):\n        t, k = [int(x) for x in sys.stdin.readline().split()]\n        s = sys.stdin.readline()\n        print(solve(t, k, s))\n\ndef solve(t, k, s):\n    if k == 0:\n        return sum(map(lambda x: int(x == '0'), s))\n    if k == 1:\n        return sum(map(lambda x: int(x == '0'), s)) - 1\n\n    free = 0\n    for i in range(k):\n        if s[i] == '0':\n            free += 1\n        if s[t - 1 - i] == '0':\n            free += 1\n    for i in range(k, t - k):\n        if s[i] == '0':\n            free += 1\n\n    return free\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef solution(n, k, s):\n    if k == 0:\n        return n\n    if k == 1:\n        return s.count(\"0\")\n    if k > n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s == \"1\" * n:\n        return 0\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s[0] == \"0\":\n        s = \"1\" + s[1:]\n    if s[-1] == \"0\":\n        s = s[:-1] + \"1\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"0\":\n        s = \"1\" + s[1:]\n    if s[-1] == \"0\":\n        s = s[:-1] + \"1\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n\n    # print(s)\n    # print(k)\n    max_0 = 0\n    count = 0\n    for i in s:\n        if i == \"0\":\n            count += 1\n            if count > max_0:\n                max_0 = count\n        else:\n            count = 0\n    # print(max_0)\n    if max_0 < k:\n        return max_0\n    else:\n        return max_0 - k + 1\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        s = input()\n        print(solution(n, k, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for i in range(t):\n        n, k = map(int, sys.stdin.readline().split())\n        s = sys.stdin.readline()\n        if k == 1:\n            print(n - s.count('1'))\n        else:\n            count = 0\n            for j in range(n):\n                if s[j] == '1':\n                    if j + k + 1 < n and s[j + k + 1] == '0':\n                        s = s[:j + k + 1] + '1' + s[j + k + 2:]\n                        count += 1\n                    if j - k - 1 >= 0 and s[j - k - 1] == '0':\n                        s = s[:j - k - 1] + '1' + s[j - k:]\n                        count += 1\n            print(count)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Read the number of test cases\n    t = int(input())\n    # Iterate over test cases\n    for i in range(t):\n        # Read the number of tables and the minimum distance between people\n        n, k = map(int, input().split())\n        # Read the state of the restaurant\n        s = input()\n        # Compute the solution\n        sol = compute_solution(n, k, s)\n        # Print the solution\n        print(sol)\n\ndef compute_solution(n, k, s):\n    \"\"\"\n    Compute the solution to the problem.\n\n    Parameters:\n    n: the number of tables in the restaurant\n    k: the minimum allowed distance between two people\n    s: the state of the restaurant\n\n    Returns:\n    The number of tables that you can occupy so as not to violate the rules of the restaurant\n    \"\"\"\n    # Initialize the number of tables that you can occupy\n    sol = 0\n    # Iterate over the tables\n    for i in range(n):\n        # Check if the table is empty\n        if s[i] == '0':\n            # Check if the table can be occupied\n            if (i == 0) or (i == n-1) or (s[i-1] == '0') or (s[i+1] == '0'):\n                # Update the number of tables that you can occupy\n                sol += 1\n    # Return the number of tables that you can occupy\n    return sol\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n, k = map(int, input().split())\n    s = input()\n    k += 1\n    count = 0\n    if s[0] == '0':\n        count += 1\n        if k > 1:\n            s = s[1:]\n    for i in range(len(s)-1):\n        if s[i] == '1':\n            if i+k < len(s):\n                s = s[:i+k] + '0'*(len(s)-i-k)\n            else:\n                s = s[:i+k]\n        if s[i] == '0':\n            if s[i+1] == '0':\n                count += 1\n            else:\n                if i+k < len(s):\n                    s = s[:i+k] + '0'*(len(s)-i-k)\n                else:\n                    s = s[:i+k]\n    if s[-1] == '0':\n        count += 1\n    print(count)"
+    }
+  ],
+  "created": 1649882092,
+  "id": "cmpl-4wdzQ4RiqKdlSzKJGOmXy4jUDE0V7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:35:27.630993 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    s=input()\n    c=0\n    for j in range(n):\n        if s[j]==\"0\":\n            if j-k>=0 and s[j-k]==\"0\":\n                c+=1\n                s=s[:j]+\"1\"+s[j+1:]\n            elif j+k<n and s[j+k]==\"0\":\n                c+=1\n                s=s[:j]+\"1\"+s[j+1:]\n    print(c)"
+}
+2022-04-13 20:35:27.631037 REASON stop
+2022-04-13 20:35:27.631391 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\n#!/usr/bin/python3\n\nfor _ in range(int(input())):\n    n,k = map(int, input().split())\n    s = input()\n    cnt = 0\n    for i in range(n):\n        if s[i] == '0':\n            if i == 0:\n                if (s[i+1] == '0'):\n                    cnt += 1\n                    s = s[:i] + '1' + s[i+1:]\n            elif i == n-1:\n                if (s[i-1] == '0'):\n                    cnt += 1\n                    s = s[:i] + '1' + s[i+1:]\n            elif s[i-1] == '0' and s[i+1] == '0':\n                cnt += 1\n                s = s[:i] + '1' + s[i+1:]\n    print(cnt)"
+}
+2022-04-13 20:35:27.631492 REASON stop
+2022-04-13 20:35:27.631853 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    for i in range(n):\n        t, k = [int(x) for x in sys.stdin.readline().split()]\n        s = sys.stdin.readline()\n        print(solve(t, k, s))\n\ndef solve(t, k, s):\n    if k == 0:\n        return sum(map(lambda x: int(x == '0'), s))\n    if k == 1:\n        return sum(map(lambda x: int(x == '0'), s)) - 1\n\n    free = 0\n    for i in range(k):\n        if s[i] == '0':\n            free += 1\n        if s[t - 1 - i] == '0':\n            free += 1\n    for i in range(k, t - k):\n        if s[i] == '0':\n            free += 1\n\n    return free\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:35:27.631903 REASON stop
+2022-04-13 20:35:27.633109 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef solution(n, k, s):\n    if k == 0:\n        return n\n    if k == 1:\n        return s.count(\"0\")\n    if k > n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s == \"1\" * n:\n        return 0\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s[0] == \"0\":\n        s = \"1\" + s[1:]\n    if s[-1] == \"0\":\n        s = s[:-1] + \"1\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"0\":\n        s = \"1\" + s[1:]\n    if s[-1] == \"0\":\n        s = s[:-1] + \"1\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n    if s[0] == \"1\":\n        s = \"0\" + s[1:]\n    if s[-1] == \"1\":\n        s = s[:-1] + \"0\"\n    if s == \"1\" * n:\n        return 0\n    if s == \"0\" * n:\n        return n\n\n    # print(s)\n    # print(k)\n    max_0 = 0\n    count = 0\n    for i in s:\n        if i == \"0\":\n            count += 1\n            if count > max_0:\n                max_0 = count\n        else:\n            count = 0\n    # print(max_0)\n    if max_0 < k:\n        return max_0\n    else:\n        return max_0 - k + 1\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for i in range(t):\n        n, k = map(int, input().split())\n        s = input()\n        print(solution(n, k, s))"
+}
+2022-04-13 20:35:27.633175 REASON stop
+2022-04-13 20:35:27.633929 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for i in range(t):\n        n, k = map(int, sys.stdin.readline().split())\n        s = sys.stdin.readline()\n        if k == 1:\n            print(n - s.count('1'))\n        else:\n            count = 0\n            for j in range(n):\n                if s[j] == '1':\n                    if j + k + 1 < n and s[j + k + 1] == '0':\n                        s = s[:j + k + 1] + '1' + s[j + k + 2:]\n                        count += 1\n                    if j - k - 1 >= 0 and s[j - k - 1] == '0':\n                        s = s[:j - k - 1] + '1' + s[j - k:]\n                        count += 1\n            print(count)\n\nmain()"
+}
+2022-04-13 20:35:27.633985 REASON stop
+2022-04-13 20:35:27.634712 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Read the number of test cases\n    t = int(input())\n    # Iterate over test cases\n    for i in range(t):\n        # Read the number of tables and the minimum distance between people\n        n, k = map(int, input().split())\n        # Read the state of the restaurant\n        s = input()\n        # Compute the solution\n        sol = compute_solution(n, k, s)\n        # Print the solution\n        print(sol)\n\ndef compute_solution(n, k, s):\n    \"\"\"\n    Compute the solution to the problem.\n\n    Parameters:\n    n: the number of tables in the restaurant\n    k: the minimum allowed distance between two people\n    s: the state of the restaurant\n\n    Returns:\n    The number of tables that you can occupy so as not to violate the rules of the restaurant\n    \"\"\"\n    # Initialize the number of tables that you can occupy\n    sol = 0\n    # Iterate over the tables\n    for i in range(n):\n        # Check if the table is empty\n        if s[i] == '0':\n            # Check if the table can be occupied\n            if (i == 0) or (i == n-1) or (s[i-1] == '0') or (s[i+1] == '0'):\n                # Update the number of tables that you can occupy\n                sol += 1\n    # Return the number of tables that you can occupy\n    return sol\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:35:27.634759 REASON stop
+2022-04-13 20:35:27.653649 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n, k = map(int, input().split())\n    s = input()\n    k += 1\n    count = 0\n    if s[0] == '0':\n        count += 1\n        if k > 1:\n            s = s[1:]\n    for i in range(len(s)-1):\n        if s[i] == '1':\n            if i+k < len(s):\n                s = s[:i+k] + '0'*(len(s)-i-k)\n            else:\n                s = s[:i+k]\n        if s[i] == '0':\n            if s[i+1] == '0':\n                count += 1\n            else:\n                if i+k < len(s):\n                    s = s[:i+k] + '0'*(len(s)-i-k)\n                else:\n                    s = s[:i+k]\n    if s[-1] == '0':\n        count += 1\n    print(count)"
+}
+2022-04-13 20:35:27.653753 REASON stop

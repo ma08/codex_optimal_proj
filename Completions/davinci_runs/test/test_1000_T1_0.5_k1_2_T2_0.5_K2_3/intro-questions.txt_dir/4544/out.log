@@ -1,0 +1,63 @@
+2022-04-09 20:49:30.721151 """
+You are given an integer sequence of length N, a_1,a_2,...,a_N.
+For each 1≤i≤N, you have three choices: add 1 to a_i, subtract 1 from a_i or do nothing.
+After these operations, you select an integer X and count the number of i such that a_i=X.
+Maximize this count by making optimal choices.
+
+-----Constraints-----
+ - 1≤N≤10^5
+ - 0≤a_i<10^5 (1≤i≤N)
+ - a_i is an integer.
+
+-----Input-----
+The input is given from Standard Input in the following format:
+N
+a_1 a_2 .. a_N
+
+-----Output-----
+Print the maximum possible number of i such that a_i=X.
+
+-----Sample Input-----
+7
+3 1 4 1 5 9 2
+
+-----Sample Output-----
+4
+
+For example, turn the sequence into 2,2,3,2,6,9,2 and select X=2 to obtain 4, the maximum possible count.
+"""
+2022-04-09 20:49:30.721173 --------------------------
+2022-04-09 20:49:59.629888 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nN = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\n# a_i\u304c\u5c0f\u3055\u3044\u9806\u306b\u3001\u305d\u308c\u3092\u66f4\u65b0\u3059\u308b\u306e\u304c\u6700\u9069\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\nans = 0\nfor i in range(N):\n    # a_i\u3092\u66f4\u65b0\u3057\u3066\u3001a_i+1, a_i+2, ..., a_N\u3092\u66f4\u65b0\u3059\u308b\n    # \u66f4\u65b0\u524d\u306ea_i+1, a_i+2, ..., a_N\u306e\u5024\u3092\u8a18\u61b6\u3057\u3066\u304a\u304f\n    # \u66f4\u65b0\u5f8c\u306ea_i+1, a_i+2, ..., a_N\u306e\u5024\u3068\u66f4\u65b0\u524d\u306e\u5024\u3092\u6bd4\u8f03\u3057\u3066\u3001\n    # \u66f4\u65b0\u524d\u306e\u5024\u304c\u5927\u304d\u3044\u5834\u5408\u306f\u3001\u305d\u308c\u3092\u66f4\u65b0\u3057\u3066\u3082\u6700\u9069\u89e3\u306b\u306f\u306a\u3089\u306a\u3044\n    # \u305d\u306e\u5834\u5408\u306f\u3001\u66f4\u65b0\u3057\u306a\u304f\u3066\u3082\u826f\u3044\n    prev_a = [a[j] for j in range(i, N)]\n    a[i] += 1\n    for j in range(i+1, N):\n        if a[j] < a[j-1]:\n            a[j] = a[j-1]\n    if a[N-1] < prev_a[-1]:\n        a[i] = a[i] - 1\n    else:\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\na = list(map(int, sys.stdin.readline().split()))\n\n# \u8981\u7d20\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3057\u3001\u6700\u3082\u591a\u3044\u8981\u7d20\u3092\u63a2\u3059\ncount = {}\nfor i in range(n):\n    if a[i] in count:\n        count[a[i]] += 1\n    else:\n        count[a[i]] = 1\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\nmax_value = 0\nfor key in count.keys():\n    if count[key] > max_value:\n        max_value = count[key]\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u3092\u63a2\u3059\nmax_key = 0\nfor key in count.keys():\n    if count[key] == max_value:\n        max_key = key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u3092\u63a2\u3059\nmin_key = max_key\nfor key in count.keys():\n    if count[key] != max_value:\n        if key < min_key:\n            min_key = key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u304c1\u3064\u3057\u304b\u306a\u3044\u5834\u5408\u3001\u305d\u306e\u8981\u7d20\u3092\u6700\u5c0f\u5024\u306b\u3059\u308b\nif len(count) == 2:\n    min_key = max_key - 1\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u3092\u6700\u5c0f\u5024\u306b\u3059\u308b\nfor i in range(n):\n    if a[i] != max_key:\n        a[i] = min_key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u3092\u6700\u5927\u5024\u306b\u3059\u308b\nfor i in range(n):\n    if a[i] == max_key:\n        a[i] = max_value\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u306e\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3059\u308b\ncount = 0\nfor i in range(n):\n    if a[i] == max_value:\n        count += 1\n\nprint(count)"
+    }
+  ],
+  "created": 1649551771,
+  "id": "cmpl-4vG3fbdvaccVBmTptfCqcy7k8ghvr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 20:49:59.630187 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nN = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\n# a_i\u304c\u5c0f\u3055\u3044\u9806\u306b\u3001\u305d\u308c\u3092\u66f4\u65b0\u3059\u308b\u306e\u304c\u6700\u9069\u304b\u3069\u3046\u304b\u3092\u5224\u5b9a\u3059\u308b\nans = 0\nfor i in range(N):\n    # a_i\u3092\u66f4\u65b0\u3057\u3066\u3001a_i+1, a_i+2, ..., a_N\u3092\u66f4\u65b0\u3059\u308b\n    # \u66f4\u65b0\u524d\u306ea_i+1, a_i+2, ..., a_N\u306e\u5024\u3092\u8a18\u61b6\u3057\u3066\u304a\u304f\n    # \u66f4\u65b0\u5f8c\u306ea_i+1, a_i+2, ..., a_N\u306e\u5024\u3068\u66f4\u65b0\u524d\u306e\u5024\u3092\u6bd4\u8f03\u3057\u3066\u3001\n    # \u66f4\u65b0\u524d\u306e\u5024\u304c\u5927\u304d\u3044\u5834\u5408\u306f\u3001\u305d\u308c\u3092\u66f4\u65b0\u3057\u3066\u3082\u6700\u9069\u89e3\u306b\u306f\u306a\u3089\u306a\u3044\n    # \u305d\u306e\u5834\u5408\u306f\u3001\u66f4\u65b0\u3057\u306a\u304f\u3066\u3082\u826f\u3044\n    prev_a = [a[j] for j in range(i, N)]\n    a[i] += 1\n    for j in range(i+1, N):\n        if a[j] < a[j-1]:\n            a[j] = a[j-1]\n    if a[N-1] < prev_a[-1]:\n        a[i] = a[i] - 1\n    else:\n        ans += 1\n\nprint(ans)"
+}
+2022-04-09 20:49:59.630251 REASON stop
+2022-04-09 20:49:59.632449 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\na = list(map(int, sys.stdin.readline().split()))\n\n# \u8981\u7d20\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3057\u3001\u6700\u3082\u591a\u3044\u8981\u7d20\u3092\u63a2\u3059\ncount = {}\nfor i in range(n):\n    if a[i] in count:\n        count[a[i]] += 1\n    else:\n        count[a[i]] = 1\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\nmax_value = 0\nfor key in count.keys():\n    if count[key] > max_value:\n        max_value = count[key]\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u3092\u63a2\u3059\nmax_key = 0\nfor key in count.keys():\n    if count[key] == max_value:\n        max_key = key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u3092\u63a2\u3059\nmin_key = max_key\nfor key in count.keys():\n    if count[key] != max_value:\n        if key < min_key:\n            min_key = key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u304c1\u3064\u3057\u304b\u306a\u3044\u5834\u5408\u3001\u305d\u306e\u8981\u7d20\u3092\u6700\u5c0f\u5024\u306b\u3059\u308b\nif len(count) == 2:\n    min_key = max_key - 1\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u4ee5\u5916\u306e\u8981\u7d20\u3092\u6700\u5c0f\u5024\u306b\u3059\u308b\nfor i in range(n):\n    if a[i] != max_key:\n        a[i] = min_key\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u3092\u6700\u5927\u5024\u306b\u3059\u308b\nfor i in range(n):\n    if a[i] == max_key:\n        a[i] = max_value\n\n# \u8981\u7d20\u306e\u6700\u5927\u5024\u3092\u6301\u3064\u8981\u7d20\u306e\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3059\u308b\ncount = 0\nfor i in range(n):\n    if a[i] == max_value:\n        count += 1\n\nprint(count)"
+}
+2022-04-09 20:49:59.632613 REASON stop

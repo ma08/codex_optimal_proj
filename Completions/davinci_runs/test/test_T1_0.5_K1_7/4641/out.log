@@ -1,0 +1,167 @@
+2022-04-13 22:22:03.397147 """
+Recall that MEX of an array is a minimum non-negative integer that does not belong to the array. Examples:  for the array $[0, 0, 1, 0, 2]$ MEX equals to $3$ because numbers $0, 1$ and $2$ are presented in the array and $3$ is the minimum non-negative integer not presented in the array;  for the array $[1, 2, 3, 4]$ MEX equals to $0$ because $0$ is the minimum non-negative integer not presented in the array;  for the array $[0, 1, 4, 3]$ MEX equals to $2$ because $2$ is the minimum non-negative integer not presented in the array. 
+
+You are given an empty array $a=[]$ (in other words, a zero-length array). You are also given a positive integer $x$.
+
+You are also given $q$ queries. The $j$-th query consists of one integer $y_j$ and means that you have to append one element $y_j$ to the array. The array length increases by $1$ after a query.
+
+In one move, you can choose any index $i$ and set $a_i := a_i + x$ or $a_i := a_i - x$ (i.e. increase or decrease any element of the array by $x$). The only restriction is that $a_i$ cannot become negative. Since initially the array is empty, you can perform moves only after the first query.
+
+You have to maximize the MEX (minimum excluded) of the array if you can perform any number of such operations (you can even perform the operation multiple times with one element).
+
+You have to find the answer after each of $q$ queries (i.e. the $j$-th answer corresponds to the array of length $j$).
+
+Operations are discarded before each query. I.e. the array $a$ after the $j$-th query equals to $[y_1, y_2, \dots, y_j]$.
+
+
+-----Input-----
+
+The first line of the input contains two integers $q, x$ ($1 \le q, x \le 4 \cdot 10^5$) — the number of queries and the value of $x$.
+
+The next $q$ lines describe queries. The $j$-th query consists of one integer $y_j$ ($0 \le y_j \le 10^9$) and means that you have to append one element $y_j$ to the array.
+
+
+-----Output-----
+
+Print the answer to the initial problem after each query — for the query $j$ print the maximum value of MEX after first $j$ queries. Note that queries are dependent (the array changes after each query) but operations are independent between queries.
+
+
+-----Examples-----
+Input
+7 3
+0
+1
+2
+2
+0
+0
+10
+
+Output
+1
+2
+3
+3
+4
+4
+7
+
+Input
+4 3
+1
+2
+1
+2
+
+Output
+0
+0
+0
+0
+
+
+
+-----Note-----
+
+In the first example:  After the first query, the array is $a=[0]$: you don't need to perform any operations, maximum possible MEX is $1$.  After the second query, the array is $a=[0, 1]$: you don't need to perform any operations, maximum possible MEX is $2$.  After the third query, the array is $a=[0, 1, 2]$: you don't need to perform any operations, maximum possible MEX is $3$.  After the fourth query, the array is $a=[0, 1, 2, 2]$: you don't need to perform any operations, maximum possible MEX is $3$ (you can't make it greater with operations).  After the fifth query, the array is $a=[0, 1, 2, 2, 0]$: you can perform $a[4] := a[4] + 3 = 3$. The array changes to be $a=[0, 1, 2, 2, 3]$. Now MEX is maximum possible and equals to $4$.  After the sixth query, the array is $a=[0, 1, 2, 2, 0, 0]$: you can perform $a[4] := a[4] + 3 = 0 + 3 = 3$. The array changes to be $a=[0, 1, 2, 2, 3, 0]$. Now MEX is maximum possible and equals to $4$.  After the seventh query, the array is $a=[0, 1, 2, 2, 0, 0, 10]$. You can perform the following operations:   $a[3] := a[3] + 3 = 2 + 3 = 5$,  $a[4] := a[4] + 3 = 0 + 3 = 3$,  $a[5] := a[5] + 3 = 0 + 3 = 3$,  $a[5] := a[5] + 3 = 3 + 3 = 6$,  $a[6] := a[6] - 3 = 10 - 3 = 7$,  $a[6] := a[6] - 3 = 7 - 3 = 4$.  The resulting array will be $a=[0, 1, 2, 5, 3, 6, 4]$. Now MEX is maximum possible and equals to $7$.
+"""
+2022-04-13 22:22:03.397164 --------------------------
+2022-04-13 22:23:30.962133 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef solve(q, x):\n    d = {}\n    d[0] = 1\n    d[1] = 1\n    d[2] = 1\n    d[3] = 1\n    for i in range(4, x+1):\n        d[i] = 1\n    for i in range(x+1, x*2+1):\n        d[i] = 2\n    for i in range(x*2+1, x*3+1):\n        d[i] = 3\n    for i in range(x*3+1, x*4+1):\n        d[i] = 4\n    for i in range(x*4+1, x*5+1):\n        d[i] = 5\n    for i in range(x*5+1, x*6+1):\n        d[i] = 6\n    for i in range(x*6+1, x*7+1):\n        d[i] = 7\n    for i in range(x*7+1, x*8+1):\n        d[i] = 8\n    for i in range(x*8+1, x*9+1):\n        d[i] = 9\n    for i in range(x*9+1, x*10+1):\n        d[i] = 10\n\n    def getMax(n):\n        if n in d:\n            return d[n]\n        return n // x + 1\n\n    def getMin(n):\n        if n in d:\n            return d[n]\n        return n // x\n\n    def getMEX(n):\n        if n in d:\n            return d[n]\n        return n // x + 1\n\n    min_n = 0\n    max_n = 0\n    mex_n = 0\n    res = []\n    for i in range(q):\n        n = int(input())\n        if n % x == 0:\n            res.append(getMEX(n))\n        else:\n            res.append(getMEX(n))\n    return res\n\nq, x = map(int, input().split())\nres = solve(q, x)\nfor r in res:\n    print(r)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solve(q, x, y):\n    ans = [0]*q\n    d = {}\n    for i in range(q):\n        if y[i] in d:\n            d[y[i]] += 1\n        else:\n            d[y[i]] = 1\n        if y[i] == 0:\n            ans[i] = 1\n        elif y[i] == 1:\n            ans[i] = 0\n        elif y[i] == 2:\n            if d[1] == 0:\n                ans[i] = 2\n            else:\n                ans[i] = 1\n        elif y[i] == 3:\n            if d[1] == 0:\n                ans[i] = 3\n            else:\n                ans[i] = 2\n        elif y[i] == 4:\n            if d[1] == 0:\n                ans[i] = 4\n            elif d[2] == 0:\n                ans[i] = 3\n            else:\n                ans[i] = 2\n        elif y[i] == 5:\n            if d[1] == 0:\n                ans[i] = 5\n            elif d[2] == 0:\n                ans[i] = 4\n            else:\n                ans[i] = 3\n        elif y[i] == 6:\n            if d[1] == 0:\n                ans[i] = 6\n            elif d[2] == 0:\n                ans[i] = 5\n            elif d[3] == 0:\n                ans[i] = 4\n            else:\n                ans[i] = 3\n        elif y[i] == 7:\n            if d[1] == 0:\n                ans[i] = 7\n            elif d[2] == 0:\n                ans[i] = 6\n            elif d[3] == 0:\n                ans[i] = 5\n            else:\n                ans[i] = 4\n        elif y[i] == 8:\n            if d[1] == 0:\n                ans[i] = 8\n            elif d[2] == 0:\n                ans[i] = 7\n            elif d[3] == 0:\n                ans[i] = 6\n            elif d[4] == 0:\n                ans[i] = 5\n            else:\n                ans[i] = 4\n        elif y[i] == 9:\n            if d[1] == 0:\n                ans[i] = 9\n            elif d[2] == 0:\n                ans[i] = 8\n            elif d[3] == 0:\n                ans[i] = 7\n            elif d[4] == 0:\n                ans[i] = 6\n            else:\n                ans[i] = 5\n        elif y[i] == 10:\n            if d[1] == 0:\n                ans[i] = 10\n            elif d[2] == 0:\n                ans[i] = 9\n            elif d[3] == 0:\n                ans[i] = 8\n            elif d[4] == 0:\n                ans[i] = 7\n            elif d[5] == 0:\n                ans[i] = 6\n            else:\n                ans[i] = 5\n        elif y[i] == 11:\n            if d[1] == 0:\n                ans[i] = 11\n            elif d[2] == 0:\n                ans[i] = 10\n            elif d[3] == 0:\n                ans[i] = 9\n            elif d[4] == 0:\n                ans[i] = 8\n            elif d[5] == 0:\n                ans[i] = 7\n            else:\n                ans[i] = 6\n        elif y[i] == 12:\n            if d[1] == 0:\n                ans[i] = 12\n            elif d[2] == 0:\n                ans[i] = 11\n            elif d[3] == 0:\n                ans[i] = 10\n            elif d[4] == 0:\n                ans[i] = 9\n            elif d[5] == 0:\n                ans[i] = 8\n            elif d[6] == 0:\n                ans[i] = 7\n            else:\n                ans[i] = 6\n        elif y[i] == 13:\n            if d[1] == 0:\n                ans[i] = 13\n            elif d[2] == 0:\n                ans[i] = 12\n            elif d[3] == 0:\n                ans[i] = 11\n            elif d[4] == 0:\n                ans[i] = 10\n            elif d[5] == 0:\n                ans[i] = 9\n            elif d[6] == 0:\n                ans[i] = 8\n            else:\n                ans[i] = 7\n        elif y[i] == 14:\n            if d[1] == 0:\n                ans[i] = 14\n            elif d[2] == 0:\n                ans[i] = 13\n            elif d[3] == 0:\n                ans[i] = 12\n            elif d[4] == 0:\n                ans[i] = 11\n            elif d[5] == 0:\n                ans[i] = 10\n            elif d[6] == 0:\n                ans[i] = 9\n            elif d[7] == 0:\n                ans[i] = 8\n            else:\n                ans[i] = 7\n        elif y[i] == 15:\n            if d[1] == 0:\n                ans[i] = 15\n            elif d[2] == 0:\n                ans[i] = 14\n            elif d[3] == 0:\n                ans[i] = 13\n            elif d[4] == 0:\n                ans[i] = 12\n            elif d[5] == 0:\n                ans[i] = 11\n            elif d[6] == 0:\n                ans[i] = 10\n            elif d[7] == 0:\n                ans[i] = 9\n            else:\n                ans[i] = 8\n        elif y[i] == 16:\n            if d[1] == 0:\n                ans[i] = 16\n            elif d[2] == 0:\n                ans[i] = 15\n            elif d[3] == 0:\n                ans[i] = 14\n            elif d[4] == 0:\n                ans[i] = 13\n            elif d[5] == 0:\n                ans[i] = 12\n            elif d[6] == 0:\n                ans[i] = 11\n            elif d[7] == 0:\n                ans[i] = 10\n            elif d[8] == 0:\n                ans[i] = 9\n            else:\n                ans[i] = 8\n        elif y[i] == 17:\n            if d[1] == 0:\n                ans[i] = 17\n            elif d[2] == 0:\n                ans[i] = 16\n            elif d[3] == 0:\n                ans[i] = 15\n            elif d[4] == 0:\n                ans[i] = 14\n            elif d[5] == 0:\n                ans[i] = 13\n            elif d[6] == 0:\n                ans[i] = 12\n            elif d[7] == 0:\n                ans[i] = 11\n            elif d[8] == 0:\n                ans[i] = 10\n            else:\n                ans[i] = 9\n        elif y[i] == 18:\n            if d[1] == 0:\n                ans[i] = 18\n            elif d[2] == 0:\n                ans[i] = 17\n            elif d[3] == 0:\n                ans[i] = 16\n            elif d[4] == 0:\n                ans[i] = 15\n            elif d[5] == 0:\n                ans[i] = 14\n            elif d[6] == 0:\n                ans[i] = 13\n            elif d[7] == 0:\n                ans[i] = 12\n            elif d[8] == 0:\n                ans[i] = 11\n            elif d[9] == 0:\n                ans[i] = 10\n            else:\n                ans[i] = 9\n        elif y[i] == 19:\n            if d[1] == 0:\n                ans[i] = 19\n            elif d[2] == 0:\n                ans[i] = 18\n            elif d[3] == 0:\n                ans[i] = 17\n            elif d[4] == 0:\n                ans[i] = 16\n            elif d[5] == 0:\n                ans[i] = 15\n            elif d[6] == 0:\n                ans[i] = 14\n            elif d[7] == 0:\n                ans[i] = 13\n            elif d[8] == 0:\n                ans[i] = 12\n            elif d[9] == 0:\n                ans[i] = 11\n            else:\n                ans[i] = 10\n        elif y[i] == 20:\n            if d[1] == 0:\n                ans[i] = 20\n            elif d[2] == 0:\n                ans[i] = 19\n            elif d[3] == 0:\n                ans[i] = 18\n            elif d[4] == 0:\n                ans[i] = 17\n            elif d[5] == 0:\n                ans[i] = 16\n            elif d[6] == 0:\n                ans[i] = 15\n            elif d[7] == 0:\n                ans[i] = 14\n            elif d[8] == 0:\n                ans[i] = 13\n            elif d[9] == 0:\n                ans[i] = 12\n            elif d[10] == 0:\n                ans[i] = 11\n            else:\n                ans[i] = 10\n    return ans\n\nq, x = map(int, input().split())\ny = []\nfor i in range(q):\n    y.append(int(input()))\nans = solve(q, x, y)\nfor i in range(q):\n    print(ans[i])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nq, x = map(int, input().split())\n\nfor _ in range(q):\n    y = int(input())\n    print(min(y, x))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(n, x, q):\n    a = []\n    for i in range(n):\n        a.append(q[i])\n        s = min(a)\n        if s < 0:\n            a[:] = [i - s for i in a]\n        m = max(a)\n        if m < x:\n            print(m)\n        else:\n            print(m % x)\n\nq = []\nfor line in sys.stdin:\n    a = line.split()\n    if len(a) == 1:\n        q.append(int(a[0]))\n    elif len(a) == 2:\n        n = int(a[0])\n        x = int(a[1])\n        solve(n, x, q)\n        q = []"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys, threading\n\nsys.setrecursionlimit(10**7) # max depth of recursion\nthreading.stack_size(2**27)  # new thread will get stack of such size\n\ndef get_mex(arr):\n    for i in range(len(arr)):\n        if i not in arr:\n            return i\n    return i + 1\n\ndef get_max_mex(arr, x):\n    mex = get_mex(arr)\n    if mex == 0: return 0\n    arr.sort()\n    i = 0\n    while i < len(arr) and arr[i] < mex:\n        if arr[i] + x > mex:\n            return mex\n        i += 1\n    if i == len(arr):\n        return mex\n    return arr[i] + x\n\ndef get_max_mex_array(arr, x):\n    max_mex_arr = [0]\n    for i in range(1, len(arr)):\n        arr[i] = arr[i] + x\n        max_mex_arr.append(get_max_mex(arr[:i+1], x))\n    return max_mex_arr\n\ndef main():\n    n, x = map(int, sys.stdin.readline().split())\n    arr = [0]\n    for i in range(n):\n        arr.append(int(sys.stdin.readline()))\n    max_mex_arr = get_max_mex_array(arr, x)\n    for i in range(1, len(arr)):\n        print(max_mex_arr[i])\n\nthreading.Thread(target=main).start()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nsys.setrecursionlimit(1000000000)\n\ndef get_mex(arr):\n    arr = sorted(arr)\n    mex = 0\n    for i in range(len(arr)):\n        if arr[i] == mex:\n            mex += 1\n        elif arr[i] > mex:\n            break\n    return mex\n\ndef main():\n    n, x = map(int, input().split())\n    arr = []\n    for _ in range(n):\n        arr.append(int(input()))\n    mex = get_mex(arr)\n    print(mex)\n    for i in range(n-1):\n        arr[i] += x\n        arr[i+1] += x\n        mex = get_mex(arr)\n        print(mex)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nq,x = map(int,input().split())\n\narr = []\n\nfor i in range(q):\n    y = int(input())\n    arr.append(y)\n    arr.sort()\n    # print(arr)\n    if arr[0] == 0:\n        print(1)\n    else:\n        print(0)"
+    }
+  ],
+  "created": 1649888523,
+  "id": "cmpl-4wff9XF7FRL45zyBglz8okwsts4Ks",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:23:30.962513 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef solve(q, x):\n    d = {}\n    d[0] = 1\n    d[1] = 1\n    d[2] = 1\n    d[3] = 1\n    for i in range(4, x+1):\n        d[i] = 1\n    for i in range(x+1, x*2+1):\n        d[i] = 2\n    for i in range(x*2+1, x*3+1):\n        d[i] = 3\n    for i in range(x*3+1, x*4+1):\n        d[i] = 4\n    for i in range(x*4+1, x*5+1):\n        d[i] = 5\n    for i in range(x*5+1, x*6+1):\n        d[i] = 6\n    for i in range(x*6+1, x*7+1):\n        d[i] = 7\n    for i in range(x*7+1, x*8+1):\n        d[i] = 8\n    for i in range(x*8+1, x*9+1):\n        d[i] = 9\n    for i in range(x*9+1, x*10+1):\n        d[i] = 10\n\n    def getMax(n):\n        if n in d:\n            return d[n]\n        return n // x + 1\n\n    def getMin(n):\n        if n in d:\n            return d[n]\n        return n // x\n\n    def getMEX(n):\n        if n in d:\n            return d[n]\n        return n // x + 1\n\n    min_n = 0\n    max_n = 0\n    mex_n = 0\n    res = []\n    for i in range(q):\n        n = int(input())\n        if n % x == 0:\n            res.append(getMEX(n))\n        else:\n            res.append(getMEX(n))\n    return res\n\nq, x = map(int, input().split())\nres = solve(q, x)\nfor r in res:\n    print(r)"
+}
+2022-04-13 22:23:30.962557 REASON stop
+2022-04-13 22:23:30.962944 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solve(q, x, y):\n    ans = [0]*q\n    d = {}\n    for i in range(q):\n        if y[i] in d:\n            d[y[i]] += 1\n        else:\n            d[y[i]] = 1\n        if y[i] == 0:\n            ans[i] = 1\n        elif y[i] == 1:\n            ans[i] = 0\n        elif y[i] == 2:\n            if d[1] == 0:\n                ans[i] = 2\n            else:\n                ans[i] = 1\n        elif y[i] == 3:\n            if d[1] == 0:\n                ans[i] = 3\n            else:\n                ans[i] = 2\n        elif y[i] == 4:\n            if d[1] == 0:\n                ans[i] = 4\n            elif d[2] == 0:\n                ans[i] = 3\n            else:\n                ans[i] = 2\n        elif y[i] == 5:\n            if d[1] == 0:\n                ans[i] = 5\n            elif d[2] == 0:\n                ans[i] = 4\n            else:\n                ans[i] = 3\n        elif y[i] == 6:\n            if d[1] == 0:\n                ans[i] = 6\n            elif d[2] == 0:\n                ans[i] = 5\n            elif d[3] == 0:\n                ans[i] = 4\n            else:\n                ans[i] = 3\n        elif y[i] == 7:\n            if d[1] == 0:\n                ans[i] = 7\n            elif d[2] == 0:\n                ans[i] = 6\n            elif d[3] == 0:\n                ans[i] = 5\n            else:\n                ans[i] = 4\n        elif y[i] == 8:\n            if d[1] == 0:\n                ans[i] = 8\n            elif d[2] == 0:\n                ans[i] = 7\n            elif d[3] == 0:\n                ans[i] = 6\n            elif d[4] == 0:\n                ans[i] = 5\n            else:\n                ans[i] = 4\n        elif y[i] == 9:\n            if d[1] == 0:\n                ans[i] = 9\n            elif d[2] == 0:\n                ans[i] = 8\n            elif d[3] == 0:\n                ans[i] = 7\n            elif d[4] == 0:\n                ans[i] = 6\n            else:\n                ans[i] = 5\n        elif y[i] == 10:\n            if d[1] == 0:\n                ans[i] = 10\n            elif d[2] == 0:\n                ans[i] = 9\n            elif d[3] == 0:\n                ans[i] = 8\n            elif d[4] == 0:\n                ans[i] = 7\n            elif d[5] == 0:\n                ans[i] = 6\n            else:\n                ans[i] = 5\n        elif y[i] == 11:\n            if d[1] == 0:\n                ans[i] = 11\n            elif d[2] == 0:\n                ans[i] = 10\n            elif d[3] == 0:\n                ans[i] = 9\n            elif d[4] == 0:\n                ans[i] = 8\n            elif d[5] == 0:\n                ans[i] = 7\n            else:\n                ans[i] = 6\n        elif y[i] == 12:\n            if d[1] == 0:\n                ans[i] = 12\n            elif d[2] == 0:\n                ans[i] = 11\n            elif d[3] == 0:\n                ans[i] = 10\n            elif d[4] == 0:\n                ans[i] = 9\n            elif d[5] == 0:\n                ans[i] = 8\n            elif d[6] == 0:\n                ans[i] = 7\n            else:\n                ans[i] = 6\n        elif y[i] == 13:\n            if d[1] == 0:\n                ans[i] = 13\n            elif d[2] == 0:\n                ans[i] = 12\n            elif d[3] == 0:\n                ans[i] = 11\n            elif d[4] == 0:\n                ans[i] = 10\n            elif d[5] == 0:\n                ans[i] = 9\n            elif d[6] == 0:\n                ans[i] = 8\n            else:\n                ans[i] = 7\n        elif y[i] == 14:\n            if d[1] == 0:\n                ans[i] = 14\n            elif d[2] == 0:\n                ans[i] = 13\n            elif d[3] == 0:\n                ans[i] = 12\n            elif d[4] == 0:\n                ans[i] = 11\n            elif d[5] == 0:\n                ans[i] = 10\n            elif d[6] == 0:\n                ans[i] = 9\n            elif d[7] == 0:\n                ans[i] = 8\n            else:\n                ans[i] = 7\n        elif y[i] == 15:\n            if d[1] == 0:\n                ans[i] = 15\n            elif d[2] == 0:\n                ans[i] = 14\n            elif d[3] == 0:\n                ans[i] = 13\n            elif d[4] == 0:\n                ans[i] = 12\n            elif d[5] == 0:\n                ans[i] = 11\n            elif d[6] == 0:\n                ans[i] = 10\n            elif d[7] == 0:\n                ans[i] = 9\n            else:\n                ans[i] = 8\n        elif y[i] == 16:\n            if d[1] == 0:\n                ans[i] = 16\n            elif d[2] == 0:\n                ans[i] = 15\n            elif d[3] == 0:\n                ans[i] = 14\n            elif d[4] == 0:\n                ans[i] = 13\n            elif d[5] == 0:\n                ans[i] = 12\n            elif d[6] == 0:\n                ans[i] = 11\n            elif d[7] == 0:\n                ans[i] = 10\n            elif d[8] == 0:\n                ans[i] = 9\n            else:\n                ans[i] = 8\n        elif y[i] == 17:\n            if d[1] == 0:\n                ans[i] = 17\n            elif d[2] == 0:\n                ans[i] = 16\n            elif d[3] == 0:\n                ans[i] = 15\n            elif d[4] == 0:\n                ans[i] = 14\n            elif d[5] == 0:\n                ans[i] = 13\n            elif d[6] == 0:\n                ans[i] = 12\n            elif d[7] == 0:\n                ans[i] = 11\n            elif d[8] == 0:\n                ans[i] = 10\n            else:\n                ans[i] = 9\n        elif y[i] == 18:\n            if d[1] == 0:\n                ans[i] = 18\n            elif d[2] == 0:\n                ans[i] = 17\n            elif d[3] == 0:\n                ans[i] = 16\n            elif d[4] == 0:\n                ans[i] = 15\n            elif d[5] == 0:\n                ans[i] = 14\n            elif d[6] == 0:\n                ans[i] = 13\n            elif d[7] == 0:\n                ans[i] = 12\n            elif d[8] == 0:\n                ans[i] = 11\n            elif d[9] == 0:\n                ans[i] = 10\n            else:\n                ans[i] = 9\n        elif y[i] == 19:\n            if d[1] == 0:\n                ans[i] = 19\n            elif d[2] == 0:\n                ans[i] = 18\n            elif d[3] == 0:\n                ans[i] = 17\n            elif d[4] == 0:\n                ans[i] = 16\n            elif d[5] == 0:\n                ans[i] = 15\n            elif d[6] == 0:\n                ans[i] = 14\n            elif d[7] == 0:\n                ans[i] = 13\n            elif d[8] == 0:\n                ans[i] = 12\n            elif d[9] == 0:\n                ans[i] = 11\n            else:\n                ans[i] = 10\n        elif y[i] == 20:\n            if d[1] == 0:\n                ans[i] = 20\n            elif d[2] == 0:\n                ans[i] = 19\n            elif d[3] == 0:\n                ans[i] = 18\n            elif d[4] == 0:\n                ans[i] = 17\n            elif d[5] == 0:\n                ans[i] = 16\n            elif d[6] == 0:\n                ans[i] = 15\n            elif d[7] == 0:\n                ans[i] = 14\n            elif d[8] == 0:\n                ans[i] = 13\n            elif d[9] == 0:\n                ans[i] = 12\n            elif d[10] == 0:\n                ans[i] = 11\n            else:\n                ans[i] = 10\n    return ans\n\nq, x = map(int, input().split())\ny = []\nfor i in range(q):\n    y.append(int(input()))\nans = solve(q, x, y)\nfor i in range(q):\n    print(ans[i])"
+}
+2022-04-13 22:23:30.963092 REASON stop
+2022-04-13 22:23:30.963455 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nq, x = map(int, input().split())\n\nfor _ in range(q):\n    y = int(input())\n    print(min(y, x))"
+}
+2022-04-13 22:23:30.963498 REASON stop
+2022-04-13 22:23:30.982265 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(n, x, q):\n    a = []\n    for i in range(n):\n        a.append(q[i])\n        s = min(a)\n        if s < 0:\n            a[:] = [i - s for i in a]\n        m = max(a)\n        if m < x:\n            print(m)\n        else:\n            print(m % x)\n\nq = []\nfor line in sys.stdin:\n    a = line.split()\n    if len(a) == 1:\n        q.append(int(a[0]))\n    elif len(a) == 2:\n        n = int(a[0])\n        x = int(a[1])\n        solve(n, x, q)\n        q = []"
+}
+2022-04-13 22:23:30.982346 REASON stop
+2022-04-13 22:23:30.999475 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys, threading\n\nsys.setrecursionlimit(10**7) # max depth of recursion\nthreading.stack_size(2**27)  # new thread will get stack of such size\n\ndef get_mex(arr):\n    for i in range(len(arr)):\n        if i not in arr:\n            return i\n    return i + 1\n\ndef get_max_mex(arr, x):\n    mex = get_mex(arr)\n    if mex == 0: return 0\n    arr.sort()\n    i = 0\n    while i < len(arr) and arr[i] < mex:\n        if arr[i] + x > mex:\n            return mex\n        i += 1\n    if i == len(arr):\n        return mex\n    return arr[i] + x\n\ndef get_max_mex_array(arr, x):\n    max_mex_arr = [0]\n    for i in range(1, len(arr)):\n        arr[i] = arr[i] + x\n        max_mex_arr.append(get_max_mex(arr[:i+1], x))\n    return max_mex_arr\n\ndef main():\n    n, x = map(int, sys.stdin.readline().split())\n    arr = [0]\n    for i in range(n):\n        arr.append(int(sys.stdin.readline()))\n    max_mex_arr = get_max_mex_array(arr, x)\n    for i in range(1, len(arr)):\n        print(max_mex_arr[i])\n\nthreading.Thread(target=main).start()"
+}
+2022-04-13 22:23:30.999580 REASON stop
+2022-04-13 22:23:31.000483 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nsys.setrecursionlimit(1000000000)\n\ndef get_mex(arr):\n    arr = sorted(arr)\n    mex = 0\n    for i in range(len(arr)):\n        if arr[i] == mex:\n            mex += 1\n        elif arr[i] > mex:\n            break\n    return mex\n\ndef main():\n    n, x = map(int, input().split())\n    arr = []\n    for _ in range(n):\n        arr.append(int(input()))\n    mex = get_mex(arr)\n    print(mex)\n    for i in range(n-1):\n        arr[i] += x\n        arr[i+1] += x\n        mex = get_mex(arr)\n        print(mex)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:23:31.000567 REASON stop
+2022-04-13 22:23:31.001311 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nq,x = map(int,input().split())\n\narr = []\n\nfor i in range(q):\n    y = int(input())\n    arr.append(y)\n    arr.sort()\n    # print(arr)\n    if arr[0] == 0:\n        print(1)\n    else:\n        print(0)"
+}
+2022-04-13 22:23:31.001406 REASON stop

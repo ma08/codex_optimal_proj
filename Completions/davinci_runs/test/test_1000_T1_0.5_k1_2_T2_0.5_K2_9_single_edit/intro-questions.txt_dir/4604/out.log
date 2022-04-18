@@ -1,0 +1,70 @@
+2022-04-09 21:03:19.648123 """
+There are N people, conveniently numbered 1 through N.
+They were standing in a row yesterday, but now they are unsure of the order in which they were standing.
+However, each person remembered the following fact: the absolute difference of the number of the people who were standing to the left of that person, and the number of the people who were standing to the right of that person.
+According to their reports, the difference above for person i is A_i.
+Based on these reports, find the number of the possible orders in which they were standing.
+Since it can be extremely large, print the answer modulo 10^9+7.
+Note that the reports may be incorrect and thus there may be no consistent order.
+In such a case, print 0.
+
+-----Constraints-----
+ - 1≦N≦10^5
+ - 0≦A_i≦N-1
+
+-----Input-----
+The input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_N
+
+-----Output-----
+Print the number of the possible orders in which they were standing, modulo 10^9+7.
+
+-----Sample Input-----
+5
+2 4 4 0 2
+
+-----Sample Output-----
+4
+
+There are four possible orders, as follows:
+ - 2,1,4,5,3
+ - 2,5,4,1,3
+ - 3,1,4,5,2
+ - 3,5,4,1,2
+"""
+2022-04-09 21:03:19.648140 --------------------------
+2022-04-09 21:03:48.358009 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\nif A[0] != 0:\n    print(0)\n    exit()\n\nif len(set(A)) != N:\n    print(0)\n    exit()\n\ns = []\nfor i in range(N):\n    if len(s) == 0:\n        s.append(i+1)\n        continue\n    if A[i] >= len(s):\n        s.append(i+1)\n    else:\n        s.insert(A[i], i+1)\n\nprint(s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read from standard input\nN = int(sys.stdin.readline())\nA = list(map(int, sys.stdin.readline().split()))\n\n# Check if each person's report is consistent with the others\nfor i in range(N):\n    if abs(i - A[i]) > 1:\n        print(0)\n        sys.exit()\n\n# Initialize a list of the number of people to the left of each person\n# and the number of people to the right of each person\nleft = [0] * N\nright = [0] * N\n\n# Count the number of people to the left of each person\nfor i in range(N):\n    for j in range(N):\n        if j < i:\n            left[i] += A[j]\n        elif j > i:\n            left[i] += (N - 1 - A[j])\n\n# Count the number of people to the right of each person\nfor i in range(N):\n    for j in range(N):\n        if j < i:\n            right[i] += (N - 1 - A[j])\n        elif j > i:\n            right[i] += A[j]\n\n# Initialize a list to keep track of the number of ways to order the people\n# and the number of people we have ordered\nnum_ways = [0] * N\nnum_ordered = 0\n\n# Order the people\nwhile num_ordered < N:\n    # Find the first person that has not been ordered\n    i = left.index(0)\n\n    # Add this person to the ordered list\n    num_ways[num_ordered] = i + 1\n    num_ordered += 1\n\n    # Subtract the number of people to the left of this person from everyone else\n    for j in range(N):\n        left[j] -= A[i]\n        right[j] -= (N - 1 - A[i])\n\n    # Remove this person from the list\n    left[i] = -1\n    right[i] = -1\n\n# Print the number of ways to order the people\nprint(num_ways[0])"
+    }
+  ],
+  "created": 1649552599,
+  "id": "cmpl-4vGH1KZ2vzuLJvfvynz1OYDtZH5l6",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 21:03:48.358475 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\n\nif A[0] != 0:\n    print(0)\n    exit()\n\nif len(set(A)) != N:\n    print(0)\n    exit()\n\ns = []\nfor i in range(N):\n    if len(s) == 0:\n        s.append(i+1)\n        continue\n    if A[i] >= len(s):\n        s.append(i+1)\n    else:\n        s.insert(A[i], i+1)\n\nprint(s)"
+}
+2022-04-09 21:03:48.358568 REASON stop
+2022-04-09 21:03:48.360982 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read from standard input\nN = int(sys.stdin.readline())\nA = list(map(int, sys.stdin.readline().split()))\n\n# Check if each person's report is consistent with the others\nfor i in range(N):\n    if abs(i - A[i]) > 1:\n        print(0)\n        sys.exit()\n\n# Initialize a list of the number of people to the left of each person\n# and the number of people to the right of each person\nleft = [0] * N\nright = [0] * N\n\n# Count the number of people to the left of each person\nfor i in range(N):\n    for j in range(N):\n        if j < i:\n            left[i] += A[j]\n        elif j > i:\n            left[i] += (N - 1 - A[j])\n\n# Count the number of people to the right of each person\nfor i in range(N):\n    for j in range(N):\n        if j < i:\n            right[i] += (N - 1 - A[j])\n        elif j > i:\n            right[i] += A[j]\n\n# Initialize a list to keep track of the number of ways to order the people\n# and the number of people we have ordered\nnum_ways = [0] * N\nnum_ordered = 0\n\n# Order the people\nwhile num_ordered < N:\n    # Find the first person that has not been ordered\n    i = left.index(0)\n\n    # Add this person to the ordered list\n    num_ways[num_ordered] = i + 1\n    num_ordered += 1\n\n    # Subtract the number of people to the left of this person from everyone else\n    for j in range(N):\n        left[j] -= A[i]\n        right[j] -= (N - 1 - A[i])\n\n    # Remove this person from the list\n    left[i] = -1\n    right[i] = -1\n\n# Print the number of ways to order the people\nprint(num_ways[0])"
+}
+2022-04-09 21:03:48.361089 REASON stop

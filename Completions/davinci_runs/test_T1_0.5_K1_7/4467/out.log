@@ -1,0 +1,142 @@
+2022-04-13 21:05:56.424771 """
+On a two-dimensional plane, there are N red points and N blue points.
+The coordinates of the i-th red point are (a_i, b_i), and the coordinates of the i-th blue point are (c_i, d_i).
+A red point and a blue point can form a friendly pair when, the x-coordinate of the red point is smaller than that of the blue point, and the y-coordinate of the red point is also smaller than that of the blue point.
+At most how many friendly pairs can you form? Note that a point cannot belong to multiple pairs.
+
+-----Constraints-----
+ - All input values are integers.
+ - 1 \leq N \leq 100
+ - 0 \leq a_i, b_i, c_i, d_i < 2N
+ - a_1, a_2, ..., a_N, c_1, c_2, ..., c_N are all different.
+ - b_1, b_2, ..., b_N, d_1, d_2, ..., d_N are all different.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+a_1 b_1
+a_2 b_2
+:
+a_N b_N
+c_1 d_1
+c_2 d_2
+:
+c_N d_N
+
+-----Output-----
+Print the maximum number of friendly pairs.
+
+-----Sample Input-----
+3
+2 0
+3 1
+1 3
+4 2
+0 4
+5 5
+
+-----Sample Output-----
+2
+
+For example, you can pair (2, 0) and (4, 2), then (3, 1) and (5, 5).
+"""
+2022-04-13 21:05:56.424779 --------------------------
+2022-04-13 21:06:14.558023 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nreds = []\nblues = []\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    reds.append([x, y])\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    blues.append([x, y])\n\nreds.sort()\nblues.sort()\n\npairs = 0\nfor red in reds:\n    for blue in blues:\n        if red[0] < blue[0] and red[1] < blue[1]:\n            pairs += 1\n            blues.remove(blue)\n            break\n\nprint(pairs)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nred = []\nblue = []\n\nfor i in range(N):\n    red.append(list(map(int, input().split())))\n\nfor i in range(N):\n    blue.append(list(map(int, input().split())))\n\nred.sort(key=lambda x: x[0])\nblue.sort(key=lambda x: x[0])\n\nresult = 0\nfor r in red:\n    for b in blue:\n        if r[0] < b[0] and r[1] < b[1]:\n            blue.remove(b)\n            result += 1\n            break\n\nprint(result)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# === Problem 1 ===\n\n# Input\nn = int(input())\nred_x = []\nred_y = []\nblue_x = []\nblue_y = []\nfor i in range(n):\n    a, b = map(int, input().split())\n    red_x.append(a)\n    red_y.append(b)\nfor i in range(n):\n    c, d = map(int, input().split())\n    blue_x.append(c)\n    blue_y.append(d)\n\n# Sort\nred_x.sort()\nred_y.sort()\nblue_x.sort()\nblue_y.sort()\n\n# Count\ncount = 0\nfor i in range(n):\n    j = 0\n    while j < n:\n        if red_x[i] < blue_x[j] and red_y[i] < blue_y[j]:\n            count += 1\n            blue_x.pop(j)\n            blue_y.pop(j)\n            break\n        j += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nreds = []\nblues = []\nfor _ in range(N):\n    rx, ry = map(int, input().split())\n    reds.append((rx, ry))\nfor _ in range(N):\n    bx, by = map(int, input().split())\n    blues.append((bx, by))\n\nreds.sort()\nblues.sort()\n\nans = 0\nfor r in reds:\n    for i, b in enumerate(blues):\n        if r[0] < b[0] and r[1] < b[1]:\n            ans += 1\n            del blues[i]\n            break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nred = [list(map(int, input().split())) for _ in range(N)]\nblue = [list(map(int, input().split())) for _ in range(N)]\n\nred.sort()\nblue.sort()\n\ncount = 0\nred_idx = 0\nfor b in blue:\n    while red_idx < N and red[red_idx][0] < b[0] and red[red_idx][1] < b[1]:\n        red_idx += 1\n    if red_idx == N:\n        break\n    count += 1\n    red_idx += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(N, red, blue):\n    red.sort()\n    blue.sort()\n    res = 0\n    for i in range(N):\n        for j in range(N):\n            if red[i][0] < blue[j][0] and red[i][1] < blue[j][1]:\n                res += 1\n                break\n    return res\n\ndef main():\n    N = int(input())\n    red = []\n    blue = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        red.append((x, y))\n    for _ in range(N):\n        x, y = map(int, input().split())\n        blue.append((x, y))\n    print(solve(N, red, blue))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    red = [tuple(map(int, input().split())) for _ in range(n)]\n    blue = [tuple(map(int, input().split())) for _ in range(n)]\n    print(solve(red, blue))\n\n\ndef solve(red, blue):\n    red.sort()\n    blue.sort(key=lambda b: (b[1], b[0]))\n    r_index = 0\n    b_index = 0\n    count = 0\n    while r_index < len(red) and b_index < len(blue):\n        rx, ry = red[r_index]\n        bx, by = blue[b_index]\n        if rx < bx and ry < by:\n            count += 1\n            r_index += 1\n            b_index += 1\n        else:\n            if ry < by:\n                r_index += 1\n            else:\n                b_index += 1\n    return count\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649883956,
+  "id": "cmpl-4weTURa1ZpXlXS9C9gmWiJEAa2Zx1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:06:14.558294 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nreds = []\nblues = []\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    reds.append([x, y])\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    blues.append([x, y])\n\nreds.sort()\nblues.sort()\n\npairs = 0\nfor red in reds:\n    for blue in blues:\n        if red[0] < blue[0] and red[1] < blue[1]:\n            pairs += 1\n            blues.remove(blue)\n            break\n\nprint(pairs)"
+}
+2022-04-13 21:06:14.558339 REASON stop
+2022-04-13 21:06:14.558818 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nred = []\nblue = []\n\nfor i in range(N):\n    red.append(list(map(int, input().split())))\n\nfor i in range(N):\n    blue.append(list(map(int, input().split())))\n\nred.sort(key=lambda x: x[0])\nblue.sort(key=lambda x: x[0])\n\nresult = 0\nfor r in red:\n    for b in blue:\n        if r[0] < b[0] and r[1] < b[1]:\n            blue.remove(b)\n            result += 1\n            break\n\nprint(result)"
+}
+2022-04-13 21:06:14.558952 REASON stop
+2022-04-13 21:06:14.559389 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# === Problem 1 ===\n\n# Input\nn = int(input())\nred_x = []\nred_y = []\nblue_x = []\nblue_y = []\nfor i in range(n):\n    a, b = map(int, input().split())\n    red_x.append(a)\n    red_y.append(b)\nfor i in range(n):\n    c, d = map(int, input().split())\n    blue_x.append(c)\n    blue_y.append(d)\n\n# Sort\nred_x.sort()\nred_y.sort()\nblue_x.sort()\nblue_y.sort()\n\n# Count\ncount = 0\nfor i in range(n):\n    j = 0\n    while j < n:\n        if red_x[i] < blue_x[j] and red_y[i] < blue_y[j]:\n            count += 1\n            blue_x.pop(j)\n            blue_y.pop(j)\n            break\n        j += 1\n\nprint(count)"
+}
+2022-04-13 21:06:14.559445 REASON stop
+2022-04-13 21:06:14.571579 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nreds = []\nblues = []\nfor _ in range(N):\n    rx, ry = map(int, input().split())\n    reds.append((rx, ry))\nfor _ in range(N):\n    bx, by = map(int, input().split())\n    blues.append((bx, by))\n\nreds.sort()\nblues.sort()\n\nans = 0\nfor r in reds:\n    for i, b in enumerate(blues):\n        if r[0] < b[0] and r[1] < b[1]:\n            ans += 1\n            del blues[i]\n            break\n\nprint(ans)"
+}
+2022-04-13 21:06:14.571676 REASON stop
+2022-04-13 21:06:14.583280 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nred = [list(map(int, input().split())) for _ in range(N)]\nblue = [list(map(int, input().split())) for _ in range(N)]\n\nred.sort()\nblue.sort()\n\ncount = 0\nred_idx = 0\nfor b in blue:\n    while red_idx < N and red[red_idx][0] < b[0] and red[red_idx][1] < b[1]:\n        red_idx += 1\n    if red_idx == N:\n        break\n    count += 1\n    red_idx += 1\n\nprint(count)"
+}
+2022-04-13 21:06:14.583375 REASON stop
+2022-04-13 21:06:14.584645 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(N, red, blue):\n    red.sort()\n    blue.sort()\n    res = 0\n    for i in range(N):\n        for j in range(N):\n            if red[i][0] < blue[j][0] and red[i][1] < blue[j][1]:\n                res += 1\n                break\n    return res\n\ndef main():\n    N = int(input())\n    red = []\n    blue = []\n    for _ in range(N):\n        x, y = map(int, input().split())\n        red.append((x, y))\n    for _ in range(N):\n        x, y = map(int, input().split())\n        blue.append((x, y))\n    print(solve(N, red, blue))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:06:14.584713 REASON stop
+2022-04-13 21:06:14.606774 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    red = [tuple(map(int, input().split())) for _ in range(n)]\n    blue = [tuple(map(int, input().split())) for _ in range(n)]\n    print(solve(red, blue))\n\n\ndef solve(red, blue):\n    red.sort()\n    blue.sort(key=lambda b: (b[1], b[0]))\n    r_index = 0\n    b_index = 0\n    count = 0\n    while r_index < len(red) and b_index < len(blue):\n        rx, ry = red[r_index]\n        bx, by = blue[b_index]\n        if rx < bx and ry < by:\n            count += 1\n            r_index += 1\n            b_index += 1\n        else:\n            if ry < by:\n                r_index += 1\n            else:\n                b_index += 1\n    return count\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:06:14.606898 REASON stop

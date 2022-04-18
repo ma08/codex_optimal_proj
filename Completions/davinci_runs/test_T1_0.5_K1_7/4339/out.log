@@ -1,0 +1,139 @@
+2022-04-13 20:10:10.048841 """
+The next lecture in a high school requires two topics to be discussed. The $i$-th topic is interesting by $a_i$ units for the teacher and by $b_i$ units for the students.
+
+The pair of topics $i$ and $j$ ($i < j$) is called good if $a_i + a_j > b_i + b_j$ (i.e. it is more interesting for the teacher).
+
+Your task is to find the number of good pairs of topics.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of topics.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the interestingness of the $i$-th topic for the teacher.
+
+The third line of the input contains $n$ integers $b_1, b_2, \dots, b_n$ ($1 \le b_i \le 10^9$), where $b_i$ is the interestingness of the $i$-th topic for the students.
+
+
+-----Output-----
+
+Print one integer — the number of good pairs of topic.
+
+
+-----Examples-----
+Input
+5
+4 8 2 6 2
+4 5 4 1 3
+
+Output
+7
+
+Input
+4
+1 3 2 4
+1 3 2 4
+
+Output
+0
+"""
+2022-04-13 20:10:10.048850 --------------------------
+2022-04-13 20:10:37.774867 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    ans = 0\n    for i in range(n):\n        ans += (i+1)*(n-i)-1\n    for i in range(n):\n        ans += a[i]*(n-i)-b[i]*(i+1)\n    print(ans)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution 1\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)\n\n\n# Solution 2\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n - 1):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)\n\n\n# Solution 3\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\ntotal = 0\n\nfor i in range(n - 1):\n    for j in range(i + 1, n):\n        if a[i] + a[j] > b[i] + b[j]:\n            total += 1\n\nprint(total)\n\n\n# Solution 4\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n - 1):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na.sort()\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += a[i] * (n - i) - b[i] * i\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\n# The teacher's interestingness is the same as the student's interestingness\nif a == b:\n    print(0)\n    exit()\n\n# The teacher's interestingness is different from the student's interestingness\n# Sort the topics by the teacher's interestingness\na_sorted = sorted(a)\n\n# Sort the topics by the student's interestingness\nb_sorted = sorted(b)\n\n# The number of good pairs of topics\ncount = 0\n\n# Iterate through the topics\nfor i in range(n):\n    # The teacher's interestingness is greater than the student's interestingness\n    if a[i] > b[i]:\n        # Find the index of the topic with the same interestingness for the teacher and student\n        idx = a_sorted.index(b[i])\n\n        # The number of topics with the same interestingness for the teacher and student\n        # which are more interesting for the teacher\n        count += idx\n\n        # Remove the topic from the sorted list\n        a_sorted.pop(idx)\n    # The teacher's interestingness is less than the student's interestingness\n    else:\n        # Find the index of the topic with the same interestingness for the teacher and student\n        idx = b_sorted.index(a[i])\n\n        # The number of topics with the same interestingness for the teacher and student\n        # which are more interesting for the student\n        count += n - idx - 1\n\n        # Remove the topic from the sorted list\n        b_sorted.pop(idx)\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\n# \uc815\ub82c\n# a_sort = sorted(a)\n# b_sort = sorted(b)\n\n# a_sum = 0\n# b_sum = 0\n\n# for i in range(n):\n#     for j in range(i+1, n):\n#         if a_sort[i] + a_sort[j] > b_sort[i] + b_sort[j]:\n#             a_sum += 1\n#         else:\n#             b_sum += 1\n\n# print(a_sum)\n\na_sort = sorted(a)\nb_sort = sorted(b)\n\na_sum = 0\nb_sum = 0\n\nfor i in range(n):\n    a_sum += n - (bisect_right(a_sort, b_sort[i]))\n    b_sum += n - (bisect_right(b_sort, a_sort[i]))\n\nprint(a_sum - b_sum)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na.sort()\nb.sort()\n\nans = 0\nfor i in range(n):\n    ans += a.pop() + b.pop()\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\nb = [int(x) for x in input().split()]\n\n# Using a greedy approach.\n# Sort both a and b in increasing order.\n# Since we want to maximize the sum of a, we want to pair the largest a with the smallest b.\n# And since we want to minimize the sum of b, we want to pair the smallest a with the largest b.\n# This means we want to pair the largest a with the smallest b, and the 2nd largest a with the 2nd smallest b, etc.\n# Thus, we can sort both a and b in increasing order, and then pair a[i] with b[n-i-1] for i in range(n)\n\na.sort()\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += (a[i] + a[n-i-1]) * (b[i] + b[n-i-1])\n\nprint(ans)"
+    }
+  ],
+  "created": 1649880610,
+  "id": "cmpl-4wdbW0sGUSKHo2rEpj8P3Ov31qVlN",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:10:37.775144 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    a.sort()\n    b.sort()\n    ans = 0\n    for i in range(n):\n        ans += (i+1)*(n-i)-1\n    for i in range(n):\n        ans += a[i]*(n-i)-b[i]*(i+1)\n    print(ans)\n\nmain()"
+}
+2022-04-13 20:10:37.775181 REASON stop
+2022-04-13 20:10:37.775639 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution 1\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)\n\n\n# Solution 2\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n - 1):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)\n\n\n# Solution 3\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\ntotal = 0\n\nfor i in range(n - 1):\n    for j in range(i + 1, n):\n        if a[i] + a[j] > b[i] + b[j]:\n            total += 1\n\nprint(total)\n\n\n# Solution 4\n# n = int(input())\n# a = list(map(int, input().split()))\n# b = list(map(int, input().split()))\n#\n# total = 0\n#\n# for i in range(n - 1):\n#     for j in range(i + 1, n):\n#         if a[i] + a[j] > b[i] + b[j]:\n#             total += 1\n#\n# print(total)"
+}
+2022-04-13 20:10:37.775779 REASON stop
+2022-04-13 20:10:37.776148 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na.sort()\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += a[i] * (n - i) - b[i] * i\n\nprint(ans)"
+}
+2022-04-13 20:10:37.776196 REASON stop
+2022-04-13 20:10:37.804195 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\n# The teacher's interestingness is the same as the student's interestingness\nif a == b:\n    print(0)\n    exit()\n\n# The teacher's interestingness is different from the student's interestingness\n# Sort the topics by the teacher's interestingness\na_sorted = sorted(a)\n\n# Sort the topics by the student's interestingness\nb_sorted = sorted(b)\n\n# The number of good pairs of topics\ncount = 0\n\n# Iterate through the topics\nfor i in range(n):\n    # The teacher's interestingness is greater than the student's interestingness\n    if a[i] > b[i]:\n        # Find the index of the topic with the same interestingness for the teacher and student\n        idx = a_sorted.index(b[i])\n\n        # The number of topics with the same interestingness for the teacher and student\n        # which are more interesting for the teacher\n        count += idx\n\n        # Remove the topic from the sorted list\n        a_sorted.pop(idx)\n    # The teacher's interestingness is less than the student's interestingness\n    else:\n        # Find the index of the topic with the same interestingness for the teacher and student\n        idx = b_sorted.index(a[i])\n\n        # The number of topics with the same interestingness for the teacher and student\n        # which are more interesting for the student\n        count += n - idx - 1\n\n        # Remove the topic from the sorted list\n        b_sorted.pop(idx)\n\nprint(count)"
+}
+2022-04-13 20:10:37.804320 REASON stop
+2022-04-13 20:10:37.804857 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\n# \uc815\ub82c\n# a_sort = sorted(a)\n# b_sort = sorted(b)\n\n# a_sum = 0\n# b_sum = 0\n\n# for i in range(n):\n#     for j in range(i+1, n):\n#         if a_sort[i] + a_sort[j] > b_sort[i] + b_sort[j]:\n#             a_sum += 1\n#         else:\n#             b_sum += 1\n\n# print(a_sum)\n\na_sort = sorted(a)\nb_sort = sorted(b)\n\na_sum = 0\nb_sum = 0\n\nfor i in range(n):\n    a_sum += n - (bisect_right(a_sort, b_sort[i]))\n    b_sum += n - (bisect_right(b_sort, a_sort[i]))\n\nprint(a_sum - b_sum)"
+}
+2022-04-13 20:10:37.804927 REASON stop
+2022-04-13 20:10:37.835694 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\na.sort()\nb.sort()\n\nans = 0\nfor i in range(n):\n    ans += a.pop() + b.pop()\n\nprint(ans)"
+}
+2022-04-13 20:10:37.835793 REASON stop
+2022-04-13 20:10:37.836534 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\nb = [int(x) for x in input().split()]\n\n# Using a greedy approach.\n# Sort both a and b in increasing order.\n# Since we want to maximize the sum of a, we want to pair the largest a with the smallest b.\n# And since we want to minimize the sum of b, we want to pair the smallest a with the largest b.\n# This means we want to pair the largest a with the smallest b, and the 2nd largest a with the 2nd smallest b, etc.\n# Thus, we can sort both a and b in increasing order, and then pair a[i] with b[n-i-1] for i in range(n)\n\na.sort()\nb.sort()\n\nans = 0\n\nfor i in range(n):\n    ans += (a[i] + a[n-i-1]) * (b[i] + b[n-i-1])\n\nprint(ans)"
+}
+2022-04-13 20:10:37.836620 REASON stop

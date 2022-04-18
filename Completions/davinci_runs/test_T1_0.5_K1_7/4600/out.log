@@ -1,0 +1,141 @@
+2022-04-13 21:59:12.701743 """
+Takahashi participated in a contest on AtCoder.
+The contest had N problems.
+Takahashi made M submissions during the contest.
+The i-th submission was made for the p_i-th problem and received the verdict S_i (AC or WA).
+The number of Takahashi's correct answers is the number of problems on which he received an AC once or more.
+The number of Takahashi's penalties is the sum of the following count for the problems on which he received an AC once or more: the number of WAs received before receiving an AC for the first time on that problem.
+Find the numbers of Takahashi's correct answers and penalties.
+
+-----Constraints-----
+ - N, M, and p_i are integers.
+ - 1 \leq N \leq 10^5
+ - 0 \leq M \leq 10^5
+ - 1 \leq p_i \leq N
+ - S_i is AC or WA.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+p_1 S_1
+:
+p_M S_M
+
+-----Output-----
+Print the number of Takahashi's correct answers and the number of Takahashi's penalties.
+
+-----Sample Input-----
+2 5
+1 WA
+1 AC
+2 WA
+2 AC
+2 WA
+
+-----Sample Output-----
+2 2
+
+In his second submission, he received an AC on the first problem for the first time. Before this, he received one WA on this problem.
+In his fourth submission, he received an AC on the second problem for the first time. Before this, he received one WA on this problem.
+Thus, he has two correct answers and two penalties.
+"""
+2022-04-13 21:59:12.701751 --------------------------
+2022-04-13 21:59:30.775117 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\np = []\nS = []\nans = 0\npenalty = 0\n\nfor i in range(M):\n    p_tmp, S_tmp = input().split()\n    p.append(int(p_tmp))\n    S.append(S_tmp)\n\nfor i in range(1, N+1):\n    for j in range(M):\n        if p[j] == i and S[j] == \"WA\":\n            penalty += 1\n        if p[j] == i and S[j] == \"AC\":\n            ans += 1\n            penalty += penalty\n            break\n\nprint(ans, penalty)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\n# the number of correct answers\ncorrect = 0\n# the number of penalties\npenalty = 0\n\n# the number of WA for each problem\nwa = [0 for i in range(N)]\n\nfor i in range(M):\n    p, S = input().split()\n    p = int(p) - 1\n    if S == \"AC\":\n        # if the problem is already AC, do nothing\n        if wa[p] == -1:\n            continue\n        # if the problem is not AC yet\n        else:\n            # count the number of correct answers and penalties\n            correct += 1\n            penalty += wa[p]\n            # mark the problem as AC\n            wa[p] = -1\n    else:\n        # if the problem is already AC, do nothing\n        if wa[p] == -1:\n            continue\n        # if the problem is not AC yet\n        else:\n            # count the number of WA\n            wa[p] += 1\n\nprint(correct, penalty)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\nAC = [0] * N\nWA = [0] * N\n\nfor _ in range(M):\n    p, s = input().split()\n    p = int(p) - 1\n    if s == 'AC':\n        if AC[p] == 0:\n            AC[p] = 1\n    else:\n        if AC[p] == 0:\n            WA[p] += 1\n\nprint(sum(AC), sum(WA))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\n# key: problem number, value: penalty\npenalties = {}\ncorrect = 0\n\nfor i in range(m):\n    p, s = sys.stdin.readline().split()\n    p = int(p)\n    if s == \"AC\":\n        if p not in penalties:\n            correct += 1\n            penalties[p] = 0\n    else:\n        if p not in penalties:\n            penalties[p] = 1\n        else:\n            penalties[p] += 1\n\nprint(correct, sum(penalties.values()))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\nn, m = map(int, input().split())\n\npenalty = defaultdict(int)\nac = 0\nwa = 0\n\nfor _ in range(m):\n    p, s = input().split()\n    p = int(p)\n    if s == \"AC\":\n        if penalty[p] == 0:\n            ac += 1\n        else:\n            penalty[p] += 1\n    else:\n        if penalty[p] == 0:\n            penalty[p] += 1\n\nfor _, v in penalty.items():\n    wa += v\n\nprint(ac, wa)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\np = [0] * m\ns = [0] * m\nfor i in range(m):\n    p[i], s[i] = map(str, input().split())\n    p[i] = int(p[i])\n\ncorrect = [0] * n\npenalty = [0] * n\nfor i in range(m):\n    if s[i] == 'AC':\n        if correct[p[i] - 1] == 0:\n            correct[p[i] - 1] = 1\n    else:\n        if correct[p[i] - 1] == 0:\n            penalty[p[i] - 1] += 1\n\nprint(sum(correct), sum(penalty))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    p_s = [list(map(str, input().split())) for i in range(m)]\n    ac_count = 0\n    penalty = 0\n    p_count = [0]*n\n    for p, s in p_s:\n        p = int(p)-1\n        if s == \"AC\":\n            if p_count[p] != -1:\n                ac_count += 1\n                penalty += p_count[p]\n                p_count[p] = -1\n        else:\n            if p_count[p] != -1:\n                p_count[p] += 1\n    print(ac_count, penalty)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649887152,
+  "id": "cmpl-4wfJ2iOfCbsjjepQFrWWydf249vyj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:59:30.775405 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\np = []\nS = []\nans = 0\npenalty = 0\n\nfor i in range(M):\n    p_tmp, S_tmp = input().split()\n    p.append(int(p_tmp))\n    S.append(S_tmp)\n\nfor i in range(1, N+1):\n    for j in range(M):\n        if p[j] == i and S[j] == \"WA\":\n            penalty += 1\n        if p[j] == i and S[j] == \"AC\":\n            ans += 1\n            penalty += penalty\n            break\n\nprint(ans, penalty)"
+}
+2022-04-13 21:59:30.775440 REASON stop
+2022-04-13 21:59:30.776009 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\n# the number of correct answers\ncorrect = 0\n# the number of penalties\npenalty = 0\n\n# the number of WA for each problem\nwa = [0 for i in range(N)]\n\nfor i in range(M):\n    p, S = input().split()\n    p = int(p) - 1\n    if S == \"AC\":\n        # if the problem is already AC, do nothing\n        if wa[p] == -1:\n            continue\n        # if the problem is not AC yet\n        else:\n            # count the number of correct answers and penalties\n            correct += 1\n            penalty += wa[p]\n            # mark the problem as AC\n            wa[p] = -1\n    else:\n        # if the problem is already AC, do nothing\n        if wa[p] == -1:\n            continue\n        # if the problem is not AC yet\n        else:\n            # count the number of WA\n            wa[p] += 1\n\nprint(correct, penalty)"
+}
+2022-04-13 21:59:30.776122 REASON stop
+2022-04-13 21:59:30.776519 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\nAC = [0] * N\nWA = [0] * N\n\nfor _ in range(M):\n    p, s = input().split()\n    p = int(p) - 1\n    if s == 'AC':\n        if AC[p] == 0:\n            AC[p] = 1\n    else:\n        if AC[p] == 0:\n            WA[p] += 1\n\nprint(sum(AC), sum(WA))"
+}
+2022-04-13 21:59:30.776569 REASON stop
+2022-04-13 21:59:30.803781 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\n# key: problem number, value: penalty\npenalties = {}\ncorrect = 0\n\nfor i in range(m):\n    p, s = sys.stdin.readline().split()\n    p = int(p)\n    if s == \"AC\":\n        if p not in penalties:\n            correct += 1\n            penalties[p] = 0\n    else:\n        if p not in penalties:\n            penalties[p] = 1\n        else:\n            penalties[p] += 1\n\nprint(correct, sum(penalties.values()))"
+}
+2022-04-13 21:59:30.803928 REASON stop
+2022-04-13 21:59:30.825850 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\nn, m = map(int, input().split())\n\npenalty = defaultdict(int)\nac = 0\nwa = 0\n\nfor _ in range(m):\n    p, s = input().split()\n    p = int(p)\n    if s == \"AC\":\n        if penalty[p] == 0:\n            ac += 1\n        else:\n            penalty[p] += 1\n    else:\n        if penalty[p] == 0:\n            penalty[p] += 1\n\nfor _, v in penalty.items():\n    wa += v\n\nprint(ac, wa)"
+}
+2022-04-13 21:59:30.825944 REASON stop
+2022-04-13 21:59:30.826950 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\np = [0] * m\ns = [0] * m\nfor i in range(m):\n    p[i], s[i] = map(str, input().split())\n    p[i] = int(p[i])\n\ncorrect = [0] * n\npenalty = [0] * n\nfor i in range(m):\n    if s[i] == 'AC':\n        if correct[p[i] - 1] == 0:\n            correct[p[i] - 1] = 1\n    else:\n        if correct[p[i] - 1] == 0:\n            penalty[p[i] - 1] += 1\n\nprint(sum(correct), sum(penalty))"
+}
+2022-04-13 21:59:30.827036 REASON stop
+2022-04-13 21:59:30.827910 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    p_s = [list(map(str, input().split())) for i in range(m)]\n    ac_count = 0\n    penalty = 0\n    p_count = [0]*n\n    for p, s in p_s:\n        p = int(p)-1\n        if s == \"AC\":\n            if p_count[p] != -1:\n                ac_count += 1\n                penalty += p_count[p]\n                p_count[p] = -1\n        else:\n            if p_count[p] != -1:\n                p_count[p] += 1\n    print(ac_count, penalty)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:59:30.827968 REASON stop

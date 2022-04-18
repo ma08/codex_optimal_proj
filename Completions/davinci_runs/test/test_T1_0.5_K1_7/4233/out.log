@@ -1,0 +1,190 @@
+2022-04-13 19:22:39.068118 """
+A star is a figure of the following type: an asterisk character '*' in the center of the figure and four rays (to the left, right, top, bottom) of the same positive length. The size of a star is the length of its rays. The size of a star must be a positive number (i.e. rays of length $0$ are not allowed).
+
+Let's consider empty cells are denoted by '.', then the following figures are stars:
+
+ [Image] The leftmost figure is a star of size $1$, the middle figure is a star of size $2$ and the rightmost figure is a star of size $3$. 
+
+You are given a rectangular grid of size $n \times m$ consisting only of asterisks '*' and periods (dots) '.'. Rows are numbered from $1$ to $n$, columns are numbered from $1$ to $m$. Your task is to draw this grid using any number of stars or find out that it is impossible. Stars can intersect, overlap or even coincide with each other. The number of stars in the output can't exceed $n \cdot m$. Each star should be completely inside the grid. You can use stars of same and arbitrary sizes.
+
+In this problem, you do not need to minimize the number of stars. Just find any way to draw the given grid with at most $n \cdot m$ stars.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($3 \le n, m \le 100$) — the sizes of the given grid.
+
+The next $n$ lines contains $m$ characters each, the $i$-th line describes the $i$-th row of the grid. It is guaranteed that grid consists of characters '*' and '.' only.
+
+
+-----Output-----
+
+If it is impossible to draw the given grid using stars only, print "-1".
+
+Otherwise in the first line print one integer $k$ ($0 \le k \le n \cdot m$) — the number of stars needed to draw the given grid. The next $k$ lines should contain three integers each — $x_j$, $y_j$ and $s_j$, where $x_j$ is the row index of the central star character, $y_j$ is the column index of the central star character and $s_j$ is the size of the star. Each star should be completely inside the grid.
+
+
+-----Examples-----
+Input
+6 8
+....*...
+...**...
+..*****.
+...**...
+....*...
+........
+
+Output
+3
+3 4 1
+3 5 2
+3 5 1
+
+Input
+5 5
+.*...
+****.
+.****
+..**.
+.....
+
+Output
+3
+2 2 1
+3 3 1
+3 4 1
+
+Input
+5 5
+.*...
+***..
+.*...
+.*...
+.....
+
+Output
+-1
+
+Input
+3 3
+*.*
+.*.
+*.*
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the output 2
+
+3 4 1
+
+3 5 2
+
+
+
+is also correct.
+"""
+2022-04-13 19:22:39.068131 --------------------------
+2022-04-13 19:24:37.663104 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    grid = []\n    for _ in range(n):\n        grid.append(input())\n    grid = [[x for x in row] for row in grid]\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j+s] == '*':\n                    s += 1\n                stars.append((i, j, s))\n                for x in range(i, i+s):\n                    for y in range(j, j+s):\n                        grid[x][y] = '.'\n    if any('*' in row for row in grid):\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(' '.join(str(x) for x in star))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn, m = [int(i) for i in input().split()]\ngrid = [[\".\" for j in range(m)] for i in range(n)]\n\nfor i in range(n):\n    row = input()\n    for j in range(m):\n        grid[i][j] = row[j]\n\nstars = []\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == \"*\":\n            s = 1\n            while (i - s >= 0 and i + s < n and j - s >= 0 and j + s < m and grid[i - s][j] == \"*\" and grid[i + s][j] == \"*\" and grid[i][j - s] == \"*\" and grid[i][j + s] == \"*\"):\n                s += 1\n            stars.append((i, j, s))\n            for k in range(s):\n                grid[i - k][j] = \".\"\n                grid[i + k][j] = \".\"\n                grid[i][j - k] = \".\"\n                grid[i][j + k] = \".\"\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == \"*\":\n            print(\"-1\")\n            exit(0)\n\nprint(len(stars))\nfor star in stars:\n    print(\" \".join([str(a) for a in star]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n\tn,m = [int(x) for x in sys.stdin.readline().split()]\n\tgrid = []\n\tfor i in range(n):\n\t\tgrid.append(sys.stdin.readline())\n\t\tgrid[i] = grid[i].strip()\n\t\n\tstars = []\n\tfor i in range(n):\n\t\tfor j in range(m):\n\t\t\tif grid[i][j] == '*':\n\t\t\t\tfor k in range(1,min(n,m)+1):\n\t\t\t\t\tif i>=k and j>=k and i+k<n and j+k<m:\n\t\t\t\t\t\tif grid[i-k][j] == '*' and grid[i+k][j] == '*' and grid[i][j-k] == '*' and grid[i][j+k] == '*':\n\t\t\t\t\t\t\tstars.append((i,j,k))\n\t\t\t\t\t\telse:\n\t\t\t\t\t\t\tbreak\n\t\t\t\t\telse:\n\t\t\t\t\t\tbreak\n\t\n\tfor s in stars:\n\t\tfor i in range(s[0]-s[2],s[0]+s[2]+1):\n\t\t\tfor j in range(s[1]-s[2],s[1]+s[2]+1):\n\t\t\t\tif i == s[0] and j == s[1]:\n\t\t\t\t\tcontinue\n\t\t\t\telse:\n\t\t\t\t\tgrid[i] = grid[i][:j]+'.'+grid[i][j+1:]\n\t\n\tfor i in range(n):\n\t\tif '*' in grid[i]:\n\t\t\tprint -1\n\t\t\treturn\n\t\n\tprint len(stars)\n\tfor s in stars:\n\t\tprint s[0]+1,s[1]+1,s[2]\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#Solution\nn, m = map(int, input().split())\n\na = [input() for _ in range(n)]\n\ndef solve():\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                for size in range(1, min(n - i, m - j) + 1):\n                    if a[i][j+size-1] == '.':\n                        break\n                    if a[i+size-1][j] == '.':\n                        break\n                    if a[i+size-1][j+size-1] == '.':\n                        break\n                    if a[i+size-1][j+size-1] == '*':\n                        break\n                    for k in range(size):\n                        if a[i+size-1][j+k] == '.':\n                            break\n                    else:\n                        continue\n                    for k in range(size):\n                        if a[i+k][j+size-1] == '.':\n                            break\n                    else:\n                        continue\n                    break\n                else:\n                    continue\n                for k in range(i, i+size):\n                    for l in range(j, j+size):\n                        a[k][l] = '.'\n                print(i+1, j+1, size)\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                return -1\n    return 0\n\nans = solve()\nif ans == -1:\n    print(-1)\nelse:\n    print(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    >>> main()\n    3\n    3 4 1\n    3 5 2\n    3 5 1\n    3\n    2 2 1\n    3 3 1\n    3 4 1\n    -1\n    -1\n    \"\"\"\n    n, m = map(int, input().split())\n    grid = [input() for _ in range(n)]\n    # grid = [['.', '*', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '*', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '*', '*', '*', '*', '*', '.'],\n    #         ['.', '.', '*', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.']]\n    # grid = [['.', '*', '.', '.', '.'],\n    #         ['*', '*', '*', '.', '.'],\n    #         ['.', '*', '*', '*', '*'],\n    #         ['.', '.', '*', '*', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    # grid = [['.', '*', '.', '.', '.'],\n    #         ['*', '*', '*', '.', '.'],\n    #         ['.', '*', '*', '*', '.'],\n    #         ['.', '*', '*', '.', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    # grid = [['*', '.', '*'],\n    #         ['.', '.', '.'],\n    #         ['*', '.', '*']]\n    # grid = [['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.']]\n    # grid = [['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    stars = []\n    for i, row in enumerate(grid):\n        for j, cell in enumerate(row):\n            if cell == '*':\n                x, y, s = i, j, 1\n                while True:\n                    if (x + s < n and grid[x + s][y] == '*' and\n                            x - s >= 0 and grid[x - s][y] == '*' and\n                            y + s < m and grid[x][y + s] == '*' and\n                            y - s >= 0 and grid[x][y - s] == '*'):\n                        s += 1\n                    else:\n                        s -= 1\n                        break\n                stars.append((x, y, s))\n    if len(stars) == 0:\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(*star, sep=' ')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n    \n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                size = 0\n                x, y = i, j\n                while x >= 0 and grid[x][y] == '*':\n                    x -= 1\n                    size += 1\n                x += 1\n                while x < n and grid[x][y] == '*':\n                    grid[x][y] = '.'\n                    x += 1\n                ans.append((x, y, size))\n\n    if all(all(c == '.' for c in row) for row in grid):\n        print(len(ans))\n        for x, y, size in ans:\n            print(x, y, size)\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\n\n\"\"\"\n\nimport sys\nimport math\nfrom collections import deque\n\ndef main():\n    n,m = map(int,sys.stdin.readline().strip().split())\n    grid = []\n    for i in range(n):\n        row = sys.stdin.readline().strip()\n        grid.append(row)\n\n    #print(n,m)\n    #print(grid)\n\n    #print(grid[2][2])\n    #print(grid[2][3])\n    #print(grid[2][4])\n\n    #print(grid[3][2])\n    #print(grid[3][3])\n    #print(grid[3][4])\n\n    #print(grid[4][2])\n    #print(grid[4][3])\n    #print(grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i,j))\n\n    #print(stars)\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')"
+    }
+  ],
+  "created": 1649877759,
+  "id": "cmpl-4wcrXVSiKJdd6RdrjVLHK4E9cnH1w",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:24:37.663551 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    grid = []\n    for _ in range(n):\n        grid.append(input())\n    grid = [[x for x in row] for row in grid]\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j+s] == '*':\n                    s += 1\n                stars.append((i, j, s))\n                for x in range(i, i+s):\n                    for y in range(j, j+s):\n                        grid[x][y] = '.'\n    if any('*' in row for row in grid):\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(' '.join(str(x) for x in star))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:24:37.663592 REASON stop
+2022-04-13 19:24:37.664007 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn, m = [int(i) for i in input().split()]\ngrid = [[\".\" for j in range(m)] for i in range(n)]\n\nfor i in range(n):\n    row = input()\n    for j in range(m):\n        grid[i][j] = row[j]\n\nstars = []\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == \"*\":\n            s = 1\n            while (i - s >= 0 and i + s < n and j - s >= 0 and j + s < m and grid[i - s][j] == \"*\" and grid[i + s][j] == \"*\" and grid[i][j - s] == \"*\" and grid[i][j + s] == \"*\"):\n                s += 1\n            stars.append((i, j, s))\n            for k in range(s):\n                grid[i - k][j] = \".\"\n                grid[i + k][j] = \".\"\n                grid[i][j - k] = \".\"\n                grid[i][j + k] = \".\"\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == \"*\":\n            print(\"-1\")\n            exit(0)\n\nprint(len(stars))\nfor star in stars:\n    print(\" \".join([str(a) for a in star]))"
+}
+2022-04-13 19:24:37.664145 REASON stop
+2022-04-13 19:24:37.664515 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n\tn,m = [int(x) for x in sys.stdin.readline().split()]\n\tgrid = []\n\tfor i in range(n):\n\t\tgrid.append(sys.stdin.readline())\n\t\tgrid[i] = grid[i].strip()\n\t\n\tstars = []\n\tfor i in range(n):\n\t\tfor j in range(m):\n\t\t\tif grid[i][j] == '*':\n\t\t\t\tfor k in range(1,min(n,m)+1):\n\t\t\t\t\tif i>=k and j>=k and i+k<n and j+k<m:\n\t\t\t\t\t\tif grid[i-k][j] == '*' and grid[i+k][j] == '*' and grid[i][j-k] == '*' and grid[i][j+k] == '*':\n\t\t\t\t\t\t\tstars.append((i,j,k))\n\t\t\t\t\t\telse:\n\t\t\t\t\t\t\tbreak\n\t\t\t\t\telse:\n\t\t\t\t\t\tbreak\n\t\n\tfor s in stars:\n\t\tfor i in range(s[0]-s[2],s[0]+s[2]+1):\n\t\t\tfor j in range(s[1]-s[2],s[1]+s[2]+1):\n\t\t\t\tif i == s[0] and j == s[1]:\n\t\t\t\t\tcontinue\n\t\t\t\telse:\n\t\t\t\t\tgrid[i] = grid[i][:j]+'.'+grid[i][j+1:]\n\t\n\tfor i in range(n):\n\t\tif '*' in grid[i]:\n\t\t\tprint -1\n\t\t\treturn\n\t\n\tprint len(stars)\n\tfor s in stars:\n\t\tprint s[0]+1,s[1]+1,s[2]\n\nmain()"
+}
+2022-04-13 19:24:37.664565 REASON stop
+2022-04-13 19:24:37.686341 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#Solution\nn, m = map(int, input().split())\n\na = [input() for _ in range(n)]\n\ndef solve():\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                for size in range(1, min(n - i, m - j) + 1):\n                    if a[i][j+size-1] == '.':\n                        break\n                    if a[i+size-1][j] == '.':\n                        break\n                    if a[i+size-1][j+size-1] == '.':\n                        break\n                    if a[i+size-1][j+size-1] == '*':\n                        break\n                    for k in range(size):\n                        if a[i+size-1][j+k] == '.':\n                            break\n                    else:\n                        continue\n                    for k in range(size):\n                        if a[i+k][j+size-1] == '.':\n                            break\n                    else:\n                        continue\n                    break\n                else:\n                    continue\n                for k in range(i, i+size):\n                    for l in range(j, j+size):\n                        a[k][l] = '.'\n                print(i+1, j+1, size)\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                return -1\n    return 0\n\nans = solve()\nif ans == -1:\n    print(-1)\nelse:\n    print(ans)"
+}
+2022-04-13 19:24:37.686439 REASON stop
+2022-04-13 19:24:37.719929 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    >>> main()\n    3\n    3 4 1\n    3 5 2\n    3 5 1\n    3\n    2 2 1\n    3 3 1\n    3 4 1\n    -1\n    -1\n    \"\"\"\n    n, m = map(int, input().split())\n    grid = [input() for _ in range(n)]\n    # grid = [['.', '*', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '*', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '*', '*', '*', '*', '*', '.'],\n    #         ['.', '.', '*', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '*', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.']]\n    # grid = [['.', '*', '.', '.', '.'],\n    #         ['*', '*', '*', '.', '.'],\n    #         ['.', '*', '*', '*', '*'],\n    #         ['.', '.', '*', '*', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    # grid = [['.', '*', '.', '.', '.'],\n    #         ['*', '*', '*', '.', '.'],\n    #         ['.', '*', '*', '*', '.'],\n    #         ['.', '*', '*', '.', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    # grid = [['*', '.', '*'],\n    #         ['.', '.', '.'],\n    #         ['*', '.', '*']]\n    # grid = [['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.', '.', '.', '.']]\n    # grid = [['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.'],\n    #         ['.', '.', '.', '.', '.']]\n    stars = []\n    for i, row in enumerate(grid):\n        for j, cell in enumerate(row):\n            if cell == '*':\n                x, y, s = i, j, 1\n                while True:\n                    if (x + s < n and grid[x + s][y] == '*' and\n                            x - s >= 0 and grid[x - s][y] == '*' and\n                            y + s < m and grid[x][y + s] == '*' and\n                            y - s >= 0 and grid[x][y - s] == '*'):\n                        s += 1\n                    else:\n                        s -= 1\n                        break\n                stars.append((x, y, s))\n    if len(stars) == 0:\n        print(-1)\n    else:\n        print(len(stars))\n        for star in stars:\n            print(*star, sep=' ')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:24:37.720040 REASON stop
+2022-04-13 19:24:37.721053 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n    \n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                size = 0\n                x, y = i, j\n                while x >= 0 and grid[x][y] == '*':\n                    x -= 1\n                    size += 1\n                x += 1\n                while x < n and grid[x][y] == '*':\n                    grid[x][y] = '.'\n                    x += 1\n                ans.append((x, y, size))\n\n    if all(all(c == '.' for c in row) for row in grid):\n        print(len(ans))\n        for x, y, size in ans:\n            print(x, y, size)\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:24:37.721146 REASON stop
+2022-04-13 19:24:37.722292 6 {
+  "finish_reason": "length",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\n\n\"\"\"\n\nimport sys\nimport math\nfrom collections import deque\n\ndef main():\n    n,m = map(int,sys.stdin.readline().strip().split())\n    grid = []\n    for i in range(n):\n        row = sys.stdin.readline().strip()\n        grid.append(row)\n\n    #print(n,m)\n    #print(grid)\n\n    #print(grid[2][2])\n    #print(grid[2][3])\n    #print(grid[2][4])\n\n    #print(grid[3][2])\n    #print(grid[3][3])\n    #print(grid[3][4])\n\n    #print(grid[4][2])\n    #print(grid[4][3])\n    #print(grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4])\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i,j))\n\n    #print(stars)\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][3] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n    #print(grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')\n\n    #print(grid[2][2] == grid[2][3] == grid[2][4] == grid[3][2] == grid[3][4] == grid[4][2] == grid[4][3] == grid[4][4] == '*')"
+}
+2022-04-13 19:24:37.722402 REASON length

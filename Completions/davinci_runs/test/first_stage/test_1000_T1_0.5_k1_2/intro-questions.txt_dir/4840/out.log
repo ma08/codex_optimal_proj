@@ -1,0 +1,152 @@
+2022-04-09 22:58:56.492896 """
+Gunnar and Emma play a lot of board games at home, so they own many dice that are not normal $6$-sided dice. For example they own a die that has $10$ sides with numbers $47, 48, \ldots , 56$ on it.
+
+There has been a big storm in Stockholm, so Gunnar and Emma have been stuck at home without electricity for a couple of hours. They have finished playing all the games they have, so they came up with a new one. Each player has 2 dice which he or she rolls. The player with a bigger sum wins. If both sums are the same, the game ends in a tie.
+
+-----Task-----
+Given the description of Gunnar’s and Emma’s dice, which player has higher chances of winning?
+
+All of their dice have the following property: each die contains numbers $a, a+1, \dots , b$, where $a$ and $b$ are the lowest and highest numbers respectively on the die. Each number appears exactly on one side, so the die has $b-a+1$ sides.
+
+-----Input-----
+The first line contains four integers $a_1, b_1, a_2, b_2$ that describe Gunnar’s dice. Die number $i$ contains numbers $a_ i, a_ i + 1, \dots , b_ i$ on its sides. You may assume that $1\le a_ i \le b_ i \le 100$. You can further assume that each die has at least four sides, so $a_ i + 3\le b_ i$.
+
+The second line contains the description of Emma’s dice in the same format.
+
+-----Output-----
+Output the name of the player that has higher probability of winning. Output “Tie” if both players have same probability of winning.
+
+-----Examples-----
+Sample Input 1:
+1 4 1 4
+1 6 1 6
+Sample Output 1:
+Emma
+
+Sample Input 2:
+1 8 1 8
+1 10 2 5
+Sample Output 2:
+Tie
+"""
+2022-04-09 22:58:56.492930 --------------------------
+2022-04-09 22:59:37.771906 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Get input\ninp = input().split()\ng_a1 = int(inp[0])\ng_b1 = int(inp[1])\ng_a2 = int(inp[2])\ng_b2 = int(inp[3])\ninp = input().split()\ne_a1 = int(inp[0])\ne_b1 = int(inp[1])\ne_a2 = int(inp[2])\ne_b2 = int(inp[3])\n\n# Calculate probabilities\ng_p1 = 1/(g_b1 - g_a1 + 1)\ng_p2 = 1/(g_b2 - g_a2 + 1)\ne_p1 = 1/(e_b1 - e_a1 + 1)\ne_p2 = 1/(e_b2 - e_a2 + 1)\n\n# Calculate expected values\ng_e = 0\nfor i in range(g_a1, g_b1 + 1):\n    g_e += i*g_p1\nfor i in range(g_a2, g_b2 + 1):\n    g_e += i*g_p2\ne_e = 0\nfor i in range(e_a1, e_b1 + 1):\n    e_e += i*e_p1\nfor i in range(e_a2, e_b2 + 1):\n    e_e += i*e_p2\n\n# Compare expected values\nif g_e == e_e:\n    print(\"Tie\")\nelif g_e > e_e:\n    print(\"Gunnar\")\nelse:\n    print(\"Emma\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    #a1, b1, a2, b2 = list(map(int, input().split()))\n    #a3, b3, a4, b4 = list(map(int, input().split()))\n    a1, b1, a2, b2 = 1, 4, 1, 4\n    a3, b3, a4, b4 = 1, 6, 1, 6\n    gunnar = (b1 - a1 + 1) * (b2 - a2 + 1)\n    emma = (b3 - a3 + 1) * (b4 - a4 + 1)\n    if gunnar > emma:\n        print('Gunnar')\n    elif gunnar < emma:\n        print('Emma')\n    else:\n        print('Tie')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport numpy as np\nfrom scipy.stats import binom\n\ndef prob_distr(a, b):\n    \"\"\"\n    Finds the probability of each outcome occurring\n    in a given range of numbers.\n    \"\"\"\n    distr = []\n    for i in range(a, b+1):\n        distr.append(1/(b-a+1))\n    return distr\n\ndef find_prob(distr1, distr2):\n    \"\"\"\n    Finds the probability of each possible outcome\n    of the sum of the two dice.\n    \"\"\"\n    prob = []\n    for i in range(len(distr1)):\n        for j in range(len(distr2)):\n            prob.append(distr1[i]*distr2[j])\n    return prob\n\ndef find_winner(prob1, prob2):\n    \"\"\"\n    Finds the probability of each player winning\n    and decides who has the higher probability of winning.\n    \"\"\"\n    prob_gunnar = 0\n    prob_emma = 0\n    for i in range(len(prob1)):\n        if i < len(prob1)/2:\n            prob_gunnar += prob1[i]\n        else:\n            prob_emma += prob2[i]\n    if prob_gunnar > prob_emma:\n        return \"Gunnar\"\n    elif prob_gunnar < prob_emma:\n        return \"Emma\"\n    else:\n        return \"Tie\"\n\ndef main():\n    gunnar_dice = input().split()\n    gunnar_dice = [int(i) for i in gunnar_dice]\n    emma_dice = input().split()\n    emma_dice = [int(i) for i in emma_dice]\n\n    gunnar_distr = prob_distr(gunnar_dice[0], gunnar_dice[1])\n    emma_distr = prob_distr(emma_dice[0], emma_dice[1])\n\n    gunnar_prob = find_prob(gunnar_distr, gunnar_distr)\n    emma_prob = find_prob(emma_distr, emma_distr)\n\n    print(find_winner(gunnar_prob, emma_prob))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    gunnar_dice_one = list(map(int, input().split()))\n    gunnar_dice_two = list(map(int, input().split()))\n    emma_dice_one = list(map(int, input().split()))\n    emma_dice_two = list(map(int, input().split()))\n\n    gunnar_probability = calculate_probability(gunnar_dice_one, gunnar_dice_two)\n    emma_probability = calculate_probability(emma_dice_one, emma_dice_two)\n\n    if gunnar_probability > emma_probability:\n        print(\"Gunnar\")\n    elif gunnar_probability < emma_probability:\n        print(\"Emma\")\n    else:\n        print(\"Tie\")\n\ndef calculate_probability(dice_one, dice_two):\n    sum_probability = 0\n    for die_one in range(dice_one[0], dice_one[1]+1):\n        for die_two in range(dice_two[0], dice_two[1]+1):\n            sum_probability += 1/(dice_one[1]-dice_one[0]+1)/(dice_two[1]-dice_two[0]+1)\n    return sum_probability\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\ndef main():\n    #Read Input\n    g1, g2, e1, e2 = map(int, input().split())\n    #Calculate the number of dice sides\n    g1_sides, g2_sides = g2-g1+1, e2-e1+1\n    g1_prob = g1_sides/g2_sides\n    e1_prob = e1_sides/e2_sides\n    #Compare probabilities\n    if g1_prob > e1_prob:\n        print(\"Gunnar\")\n    elif g1_prob < e1_prob:\n        print(\"Emma\")\n    else:\n        print(\"Tie\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#g1 = [1,4,1,4]\ng1 = [1,8,1,8]\ne1 = [1,6,1,6]\n#e1 = [1,10,2,5]\n\ng = [[g1[0],g1[1]],[g1[2],g1[3]]]\ne = [[e1[0],e1[1]],[e1[2],e1[3]]]\n\ng_win = 0\ne_win = 0\n\nfor i in range(g[0][0],g[0][1]+1):\n    for j in range(g[1][0],g[1][1]+1):\n        for k in range(e[0][0],e[0][1]+1):\n            for l in range(e[1][0],e[1][1]+1):\n                if i+j > k+l:\n                    g_win += 1\n                elif i+j < k+l:\n                    e_win += 1\n\nif g_win > e_win:\n    print(\"Gunnar\")\nelif g_win < e_win:\n    print(\"Emma\")\nelse:\n    print(\"Tie\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\na1,b1,a2,b2 = map(int,input().split())\nc1,d1,c2,d2 = map(int,input().split())\n\np1 = (b1-a1+1)*(b2-a2+1)\np2 = (d1-c1+1)*(d2-c2+1)\n\nprint(\"Tie\" if p1 == p2 else \"Emma\" if p1 < p2 else \"Gunnar\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\na1,b1,a2,b2 = [int(x) for x in input().split()]\nc1,d1,c2,d2 = [int(x) for x in input().split()]\n\ng = 0\ne = 0\n\ndef get_prob(a, b):\n    diff = b-a+1\n    return (1/diff)\n\nfor i in range(a1, b1+1):\n    for j in range(a2, b2+1):\n        if i+j > c1+c2+d1+d2:\n            g += 1\n        elif i+j < c1+c2+d1+d2:\n            e += 1\n\nif g > e:\n    print(\"Gunnar\")\nelif g < e:\n    print(\"Emma\")\nelse:\n    print(\"Tie\")"
+    }
+  ],
+  "created": 1649559537,
+  "id": "cmpl-4vI4vWbEx410nce8HPfDYLCXKUgZA",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:59:37.772194 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Get input\ninp = input().split()\ng_a1 = int(inp[0])\ng_b1 = int(inp[1])\ng_a2 = int(inp[2])\ng_b2 = int(inp[3])\ninp = input().split()\ne_a1 = int(inp[0])\ne_b1 = int(inp[1])\ne_a2 = int(inp[2])\ne_b2 = int(inp[3])\n\n# Calculate probabilities\ng_p1 = 1/(g_b1 - g_a1 + 1)\ng_p2 = 1/(g_b2 - g_a2 + 1)\ne_p1 = 1/(e_b1 - e_a1 + 1)\ne_p2 = 1/(e_b2 - e_a2 + 1)\n\n# Calculate expected values\ng_e = 0\nfor i in range(g_a1, g_b1 + 1):\n    g_e += i*g_p1\nfor i in range(g_a2, g_b2 + 1):\n    g_e += i*g_p2\ne_e = 0\nfor i in range(e_a1, e_b1 + 1):\n    e_e += i*e_p1\nfor i in range(e_a2, e_b2 + 1):\n    e_e += i*e_p2\n\n# Compare expected values\nif g_e == e_e:\n    print(\"Tie\")\nelif g_e > e_e:\n    print(\"Gunnar\")\nelse:\n    print(\"Emma\")"
+}
+2022-04-09 22:59:37.772321 REASON stop
+2022-04-09 22:59:37.783716 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.783755 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    #a1, b1, a2, b2 = list(map(int, input().split()))\n    #a3, b3, a4, b4 = list(map(int, input().split()))\n    a1, b1, a2, b2 = 1, 4, 1, 4\n    a3, b3, a4, b4 = 1, 6, 1, 6\n    gunnar = (b1 - a1 + 1) * (b2 - a2 + 1)\n    emma = (b3 - a3 + 1) * (b4 - a4 + 1)\n    if gunnar > emma:\n        print('Gunnar')\n    elif gunnar < emma:\n        print('Emma')\n    else:\n        print('Tie')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:59:37.783854 REASON stop
+2022-04-09 22:59:37.784430 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.784465 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport numpy as np\nfrom scipy.stats import binom\n\ndef prob_distr(a, b):\n    \"\"\"\n    Finds the probability of each outcome occurring\n    in a given range of numbers.\n    \"\"\"\n    distr = []\n    for i in range(a, b+1):\n        distr.append(1/(b-a+1))\n    return distr\n\ndef find_prob(distr1, distr2):\n    \"\"\"\n    Finds the probability of each possible outcome\n    of the sum of the two dice.\n    \"\"\"\n    prob = []\n    for i in range(len(distr1)):\n        for j in range(len(distr2)):\n            prob.append(distr1[i]*distr2[j])\n    return prob\n\ndef find_winner(prob1, prob2):\n    \"\"\"\n    Finds the probability of each player winning\n    and decides who has the higher probability of winning.\n    \"\"\"\n    prob_gunnar = 0\n    prob_emma = 0\n    for i in range(len(prob1)):\n        if i < len(prob1)/2:\n            prob_gunnar += prob1[i]\n        else:\n            prob_emma += prob2[i]\n    if prob_gunnar > prob_emma:\n        return \"Gunnar\"\n    elif prob_gunnar < prob_emma:\n        return \"Emma\"\n    else:\n        return \"Tie\"\n\ndef main():\n    gunnar_dice = input().split()\n    gunnar_dice = [int(i) for i in gunnar_dice]\n    emma_dice = input().split()\n    emma_dice = [int(i) for i in emma_dice]\n\n    gunnar_distr = prob_distr(gunnar_dice[0], gunnar_dice[1])\n    emma_distr = prob_distr(emma_dice[0], emma_dice[1])\n\n    gunnar_prob = find_prob(gunnar_distr, gunnar_distr)\n    emma_prob = find_prob(emma_distr, emma_distr)\n\n    print(find_winner(gunnar_prob, emma_prob))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:59:37.784553 REASON stop
+2022-04-09 22:59:37.785049 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.785090 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    gunnar_dice_one = list(map(int, input().split()))\n    gunnar_dice_two = list(map(int, input().split()))\n    emma_dice_one = list(map(int, input().split()))\n    emma_dice_two = list(map(int, input().split()))\n\n    gunnar_probability = calculate_probability(gunnar_dice_one, gunnar_dice_two)\n    emma_probability = calculate_probability(emma_dice_one, emma_dice_two)\n\n    if gunnar_probability > emma_probability:\n        print(\"Gunnar\")\n    elif gunnar_probability < emma_probability:\n        print(\"Emma\")\n    else:\n        print(\"Tie\")\n\ndef calculate_probability(dice_one, dice_two):\n    sum_probability = 0\n    for die_one in range(dice_one[0], dice_one[1]+1):\n        for die_two in range(dice_two[0], dice_two[1]+1):\n            sum_probability += 1/(dice_one[1]-dice_one[0]+1)/(dice_two[1]-dice_two[0]+1)\n    return sum_probability\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:59:37.785163 REASON stop
+2022-04-09 22:59:37.785628 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.785657 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\ndef main():\n    #Read Input\n    g1, g2, e1, e2 = map(int, input().split())\n    #Calculate the number of dice sides\n    g1_sides, g2_sides = g2-g1+1, e2-e1+1\n    g1_prob = g1_sides/g2_sides\n    e1_prob = e1_sides/e2_sides\n    #Compare probabilities\n    if g1_prob > e1_prob:\n        print(\"Gunnar\")\n    elif g1_prob < e1_prob:\n        print(\"Emma\")\n    else:\n        print(\"Tie\")\n\nmain()"
+}
+2022-04-09 22:59:37.785727 REASON stop
+2022-04-09 22:59:37.786206 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.786241 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#g1 = [1,4,1,4]\ng1 = [1,8,1,8]\ne1 = [1,6,1,6]\n#e1 = [1,10,2,5]\n\ng = [[g1[0],g1[1]],[g1[2],g1[3]]]\ne = [[e1[0],e1[1]],[e1[2],e1[3]]]\n\ng_win = 0\ne_win = 0\n\nfor i in range(g[0][0],g[0][1]+1):\n    for j in range(g[1][0],g[1][1]+1):\n        for k in range(e[0][0],e[0][1]+1):\n            for l in range(e[1][0],e[1][1]+1):\n                if i+j > k+l:\n                    g_win += 1\n                elif i+j < k+l:\n                    e_win += 1\n\nif g_win > e_win:\n    print(\"Gunnar\")\nelif g_win < e_win:\n    print(\"Emma\")\nelse:\n    print(\"Tie\")"
+}
+2022-04-09 22:59:37.786328 REASON stop
+2022-04-09 22:59:37.786805 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.786838 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\na1,b1,a2,b2 = map(int,input().split())\nc1,d1,c2,d2 = map(int,input().split())\n\np1 = (b1-a1+1)*(b2-a2+1)\np2 = (d1-c1+1)*(d2-c2+1)\n\nprint(\"Tie\" if p1 == p2 else \"Emma\" if p1 < p2 else \"Gunnar\")"
+}
+2022-04-09 22:59:37.786913 REASON stop
+2022-04-09 22:59:37.787431 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'
+2022-04-09 22:59:37.787460 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\na1,b1,a2,b2 = [int(x) for x in input().split()]\nc1,d1,c2,d2 = [int(x) for x in input().split()]\n\ng = 0\ne = 0\n\ndef get_prob(a, b):\n    diff = b-a+1\n    return (1/diff)\n\nfor i in range(a1, b1+1):\n    for j in range(a2, b2+1):\n        if i+j > c1+c2+d1+d2:\n            g += 1\n        elif i+j < c1+c2+d1+d2:\n            e += 1\n\nif g > e:\n    print(\"Gunnar\")\nelif g < e:\n    print(\"Emma\")\nelse:\n    print(\"Tie\")"
+}
+2022-04-09 22:59:37.787534 REASON stop
+2022-04-09 22:59:37.787805 test/intro-questions.txt_dir/4840/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4840/solutions.json'

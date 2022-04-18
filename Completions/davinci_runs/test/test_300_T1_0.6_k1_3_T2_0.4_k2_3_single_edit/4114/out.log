@@ -1,0 +1,88 @@
+2022-04-18 02:32:46.896495 """
+In the Ancient Kingdom of Snuke, there was a pyramid to strengthen the authority of Takahashi, the president of AtCoder Inc.
+
+The pyramid had center coordinates (C_X, C_Y) and height H. The altitude of coordinates (X, Y) is max(H - |X - C_X| - |Y - C_Y|, 0).  
+Aoki, an explorer, conducted a survey to identify the center coordinates and height of this pyramid. As a result, he obtained the following information:  
+ - C_X, C_Y was integers between 0 and 100 (inclusive), and H was an integer not less than 1.  
+ - Additionally, he obtained N pieces of information. The i-th of them is: "the altitude of point (x_i, y_i) is h_i."  
+This was enough to identify the center coordinates and the height of the pyramid. Find these values with the clues above.  
+
+-----Constraints-----
+ - N is an integer between 1 and 100 (inclusive).
+ - x_i and y_i are integers between 0 and 100 (inclusive).
+ - h_i is an integer between 0 and 10^9 (inclusive).
+ - The N coordinates (x_1, y_1), (x_2, y_2), (x_3, y_3), ..., (x_N, y_N) are all different.
+ - The center coordinates and the height of the pyramid can be uniquely identified.
+
+-----Input-----
+Input is given from Standard Input in the following format:  
+N
+x_1 y_1 h_1
+x_2 y_2 h_2
+x_3 y_3 h_3
+:
+x_N y_N h_N
+
+-----Output-----
+Print values C_X, C_Y and H representing the center coordinates and the height of the pyramid in one line, with spaces in between.  
+
+-----Sample Input-----
+4
+2 3 5
+2 1 5
+1 2 5
+3 2 5
+
+-----Sample Output-----
+2 2 6
+
+In this case, the center coordinates and the height can be identified as (2, 2) and 6.
+"""
+2022-04-18 02:32:46.896514 --------------------------
+2022-04-18 02:33:17.888574 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\npoints = []\nfor _ in range(n):\n    x, y, h = map(int, input().split())\n    points.append((x, y, h))\n\n# C_X, C_Y is on the line that connects points with altitude 10^9\n# C_X, C_Y is on the line that connects points with altitude 10^9-1\n# C_X, C_Y is on the line that connects points with altitude 10^9-2\n# ...\n# C_X, C_Y is on the line that connects points with altitude 1\n# C_X, C_Y is on the line that connects points with altitude 0\n\nfor cx in range(101):\n    for cy in range(101):\n        h = 0\n        for p in points:\n            h = max(h, p[2] - abs(p[0] - cx) - abs(p[1] - cy))\n        if h > 0:\n            print(cx, cy, h)\n            exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\ncoord_dict = {}\nfor i in range(n):\n    x, y, h = map(int, input().split())\n    coord_dict[(x, y)] = h\n\nfor x in range(101):\n    for y in range(101):\n        h = -1\n        for (x_, y_), h_ in coord_dict.items():\n            if h == -1:\n                h = h_ + abs(x - x_) + abs(y - y_)\n            elif h != h_ + abs(x - x_) + abs(y - y_):\n                break\n        else:\n            print(x, y, h)\n            exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nn = int(input())\narr = [list(map(int, input().split())) for _ in range(n)]\n\ncx = (arr[0][0] + arr[1][0] + arr[2][0] - arr[3][0]) // 2\ncy = (arr[0][1] + arr[1][1] + arr[3][1] - arr[2][1]) // 2\nh = arr[0][2] - abs(cx - arr[0][0]) - abs(cy - arr[0][1])\nprint(cx, cy, h)"
+    }
+  ],
+  "created": 1650249167,
+  "id": "cmpl-4yBTzvMogGv03HVbnjpNzYWr9pxVD",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:33:17.888813 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\npoints = []\nfor _ in range(n):\n    x, y, h = map(int, input().split())\n    points.append((x, y, h))\n\n# C_X, C_Y is on the line that connects points with altitude 10^9\n# C_X, C_Y is on the line that connects points with altitude 10^9-1\n# C_X, C_Y is on the line that connects points with altitude 10^9-2\n# ...\n# C_X, C_Y is on the line that connects points with altitude 1\n# C_X, C_Y is on the line that connects points with altitude 0\n\nfor cx in range(101):\n    for cy in range(101):\n        h = 0\n        for p in points:\n            h = max(h, p[2] - abs(p[0] - cx) - abs(p[1] - cy))\n        if h > 0:\n            print(cx, cy, h)\n            exit()"
+}
+2022-04-18 02:33:17.888869 REASON stop
+2022-04-18 02:33:17.908137 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\ncoord_dict = {}\nfor i in range(n):\n    x, y, h = map(int, input().split())\n    coord_dict[(x, y)] = h\n\nfor x in range(101):\n    for y in range(101):\n        h = -1\n        for (x_, y_), h_ in coord_dict.items():\n            if h == -1:\n                h = h_ + abs(x - x_) + abs(y - y_)\n            elif h != h_ + abs(x - x_) + abs(y - y_):\n                break\n        else:\n            print(x, y, h)\n            exit()"
+}
+2022-04-18 02:33:17.908218 REASON stop
+2022-04-18 02:33:17.908786 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nn = int(input())\narr = [list(map(int, input().split())) for _ in range(n)]\n\ncx = (arr[0][0] + arr[1][0] + arr[2][0] - arr[3][0]) // 2\ncy = (arr[0][1] + arr[1][1] + arr[3][1] - arr[2][1]) // 2\nh = arr[0][2] - abs(cx - arr[0][0]) - abs(cy - arr[0][1])\nprint(cx, cy, h)"
+}
+2022-04-18 02:33:17.908850 REASON stop

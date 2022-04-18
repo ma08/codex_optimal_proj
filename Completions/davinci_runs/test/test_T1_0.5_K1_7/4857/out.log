@@ -1,0 +1,129 @@
+2022-04-13 23:45:06.917419 """
+Justin likes to play a game called “Weight of Words.” In this game, a player must find words of a given length and a given weight. The weight of a word is the sum of the weights of its letters. Letters are English lowercase characters from ‘a’ to ‘z’ and have weights from $1 \ldots 26$. 
+
+You are asked to write an AI that can play this game!
+
+-----Input-----
+The input consists of a single line with two integers $l$ ($0 < l \le 40$) and $w$ ($0 < w \le 1000$).
+
+-----Output-----
+Output a string of length $l$ with weight $w$ consisting of lowercase English letters if it exists, otherwise output impossible. If more than one string exists, you may output any of them.
+
+-----Examples-----
+Sample Input 1:
+11 131
+Sample Output 1:
+programming
+
+Sample Input 2:
+7 96
+Sample Output 2:
+contest
+"""
+2022-04-13 23:45:06.917430 --------------------------
+2022-04-13 23:45:38.629564 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    l, w = map(int, sys.stdin.readline().split())\n    if w > 26 * l or w < l:\n        print(\"impossible\")\n    else:\n        ans = \"\"\n        for i in range(l):\n            if w >= 26:\n                ans += \"z\"\n                w -= 26\n            else:\n                ans += chr(ord(\"a\") + w - 1)\n                w = 0\n        print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import combinations, permutations, product\n\nl, w = map(int, input().split())\n\nletters = 'abcdefghijklmnopqrstuvwxyz'\n\ndef weight(word):\n    return sum(ord(c) - 96 for c in word)\n\ndef possible_letter_weights(w):\n    return [i for i in range(1, 27) if i <= w]\n\ndef possible_letter_weights_of_length(l, w):\n    return [i for i in combinations(possible_letter_weights(w), l) if sum(i) == w]\n\ndef possible_words(l, w):\n    for i in possible_letter_weights_of_length(l, w):\n        for j in product(letters, repeat=l):\n            if weight(''.join(j)) == w:\n                yield ''.join(j)\n\ntry:\n    print(next(possible_words(l, w)))\nexcept StopIteration:\n    print('impossible')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef get_weight(s):\n    return sum(ord(c) - 96 for c in s)\n\ndef find_word(l, w):\n    if l == 1:\n        if w >= 1 and w <= 26:\n            return chr(w + 96)\n        else:\n            return None\n    else:\n        for i in range(1, 27):\n            res = find_word(l - 1, w - i)\n            if res:\n                return chr(i + 96) + res\n        return None\n\ndef main():\n    l, w = map(int, sys.stdin.readline().strip().split())\n    res = find_word(l, w)\n    if res:\n        print(res)\n    else:\n        print('impossible')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n#read in input\nline = sys.stdin.readline()\nline = line.strip()\nline = line.split()\n\n#parse input\nl = int(line[0])\nw = int(line[1])\n\n#create a list of all possible letters\nletters = list()\nfor i in range(1, 27):\n    letters.append(i)\n\n#find the maximum number of times the largest letter can be in the word\nmax_large = int(w/letters[-1])\n\n#if the max_large is larger than the length, it is impossible\nif max_large > l:\n    print(\"impossible\")\nelse:\n    #find the largest letter that can be used\n    large = 0\n    for i in range(len(letters)):\n        if letters[i] <= w:\n            large = letters[i]\n        else:\n            break\n    #create a list of the letters that can be used\n    letter_list = list()\n    for i in range(len(letters)):\n        if letters[i] <= large:\n            letter_list.append(letters[i])\n    #find the minumum number of times the largest letter can be used\n    min_large = int((w - (l - 1))/large)\n    #create the word\n    word = \"\"\n    for i in range(l):\n        #if the letter is the largest letter\n        if i % 2 == 0:\n            #find the largest letter that can be used\n            large = 0\n            for j in range(len(letter_list)):\n                if letter_list[j] <= w:\n                    large = letter_list[j]\n                else:\n                    break\n            #add the largest letter to the word\n            word += chr(large + 96)\n            #subtract the weight of the letter from the weight of the word\n            w -= large\n        #if the letter is not the largest letter\n        else:\n            #find the smallest letter that can be used\n            small = 0\n            for j in range(len(letter_list)):\n                if letter_list[j] <= w:\n                    small = letter_list[j]\n                else:\n                    break\n            #add the smallest letter to the word\n            word += chr(small + 96)\n            #subtract the weight of the letter from the weight of the word\n            w -= small\n    print(word)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport string\n\ndef weight_of_words(l, w):\n    if w > 26*l:\n        return \"impossible\"\n    else:\n        word = \"\"\n        current_weight = 0\n        for i in range(l):\n            if (w - current_weight) > 26:\n                word += \"z\"\n                current_weight += 26\n            else:\n                word += string.ascii_lowercase[w - current_weight - 1]\n                current_weight += w - current_weight\n        return word\n\nl, w = [int(x) for x in input().split()]\nprint(weight_of_words(l, w))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solution(line):\n    l, w = (int(x) for x in line.split())\n\n    if l == 1:\n        return chr(w + ord('a') - 1)\n\n    weight = 0\n    for i in range(1, l):\n        weight += i * 26 ** (l - i - 1)\n    if w < weight:\n        return \"impossible\"\n    else:\n        w -= weight\n\n    result = \"\"\n    for i in range(l - 2, -1, -1):\n        n = w // (i + 1)\n        w -= n * (i + 1)\n        result += chr(n + ord('a'))\n\n    result += chr(w + ord('a'))\n    return result\n\ndef main():\n    lines = [line.strip() for line in sys.stdin]\n    for i in range(1, len(lines)):\n        print(solution(lines[i]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport itertools\n\nl, w = map(int, input().split())\n\nfor p in itertools.product(range(1, 27), repeat=l):\n    if sum(p) == w:\n        print(''.join(map(lambda x: chr(x+96), p)))\n        break\nelse:\n    print('impossible')"
+    }
+  ],
+  "created": 1649893507,
+  "id": "cmpl-4wgxXjGU3CFt3RBKKni5SK5fTU5jN",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 23:45:38.629861 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    l, w = map(int, sys.stdin.readline().split())\n    if w > 26 * l or w < l:\n        print(\"impossible\")\n    else:\n        ans = \"\"\n        for i in range(l):\n            if w >= 26:\n                ans += \"z\"\n                w -= 26\n            else:\n                ans += chr(ord(\"a\") + w - 1)\n                w = 0\n        print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 23:45:38.629897 REASON stop
+2022-04-13 23:45:38.630217 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.630232 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import combinations, permutations, product\n\nl, w = map(int, input().split())\n\nletters = 'abcdefghijklmnopqrstuvwxyz'\n\ndef weight(word):\n    return sum(ord(c) - 96 for c in word)\n\ndef possible_letter_weights(w):\n    return [i for i in range(1, 27) if i <= w]\n\ndef possible_letter_weights_of_length(l, w):\n    return [i for i in combinations(possible_letter_weights(w), l) if sum(i) == w]\n\ndef possible_words(l, w):\n    for i in possible_letter_weights_of_length(l, w):\n        for j in product(letters, repeat=l):\n            if weight(''.join(j)) == w:\n                yield ''.join(j)\n\ntry:\n    print(next(possible_words(l, w)))\nexcept StopIteration:\n    print('impossible')"
+}
+2022-04-13 23:45:38.630383 REASON stop
+2022-04-13 23:45:38.630621 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.630632 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef get_weight(s):\n    return sum(ord(c) - 96 for c in s)\n\ndef find_word(l, w):\n    if l == 1:\n        if w >= 1 and w <= 26:\n            return chr(w + 96)\n        else:\n            return None\n    else:\n        for i in range(1, 27):\n            res = find_word(l - 1, w - i)\n            if res:\n                return chr(i + 96) + res\n        return None\n\ndef main():\n    l, w = map(int, sys.stdin.readline().strip().split())\n    res = find_word(l, w)\n    if res:\n        print(res)\n    else:\n        print('impossible')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:45:38.630672 REASON stop
+2022-04-13 23:45:38.631704 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.631718 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n#read in input\nline = sys.stdin.readline()\nline = line.strip()\nline = line.split()\n\n#parse input\nl = int(line[0])\nw = int(line[1])\n\n#create a list of all possible letters\nletters = list()\nfor i in range(1, 27):\n    letters.append(i)\n\n#find the maximum number of times the largest letter can be in the word\nmax_large = int(w/letters[-1])\n\n#if the max_large is larger than the length, it is impossible\nif max_large > l:\n    print(\"impossible\")\nelse:\n    #find the largest letter that can be used\n    large = 0\n    for i in range(len(letters)):\n        if letters[i] <= w:\n            large = letters[i]\n        else:\n            break\n    #create a list of the letters that can be used\n    letter_list = list()\n    for i in range(len(letters)):\n        if letters[i] <= large:\n            letter_list.append(letters[i])\n    #find the minumum number of times the largest letter can be used\n    min_large = int((w - (l - 1))/large)\n    #create the word\n    word = \"\"\n    for i in range(l):\n        #if the letter is the largest letter\n        if i % 2 == 0:\n            #find the largest letter that can be used\n            large = 0\n            for j in range(len(letter_list)):\n                if letter_list[j] <= w:\n                    large = letter_list[j]\n                else:\n                    break\n            #add the largest letter to the word\n            word += chr(large + 96)\n            #subtract the weight of the letter from the weight of the word\n            w -= large\n        #if the letter is not the largest letter\n        else:\n            #find the smallest letter that can be used\n            small = 0\n            for j in range(len(letter_list)):\n                if letter_list[j] <= w:\n                    small = letter_list[j]\n                else:\n                    break\n            #add the smallest letter to the word\n            word += chr(small + 96)\n            #subtract the weight of the letter from the weight of the word\n            w -= small\n    print(word)"
+}
+2022-04-13 23:45:38.631764 REASON stop
+2022-04-13 23:45:38.653623 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.653652 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport string\n\ndef weight_of_words(l, w):\n    if w > 26*l:\n        return \"impossible\"\n    else:\n        word = \"\"\n        current_weight = 0\n        for i in range(l):\n            if (w - current_weight) > 26:\n                word += \"z\"\n                current_weight += 26\n            else:\n                word += string.ascii_lowercase[w - current_weight - 1]\n                current_weight += w - current_weight\n        return word\n\nl, w = [int(x) for x in input().split()]\nprint(weight_of_words(l, w))"
+}
+2022-04-13 23:45:38.653723 REASON stop
+2022-04-13 23:45:38.654472 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.654493 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solution(line):\n    l, w = (int(x) for x in line.split())\n\n    if l == 1:\n        return chr(w + ord('a') - 1)\n\n    weight = 0\n    for i in range(1, l):\n        weight += i * 26 ** (l - i - 1)\n    if w < weight:\n        return \"impossible\"\n    else:\n        w -= weight\n\n    result = \"\"\n    for i in range(l - 2, -1, -1):\n        n = w // (i + 1)\n        w -= n * (i + 1)\n        result += chr(n + ord('a'))\n\n    result += chr(w + ord('a'))\n    return result\n\ndef main():\n    lines = [line.strip() for line in sys.stdin]\n    for i in range(1, len(lines)):\n        print(solution(lines[i]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 23:45:38.654539 REASON stop
+2022-04-13 23:45:38.671411 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'
+2022-04-13 23:45:38.671443 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport itertools\n\nl, w = map(int, input().split())\n\nfor p in itertools.product(range(1, 27), repeat=l):\n    if sum(p) == w:\n        print(''.join(map(lambda x: chr(x+96), p)))\n        break\nelse:\n    print('impossible')"
+}
+2022-04-13 23:45:38.671517 REASON stop
+2022-04-13 23:45:38.687975 test/intro-questions.txt_dir/4857/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4857/solutions.json'

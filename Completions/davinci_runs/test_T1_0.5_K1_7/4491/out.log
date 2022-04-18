@@ -1,0 +1,133 @@
+2022-04-13 21:14:02.809183 """
+We have a 2 \times N grid. We will denote the square at the i-th row and j-th column (1 \leq i \leq 2, 1 \leq j \leq N) as (i, j).
+You are initially in the top-left square, (1, 1).
+You will travel to the bottom-right square, (2, N), by repeatedly moving right or down.
+The square (i, j) contains A_{i, j} candies.
+You will collect all the candies you visit during the travel.
+The top-left and bottom-right squares also contain candies, and you will also collect them.
+At most how many candies can you collect when you choose the best way to travel?
+
+-----Constraints-----
+ - 1 \leq N \leq 100
+ - 1 \leq A_{i, j} \leq 100 (1 \leq i \leq 2, 1 \leq j \leq N)
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_{1, 1} A_{1, 2} ... A_{1, N}
+A_{2, 1} A_{2, 2} ... A_{2, N}
+
+-----Output-----
+Print the maximum number of candies that can be collected.
+
+-----Sample Input-----
+5
+3 2 2 4 1
+1 2 2 2 1
+
+-----Sample Output-----
+14
+
+The number of collected candies will be maximized when you:
+ - move right three times, then move down once, then move right once.
+"""
+2022-04-13 21:14:02.809195 --------------------------
+2022-04-13 21:14:18.878783 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na1 = list(map(int, input().split()))\na2 = list(map(int, input().split()))\n\ndp = [[0] * n for _ in range(2)]\ndp[0][0] = a1[0]\ndp[1][0] = a2[0]\n\nfor i in range(1, n):\n    dp[0][i] = max(dp[0][i - 1], dp[1][i - 1]) + a1[i]\n    dp[1][i] = max(dp[0][i - 1], dp[1][i - 1]) + a2[i]\n\nprint(max(dp[0][n - 1], dp[1][n - 1]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    candies = [list(map(int, input().split())) for _ in range(2)]\n    dp = [[0 for _ in range(N+1)] for _ in range(2)]\n    for i in range(1, 2):\n        for j in range(1, N+1):\n            dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + candies[i-1][j-1]\n    print(dp[1][N])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na_1 = list(map(int, input().split()))\na_2 = list(map(int, input().split()))\n\ndp = [[0]*n for i in range(2)]\ndp[0][0] = a_1[0]\ndp[1][0] = a_2[0]\n\nfor i in range(1, n):\n    dp[0][i] = max(dp[0][i-1], dp[1][i-1]) + a_1[i]\n    dp[1][i] = max(dp[0][i-1], dp[1][i-1]) + a_2[i]\n\nprint(max(dp[0][n-1], dp[1][n-1]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef collect_candies(N, A):\n    dp = [[0 for i in range(N + 1)] for j in range(2)]\n    for i in range(1, 2):\n        for j in range(1, N + 1):\n            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]) + A[i - 1][j - 1]\n    return dp[1][N]\n\n\nif __name__ == '__main__':\n    N = int(input())\n    A = [[int(i) for i in input().split()] for j in range(2)]\n    print(collect_candies(N, A))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = []\nfor _ in range(2):\n    A.append(list(map(int, input().split())))\n\n# dp[i][j] := (i, j) \u307e\u3067\u306b\u305f\u3069\u308a\u7740\u304f\u3068\u304d\u306e\u6700\u5927\u5024\ndp = [[0 for _ in range(N+1)] for _ in range(3)]\n\nfor i in range(1, 3):\n    for j in range(1, N+1):\n        dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + A[i-1][j-1]\n\nprint(dp[2][N])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#import sys\n#input = sys.stdin.readline\n\ndef main():\n    N = int(input())\n    candies = [list(map(int, input().split())) for _ in range(2)]\n    dp = [[0 for _ in range(N+1)] for _ in range(2)]\n    for i in range(1, N+1):\n        dp[0][i] = dp[0][i-1] + candies[0][i-1]\n        dp[1][i] = dp[1][i-1] + candies[1][i-1]\n    for i in range(1, N):\n        dp[0][i+1] = max(dp[0][i+1], dp[1][i] + candies[0][i])\n        dp[1][i+1] = max(dp[1][i+1], dp[0][i] + candies[1][i])\n    print(max(dp[0][N], dp[1][N]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    A1 = list(map(int, input().split()))\n    A2 = list(map(int, input().split()))\n\n    dp = [[0] * N for _ in range(2)]\n\n    dp[0][0] = A1[0]\n    dp[1][0] = A2[0]\n\n    for i in range(1, N):\n        dp[0][i] = dp[0][i - 1] + A1[i]\n        dp[1][i] = max(dp[0][i - 1], dp[1][i - 1]) + A2[i]\n\n    print(max(dp[0][N - 1], dp[1][N - 1]))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649884442,
+  "id": "cmpl-4webKCLCmeW4vk1lPJVY5JFCx6N1f",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:14:18.879040 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na1 = list(map(int, input().split()))\na2 = list(map(int, input().split()))\n\ndp = [[0] * n for _ in range(2)]\ndp[0][0] = a1[0]\ndp[1][0] = a2[0]\n\nfor i in range(1, n):\n    dp[0][i] = max(dp[0][i - 1], dp[1][i - 1]) + a1[i]\n    dp[1][i] = max(dp[0][i - 1], dp[1][i - 1]) + a2[i]\n\nprint(max(dp[0][n - 1], dp[1][n - 1]))"
+}
+2022-04-13 21:14:18.879073 REASON stop
+2022-04-13 21:14:18.879543 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    candies = [list(map(int, input().split())) for _ in range(2)]\n    dp = [[0 for _ in range(N+1)] for _ in range(2)]\n    for i in range(1, 2):\n        for j in range(1, N+1):\n            dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + candies[i-1][j-1]\n    print(dp[1][N])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:14:18.879673 REASON stop
+2022-04-13 21:14:18.880040 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na_1 = list(map(int, input().split()))\na_2 = list(map(int, input().split()))\n\ndp = [[0]*n for i in range(2)]\ndp[0][0] = a_1[0]\ndp[1][0] = a_2[0]\n\nfor i in range(1, n):\n    dp[0][i] = max(dp[0][i-1], dp[1][i-1]) + a_1[i]\n    dp[1][i] = max(dp[0][i-1], dp[1][i-1]) + a_2[i]\n\nprint(max(dp[0][n-1], dp[1][n-1]))"
+}
+2022-04-13 21:14:18.880082 REASON stop
+2022-04-13 21:14:18.893668 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef collect_candies(N, A):\n    dp = [[0 for i in range(N + 1)] for j in range(2)]\n    for i in range(1, 2):\n        for j in range(1, N + 1):\n            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]) + A[i - 1][j - 1]\n    return dp[1][N]\n\n\nif __name__ == '__main__':\n    N = int(input())\n    A = [[int(i) for i in input().split()] for j in range(2)]\n    print(collect_candies(N, A))"
+}
+2022-04-13 21:14:18.893749 REASON stop
+2022-04-13 21:14:18.914253 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = []\nfor _ in range(2):\n    A.append(list(map(int, input().split())))\n\n# dp[i][j] := (i, j) \u307e\u3067\u306b\u305f\u3069\u308a\u7740\u304f\u3068\u304d\u306e\u6700\u5927\u5024\ndp = [[0 for _ in range(N+1)] for _ in range(3)]\n\nfor i in range(1, 3):\n    for j in range(1, N+1):\n        dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + A[i-1][j-1]\n\nprint(dp[2][N])"
+}
+2022-04-13 21:14:18.914353 REASON stop
+2022-04-13 21:14:18.924934 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#import sys\n#input = sys.stdin.readline\n\ndef main():\n    N = int(input())\n    candies = [list(map(int, input().split())) for _ in range(2)]\n    dp = [[0 for _ in range(N+1)] for _ in range(2)]\n    for i in range(1, N+1):\n        dp[0][i] = dp[0][i-1] + candies[0][i-1]\n        dp[1][i] = dp[1][i-1] + candies[1][i-1]\n    for i in range(1, N):\n        dp[0][i+1] = max(dp[0][i+1], dp[1][i] + candies[0][i])\n        dp[1][i+1] = max(dp[1][i+1], dp[0][i] + candies[1][i])\n    print(max(dp[0][N], dp[1][N]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:14:18.925024 REASON stop
+2022-04-13 21:14:18.925693 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    A1 = list(map(int, input().split()))\n    A2 = list(map(int, input().split()))\n\n    dp = [[0] * N for _ in range(2)]\n\n    dp[0][0] = A1[0]\n    dp[1][0] = A2[0]\n\n    for i in range(1, N):\n        dp[0][i] = dp[0][i - 1] + A1[i]\n        dp[1][i] = max(dp[0][i - 1], dp[1][i - 1]) + A2[i]\n\n    print(max(dp[0][N - 1], dp[1][N - 1]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:14:18.925808 REASON stop

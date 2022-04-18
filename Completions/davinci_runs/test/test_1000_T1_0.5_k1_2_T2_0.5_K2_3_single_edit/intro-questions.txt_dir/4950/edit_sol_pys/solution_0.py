@@ -1,0 +1,21 @@
+
+
+def solve(n):
+    prev_t = 0
+    prev_d = 0
+    max_v = 0
+    for i in range(n):
+        t, d = [int(x) for x in input().split()]
+        v = (d - prev_d) / (t - prev_t)
+        if v > max_v:
+            max_v = v
+        prev_t = t
+        prev_d = d
+    return int(max_v)
+
+def main():
+    n = int(input())
+    print(solve(n))
+
+if __name__ == "__main__":
+    main()

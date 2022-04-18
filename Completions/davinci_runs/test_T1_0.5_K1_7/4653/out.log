@@ -1,0 +1,154 @@
+2022-04-13 22:29:50.498511 """
+Santa has $n$ candies and he wants to gift them to $k$ kids. He wants to divide as many candies as possible between all $k$ kids. Santa can't divide one candy into parts but he is allowed to not use some candies at all.
+
+Suppose the kid who recieves the minimum number of candies has $a$ candies and the kid who recieves the maximum number of candies has $b$ candies. Then Santa will be satisfied, if the both conditions are met at the same time:
+
+  $b - a \le 1$ (it means $b = a$ or $b = a + 1$);  the number of kids who has $a+1$ candies (note that $a+1$ not necessarily equals $b$) does not exceed $\lfloor\frac{k}{2}\rfloor$ (less than or equal to $\lfloor\frac{k}{2}\rfloor$). 
+
+$\lfloor\frac{k}{2}\rfloor$ is $k$ divided by $2$ and rounded down to the nearest integer. For example, if $k=5$ then $\lfloor\frac{k}{2}\rfloor=\lfloor\frac{5}{2}\rfloor=2$.
+
+Your task is to find the maximum number of candies Santa can give to kids so that he will be satisfied.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 5 \cdot 10^4$) — the number of test cases.
+
+The next $t$ lines describe test cases. The $i$-th test case contains two integers $n$ and $k$ ($1 \le n, k \le 10^9$) — the number of candies and the number of kids.
+
+
+-----Output-----
+
+For each test case print the answer on it — the maximum number of candies Santa can give to kids so that he will be satisfied.
+
+
+-----Example-----
+Input
+5
+5 2
+19 4
+12 7
+6 2
+100000 50010
+
+Output
+5
+18
+10
+6
+75015
+
+
+
+-----Note-----
+
+In the first test case, Santa can give $3$ and $2$ candies to kids. There $a=2, b=3,a+1=3$.
+
+In the second test case, Santa can give $5, 5, 4$ and $4$ candies. There $a=4,b=5,a+1=5$. The answer cannot be greater because then the number of kids with $5$ candies will be $3$.
+
+In the third test case, Santa can distribute candies in the following way: $[1, 2, 2, 1, 1, 2, 1]$. There $a=1,b=2,a+1=2$. He cannot distribute two remaining candies in a way to be satisfied.
+
+In the fourth test case, Santa can distribute candies in the following way: $[3, 3]$. There $a=3, b=3, a+1=4$. Santa distributed all $6$ candies.
+"""
+2022-04-13 22:29:50.498526 --------------------------
+2022-04-13 22:30:09.244089 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef get_max_num_candies(n, k):\n    if n == k:\n        return n\n    if k % 2 != 0:\n        return n // k\n\n    num_candies = n // k\n    if num_candies > 1:\n        num_candies -= 1\n    return num_candies * k\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, k = [int(s) for s in input().split(\" \")]\n        print(get_max_num_candies(n, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    if k%2==0:\n        print((k//2)*n//k)\n    else:\n        print((k//2)*(n//k)+n%k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    if n % k == 0:\n        print(n)\n    elif n % k <= k//2:\n        print(n - n % k)\n    else:\n        print(n - (k//2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin, stdout\n\nt = int(stdin.readline())\n\nfor _ in range(t):\n    n, k = map(int, stdin.readline().split())\n    stdout.write(str(n - k//2) + \"\\n\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    if k > n:\n        print(0)\n        continue\n    if k % 2 == 0:\n        print(n//k)\n    else:\n        print((n//k)*(k//2+1) + (n//k)*(k//2))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nt = int(input())\nfor _ in range(t):\n    n,k = map(int,input().split())\n    if n < k:\n        print(n)\n        continue\n    if k == 1:\n        print(n)\n        continue\n    if k == 2:\n        print(n//2)\n        continue\n    if k == 3:\n        if n%2 == 0:\n            print((n//2)+1)\n            continue\n        else:\n            print(n//2)\n            continue\n    if n%k == 0:\n        print(n//k)\n        continue\n    if n%k == 1:\n        if k%2 == 0:\n            print((n//k)+1)\n            continue\n        else:\n            print(n//k)\n            continue\n    if n%k == 2:\n        if k%2 == 0:\n            print(n//k)\n            continue\n        else:\n            print((n//k)+1)\n            continue\n    if n%k > k//2:\n        print((n//k)+1)\n        continue\n    if n%k < k//2:\n        print(n//k)\n        continue"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        if k<=n:\n            print(n)\n        else:\n            print(k//2 + k%2)\n\nmain()"
+    }
+  ],
+  "created": 1649888990,
+  "id": "cmpl-4wfmgANZG9ZZBhJDpb9aCaa4vcnB7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:30:09.244359 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef get_max_num_candies(n, k):\n    if n == k:\n        return n\n    if k % 2 != 0:\n        return n // k\n\n    num_candies = n // k\n    if num_candies > 1:\n        num_candies -= 1\n    return num_candies * k\n\nif __name__ == \"__main__\":\n    t = int(input())\n    for _ in range(t):\n        n, k = [int(s) for s in input().split(\" \")]\n        print(get_max_num_candies(n, k))"
+}
+2022-04-13 22:30:09.244397 REASON stop
+2022-04-13 22:30:09.244838 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nt=int(input())\nfor i in range(t):\n    n,k=map(int,input().split())\n    if k%2==0:\n        print((k//2)*n//k)\n    else:\n        print((k//2)*(n//k)+n%k)"
+}
+2022-04-13 22:30:09.244949 REASON stop
+2022-04-13 22:30:09.245301 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nt = int(input())\nfor _ in range(t):\n    n, k = map(int, input().split())\n    if n % k == 0:\n        print(n)\n    elif n % k <= k//2:\n        print(n - n % k)\n    else:\n        print(n - (k//2))"
+}
+2022-04-13 22:30:09.245347 REASON stop
+2022-04-13 22:30:09.260744 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin, stdout\n\nt = int(stdin.readline())\n\nfor _ in range(t):\n    n, k = map(int, stdin.readline().split())\n    stdout.write(str(n - k//2) + \"\\n\")"
+}
+2022-04-13 22:30:09.260840 REASON stop
+2022-04-13 22:30:09.284098 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\nfor i in range(t):\n    n, k = map(int, input().split())\n    if k > n:\n        print(0)\n        continue\n    if k % 2 == 0:\n        print(n//k)\n    else:\n        print((n//k)*(k//2+1) + (n//k)*(k//2))"
+}
+2022-04-13 22:30:09.284197 REASON stop
+2022-04-13 22:30:09.285003 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nt = int(input())\nfor _ in range(t):\n    n,k = map(int,input().split())\n    if n < k:\n        print(n)\n        continue\n    if k == 1:\n        print(n)\n        continue\n    if k == 2:\n        print(n//2)\n        continue\n    if k == 3:\n        if n%2 == 0:\n            print((n//2)+1)\n            continue\n        else:\n            print(n//2)\n            continue\n    if n%k == 0:\n        print(n//k)\n        continue\n    if n%k == 1:\n        if k%2 == 0:\n            print((n//k)+1)\n            continue\n        else:\n            print(n//k)\n            continue\n    if n%k == 2:\n        if k%2 == 0:\n            print(n//k)\n            continue\n        else:\n            print((n//k)+1)\n            continue\n    if n%k > k//2:\n        print((n//k)+1)\n        continue\n    if n%k < k//2:\n        print(n//k)\n        continue"
+}
+2022-04-13 22:30:09.285099 REASON stop
+2022-04-13 22:30:09.285883 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n, k = map(int, input().split())\n        if k<=n:\n            print(n)\n        else:\n            print(k//2 + k%2)\n\nmain()"
+}
+2022-04-13 22:30:09.285960 REASON stop

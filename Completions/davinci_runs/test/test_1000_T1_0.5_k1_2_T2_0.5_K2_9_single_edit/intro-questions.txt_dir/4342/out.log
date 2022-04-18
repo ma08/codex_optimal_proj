@@ -1,0 +1,107 @@
+2022-04-09 19:43:51.757335 """
+You are given an undirected tree of $n$ vertices. 
+
+Some vertices are colored blue, some are colored red and some are uncolored. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.
+
+You choose an edge and remove it from the tree. Tree falls apart into two connected components. Let's call an edge nice if neither of the resulting components contain vertices of both red and blue colors.
+
+How many nice edges are there in the given tree?
+
+
+-----Input-----
+
+The first line contains a single integer $n$ ($2 \le n \le 3 \cdot 10^5$) — the number of vertices in the tree.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($0 \le a_i \le 2$) — the colors of the vertices. $a_i = 1$ means that vertex $i$ is colored red, $a_i = 2$ means that vertex $i$ is colored blue and $a_i = 0$ means that vertex $i$ is uncolored.
+
+The $i$-th of the next $n - 1$ lines contains two integers $v_i$ and $u_i$ ($1 \le v_i, u_i \le n$, $v_i \ne u_i$) — the edges of the tree. It is guaranteed that the given edges form a tree. It is guaranteed that the tree contains at least one red vertex and at least one blue vertex.
+
+
+-----Output-----
+
+Print a single integer — the number of nice edges in the given tree.
+
+
+-----Examples-----
+Input
+5
+2 0 0 1 2
+1 2
+2 3
+2 4
+2 5
+
+Output
+1
+
+Input
+5
+1 0 0 0 2
+1 2
+2 3
+3 4
+4 5
+
+Output
+4
+
+Input
+3
+1 1 2
+2 3
+1 3
+
+Output
+0
+
+
+
+-----Note-----
+
+Here is the tree from the first example: [Image] 
+
+The only nice edge is edge $(2, 4)$. Removing it makes the tree fall apart into components $\{4\}$ and $\{1, 2, 3, 5\}$. The first component only includes a red vertex and the second component includes blue vertices and uncolored vertices.
+
+Here is the tree from the second example: [Image] 
+
+Every edge is nice in it.
+
+Here is the tree from the third example: [Image] 
+
+Edge $(1, 3)$ splits the into components $\{1\}$ and $\{3, 2\}$, the latter one includes both red and blue vertex, thus the edge isn't nice. Edge $(2, 3)$ splits the into components $\{1, 3\}$ and $\{2\}$, the former one includes both red and blue vertex, thus the edge also isn't nice. So the answer is 0.
+"""
+2022-04-09 19:43:51.757352 --------------------------
+2022-04-09 19:44:18.340950 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 200000 + 10;\n\nint n, a[N];\nvector<int> g[N];\n\nvoid dfs(int u, int p, int &red, int &blue, int &uncolored) {\n\tred += (a[u] == 1);\n\tblue += (a[u] == 2);\n\tuncolored += (a[u] == 0);\n\tfor (int v : g[u]) {\n\t\tif (v == p) continue;\n\t\tdfs(v, u, red, blue, uncolored);\n\t}\n}\n\nint main() {\n\tint ans = 0;\n\tcin >> n;\n\tfor (int i = 1; i <= n; i++) {\n\t\tcin >> a[i];\n\t}\n\tfor (int i = 1; i < n; i++) {\n\t\tint u, v;\n\t\tcin >> u >> v;\n\t\tg[u].push_back(v);\n\t\tg[v].push_back(u);\n\t}\n\tfor (int u = 1; u <= n; u++) {\n\t\tfor (int v : g[u]) {\n\t\t\tint red = 0, blue = 0, uncolored = 0;\n\t\t\tdfs(u, v, red, blue, uncolored);\n\t\t\tint red1 = 0, blue1 = 0, uncolored1 = 0;\n\t\t\tdfs(v, u, red1, blue1, uncolored1);\n\t\t\tif (red && blue1) continue;\n\t\t\tif (red1 && blue) continue;\n\t\t\tans++;\n\t\t}\n\t}\n\tcout << ans << endl;\n\treturn 0;\n}"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\ndef main():\n    # n = int(input())\n    # a = list(map(int, input().split()))\n    # edges = []\n    # for i in range(n-1):\n    #     v, u = map(int, input().split())\n    #     edges.append((v, u))\n    n = 5\n    a = [2, 0, 0, 1, 2]\n    edges = [(1, 2), (2, 3), (2, 4), (2, 5)]\n    # n = 5\n    # a = [1, 0, 0, 0, 2]\n    # edges = [(1, 2), (2, 3), (3, 4), (4, 5)]\n    # n = 3\n    # a = [1, 1, 2]\n    # edges = [(2, 3), (1, 3)]\n    nice_edges = 0\n    for i in range(n-1):\n        v, u = edges[i]\n        if a[v-1] == 0 or a[u-1] == 0:\n            nice_edges += 1\n    print(nice_edges)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649547832,
+  "id": "cmpl-4vF28gQLqdNa9bqyA1gS7FvyhIFPL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 19:44:18.341150 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int N = 200000 + 10;\n\nint n, a[N];\nvector<int> g[N];\n\nvoid dfs(int u, int p, int &red, int &blue, int &uncolored) {\n\tred += (a[u] == 1);\n\tblue += (a[u] == 2);\n\tuncolored += (a[u] == 0);\n\tfor (int v : g[u]) {\n\t\tif (v == p) continue;\n\t\tdfs(v, u, red, blue, uncolored);\n\t}\n}\n\nint main() {\n\tint ans = 0;\n\tcin >> n;\n\tfor (int i = 1; i <= n; i++) {\n\t\tcin >> a[i];\n\t}\n\tfor (int i = 1; i < n; i++) {\n\t\tint u, v;\n\t\tcin >> u >> v;\n\t\tg[u].push_back(v);\n\t\tg[v].push_back(u);\n\t}\n\tfor (int u = 1; u <= n; u++) {\n\t\tfor (int v : g[u]) {\n\t\t\tint red = 0, blue = 0, uncolored = 0;\n\t\t\tdfs(u, v, red, blue, uncolored);\n\t\t\tint red1 = 0, blue1 = 0, uncolored1 = 0;\n\t\t\tdfs(v, u, red1, blue1, uncolored1);\n\t\t\tif (red && blue1) continue;\n\t\t\tif (red1 && blue) continue;\n\t\t\tans++;\n\t\t}\n\t}\n\tcout << ans << endl;\n\treturn 0;\n}"
+}
+2022-04-09 19:44:18.341220 REASON stop
+2022-04-09 19:44:18.342426 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\ndef main():\n    # n = int(input())\n    # a = list(map(int, input().split()))\n    # edges = []\n    # for i in range(n-1):\n    #     v, u = map(int, input().split())\n    #     edges.append((v, u))\n    n = 5\n    a = [2, 0, 0, 1, 2]\n    edges = [(1, 2), (2, 3), (2, 4), (2, 5)]\n    # n = 5\n    # a = [1, 0, 0, 0, 2]\n    # edges = [(1, 2), (2, 3), (3, 4), (4, 5)]\n    # n = 3\n    # a = [1, 1, 2]\n    # edges = [(2, 3), (1, 3)]\n    nice_edges = 0\n    for i in range(n-1):\n        v, u = edges[i]\n        if a[v-1] == 0 or a[u-1] == 0:\n            nice_edges += 1\n    print(nice_edges)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 19:44:18.342493 REASON stop

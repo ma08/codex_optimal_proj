@@ -1,0 +1,14 @@
+import fileinput
+
+import sys
+
+message = fileinput.input().readline().strip()
+key = fileinput.input().readline().strip()
+
+output = ""
+for i in range(len(message)):
+    if (i % 2 == 0):
+        output += chr((ord(message[i]) - ord(key[i]) + 26) % 26 + ord('A'))
+    else:
+        output += chr((ord(message[i]) - ord(key[i]) - 26) % 26 + ord('A'))
+print(output)

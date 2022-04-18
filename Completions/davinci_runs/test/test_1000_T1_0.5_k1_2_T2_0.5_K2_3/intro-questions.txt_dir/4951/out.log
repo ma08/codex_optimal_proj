@@ -1,0 +1,141 @@
+2022-04-10 00:05:02.780520 """
+You are teaching discrete math. You have done your best to teach your students about axioms and inference rules, proofs and theorems. Sometimes the students write beautiful proofs that Fermat would be proud of but sometimes, also like Fermat, their proofs are not quite right. You are getting a little tired of hunting through some of these so-called “proofs” for the magic tricks that let them prove $1 = 2$ and had the great idea to write a computer program to speed things up!
+
+Because this is the first class in proof-based mathematics, you have started your students off with a simple proof system. All proof lines consist of a list of assumptions, an arrow, and a conclusion. If there are no assumptions, the conclusion is an axiom. A line of the proof is valid if and only if all assumptions were conclusions of previous lines. Sometimes the students derive a conclusion more than once just to be extra sure it is true, and that is perfectly all right!
+
+-----Input-----
+The first line of input consists of an integer $1 \le n \le 400000$, the number of lines in the “proof”. Then follow the $n$ lines of the “proof”. Each line has $0 \le a \le 5$ assumptions, followed by an arrow (the string “->”), followed by one conclusion. All assumptions and conclusions consist of $1 \le c \le 5$ uppercase alphabetic characters. The assumptions, arrow, and conclusion are all separated by single spaces.
+
+-----Output-----
+If every line is correct output “correct”. Otherwise, output the number of the first line with an error (line numbers start at $1$).
+
+-----Examples-----
+Sample Input:
+3
+-> ALICE
+-> BOB
+ALICE BOB -> CARL
+Sample Output:
+correct
+"""
+2022-04-10 00:05:02.780541 --------------------------
+2022-04-10 00:05:38.273552 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = []\n    for i in range(int(sys.stdin.readline().strip())):\n        lines.append(sys.stdin.readline().strip().split(' -> '))\n\n    for i, line in enumerate(lines):\n        if line[0] != '' and line[0] not in [j[1] for j in lines[:i]]:\n            print(i+1)\n            break\n    else:\n        print('correct')\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    axioms = set()\n    for i in range(n):\n        assumptions, arrow, conclusion = input().split(' ')\n        if assumptions == '':\n            axioms.add(conclusion)\n        else:\n            for a in assumptions.split(' '):\n                if a not in axioms:\n                    print(i + 1)\n                    return\n            axioms.add(conclusion)\n    print('correct')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    lines = []\n    for i in range(n):\n        lines.append(sys.stdin.readline().strip().split())\n    #print(lines)\n    lineCount = 1\n    for line in lines:\n        if line[-2] != \"->\":\n            print(lineCount)\n            break\n        else:\n            for i in range(len(line)-2):\n                if line[i] not in lines[:lineCount-1]:\n                    print(lineCount)\n                    break\n        lineCount += 1\n    else:\n        print(\"correct\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    lines = []\n    for line in sys.stdin.readlines():\n        lines.append(line.strip())\n\n    lines = lines[1:]\n    lines = [line.split() for line in lines]\n    lines = [(line[:-1], line[-1]) for line in lines]\n    lines = [(tuple(line[0]), line[1]) for line in lines]\n\n    for i, line in enumerate(lines):\n        if line[0] == ():\n            continue\n        for assumption in line[0]:\n            if assumption not in [line[1] for line in lines[:i]]:\n                print(i+1)\n                return\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef is_valid(proof):\n    \"\"\"\n    Given a list of lines of a \"proof\", determine whether it is valid.\n    \"\"\"\n    # The set of all previous conclusions\n    prev_conclusions = set()\n    # The set of all current assumptions\n    curr_assumptions = set()\n\n    for line in proof:\n        # Split the line into assumptions and conclusion\n        split = line.split(\" -> \")\n        assumptions = split[0]\n        conclusion = split[1]\n\n        # If there are no assumptions, the conclusion is an axiom\n        if assumptions == \"\":\n            curr_assumptions.add(conclusion)\n        else:\n            # Otherwise, each assumption must be in the set of previous conclusions\n            for assumption in assumptions.split():\n                if assumption not in prev_conclusions:\n                    return False\n            curr_assumptions.add(conclusion)\n\n        # Add the current assumptions to the set of previous conclusions\n        prev_conclusions.update(curr_assumptions)\n\n    return True\n\n\ndef main():\n    # Read the number of lines in the proof\n    n = int(input())\n    # Read the proof\n    proof = [input() for _ in range(n)]\n\n    # Determine whether the proof is valid\n    valid = is_valid(proof)\n\n    if valid:\n        print(\"correct\")\n    else:\n        # If the proof is not valid, print the line number of the first invalid line\n        for i, line in enumerate(proof):\n            split = line.split(\" -> \")\n            assumptions = split[0]\n            conclusion = split[1]\n\n            if assumptions == \"\":\n                if conclusion not in prev_conclusions:\n                    print(i+1)\n                    break\n            else:\n                for assumption in assumptions.split():\n                    if assumption not in prev_conclusions:\n                        print(i+1)\n                        break\n                else:\n                    continue\n                break\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    conclusion_list = []\n    for i in range(N):\n        conclusion_list.append(input())\n\n    for i in range(N):\n        line = conclusion_list[i]\n        if \"->\" in line:\n            if i == 0:\n                print(i+1)\n                return\n            conclusion = line.split(\"->\")[1].strip()\n            assumptions = line.split(\"->\")[0].split(\" \")\n            for assumption in assumptions:\n                if assumption not in conclusion_list[:i]:\n                    print(i+1)\n                    return\n        else:\n            print(i+1)\n            return\n\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    lines = []\n    for i in range(n):\n        lines.append(sys.stdin.readline().strip().split())\n    for i in range(n):\n        for j in range(i):\n            if lines[j][-1] in lines[i][:-2]:\n                continue\n            else:\n                print(i+1)\n                return\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef check_proof(proof):\n    assumptions = []\n    for line in proof:\n        line = line.split('->')\n        if line[0].strip() == '':\n            assumptions.append(line[1].strip())\n        else:\n            for assumption in line[0].split():\n                if assumption not in assumptions:\n                    return proof.index(line) + 1\n            assumptions.append(line[1].strip())\n    return 'correct'\n\nif __name__ == '__main__':\n    n = int(input())\n    proof = []\n    for _ in range(n):\n        proof.append(input())\n    print(check_proof(proof))"
+    }
+  ],
+  "created": 1649563503,
+  "id": "cmpl-4vJ6tqSsuTvaKFqDrL3twe3ExwUTD",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:05:38.273968 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = []\n    for i in range(int(sys.stdin.readline().strip())):\n        lines.append(sys.stdin.readline().strip().split(' -> '))\n\n    for i, line in enumerate(lines):\n        if line[0] != '' and line[0] not in [j[1] for j in lines[:i]]:\n            print(i+1)\n            break\n    else:\n        print('correct')\n\nmain()"
+}
+2022-04-10 00:05:38.274028 REASON stop
+2022-04-10 00:05:38.312261 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.312297 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    axioms = set()\n    for i in range(n):\n        assumptions, arrow, conclusion = input().split(' ')\n        if assumptions == '':\n            axioms.add(conclusion)\n        else:\n            for a in assumptions.split(' '):\n                if a not in axioms:\n                    print(i + 1)\n                    return\n            axioms.add(conclusion)\n    print('correct')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:05:38.312375 REASON stop
+2022-04-10 00:05:38.312871 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.312996 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    lines = []\n    for i in range(n):\n        lines.append(sys.stdin.readline().strip().split())\n    #print(lines)\n    lineCount = 1\n    for line in lines:\n        if line[-2] != \"->\":\n            print(lineCount)\n            break\n        else:\n            for i in range(len(line)-2):\n                if line[i] not in lines[:lineCount-1]:\n                    print(lineCount)\n                    break\n        lineCount += 1\n    else:\n        print(\"correct\")\n\nmain()"
+}
+2022-04-10 00:05:38.313073 REASON stop
+2022-04-10 00:05:38.313446 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.313465 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    lines = []\n    for line in sys.stdin.readlines():\n        lines.append(line.strip())\n\n    lines = lines[1:]\n    lines = [line.split() for line in lines]\n    lines = [(line[:-1], line[-1]) for line in lines]\n    lines = [(tuple(line[0]), line[1]) for line in lines]\n\n    for i, line in enumerate(lines):\n        if line[0] == ():\n            continue\n        for assumption in line[0]:\n            if assumption not in [line[1] for line in lines[:i]]:\n                print(i+1)\n                return\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:05:38.313521 REASON stop
+2022-04-10 00:05:38.313761 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.313775 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef is_valid(proof):\n    \"\"\"\n    Given a list of lines of a \"proof\", determine whether it is valid.\n    \"\"\"\n    # The set of all previous conclusions\n    prev_conclusions = set()\n    # The set of all current assumptions\n    curr_assumptions = set()\n\n    for line in proof:\n        # Split the line into assumptions and conclusion\n        split = line.split(\" -> \")\n        assumptions = split[0]\n        conclusion = split[1]\n\n        # If there are no assumptions, the conclusion is an axiom\n        if assumptions == \"\":\n            curr_assumptions.add(conclusion)\n        else:\n            # Otherwise, each assumption must be in the set of previous conclusions\n            for assumption in assumptions.split():\n                if assumption not in prev_conclusions:\n                    return False\n            curr_assumptions.add(conclusion)\n\n        # Add the current assumptions to the set of previous conclusions\n        prev_conclusions.update(curr_assumptions)\n\n    return True\n\n\ndef main():\n    # Read the number of lines in the proof\n    n = int(input())\n    # Read the proof\n    proof = [input() for _ in range(n)]\n\n    # Determine whether the proof is valid\n    valid = is_valid(proof)\n\n    if valid:\n        print(\"correct\")\n    else:\n        # If the proof is not valid, print the line number of the first invalid line\n        for i, line in enumerate(proof):\n            split = line.split(\" -> \")\n            assumptions = split[0]\n            conclusion = split[1]\n\n            if assumptions == \"\":\n                if conclusion not in prev_conclusions:\n                    print(i+1)\n                    break\n            else:\n                for assumption in assumptions.split():\n                    if assumption not in prev_conclusions:\n                        print(i+1)\n                        break\n                else:\n                    continue\n                break\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:05:38.313831 REASON stop
+2022-04-10 00:05:38.314077 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.314090 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    conclusion_list = []\n    for i in range(N):\n        conclusion_list.append(input())\n\n    for i in range(N):\n        line = conclusion_list[i]\n        if \"->\" in line:\n            if i == 0:\n                print(i+1)\n                return\n            conclusion = line.split(\"->\")[1].strip()\n            assumptions = line.split(\"->\")[0].split(\" \")\n            for assumption in assumptions:\n                if assumption not in conclusion_list[:i]:\n                    print(i+1)\n                    return\n        else:\n            print(i+1)\n            return\n\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:05:38.314130 REASON stop
+2022-04-10 00:05:38.314470 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.314503 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    lines = []\n    for i in range(n):\n        lines.append(sys.stdin.readline().strip().split())\n    for i in range(n):\n        for j in range(i):\n            if lines[j][-1] in lines[i][:-2]:\n                continue\n            else:\n                print(i+1)\n                return\n    print(\"correct\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:05:38.314569 REASON stop
+2022-04-10 00:05:38.314813 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'
+2022-04-10 00:05:38.314827 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef check_proof(proof):\n    assumptions = []\n    for line in proof:\n        line = line.split('->')\n        if line[0].strip() == '':\n            assumptions.append(line[1].strip())\n        else:\n            for assumption in line[0].split():\n                if assumption not in assumptions:\n                    return proof.index(line) + 1\n            assumptions.append(line[1].strip())\n    return 'correct'\n\nif __name__ == '__main__':\n    n = int(input())\n    proof = []\n    for _ in range(n):\n        proof.append(input())\n    print(check_proof(proof))"
+}
+2022-04-10 00:05:38.314872 REASON stop
+2022-04-10 00:05:38.315216 test/intro-questions.txt_dir/4951/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4951/solutions.json'

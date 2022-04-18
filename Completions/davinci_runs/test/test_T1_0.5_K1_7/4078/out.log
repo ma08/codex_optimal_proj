@@ -1,0 +1,184 @@
+2022-04-13 18:00:14.063188 """
+The only difference between easy and hard versions is a number of elements in the array.
+
+You are given an array $a$ consisting of $n$ integers. The value of the $i$-th element of the array is $a_i$.
+
+You are also given a set of $m$ segments. The $j$-th segment is $[l_j; r_j]$, where $1 \le l_j \le r_j \le n$.
+
+You can choose some subset of the given set of segments and decrease values on each of the chosen segments by one (independently). For example, if the initial array $a = [0, 0, 0, 0, 0]$ and the given segments are $[1; 3]$ and $[2; 4]$ then you can choose both of them and the array will become $b = [-1, -2, -2, -1, 0]$.
+
+You have to choose some subset of the given segments (each segment can be chosen at most once) in such a way that if you apply this subset of segments to the array $a$ and obtain the array $b$ then the value $\max\limits_{i=1}^{n}b_i - \min\limits_{i=1}^{n}b_i$ will be maximum possible.
+
+Note that you can choose the empty set.
+
+If there are multiple answers, you can print any.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n \le 300, 0 \le m \le 300$) — the length of the array $a$ and the number of segments, respectively.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($-10^6 \le a_i \le 10^6$), where $a_i$ is the value of the $i$-th element of the array $a$.
+
+The next $m$ lines are contain two integers each. The $j$-th of them contains two integers $l_j$ and $r_j$ ($1 \le l_j \le r_j \le n$), where $l_j$ and $r_j$ are the ends of the $j$-th segment.
+
+
+-----Output-----
+
+In the first line of the output print one integer $d$ — the maximum possible value $\max\limits_{i=1}^{n}b_i - \min\limits_{i=1}^{n}b_i$ if $b$ is the array obtained by applying some subset of the given segments to the array $a$.
+
+In the second line of the output print one integer $q$ ($0 \le q \le m$) — the number of segments you apply.
+
+In the third line print $q$ distinct integers $c_1, c_2, \dots, c_q$ in any order ($1 \le c_k \le m$) — indices of segments you apply to the array $a$ in such a way that the value $\max\limits_{i=1}^{n}b_i - \min\limits_{i=1}^{n}b_i$ of the obtained array $b$ is maximum possible.
+
+If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+5 4
+2 -2 3 1 2
+1 3
+4 5
+2 5
+1 3
+
+Output
+6
+2
+1 4 
+
+Input
+5 4
+2 -2 3 1 4
+3 5
+3 4
+2 4
+2 5
+
+Output
+7
+2
+3 2 
+
+Input
+1 0
+1000000
+
+Output
+0
+0
+
+
+
+
+-----Note-----
+
+In the first example the obtained array $b$ will be $[0, -4, 1, 1, 2]$ so the answer is $6$.
+
+In the second example the obtained array $b$ will be $[2, -3, 1, -1, 4]$ so the answer is $7$.
+
+In the third example you cannot do anything so the answer is $0$.
+"""
+2022-04-13 18:00:14.063212 --------------------------
+2022-04-13 18:02:13.379628 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef get_max_diff(a, diff_max, min_val, max_val, i, j):\n    if i == j:\n        return diff_max\n    if a[i] < min_val:\n        min_val = a[i]\n    if a[i] > max_val:\n        max_val = a[i]\n    return get_max_diff(a, max(diff_max, max_val - min_val), min_val, max_val, i + 1, j)\n\ndef solve(a, l, r):\n    diff_max = 0\n    for i in range(len(l)):\n        diff = get_max_diff(a, 0, a[l[i] - 1], a[l[i] - 1], l[i] - 1, r[i] - 1)\n        if diff > diff_max:\n            diff_max = diff\n    return diff_max\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n    l = []\n    r = []\n    for i in range(m):\n        x, y = [int(x) for x in sys.stdin.readline().split()]\n        l.append(x)\n        r.append(y)\n    print(solve(a, l, r))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\n#print(n, m, a)\n\ndef max_diff(a):\n    mx = a[0]\n    mn = a[0]\n    for x in a:\n        mx = max(mx, x)\n        mn = min(mn, x)\n    return mx - mn\n\nsegs = []\nfor i in range(m):\n    l, r = [int(x) for x in input().split()]\n    segs.append([l, r])\n\n#print(segs)\n\ndef apply_seg(a, seg):\n    l, r = seg\n    for i in range(l-1, r):\n        a[i] -= 1\n\ndef apply_segs(a, segs):\n    for seg in segs:\n        apply_seg(a, seg)\n\ndef apply_ind(a, ind):\n    if ind == 0:\n        return\n    l, r = segs[ind-1]\n    for i in range(l-1, r):\n        a[i] -= 1\n\ndef apply_inds(a, inds):\n    for ind in inds:\n        apply_ind(a, ind)\n\ndef get_seg_inds(a, segs):\n    inds = []\n    for seg in segs:\n        inds.append(segs.index(seg)+1)\n    return inds\n\nfrom itertools import combinations\n\ndef get_best_diff(a, segs):\n    best_diff = 0\n    best_inds = []\n    for i in range(1, len(segs)+1):\n        for comb in combinations(segs, i):\n            #print(comb)\n            a_copy = a.copy()\n            apply_segs(a_copy, comb)\n            diff = max_diff(a_copy)\n            if diff > best_diff:\n                best_diff = diff\n                best_inds = get_seg_inds(a_copy, comb)\n    return best_diff, best_inds\n\nbest_diff, best_inds = get_best_diff(a, segs)\n\nprint(best_diff)\nprint(len(best_inds))\nprint(' '.join([str(x) for x in best_inds]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\nsegments = []\nfor i in range(m):\n    start, end = map(int, input().split())\n    segments.append((start, end))\n\n# print(n, m)\n# print(a)\n# print(segments)\n\ndef get_max_diff(a):\n    return max(a) - min(a)\n\ndef get_max_diff_with_segments(a, segments):\n    if len(segments) == 0:\n        return get_max_diff(a)\n    else:\n        max_diff = -1\n        for i, segment in enumerate(segments):\n            start, end = segment\n            a_copy = a[:]\n            for i in range(start-1, end):\n                a_copy[i] -= 1\n            max_diff_copy = get_max_diff_with_segments(a_copy, segments[:i] + segments[i+1:])\n            if max_diff_copy > max_diff:\n                max_diff = max_diff_copy\n        return max_diff\n\nprint(get_max_diff_with_segments(a, segments))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef read_integers():\n    return [int(x) for x in stdin.readline().split()]\n\ndef read_segments():\n    m = read_integers()[0]\n    segments = []\n    for i in range(m):\n        segments.append(read_integers())\n    return segments\n\ndef solve(n, a, m, segments):\n    a = sorted(a)\n    segments = sorted(segments, key = lambda x: x[0])\n    max_diff = 0\n    for i in range(m):\n        max_diff += a[-1] - a[0]\n        a[-1] -= segments[i][1] - segments[i][0] + 1\n        a[0] += segments[i][1] - segments[i][0] + 1\n        a = sorted(a)\n    max_diff += a[-1] - a[0]\n    return max_diff\n\ndef main():\n    n, m = read_integers()\n    a = read_integers()\n    segments = read_segments()\n    print(solve(n, a, m, segments))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport random\nimport sys\n\nsys.setrecursionlimit(10000)\n\ndef solve_dp(n, m, a, l, r):\n    # dp[i][j] is the maximum possible value of max(b) - min(b)\n    # if we apply the first i segments and the last segment is j\n    dp = [[-1] * (n + 1) for _ in range(m + 1)]\n    dp[0][0] = 0\n    for i in range(1, m + 1):\n        for j in range(n + 1):\n            dp[i][j] = dp[i - 1][j]\n            if l[i - 1] <= j and j <= r[i - 1]:\n                dp[i][j] = max(dp[i][j], dp[i - 1][l[i - 1] - 1] + a[j - 1] - a[l[i - 1] - 1])\n    return max(dp[m])\n\ndef solve_naive(n, m, a, l, r):\n    def rec(i, j):\n        if i == m:\n            return 0\n        if j == n:\n            return 0\n        if l[i] <= j + 1 and j + 1 <= r[i]:\n            return max(rec(i + 1, j), rec(i + 1, l[i] - 1) + a[j] - a[l[i] - 1])\n        return rec(i + 1, j)\n    return rec(0, 0)\n\ndef solve_random(n, m, a, l, r):\n    def rec(i, j):\n        if i == m:\n            return 0\n        if j == n:\n            return 0\n        if l[i] <= j + 1 and j + 1 <= r[i]:\n            return max(rec(i + 1, j), rec(i + 1, l[i] - 1) + a[j] - a[l[i] - 1])\n        return rec(i + 1, j)\n    def random_solve():\n        order = list(range(m))\n        random.shuffle(order)\n        return rec(0, 0)\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy(n, m, a, l, r):\n    # sort by r\n    idx = list(range(m))\n    idx.sort(key=lambda i: r[i])\n    l = [l[i] for i in idx]\n    r = [r[i] for i in idx]\n    # dp[i] is the maximum possible value of max(b) - min(b)\n    # if we apply the first i segments\n    dp = [0] * (m + 1)\n    for i in range(1, m + 1):\n        dp[i] = dp[i - 1]\n        dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n    return dp[m]\n\ndef solve_greedy_random(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_2(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_3(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_4(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_5(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_6(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_7(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_8(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_9(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_10(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_11(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_12(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_13(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649872814,
+  "id": "cmpl-4wbZmTWuTi5TFKEWYv4JGgYvSZlT7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:02:13.380076 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef get_max_diff(a, diff_max, min_val, max_val, i, j):\n    if i == j:\n        return diff_max\n    if a[i] < min_val:\n        min_val = a[i]\n    if a[i] > max_val:\n        max_val = a[i]\n    return get_max_diff(a, max(diff_max, max_val - min_val), min_val, max_val, i + 1, j)\n\ndef solve(a, l, r):\n    diff_max = 0\n    for i in range(len(l)):\n        diff = get_max_diff(a, 0, a[l[i] - 1], a[l[i] - 1], l[i] - 1, r[i] - 1)\n        if diff > diff_max:\n            diff_max = diff\n    return diff_max\n\ndef main():\n    n, m = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n    l = []\n    r = []\n    for i in range(m):\n        x, y = [int(x) for x in sys.stdin.readline().split()]\n        l.append(x)\n        r.append(y)\n    print(solve(a, l, r))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:02:13.380132 REASON stop
+2022-04-13 18:02:13.380647 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\n#print(n, m, a)\n\ndef max_diff(a):\n    mx = a[0]\n    mn = a[0]\n    for x in a:\n        mx = max(mx, x)\n        mn = min(mn, x)\n    return mx - mn\n\nsegs = []\nfor i in range(m):\n    l, r = [int(x) for x in input().split()]\n    segs.append([l, r])\n\n#print(segs)\n\ndef apply_seg(a, seg):\n    l, r = seg\n    for i in range(l-1, r):\n        a[i] -= 1\n\ndef apply_segs(a, segs):\n    for seg in segs:\n        apply_seg(a, seg)\n\ndef apply_ind(a, ind):\n    if ind == 0:\n        return\n    l, r = segs[ind-1]\n    for i in range(l-1, r):\n        a[i] -= 1\n\ndef apply_inds(a, inds):\n    for ind in inds:\n        apply_ind(a, ind)\n\ndef get_seg_inds(a, segs):\n    inds = []\n    for seg in segs:\n        inds.append(segs.index(seg)+1)\n    return inds\n\nfrom itertools import combinations\n\ndef get_best_diff(a, segs):\n    best_diff = 0\n    best_inds = []\n    for i in range(1, len(segs)+1):\n        for comb in combinations(segs, i):\n            #print(comb)\n            a_copy = a.copy()\n            apply_segs(a_copy, comb)\n            diff = max_diff(a_copy)\n            if diff > best_diff:\n                best_diff = diff\n                best_inds = get_seg_inds(a_copy, comb)\n    return best_diff, best_inds\n\nbest_diff, best_inds = get_best_diff(a, segs)\n\nprint(best_diff)\nprint(len(best_inds))\nprint(' '.join([str(x) for x in best_inds]))"
+}
+2022-04-13 18:02:13.380785 REASON stop
+2022-04-13 18:02:13.381288 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\nsegments = []\nfor i in range(m):\n    start, end = map(int, input().split())\n    segments.append((start, end))\n\n# print(n, m)\n# print(a)\n# print(segments)\n\ndef get_max_diff(a):\n    return max(a) - min(a)\n\ndef get_max_diff_with_segments(a, segments):\n    if len(segments) == 0:\n        return get_max_diff(a)\n    else:\n        max_diff = -1\n        for i, segment in enumerate(segments):\n            start, end = segment\n            a_copy = a[:]\n            for i in range(start-1, end):\n                a_copy[i] -= 1\n            max_diff_copy = get_max_diff_with_segments(a_copy, segments[:i] + segments[i+1:])\n            if max_diff_copy > max_diff:\n                max_diff = max_diff_copy\n        return max_diff\n\nprint(get_max_diff_with_segments(a, segments))"
+}
+2022-04-13 18:02:13.381345 REASON stop
+2022-04-13 18:02:13.402005 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-13 18:02:13.402121 REASON stop
+2022-04-13 18:02:13.413189 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef read_integers():\n    return [int(x) for x in stdin.readline().split()]\n\ndef read_segments():\n    m = read_integers()[0]\n    segments = []\n    for i in range(m):\n        segments.append(read_integers())\n    return segments\n\ndef solve(n, a, m, segments):\n    a = sorted(a)\n    segments = sorted(segments, key = lambda x: x[0])\n    max_diff = 0\n    for i in range(m):\n        max_diff += a[-1] - a[0]\n        a[-1] -= segments[i][1] - segments[i][0] + 1\n        a[0] += segments[i][1] - segments[i][0] + 1\n        a = sorted(a)\n    max_diff += a[-1] - a[0]\n    return max_diff\n\ndef main():\n    n, m = read_integers()\n    a = read_integers()\n    segments = read_segments()\n    print(solve(n, a, m, segments))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:02:13.413301 REASON stop
+2022-04-13 18:02:13.415707 5 {
+  "finish_reason": "length",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport random\nimport sys\n\nsys.setrecursionlimit(10000)\n\ndef solve_dp(n, m, a, l, r):\n    # dp[i][j] is the maximum possible value of max(b) - min(b)\n    # if we apply the first i segments and the last segment is j\n    dp = [[-1] * (n + 1) for _ in range(m + 1)]\n    dp[0][0] = 0\n    for i in range(1, m + 1):\n        for j in range(n + 1):\n            dp[i][j] = dp[i - 1][j]\n            if l[i - 1] <= j and j <= r[i - 1]:\n                dp[i][j] = max(dp[i][j], dp[i - 1][l[i - 1] - 1] + a[j - 1] - a[l[i - 1] - 1])\n    return max(dp[m])\n\ndef solve_naive(n, m, a, l, r):\n    def rec(i, j):\n        if i == m:\n            return 0\n        if j == n:\n            return 0\n        if l[i] <= j + 1 and j + 1 <= r[i]:\n            return max(rec(i + 1, j), rec(i + 1, l[i] - 1) + a[j] - a[l[i] - 1])\n        return rec(i + 1, j)\n    return rec(0, 0)\n\ndef solve_random(n, m, a, l, r):\n    def rec(i, j):\n        if i == m:\n            return 0\n        if j == n:\n            return 0\n        if l[i] <= j + 1 and j + 1 <= r[i]:\n            return max(rec(i + 1, j), rec(i + 1, l[i] - 1) + a[j] - a[l[i] - 1])\n        return rec(i + 1, j)\n    def random_solve():\n        order = list(range(m))\n        random.shuffle(order)\n        return rec(0, 0)\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy(n, m, a, l, r):\n    # sort by r\n    idx = list(range(m))\n    idx.sort(key=lambda i: r[i])\n    l = [l[i] for i in idx]\n    r = [r[i] for i in idx]\n    # dp[i] is the maximum possible value of max(b) - min(b)\n    # if we apply the first i segments\n    dp = [0] * (m + 1)\n    for i in range(1, m + 1):\n        dp[i] = dp[i - 1]\n        dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n    return dp[m]\n\ndef solve_greedy_random(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_2(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_3(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_4(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_5(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_6(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_7(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_8(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_9(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_10(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_11(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_12(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n        l = [l[i] for i in idx]\n        r = [r[i] for i in idx]\n        # dp[i] is the maximum possible value of max(b) - min(b)\n        # if we apply the first i segments\n        dp = [0] * (m + 1)\n        for i in range(1, m + 1):\n            dp[i] = dp[i - 1]\n            if l[i - 1] <= r[i - 1] - 1:\n                dp[i] = max(dp[i], dp[i - 1] + a[r[i - 1] - 1] - a[l[i - 1] - 1])\n        return dp[m]\n    best_value = -1\n    for _ in range(100):\n        best_value = max(best_value, random_solve())\n    return best_value\n\ndef solve_greedy_random_13(n, m, a, l, r):\n    def random_solve():\n        # sort by r\n        idx = list(range(m))\n        random.shuffle(idx)\n"
+}
+2022-04-13 18:02:13.415881 REASON length
+2022-04-13 18:02:13.415891 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:02:13.415935 REASON stop

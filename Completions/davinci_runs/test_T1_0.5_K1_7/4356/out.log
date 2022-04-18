@@ -1,0 +1,150 @@
+2022-04-13 20:20:00.598607 """
+You are given an image A composed of N rows and N columns of pixels, and a template image B composed of M rows and M columns of pixels.
+
+A pixel is the smallest element of an image, and in this problem it is a square of size 1×1.
+
+Also, the given images are binary images, and the color of each pixel is either white or black.  
+In the input, every pixel is represented by a character: . corresponds to a white pixel, and # corresponds to a black pixel.
+
+The image A is given as N strings A_1,...,A_N.
+
+The j-th character in the string A_i corresponds to the pixel at the i-th row and j-th column of the image A (1≦i,j≦N).
+
+Similarly, the template image B is given as M strings B_1,...,B_M.
+
+The j-th character in the string B_i corresponds to the pixel at the i-th row and j-th column of the template image B (1≦i,j≦M).  
+Determine whether the template image B is contained in the image A when only parallel shifts can be applied to the images.  
+
+-----Constraints-----
+ - 1≦M≦N≦50 
+ - A_i is a string of length N consisting of # and ..
+ - B_i is a string of length M consisting of # and ..
+
+-----Input-----
+The input is given from Standard Input in the following format:
+N M
+A_1
+A_2
+:  
+A_N
+B_1
+B_2
+:  
+B_M
+
+-----Output-----
+Print Yes if the template image B is contained in the image A. Print No otherwise.
+
+-----Sample Input-----
+3 2
+#.#
+.#.
+#.#
+#.
+.#
+
+-----Sample Output-----
+Yes
+
+The template image B is identical to the upper-left 2 × 2 subimage and the lower-right 2 × 2 subimage of A. Thus, the output should be Yes.
+"""
+2022-04-13 20:20:00.598618 --------------------------
+2022-04-13 20:20:16.152863 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\nimage_A = []\nfor i in range(N):\n    image_A.append(sys.stdin.readline().rstrip())\nimage_B = []\nfor i in range(M):\n    image_B.append(sys.stdin.readline().rstrip())\n\ndef is_contained_in(image_A, image_B):\n    for i in range(N - M + 1):\n        for j in range(N - M + 1):\n            flag = True\n            for k in range(M):\n                if image_A[i + k][j:j + M] != image_B[k]:\n                    flag = False\n                    break\n            if flag:\n                return True\n    return False\n\nif is_contained_in(image_A, image_B):\n    print('Yes')\nelse:\n    print('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef check_template(N, M, A, B):\n    for i in range(N):\n        for j in range(N):\n            if A[i][j:j+M] == B[0]:\n                for k in range(1, M):\n                    if A[i+k][j:j+M] != B[k]:\n                        break\n                else:\n                    return True\n    return False\n\nN, M = map(int, input().split())\nA = [input() for _ in range(N)]\nB = [input() for _ in range(M)]\nif check_template(N, M, A, B):\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN,M = map(int,input().split())\nA = [input() for i in range(N)]\nB = [input() for j in range(M)]\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        flag = True\n        for k in range(M):\n            if A[i+k][j:j+M] != B[k]:\n                flag = False\n                break\n        if flag:\n            print(\"Yes\")\n            exit()\nprint(\"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#N,M = map(int,input().split())\nN = 3\nM = 2\n\n#A = [input() for i in range(N)]\nA = ['#.#','.#.','#.#']\n\n#B = [input() for i in range(M)]\nB = ['#.','.#']\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        if A[i][j:j+M] == B[0]:\n            for k in range(1,M):\n                if A[i+k][j:j+M] != B[k]:\n                    break\n            else:\n                print('Yes')\n                exit()\nprint('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\n# --- code in here ---\n\n# input\nn, m = list(map(int, input().split()))\na_list = []\nb_list = []\nfor i in range(n):\n    a_list.append(input())\nfor i in range(m):\n    b_list.append(input())\n\n# define function\ndef check_substring(a_list, b_list):\n    for i in range(n-m+1):\n        for j in range(n-m+1):\n            for k in range(m):\n                if a_list[i+k][j:j+m] == b_list[k]:\n                    if k == m-1:\n                        return True\n                    else:\n                        continue\n                else:\n                    break\n    return False\n\n# output\nif check_substring(a_list, b_list):\n    print('Yes')\nelse:\n    print('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\nA = [input() for _ in range(N)]\nB = [input() for _ in range(M)]\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        if A[i][j] == B[0][0]:\n            for k in range(M):\n                if A[i+k][j:j+M] != B[k]:\n                    break\n            else:\n                print('Yes')\n                exit()\nprint('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # Get input\n    N,M = map(int,input().split())\n    A = [input() for _ in range(N)]\n    B = [input() for _ in range(M)]\n    # Check if B is contained in A\n    if any([B[0] in A[i:i+M] for i in range(N-M+1)]):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649881200,
+  "id": "cmpl-4wdl2mevkOcfg0bMfvJ5vvjr7esUw",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:20:16.153163 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\nimage_A = []\nfor i in range(N):\n    image_A.append(sys.stdin.readline().rstrip())\nimage_B = []\nfor i in range(M):\n    image_B.append(sys.stdin.readline().rstrip())\n\ndef is_contained_in(image_A, image_B):\n    for i in range(N - M + 1):\n        for j in range(N - M + 1):\n            flag = True\n            for k in range(M):\n                if image_A[i + k][j:j + M] != image_B[k]:\n                    flag = False\n                    break\n            if flag:\n                return True\n    return False\n\nif is_contained_in(image_A, image_B):\n    print('Yes')\nelse:\n    print('No')"
+}
+2022-04-13 20:20:16.153203 REASON stop
+2022-04-13 20:20:16.153733 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef check_template(N, M, A, B):\n    for i in range(N):\n        for j in range(N):\n            if A[i][j:j+M] == B[0]:\n                for k in range(1, M):\n                    if A[i+k][j:j+M] != B[k]:\n                        break\n                else:\n                    return True\n    return False\n\nN, M = map(int, input().split())\nA = [input() for _ in range(N)]\nB = [input() for _ in range(M)]\nif check_template(N, M, A, B):\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+}
+2022-04-13 20:20:16.153849 REASON stop
+2022-04-13 20:20:16.154241 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN,M = map(int,input().split())\nA = [input() for i in range(N)]\nB = [input() for j in range(M)]\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        flag = True\n        for k in range(M):\n            if A[i+k][j:j+M] != B[k]:\n                flag = False\n                break\n        if flag:\n            print(\"Yes\")\n            exit()\nprint(\"No\")"
+}
+2022-04-13 20:20:16.154287 REASON stop
+2022-04-13 20:20:16.155948 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#N,M = map(int,input().split())\nN = 3\nM = 2\n\n#A = [input() for i in range(N)]\nA = ['#.#','.#.','#.#']\n\n#B = [input() for i in range(M)]\nB = ['#.','.#']\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        if A[i][j:j+M] == B[0]:\n            for k in range(1,M):\n                if A[i+k][j:j+M] != B[k]:\n                    break\n            else:\n                print('Yes')\n                exit()\nprint('No')"
+}
+2022-04-13 20:20:16.156029 REASON stop
+2022-04-13 20:20:16.171009 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\n# --- code in here ---\n\n# input\nn, m = list(map(int, input().split()))\na_list = []\nb_list = []\nfor i in range(n):\n    a_list.append(input())\nfor i in range(m):\n    b_list.append(input())\n\n# define function\ndef check_substring(a_list, b_list):\n    for i in range(n-m+1):\n        for j in range(n-m+1):\n            for k in range(m):\n                if a_list[i+k][j:j+m] == b_list[k]:\n                    if k == m-1:\n                        return True\n                    else:\n                        continue\n                else:\n                    break\n    return False\n\n# output\nif check_substring(a_list, b_list):\n    print('Yes')\nelse:\n    print('No')"
+}
+2022-04-13 20:20:16.171108 REASON stop
+2022-04-13 20:20:16.206735 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\nA = [input() for _ in range(N)]\nB = [input() for _ in range(M)]\n\nfor i in range(N-M+1):\n    for j in range(N-M+1):\n        if A[i][j] == B[0][0]:\n            for k in range(M):\n                if A[i+k][j:j+M] != B[k]:\n                    break\n            else:\n                print('Yes')\n                exit()\nprint('No')"
+}
+2022-04-13 20:20:16.206837 REASON stop
+2022-04-13 20:20:16.207807 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # Get input\n    N,M = map(int,input().split())\n    A = [input() for _ in range(N)]\n    B = [input() for _ in range(M)]\n    # Check if B is contained in A\n    if any([B[0] in A[i:i+M] for i in range(N-M+1)]):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:20:16.207876 REASON stop

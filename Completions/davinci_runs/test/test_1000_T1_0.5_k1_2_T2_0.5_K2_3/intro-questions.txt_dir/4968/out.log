@@ -1,0 +1,144 @@
+2022-04-10 00:15:26.760905 """
+As you know, a kayaking competition is going on as we speak. Unfortunately strong winds have damaged a few kayaks, and the race starts in 5 minutes!. Fortunately, some teams have brought reserve kayaks. Since kayaks are bulky and hard to carry, teams are willing to lend kayaks to opposing teams if and only if they are starting immediately next to them. For example, team with the starting number 4 will lend its reserve kayak only to teams 3 and 5. Of course if some team did bring a reserve and its kayak was damaged, they will use it themselves and not lend it to anyone.
+
+You as the organizer now need to know, what is the minimal number of teams that cannot start the race, not even in borrowed kayaks.
+
+-----Input-----
+The first line of input contains three integers $N$, $(2 \le N \le 10)$, total number of teams, $S$, $(2 \le S \le N)$, number of teams with damaged kayaks and $R$, $(1 \le R \le N)$, number of teams with reserve kayaks.
+
+The second line contains exactly $S$ numbers, the starting numbers of teams with damaged kayaks. The second line will not contain duplicates.
+
+The third line contains exactly $R$ numbers, the starting numbers of teams with reserve kayaks. The third line will not contain duplicates.
+
+-----Output-----
+The first and only line of output should contain the smallest number of teams that cannot start the competition.
+
+-----Examples-----
+Sample Input:
+5 2 3
+2 4
+1 3 5
+Sample Output:
+0
+"""
+2022-04-10 00:15:26.760935 --------------------------
+2022-04-10 00:16:07.523387 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n[N, S, R] = map(int, sys.stdin.readline().split())\ndamaged = map(int, sys.stdin.readline().split())\nreserve = map(int, sys.stdin.readline().split())\n\ndef check(reserve, damaged):\n    for i in damaged:\n        if i-1 in reserve or i+1 in reserve:\n            reserve.remove(i-1)\n            reserve.remove(i+1)\n            damaged.remove(i)\n    return len(damaged)\n\nprint check(reserve, damaged)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, s, r = (int(x) for x in sys.stdin.readline().split())\n    damaged = set(int(x) for x in sys.stdin.readline().split())\n    reserve = set(int(x) for x in sys.stdin.readline().split())\n    print(max(0, s - len(reserve.intersection(damaged.union({x - 1 for x in damaged}).union({x + 1 for x in damaged})))))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, s, r = [int(x) for x in sys.stdin.readline().split()]\n    damaged = [int(x) for x in sys.stdin.readline().split()]\n    reserve = [int(x) for x in sys.stdin.readline().split()]\n    damaged = set(damaged)\n    reserve = set(reserve)\n    if len(damaged) != s or len(reserve) != r:\n        return 'ERROR'\n    if n < 2 or n > 10 or s < 2 or s > n or r < 1 or r > n:\n        return 'ERROR'\n    for x in damaged:\n        if x < 1 or x > n:\n            return 'ERROR'\n    for x in reserve:\n        if x < 1 or x > n:\n            return 'ERROR'\n    for x in damaged:\n        if x - 1 in reserve and x + 1 in reserve:\n            reserve.remove(x - 1)\n            reserve.remove(x + 1)\n            damaged.remove(x)\n        elif x - 1 in reserve:\n            reserve.remove(x - 1)\n            damaged.remove(x)\n        elif x + 1 in reserve:\n            reserve.remove(x + 1)\n            damaged.remove(x)\n    return len(damaged)\n\nif __name__ == '__main__':\n    print(main())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Get input\nN, S, R = [int(x) for x in input().split()]\ndmg = [int(x) for x in input().split()]\nrsv = [int(x) for x in input().split()]\n\n# Find the number of teams that can't start\n# Start with the number of teams with damaged kayaks\n# Subtract the number of teams with reserve kayaks\n# Add the number of teams that can be helped by reserve kayaks\n# Subtract the number of teams that are helped by reserve kayaks\n#   but are not next to the team with the reserve kayak\n# Subtract the number of teams that are helped by a reserve kayak\n#   but are not next to any team with a damaged kayak\n# Subtract the number of teams that are helped by a reserve kayak\n#   but are not next to any other team with a reserve kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to a team with a damaged kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to another team with a reserve kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to a team with a damaged kayak and a team with a reserve kayak\ncantStart = S - R\ncantStart -= sum([1 for x in dmg if x - 1 not in rsv and x + 1 not in rsv])\ncantStart -= sum([1 for x in rsv if x - 1 not in dmg and x + 1 not in dmg])\ncantStart -= sum([1 for x in rsv if x - 1 not in rsv and x + 1 not in rsv])\ncantStart += sum([1 for x in dmg if x - 1 in rsv or x + 1 in rsv])\ncantStart += sum([1 for x in rsv if x - 1 in rsv or x + 1 in rsv])\ncantStart += sum([1 for x in dmg if (x - 1 in rsv or x + 1 in rsv) and (x - 1 in rsv or x + 1 in rsv)])\n\n# Print the result\nprint(cantStart)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, s, r = [int(i) for i in sys.stdin.readline().split()]\n    broken = [int(i) for i in sys.stdin.readline().split()]\n    reserve = [int(i) for i in sys.stdin.readline().split()]\n    total = 0\n    for i in broken:\n        if i == 1:\n            if 2 in reserve:\n                reserve.remove(2)\n            else:\n                total += 1\n        elif i == n:\n            if n-1 in reserve:\n                reserve.remove(n-1)\n            else:\n                total += 1\n        else:\n            if i-1 in reserve:\n                reserve.remove(i-1)\n            elif i+1 in reserve:\n                reserve.remove(i+1)\n            else:\n                total += 1\n    print(total)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, s, r = map(int, input().split())\n    damaged = set(map(int, input().split()))\n    reserve = set(map(int, input().split()))\n    count = 0\n    for i in range(1, n+1):\n        if i in damaged:\n            if i-1 in reserve and i+1 in reserve:\n                reserve.remove(i-1)\n                reserve.remove(i+1)\n            elif i-1 in reserve:\n                reserve.remove(i-1)\n            elif i+1 in reserve:\n                reserve.remove(i+1)\n            else:\n                count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function\n    \"\"\"\n    # Read the input\n    num_teams, num_teams_damaged, num_teams_reserve = map(int, input().split())\n    teams_damaged = list(map(int, input().split()))\n    teams_reserve = list(map(int, input().split()))\n\n    # Sort the lists\n    teams_damaged.sort()\n    teams_reserve.sort()\n\n    # Check if the team with the reserve is damaged\n    for team in teams_reserve:\n        if team in teams_damaged:\n            teams_damaged.remove(team)\n\n    # Check if the team with the damaged kayak is next to the team with the reserve\n    for team in teams_damaged:\n        if team + 1 in teams_reserve or team - 1 in teams_reserve:\n            teams_damaged.remove(team)\n\n    print(len(teams_damaged))\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN, S, R = map(int, input().split())\nD = set(map(int, input().split()))\nB = set(map(int, input().split()))\n\nc = 0\n\nfor i in range(1, N+1):\n    if i in D:\n        if i-1 in B:\n            B.remove(i-1)\n        elif i+1 in B:\n            B.remove(i+1)\n        else:\n            c += 1\nprint(c)"
+    }
+  ],
+  "created": 1649564127,
+  "id": "cmpl-4vJGxrLdbGd82EeXWTEgcNHttK2nJ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-10 00:16:07.523659 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n[N, S, R] = map(int, sys.stdin.readline().split())\ndamaged = map(int, sys.stdin.readline().split())\nreserve = map(int, sys.stdin.readline().split())\n\ndef check(reserve, damaged):\n    for i in damaged:\n        if i-1 in reserve or i+1 in reserve:\n            reserve.remove(i-1)\n            reserve.remove(i+1)\n            damaged.remove(i)\n    return len(damaged)\n\nprint check(reserve, damaged)"
+}
+2022-04-10 00:16:07.523698 REASON stop
+2022-04-10 00:16:07.535057 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.535125 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, s, r = (int(x) for x in sys.stdin.readline().split())\n    damaged = set(int(x) for x in sys.stdin.readline().split())\n    reserve = set(int(x) for x in sys.stdin.readline().split())\n    print(max(0, s - len(reserve.intersection(damaged.union({x - 1 for x in damaged}).union({x + 1 for x in damaged})))))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:16:07.535241 REASON stop
+2022-04-10 00:16:07.535795 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.535871 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, s, r = [int(x) for x in sys.stdin.readline().split()]\n    damaged = [int(x) for x in sys.stdin.readline().split()]\n    reserve = [int(x) for x in sys.stdin.readline().split()]\n    damaged = set(damaged)\n    reserve = set(reserve)\n    if len(damaged) != s or len(reserve) != r:\n        return 'ERROR'\n    if n < 2 or n > 10 or s < 2 or s > n or r < 1 or r > n:\n        return 'ERROR'\n    for x in damaged:\n        if x < 1 or x > n:\n            return 'ERROR'\n    for x in reserve:\n        if x < 1 or x > n:\n            return 'ERROR'\n    for x in damaged:\n        if x - 1 in reserve and x + 1 in reserve:\n            reserve.remove(x - 1)\n            reserve.remove(x + 1)\n            damaged.remove(x)\n        elif x - 1 in reserve:\n            reserve.remove(x - 1)\n            damaged.remove(x)\n        elif x + 1 in reserve:\n            reserve.remove(x + 1)\n            damaged.remove(x)\n    return len(damaged)\n\nif __name__ == '__main__':\n    print(main())"
+}
+2022-04-10 00:16:07.535943 REASON stop
+2022-04-10 00:16:07.536194 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.536207 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Get input\nN, S, R = [int(x) for x in input().split()]\ndmg = [int(x) for x in input().split()]\nrsv = [int(x) for x in input().split()]\n\n# Find the number of teams that can't start\n# Start with the number of teams with damaged kayaks\n# Subtract the number of teams with reserve kayaks\n# Add the number of teams that can be helped by reserve kayaks\n# Subtract the number of teams that are helped by reserve kayaks\n#   but are not next to the team with the reserve kayak\n# Subtract the number of teams that are helped by a reserve kayak\n#   but are not next to any team with a damaged kayak\n# Subtract the number of teams that are helped by a reserve kayak\n#   but are not next to any other team with a reserve kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to a team with a damaged kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to another team with a reserve kayak\n# Add the number of teams that are helped by a reserve kayak\n#   and are next to a team with a damaged kayak and a team with a reserve kayak\ncantStart = S - R\ncantStart -= sum([1 for x in dmg if x - 1 not in rsv and x + 1 not in rsv])\ncantStart -= sum([1 for x in rsv if x - 1 not in dmg and x + 1 not in dmg])\ncantStart -= sum([1 for x in rsv if x - 1 not in rsv and x + 1 not in rsv])\ncantStart += sum([1 for x in dmg if x - 1 in rsv or x + 1 in rsv])\ncantStart += sum([1 for x in rsv if x - 1 in rsv or x + 1 in rsv])\ncantStart += sum([1 for x in dmg if (x - 1 in rsv or x + 1 in rsv) and (x - 1 in rsv or x + 1 in rsv)])\n\n# Print the result\nprint(cantStart)"
+}
+2022-04-10 00:16:07.536255 REASON stop
+2022-04-10 00:16:07.536496 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.536509 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, s, r = [int(i) for i in sys.stdin.readline().split()]\n    broken = [int(i) for i in sys.stdin.readline().split()]\n    reserve = [int(i) for i in sys.stdin.readline().split()]\n    total = 0\n    for i in broken:\n        if i == 1:\n            if 2 in reserve:\n                reserve.remove(2)\n            else:\n                total += 1\n        elif i == n:\n            if n-1 in reserve:\n                reserve.remove(n-1)\n            else:\n                total += 1\n        else:\n            if i-1 in reserve:\n                reserve.remove(i-1)\n            elif i+1 in reserve:\n                reserve.remove(i+1)\n            else:\n                total += 1\n    print(total)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-10 00:16:07.536566 REASON stop
+2022-04-10 00:16:07.536941 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.536957 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, s, r = map(int, input().split())\n    damaged = set(map(int, input().split()))\n    reserve = set(map(int, input().split()))\n    count = 0\n    for i in range(1, n+1):\n        if i in damaged:\n            if i-1 in reserve and i+1 in reserve:\n                reserve.remove(i-1)\n                reserve.remove(i+1)\n            elif i-1 in reserve:\n                reserve.remove(i-1)\n            elif i+1 in reserve:\n                reserve.remove(i+1)\n            else:\n                count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-10 00:16:07.536987 REASON stop
+2022-04-10 00:16:07.537109 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.537116 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function\n    \"\"\"\n    # Read the input\n    num_teams, num_teams_damaged, num_teams_reserve = map(int, input().split())\n    teams_damaged = list(map(int, input().split()))\n    teams_reserve = list(map(int, input().split()))\n\n    # Sort the lists\n    teams_damaged.sort()\n    teams_reserve.sort()\n\n    # Check if the team with the reserve is damaged\n    for team in teams_reserve:\n        if team in teams_damaged:\n            teams_damaged.remove(team)\n\n    # Check if the team with the damaged kayak is next to the team with the reserve\n    for team in teams_damaged:\n        if team + 1 in teams_reserve or team - 1 in teams_reserve:\n            teams_damaged.remove(team)\n\n    print(len(teams_damaged))\n\nmain()"
+}
+2022-04-10 00:16:07.537135 REASON stop
+2022-04-10 00:16:07.537253 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'
+2022-04-10 00:16:07.537259 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN, S, R = map(int, input().split())\nD = set(map(int, input().split()))\nB = set(map(int, input().split()))\n\nc = 0\n\nfor i in range(1, N+1):\n    if i in D:\n        if i-1 in B:\n            B.remove(i-1)\n        elif i+1 in B:\n            B.remove(i+1)\n        else:\n            c += 1\nprint(c)"
+}
+2022-04-10 00:16:07.537278 REASON stop
+2022-04-10 00:16:07.537392 test/intro-questions.txt_dir/4968/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4968/solutions.json'

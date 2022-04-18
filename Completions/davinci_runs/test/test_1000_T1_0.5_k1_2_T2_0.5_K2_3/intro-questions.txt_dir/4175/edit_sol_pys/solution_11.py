@@ -1,0 +1,13 @@
+
+N = int(input())
+
+words = []
+for i in range(N):
+    words.append(input())
+
+for i in range(1, N):
+    if words[i] in words[:i] or words[i][0] != words[i-1][-1]: # or を使っているので、ここで一致したら即座に終了する
+        print("No")
+        exit()
+
+print("Yes")

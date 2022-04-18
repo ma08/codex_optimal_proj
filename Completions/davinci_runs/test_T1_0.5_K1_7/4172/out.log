@@ -1,0 +1,137 @@
+2022-04-13 19:00:51.009640 """
+You are given the array $a$ consisting of $n$ elements and the integer $k \le n$.
+
+You want to obtain at least $k$ equal elements in the array $a$. In one move, you can make one of the following two operations:
+
+  Take one of the minimum elements of the array and increase its value by one (more formally, if the minimum value of $a$ is $mn$ then you choose such index $i$ that $a_i = mn$ and set $a_i := a_i + 1$);  take one of the maximum elements of the array and decrease its value by one (more formally, if the maximum value of $a$ is $mx$ then you choose such index $i$ that $a_i = mx$ and set $a_i := a_i - 1$). 
+
+Your task is to calculate the minimum number of moves required to obtain at least $k$ equal elements in the array.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 2 \cdot 10^5$) — the number of elements in $a$ and the required number of equal elements.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the minimum number of moves required to obtain at least $k$ equal elements in the array.
+
+
+-----Examples-----
+Input
+6 5
+1 2 2 4 2 3
+
+Output
+3
+
+Input
+7 5
+3 3 2 1 1 1 3
+
+Output
+4
+"""
+2022-04-13 19:00:51.009650 --------------------------
+2022-04-13 19:01:18.303109 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    a = map(int, sys.stdin.readline().split())\n\n    moves = 0\n    while True:\n        mn = min(a)\n        mx = max(a)\n\n        if mn == mx:\n            if a.count(mn) >= k:\n                break\n            else:\n                moves = -1\n                break\n\n        if a.count(mn) >= k:\n            moves += mx - mn\n            break\n\n        a[a.index(mx)] -= 1\n        a[a.index(mn)] += 1\n        moves += 1\n\n    print(moves)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    moves = 0\n    if k == n:\n        moves = max_a - min_a\n    else:\n        while len(set(a)) > 1:\n            if moves % 2 == 0:\n                for i in range(len(a)):\n                    if a[i] == min_a:\n                        a[i] += 1\n                        moves += 1\n                        break\n            else:\n                for i in range(len(a)):\n                    if a[i] == max_a:\n                        a[i] -= 1\n                        moves += 1\n                        break\n    print(moves)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\n    exit()\n\nif k == 1:\n    print(1)\n    exit()\n\nmin_a_count = a.count(min_a)\nmax_a_count = a.count(max_a)\n\nif min_a_count >= k:\n    print(max_a - min_a)\n    exit()\n\nif max_a_count >= k:\n    print(max_a - min_a)\n    exit()\n\nif min_a_count + max_a_count < k:\n    print(-1)\n    exit()\n\nif min_a_count + max_a_count == k:\n    print(max_a - min_a)\n    exit()\n\nif min_a_count + max_a_count > k:\n    print(max_a - min_a + 1)\n    exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # The number of moves required is the number of elements that are not equal to the minimum value\n    # and the number of elements that are not equal to the maximum value.\n    #\n    # The minimum and maximum values of the array are the same iff the array contains all the same\n    # elements.\n    #\n    # Thus the number of moves required is the number of elements that are not equal to the minimum\n    # value and the number of elements that are not equal to the maximum value.\n    mn = min(a)\n    mx = max(a)\n\n    ans = 0\n    for i in range(n):\n        if a[i] != mn and a[i] != mx:\n            ans += 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    if k <= n//2:\n        print(min_a*k - sum(a[:k]))\n    else:\n        print(sum(a[n-k+1:]) - max_a*k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# n, k = 6, 5\n# a = [1, 2, 2, 4, 2, 3]\n\n# n, k = 7, 5\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 3\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 4\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 6\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 7\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 1\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 2\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# print(n, k)\n# print(a)\n\n# print(set(a))\n# print(len(set(a)))\n\nif len(set(a)) == 1:\n    print(0)\nelif len(set(a)) == n:\n    print(max(a) - min(a))\nelse:\n    # print(n, k)\n    # print(a)\n\n    a.sort()\n    # print(a)\n\n    # print(a[-1] - a[0])\n    # print(a[k-1] - a[0])\n    # print(a[-1] - a[k-1])\n\n    print(min(a[-1] - a[0], a[k-1] - a[0], a[-1] - a[k-1]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\nif k == 1:\n    print(0)\n    exit()\n\nmin_moves = float('inf')\n\nfor i in range(n - k + 1):\n    min_moves = min(min_moves, a[i + k - 1] - a[i])\n\nprint(min_moves)"
+    }
+  ],
+  "created": 1649876451,
+  "id": "cmpl-4wcWRaiSebgeRpooGqv9BYr8h0NwM",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:01:18.303416 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    a = map(int, sys.stdin.readline().split())\n\n    moves = 0\n    while True:\n        mn = min(a)\n        mx = max(a)\n\n        if mn == mx:\n            if a.count(mn) >= k:\n                break\n            else:\n                moves = -1\n                break\n\n        if a.count(mn) >= k:\n            moves += mx - mn\n            break\n\n        a[a.index(mx)] -= 1\n        a[a.index(mn)] += 1\n        moves += 1\n\n    print(moves)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:01:18.303455 REASON stop
+2022-04-13 19:01:18.303915 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    moves = 0\n    if k == n:\n        moves = max_a - min_a\n    else:\n        while len(set(a)) > 1:\n            if moves % 2 == 0:\n                for i in range(len(a)):\n                    if a[i] == min_a:\n                        a[i] += 1\n                        moves += 1\n                        break\n            else:\n                for i in range(len(a)):\n                    if a[i] == max_a:\n                        a[i] -= 1\n                        moves += 1\n                        break\n    print(moves)"
+}
+2022-04-13 19:01:18.304026 REASON stop
+2022-04-13 19:01:18.304395 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\n    exit()\n\nif k == 1:\n    print(1)\n    exit()\n\nmin_a_count = a.count(min_a)\nmax_a_count = a.count(max_a)\n\nif min_a_count >= k:\n    print(max_a - min_a)\n    exit()\n\nif max_a_count >= k:\n    print(max_a - min_a)\n    exit()\n\nif min_a_count + max_a_count < k:\n    print(-1)\n    exit()\n\nif min_a_count + max_a_count == k:\n    print(max_a - min_a)\n    exit()\n\nif min_a_count + max_a_count > k:\n    print(max_a - min_a + 1)\n    exit()"
+}
+2022-04-13 19:01:18.304469 REASON stop
+2022-04-13 19:01:18.330148 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # The number of moves required is the number of elements that are not equal to the minimum value\n    # and the number of elements that are not equal to the maximum value.\n    #\n    # The minimum and maximum values of the array are the same iff the array contains all the same\n    # elements.\n    #\n    # Thus the number of moves required is the number of elements that are not equal to the minimum\n    # value and the number of elements that are not equal to the maximum value.\n    mn = min(a)\n    mx = max(a)\n\n    ans = 0\n    for i in range(n):\n        if a[i] != mn and a[i] != mx:\n            ans += 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 19:01:18.330260 REASON stop
+2022-04-13 19:01:18.344962 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    if k <= n//2:\n        print(min_a*k - sum(a[:k]))\n    else:\n        print(sum(a[n-k+1:]) - max_a*k)"
+}
+2022-04-13 19:01:18.345069 REASON stop
+2022-04-13 19:01:18.345861 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# n, k = 6, 5\n# a = [1, 2, 2, 4, 2, 3]\n\n# n, k = 7, 5\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 3\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 4\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 6\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 7\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 1\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# n, k = 7, 2\n# a = [3, 3, 2, 1, 1, 1, 3]\n\n# print(n, k)\n# print(a)\n\n# print(set(a))\n# print(len(set(a)))\n\nif len(set(a)) == 1:\n    print(0)\nelif len(set(a)) == n:\n    print(max(a) - min(a))\nelse:\n    # print(n, k)\n    # print(a)\n\n    a.sort()\n    # print(a)\n\n    # print(a[-1] - a[0])\n    # print(a[k-1] - a[0])\n    # print(a[-1] - a[k-1])\n\n    print(min(a[-1] - a[0], a[k-1] - a[0], a[-1] - a[k-1]))"
+}
+2022-04-13 19:01:18.345936 REASON stop
+2022-04-13 19:01:18.346524 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort()\n\nif k == 1:\n    print(0)\n    exit()\n\nmin_moves = float('inf')\n\nfor i in range(n - k + 1):\n    min_moves = min(min_moves, a[i + k - 1] - a[i])\n\nprint(min_moves)"
+}
+2022-04-13 19:01:18.346588 REASON stop

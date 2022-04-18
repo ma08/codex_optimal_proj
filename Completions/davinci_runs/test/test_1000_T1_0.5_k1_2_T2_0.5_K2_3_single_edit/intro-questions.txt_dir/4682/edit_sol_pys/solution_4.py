@@ -1,0 +1,29 @@
+'''
+
+import math
+
+a = int(input())
+b = int(input())
+h = int(input())
+
+area = (a + b) * h / 2
+
+'''
+
+def is_prime(n):
+    if n == 1:
+        return False
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
+
+
+def main():
+    n = int(input())
+    print(is_prime(n))
+
+
+if __name__ == '__main__':
+    main()
+print(math.floor(area))

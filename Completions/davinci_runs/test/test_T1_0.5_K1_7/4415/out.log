@@ -1,0 +1,179 @@
+2022-04-13 20:39:03.079180 """
+Two integer sequences existed initially — one of them was strictly increasing, and the other one — strictly decreasing.
+
+Strictly increasing sequence is a sequence of integers $[x_1 < x_2 < \dots < x_k]$. And strictly decreasing sequence is a sequence of integers $[y_1 > y_2 > \dots > y_l]$. Note that the empty sequence and the sequence consisting of one element can be considered as increasing or decreasing.
+
+They were merged into one sequence $a$. After that sequence $a$ got shuffled. For example, some of the possible resulting sequences $a$ for an increasing sequence $[1, 3, 4]$ and a decreasing sequence $[10, 4, 2]$ are sequences $[1, 2, 3, 4, 4, 10]$ or $[4, 2, 1, 10, 4, 3]$.
+
+This shuffled sequence $a$ is given in the input.
+
+Your task is to find any two suitable initial sequences. One of them should be strictly increasing and the other one — strictly decreasing. Note that the empty sequence and the sequence consisting of one element can be considered as increasing or decreasing.
+
+If there is a contradiction in the input and it is impossible to split the given sequence $a$ to increasing and decreasing sequences, print "NO".
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($0 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+If there is a contradiction in the input and it is impossible to split the given sequence $a$ to increasing and decreasing sequences, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and any two suitable sequences. Note that the empty sequence and the sequence consisting of one element can be considered as increasing or decreasing.
+
+In the second line print $n_i$ — the number of elements in the strictly increasing sequence. $n_i$ can be zero, in this case the increasing sequence is empty.
+
+In the third line print $n_i$ integers $inc_1, inc_2, \dots, inc_{n_i}$ in the increasing order of its values ($inc_1 < inc_2 < \dots < inc_{n_i}$) — the strictly increasing sequence itself. You can keep this line empty if $n_i = 0$ (or just print the empty line).
+
+In the fourth line print $n_d$ — the number of elements in the strictly decreasing sequence. $n_d$ can be zero, in this case the decreasing sequence is empty.
+
+In the fifth line print $n_d$ integers $dec_1, dec_2, \dots, dec_{n_d}$ in the decreasing order of its values ($dec_1 > dec_2 > \dots > dec_{n_d}$) — the strictly decreasing sequence itself. You can keep this line empty if $n_d = 0$ (or just print the empty line).
+
+$n_i + n_d$ should be equal to $n$ and the union of printed sequences should be a permutation of the given sequence (in case of "YES" answer).
+
+
+-----Examples-----
+Input
+7
+7 2 7 3 3 1 4
+
+Output
+YES
+2
+3 7 
+5
+7 4 3 2 1 
+
+Input
+5
+4 3 1 5 3
+
+Output
+YES
+1
+3 
+4
+5 4 3 1 
+
+Input
+5
+1 1 2 1 2
+
+Output
+NO
+
+Input
+5
+0 1 2 3 4
+
+Output
+YES
+0
+
+5
+4 3 2 1 0
+"""
+2022-04-13 20:39:03.079206 --------------------------
+2022-04-13 20:39:32.133529 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom typing import List\n\n\ndef is_increasing(x: int, y: int) -> bool:\n    return x < y\n\n\ndef is_decreasing(x: int, y: int) -> bool:\n    return x > y\n\n\ndef is_increasing_sequence(arr: List[int]) -> bool:\n    for i in range(len(arr) - 1):\n        if not is_increasing(arr[i], arr[i + 1]):\n            return False\n    return True\n\n\ndef is_decreasing_sequence(arr: List[int]) -> bool:\n    for i in range(len(arr) - 1):\n        if not is_decreasing(arr[i], arr[i + 1]):\n            return False\n    return True\n\n\ndef is_increasing_or_decreasing_sequence(arr: List[int]) -> bool:\n    return is_increasing_sequence(arr) or is_decreasing_sequence(arr)\n\n\ndef split_sequence(arr: List[int]) -> List[List[int]]:\n    increasing_sequence = []\n    decreasing_sequence = []\n    for i in range(len(arr)):\n        if is_increasing_or_decreasing_sequence(arr[i:]) and is_increasing_or_decreasing_sequence(arr[:i]):\n            increasing_sequence = arr[:i]\n            decreasing_sequence = arr[i:]\n            break\n    return [increasing_sequence, decreasing_sequence]\n\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    sequences = split_sequence(arr)\n    if not is_increasing_or_decreasing_sequence(sequences[0]) or not is_increasing_or_decreasing_sequence(sequences[1]):\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(len(sequences[0]))\n        print(*sequences[0])\n        print(len(sequences[1]))\n        print(*sequences[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\n\ndef main():\n\tn = int(stdin.readline())\n\tarr = list(map(int, stdin.readline().split()))\n\t\n\t# sort the array\n\tarr.sort()\n\t\n\t# create a hash table based on the array\n\tnum_counts = defaultdict(int)\n\tfor num in arr:\n\t\tnum_counts[num] += 1\n\t\n\t# find the median\n\tmedian_num = arr[n // 2]\n\t\n\t# create the increasing and decreasing sequences\n\tincreasing = []\n\tdecreasing = []\n\tfor num, count in num_counts.items():\n\t\tif num < median_num:\n\t\t\tincreasing.extend([num] * count)\n\t\telif num > median_num:\n\t\t\tdecreasing.extend([num] * count)\n\t\n\t# check if the median number is repeated\n\tif num_counts[median_num] > 1:\n\t\t# if the median number is repeated, then we can only use it in the decreasing sequence\n\t\t# if we use it in the increasing sequence, then the increasing sequence would be longer than the decreasing sequence\n\t\tdecreasing.extend([median_num] * num_counts[median_num])\n\telse:\n\t\t# otherwise we can use it in either sequence\n\t\tif len(increasing) <= len(decreasing):\n\t\t\tincreasing.append(median_num)\n\t\telse:\n\t\t\tdecreasing.append(median_num)\n\t\n\t# check if the increasing and decreasing sequences have the same length\n\tif len(increasing) != len(decreasing):\n\t\tprint(\"NO\")\n\t\treturn\n\t\n\t# print the increasing and decreasing sequences\n\tprint(\"YES\")\n\tprint(len(increasing))\n\tprint(\" \".join(map(str, increasing)))\n\tprint(len(decreasing))\n\tprint(\" \".join(map(str, decreasing)))\n\nif __name__ == \"__main__\":\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if len(set(a)) != n:\n        print(\"NO\")\n        return\n\n    inc = [0] * n\n    dec = [0] * n\n    inc_len = 0\n    dec_len = 0\n    i = 0\n    while i < n:\n        if a[i] > a[i - 1]:\n            inc[inc_len] = a[i]\n            inc_len += 1\n        else:\n            dec[dec_len] = a[i]\n            dec_len += 1\n        i += 1\n\n    if inc_len == 0 or dec_len == 0:\n        print(\"NO\")\n        return\n\n    inc = inc[:inc_len]\n    dec = dec[:dec_len]\n\n    print(\"YES\")\n    print(inc_len)\n    print(*inc)\n    print(dec_len)\n    print(*dec)\n\nsolve()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    a = list(map(int, input().split()))\n\n    # check if there is contradiction\n    flag = False\n    for i in range(1, N):\n        if a[i] > a[i-1]:\n            flag = True\n        elif a[i] < a[i-1]:\n            flag = False\n        elif a[i] == a[i-1] and flag:\n            print(\"NO\")\n            return\n\n    # split\n    inc = []\n    dec = []\n    flag = False\n    for i in range(N):\n        if i == 0 or a[i] > a[i-1]:\n            inc.append(a[i])\n            flag = True\n        elif a[i] < a[i-1]:\n            dec.append(a[i])\n            flag = False\n        elif a[i] == a[i-1] and flag:\n            inc.append(a[i])\n        elif a[i] == a[i-1] and not flag:\n            dec.append(a[i])\n    \n    # output\n    print(\"YES\")\n    print(len(inc))\n    print(*inc)\n    print(len(dec))\n    print(*dec[::-1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn = int(input())\n\ta = list(map(int, input().split()))\n\t# print(n, a)\n\n\tinc = []\n\tdec = []\n\t\n\ti = 0\n\twhile i < n:\n\t\tif i == n-1:\n\t\t\tinc.append(a[i])\n\t\t\tbreak\n\t\tif a[i] < a[i+1]:\n\t\t\tinc.append(a[i])\n\t\t\ti += 1\n\t\telse:\n\t\t\tbreak\n\n\twhile i < n:\n\t\tif i == n-1:\n\t\t\tdec.append(a[i])\n\t\t\tbreak\n\t\tif a[i] > a[i+1]:\n\t\t\tdec.append(a[i])\n\t\t\ti += 1\n\t\telse:\n\t\t\tbreak\n\n\tif i == n-1:\n\t\tdec.append(a[i])\n\n\tif i < n-1:\n\t\tprint(\"NO\")\n\t\treturn\n\n\tprint(\"YES\")\n\tprint(len(inc))\n\tprint(*inc)\n\tprint(len(dec))\n\tprint(*dec)\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif len(set(a)) != len(a):\n    print(\"NO\")\n    exit()\n\nb = sorted(a)\nc = sorted(a, reverse=True)\n\nif b[0] < b[-1] and c[0] > c[-1]:\n    print(\"YES\")\n    print(n - a.index(b[-1]))\n    print(*b[:n - a.index(b[-1])])\n    print(n - a.index(c[0]))\n    print(*c[:n - a.index(c[0])])\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(n, a):\n    inc = []\n    dec = []\n    for i in range(n):\n        if i == 0 or a[i] > a[i-1]:\n            inc.append(a[i])\n        else:\n            dec.append(a[i])\n    if len(inc) + len(dec) != n:\n        return \"NO\"\n    return \"YES\\n{}\\n{}\\n{}\\n{}\".format(len(inc), \" \".join(map(str, inc)), len(dec), \" \".join(map(str, dec)))\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    print(solve(n, a))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649882343,
+  "id": "cmpl-4we3TNCrNPK50pXrdNWzC9TFOA3Xk",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:39:32.133920 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom typing import List\n\n\ndef is_increasing(x: int, y: int) -> bool:\n    return x < y\n\n\ndef is_decreasing(x: int, y: int) -> bool:\n    return x > y\n\n\ndef is_increasing_sequence(arr: List[int]) -> bool:\n    for i in range(len(arr) - 1):\n        if not is_increasing(arr[i], arr[i + 1]):\n            return False\n    return True\n\n\ndef is_decreasing_sequence(arr: List[int]) -> bool:\n    for i in range(len(arr) - 1):\n        if not is_decreasing(arr[i], arr[i + 1]):\n            return False\n    return True\n\n\ndef is_increasing_or_decreasing_sequence(arr: List[int]) -> bool:\n    return is_increasing_sequence(arr) or is_decreasing_sequence(arr)\n\n\ndef split_sequence(arr: List[int]) -> List[List[int]]:\n    increasing_sequence = []\n    decreasing_sequence = []\n    for i in range(len(arr)):\n        if is_increasing_or_decreasing_sequence(arr[i:]) and is_increasing_or_decreasing_sequence(arr[:i]):\n            increasing_sequence = arr[:i]\n            decreasing_sequence = arr[i:]\n            break\n    return [increasing_sequence, decreasing_sequence]\n\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    sequences = split_sequence(arr)\n    if not is_increasing_or_decreasing_sequence(sequences[0]) or not is_increasing_or_decreasing_sequence(sequences[1]):\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        print(len(sequences[0]))\n        print(*sequences[0])\n        print(len(sequences[1]))\n        print(*sequences[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:39:32.133973 REASON stop
+2022-04-13 20:39:32.134371 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\nfrom sys import stdin\n\ndef main():\n\tn = int(stdin.readline())\n\tarr = list(map(int, stdin.readline().split()))\n\t\n\t# sort the array\n\tarr.sort()\n\t\n\t# create a hash table based on the array\n\tnum_counts = defaultdict(int)\n\tfor num in arr:\n\t\tnum_counts[num] += 1\n\t\n\t# find the median\n\tmedian_num = arr[n // 2]\n\t\n\t# create the increasing and decreasing sequences\n\tincreasing = []\n\tdecreasing = []\n\tfor num, count in num_counts.items():\n\t\tif num < median_num:\n\t\t\tincreasing.extend([num] * count)\n\t\telif num > median_num:\n\t\t\tdecreasing.extend([num] * count)\n\t\n\t# check if the median number is repeated\n\tif num_counts[median_num] > 1:\n\t\t# if the median number is repeated, then we can only use it in the decreasing sequence\n\t\t# if we use it in the increasing sequence, then the increasing sequence would be longer than the decreasing sequence\n\t\tdecreasing.extend([median_num] * num_counts[median_num])\n\telse:\n\t\t# otherwise we can use it in either sequence\n\t\tif len(increasing) <= len(decreasing):\n\t\t\tincreasing.append(median_num)\n\t\telse:\n\t\t\tdecreasing.append(median_num)\n\t\n\t# check if the increasing and decreasing sequences have the same length\n\tif len(increasing) != len(decreasing):\n\t\tprint(\"NO\")\n\t\treturn\n\t\n\t# print the increasing and decreasing sequences\n\tprint(\"YES\")\n\tprint(len(increasing))\n\tprint(\" \".join(map(str, increasing)))\n\tprint(len(decreasing))\n\tprint(\" \".join(map(str, decreasing)))\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-13 20:39:32.134484 REASON stop
+2022-04-13 20:39:32.134828 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    if len(set(a)) != n:\n        print(\"NO\")\n        return\n\n    inc = [0] * n\n    dec = [0] * n\n    inc_len = 0\n    dec_len = 0\n    i = 0\n    while i < n:\n        if a[i] > a[i - 1]:\n            inc[inc_len] = a[i]\n            inc_len += 1\n        else:\n            dec[dec_len] = a[i]\n            dec_len += 1\n        i += 1\n\n    if inc_len == 0 or dec_len == 0:\n        print(\"NO\")\n        return\n\n    inc = inc[:inc_len]\n    dec = dec[:dec_len]\n\n    print(\"YES\")\n    print(inc_len)\n    print(*inc)\n    print(dec_len)\n    print(*dec)\n\nsolve()"
+}
+2022-04-13 20:39:32.134871 REASON stop
+2022-04-13 20:39:32.154824 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    a = list(map(int, input().split()))\n\n    # check if there is contradiction\n    flag = False\n    for i in range(1, N):\n        if a[i] > a[i-1]:\n            flag = True\n        elif a[i] < a[i-1]:\n            flag = False\n        elif a[i] == a[i-1] and flag:\n            print(\"NO\")\n            return\n\n    # split\n    inc = []\n    dec = []\n    flag = False\n    for i in range(N):\n        if i == 0 or a[i] > a[i-1]:\n            inc.append(a[i])\n            flag = True\n        elif a[i] < a[i-1]:\n            dec.append(a[i])\n            flag = False\n        elif a[i] == a[i-1] and flag:\n            inc.append(a[i])\n        elif a[i] == a[i-1] and not flag:\n            dec.append(a[i])\n    \n    # output\n    print(\"YES\")\n    print(len(inc))\n    print(*inc)\n    print(len(dec))\n    print(*dec[::-1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:39:32.154919 REASON stop
+2022-04-13 20:39:32.189729 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn = int(input())\n\ta = list(map(int, input().split()))\n\t# print(n, a)\n\n\tinc = []\n\tdec = []\n\t\n\ti = 0\n\twhile i < n:\n\t\tif i == n-1:\n\t\t\tinc.append(a[i])\n\t\t\tbreak\n\t\tif a[i] < a[i+1]:\n\t\t\tinc.append(a[i])\n\t\t\ti += 1\n\t\telse:\n\t\t\tbreak\n\n\twhile i < n:\n\t\tif i == n-1:\n\t\t\tdec.append(a[i])\n\t\t\tbreak\n\t\tif a[i] > a[i+1]:\n\t\t\tdec.append(a[i])\n\t\t\ti += 1\n\t\telse:\n\t\t\tbreak\n\n\tif i == n-1:\n\t\tdec.append(a[i])\n\n\tif i < n-1:\n\t\tprint(\"NO\")\n\t\treturn\n\n\tprint(\"YES\")\n\tprint(len(inc))\n\tprint(*inc)\n\tprint(len(dec))\n\tprint(*dec)\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 20:39:32.189837 REASON stop
+2022-04-13 20:39:32.190622 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif len(set(a)) != len(a):\n    print(\"NO\")\n    exit()\n\nb = sorted(a)\nc = sorted(a, reverse=True)\n\nif b[0] < b[-1] and c[0] > c[-1]:\n    print(\"YES\")\n    print(n - a.index(b[-1]))\n    print(*b[:n - a.index(b[-1])])\n    print(n - a.index(c[0]))\n    print(*c[:n - a.index(c[0])])\nelse:\n    print(\"NO\")"
+}
+2022-04-13 20:39:32.190695 REASON stop
+2022-04-13 20:39:32.191433 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(n, a):\n    inc = []\n    dec = []\n    for i in range(n):\n        if i == 0 or a[i] > a[i-1]:\n            inc.append(a[i])\n        else:\n            dec.append(a[i])\n    if len(inc) + len(dec) != n:\n        return \"NO\"\n    return \"YES\\n{}\\n{}\\n{}\\n{}\".format(len(inc), \" \".join(map(str, inc)), len(dec), \" \".join(map(str, dec)))\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    print(solve(n, a))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:39:32.191487 REASON stop

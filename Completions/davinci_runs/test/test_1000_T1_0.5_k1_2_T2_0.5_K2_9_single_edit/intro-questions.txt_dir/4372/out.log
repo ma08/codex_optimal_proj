@@ -1,0 +1,96 @@
+2022-04-09 19:52:00.472703 """
+There were $n$ types of swords in the theater basement which had been used during the plays. Moreover there were exactly $x$ swords of each type. $y$ people have broken into the theater basement and each of them has taken exactly $z$ swords of some single type. Note that different people might have taken different types of swords. Note that the values $x, y$ and $z$ are unknown for you.
+
+The next morning the director of the theater discovers the loss. He counts all swords — exactly $a_i$ swords of the $i$-th type are left untouched.
+
+The director has no clue about the initial number of swords of each type in the basement, the number of people who have broken into the basement and how many swords each of them have taken.
+
+For example, if $n=3$, $a = [3, 12, 6]$ then one of the possible situations is $x=12$, $y=5$ and $z=3$. Then the first three people took swords of the first type and the other two people took swords of the third type. Note that you don't know values $x, y$ and $z$ beforehand but know values of $n$ and $a$.
+
+Thus he seeks for your help. Determine the minimum number of people $y$, which could have broken into the theater basement, and the number of swords $z$ each of them has taken.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ $(2 \le n \le 2 \cdot 10^{5})$ — the number of types of swords.
+
+The second line of the input contains the sequence $a_1, a_2, \dots, a_n$ $(0 \le a_i \le 10^{9})$, where $a_i$ equals to the number of swords of the $i$-th type, which have remained in the basement after the theft. It is guaranteed that there exists at least one such pair of indices $(j, k)$ that $a_j \neq a_k$.
+
+
+-----Output-----
+
+Print two integers $y$ and $z$ — the minimum number of people which could have broken into the basement and the number of swords each of them has taken.
+
+
+-----Examples-----
+Input
+3
+3 12 6
+
+Output
+5 3
+
+Input
+2
+2 9
+
+Output
+1 7
+
+Input
+7
+2 1000000000 4 6 8 4 2
+
+Output
+2999999987 2
+
+Input
+6
+13 52 0 13 26 52
+
+Output
+12 13
+
+
+
+-----Note-----
+
+In the first example the minimum value of $y$ equals to $5$, i.e. the minimum number of people who could have broken into the basement, is $5$. Each of them has taken $3$ swords: three of them have taken $3$ swords of the first type, and two others have taken $3$ swords of the third type.
+
+In the second example the minimum value of $y$ is $1$, i.e. the minimum number of people who could have broken into the basement, equals to $1$. He has taken $7$ swords of the first type.
+"""
+2022-04-09 19:52:00.472749 --------------------------
+2022-04-09 19:53:42.474109 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n\n    if n == 1:\n        print(1, a[0])\n        return\n\n    a.sort()\n\n    i = 0\n    while i < n and a[i] == 0:\n        i += 1\n\n    if i == n:\n        print(1, a[-1])\n        return\n\n    if i == n - 1:\n        print(1, a[i])\n        return\n\n    z = a[i]\n    y = 1\n    while i < n and a[i] == z:\n        i += 1\n\n    for j in range(i, n):\n        if a[j] % z != 0:\n            print(1, a[j])\n            return\n\n        y = max(y, a[j] // z)\n\n    print(y, z)\n\n\nmain()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 2:\n    print(1, a[1] - a[0])\n    sys.exit(0)\n\nmin_a = min(a)\nmax_a = max(a)\n\n# print(min_a, max_a)\n\n# a[i] = a[j] + a[k]\n# a[i] - a[j] = a[k]\n\n# a[j] = a[k] + a[i]\n# a[j] - a[k] = a[i]\n\n# a[k] = a[j] + a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] = a[j] + a[k]\n# a[j] = a[k] + a[i]\n# a[k] = a[j] + a[i]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a"
+    }
+  ],
+  "created": 1649548320,
+  "id": "cmpl-4vFA0io7GZSptJ06J9LJbBZr2Wa4P",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 19:53:42.474389 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(i) for i in input().split()]\n\n    if n == 1:\n        print(1, a[0])\n        return\n\n    a.sort()\n\n    i = 0\n    while i < n and a[i] == 0:\n        i += 1\n\n    if i == n:\n        print(1, a[-1])\n        return\n\n    if i == n - 1:\n        print(1, a[i])\n        return\n\n    z = a[i]\n    y = 1\n    while i < n and a[i] == z:\n        i += 1\n\n    for j in range(i, n):\n        if a[j] % z != 0:\n            print(1, a[j])\n            return\n\n        y = max(y, a[j] // z)\n\n    print(y, z)\n\n\nmain()"
+}
+2022-04-09 19:53:42.474459 REASON stop
+2022-04-09 19:53:42.475593 1 {
+  "finish_reason": "length",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 2:\n    print(1, a[1] - a[0])\n    sys.exit(0)\n\nmin_a = min(a)\nmax_a = max(a)\n\n# print(min_a, max_a)\n\n# a[i] = a[j] + a[k]\n# a[i] - a[j] = a[k]\n\n# a[j] = a[k] + a[i]\n# a[j] - a[k] = a[i]\n\n# a[k] = a[j] + a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] = a[j] + a[k]\n# a[j] = a[k] + a[i]\n# a[k] = a[j] + a[i]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a[k] = a[j]\n# a[i] + a[j] = a[k]\n\n# a[j] + a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] + a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[j] = a[k]\n# a[j] - a[k] = a[i]\n# a[k] - a[j] = a[i]\n\n# a[i] + a[k] = a[j]\n# a[j] + a[i] = a[k]\n# a[k] + a[j] = a[i]\n\n# a[i] + a[j] = a[k]\n# a[j] + a[k] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] - a[k] = a[j]\n# a[j] - a[i] = a[k]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] + a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] + a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] + a[i] = a[j]\n\n# a[i] + a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] + a[k] = a[i]\n# a[j] - a[i] = a[k]\n\n# a[k] + a[i] = a[j]\n# a[k] - a[j] = a[i]\n\n# a[i] - a[j] = a[k]\n# a[i] - a[k] = a[j]\n\n# a[j] - a[i] = a[k]\n# a[j] - a[k] = a[i]\n\n# a[k] - a[j] = a[i]\n# a[k] - a[i] = a[j]\n\n# a[i] + a"
+}
+2022-04-09 19:53:42.475725 REASON length

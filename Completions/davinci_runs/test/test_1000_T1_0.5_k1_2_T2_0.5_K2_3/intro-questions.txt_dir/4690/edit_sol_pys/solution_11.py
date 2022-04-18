@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+import sys
+
+def area_of_rect(a,b,c,d):
+    return max(a*b, c*d)
+
+def main():
+    a,b,c,d = map(int, sys.stdin.readline().split()) # split the input line
+    print(area_of_rect(a,b,c,d))
+
+if __name__ == '__main__':
+    main()

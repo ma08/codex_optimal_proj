@@ -1,0 +1,12 @@
+
+
+# 紅白色
+
+n, a, b = map(int, input().split())
+
+if n % 3 == 0:
+    print(n // 3 * 2)
+elif n % 3 == 1:
+    print((n - 4) // 3 * 2 + 1)
+else:
+    print((n - 2) // 3 * 2 + 1)

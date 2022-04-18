@@ -1,0 +1,152 @@
+2022-04-13 19:18:11.860220 """
+You are given an array $a$, consisting of $n$ positive integers.
+
+Let's call a concatenation of numbers $x$ and $y$ the number that is obtained by writing down numbers $x$ and $y$ one right after another without changing the order. For example, a concatenation of numbers $12$ and $3456$ is a number $123456$.
+
+Count the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5$, $2 \le k \le 10^9$).
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$).
+
+
+-----Output-----
+
+Print a single integer — the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Examples-----
+Input
+6 11
+45 1 10 12 11 7
+
+Output
+7
+
+Input
+4 2
+2 78 4 10
+
+Output
+12
+
+Input
+5 2
+3 7 19 3 3
+
+Output
+0
+
+
+
+-----Note-----
+
+In the first example pairs $(1, 2)$, $(1, 3)$, $(2, 3)$, $(3, 1)$, $(3, 4)$, $(4, 2)$, $(4, 3)$ suffice. They produce numbers $451$, $4510$, $110$, $1045$, $1012$, $121$, $1210$, respectively, each of them is divisible by $11$.
+
+In the second example all $n(n - 1)$ pairs suffice.
+
+In the third example no pair is sufficient.
+"""
+2022-04-13 19:18:11.860230 --------------------------
+2022-04-13 19:18:28.139372 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nl = list(map(int, input().split()))\n\ndef is_divisible(x, y, k):\n    for i in range(len(str(x))):\n        for j in range(len(str(y))):\n            if (int(str(x)[i:]) + int(str(y)[:j])) % k == 0:\n                return True\n    return False\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(l[i], l[j], k):\n            count += 1\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, k, a):\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                x = str(a[i]) + str(a[j])\n                if int(x) % k == 0:\n                    ans += 1\n    return ans\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(solve(n, k, a))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nans = 0\nfor i in range(n):\n    for j in range(n):\n        if i == j:\n            continue\n        if (a[i] * (10 ** len(str(a[j]))) + a[j]) % k == 0:\n            ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = map(int, input().split())\n    a = list(a)\n\n    count = 0\n\n    for i in range(n):\n        for j in range(i+1, n):\n            if int(str(a[i])+str(a[j])) % k == 0:\n                count += 1\n\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, k, a):\n    d = [0] * (k + 1)\n    for i in range(n):\n        d[a[i] % k] += 1\n    ans = 0\n    for i in range(k + 1):\n        ans += d[i] * (d[i] - 1) // 2\n    for i in range(k + 1):\n        if d[i] > 0:\n            ans += d[i] * d[(k - i) % k]\n    return ans\n\n\nif __name__ == '__main__':\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(solve(n, k, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# generate the list of all pairs\npairs = []\nfor i in range(n):\n    for j in range(i+1, n):\n        pairs.append((a[i], a[j]))\n\n# count the number of pairs that produce a number divisible by k\ncount = 0\nfor pair in pairs:\n    x = int(str(pair[0]) + str(pair[1]))\n    if x % k == 0:\n        count += 1\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a_n = []\n    for i in range(n):\n        a_n.append(a[i] % k)\n    a_n.sort()\n    # print(a_n)\n    cnt = 0\n    for i in range(1, n):\n        if a_n[i] == 0:\n            cnt += i\n        else:\n            cnt += (i - bisect.bisect_left(a_n, k - a_n[i]))\n    print(cnt)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649877492,
+  "id": "cmpl-4wcnEvjra8gFntc0ZaJJGdJPxPZL7",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 19:18:28.139649 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nl = list(map(int, input().split()))\n\ndef is_divisible(x, y, k):\n    for i in range(len(str(x))):\n        for j in range(len(str(y))):\n            if (int(str(x)[i:]) + int(str(y)[:j])) % k == 0:\n                return True\n    return False\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(l[i], l[j], k):\n            count += 1\nprint(count)"
+}
+2022-04-13 19:18:28.139685 REASON stop
+2022-04-13 19:18:28.140086 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, k, a):\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                x = str(a[i]) + str(a[j])\n                if int(x) % k == 0:\n                    ans += 1\n    return ans\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(solve(n, k, a))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:18:28.140215 REASON stop
+2022-04-13 19:18:28.140549 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nans = 0\nfor i in range(n):\n    for j in range(n):\n        if i == j:\n            continue\n        if (a[i] * (10 ** len(str(a[j]))) + a[j]) % k == 0:\n            ans += 1\n\nprint(ans)"
+}
+2022-04-13 19:18:28.140597 REASON stop
+2022-04-13 19:18:28.161881 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = map(int, input().split())\n    a = list(a)\n\n    count = 0\n\n    for i in range(n):\n        for j in range(i+1, n):\n            if int(str(a[i])+str(a[j])) % k == 0:\n                count += 1\n\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:18:28.161980 REASON stop
+2022-04-13 19:18:28.177075 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, k, a):\n    d = [0] * (k + 1)\n    for i in range(n):\n        d[a[i] % k] += 1\n    ans = 0\n    for i in range(k + 1):\n        ans += d[i] * (d[i] - 1) // 2\n    for i in range(k + 1):\n        if d[i] > 0:\n            ans += d[i] * d[(k - i) % k]\n    return ans\n\n\nif __name__ == '__main__':\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(solve(n, k, a))"
+}
+2022-04-13 19:18:28.177187 REASON stop
+2022-04-13 19:18:28.178140 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# generate the list of all pairs\npairs = []\nfor i in range(n):\n    for j in range(i+1, n):\n        pairs.append((a[i], a[j]))\n\n# count the number of pairs that produce a number divisible by k\ncount = 0\nfor pair in pairs:\n    x = int(str(pair[0]) + str(pair[1]))\n    if x % k == 0:\n        count += 1\nprint(count)"
+}
+2022-04-13 19:18:28.178241 REASON stop
+2022-04-13 19:18:28.179006 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a_n = []\n    for i in range(n):\n        a_n.append(a[i] % k)\n    a_n.sort()\n    # print(a_n)\n    cnt = 0\n    for i in range(1, n):\n        if a_n[i] == 0:\n            cnt += i\n        else:\n            cnt += (i - bisect.bisect_left(a_n, k - a_n[i]))\n    print(cnt)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 19:18:28.179114 REASON stop

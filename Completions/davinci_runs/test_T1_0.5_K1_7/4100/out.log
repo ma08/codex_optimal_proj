@@ -1,0 +1,150 @@
+2022-04-13 18:15:37.567134 """
+Takahashi has decided to hold fastest-finger-fast quiz games. Kizahashi, who is in charge of making the scoreboard, is struggling to write the program that manages the players' scores in a game, which proceeds as follows.
+A game is played by N players, numbered 1 to N. At the beginning of a game, each player has K points.
+When a player correctly answers a question, each of the other N-1 players receives minus one (-1) point. There is no other factor that affects the players' scores.
+At the end of a game, the players with 0 points or lower are eliminated, and the remaining players survive.
+In the last game, the players gave a total of Q correct answers, the i-th of which was given by Player A_i.
+For Kizahashi, write a program that determines whether each of the N players survived this game.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 10^5
+ - 1 \leq K \leq 10^9
+ - 1 \leq Q \leq 10^5
+ - 1 \leq A_i \leq N\ (1 \leq i \leq Q)
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N K Q
+A_1
+A_2
+.
+.
+.
+A_Q
+
+-----Output-----
+Print N lines. The i-th line should contain Yes if Player i survived the game, and No otherwise.
+
+-----Sample Input-----
+6 3 4
+3
+1
+3
+2
+
+-----Sample Output-----
+No
+No
+Yes
+No
+No
+No
+
+In the beginning, the players' scores are (3, 3, 3, 3, 3, 3).
+ - Player 3 correctly answers a question. The players' scores are now (2, 2, 3, 2, 2, 2).
+ - Player 1 correctly answers a question. The players' scores are now (2, 1, 2, 1, 1, 1).
+ - Player 3 correctly answers a question. The players' scores are now (1, 0, 2, 0, 0, 0).
+ - Player 2 correctly answers a question. The players' scores are now (0, 0, 1, -1, -1, -1).
+Players 1, 2, 4, 5 and 6, who have 0 points or lower, are eliminated, and Player 3 survives this game.
+"""
+2022-04-13 18:15:37.567141 --------------------------
+2022-04-13 18:16:03.665508 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ninput = sys.stdin.readlines()\nN, K, Q = map(int, input[0].split())\nA = map(int, input[1:])\n\nscore = [K for i in range(N)]\nfor a in A:\n    for i in range(N):\n        if i != a-1:\n            score[i] -= 1\n\nfor s in score:\n    if s <= 0:\n        print('No')\n    else:\n        print('Yes')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# \u63d0\u51fa\u6642\u306f\u4e0b\u8a18\u306e\u30b3\u30e1\u30f3\u30c8\u30a2\u30a6\u30c8\u3092\u5916\u3059\n# N, K, Q = map(int, input().split())\n# A = [int(input()) for i in range(Q)]\n\n# \u3053\u3053\u304b\u3089\u6a19\u6e96\u5165\u529b\u3092\u53d7\u3051\u53d6\u3063\u305f\u3068\u304d\u306e\u30c6\u30b9\u30c8\u30b3\u30fc\u30c9\nimport sys\nimport io\n\nsys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')\ninput_str = \"\"\"6 3 4\n3\n1\n3\n2\n\"\"\"\ninput_lines = input_str.strip().split(\"\\n\")\nN, K, Q = map(int, input_lines[0].split())\nA = [int(input_lines[i + 1]) for i in range(Q)]\n# \u3053\u3053\u307e\u3067\u6a19\u6e96\u5165\u529b\u3092\u53d7\u3051\u53d6\u3063\u305f\u3068\u304d\u306e\u30c6\u30b9\u30c8\u30b3\u30fc\u30c9\n\nscore = [K] * N\nfor i in range(Q):\n    score[A[i] - 1] -= 1\n    for j in range(N):\n        if j != A[i] - 1:\n            score[j] -= 1\n\nfor i in range(N):\n    if score[i] > 0:\n        print(\"Yes\")\n    else:\n        print(\"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\nP = [K] * N\n\nfor a in A:\n    P[a-1] += 1\n\nfor p in P:\n    if p <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\n\nfor i in range(1, N+1):\n    if K - (Q - A.count(i)) <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\n\nplayers = [K - Q] * N\nfor a in A:\n    players[a-1] += 1\n\nfor player in players:\n    if player > 0:\n        print('Yes')\n    else:\n        print('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k, q = map(int, input().split())\na = [int(input()) for _ in range(q)]\n\nplayer = [k] * n\nfor a_i in a:\n    player[a_i - 1] += 1\n    for i in range(n):\n        if i != a_i - 1:\n            player[i] -= 1\nfor i in range(n):\n    if player[i] <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k, q = map(int, input().split())\na = [0] * q\nfor i in range(q):\n    a[i] = int(input())\n\nscore = [k] * n\nfor i in range(q):\n    for j in range(n):\n        if j != a[i] - 1:\n            score[j] -= 1\n\nfor i in range(n):\n    if score[i] > 0:\n        print(\"Yes\")\n    else:\n        print(\"No\")"
+    }
+  ],
+  "created": 1649873737,
+  "id": "cmpl-4wbof4s4WnDC2oKafIkt5ys7gIFgL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:16:03.665786 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ninput = sys.stdin.readlines()\nN, K, Q = map(int, input[0].split())\nA = map(int, input[1:])\n\nscore = [K for i in range(N)]\nfor a in A:\n    for i in range(N):\n        if i != a-1:\n            score[i] -= 1\n\nfor s in score:\n    if s <= 0:\n        print('No')\n    else:\n        print('Yes')"
+}
+2022-04-13 18:16:03.665825 REASON stop
+2022-04-13 18:16:03.682105 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# \u63d0\u51fa\u6642\u306f\u4e0b\u8a18\u306e\u30b3\u30e1\u30f3\u30c8\u30a2\u30a6\u30c8\u3092\u5916\u3059\n# N, K, Q = map(int, input().split())\n# A = [int(input()) for i in range(Q)]\n\n# \u3053\u3053\u304b\u3089\u6a19\u6e96\u5165\u529b\u3092\u53d7\u3051\u53d6\u3063\u305f\u3068\u304d\u306e\u30c6\u30b9\u30c8\u30b3\u30fc\u30c9\nimport sys\nimport io\n\nsys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')\ninput_str = \"\"\"6 3 4\n3\n1\n3\n2\n\"\"\"\ninput_lines = input_str.strip().split(\"\\n\")\nN, K, Q = map(int, input_lines[0].split())\nA = [int(input_lines[i + 1]) for i in range(Q)]\n# \u3053\u3053\u307e\u3067\u6a19\u6e96\u5165\u529b\u3092\u53d7\u3051\u53d6\u3063\u305f\u3068\u304d\u306e\u30c6\u30b9\u30c8\u30b3\u30fc\u30c9\n\nscore = [K] * N\nfor i in range(Q):\n    score[A[i] - 1] -= 1\n    for j in range(N):\n        if j != A[i] - 1:\n            score[j] -= 1\n\nfor i in range(N):\n    if score[i] > 0:\n        print(\"Yes\")\n    else:\n        print(\"No\")"
+}
+2022-04-13 18:16:03.682281 REASON stop
+2022-04-13 18:16:03.771484 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\nP = [K] * N\n\nfor a in A:\n    P[a-1] += 1\n\nfor p in P:\n    if p <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+}
+2022-04-13 18:16:03.771592 REASON stop
+2022-04-13 18:16:03.850403 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\n\nfor i in range(1, N+1):\n    if K - (Q - A.count(i)) <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+}
+2022-04-13 18:16:03.850509 REASON stop
+2022-04-13 18:16:03.933706 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN, K, Q = map(int, input().split())\nA = [int(input()) for _ in range(Q)]\n\nplayers = [K - Q] * N\nfor a in A:\n    players[a-1] += 1\n\nfor player in players:\n    if player > 0:\n        print('Yes')\n    else:\n        print('No')"
+}
+2022-04-13 18:16:03.933841 REASON stop
+2022-04-13 18:16:03.994728 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k, q = map(int, input().split())\na = [int(input()) for _ in range(q)]\n\nplayer = [k] * n\nfor a_i in a:\n    player[a_i - 1] += 1\n    for i in range(n):\n        if i != a_i - 1:\n            player[i] -= 1\nfor i in range(n):\n    if player[i] <= 0:\n        print(\"No\")\n    else:\n        print(\"Yes\")"
+}
+2022-04-13 18:16:03.994897 REASON stop
+2022-04-13 18:16:04.122291 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k, q = map(int, input().split())\na = [0] * q\nfor i in range(q):\n    a[i] = int(input())\n\nscore = [k] * n\nfor i in range(q):\n    for j in range(n):\n        if j != a[i] - 1:\n            score[j] -= 1\n\nfor i in range(n):\n    if score[i] > 0:\n        print(\"Yes\")\n    else:\n        print(\"No\")"
+}
+2022-04-13 18:16:04.122418 REASON stop

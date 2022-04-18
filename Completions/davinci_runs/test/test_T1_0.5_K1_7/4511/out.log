@@ -1,0 +1,166 @@
+2022-04-13 21:23:01.818951 """
+You are playing a computer card game called Splay the Sire. Currently you are struggling to defeat the final boss of the game.
+
+The boss battle consists of $n$ turns. During each turn, you will get several cards. Each card has two parameters: its cost $c_i$ and damage $d_i$. You may play some of your cards during each turn in some sequence (you choose the cards and the exact order they are played), as long as the total cost of the cards you play during the turn does not exceed $3$. After playing some (possibly zero) cards, you end your turn, and all cards you didn't play are discarded. Note that you can use each card at most once.
+
+Your character has also found an artifact that boosts the damage of some of your actions: every $10$-th card you play deals double damage.
+
+What is the maximum possible damage you can deal during $n$ turns?
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of turns.
+
+Then $n$ blocks of input follow, the $i$-th block representing the cards you get during the $i$-th turn.
+
+Each block begins with a line containing one integer $k_i$ ($1 \le k_i \le 2 \cdot 10^5$) — the number of cards you get during $i$-th turn. Then $k_i$ lines follow, each containing two integers $c_j$ and $d_j$ ($1 \le c_j \le 3$, $1 \le d_j \le 10^9$) — the parameters of the corresponding card.
+
+It is guaranteed that $\sum \limits_{i = 1}^{n} k_i \le 2 \cdot 10^5$.
+
+
+-----Output-----
+
+Print one integer — the maximum damage you may deal.
+
+
+-----Example-----
+Input
+5
+3
+1 6
+1 7
+1 5
+2
+1 4
+1 3
+3
+1 10
+3 5
+2 3
+3
+1 15
+2 4
+1 10
+1
+1 100
+
+Output
+263
+
+
+
+-----Note-----
+
+In the example test the best course of action is as follows:
+
+During the first turn, play all three cards in any order and deal $18$ damage.
+
+During the second turn, play both cards and deal $7$ damage.
+
+During the third turn, play the first and the third card and deal $13$ damage.
+
+During the fourth turn, play the first and the third card and deal $25$ damage.
+
+During the fifth turn, play the only card, which will deal double damage ($200$).
+"""
+2022-04-13 21:23:01.818967 --------------------------
+2022-04-13 21:23:35.100782 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    max_damage = 0\n    for _ in range(n):\n        k = int(input())\n        cards = []\n        for _ in range(k):\n            cards.append(list(map(int, input().split())))\n        cards.sort(key=lambda x: x[1], reverse=True)\n        damage = 0\n        for i in range(len(cards)):\n            if i % 10 == 0:\n                damage += 2 * cards[i][1]\n            else:\n                damage += cards[i][1]\n        max_damage += damage\n    print(max_damage)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = int(input())\n    total_damage = 0\n    for i in range(n):\n        k = int(input())\n        cards = []\n        for j in range(k):\n            cards.append(tuple(map(int, input().split())))\n        cards.sort(key=lambda x: x[1], reverse=True)\n\n        damage = 0\n        total_cost = 0\n        for card in cards:\n            if total_cost + card[0] <= 3:\n                total_cost += card[0]\n                damage += card[1]\n                if (i*k + j + 1) % 10 == 0:\n                    damage += card[1]\n        total_damage += damage\n    print(total_damage)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    cards = []\n    for i in range(n):\n        k = int(input())\n        cards.append([])\n        for j in range(k):\n            cards[i].append(list(map(int, sys.stdin.readline().split())))\n\n    dp = [[0, 0, 0] for i in range(n)]\n    dp[0][0] = cards[0][0][1]\n    dp[0][1] = cards[0][1][1]\n    dp[0][2] = cards[0][2][1]\n    for i in range(1, n):\n        dp[i][0] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][0][1] * (1 + (i % 10 == 0))\n        dp[i][1] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][1][1] * (1 + (i % 10 == 0))\n        dp[i][2] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][2][1] * (1 + (i % 10 == 0))\n        if len(cards[i]) == 4:\n            dp[i][0] = max(dp[i][0], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n            dp[i][1] = max(dp[i][1], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n            dp[i][2] = max(dp[i][2], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n    \n    print(max(dp[n-1][0], dp[n-1][1], dp[n-1][2]))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef splay_the_sire():\n    turns = int(input())\n    total_damage = 0\n    for _ in range(turns):\n        cards = int(input())\n        turn_damage = 0\n        for _ in range(cards):\n            cost, damage = map(int, input().split())\n            if cost <= 3 and turn_damage + damage <= 30:\n                turn_damage += damage\n        total_damage += turn_damage\n    return total_damage\n\n\nif __name__ == \"__main__\":\n    print(splay_the_sire())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    cost_damage = []\n    for _ in range(n):\n        k = int(input())\n        cost_damage.append(list(map(int, input().split())) for _ in range(k))\n    print(solution(cost_damage))\n\ndef solution(cost_damage):\n    damage = 0\n    for turn in cost_damage:\n        turn.sort(key=lambda x: x[0])\n        for i, card in enumerate(turn):\n            if i % 10 == 0:\n                damage += 2 * card[1]\n            else:\n                damage += card[1]\n    return damage\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef splay_the_sire(turns):\n    damage = 0\n    for i in range(turns):\n        cards = int(input())\n        costs = []\n        damages = []\n        for j in range(cards):\n            c, d = [int(x) for x in input().split()]\n            costs.append(c)\n            damages.append(d)\n        costs = sorted(costs)\n        damages = sorted(damages)\n        while costs:\n            if len(costs) >= 10:\n                damage += max(damages[-10:])\n                damages = damages[:-10]\n                costs = costs[:-10]\n            else:\n                damage += max(damages)\n                damages = damages[:-1]\n                costs = costs[:-1]\n    return damage\n\n\nif __name__ == \"__main__\":\n    turns = int(input())\n    print(splay_the_sire(turns))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(turns):\n    \"\"\"\n    turns is a list of tuples (cost, damage)\n    \"\"\"\n    # TODO: solve the problem\n    return 0\n\n\ndef main():\n    n = int(input())\n    turns = []\n    for i in range(n):\n        k = int(input())\n        turn = []\n        for j in range(k):\n            c, d = map(int, input().split())\n            turn.append((c, d))\n        turns.append(turn)\n    print(solve(turns))\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649884981,
+  "id": "cmpl-4wek1d2RBozQ57Xan095nvdRqN87m",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:23:35.101073 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    max_damage = 0\n    for _ in range(n):\n        k = int(input())\n        cards = []\n        for _ in range(k):\n            cards.append(list(map(int, input().split())))\n        cards.sort(key=lambda x: x[1], reverse=True)\n        damage = 0\n        for i in range(len(cards)):\n            if i % 10 == 0:\n                damage += 2 * cards[i][1]\n            else:\n                damage += cards[i][1]\n        max_damage += damage\n    print(max_damage)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:23:35.101174 REASON stop
+2022-04-13 21:23:35.101784 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = int(input())\n    total_damage = 0\n    for i in range(n):\n        k = int(input())\n        cards = []\n        for j in range(k):\n            cards.append(tuple(map(int, input().split())))\n        cards.sort(key=lambda x: x[1], reverse=True)\n\n        damage = 0\n        total_cost = 0\n        for card in cards:\n            if total_cost + card[0] <= 3:\n                total_cost += card[0]\n                damage += card[1]\n                if (i*k + j + 1) % 10 == 0:\n                    damage += card[1]\n        total_damage += damage\n    print(total_damage)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:23:35.101925 REASON stop
+2022-04-13 21:23:35.102318 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    cards = []\n    for i in range(n):\n        k = int(input())\n        cards.append([])\n        for j in range(k):\n            cards[i].append(list(map(int, sys.stdin.readline().split())))\n\n    dp = [[0, 0, 0] for i in range(n)]\n    dp[0][0] = cards[0][0][1]\n    dp[0][1] = cards[0][1][1]\n    dp[0][2] = cards[0][2][1]\n    for i in range(1, n):\n        dp[i][0] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][0][1] * (1 + (i % 10 == 0))\n        dp[i][1] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][1][1] * (1 + (i % 10 == 0))\n        dp[i][2] = max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][2][1] * (1 + (i % 10 == 0))\n        if len(cards[i]) == 4:\n            dp[i][0] = max(dp[i][0], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n            dp[i][1] = max(dp[i][1], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n            dp[i][2] = max(dp[i][2], max(dp[i-1][0], dp[i-1][1], dp[i-1][2]) + cards[i][3][1] * (1 + (i % 10 == 0)))\n    \n    print(max(dp[n-1][0], dp[n-1][1], dp[n-1][2]))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:23:35.102370 REASON stop
+2022-04-13 21:23:35.113676 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef splay_the_sire():\n    turns = int(input())\n    total_damage = 0\n    for _ in range(turns):\n        cards = int(input())\n        turn_damage = 0\n        for _ in range(cards):\n            cost, damage = map(int, input().split())\n            if cost <= 3 and turn_damage + damage <= 30:\n                turn_damage += damage\n        total_damage += turn_damage\n    return total_damage\n\n\nif __name__ == \"__main__\":\n    print(splay_the_sire())"
+}
+2022-04-13 21:23:35.113740 REASON stop
+2022-04-13 21:23:35.121926 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    cost_damage = []\n    for _ in range(n):\n        k = int(input())\n        cost_damage.append(list(map(int, input().split())) for _ in range(k))\n    print(solution(cost_damage))\n\ndef solution(cost_damage):\n    damage = 0\n    for turn in cost_damage:\n        turn.sort(key=lambda x: x[0])\n        for i, card in enumerate(turn):\n            if i % 10 == 0:\n                damage += 2 * card[1]\n            else:\n                damage += card[1]\n    return damage\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:23:35.121999 REASON stop
+2022-04-13 21:23:35.122697 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef splay_the_sire(turns):\n    damage = 0\n    for i in range(turns):\n        cards = int(input())\n        costs = []\n        damages = []\n        for j in range(cards):\n            c, d = [int(x) for x in input().split()]\n            costs.append(c)\n            damages.append(d)\n        costs = sorted(costs)\n        damages = sorted(damages)\n        while costs:\n            if len(costs) >= 10:\n                damage += max(damages[-10:])\n                damages = damages[:-10]\n                costs = costs[:-10]\n            else:\n                damage += max(damages)\n                damages = damages[:-1]\n                costs = costs[:-1]\n    return damage\n\n\nif __name__ == \"__main__\":\n    turns = int(input())\n    print(splay_the_sire(turns))"
+}
+2022-04-13 21:23:35.122751 REASON stop
+2022-04-13 21:23:35.123306 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(turns):\n    \"\"\"\n    turns is a list of tuples (cost, damage)\n    \"\"\"\n    # TODO: solve the problem\n    return 0\n\n\ndef main():\n    n = int(input())\n    turns = []\n    for i in range(n):\n        k = int(input())\n        turn = []\n        for j in range(k):\n            c, d = map(int, input().split())\n            turn.append((c, d))\n        turns.append(turn)\n    print(solve(turns))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 21:23:35.123357 REASON stop

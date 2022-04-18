@@ -1,0 +1,13 @@
+
+def square_cake(n, h, v):
+
+    # Find the dimensions of the largest piece of cake.
+    x = min(h, n - h, v, n - v)
+
+    # Find the volume of the largest piece of cake.
+    return x * x * 4
+
+
+if __name__ == "__main__":
+    print(square_cake(10, 4, 7))
+    print(square_cake(5, 2, 2))

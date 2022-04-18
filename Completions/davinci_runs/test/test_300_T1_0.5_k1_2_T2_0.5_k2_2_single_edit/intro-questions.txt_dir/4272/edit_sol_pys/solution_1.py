@@ -1,0 +1,16 @@
+# https://atcoder.jp/contests/abc087/tasks/abc087_b
+
+n = int(input())
+s = input()
+
+a = int(input())
+b = int(input())
+c = int(input())
+x = int(input())
+count = 0
+
+for i in range(n - 2):
+    if s[i] == "A" and s[i + 1] == "B" and s[i + 2] == "C":
+        count += 1
+
+print(count)

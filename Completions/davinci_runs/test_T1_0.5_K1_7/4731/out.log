@@ -1,0 +1,142 @@
+2022-04-13 22:57:45.583101 """
+The Japanese game of Shiritori is the perfect 2-player game for a long car ride. The rules are simple: the first player picks any word to say, then the second player must choose a new word that begins with the last letter of the word that the first player just said. Then it is the first player’s turn again to say a word that begins with the last letter of the previous word the second player said, and so on. At each turn, the player whose turn it is must say a word that links to the previous one and which has not been called out before during the game. Your job is to determine if the game was played according to these rules, given a history of the words used in a particular game. In a game, player $1$ always starts first.
+
+-----Input-----
+Input consists of one test case that begins with an integer $N$ ($2 \leq N \leq 100000$) on a single line. Each of the following $N$ lines contains $1$ word. The words are presented in the order in which the players called them out, starting with player $1$. All words consist of between $1$ and $120$ lowercase English letters.
+
+-----Output-----
+If the game was played according to the rules, output “Fair Game”. Otherwise, find out which player first violated the rules of the game. That player lost the game, so output “Player <i> lost”. For example, if player $1$ violated the rules first, output “Player 1 lost”.
+
+-----Examples-----
+Sample Input 1:
+5
+apple
+ear
+real
+letters
+style
+Sample Output 1:
+Fair Game
+
+Sample Input 2:
+3
+apple
+extra
+apple
+Sample Output 2:
+Player 1 lost
+
+Sample Input 3:
+2
+apple
+neat
+Sample Output 3:
+Player 2 lost
+"""
+2022-04-13 22:57:45.583116 --------------------------
+2022-04-13 22:58:02.769412 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\nfor i in range(n-1):\n    if words[i][-1] != words[i+1][0]:\n        print('Player {} lost'.format(i%2 + 1))\n        break\n    if words[i] in words[i+1:]:\n        print('Player {} lost'.format(i%2 + 1))\n        break\nelse:\n    print('Fair Game')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nwords = [input() for _ in range(N)]\n\n# If the first word is not the first word, then player 1 lost\nif words[0] != words[0].lower():\n    print(\"Player 1 lost\")\n\n# If the first word is the first word, then check the rest of the words\nelse:\n    # Check each word\n    for i in range(1, N):\n        # If the word is not the first word, then player 2 lost\n        if words[i] != words[i].lower():\n            print(\"Player 2 lost\")\n            break\n        # If the word is the first word, then check if the last letter of the previous word is the same as the first letter of the current word\n        else:\n            if words[i-1][-1] != words[i][0]:\n                print(\"Player 2 lost\")\n                break\n    # If all the words are the first word, then the game is fair\n    else:\n        print(\"Fair Game\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline())\n    words = []\n    for i in range(N):\n        words.append(sys.stdin.readline().strip())\n    if len(set(words)) != N:\n        print(\"Player \" + str(1 + words.index(words[-1])) + \" lost\")\n    elif words[0][0] != words[1][-1]:\n        print(\"Player 1 lost\")\n    else:\n        for i in range(1, N-1):\n            if words[i][0] != words[i+1][-1]:\n                print(\"Player \" + str(i+1) + \" lost\")\n                break\n        else:\n            print(\"Fair Game\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# Since we're looking for the first player to lose, we can use a simple\n# stack to keep track of the words that have been said.\n# If the stack is empty, we push the first word.\n# If the next word begins with the last letter of the word on the stack,\n# we push the word on the stack.\n# If the stack is not empty and the next word does not begin with the\n# last letter of the word on the stack, we print out the current player\n# number and exit.\nimport sys\n\nn = int(sys.stdin.readline().strip())\n\nstack = []\n\nfor i in range(n):\n    word = sys.stdin.readline().strip()\n    if len(stack) == 0:\n        stack.append(word)\n    else:\n        if word[0] == stack[-1][-1]:\n            stack.append(word)\n        else:\n            print(\"Player %d lost\" % ((i % 2) + 1))\n            exit()\n\nprint(\"Fair Game\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\n# print(words)\n\nfirstWord = words[0]\nlastLetter = firstWord[-1]\n\nfor i in range(1, n):\n    word = words[i]\n    if word[0] != lastLetter:\n        print(\"Player \" + str(i % 2 + 1) + \" lost\")\n        exit()\n    lastLetter = word[-1]\n\nprint(\"Fair Game\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\n\nif words[0][-1] == words[1][0]:\n    for i in range(1, len(words) - 1):\n        if words[i][-1] != words[i+1][0]:\n            print('Player ' + str(i % 2 + 1) + ' lost')\n            break\n        if i == len(words)-2:\n            print('Fair Game')\nelse:\n    print('Player 1 lost')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\nif len(words) == 1:\n    print('Fair Game')\nelse:\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1] or words[i] in words[:i]:\n            print('Player ' + str(i%2+1) + ' lost')\n            break\n    else:\n        print('Fair Game')"
+    }
+  ],
+  "created": 1649890665,
+  "id": "cmpl-4wgDhCCKCSJzqJZ7Nk8avCMNKkE4B",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:58:02.769780 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\nfor i in range(n-1):\n    if words[i][-1] != words[i+1][0]:\n        print('Player {} lost'.format(i%2 + 1))\n        break\n    if words[i] in words[i+1:]:\n        print('Player {} lost'.format(i%2 + 1))\n        break\nelse:\n    print('Fair Game')"
+}
+2022-04-13 22:58:02.769840 REASON stop
+2022-04-13 22:58:02.770270 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.770294 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nwords = [input() for _ in range(N)]\n\n# If the first word is not the first word, then player 1 lost\nif words[0] != words[0].lower():\n    print(\"Player 1 lost\")\n\n# If the first word is the first word, then check the rest of the words\nelse:\n    # Check each word\n    for i in range(1, N):\n        # If the word is not the first word, then player 2 lost\n        if words[i] != words[i].lower():\n            print(\"Player 2 lost\")\n            break\n        # If the word is the first word, then check if the last letter of the previous word is the same as the first letter of the current word\n        else:\n            if words[i-1][-1] != words[i][0]:\n                print(\"Player 2 lost\")\n                break\n    # If all the words are the first word, then the game is fair\n    else:\n        print(\"Fair Game\")"
+}
+2022-04-13 22:58:02.770439 REASON stop
+2022-04-13 22:58:02.770781 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.770802 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline())\n    words = []\n    for i in range(N):\n        words.append(sys.stdin.readline().strip())\n    if len(set(words)) != N:\n        print(\"Player \" + str(1 + words.index(words[-1])) + \" lost\")\n    elif words[0][0] != words[1][-1]:\n        print(\"Player 1 lost\")\n    else:\n        for i in range(1, N-1):\n            if words[i][0] != words[i+1][-1]:\n                print(\"Player \" + str(i+1) + \" lost\")\n                break\n        else:\n            print(\"Fair Game\")\n\nmain()"
+}
+2022-04-13 22:58:02.770897 REASON stop
+2022-04-13 22:58:02.789559 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.789601 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# Since we're looking for the first player to lose, we can use a simple\n# stack to keep track of the words that have been said.\n# If the stack is empty, we push the first word.\n# If the next word begins with the last letter of the word on the stack,\n# we push the word on the stack.\n# If the stack is not empty and the next word does not begin with the\n# last letter of the word on the stack, we print out the current player\n# number and exit.\nimport sys\n\nn = int(sys.stdin.readline().strip())\n\nstack = []\n\nfor i in range(n):\n    word = sys.stdin.readline().strip()\n    if len(stack) == 0:\n        stack.append(word)\n    else:\n        if word[0] == stack[-1][-1]:\n            stack.append(word)\n        else:\n            print(\"Player %d lost\" % ((i % 2) + 1))\n            exit()\n\nprint(\"Fair Game\")"
+}
+2022-04-13 22:58:02.789704 REASON stop
+2022-04-13 22:58:02.812943 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.812985 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nwords = []\n\nfor i in range(n):\n    words.append(input())\n\n# print(words)\n\nfirstWord = words[0]\nlastLetter = firstWord[-1]\n\nfor i in range(1, n):\n    word = words[i]\n    if word[0] != lastLetter:\n        print(\"Player \" + str(i % 2 + 1) + \" lost\")\n        exit()\n    lastLetter = word[-1]\n\nprint(\"Fair Game\")"
+}
+2022-04-13 22:58:02.813087 REASON stop
+2022-04-13 22:58:02.827955 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.827993 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nwords = []\nfor i in range(n):\n    words.append(input())\n\nif words[0][-1] == words[1][0]:\n    for i in range(1, len(words) - 1):\n        if words[i][-1] != words[i+1][0]:\n            print('Player ' + str(i % 2 + 1) + ' lost')\n            break\n        if i == len(words)-2:\n            print('Fair Game')\nelse:\n    print('Player 1 lost')"
+}
+2022-04-13 22:58:02.828081 REASON stop
+2022-04-13 22:58:02.828735 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'
+2022-04-13 22:58:02.828756 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nwords = []\nfor i in range(N):\n    words.append(input())\n\nif len(words) == 1:\n    print('Fair Game')\nelse:\n    for i in range(1, len(words)):\n        if words[i][0] != words[i-1][-1] or words[i] in words[:i]:\n            print('Player ' + str(i%2+1) + ' lost')\n            break\n    else:\n        print('Fair Game')"
+}
+2022-04-13 22:58:02.828828 REASON stop
+2022-04-13 22:58:02.829701 test/intro-questions.txt_dir/4731/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4731/solutions.json'

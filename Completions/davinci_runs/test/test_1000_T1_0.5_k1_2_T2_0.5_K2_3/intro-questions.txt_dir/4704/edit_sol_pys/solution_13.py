@@ -1,0 +1,19 @@
+
+
+import sys
+readline = sys.stdin.buffer.readline
+
+def main():
+    n = int(readline())
+    # a = list(map(int, readline().split()))
+    a = [1,2,3,4,5,6]
+    n = 6
+    # a.sort()
+    # if a[n-1] == 0:
+    #     print(0)
+    # else:
+    #     print(a[n-1] - a[n-2])
+    print(a)
+
+if __name__ == '__main__':
+    main()

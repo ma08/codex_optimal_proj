@@ -1,0 +1,157 @@
+2022-04-09 22:10:16.029658 """
+Little Ivica solves crossword puzzles every day. In case you haven’t seen one, a crossword puzzle starts on a grid of $R \times C$ squares, each of which is either empty or blocked. The player’s task is to write words in consecutive empty squares vertically (top down) or horizontally (left to right).
+
+Ivica’s sister has a strange habit of looking at crosswords Ivica has finished solving, and finding the lexicographically smallest word in it. She only considers words at least $2$ characters long.
+
+Write a program that, given a crossword puzzle, finds that word.
+
+-----Input-----
+The first line contains two integers $R$ and $C$ ($2 \le R, C \le 20$), the number of rows and columns in the crosswords.
+
+Each of the following $R$ lines contains a string of $C$ characters. Each of those characters is either a lowercase letter of the English alphabet, or the character ‘#’ representing a blocked square.
+
+The input will be such that a solution will always exist.
+
+-----Output-----
+Output the lexicographically smallest word in the crossword.
+
+-----Examples-----
+Sample Input 1:
+4 4
+luka
+o#a#
+kula
+i#a#
+Sample Output 1:
+kala
+
+Sample Input 2:
+4 4
+luka
+o#a#
+kula
+i#as
+Sample Output 2:
+as
+"""
+2022-04-09 22:10:16.029685 --------------------------
+2022-04-09 22:10:49.182500 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Accepted after 2nd attempt (wrong answer on first attempt)\n\n# Read input\nR, C = [int(i) for i in input().split()]\ngrid = []\nfor i in range(R):\n    grid.append(list(input()))\n\n# Find all words\nwords = []\nfor r in range(R):\n    for c in range(C):\n        # Check horizontal\n        if c < C-1 and grid[r][c] != '#' and grid[r][c+1] != '#':\n            word = grid[r][c]\n            while c < C-1 and grid[r][c+1] != '#':\n                c += 1\n                word += grid[r][c]\n            if len(word) > 1:\n                words.append(word)\n\n        # Check vertical\n        if r < R-1 and grid[r][c] != '#' and grid[r+1][c] != '#':\n            word = grid[r][c]\n            while r < R-1 and grid[r+1][c] != '#':\n                r += 1\n                word += grid[r][c]\n            if len(word) > 1:\n                words.append(word)\n\n# Print lexicographically smallest word\nprint(min(words))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    row, col = map(int, input().split())\n    matrix = []\n    for i in range(row):\n        matrix.append(input())\n    #print(matrix)\n    words = []\n    for i in range(row):\n        for j in range(col):\n            if matrix[i][j] != '#':\n                if j < col-1 and matrix[i][j+1] != '#':\n                    word = matrix[i][j]\n                    k = j+1\n                    while k < col and matrix[i][k] != '#':\n                        word += matrix[i][k]\n                        k += 1\n                    words.append(word)\n                if i < row-1 and matrix[i+1][j] != '#':\n                    word = matrix[i][j]\n                    k = i+1\n                    while k < row and matrix[k][j] != '#':\n                        word += matrix[k][j]\n                        k += 1\n                    words.append(word)\n    print(min(words))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    R, C = map(int, sys.stdin.readline().split())\n    grid = [sys.stdin.readline().strip() for _ in range(R)]\n    words = []\n\n    # horizontal words\n    for row in grid:\n        word = ''\n        for char in row:\n            if char == '#':\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n            else:\n                word += char\n        if len(word) > 1:\n            words.append(word)\n\n    # vertical words\n    for col in range(C):\n        word = ''\n        for row in range(R):\n            char = grid[row][col]\n            if char == '#':\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n            else:\n                word += char\n        if len(word) > 1:\n            words.append(word)\n\n    print(sorted(words)[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    R, C = sys.stdin.readline().split()\n    R = int(R)\n    C = int(C)\n    crossword = []\n    for i in range(R):\n        row = sys.stdin.readline().strip()\n        crossword.append(row)\n\n    smallest_word = 'z'\n    for r in range(R):\n        for c in range(C):\n            if crossword[r][c] != '#':\n                if r + 1 < R:\n                    if crossword[r + 1][c] != '#':\n                        word = crossword[r][c] + crossword[r + 1][c]\n                        if word < smallest_word:\n                            smallest_word = word\n                if c + 1 < C:\n                    if crossword[r][c + 1] != '#':\n                        word = crossword[r][c] + crossword[r][c + 1]\n                        if word < smallest_word:\n                            smallest_word = word\n\n    print(smallest_word)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    line = sys.stdin.readline().strip().split(' ')\n    R = int(line[0])\n    C = int(line[1])\n    crossword = list()\n    for i in range(R):\n        crossword.append(sys.stdin.readline().strip())\n    words = list()\n    for i in range(R):\n        word = ''\n        for j in range(C):\n            if crossword[i][j] != '#':\n                word += crossword[i][j]\n            else:\n                if len(word) >= 2:\n                    words.append(word)\n                word = ''\n        if len(word) >= 2:\n            words.append(word)\n    for j in range(C):\n        word = ''\n        for i in range(R):\n            if crossword[i][j] != '#':\n                word += crossword[i][j]\n            else:\n                if len(word) >= 2:\n                    words.append(word)\n                word = ''\n        if len(word) >= 2:\n            words.append(word)\n    words.sort()\n    print(words[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nR, C = map(int, input().split())\n\ncrossword = []\nfor _ in range(R):\n    crossword.append(input())\n\nlex_min = '~'\n\nfor i in range(R):\n    for j in range(C):\n        if crossword[i][j] == '#':\n            continue\n        if j < C - 1 and crossword[i][j + 1] != '#':\n            lex_min = min(lex_min, crossword[i][j:j + 2])\n        if i < R - 1 and crossword[i + 1][j] != '#':\n            lex_min = min(lex_min, crossword[i][j] + crossword[i + 1][j])\n\nprint(lex_min)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = [int(i) for i in input().split()]\n    puzzle = [input() for i in range(n)]\n    words = []\n    for i in range(n):\n        word = ''\n        for j in range(m):\n            if puzzle[i][j].isalpha():\n                word += puzzle[i][j]\n            else:\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n        if len(word) > 1:\n            words.append(word)\n    for j in range(m):\n        word = ''\n        for i in range(n):\n            if puzzle[i][j].isalpha():\n                word += puzzle[i][j]\n            else:\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n        if len(word) > 1:\n            words.append(word)\n    words.sort()\n    print(words[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nR, C = map(int, input().split())\ncrossword = []\nfor i in range(R):\n    crossword.append(list(input()))\n\ndef check_horizontal(crossword, R, C):\n    for r in range(R):\n        for c in range(C - 1):\n            if crossword[r][c].isalpha() and crossword[r][c + 1].isalpha():\n                return True\n    return False\n\ndef check_vertical(crossword, R, C):\n    for c in range(C):\n        for r in range(R - 1):\n            if crossword[r][c].isalpha() and crossword[r + 1][c].isalpha():\n                return True\n    return False\n\ndef get_horizontal(crossword, R, C):\n    for r in range(R):\n        for c in range(C - 1):\n            if crossword[r][c].isalpha() and crossword[r][c + 1].isalpha():\n                return crossword[r][c] + crossword[r][c + 1]\n\ndef get_vertical(crossword, R, C):\n    for c in range(C):\n        for r in range(R - 1):\n            if crossword[r][c].isalpha() and crossword[r + 1][c].isalpha():\n                return crossword[r][c] + crossword[r + 1][c]\n\nif check_horizontal(crossword, R, C):\n    print(get_horizontal(crossword, R, C))\nelse:\n    print(get_vertical(crossword, R, C))"
+    }
+  ],
+  "created": 1649556616,
+  "id": "cmpl-4vHJowBWvKk1dGC8lSWlRxyQo7qOA",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 22:10:49.182893 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Accepted after 2nd attempt (wrong answer on first attempt)\n\n# Read input\nR, C = [int(i) for i in input().split()]\ngrid = []\nfor i in range(R):\n    grid.append(list(input()))\n\n# Find all words\nwords = []\nfor r in range(R):\n    for c in range(C):\n        # Check horizontal\n        if c < C-1 and grid[r][c] != '#' and grid[r][c+1] != '#':\n            word = grid[r][c]\n            while c < C-1 and grid[r][c+1] != '#':\n                c += 1\n                word += grid[r][c]\n            if len(word) > 1:\n                words.append(word)\n\n        # Check vertical\n        if r < R-1 and grid[r][c] != '#' and grid[r+1][c] != '#':\n            word = grid[r][c]\n            while r < R-1 and grid[r+1][c] != '#':\n                r += 1\n                word += grid[r][c]\n            if len(word) > 1:\n                words.append(word)\n\n# Print lexicographically smallest word\nprint(min(words))"
+}
+2022-04-09 22:10:49.182932 REASON stop
+2022-04-09 22:10:49.183603 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.183624 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    Main function\n    \"\"\"\n    row, col = map(int, input().split())\n    matrix = []\n    for i in range(row):\n        matrix.append(input())\n    #print(matrix)\n    words = []\n    for i in range(row):\n        for j in range(col):\n            if matrix[i][j] != '#':\n                if j < col-1 and matrix[i][j+1] != '#':\n                    word = matrix[i][j]\n                    k = j+1\n                    while k < col and matrix[i][k] != '#':\n                        word += matrix[i][k]\n                        k += 1\n                    words.append(word)\n                if i < row-1 and matrix[i+1][j] != '#':\n                    word = matrix[i][j]\n                    k = i+1\n                    while k < row and matrix[k][j] != '#':\n                        word += matrix[k][j]\n                        k += 1\n                    words.append(word)\n    print(min(words))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 22:10:49.183675 REASON stop
+2022-04-09 22:10:49.183886 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.183895 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    R, C = map(int, sys.stdin.readline().split())\n    grid = [sys.stdin.readline().strip() for _ in range(R)]\n    words = []\n\n    # horizontal words\n    for row in grid:\n        word = ''\n        for char in row:\n            if char == '#':\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n            else:\n                word += char\n        if len(word) > 1:\n            words.append(word)\n\n    # vertical words\n    for col in range(C):\n        word = ''\n        for row in range(R):\n            char = grid[row][col]\n            if char == '#':\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n            else:\n                word += char\n        if len(word) > 1:\n            words.append(word)\n\n    print(sorted(words)[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:10:49.183925 REASON stop
+2022-04-09 22:10:49.184084 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.184092 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    R, C = sys.stdin.readline().split()\n    R = int(R)\n    C = int(C)\n    crossword = []\n    for i in range(R):\n        row = sys.stdin.readline().strip()\n        crossword.append(row)\n\n    smallest_word = 'z'\n    for r in range(R):\n        for c in range(C):\n            if crossword[r][c] != '#':\n                if r + 1 < R:\n                    if crossword[r + 1][c] != '#':\n                        word = crossword[r][c] + crossword[r + 1][c]\n                        if word < smallest_word:\n                            smallest_word = word\n                if c + 1 < C:\n                    if crossword[r][c + 1] != '#':\n                        word = crossword[r][c] + crossword[r][c + 1]\n                        if word < smallest_word:\n                            smallest_word = word\n\n    print(smallest_word)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:10:49.184117 REASON stop
+2022-04-09 22:10:49.184266 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.184303 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    line = sys.stdin.readline().strip().split(' ')\n    R = int(line[0])\n    C = int(line[1])\n    crossword = list()\n    for i in range(R):\n        crossword.append(sys.stdin.readline().strip())\n    words = list()\n    for i in range(R):\n        word = ''\n        for j in range(C):\n            if crossword[i][j] != '#':\n                word += crossword[i][j]\n            else:\n                if len(word) >= 2:\n                    words.append(word)\n                word = ''\n        if len(word) >= 2:\n            words.append(word)\n    for j in range(C):\n        word = ''\n        for i in range(R):\n            if crossword[i][j] != '#':\n                word += crossword[i][j]\n            else:\n                if len(word) >= 2:\n                    words.append(word)\n                word = ''\n        if len(word) >= 2:\n            words.append(word)\n    words.sort()\n    print(words[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:10:49.184402 REASON stop
+2022-04-09 22:10:49.184849 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.184906 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nR, C = map(int, input().split())\n\ncrossword = []\nfor _ in range(R):\n    crossword.append(input())\n\nlex_min = '~'\n\nfor i in range(R):\n    for j in range(C):\n        if crossword[i][j] == '#':\n            continue\n        if j < C - 1 and crossword[i][j + 1] != '#':\n            lex_min = min(lex_min, crossword[i][j:j + 2])\n        if i < R - 1 and crossword[i + 1][j] != '#':\n            lex_min = min(lex_min, crossword[i][j] + crossword[i + 1][j])\n\nprint(lex_min)"
+}
+2022-04-09 22:10:49.184965 REASON stop
+2022-04-09 22:10:49.185411 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.185461 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = [int(i) for i in input().split()]\n    puzzle = [input() for i in range(n)]\n    words = []\n    for i in range(n):\n        word = ''\n        for j in range(m):\n            if puzzle[i][j].isalpha():\n                word += puzzle[i][j]\n            else:\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n        if len(word) > 1:\n            words.append(word)\n    for j in range(m):\n        word = ''\n        for i in range(n):\n            if puzzle[i][j].isalpha():\n                word += puzzle[i][j]\n            else:\n                if len(word) > 1:\n                    words.append(word)\n                word = ''\n        if len(word) > 1:\n            words.append(word)\n    words.sort()\n    print(words[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 22:10:49.185533 REASON stop
+2022-04-09 22:10:49.185982 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'
+2022-04-09 22:10:49.186087 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nR, C = map(int, input().split())\ncrossword = []\nfor i in range(R):\n    crossword.append(list(input()))\n\ndef check_horizontal(crossword, R, C):\n    for r in range(R):\n        for c in range(C - 1):\n            if crossword[r][c].isalpha() and crossword[r][c + 1].isalpha():\n                return True\n    return False\n\ndef check_vertical(crossword, R, C):\n    for c in range(C):\n        for r in range(R - 1):\n            if crossword[r][c].isalpha() and crossword[r + 1][c].isalpha():\n                return True\n    return False\n\ndef get_horizontal(crossword, R, C):\n    for r in range(R):\n        for c in range(C - 1):\n            if crossword[r][c].isalpha() and crossword[r][c + 1].isalpha():\n                return crossword[r][c] + crossword[r][c + 1]\n\ndef get_vertical(crossword, R, C):\n    for c in range(C):\n        for r in range(R - 1):\n            if crossword[r][c].isalpha() and crossword[r + 1][c].isalpha():\n                return crossword[r][c] + crossword[r + 1][c]\n\nif check_horizontal(crossword, R, C):\n    print(get_horizontal(crossword, R, C))\nelse:\n    print(get_vertical(crossword, R, C))"
+}
+2022-04-09 22:10:49.186156 REASON stop
+2022-04-09 22:10:49.186575 test/intro-questions.txt_dir/4772/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4772/solutions.json'

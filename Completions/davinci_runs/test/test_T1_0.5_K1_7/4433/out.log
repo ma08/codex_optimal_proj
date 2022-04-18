@@ -1,0 +1,186 @@
+2022-04-13 20:44:58.163986 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the maximum degree over all vertices is maximum possible. Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2})$) — the number of vertices and edges, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+Print $n-1$ lines describing the edges of a spanning tree such that the maximum degree over all vertices is maximum possible. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+5 5
+1 2
+2 3
+3 5
+4 3
+1 5
+
+Output
+3 5
+2 1
+3 2
+3 4
+
+Input
+4 6
+1 2
+1 3
+1 4
+2 3
+2 4
+3 4
+
+Output
+4 1
+1 2
+1 3
+
+Input
+8 9
+1 2
+2 3
+2 5
+1 6
+3 4
+6 5
+4 5
+2 7
+5 8
+
+Output
+3 2
+2 5
+8 5
+6 1
+2 7
+1 2
+3 4
+
+
+
+-----Note-----
+
+Picture corresponding to the first example: [Image]
+
+In this example the number of edges of spanning tree incident to the vertex $3$ is $3$. It is the maximum degree over all vertices of the spanning tree. It is easy to see that we cannot obtain a better answer.
+
+Picture corresponding to the second example: [Image]
+
+In this example the number of edges of spanning tree incident to the vertex $1$ is $3$. It is the maximum degree over all vertices of the spanning tree. It is easy to see that we cannot obtain a better answer.
+
+Picture corresponding to the third example: [Image]
+
+In this example the number of edges of spanning tree incident to the vertex $2$ is $4$. It is the maximum degree over all vertices of the spanning tree. It is easy to see that we cannot obtain a better answer. But because this example is symmetric, we can choose almost the same spanning tree but with vertex $5$ instead of $2$.
+"""
+2022-04-13 20:44:58.164001 --------------------------
+2022-04-13 20:45:25.865805 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    graph = [[] for _ in range(n)]\n    for _ in range(m):\n        v, u = map(int, input().split())\n        graph[v - 1].append(u - 1)\n        graph[u - 1].append(v - 1)\n\n    result = []\n    stack = [0]\n    visited = [False] * n\n    visited[0] = True\n    while stack:\n        v = stack[-1]\n        for u in graph[v]:\n            if not visited[u]:\n                stack.append(u)\n                visited[u] = True\n                result.append((v + 1, u + 1))\n                break\n        else:\n            stack.pop()\n\n    print('\\n'.join(map(lambda x: ' '.join(map(str, x)), result)))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    g = [[] for _ in range(n)]\n    for _ in range(m):\n        u, v = map(int, input().split())\n        g[u-1].append(v-1)\n        g[v-1].append(u-1)\n    # print(n, m, g)\n    ans = []\n    seen = [False] * n\n    queue = [0]\n    while queue:\n        curr = queue.pop(0)\n        seen[curr] = True\n        for next in g[curr]:\n            if not seen[next]:\n                queue.append(next)\n                ans.append([curr+1, next+1])\n    print(\"\\n\".join(\" \".join(map(str, x)) for x in ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        a, b = map(int, input().split())\n        edges.append((a, b))\n    print('\\n'.join(map(lambda x: '{} {}'.format(x[0], x[1]), edges)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef solution(n, m, edges):\n    # Write your code here\n    # Return the edges of the spanning tree as an array of arrays.\n    pass\n\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(list(map(int, input().split())))\n    edges = solution(n, m, edges)\n    for edge in edges:\n        print(*edge)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\nsys.setrecursionlimit(100000)\n\ndef dfs(v, p, g, used, ans):\n    used[v] = True\n    for u in g[v]:\n        if u == p:\n            continue\n        if not used[u]:\n            ans.append((v, u))\n            dfs(u, v, g, used, ans)\n        else:\n            ans.append((v, u))\n            ans.append((u, v))\n\n\ndef main():\n    n, m = map(int, input().split())\n    g = defaultdict(list)\n    for i in range(m):\n        v, u = map(int, input().split())\n        g[v].append(u)\n        g[u].append(v)\n    used = [False for i in range(n + 1)]\n    ans = []\n    dfs(1, -1, g, used, ans)\n    for v, u in ans:\n        print(v, u)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        a, b = map(int, input().split())\n        edges.append((a, b))\n    print(n - 1)\n    print(\"2 1\")\n    for i in range(2, n):\n        print(\"1\", i)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        u, v = map(int, input().split())\n        edges.append((u, v))\n    ans = []\n    degree = [0] * n\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 0 and degree[v - 1] == 0:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 0 and degree[v - 1] == 1:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 1 and degree[v - 1] == 0:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 1 and degree[v - 1] == 1:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for u, v in ans:\n        print(u, v)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649882698,
+  "id": "cmpl-4we9C7jbX8Qs9njXpDQ83zp1plO4m",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:45:25.866116 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    graph = [[] for _ in range(n)]\n    for _ in range(m):\n        v, u = map(int, input().split())\n        graph[v - 1].append(u - 1)\n        graph[u - 1].append(v - 1)\n\n    result = []\n    stack = [0]\n    visited = [False] * n\n    visited[0] = True\n    while stack:\n        v = stack[-1]\n        for u in graph[v]:\n            if not visited[u]:\n                stack.append(u)\n                visited[u] = True\n                result.append((v + 1, u + 1))\n                break\n        else:\n            stack.pop()\n\n    print('\\n'.join(map(lambda x: ' '.join(map(str, x)), result)))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:45:25.866248 REASON stop
+2022-04-13 20:45:25.866672 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    g = [[] for _ in range(n)]\n    for _ in range(m):\n        u, v = map(int, input().split())\n        g[u-1].append(v-1)\n        g[v-1].append(u-1)\n    # print(n, m, g)\n    ans = []\n    seen = [False] * n\n    queue = [0]\n    while queue:\n        curr = queue.pop(0)\n        seen[curr] = True\n        for next in g[curr]:\n            if not seen[next]:\n                queue.append(next)\n                ans.append([curr+1, next+1])\n    print(\"\\n\".join(\" \".join(map(str, x)) for x in ans))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:45:25.866796 REASON stop
+2022-04-13 20:45:25.867137 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        a, b = map(int, input().split())\n        edges.append((a, b))\n    print('\\n'.join(map(lambda x: '{} {}'.format(x[0], x[1]), edges)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:45:25.867179 REASON stop
+2022-04-13 20:45:25.886276 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef solution(n, m, edges):\n    # Write your code here\n    # Return the edges of the spanning tree as an array of arrays.\n    pass\n\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(list(map(int, input().split())))\n    edges = solution(n, m, edges)\n    for edge in edges:\n        print(*edge)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:45:25.886378 REASON stop
+2022-04-13 20:45:25.913774 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\nsys.setrecursionlimit(100000)\n\ndef dfs(v, p, g, used, ans):\n    used[v] = True\n    for u in g[v]:\n        if u == p:\n            continue\n        if not used[u]:\n            ans.append((v, u))\n            dfs(u, v, g, used, ans)\n        else:\n            ans.append((v, u))\n            ans.append((u, v))\n\n\ndef main():\n    n, m = map(int, input().split())\n    g = defaultdict(list)\n    for i in range(m):\n        v, u = map(int, input().split())\n        g[v].append(u)\n        g[u].append(v)\n    used = [False for i in range(n + 1)]\n    ans = []\n    dfs(1, -1, g, used, ans)\n    for v, u in ans:\n        print(v, u)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:45:25.913880 REASON stop
+2022-04-13 20:45:25.914791 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        a, b = map(int, input().split())\n        edges.append((a, b))\n    print(n - 1)\n    print(\"2 1\")\n    for i in range(2, n):\n        print(\"1\", i)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:45:25.914855 REASON stop
+2022-04-13 20:45:25.915650 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for i in range(m):\n        u, v = map(int, input().split())\n        edges.append((u, v))\n    ans = []\n    degree = [0] * n\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 0 and degree[v - 1] == 0:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 0 and degree[v - 1] == 1:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 1 and degree[v - 1] == 0:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for i in range(m):\n        u, v = edges[i]\n        if degree[u - 1] == 1 and degree[v - 1] == 1:\n            ans.append((u, v))\n            degree[u - 1] += 1\n            degree[v - 1] += 1\n    for u, v in ans:\n        print(u, v)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:45:25.915710 REASON stop

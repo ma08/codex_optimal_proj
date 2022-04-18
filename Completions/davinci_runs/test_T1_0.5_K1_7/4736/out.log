@@ -1,0 +1,143 @@
+2022-04-13 22:59:04.536626 """
+A bored technician whose job requires inspecting each of $10$ equipment stations on a regular basis has tried to inject a little variety into his days by creating a deck of cards, each card bearing a number in the range $1..10$. From this deck he randomly deals out $K$ cards at the start of the day, and uses the numbers on these to determine which stations and in what order he will visit them on that day. (He has decided that it is OK to visit the same station more than once in the same day.)
+
+As time goes by, he adds cards for the number of stations where he finds problems, so that he will visit them more often, so the number of cards bearing each digit may vary considerably.
+
+One day he deals out his cards, and notices that they have come out in strictly ascending order. He starts to wonder just how likely such an ordering would be.
+
+Find the number of ways to deal the cards that form a strictly ascending sequence. (“Strictly ascending” in this problem means that, for example $[2, 4, 5]$ would be accepted but $[3, 1, 2]$ and $[2, 2, 4]$ would not.)
+
+-----Input-----
+The first line of input contains $10$ non-negative integers $n_ i$, each denoting the number of cards bearing the number $i$. The sum of these $10$ numbers is in the range $1\ldots 1000$.
+
+This is followed by a line containing an integer $K$, $1 \leq K \leq 10$, denoting the number of cards to be dealt.
+
+-----Output-----
+Print a single line containing an integer denoting the number of ways to deal $K$ cards from that deck that would form a strictly ascending sequence.
+
+-----Examples-----
+Sample Input 1:
+4 0 0 0 4 0 0 0 0 4
+3
+Sample Output 1:
+64
+
+Sample Input 2:
+4 0 0 0 4 0 0 0 0 4
+4
+Sample Output 2:
+0
+
+Sample Input 3:
+10 10 10 20 0 10 10 10 10 10
+4
+Sample Output 3:
+1820000
+"""
+2022-04-13 22:59:04.536640 --------------------------
+2022-04-13 22:59:31.673238 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1. Read in the numbers of each card.\n    2. Read in the number of cards to be dealt.\n    3. Find the number of ways to deal the cards.\n    \"\"\"\n    # Read in the numbers of each card.\n    nums = [int(x) for x in input().split()]\n\n    # Read in the number of cards to be dealt.\n    k = int(input())\n\n    # Find the number of ways to deal the cards.\n    ways = find_ways(nums, k)\n\n    # Print the result.\n    print(ways)\n\ndef find_ways(nums, k):\n    \"\"\"\n    Find the number of ways to deal the cards.\n    \"\"\"\n    # Find the number of ways to deal the cards.\n    ways = 0\n    for i in range(k):\n        ways += nums[i]\n    for i in range(k-1):\n        ways *= nums[i+1]\n    return ways\n\n# Call the main function.\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef dealCards(n, k):\n    \"\"\"\n    Returns the number of ways to deal K cards from a deck of N cards\n    where each card is unique. \n    \"\"\"\n    return factorial(n) / (factorial(n - k) * factorial(k))\n\ndef strictlyAscending(n, k):\n    \"\"\"\n    Returns the number of ways to deal K cards from a deck of N cards\n    where each card is unique. \n    \"\"\"\n    return factorial(n) / (factorial(n - k) * factorial(k))\n\ndef main():\n    \"\"\"\n    Main program\n    \"\"\"\n    # Read the number of cards for each number 1-10\n    n = [int(x) for x in input().split()]\n    # Read the number of cards to be dealt\n    k = int(input())\n\n    # Calculate the number of ways to deal the cards\n    ways = dealCards(sum(n), k)\n    # Calculate the number of ways to deal the cards in ascending order\n    ascending = strictlyAscending(sum(n), k)\n\n    # Print the result\n    print(ways - ascending)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    data = [int(x) for x in input().split()]\n    k = int(input())\n\n    print(solve(data, k))\n\ndef solve(data, k):\n    num_ways = 0\n    for i in range(1, 11):\n        if data[i-1] > 0:\n            data[i-1] -= 1\n            num_ways += solve(data, k-1)\n            data[i-1] += 1\n\n    if k == 0:\n        num_ways += 1\n\n    return num_ways\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read the input\n    nums = [int(x) for x in sys.stdin.readline().strip().split()]\n    K = int(sys.stdin.readline().strip())\n\n    # There are no ways to deal a strictly ascending sequence if there are not enough cards\n    if sum(nums) < K:\n        print(0)\n        return\n\n    # There are no ways to deal a strictly ascending sequence if there are not enough cards of each number\n    if min(nums) < 1:\n        print(0)\n        return\n\n    # There are no ways to deal a strictly ascending sequence if there is only one card of each number\n    if min(nums) == 1 and max(nums) == 1 and K > 1:\n        print(0)\n        return\n\n    # Otherwise, count the number of ways to deal the cards\n    print(count_ways(nums, K))\n\n\ndef count_ways(nums, K):\n    \"\"\"\n    Counts the number of ways to deal the cards that form a strictly ascending sequence.\n    :param nums: The number of cards bearing each number\n    :param K: The number of cards to be dealt\n    :return: The number of ways to deal the cards that form a strictly ascending sequence\n    \"\"\"\n    # Count the number of ways to deal the cards that form a strictly ascending sequence\n    count = 0\n    for i in range(len(nums)):\n        if nums[i] > 0:\n            nums[i] -= 1\n            count += count_ways(nums, K - 1)\n            nums[i] += 1\n    return count\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\n# C(n,k) = (n!)/(k!(n-k)!) (n >= k)\ndef binomial(n, k):\n    return math.factorial(n)/(math.factorial(k)*math.factorial(n-k))\n\ndef main():\n    # Get the input\n    cards = list(map(int, sys.stdin.readline().split()))\n    K = int(sys.stdin.readline())\n\n    # Count the number of cards\n    N = sum(cards)\n\n    # Count the number of ways we can choose K cards from N cards\n    ways = binomial(N, K)\n\n    # Count the number of ways we can choose K cards from N cards\n    # given that we have to choose all cards of the same number\n    for i in range(len(cards)):\n        ways //= binomial(cards[i], K)\n\n    print(ways)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# We use the dynamic programming approach.\n# We have 10 stations, so we have 10 states.\n# We have K cards, so we have K steps.\n# At step i (for i in range(1, K+1)), we can either use the current station or not.\n# If we use it, we can use any of the i cards.\n# If we don't use it, we can use any of the i-1 cards.\n# We have a constraint that the number of cards used for each state is at most equal to the number of cards for that state.\n\nimport sys\n\ndef dp(dp, n, k):\n    for i in range(1, k+1):\n        for j in range(10):\n            dp[i][j] = 0\n            if i <= n[j]:\n                dp[i][j] += dp[i-1][j]\n            if j > 0:\n                dp[i][j] += dp[i][j-1]\n            if i > 1 and j > 0:\n                dp[i][j] -= dp[i-1][j-1]\n\ndef main():\n    n = [int(x) for x in sys.stdin.readline().split()]\n    k = int(sys.stdin.readline())\n    dp = [[0]*10 for i in range(k+1)]\n    dp[0][0] = 1\n    dp(dp, n, k)\n    print(dp[k][9])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nimport itertools\n\ndef read_list_int():\n\tlist_int = list(map(int, input().split(\" \")))\n\treturn list_int\n\ndef read_list_float():\n\tlist_float = list(map(float, input().split(\" \")))\n\treturn list_float\n\ndef read_list_str():\n\tlist_str = list(map(str, input().split(\" \")))\n\treturn list_str\n\ndef read_list_char():\n\tlist_char = list(map(chr, input().split(\" \")))\n\treturn list_char\n\ndef read_number_int():\n\treturn int(input())\n\ndef read_number_float():\n\treturn float(input())\n\ndef read_number_str():\n\treturn str(input())\n\ndef read_number_char():\n\treturn chr(input())\n\ndef get_combinations(lst):\n\treturn list(itertools.combinations(lst, 2))\n\ndef get_permutations(lst):\n\treturn list(itertools.permutations(lst, 2))\n\ndef get_factorial(n):\n\treturn math.factorial(n)\n\ndef get_nCr(n, r):\n\treturn math.factorial(n)/(math.factorial(n-r)*math.factorial(r))\n\ndef get_nPr(n, r):\n\treturn math.factorial(n)/math.factorial(n-r)\n\ndef main():\n\tlst = read_list_int()\n\tk = read_number_int()\n\tnum_ways = 0\n\tfor i in range(len(lst)):\n\t\tif lst[i] >= k:\n\t\t\tnum_ways += get_nCr(lst[i], k)\n\tprint(int(num_ways))\n\nif __name__ == '__main__':\n\tmain()"
+    }
+  ],
+  "created": 1649890744,
+  "id": "cmpl-4wgEyqABhLPZCwGpWOEjN15S6cAam",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:59:31.673643 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1. Read in the numbers of each card.\n    2. Read in the number of cards to be dealt.\n    3. Find the number of ways to deal the cards.\n    \"\"\"\n    # Read in the numbers of each card.\n    nums = [int(x) for x in input().split()]\n\n    # Read in the number of cards to be dealt.\n    k = int(input())\n\n    # Find the number of ways to deal the cards.\n    ways = find_ways(nums, k)\n\n    # Print the result.\n    print(ways)\n\ndef find_ways(nums, k):\n    \"\"\"\n    Find the number of ways to deal the cards.\n    \"\"\"\n    # Find the number of ways to deal the cards.\n    ways = 0\n    for i in range(k):\n        ways += nums[i]\n    for i in range(k-1):\n        ways *= nums[i+1]\n    return ways\n\n# Call the main function.\nmain()"
+}
+2022-04-13 22:59:31.673690 REASON stop
+2022-04-13 22:59:31.673993 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.674008 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef dealCards(n, k):\n    \"\"\"\n    Returns the number of ways to deal K cards from a deck of N cards\n    where each card is unique. \n    \"\"\"\n    return factorial(n) / (factorial(n - k) * factorial(k))\n\ndef strictlyAscending(n, k):\n    \"\"\"\n    Returns the number of ways to deal K cards from a deck of N cards\n    where each card is unique. \n    \"\"\"\n    return factorial(n) / (factorial(n - k) * factorial(k))\n\ndef main():\n    \"\"\"\n    Main program\n    \"\"\"\n    # Read the number of cards for each number 1-10\n    n = [int(x) for x in input().split()]\n    # Read the number of cards to be dealt\n    k = int(input())\n\n    # Calculate the number of ways to deal the cards\n    ways = dealCards(sum(n), k)\n    # Calculate the number of ways to deal the cards in ascending order\n    ascending = strictlyAscending(sum(n), k)\n\n    # Print the result\n    print(ways - ascending)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:59:31.674115 REASON stop
+2022-04-13 22:59:31.674363 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.674374 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    data = [int(x) for x in input().split()]\n    k = int(input())\n\n    print(solve(data, k))\n\ndef solve(data, k):\n    num_ways = 0\n    for i in range(1, 11):\n        if data[i-1] > 0:\n            data[i-1] -= 1\n            num_ways += solve(data, k-1)\n            data[i-1] += 1\n\n    if k == 0:\n        num_ways += 1\n\n    return num_ways\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:59:31.674415 REASON stop
+2022-04-13 22:59:31.694179 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.694211 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # Read the input\n    nums = [int(x) for x in sys.stdin.readline().strip().split()]\n    K = int(sys.stdin.readline().strip())\n\n    # There are no ways to deal a strictly ascending sequence if there are not enough cards\n    if sum(nums) < K:\n        print(0)\n        return\n\n    # There are no ways to deal a strictly ascending sequence if there are not enough cards of each number\n    if min(nums) < 1:\n        print(0)\n        return\n\n    # There are no ways to deal a strictly ascending sequence if there is only one card of each number\n    if min(nums) == 1 and max(nums) == 1 and K > 1:\n        print(0)\n        return\n\n    # Otherwise, count the number of ways to deal the cards\n    print(count_ways(nums, K))\n\n\ndef count_ways(nums, K):\n    \"\"\"\n    Counts the number of ways to deal the cards that form a strictly ascending sequence.\n    :param nums: The number of cards bearing each number\n    :param K: The number of cards to be dealt\n    :return: The number of ways to deal the cards that form a strictly ascending sequence\n    \"\"\"\n    # Count the number of ways to deal the cards that form a strictly ascending sequence\n    count = 0\n    for i in range(len(nums)):\n        if nums[i] > 0:\n            nums[i] -= 1\n            count += count_ways(nums, K - 1)\n            nums[i] += 1\n    return count\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:59:31.694283 REASON stop
+2022-04-13 22:59:31.706486 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.706517 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\n# C(n,k) = (n!)/(k!(n-k)!) (n >= k)\ndef binomial(n, k):\n    return math.factorial(n)/(math.factorial(k)*math.factorial(n-k))\n\ndef main():\n    # Get the input\n    cards = list(map(int, sys.stdin.readline().split()))\n    K = int(sys.stdin.readline())\n\n    # Count the number of cards\n    N = sum(cards)\n\n    # Count the number of ways we can choose K cards from N cards\n    ways = binomial(N, K)\n\n    # Count the number of ways we can choose K cards from N cards\n    # given that we have to choose all cards of the same number\n    for i in range(len(cards)):\n        ways //= binomial(cards[i], K)\n\n    print(ways)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 22:59:31.706593 REASON stop
+2022-04-13 22:59:31.728355 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.728387 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# We use the dynamic programming approach.\n# We have 10 stations, so we have 10 states.\n# We have K cards, so we have K steps.\n# At step i (for i in range(1, K+1)), we can either use the current station or not.\n# If we use it, we can use any of the i cards.\n# If we don't use it, we can use any of the i-1 cards.\n# We have a constraint that the number of cards used for each state is at most equal to the number of cards for that state.\n\nimport sys\n\ndef dp(dp, n, k):\n    for i in range(1, k+1):\n        for j in range(10):\n            dp[i][j] = 0\n            if i <= n[j]:\n                dp[i][j] += dp[i-1][j]\n            if j > 0:\n                dp[i][j] += dp[i][j-1]\n            if i > 1 and j > 0:\n                dp[i][j] -= dp[i-1][j-1]\n\ndef main():\n    n = [int(x) for x in sys.stdin.readline().split()]\n    k = int(sys.stdin.readline())\n    dp = [[0]*10 for i in range(k+1)]\n    dp[0][0] = 1\n    dp(dp, n, k)\n    print(dp[k][9])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:59:31.728461 REASON stop
+2022-04-13 22:59:31.729019 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'
+2022-04-13 22:59:31.729034 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nimport itertools\n\ndef read_list_int():\n\tlist_int = list(map(int, input().split(\" \")))\n\treturn list_int\n\ndef read_list_float():\n\tlist_float = list(map(float, input().split(\" \")))\n\treturn list_float\n\ndef read_list_str():\n\tlist_str = list(map(str, input().split(\" \")))\n\treturn list_str\n\ndef read_list_char():\n\tlist_char = list(map(chr, input().split(\" \")))\n\treturn list_char\n\ndef read_number_int():\n\treturn int(input())\n\ndef read_number_float():\n\treturn float(input())\n\ndef read_number_str():\n\treturn str(input())\n\ndef read_number_char():\n\treturn chr(input())\n\ndef get_combinations(lst):\n\treturn list(itertools.combinations(lst, 2))\n\ndef get_permutations(lst):\n\treturn list(itertools.permutations(lst, 2))\n\ndef get_factorial(n):\n\treturn math.factorial(n)\n\ndef get_nCr(n, r):\n\treturn math.factorial(n)/(math.factorial(n-r)*math.factorial(r))\n\ndef get_nPr(n, r):\n\treturn math.factorial(n)/math.factorial(n-r)\n\ndef main():\n\tlst = read_list_int()\n\tk = read_number_int()\n\tnum_ways = 0\n\tfor i in range(len(lst)):\n\t\tif lst[i] >= k:\n\t\t\tnum_ways += get_nCr(lst[i], k)\n\tprint(int(num_ways))\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-13 22:59:31.729118 REASON stop
+2022-04-13 22:59:31.729856 test/intro-questions.txt_dir/4736/question.txt [Errno 2] No such file or directory: 'test/intro-questions.txt_dir/4736/solutions.json'

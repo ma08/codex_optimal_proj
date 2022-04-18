@@ -1,0 +1,160 @@
+2022-04-13 20:42:53.384149 """
+International Women's Day is coming soon! Polycarp is preparing for the holiday.
+
+There are $n$ candy boxes in the shop for sale. The $i$-th box contains $d_i$ candies.
+
+Polycarp wants to prepare the maximum number of gifts for $k$ girls. Each gift will consist of exactly two boxes. The girls should be able to share each gift equally, so the total amount of candies in a gift (in a pair of boxes) should be divisible by $k$. In other words, two boxes $i$ and $j$ ($i \ne j$) can be combined as a gift if $d_i + d_j$ is divisible by $k$.
+
+How many boxes will Polycarp be able to give? Of course, each box can be a part of no more than one gift. Polycarp cannot use boxes "partially" or redistribute candies between them. 
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5, 1 \le k \le 100$) — the number the boxes and the number the girls.
+
+The second line of the input contains $n$ integers $d_1, d_2, \dots, d_n$ ($1 \le d_i \le 10^9$), where $d_i$ is the number of candies in the $i$-th box.
+
+
+-----Output-----
+
+Print one integer — the maximum number of the boxes Polycarp can give as gifts.
+
+
+-----Examples-----
+Input
+7 2
+1 2 2 3 2 4 10
+
+Output
+6
+
+Input
+8 2
+1 2 2 3 2 4 6 10
+
+Output
+8
+
+Input
+7 3
+1 2 2 3 2 4 5
+
+Output
+4
+
+
+
+-----Note-----
+
+In the first example Polycarp can give the following pairs of boxes (pairs are presented by indices of corresponding boxes):   $(2, 3)$;  $(5, 6)$;  $(1, 4)$. 
+
+So the answer is $6$.
+
+In the second example Polycarp can give the following pairs of boxes (pairs are presented by indices of corresponding boxes):   $(6, 8)$;  $(2, 3)$;  $(1, 4)$;  $(5, 7)$. 
+
+So the answer is $8$.
+
+In the third example Polycarp can give the following pairs of boxes (pairs are presented by indices of corresponding boxes):   $(1, 2)$;  $(6, 7)$. 
+
+So the answer is $4$.
+"""
+2022-04-13 20:42:53.384164 --------------------------
+2022-04-13 20:43:12.008725 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef solve(nums, k):\n    mod = [0] * k\n    for num in nums:\n        mod[num % k] += 1\n    count = min(mod[0], 1)\n    for i in range(1, k//2 + 1):\n        if i != k - i:\n            count += max(mod[i], mod[k-i])\n    if k % 2 == 0:\n        count += 1\n    return count\n\nif __name__ == '__main__':\n    n, k = map(int, input().split())\n    nums = list(map(int, input().split()))\n    print(solve(nums, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,k = map(int, input().split())\n    d = list(map(int, input().split()))\n    d.sort()\n    if k == 1:\n        print(n)\n        return\n    if d[0] > k:\n        print(0)\n        return\n    ans = 0\n    for i in range(n):\n        if d[i]%k == 0:\n            continue\n        d1 = d[i]%k\n        d2 = k - d1\n        j = i+1\n        while(j<n and d[j]%k != d1):\n            j += 1\n        if j<n:\n            ans += 1\n            d[i] = 0\n            d[j] = 0\n            j += 1\n            while (j<n and d[j]%k != d1):\n                j += 1\n            if j<n:\n                ans += 1\n                d[j] = 0\n    for i in range(n):\n        if d[i]%k == 0:\n            ans += 1\n    print(ans)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd.sort()\n\nl = 0\nr = n - 1\nans = 0\nwhile l < r:\n    if (d[l] + d[r]) % k == 0:\n        ans += 1\n        l += 1\n        r -= 1\n    elif d[l] % k > (k - d[l] % k):\n        r -= 1\n    else:\n        l += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\nd.sort()\n\ni = 0\nj = n - 1\ncnt = 0\nwhile i < j:\n    if d[i] + d[j] < k:\n        i += 1\n    elif d[i] + d[j] > k:\n        j -= 1\n    else:\n        i += 1\n        j -= 1\n        cnt += 2\n\nprint(cnt)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd = [i % k for i in d]\n\ncount = [0] * k\n\nfor i in d:\n    count[i] += 1\n\nans = 0\nfor i in range(k // 2 + 1):\n    if i == 0:\n        ans += min(count[i], 1)\n    else:\n        ans += max(count[i], count[k - i])\n\nif k % 2 == 0:\n    ans += min(count[k // 2], 1)\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom collections import defaultdict\n\n# read input\nn, k = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\n# create a dictionary with the number of boxes with each remainder\nremainder_count = defaultdict(int)\nfor num in d:\n    remainder_count[num % k] += 1\n\n# add the best pairs of boxes to the total\ntotal = 0\nfor remainder in remainder_count:\n    if remainder == 0:\n        total += remainder_count[remainder] // 2\n    elif remainder_count[remainder] >= remainder_count[k - remainder]:\n        total += remainder_count[remainder]\n    else:\n        total += remainder_count[k - remainder]\n\n# print the total\nprint(total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    d = list(map(int, sys.stdin.readline().split()))\n    d.sort()\n    c = 0\n    for i in range(n):\n        for j in range(n-1, i, -1):\n            if (d[i] + d[j]) % k == 0:\n                c += 1\n                d.pop(j)\n                break\n    print(c)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649882573,
+  "id": "cmpl-4we7BM3AQVxLVVj9LVSclqtwmTQdQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:43:12.009000 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef solve(nums, k):\n    mod = [0] * k\n    for num in nums:\n        mod[num % k] += 1\n    count = min(mod[0], 1)\n    for i in range(1, k//2 + 1):\n        if i != k - i:\n            count += max(mod[i], mod[k-i])\n    if k % 2 == 0:\n        count += 1\n    return count\n\nif __name__ == '__main__':\n    n, k = map(int, input().split())\n    nums = list(map(int, input().split()))\n    print(solve(nums, k))"
+}
+2022-04-13 20:43:12.009036 REASON stop
+2022-04-13 20:43:12.009757 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,k = map(int, input().split())\n    d = list(map(int, input().split()))\n    d.sort()\n    if k == 1:\n        print(n)\n        return\n    if d[0] > k:\n        print(0)\n        return\n    ans = 0\n    for i in range(n):\n        if d[i]%k == 0:\n            continue\n        d1 = d[i]%k\n        d2 = k - d1\n        j = i+1\n        while(j<n and d[j]%k != d1):\n            j += 1\n        if j<n:\n            ans += 1\n            d[i] = 0\n            d[j] = 0\n            j += 1\n            while (j<n and d[j]%k != d1):\n                j += 1\n            if j<n:\n                ans += 1\n                d[j] = 0\n    for i in range(n):\n        if d[i]%k == 0:\n            ans += 1\n    print(ans)\n\nmain()"
+}
+2022-04-13 20:43:12.009906 REASON stop
+2022-04-13 20:43:12.010377 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd.sort()\n\nl = 0\nr = n - 1\nans = 0\nwhile l < r:\n    if (d[l] + d[r]) % k == 0:\n        ans += 1\n        l += 1\n        r -= 1\n    elif d[l] % k > (k - d[l] % k):\n        r -= 1\n    else:\n        l += 1\n\nprint(ans)"
+}
+2022-04-13 20:43:12.010432 REASON stop
+2022-04-13 20:43:12.051643 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\nd.sort()\n\ni = 0\nj = n - 1\ncnt = 0\nwhile i < j:\n    if d[i] + d[j] < k:\n        i += 1\n    elif d[i] + d[j] > k:\n        j -= 1\n    else:\n        i += 1\n        j -= 1\n        cnt += 2\n\nprint(cnt)"
+}
+2022-04-13 20:43:12.051768 REASON stop
+2022-04-13 20:43:12.070626 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\nd = list(map(int, input().split()))\n\nd = [i % k for i in d]\n\ncount = [0] * k\n\nfor i in d:\n    count[i] += 1\n\nans = 0\nfor i in range(k // 2 + 1):\n    if i == 0:\n        ans += min(count[i], 1)\n    else:\n        ans += max(count[i], count[k - i])\n\nif k % 2 == 0:\n    ans += min(count[k // 2], 1)\n\nprint(ans)"
+}
+2022-04-13 20:43:12.070732 REASON stop
+2022-04-13 20:43:12.071386 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom collections import defaultdict\n\n# read input\nn, k = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\n# create a dictionary with the number of boxes with each remainder\nremainder_count = defaultdict(int)\nfor num in d:\n    remainder_count[num % k] += 1\n\n# add the best pairs of boxes to the total\ntotal = 0\nfor remainder in remainder_count:\n    if remainder == 0:\n        total += remainder_count[remainder] // 2\n    elif remainder_count[remainder] >= remainder_count[k - remainder]:\n        total += remainder_count[remainder]\n    else:\n        total += remainder_count[k - remainder]\n\n# print the total\nprint(total)"
+}
+2022-04-13 20:43:12.071447 REASON stop
+2022-04-13 20:43:12.072071 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    d = list(map(int, sys.stdin.readline().split()))\n    d.sort()\n    c = 0\n    for i in range(n):\n        for j in range(n-1, i, -1):\n            if (d[i] + d[j]) % k == 0:\n                c += 1\n                d.pop(j)\n                break\n    print(c)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:43:12.072124 REASON stop

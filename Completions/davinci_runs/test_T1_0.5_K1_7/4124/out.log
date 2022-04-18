@@ -1,0 +1,161 @@
+2022-04-13 18:33:01.088331 """
+You are given two strings $s$ and $t$. In a single move, you can choose any of two strings and delete the first (that is, the leftmost) character. After a move, the length of the string decreases by $1$. You can't choose a string if it is empty.
+
+For example:  by applying a move to the string "where", the result is the string "here",  by applying a move to the string "a", the result is an empty string "". 
+
+You are required to make two given strings equal using the fewest number of moves. It is possible that, in the end, both strings will be equal to the empty string, and so, are equal to each other. In this case, the answer is obviously the sum of the lengths of the initial strings.
+
+Write a program that finds the minimum number of moves to make two given strings $s$ and $t$ equal.
+
+
+-----Input-----
+
+The first line of the input contains $s$. In the second line of the input contains $t$. Both strings consist only of lowercase Latin letters. The number of letters in each string is between 1 and $2\cdot10^5$, inclusive.
+
+
+-----Output-----
+
+Output the fewest number of moves required. It is possible that, in the end, both strings will be equal to the empty string, and so, are equal to each other. In this case, the answer is obviously the sum of the lengths of the given strings.
+
+
+-----Examples-----
+Input
+test
+west
+
+Output
+2
+
+Input
+codeforces
+yes
+
+Output
+9
+
+Input
+test
+yes
+
+Output
+7
+
+Input
+b
+ab
+
+Output
+1
+
+
+
+-----Note-----
+
+In the first example, you should apply the move once to the first string and apply the move once to the second string. As a result, both strings will be equal to "est".
+
+In the second example, the move should be applied to the string "codeforces" $8$ times. As a result, the string becomes "codeforces" $\to$ "es". The move should be applied to the string "yes" once. The result is the same string "yes" $\to$ "es".
+
+In the third example, you can make the strings equal only by completely deleting them. That is, in the end, both strings will be empty.
+
+In the fourth example, the first character of the second string should be deleted.
+"""
+2022-04-13 18:33:01.088339 --------------------------
+2022-04-13 18:33:26.734138 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    t = input()\n    print(len(s) + len(t) - 2*LCS(s,t))\n\ndef LCS(s, t):\n    if len(s) == 0 or len(t) == 0:\n        return 0\n    if s[0] == t[0]:\n        return 1 + LCS(s[1:], t[1:])\n    else:\n        return max(LCS(s[1:], t), LCS(s, t[1:]))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    t = input()\n    if len(s) < len(t):\n        s, t = t, s\n    while len(t) > 0:\n        if s[0] == t[0]:\n            s = s[1:]\n            t = t[1:]\n        else:\n            s = s[1:]\n    print(len(s))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nstring1 = input()\nstring2 = input()\n\n# create a dictionary to store the number of times a character appears in each string\ndict1 = {}\ndict2 = {}\n\n# loop through characters in each string and add to dictionary\nfor i in range(len(string1)):\n    if string1[i] in dict1:\n        dict1[string1[i]] += 1\n    else:\n        dict1[string1[i]] = 1\n\nfor i in range(len(string2)):\n    if string2[i] in dict2:\n        dict2[string2[i]] += 1\n    else:\n        dict2[string2[i]] = 1\n\n# create a dictionary to store the number of times a character appears in both strings\ndict3 = {}\n\n# loop through keys in each dictionary and add to third dictionary\nfor key in dict1:\n    if key in dict2:\n        dict3[key] = min(dict1[key], dict2[key])\n\n# create a variable to store the number of times a character appears the same number of times in both strings\nsame = 0\n\n# loop through keys in dictionary and add to variable\nfor key in dict3:\n    same += dict3[key]\n\n# create a variable to store the number of times a character appears more in one string than the other\ndiff = abs(len(string1) - len(string2)) - same\n\n# print the number of moves to make both strings equal\nprint(same + diff)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\nn = len(s)\nm = len(t)\n\ndp = [[0 for j in range(m+1)] for i in range(n+1)]\n\nfor i in range(n+1):\n    for j in range(m+1):\n        if i == 0:\n            dp[i][j] = j\n        elif j == 0:\n            dp[i][j] = i\n        elif s[i-1] == t[j-1]:\n            dp[i][j] = dp[i-1][j-1]\n        else:\n            dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])\n\nprint(dp[n][m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\ndef main():\n    s = input()\n    t = input()\n    n = len(s)\n    m = len(t)\n    \n    dp = [[0 for i in range(m+1)] for j in range(n+1)]\n    for i in range(1, n+1):\n        dp[i][0] = dp[i-1][0] + 1\n    for j in range(1, m+1):\n        dp[0][j] = dp[0][j-1] + 1\n        \n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1]\n            else:\n                dp[i][j] = min(dp[i][j-1], dp[i-1][j]) + 1\n                \n    print(dp[n][m])\n    \nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\nprint(len(s) + len(t) - 2 * len(set(s) & set(t)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ns = input()\nt = input()\n\nif s == t:\n    print(0)\nelif s == t[::-1]:\n    print(len(s))\nelse:\n    print(len(s) + len(t))"
+    }
+  ],
+  "created": 1649874781,
+  "id": "cmpl-4wc5VPjXhHE4V6JpWcQJkNQBINkjr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 18:33:26.734422 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    t = input()\n    print(len(s) + len(t) - 2*LCS(s,t))\n\ndef LCS(s, t):\n    if len(s) == 0 or len(t) == 0:\n        return 0\n    if s[0] == t[0]:\n        return 1 + LCS(s[1:], t[1:])\n    else:\n        return max(LCS(s[1:], t), LCS(s, t[1:]))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 18:33:26.734454 REASON stop
+2022-04-13 18:33:26.734876 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    t = input()\n    if len(s) < len(t):\n        s, t = t, s\n    while len(t) > 0:\n        if s[0] == t[0]:\n            s = s[1:]\n            t = t[1:]\n        else:\n            s = s[1:]\n    print(len(s))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 18:33:26.734991 REASON stop
+2022-04-13 18:33:26.735352 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nstring1 = input()\nstring2 = input()\n\n# create a dictionary to store the number of times a character appears in each string\ndict1 = {}\ndict2 = {}\n\n# loop through characters in each string and add to dictionary\nfor i in range(len(string1)):\n    if string1[i] in dict1:\n        dict1[string1[i]] += 1\n    else:\n        dict1[string1[i]] = 1\n\nfor i in range(len(string2)):\n    if string2[i] in dict2:\n        dict2[string2[i]] += 1\n    else:\n        dict2[string2[i]] = 1\n\n# create a dictionary to store the number of times a character appears in both strings\ndict3 = {}\n\n# loop through keys in each dictionary and add to third dictionary\nfor key in dict1:\n    if key in dict2:\n        dict3[key] = min(dict1[key], dict2[key])\n\n# create a variable to store the number of times a character appears the same number of times in both strings\nsame = 0\n\n# loop through keys in dictionary and add to variable\nfor key in dict3:\n    same += dict3[key]\n\n# create a variable to store the number of times a character appears more in one string than the other\ndiff = abs(len(string1) - len(string2)) - same\n\n# print the number of moves to make both strings equal\nprint(same + diff)"
+}
+2022-04-13 18:33:26.735431 REASON stop
+2022-04-13 18:33:26.752664 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\nn = len(s)\nm = len(t)\n\ndp = [[0 for j in range(m+1)] for i in range(n+1)]\n\nfor i in range(n+1):\n    for j in range(m+1):\n        if i == 0:\n            dp[i][j] = j\n        elif j == 0:\n            dp[i][j] = i\n        elif s[i-1] == t[j-1]:\n            dp[i][j] = dp[i-1][j-1]\n        else:\n            dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])\n\nprint(dp[n][m])"
+}
+2022-04-13 18:33:26.752766 REASON stop
+2022-04-13 18:33:26.776280 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\ndef main():\n    s = input()\n    t = input()\n    n = len(s)\n    m = len(t)\n    \n    dp = [[0 for i in range(m+1)] for j in range(n+1)]\n    for i in range(1, n+1):\n        dp[i][0] = dp[i-1][0] + 1\n    for j in range(1, m+1):\n        dp[0][j] = dp[0][j-1] + 1\n        \n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1]\n            else:\n                dp[i][j] = min(dp[i][j-1], dp[i-1][j]) + 1\n                \n    print(dp[n][m])\n    \nmain()"
+}
+2022-04-13 18:33:26.776399 REASON stop
+2022-04-13 18:33:26.777165 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\nprint(len(s) + len(t) - 2 * len(set(s) & set(t)))"
+}
+2022-04-13 18:33:26.777223 REASON stop
+2022-04-13 18:33:26.778613 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ns = input()\nt = input()\n\nif s == t:\n    print(0)\nelif s == t[::-1]:\n    print(len(s))\nelse:\n    print(len(s) + len(t))"
+}
+2022-04-13 18:33:26.778671 REASON stop

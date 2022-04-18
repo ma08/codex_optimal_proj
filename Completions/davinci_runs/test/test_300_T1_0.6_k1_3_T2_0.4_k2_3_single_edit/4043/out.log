@@ -1,0 +1,118 @@
+2022-04-18 01:53:54.356138 """
+You are given three integers $n$, $d$ and $k$.
+
+Your task is to construct an undirected tree on $n$ vertices with diameter $d$ and degree of each vertex at most $k$, or say that it is impossible.
+
+An undirected tree is a connected undirected graph with $n - 1$ edges.
+
+Diameter of a tree is the maximum length of a simple path (a path in which each vertex appears at most once) between all pairs of vertices of this tree.
+
+Degree of a vertex is the number of edges incident to this vertex (i.e. for a vertex $u$ it is the number of edges $(u, v)$ that belong to the tree, where $v$ is any other vertex of a tree).
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $d$ and $k$ ($1 \le n, d, k \le 4 \cdot 10^5$).
+
+
+-----Output-----
+
+If there is no tree satisfying the conditions above, print only one word "NO" (without quotes).
+
+Otherwise in the first line print "YES" (without quotes), and then print $n - 1$ lines describing edges of a tree satisfying the conditions above. Vertices of the tree must be numbered from $1$ to $n$. You can print edges and vertices connected by an edge in any order. If there are multiple answers, print any of them.1
+
+
+-----Examples-----
+Input
+6 3 3
+
+Output
+YES
+3 1
+4 1
+1 2
+5 2
+2 6
+
+Input
+6 2 3
+
+Output
+NO
+
+Input
+10 4 3
+
+Output
+YES
+2 9
+2 10
+10 3
+3 1
+6 10
+8 2
+4 3
+5 6
+6 7
+
+Input
+8 5 3
+
+Output
+YES
+2 5
+7 2
+3 7
+3 1
+1 6
+8 7
+4 3
+"""
+2022-04-18 01:53:54.356164 --------------------------
+2022-04-18 01:54:43.402996 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef main():\n    n, d, k = map(int, stdin.readline().strip().split(\" \"))\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i + 1))\n            return\n    if k < d - 1:\n        print(\"NO\")\n        return\n    if n == 2:\n        print(\"YES\")\n        print(\"1 2\")\n        return\n    if d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 3:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        for i in range(1, n - 1):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 4:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        print(\"{} {}\".format(1, n - 1))\n        print(\"{} {}\".format(2, n - 1))\n        for i in range(3, n - 2):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 5:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        print(\"{} {}\".format(1, n - 1))\n        print(\"{} {}\".format(2, n - 1))\n        print(\"{} {}\".format(2, n - 2))\n        print(\"{} {}\".format(3, n - 2))\n        for i in range(4, n - 3):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\nfrom heapq import *\n\ndef add_edge(graph, frm, to, cost=1):\n    if frm == to: raise ValueError('invalid edge {}:{} -> {}'.format(cost, frm, to))\n    graph[frm].append((to, cost))\n    graph[to].append((frm, cost))\n\ndef readl():\n    return map(int, sys.stdin.readline().split())\n\ndef dijkstra(graph, start, end):\n    queue, enqueued = [(0, start, ())], set([start])\n    while queue:\n        (cost, v1, path) = heappop(queue)\n        if v1 not in enqueued:\n            enqueued.add(v1)\n            path = (v1, path)\n            if v1 == end:\n                return (cost, path)\n\n            for v2, c in graph[v1]:\n                if v2 not in enqueued:\n                    heappush(queue, (cost + c, v2, path))\n\n    return float(\"inf\")\n\ndef generate_graph(n, d, k):\n    if d > n:\n        return float(\"inf\")\n\n    if d == 1:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        else:\n            return float(\"inf\")\n\n    if d == 2:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 2:\n            return [1, 2]\n        else:\n            return float(\"inf\")\n\n    if d == 3:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 4:\n            return [1, 2, 3, 3, 4, 5]\n        else:\n            return float(\"inf\")\n\n    if d == 4:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 3:\n            return [1, 2, 3, 4, 5, 6]\n        else:\n            return float(\"inf\")\n\n    if k >= 4:\n        return [1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11]\n\n    return float(\"inf\")\n\ndef main():\n    n, d, k = readl()\n    graph = generate_graph(n, d, k)\n    if graph == float(\"inf\"):\n        print \"NO\"\n        sys.exit(0)\n\n    print \"YES\"\n    for i in range(1, n):\n        print i, graph[i - 1]\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650246834,
+  "id": "cmpl-4yAsMUCnTbXhr4R11sI18zgCN6k1C",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 01:54:43.403287 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef main():\n    n, d, k = map(int, stdin.readline().strip().split(\" \"))\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i + 1))\n            return\n    if k < d - 1:\n        print(\"NO\")\n        return\n    if n == 2:\n        print(\"YES\")\n        print(\"1 2\")\n        return\n    if d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 3:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        for i in range(1, n - 1):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 4:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        print(\"{} {}\".format(1, n - 1))\n        print(\"{} {}\".format(2, n - 1))\n        for i in range(3, n - 2):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    if d == 5:\n        print(\"YES\")\n        print(\"{} {}\".format(1, n))\n        print(\"{} {}\".format(1, n - 1))\n        print(\"{} {}\".format(2, n - 1))\n        print(\"{} {}\".format(2, n - 2))\n        print(\"{} {}\".format(3, n - 2))\n        for i in range(4, n - 3):\n            print(\"{} {}\".format(i, i + 1))\n        return\n    print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 01:54:43.403333 REASON stop
+2022-04-18 01:54:43.419750 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-18 01:54:43.419822 REASON stop
+2022-04-18 01:54:43.420358 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\nfrom collections import defaultdict\nfrom heapq import *\n\ndef add_edge(graph, frm, to, cost=1):\n    if frm == to: raise ValueError('invalid edge {}:{} -> {}'.format(cost, frm, to))\n    graph[frm].append((to, cost))\n    graph[to].append((frm, cost))\n\ndef readl():\n    return map(int, sys.stdin.readline().split())\n\ndef dijkstra(graph, start, end):\n    queue, enqueued = [(0, start, ())], set([start])\n    while queue:\n        (cost, v1, path) = heappop(queue)\n        if v1 not in enqueued:\n            enqueued.add(v1)\n            path = (v1, path)\n            if v1 == end:\n                return (cost, path)\n\n            for v2, c in graph[v1]:\n                if v2 not in enqueued:\n                    heappush(queue, (cost + c, v2, path))\n\n    return float(\"inf\")\n\ndef generate_graph(n, d, k):\n    if d > n:\n        return float(\"inf\")\n\n    if d == 1:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        else:\n            return float(\"inf\")\n\n    if d == 2:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 2:\n            return [1, 2]\n        else:\n            return float(\"inf\")\n\n    if d == 3:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 4:\n            return [1, 2, 3, 3, 4, 5]\n        else:\n            return float(\"inf\")\n\n    if d == 4:\n        if k >= n - 1:\n            return [1 for i in range(n - 1)]\n        elif k >= 3:\n            return [1, 2, 3, 4, 5, 6]\n        else:\n            return float(\"inf\")\n\n    if k >= 4:\n        return [1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10, 11]\n\n    return float(\"inf\")\n\ndef main():\n    n, d, k = readl()\n    graph = generate_graph(n, d, k)\n    if graph == float(\"inf\"):\n        print \"NO\"\n        sys.exit(0)\n\n    print \"YES\"\n    for i in range(1, n):\n        print i, graph[i - 1]\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 01:54:43.420458 REASON stop

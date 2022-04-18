@@ -1,0 +1,158 @@
+2022-04-13 17:49:37.377368 """
+You are given two strings $s$ and $t$. Both strings have length $n$ and consist of lowercase Latin letters. The characters in the strings are numbered from $1$ to $n$.
+
+You can successively perform the following move any number of times (possibly, zero):  swap any two adjacent (neighboring) characters of $s$ (i.e. for any $i = \{1, 2, \dots, n - 1\}$ you can swap $s_i$ and $s_{i + 1})$. 
+
+You can't apply a move to the string $t$. The moves are applied to the string $s$ one after another.
+
+Your task is to obtain the string $t$ from the string $s$. Find any way to do it with at most $10^4$ such moves.
+
+You do not have to minimize the number of moves, just find any sequence of moves of length $10^4$ or less to transform $s$ into $t$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 50$) — the length of strings $s$ and $t$.
+
+The second line of the input contains the string $s$ consisting of $n$ lowercase Latin letters.
+
+The third line of the input contains the string $t$ consisting of $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to obtain the string $t$ using moves, print "-1".
+
+Otherwise in the first line print one integer $k$ — the number of moves to transform $s$ to $t$. Note that $k$ must be an integer number between $0$ and $10^4$ inclusive.
+
+In the second line print $k$ integers $c_j$ ($1 \le c_j < n$), where $c_j$ means that on the $j$-th move you swap characters $s_{c_j}$ and $s_{c_j + 1}$.
+
+If you do not need to apply any moves, print a single integer $0$ in the first line and either leave the second line empty or do not print it at all.
+
+
+-----Examples-----
+Input
+6
+abcdef
+abdfec
+
+Output
+4
+3 5 4 5 
+
+Input
+4
+abcd
+accd
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the string $s$ changes as follows: "abcdef" $\rightarrow$ "abdcef" $\rightarrow$ "abdcfe" $\rightarrow$ "abdfce" $\rightarrow$ "abdfec".
+
+In the second example there is no way to transform the string $s$ into the string $t$ through any allowed moves.
+"""
+2022-04-13 17:49:37.377413 --------------------------
+2022-04-13 17:50:22.917518 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n\n    if s == t:\n        print(0)\n        return\n\n    # Use a dictionary to store the locations of each character\n    s_dict = {}\n    for i in range(n):\n        if s[i] in s_dict:\n            s_dict[s[i]].append(i)\n        else:\n            s_dict[s[i]] = [i]\n    \n    # Use a dictionary to store the locations of each character\n    t_dict = {}\n    for i in range(n):\n        if t[i] in t_dict:\n            t_dict[t[i]].append(i)\n        else:\n            t_dict[t[i]] = [i]\n\n    # If a character is not in both dictionaries, then it is impossible to transform s to t\n    for key in s_dict:\n        if key not in t_dict:\n            print(-1)\n            return\n\n    # If the number of a character in s is not equal to the number of that character in t, then it is impossible to transform s to t\n    for key in s_dict:\n        if len(s_dict[key]) != len(t_dict[key]):\n            print(-1)\n            return\n\n    # If the locations of a character in s is not equal to the locations of that character in t, then it is impossible to transform s to t\n    for key in s_dict:\n        if s_dict[key] != t_dict[key]:\n            print(-1)\n            return\n\n    # If we have not returned a -1 yet, then it is possible to transform s to t\n    # We will use a greedy algorithm to perform the swaps\n    # We will start from the left and swap the next character with the next character in t\n    # Then we will continue from the left and swap the next character with the next character in t\n    # We will continue this until we have swapped all characters\n\n    # We will use a list to store the swaps\n    swaps = []\n    for i in range(n):\n        # If the i-th character in s is already in the i-th position in t, then we do not need to swap\n        if s[i] == t[i]:\n            continue\n        # Otherwise, we will find the location of the i-th character in t in s\n        for j in range(i+1, n):\n            if s[j] == t[i]:\n                # We will swap the i-th character with the j-th character\n                swaps.append(j)\n                s = s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n                break\n    \n    # If the number of swaps are greater than 10^4, then it is impossible to transform s to t\n    if len(swaps) > 10000:\n        print(-1)\n        return\n    \n    # Otherwise, we will print the number of swaps and the swaps\n    print(len(swaps))\n    for swap in swaps:\n        print(swap, end = \" \")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    #print(s,t)\n    #print(n)\n    moves = 0\n    i = 0\n    c = []\n    while (i < n-1):\n        if (s[i] != t[i]):\n            if (s[i+1] == t[i]):\n                c.append(i+1)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                moves += 1\n                #print(s,t)\n            elif (s[i+1] == t[i+1]):\n                c.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                moves += 1\n                #print(s,t)\n                i -= 1\n            else:\n                print(-1)\n                return\n        i += 1\n    if (s != t):\n        print(-1)\n        return\n    print(moves)\n    for i in c:\n        print(i, end = \" \")\n    \n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\n\ns = input()\n\nt = input()\n\nmove = []\n\nwhile t != s:\n    for i in range(n-1):\n        if t[i] != s[i]:\n            if t[i+1] == s[i]:\n                move.append(i+1)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n            elif t[i+1] == s[i+1]:\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n            else:\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n    if t != s:\n        move = []\n        break\n\nif move == []:\n    print(-1)\nelse:\n    print(len(move))\n    for i in move:\n        print(i+1, end = \" \")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(0)\n        return\n    if len(set(t)) != len(set(s)):\n        print(-1)\n        return\n    s = list(s)\n    t = list(t)\n    moves = []\n    for i in range(n):\n        if s[i] == t[i]:\n            continue\n        for j in range(i+1, n):\n            if s[j] == t[i]:\n                moves.append(i)\n                s = s[:i] + [s[j]] + s[i+1:j] + [s[i]] + s[j+1:]\n                break\n        else:\n            print(-1)\n            return\n    print(len(moves))\n    print(*moves)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(n, s, t):\n    if s == t:\n        return 0\n    swaps = []\n    # find the first mismatch\n    for i in range(n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    if s == t:\n        return swaps\n    else:\n        return -1\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    t = input()\n    swaps = solve(n, s, t)\n    if swaps == -1:\n        print(swaps)\n    else:\n        print(len(swaps))\n        print(\" \".join(str(swap) for swap in swaps))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s, i):\n    return s[:i] + s[i + 1] + s[i] + s[i + 2:]\n\ndef is_swap(s, t, i):\n    return s[:i] + s[i + 1] + s[i] + s[i + 2:] == t\n\ndef is_swap_2(s, t, i):\n    return s[:i] + s[i + 2] + s[i] + s[i + 1] + s[i + 3:] == t\n\ndef solve():\n    for i in range(n - 1):\n        if s[i] != t[i]:\n            if is_swap(s, t, i):\n                print(1)\n                print(i + 1)\n                return\n            elif is_swap(s, t, i + 1):\n                print(1)\n                print(i + 2)\n                return\n            elif is_swap_2(s, t, i):\n                print(2)\n                print(i + 1, i + 2)\n                return\n            else:\n                print(-1)\n                return\n    print(0)\n\nsolve()"
+    }
+  ],
+  "created": 1649872177,
+  "id": "cmpl-4wbPVYFb4Lj0W8XkW0HRkXdXmMnSr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 17:50:22.917969 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n\n    if s == t:\n        print(0)\n        return\n\n    # Use a dictionary to store the locations of each character\n    s_dict = {}\n    for i in range(n):\n        if s[i] in s_dict:\n            s_dict[s[i]].append(i)\n        else:\n            s_dict[s[i]] = [i]\n    \n    # Use a dictionary to store the locations of each character\n    t_dict = {}\n    for i in range(n):\n        if t[i] in t_dict:\n            t_dict[t[i]].append(i)\n        else:\n            t_dict[t[i]] = [i]\n\n    # If a character is not in both dictionaries, then it is impossible to transform s to t\n    for key in s_dict:\n        if key not in t_dict:\n            print(-1)\n            return\n\n    # If the number of a character in s is not equal to the number of that character in t, then it is impossible to transform s to t\n    for key in s_dict:\n        if len(s_dict[key]) != len(t_dict[key]):\n            print(-1)\n            return\n\n    # If the locations of a character in s is not equal to the locations of that character in t, then it is impossible to transform s to t\n    for key in s_dict:\n        if s_dict[key] != t_dict[key]:\n            print(-1)\n            return\n\n    # If we have not returned a -1 yet, then it is possible to transform s to t\n    # We will use a greedy algorithm to perform the swaps\n    # We will start from the left and swap the next character with the next character in t\n    # Then we will continue from the left and swap the next character with the next character in t\n    # We will continue this until we have swapped all characters\n\n    # We will use a list to store the swaps\n    swaps = []\n    for i in range(n):\n        # If the i-th character in s is already in the i-th position in t, then we do not need to swap\n        if s[i] == t[i]:\n            continue\n        # Otherwise, we will find the location of the i-th character in t in s\n        for j in range(i+1, n):\n            if s[j] == t[i]:\n                # We will swap the i-th character with the j-th character\n                swaps.append(j)\n                s = s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n                break\n    \n    # If the number of swaps are greater than 10^4, then it is impossible to transform s to t\n    if len(swaps) > 10000:\n        print(-1)\n        return\n    \n    # Otherwise, we will print the number of swaps and the swaps\n    print(len(swaps))\n    for swap in swaps:\n        print(swap, end = \" \")\n\nmain()"
+}
+2022-04-13 17:50:22.918023 REASON stop
+2022-04-13 17:50:22.918451 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    #print(s,t)\n    #print(n)\n    moves = 0\n    i = 0\n    c = []\n    while (i < n-1):\n        if (s[i] != t[i]):\n            if (s[i+1] == t[i]):\n                c.append(i+1)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                moves += 1\n                #print(s,t)\n            elif (s[i+1] == t[i+1]):\n                c.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                moves += 1\n                #print(s,t)\n                i -= 1\n            else:\n                print(-1)\n                return\n        i += 1\n    if (s != t):\n        print(-1)\n        return\n    print(moves)\n    for i in c:\n        print(i, end = \" \")\n    \n\nmain()"
+}
+2022-04-13 17:50:22.918585 REASON stop
+2022-04-13 17:50:22.918968 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\n\ns = input()\n\nt = input()\n\nmove = []\n\nwhile t != s:\n    for i in range(n-1):\n        if t[i] != s[i]:\n            if t[i+1] == s[i]:\n                move.append(i+1)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n            elif t[i+1] == s[i+1]:\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n            else:\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                move.append(i)\n                s = s[:i] + s[i+1] + s[i] + s[i+2:]\n                break\n    if t != s:\n        move = []\n        break\n\nif move == []:\n    print(-1)\nelse:\n    print(len(move))\n    for i in move:\n        print(i+1, end = \" \")"
+}
+2022-04-13 17:50:22.919019 REASON stop
+2022-04-13 17:50:22.920074 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:50:22.920124 REASON stop
+2022-04-13 17:50:22.944022 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(0)\n        return\n    if len(set(t)) != len(set(s)):\n        print(-1)\n        return\n    s = list(s)\n    t = list(t)\n    moves = []\n    for i in range(n):\n        if s[i] == t[i]:\n            continue\n        for j in range(i+1, n):\n            if s[j] == t[i]:\n                moves.append(i)\n                s = s[:i] + [s[j]] + s[i+1:j] + [s[i]] + s[j+1:]\n                break\n        else:\n            print(-1)\n            return\n    print(len(moves))\n    print(*moves)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 17:50:22.944132 REASON stop
+2022-04-13 17:50:22.944921 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(n, s, t):\n    if s == t:\n        return 0\n    swaps = []\n    # find the first mismatch\n    for i in range(n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    # find the next mismatch\n    for i in range(i+1, n):\n        if s[i] != t[i]:\n            break\n    # find the char that is supposed to be at index i\n    for j in range(i+1, n):\n        if t[j] == t[i]:\n            break\n    # swap\n    swaps.append(j-1)\n    s = s[:j-1] + s[j] + s[j-1] + s[j+1:]\n    if s == t:\n        return swaps\n    else:\n        return -1\n\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    t = input()\n    swaps = solve(n, s, t)\n    if swaps == -1:\n        print(swaps)\n    else:\n        print(len(swaps))\n        print(\" \".join(str(swap) for swap in swaps))"
+}
+2022-04-13 17:50:22.944990 REASON stop
+2022-04-13 17:50:22.959571 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s, i):\n    return s[:i] + s[i + 1] + s[i] + s[i + 2:]\n\ndef is_swap(s, t, i):\n    return s[:i] + s[i + 1] + s[i] + s[i + 2:] == t\n\ndef is_swap_2(s, t, i):\n    return s[:i] + s[i + 2] + s[i] + s[i + 1] + s[i + 3:] == t\n\ndef solve():\n    for i in range(n - 1):\n        if s[i] != t[i]:\n            if is_swap(s, t, i):\n                print(1)\n                print(i + 1)\n                return\n            elif is_swap(s, t, i + 1):\n                print(1)\n                print(i + 2)\n                return\n            elif is_swap_2(s, t, i):\n                print(2)\n                print(i + 1, i + 2)\n                return\n            else:\n                print(-1)\n                return\n    print(0)\n\nsolve()"
+}
+2022-04-13 17:50:22.959713 REASON stop

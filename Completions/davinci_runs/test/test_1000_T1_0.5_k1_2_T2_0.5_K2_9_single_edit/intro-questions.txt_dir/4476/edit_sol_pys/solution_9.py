@@ -1,0 +1,25 @@
+
+"""
+This is the solution for the problem
+"""
+# SOLUTION
+
+import sys
+import math
+
+t = int(input())
+for _ in range(t):
+    a, b = map(int, sys.stdin.readline().strip().split())
+    if a == b:
+        print(0)
+    else:
+        if a % 2 == 1:
+            if b % 2 == 1:
+                print(int(math.ceil(abs(a - b) / 2.0)))
+            else:
+                print(int(math.ceil(abs(a - b) / 2.0)) + 1)
+        else:
+            if b % 2 == 1:
+                print(int(math.ceil(abs(a - b) / 2.0)) + 1)
+            else:
+                print(int(math.ceil(abs(a - b) / 2.0)))

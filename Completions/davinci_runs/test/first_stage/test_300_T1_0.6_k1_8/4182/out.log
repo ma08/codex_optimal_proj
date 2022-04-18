@@ -1,0 +1,155 @@
+2022-04-16 20:06:35.554246 """
+Our world is one-dimensional, and ruled by two empires called Empire A and Empire B.
+The capital of Empire A is located at coordinate X, and that of Empire B is located at coordinate Y.
+One day, Empire A becomes inclined to put the cities at coordinates x_1, x_2, ..., x_N under its control, and Empire B becomes inclined to put the cities at coordinates y_1, y_2, ..., y_M under its control.
+If there exists an integer Z that satisfies all of the following three conditions, they will come to an agreement, but otherwise war will break out.
+ - X < Z \leq Y
+ - x_1, x_2, ..., x_N < Z
+ - y_1, y_2, ..., y_M \geq Z
+Determine if war will break out.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N, M \leq 100
+ - -100 \leq X < Y \leq 100
+ - -100 \leq x_i, y_i \leq 100
+ - x_1, x_2, ..., x_N \neq X
+ - x_i are all different.
+ - y_1, y_2, ..., y_M \neq Y
+ - y_i are all different.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M X Y
+x_1 x_2 ... x_N
+y_1 y_2 ... y_M
+
+-----Output-----
+If war will break out, print War; otherwise, print No War.
+
+-----Sample Input-----
+3 2 10 20
+8 15 13
+16 22
+
+-----Sample Output-----
+No War
+
+The choice Z = 16 satisfies all of the three conditions as follows, thus they will come to an agreement.
+ - X = 10 < 16 \leq 20 = Y
+ - 8, 15, 13 < 16
+ - 16, 22 \geq 16
+"""
+2022-04-16 20:06:35.554268 --------------------------
+2022-04-16 20:07:33.835528 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    inputs = sys.stdin.readline().split()\n    N = int(inputs[0])\n    M = int(inputs[1])\n    X = int(inputs[2])\n    Y = int(inputs[3])\n    x = [int(i) for i in sys.stdin.readline().split()]\n    y = [int(i) for i in sys.stdin.readline().split()]\n\n    for i in range(X+1, Y+1):\n        if i > max(x) and i <= min(y):\n            print(\"No War\")\n            return\n\n    print(\"War\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN, M, X, Y = map(int, input().split())\nx = list(map(int, input().split()))\ny = list(map(int, input().split()))\n\nx.append(X)\ny.append(Y)\n\nx.sort()\ny.sort()\n\n# print(x)\n# print(y)\n\nfor i in range(X+1, Y+1):\n    if x[N] < i <= y[M]:\n        print('No War')\n        exit()\n\nprint('War')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m, x, y = map(int, input().split())\n    xs = list(map(int, input().split()))\n    ys = list(map(int, input().split()))\n    xs.sort()\n    ys.sort()\n    if x < xs[0] and ys[-1] < y:\n        print(\"No War\")\n    else:\n        print(\"War\")\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, m, x, y = map(int, input().split())\nx_list = list(map(int, input().split()))\ny_list = list(map(int, input().split()))\n\nfor z in range(x + 1, y + 1):\n    if all([x < z for x in x_list]) and all([y >= z for y in y_list]):\n        print('No War')\n        exit()\n\nprint('War')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    \"\"\"\n    x1, x2, ..., xN\u3068y1, y2, ..., yM\u304c\u4e0e\u3048\u3089\u308c\u305f\u6642\u3001\u4e21\u56fd\u304c\u6226\u4e89\u3092\u8d77\u3053\u3059\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    \"\"\"\n    # N, M, X, Y\u3092\u53d7\u3051\u53d6\u308b\n    n, m, x, y = map(int, input().split())\n\n    # x1, x2, ..., xN\u3092\u53d7\u3051\u53d6\u308b\n    x_list = list(map(int, input().split()))\n\n    # y1, y2, ..., yM\u3092\u53d7\u3051\u53d6\u308b\n    y_list = list(map(int, input().split()))\n\n    # \u6226\u4e89\u3092\u8d77\u3053\u3059\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    # X < Z <= Y, x_1, x_2, ..., x_N < Z, y_1, y_2, ..., y_M >= Z\n    # \u3059\u3079\u3066\u306e\u6761\u4ef6\u3092\u6e80\u305f\u3059Z\u304c\u3042\u308b\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    for z in range(x + 1, y + 1):\n        if x < z <= y:\n            if all(x_i < z for x_i in x_list):\n                if all(y_i >= z for y_i in y_list):\n                    print(\"No War\")\n                    exit()\n\n    print(\"War\")\n\n\ndef test_main():\n    \"\"\"\n    \u4ee5\u4e0b\u306e\u30c6\u30b9\u30c8\u3092\u5168\u3066\u30d1\u30b9\u3059\u308b\u3053\u3068\u3092\u76ee\u6a19\u306b\u6b21\u306e\u30c6\u30b9\u30c8\u3092\u5b9f\u88c5\u3057\u3066\u3044\u304f\n    \u305d\u306e\u305f\u3081\u3001\u5404\u30c6\u30b9\u30c8\u3067\u306f pass \u304b raise \u3067\u691c\u8a3c\u3092\u884c\u3046\u3053\u3068\n    \u307e\u305f\u3001\u5b9f\u88c5\u306b\u95a2\u3057\u3066\u306f\u5168\u3066pass\u3092\u901a\u3057\u3066\u304b\u3089\u3001\u30c6\u30b9\u30c8\u3092\u5b9f\u88c5\u3059\u308b\n    \u305d\u306e\u305f\u3081\u3001\u5b9f\u88c5\u524d\u306e\u6bb5\u968e\u3067\u306f\u5168\u3066\u306e\u30c6\u30b9\u30c8\u3092\u30d1\u30b9\u3055\u305b\u3066\u304a\u304f\u3053\u3068\n\n    \u3010\u30c6\u30b9\u30c8\u5185\u5bb9\u3011\n    \u30fbNo War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    \u30fbWar\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    \u30fb\u5165\u529b\u5024\u304c\u6574\u6570\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c1 <= N, M <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c-100 <= X < Y <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c-100 <= x_i, y_i <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fbx_i\u304cX\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fbx_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fby_i\u304cY\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fby_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \"\"\"\n    # No War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    # \u5165\u529b\u5024\n    # N, M, X, Y\u306f\u6574\u6570\n    # 1 <= N, M <= 100\n    # -100 <= X < Y <= 100\n    # -100 <= x_i, y_i <= 100\n    # x_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001X\u3068\u7570\u306a\u308b\u5024\n    # y_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001Y\u3068\u7570\u306a\u308b\u5024\n    # \u51fa\u529b\u5024\n    # \"No War\"\u3092\u51fa\u529b\u3059\u308b\n    n_1, m_1, x_1, y_1 = 3, 2, 10, 20\n    x_list_1 = [8, 15, 13]\n    y_list_1 = [16, 22]\n    assert main() == \"No War\"\n\n    # War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    # \u5165\u529b\u5024\n    # N, M, X, Y\u306f\u6574\u6570\n    # 1 <= N, M <= 100\n    # -100 <= X < Y <= 100\n    # -100 <= x_i, y_i <= 100\n    # x_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001X\u3068\u7570\u306a\u308b\u5024\n    # y_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001Y\u3068\u7570\u306a\u308b\u5024\n    # \u51fa\u529b\u5024\n    # \"War\"\u3092\u51fa\u529b\u3059\u308b\n    n_2, m_2, x_2, y_2 = 3, 2, 10, 20\n    x_list_2 = [8, 15, 13]\n    y_list_2 = [16, 12]\n    assert main() == \"War\"\n\n    # \u5165\u529b\u5024\u304c\u6574\u6570\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c1 <= N, M <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c-100 <= X < Y <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c-100 <= x_i, y_i <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # x_i\u304cX\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # x_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # y_i\u304cY\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # y_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn, m, x, y = map(int, input().split())\nx_list = list(map(int, input().split()))\ny_list = list(map(int, input().split()))\n\nx_list.sort()\ny_list.sort()\n\nif x < x_list[0] and y_list[-1] < y:\n    print(\"No War\")\nelse:\n    print(\"War\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N, M, X, Y = map(int, input().split())\n    x_list = list(map(int, input().split()))\n    y_list = list(map(int, input().split()))\n\n    if X >= Y:\n        print(\"War\")\n        return\n\n    if X < min(x_list) or max(y_list) < Y:\n        print(\"War\")\n        return\n\n    x_list.sort()\n    y_list.sort()\n\n    for i in range(X + 1, Y):\n        if i > min(x_list) and i <= max(y_list):\n            print(\"No War\")\n            return\n        else:\n            if i > min(x_list):\n                x_list.pop(0)\n            if i <= max(y_list):\n                y_list.pop()\n\n    print(\"War\")\n    return\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# get input and convert to integers\nN, M, X, Y = map(int, input().split())\nX_list = list(map(int, input().split()))\nY_list = list(map(int, input().split()))\n\n# check if Z lies between X and Y, is greater than all X's, and less than all Y's\nfor i in range(X+1,Y):\n    if not any(i <= x for x in X_list) and not any(i > y for y in Y_list):\n        print(\"No War\")\n        exit()\n\n# if all checks fail, war will break out\nprint(\"War\")"
+    }
+  ],
+  "created": 1650139595,
+  "id": "cmpl-4xiyhiCEZLS7EqlQBzU25bxkO2IcS",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-16 20:07:33.835954 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    inputs = sys.stdin.readline().split()\n    N = int(inputs[0])\n    M = int(inputs[1])\n    X = int(inputs[2])\n    Y = int(inputs[3])\n    x = [int(i) for i in sys.stdin.readline().split()]\n    y = [int(i) for i in sys.stdin.readline().split()]\n\n    for i in range(X+1, Y+1):\n        if i > max(x) and i <= min(y):\n            print(\"No War\")\n            return\n\n    print(\"War\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:07:33.835994 REASON stop
+2022-04-16 20:07:33.854472 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN, M, X, Y = map(int, input().split())\nx = list(map(int, input().split()))\ny = list(map(int, input().split()))\n\nx.append(X)\ny.append(Y)\n\nx.sort()\ny.sort()\n\n# print(x)\n# print(y)\n\nfor i in range(X+1, Y+1):\n    if x[N] < i <= y[M]:\n        print('No War')\n        exit()\n\nprint('War')"
+}
+2022-04-16 20:07:33.854655 REASON stop
+2022-04-16 20:07:33.855181 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m, x, y = map(int, input().split())\n    xs = list(map(int, input().split()))\n    ys = list(map(int, input().split()))\n    xs.sort()\n    ys.sort()\n    if x < xs[0] and ys[-1] < y:\n        print(\"No War\")\n    else:\n        print(\"War\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:07:33.855254 REASON stop
+2022-04-16 20:07:33.867761 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, m, x, y = map(int, input().split())\nx_list = list(map(int, input().split()))\ny_list = list(map(int, input().split()))\n\nfor z in range(x + 1, y + 1):\n    if all([x < z for x in x_list]) and all([y >= z for y in y_list]):\n        print('No War')\n        exit()\n\nprint('War')"
+}
+2022-04-16 20:07:33.867881 REASON stop
+2022-04-16 20:07:33.868903 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    \"\"\"\n    x1, x2, ..., xN\u3068y1, y2, ..., yM\u304c\u4e0e\u3048\u3089\u308c\u305f\u6642\u3001\u4e21\u56fd\u304c\u6226\u4e89\u3092\u8d77\u3053\u3059\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    \"\"\"\n    # N, M, X, Y\u3092\u53d7\u3051\u53d6\u308b\n    n, m, x, y = map(int, input().split())\n\n    # x1, x2, ..., xN\u3092\u53d7\u3051\u53d6\u308b\n    x_list = list(map(int, input().split()))\n\n    # y1, y2, ..., yM\u3092\u53d7\u3051\u53d6\u308b\n    y_list = list(map(int, input().split()))\n\n    # \u6226\u4e89\u3092\u8d77\u3053\u3059\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    # X < Z <= Y, x_1, x_2, ..., x_N < Z, y_1, y_2, ..., y_M >= Z\n    # \u3059\u3079\u3066\u306e\u6761\u4ef6\u3092\u6e80\u305f\u3059Z\u304c\u3042\u308b\u304b\u5426\u304b\u3092\u5224\u5b9a\u3059\u308b\n    for z in range(x + 1, y + 1):\n        if x < z <= y:\n            if all(x_i < z for x_i in x_list):\n                if all(y_i >= z for y_i in y_list):\n                    print(\"No War\")\n                    exit()\n\n    print(\"War\")\n\n\ndef test_main():\n    \"\"\"\n    \u4ee5\u4e0b\u306e\u30c6\u30b9\u30c8\u3092\u5168\u3066\u30d1\u30b9\u3059\u308b\u3053\u3068\u3092\u76ee\u6a19\u306b\u6b21\u306e\u30c6\u30b9\u30c8\u3092\u5b9f\u88c5\u3057\u3066\u3044\u304f\n    \u305d\u306e\u305f\u3081\u3001\u5404\u30c6\u30b9\u30c8\u3067\u306f pass \u304b raise \u3067\u691c\u8a3c\u3092\u884c\u3046\u3053\u3068\n    \u307e\u305f\u3001\u5b9f\u88c5\u306b\u95a2\u3057\u3066\u306f\u5168\u3066pass\u3092\u901a\u3057\u3066\u304b\u3089\u3001\u30c6\u30b9\u30c8\u3092\u5b9f\u88c5\u3059\u308b\n    \u305d\u306e\u305f\u3081\u3001\u5b9f\u88c5\u524d\u306e\u6bb5\u968e\u3067\u306f\u5168\u3066\u306e\u30c6\u30b9\u30c8\u3092\u30d1\u30b9\u3055\u305b\u3066\u304a\u304f\u3053\u3068\n\n    \u3010\u30c6\u30b9\u30c8\u5185\u5bb9\u3011\n    \u30fbNo War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    \u30fbWar\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    \u30fb\u5165\u529b\u5024\u304c\u6574\u6570\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c1 <= N, M <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c-100 <= X < Y <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fb\u5165\u529b\u5024\u304c-100 <= x_i, y_i <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fbx_i\u304cX\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fbx_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fby_i\u304cY\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \u30fby_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    \"\"\"\n    # No War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    # \u5165\u529b\u5024\n    # N, M, X, Y\u306f\u6574\u6570\n    # 1 <= N, M <= 100\n    # -100 <= X < Y <= 100\n    # -100 <= x_i, y_i <= 100\n    # x_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001X\u3068\u7570\u306a\u308b\u5024\n    # y_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001Y\u3068\u7570\u306a\u308b\u5024\n    # \u51fa\u529b\u5024\n    # \"No War\"\u3092\u51fa\u529b\u3059\u308b\n    n_1, m_1, x_1, y_1 = 3, 2, 10, 20\n    x_list_1 = [8, 15, 13]\n    y_list_1 = [16, 22]\n    assert main() == \"No War\"\n\n    # War\u3092\u8fd4\u3059\u30b1\u30fc\u30b9\n    # \u5165\u529b\u5024\n    # N, M, X, Y\u306f\u6574\u6570\n    # 1 <= N, M <= 100\n    # -100 <= X < Y <= 100\n    # -100 <= x_i, y_i <= 100\n    # x_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001X\u3068\u7570\u306a\u308b\u5024\n    # y_i\u306f\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u3042\u308a\u3001Y\u3068\u7570\u306a\u308b\u5024\n    # \u51fa\u529b\u5024\n    # \"War\"\u3092\u51fa\u529b\u3059\u308b\n    n_2, m_2, x_2, y_2 = 3, 2, 10, 20\n    x_list_2 = [8, 15, 13]\n    y_list_2 = [16, 12]\n    assert main() == \"War\"\n\n    # \u5165\u529b\u5024\u304c\u6574\u6570\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c1 <= N, M <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c-100 <= X < Y <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # \u5165\u529b\u5024\u304c-100 <= x_i, y_i <= 100\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # x_i\u304cX\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # x_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # y_i\u304cY\u3068\u540c\u3058\u5024\u306e\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    # y_i\u304c\u3059\u3079\u3066\u7570\u306a\u308b\u5024\u3067\u306f\u306a\u3044\u5834\u5408\u3001\u4f8b\u5916\u3092\u767a\u751f\u3055\u305b\u308b\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-16 20:07:33.869021 REASON stop
+2022-04-16 20:07:33.889756 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn, m, x, y = map(int, input().split())\nx_list = list(map(int, input().split()))\ny_list = list(map(int, input().split()))\n\nx_list.sort()\ny_list.sort()\n\nif x < x_list[0] and y_list[-1] < y:\n    print(\"No War\")\nelse:\n    print(\"War\")"
+}
+2022-04-16 20:07:33.889859 REASON stop
+2022-04-16 20:07:33.891160 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N, M, X, Y = map(int, input().split())\n    x_list = list(map(int, input().split()))\n    y_list = list(map(int, input().split()))\n\n    if X >= Y:\n        print(\"War\")\n        return\n\n    if X < min(x_list) or max(y_list) < Y:\n        print(\"War\")\n        return\n\n    x_list.sort()\n    y_list.sort()\n\n    for i in range(X + 1, Y):\n        if i > min(x_list) and i <= max(y_list):\n            print(\"No War\")\n            return\n        else:\n            if i > min(x_list):\n                x_list.pop(0)\n            if i <= max(y_list):\n                y_list.pop()\n\n    print(\"War\")\n    return\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-16 20:07:33.891403 REASON stop
+2022-04-16 20:07:33.892504 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# get input and convert to integers\nN, M, X, Y = map(int, input().split())\nX_list = list(map(int, input().split()))\nY_list = list(map(int, input().split()))\n\n# check if Z lies between X and Y, is greater than all X's, and less than all Y's\nfor i in range(X+1,Y):\n    if not any(i <= x for x in X_list) and not any(i > y for y in Y_list):\n        print(\"No War\")\n        exit()\n\n# if all checks fail, war will break out\nprint(\"War\")"
+}
+2022-04-16 20:07:33.892627 REASON stop

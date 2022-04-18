@@ -1,0 +1,169 @@
+2022-04-13 21:19:33.405420 """
+There are $n$ shovels in the nearby shop. The $i$-th shovel costs $a_i$ bourles.
+
+Misha has to buy exactly $k$ shovels. Each shovel can be bought no more than once.
+
+Misha can buy shovels by several purchases. During one purchase he can choose any subset of remaining (non-bought) shovels and buy this subset.
+
+There are also $m$ special offers in the shop. The $j$-th of them is given as a pair $(x_j, y_j)$, and it means that if Misha buys exactly $x_j$ shovels during one purchase then $y_j$ most cheapest of them are for free (i.e. he will not pay for $y_j$ most cheapest shovels during the current purchase).
+
+Misha can use any offer any (possibly, zero) number of times, but he cannot use more than one offer during one purchase (but he can buy shovels without using any offers).
+
+Your task is to calculate the minimum cost of buying $k$ shovels, if Misha buys them optimally.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, m$ and $k$ ($1 \le n, m \le 2 \cdot 10^5, 1 \le k \le min(n, 2000)$) — the number of shovels in the shop, the number of special offers and the number of shovels Misha has to buy, correspondingly.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the cost of the $i$-th shovel.
+
+The next $m$ lines contain special offers. The $j$-th of them is given as a pair of integers $(x_i, y_i)$ ($1 \le y_i \le x_i \le n$) and means that if Misha buys exactly $x_i$ shovels during some purchase, then he can take $y_i$ most cheapest of them for free.
+
+
+-----Output-----
+
+Print one integer — the minimum cost of buying $k$ shovels if Misha buys them optimally.
+
+
+-----Examples-----
+Input
+7 4 5
+2 5 4 2 6 3 1
+2 1
+6 5
+2 1
+3 1
+
+Output
+7
+
+Input
+9 4 8
+6 8 5 1 8 1 1 2 1
+9 2
+8 4
+5 3
+9 7
+
+Output
+17
+
+Input
+5 1 4
+2 5 7 4 6
+5 4
+
+Output
+17
+
+
+
+-----Note-----
+
+In the first example Misha can buy shovels on positions $1$ and $4$ (both with costs $2$) during the first purchase and get one of them for free using the first or the third special offer. And then he can buy shovels on positions $3$ and $6$ (with costs $4$ and $3$) during the second purchase and get the second one for free using the first or the third special offer. Then he can buy the shovel on a position $7$ with cost $1$. So the total cost is $4 + 2 + 1 = 7$.
+
+In the second example Misha can buy shovels on positions $1$, $2$, $3$, $4$ and $8$ (costs are $6$, $8$, $5$, $1$ and $2$) and get three cheapest (with costs $5$, $1$ and $2$) for free. And then he can buy shovels on positions $6$, $7$ and $9$ (all with costs $1$) without using any special offers. So the total cost is $6 + 8 + 1 + 1 + 1 = 17$.
+
+In the third example Misha can buy four cheapest shovels without using any special offers and get the total cost $17$.
+"""
+2022-04-13 21:19:33.405438 --------------------------
+2022-04-13 21:20:01.749416 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\nn, m, k = [int(x) for x in input().split()]\nshovels = [int(x) for x in input().split()]\n\noffers = []\n\nfor i in range(m):\n    offers.append([int(x) for x in input().split()])\n\noffers.sort(key=lambda x: x[1])\n\nshovels.sort()\n\ncost = 0\nfor i in range(k):\n    cost += shovels[i]\n\nfor offer in offers:\n    if k <= offer[0]:\n        cost -= (offer[1] * (shovels[offer[0]-1] - shovels[offer[0]-1-offer[1]]))\n        break\n\nprint(cost)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom math import inf\nfrom typing import List, Tuple\n\n\ndef read_list() -> List[int]:\n    return [int(x) for x in input().split()]\n\n\ndef read_tuple() -> Tuple[int, int]:\n    return tuple(read_list())\n\n\ndef read_tuple_list(n: int) -> List[Tuple[int, int]]:\n    return [read_tuple() for _ in range(n)]\n\n\ndef min_cost(n: int, m: int, k: int, prices: List[int], offers: List[Tuple[int, int]]) -> int:\n    if k <= m:\n        return sum(sorted(prices)[:k])\n\n    total_cost = 0\n    for i in range(k):\n        total_cost += prices[i]\n\n    for _ in range(m):\n        offer = offers.pop()\n        if offer[0] > k:\n            continue\n\n        min_prices = sorted(prices[:offer[0]])[:offer[1]]\n        total_cost -= sum(min_prices)\n\n    return total_cost\n\n\ndef main():\n    n, m, k = read_list()\n    prices = read_list()\n    offers = read_tuple_list(m)\n\n    print(min_cost(n, m, k, prices, offers))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport heapq\n\n# read data for n sequences\nn, m, k = map(int, raw_input().split())\na = map(int, raw_input().split())\n\n# sort the shovels by their prices\na.sort()\n\n# init the offer heap\noffers = []\nfor i in range(m):\n    x, y = map(int, raw_input().split())\n    heapq.heappush(offers, (x, y))\n\n# calculate the minimum cost\ncost = 0\nfor i in range(k):\n    # check if there are offers\n    if len(offers) > 0:\n        x, y = heapq.heappop(offers)\n        # if there are enough shovels\n        if x > i:\n            # if there are enough free shovels\n            if y >= x - i:\n                # add the remaining shovels to the cost\n                cost += sum(a[i:x])\n                # update the offers\n                if x - i > 1:\n                    heapq.heappush(offers, (x - i, y - (x - i)))\n            # if there are not enough free shovels\n            else:\n                # add the remaining shovels to the cost\n                cost += sum(a[i:i+y])\n                # update the offers\n                heapq.heappush(offers, (i+y, 0))\n        # if there are not enough shovels\n        else:\n            # add the remaining shovels to the cost\n            cost += sum(a[i:x])\n            # update the offers\n            if x - i > 1:\n                heapq.heappush(offers, (x - i, y - (x - i)))\n    else:\n        # if there are no offers left just add the remaining shovels to the cost\n        cost += sum(a[i:k])\nprint cost"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_ints():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_int():\n    return read_ints()[0]\n\ndef read_int_line():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_int_lines(n):\n    return [read_int_line() for i in range(n)]\n\ndef solve(n, m, k, a, offers):\n    a.sort()\n    offers.sort(key=lambda x: x[0])\n\n    dp = [[sys.maxsize] * (k + 1) for i in range(n)]\n    dp[0][1] = a[0]\n    for i in range(1, n):\n        dp[i][1] = min(dp[i-1][1], a[i])\n\n    for i in range(2, n + 1):\n        for j in range(2, k + 1):\n            dp[i-1][j] = min(dp[i-1][j], dp[i-2][j] + a[i-1])\n            for offer in offers:\n                if offer[0] == i and offer[1] <= j:\n                    dp[i-1][j] = min(dp[i-1][j], dp[i-offer[0]][j-offer[1]])\n\n    return dp[n-1][k]\n\nif __name__ == '__main__':\n    n, m, k = read_ints()\n    a = read_ints()\n    offers = read_int_lines(m)\n    print(solve(n, m, k, a, offers))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\noffers = []\nfor i in range(m):\n    x, y = [int(x) for x in input().split()]\n    offers.append((x, y))\n\na.sort()  # sort the costs from low to high\n\n# calculate the cost of buying x shovels\ndef cost(x):\n    if x == 0:\n        return 0\n    # first, try to use an offer\n    for offer in offers:\n        if x == offer[0]:\n            return cost(x - offer[1])\n    # otherwise, buy the cheapest shovels\n    return cost(x - 1) + a[x - 1]\n\nprint(cost(k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\n[n, m, k] = [int(x) for x in input().split(' ')]\na = [int(x) for x in input().split(' ')]\n\na.sort()\n\noffers = []\nfor i in range(m):\n    offers.append([int(x) for x in input().split(' ')])\n\nheapq.heapify(offers)\n\nres = 0\n\nfor i in range(k):\n    if len(offers) > 0 and offers[0][0] == i:\n        offer = heapq.heappop(offers)\n        offer[0] += offer[1]\n        if offer[0] > k:\n            offer[0] = k\n        heapq.heappush(offers, offer)\n    res += a[i]\n\nprint(res)"
+    }
+  ],
+  "created": 1649884773,
+  "id": "cmpl-4wegfIUw9fTTfnYw31ImChNm1nueU",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 21:20:01.749836 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\nn, m, k = [int(x) for x in input().split()]\nshovels = [int(x) for x in input().split()]\n\noffers = []\n\nfor i in range(m):\n    offers.append([int(x) for x in input().split()])\n\noffers.sort(key=lambda x: x[1])\n\nshovels.sort()\n\ncost = 0\nfor i in range(k):\n    cost += shovels[i]\n\nfor offer in offers:\n    if k <= offer[0]:\n        cost -= (offer[1] * (shovels[offer[0]-1] - shovels[offer[0]-1-offer[1]]))\n        break\n\nprint(cost)"
+}
+2022-04-13 21:20:01.749904 REASON stop
+2022-04-13 21:20:01.750415 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom math import inf\nfrom typing import List, Tuple\n\n\ndef read_list() -> List[int]:\n    return [int(x) for x in input().split()]\n\n\ndef read_tuple() -> Tuple[int, int]:\n    return tuple(read_list())\n\n\ndef read_tuple_list(n: int) -> List[Tuple[int, int]]:\n    return [read_tuple() for _ in range(n)]\n\n\ndef min_cost(n: int, m: int, k: int, prices: List[int], offers: List[Tuple[int, int]]) -> int:\n    if k <= m:\n        return sum(sorted(prices)[:k])\n\n    total_cost = 0\n    for i in range(k):\n        total_cost += prices[i]\n\n    for _ in range(m):\n        offer = offers.pop()\n        if offer[0] > k:\n            continue\n\n        min_prices = sorted(prices[:offer[0]])[:offer[1]]\n        total_cost -= sum(min_prices)\n\n    return total_cost\n\n\ndef main():\n    n, m, k = read_list()\n    prices = read_list()\n    offers = read_tuple_list(m)\n\n    print(min_cost(n, m, k, prices, offers))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:20:01.750578 REASON stop
+2022-04-13 21:20:01.751161 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 21:20:01.751231 REASON stop
+2022-04-13 21:20:01.770940 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport heapq\n\n# read data for n sequences\nn, m, k = map(int, raw_input().split())\na = map(int, raw_input().split())\n\n# sort the shovels by their prices\na.sort()\n\n# init the offer heap\noffers = []\nfor i in range(m):\n    x, y = map(int, raw_input().split())\n    heapq.heappush(offers, (x, y))\n\n# calculate the minimum cost\ncost = 0\nfor i in range(k):\n    # check if there are offers\n    if len(offers) > 0:\n        x, y = heapq.heappop(offers)\n        # if there are enough shovels\n        if x > i:\n            # if there are enough free shovels\n            if y >= x - i:\n                # add the remaining shovels to the cost\n                cost += sum(a[i:x])\n                # update the offers\n                if x - i > 1:\n                    heapq.heappush(offers, (x - i, y - (x - i)))\n            # if there are not enough free shovels\n            else:\n                # add the remaining shovels to the cost\n                cost += sum(a[i:i+y])\n                # update the offers\n                heapq.heappush(offers, (i+y, 0))\n        # if there are not enough shovels\n        else:\n            # add the remaining shovels to the cost\n            cost += sum(a[i:x])\n            # update the offers\n            if x - i > 1:\n                heapq.heappush(offers, (x - i, y - (x - i)))\n    else:\n        # if there are no offers left just add the remaining shovels to the cost\n        cost += sum(a[i:k])\nprint cost"
+}
+2022-04-13 21:20:01.771049 REASON stop
+2022-04-13 21:20:01.771595 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_ints():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_int():\n    return read_ints()[0]\n\ndef read_int_line():\n    return [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_int_lines(n):\n    return [read_int_line() for i in range(n)]\n\ndef solve(n, m, k, a, offers):\n    a.sort()\n    offers.sort(key=lambda x: x[0])\n\n    dp = [[sys.maxsize] * (k + 1) for i in range(n)]\n    dp[0][1] = a[0]\n    for i in range(1, n):\n        dp[i][1] = min(dp[i-1][1], a[i])\n\n    for i in range(2, n + 1):\n        for j in range(2, k + 1):\n            dp[i-1][j] = min(dp[i-1][j], dp[i-2][j] + a[i-1])\n            for offer in offers:\n                if offer[0] == i and offer[1] <= j:\n                    dp[i-1][j] = min(dp[i-1][j], dp[i-offer[0]][j-offer[1]])\n\n    return dp[n-1][k]\n\nif __name__ == '__main__':\n    n, m, k = read_ints()\n    a = read_ints()\n    offers = read_int_lines(m)\n    print(solve(n, m, k, a, offers))"
+}
+2022-04-13 21:20:01.771701 REASON stop
+2022-04-13 21:20:01.772471 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\noffers = []\nfor i in range(m):\n    x, y = [int(x) for x in input().split()]\n    offers.append((x, y))\n\na.sort()  # sort the costs from low to high\n\n# calculate the cost of buying x shovels\ndef cost(x):\n    if x == 0:\n        return 0\n    # first, try to use an offer\n    for offer in offers:\n        if x == offer[0]:\n            return cost(x - offer[1])\n    # otherwise, buy the cheapest shovels\n    return cost(x - 1) + a[x - 1]\n\nprint(cost(k))"
+}
+2022-04-13 21:20:01.772554 REASON stop
+2022-04-13 21:20:01.773378 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\n[n, m, k] = [int(x) for x in input().split(' ')]\na = [int(x) for x in input().split(' ')]\n\na.sort()\n\noffers = []\nfor i in range(m):\n    offers.append([int(x) for x in input().split(' ')])\n\nheapq.heapify(offers)\n\nres = 0\n\nfor i in range(k):\n    if len(offers) > 0 and offers[0][0] == i:\n        offer = heapq.heappop(offers)\n        offer[0] += offer[1]\n        if offer[0] > k:\n            offer[0] = k\n        heapq.heappush(offers, offer)\n    res += a[i]\n\nprint(res)"
+}
+2022-04-13 21:20:01.773443 REASON stop

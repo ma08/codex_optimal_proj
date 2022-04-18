@@ -1,0 +1,16 @@
+
+
+def main():
+    N, M = map(int, input().split())
+    prefecture_cities = [[] for _ in range(N)]
+    # prefecture_cities = defaultdict(list)
+    for _ in range(M):
+        P, Y = map(int, input().split())
+        prefecture_cities[P-1].append(Y)
+    for P, cities in enumerate(prefecture_cities, 1):
+        cities.sort()
+        for i, city in enumerate(cities, 1):
+            print('{:>06}{:>06}'.format(P, i), flush=True)
+
+if __name__ == '__main__':
+    main()

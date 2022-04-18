@@ -1,0 +1,17 @@
+import sys
+
+
+def main(args):
+    n = int(input())
+    course_combinations = []
+
+    for i in range(n):
+        courses = list(map(int, input().split(" ")))
+        course_combinations.append(tuple(sorted(courses)))
+
+    c = Counter(course_combinations)
+    most_common = c.most_common(1)
+    print(most_common[0][1])
+
+if __name__ == "__main__":
+    main(sys.argv)

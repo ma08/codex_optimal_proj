@@ -1,0 +1,157 @@
+2022-04-13 22:18:00.933818 """
+There are $n$ candies in a row, they are numbered from left to right from $1$ to $n$. The size of the $i$-th candy is $a_i$.
+
+Alice and Bob play an interesting and tasty game: they eat candy. Alice will eat candy from left to right, and Bob — from right to left. The game ends if all the candies are eaten.
+
+The process consists of moves. During a move, the player eats one or more sweets from her/his side (Alice eats from the left, Bob — from the right).
+
+Alice makes the first move. During the first move, she will eat $1$ candy (its size is $a_1$). Then, each successive move the players alternate — that is, Bob makes the second move, then Alice, then again Bob and so on.
+
+On each move, a player counts the total size of candies eaten during the current move. Once this number becomes strictly greater than the total size of candies eaten by the other player on their previous move, the current player stops eating and the move ends. In other words, on a move, a player eats the smallest possible number of candies such that the sum of the sizes of candies eaten on this move is strictly greater than the sum of the sizes of candies that the other player ate on the previous move. If there are not enough candies to make a move this way, then the player eats up all the remaining candies and the game ends.
+
+For example, if $n=11$ and $a=[3,1,4,1,5,9,2,6,5,3,5]$, then:  move 1: Alice eats one candy of size $3$ and the sequence of candies becomes $[1,4,1,5,9,2,6,5,3,5]$.  move 2: Alice ate $3$ on the previous move, which means Bob must eat $4$ or more. Bob eats one candy of size $5$ and the sequence of candies becomes $[1,4,1,5,9,2,6,5,3]$.  move 3: Bob ate $5$ on the previous move, which means Alice must eat $6$ or more. Alice eats three candies with the total size of $1+4+1=6$ and the sequence of candies becomes $[5,9,2,6,5,3]$.  move 4: Alice ate $6$ on the previous move, which means Bob must eat $7$ or more. Bob eats two candies with the total size of $3+5=8$ and the sequence of candies becomes $[5,9,2,6]$.  move 5: Bob ate $8$ on the previous move, which means Alice must eat $9$ or more. Alice eats two candies with the total size of $5+9=14$ and the sequence of candies becomes $[2,6]$.  move 6 (the last): Alice ate $14$ on the previous move, which means Bob must eat $15$ or more. It is impossible, so Bob eats the two remaining candies and the game ends. 
+
+Print the number of moves in the game and two numbers:  $a$ — the total size of all sweets eaten by Alice during the game;  $b$ — the total size of all sweets eaten by Bob during the game. 
+
+
+-----Input-----
+
+The first line contains an integer $t$ ($1 \le t \le 5000$) — the number of test cases in the input. The following are descriptions of the $t$ test cases.
+
+Each test case consists of two lines. The first line contains an integer $n$ ($1 \le n \le 1000$) — the number of candies. The second line contains a sequence of integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 1000$) — the sizes of candies in the order they are arranged from left to right.
+
+It is guaranteed that the sum of the values of $n$ for all sets of input data in a test does not exceed $2\cdot10^5$.
+
+
+-----Output-----
+
+For each set of input data print three integers — the number of moves in the game and the required values $a$ and $b$.
+
+
+-----Example-----
+Input
+7
+11
+3 1 4 1 5 9 2 6 5 3 5
+1
+1000
+3
+1 1 1
+13
+1 2 3 4 5 6 7 8 9 10 11 12 13
+2
+2 1
+6
+1 1 1 1 1 1
+7
+1 1 1 1 1 1 1
+
+Output
+6 23 21
+1 1000 0
+2 1 2
+6 45 46
+2 2 1
+3 4 2
+4 4 3
+"""
+2022-04-13 22:18:00.933835 --------------------------
+2022-04-13 22:18:18.677869 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nT = int(input())\n\nfor t in range(T):\n    N = int(input())\n    A = [int(x) for x in input().split()]\n    a = 0\n    b = 0\n    k = 0\n    i = 0\n    j = N - 1\n    while i <= j:\n        if k % 2 == 0:\n            s = 0\n            while i <= j and s < b:\n                s += A[i]\n                i += 1\n            a += s\n        else:\n            s = 0\n            while i <= j and s < a:\n                s += A[j]\n                j -= 1\n            b += s\n        k += 1\n    print(k, a, b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        count = 0\n        alice = 0\n        bob = 0\n        while len(a) > 0:\n            if count % 2 == 0:\n                alice += a.pop(0)\n            else:\n                bob += a.pop()\n            count += 1\n        print(count, alice, bob)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# read input\nt = int(sys.stdin.readline())\n\nfor i in range(t):\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    # initialize\n    a_total = 0\n    b_total = 0\n    moves = 0\n\n    # play game\n    while len(a) > 0:\n        # Alice's turn\n        if len(a) == 1:\n            a_total += a[0]\n            a = []\n        else:\n            a_total += a[0]\n            a = a[1:]\n            moves += 1\n        \n        # Bob's turn\n        if len(a) == 1:\n            b_total += a[0]\n            a = []\n        else:\n            b_total += a[-1]\n            a = a[:-1]\n            moves += 1\n    \n    # print result\n    print(moves, a_total, b_total)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        moves = 0\n        a_sum = 0\n        b_sum = 0\n        a_sum_last = 0\n        b_sum_last = 0\n        while a != []:\n            if moves % 2 == 0:\n                for i in range(len(a)):\n                    a_sum += a[i]\n                    if a_sum > b_sum_last:\n                        moves += 1\n                        a = a[i+1:]\n                        break\n            else:\n                for i in range(len(a)-1, -1, -1):\n                    b_sum += a[i]\n                    if b_sum > a_sum_last:\n                        moves += 1\n                        a = a[:i]\n                        break\n            a_sum_last = a_sum\n            b_sum_last = b_sum\n            a_sum = 0\n            b_sum = 0\n        print(moves, a_sum_last, b_sum_last)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfor i in range(int(input())):\n    num_candy = int(input())\n    candy = list(map(int, input().split()))\n    a = 0\n    b = 0\n    count = 0\n    while len(candy) != 0:\n        count += 1\n        if count % 2 == 1:\n            a += candy[0]\n            candy.remove(candy[0])\n        else:\n            b += candy[-1]\n            candy.remove(candy[-1])\n        if count > 1:\n            if a > b:\n                candy = candy[1:]\n            elif b > a:\n                candy = candy[:-1]\n    print(count, a, b)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    moves = 0\n    a_score = 0\n    b_score = 0\n    a_turn = True\n    while len(a) > 0:\n        if a_turn:\n            moves += 1\n            if a[0] > b_score:\n                a_score += a[0]\n                del a[0]\n            else:\n                a_score += sum(a)\n                a.clear()\n        else:\n            moves += 1\n            if a[-1] > a_score:\n                b_score += a[-1]\n                del a[-1]\n            else:\n                b_score += sum(a)\n                a.clear()\n        a_turn = not a_turn\n    print(moves, a_score, b_score)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n_tests = int(sys.stdin.readline())\n    for _ in range(n_tests):\n        n = int(sys.stdin.readline())\n        candies = [int(x) for x in sys.stdin.readline().split()]\n        if n == 1:\n            print(\"1\", candies[0], 0)\n            continue\n        moves = 0\n        alice_eaten = 0\n        bob_eaten = 0\n        alice_last = 0\n        bob_last = 0\n        while len(candies) > 0:\n            if moves % 2 == 0:\n                eaten = 0\n                while eaten <= bob_last:\n                    eaten += candies.pop(0)\n                alice_last = eaten\n                alice_eaten += eaten\n            else:\n                eaten = 0\n                while eaten <= alice_last:\n                    eaten += candies.pop()\n                bob_last = eaten\n                bob_eaten += eaten\n            moves += 1\n        print(moves, alice_eaten, bob_eaten)\n\nmain()"
+    }
+  ],
+  "created": 1649888281,
+  "id": "cmpl-4wfbF50YvkRHUTjjiJmgN6JC1CAmq",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 22:18:18.678228 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nT = int(input())\n\nfor t in range(T):\n    N = int(input())\n    A = [int(x) for x in input().split()]\n    a = 0\n    b = 0\n    k = 0\n    i = 0\n    j = N - 1\n    while i <= j:\n        if k % 2 == 0:\n            s = 0\n            while i <= j and s < b:\n                s += A[i]\n                i += 1\n            a += s\n        else:\n            s = 0\n            while i <= j and s < a:\n                s += A[j]\n                j -= 1\n            b += s\n        k += 1\n    print(k, a, b)"
+}
+2022-04-13 22:18:18.678273 REASON stop
+2022-04-13 22:18:18.678654 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        count = 0\n        alice = 0\n        bob = 0\n        while len(a) > 0:\n            if count % 2 == 0:\n                alice += a.pop(0)\n            else:\n                bob += a.pop()\n            count += 1\n        print(count, alice, bob)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:18:18.678762 REASON stop
+2022-04-13 22:18:18.679146 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# read input\nt = int(sys.stdin.readline())\n\nfor i in range(t):\n    n = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    # initialize\n    a_total = 0\n    b_total = 0\n    moves = 0\n\n    # play game\n    while len(a) > 0:\n        # Alice's turn\n        if len(a) == 1:\n            a_total += a[0]\n            a = []\n        else:\n            a_total += a[0]\n            a = a[1:]\n            moves += 1\n        \n        # Bob's turn\n        if len(a) == 1:\n            b_total += a[0]\n            a = []\n        else:\n            b_total += a[-1]\n            a = a[:-1]\n            moves += 1\n    \n    # print result\n    print(moves, a_total, b_total)"
+}
+2022-04-13 22:18:18.679211 REASON stop
+2022-04-13 22:18:18.692413 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        moves = 0\n        a_sum = 0\n        b_sum = 0\n        a_sum_last = 0\n        b_sum_last = 0\n        while a != []:\n            if moves % 2 == 0:\n                for i in range(len(a)):\n                    a_sum += a[i]\n                    if a_sum > b_sum_last:\n                        moves += 1\n                        a = a[i+1:]\n                        break\n            else:\n                for i in range(len(a)-1, -1, -1):\n                    b_sum += a[i]\n                    if b_sum > a_sum_last:\n                        moves += 1\n                        a = a[:i]\n                        break\n            a_sum_last = a_sum\n            b_sum_last = b_sum\n            a_sum = 0\n            b_sum = 0\n        print(moves, a_sum_last, b_sum_last)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 22:18:18.692482 REASON stop
+2022-04-13 22:18:18.694485 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfor i in range(int(input())):\n    num_candy = int(input())\n    candy = list(map(int, input().split()))\n    a = 0\n    b = 0\n    count = 0\n    while len(candy) != 0:\n        count += 1\n        if count % 2 == 1:\n            a += candy[0]\n            candy.remove(candy[0])\n        else:\n            b += candy[-1]\n            candy.remove(candy[-1])\n        if count > 1:\n            if a > b:\n                candy = candy[1:]\n            elif b > a:\n                candy = candy[:-1]\n    print(count, a, b)"
+}
+2022-04-13 22:18:18.694551 REASON stop
+2022-04-13 22:18:18.712375 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    moves = 0\n    a_score = 0\n    b_score = 0\n    a_turn = True\n    while len(a) > 0:\n        if a_turn:\n            moves += 1\n            if a[0] > b_score:\n                a_score += a[0]\n                del a[0]\n            else:\n                a_score += sum(a)\n                a.clear()\n        else:\n            moves += 1\n            if a[-1] > a_score:\n                b_score += a[-1]\n                del a[-1]\n            else:\n                b_score += sum(a)\n                a.clear()\n        a_turn = not a_turn\n    print(moves, a_score, b_score)"
+}
+2022-04-13 22:18:18.712466 REASON stop
+2022-04-13 22:18:18.713251 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n_tests = int(sys.stdin.readline())\n    for _ in range(n_tests):\n        n = int(sys.stdin.readline())\n        candies = [int(x) for x in sys.stdin.readline().split()]\n        if n == 1:\n            print(\"1\", candies[0], 0)\n            continue\n        moves = 0\n        alice_eaten = 0\n        bob_eaten = 0\n        alice_last = 0\n        bob_last = 0\n        while len(candies) > 0:\n            if moves % 2 == 0:\n                eaten = 0\n                while eaten <= bob_last:\n                    eaten += candies.pop(0)\n                alice_last = eaten\n                alice_eaten += eaten\n            else:\n                eaten = 0\n                while eaten <= alice_last:\n                    eaten += candies.pop()\n                bob_last = eaten\n                bob_eaten += eaten\n            moves += 1\n        print(moves, alice_eaten, bob_eaten)\n\nmain()"
+}
+2022-04-13 22:18:18.713325 REASON stop

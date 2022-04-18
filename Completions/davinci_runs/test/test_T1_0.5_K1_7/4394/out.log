@@ -1,0 +1,202 @@
+2022-04-13 20:29:25.589857 """
+You are given an undirected weighted connected graph with $n$ vertices and $m$ edges without loops and multiple edges.
+
+The $i$-th edge is $e_i = (u_i, v_i, w_i)$; the distance between vertices $u_i$ and $v_i$ along the edge $e_i$ is $w_i$ ($1 \le w_i$). The graph is connected, i. e. for any pair of vertices, there is at least one path between them consisting only of edges of the given graph.
+
+A minimum spanning tree (MST) in case of positive weights is a subset of the edges of a connected weighted undirected graph that connects all the vertices together and has minimum total cost among all such subsets (total cost is the sum of costs of chosen edges).
+
+You can modify the given graph. The only operation you can perform is the following: increase the weight of some edge by $1$. You can increase the weight of each edge multiple (possibly, zero) times.
+
+Suppose that the initial MST cost is $k$. Your problem is to increase weights of some edges with minimum possible number of operations in such a way that the cost of MST in the obtained graph remains $k$, but MST is unique (it means that there is only one way to choose MST in the obtained graph).
+
+Your problem is to calculate the minimum number of operations required to do it.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5, n - 1 \le m \le 2 \cdot 10^5$) — the number of vertices and the number of edges in the initial graph.
+
+The next $m$ lines contain three integers each. The $i$-th line contains the description of the $i$-th edge $e_i$. It is denoted by three integers $u_i, v_i$ and $w_i$ ($1 \le u_i, v_i \le n, u_i \ne v_i, 1 \le w \le 10^9$), where $u_i$ and $v_i$ are vertices connected by the $i$-th edge and $w_i$ is the weight of this edge.
+
+It is guaranteed that the given graph doesn't contain loops and multiple edges (i.e. for each $i$ from $1$ to $m$ $u_i \ne v_i$ and for each unordered pair of vertices $(u, v)$ there is at most one edge connecting this pair of vertices). It is also guaranteed that the given graph is connected.
+
+
+-----Output-----
+
+Print one integer — the minimum number of operations to unify MST of the initial graph without changing the cost of MST.
+
+
+-----Examples-----
+Input
+8 10
+1 2 1
+2 3 2
+2 4 5
+1 4 2
+6 3 3
+6 1 3
+3 5 2
+3 7 1
+4 8 1
+6 2 4
+
+Output
+1
+
+Input
+4 3
+2 1 3
+4 3 4
+2 4 1
+
+Output
+0
+
+Input
+3 3
+1 2 1
+2 3 2
+1 3 3
+
+Output
+0
+
+Input
+3 3
+1 2 1
+2 3 3
+1 3 3
+
+Output
+1
+
+Input
+1 0
+
+Output
+0
+
+Input
+5 6
+1 2 2
+2 3 1
+4 5 3
+2 4 2
+1 4 2
+1 5 3
+
+Output
+2
+
+
+
+-----Note-----
+
+The picture corresponding to the first example: [Image]
+
+You can, for example, increase weight of the edge $(1, 6)$ or $(6, 3)$ by $1$ to unify MST.
+
+The picture corresponding to the last example: $\$ 8$
+
+You can, for example, increase weights of edges $(1, 5)$ and $(2, 4)$ by $1$ to unify MST.
+"""
+2022-04-13 20:29:25.589879 --------------------------
+2022-04-13 20:30:02.637420 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom heapq import heappush, heappop\nfrom collections import defaultdict\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.graph = defaultdict(list)\n    \n    def add_edge(self, u, v, w):\n        self.graph[u].append((v, w))\n        self.graph[v].append((u, w))\n    \n    def prims(self):\n        visited = [False] * self.n\n        min_heap = []\n        heappush(min_heap, (0, 1))\n        mst = 0\n        while min_heap:\n            cost, node = heappop(min_heap)\n            if visited[node-1]:\n                continue\n            visited[node-1] = True\n            mst += cost\n            for v, w in self.graph[node]:\n                if not visited[v-1]:\n                    heappush(min_heap, (w, v))\n        return mst\n\ndef solve(g):\n    mst = g.prims()\n    return g.prims() - mst\n\nn, m = map(int, input().split())\ng = Graph(n)\nfor _ in range(m):\n    u, v, w = map(int, input().split())\n    g.add_edge(u, v, w)\nprint(solve(g))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport os\nimport math\nimport random\nfrom collections import defaultdict\n\ndef readString():\n    return sys.stdin.readline().strip()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \", n)\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [readIntegerSet(m) for _ in range(0, n)]\n\ndef find(u, parent):\n    if parent[u] < 0:\n        return u\n    parent[u] = find(parent[u], parent)\n    return parent[u]\n\ndef union(u, v, parent):\n    u = find(u, parent)\n    v = find(v, parent)\n    if u == v:\n        return\n    if parent[u] > parent[v]:\n        u, v = v, u\n    parent[u] += parent[v]\n    parent[v] = u\n\ndef get_cost(n, edges):\n    cost = 0\n    parent = [-1 for _ in range(0, n + 1)]\n    for u, v, w in sorted(edges, key=lambda x: x[2]):\n        if find(u, parent) != find(v, parent):\n            union(u, v, parent)\n            cost += w\n    return cost\n\ndef solve(n, edges):\n    mst_cost = get_cost(n, edges)\n    edges.sort(key=lambda x: x[2])\n    ans = 0\n    visited = set()\n    for u, v, w in edges:\n        if (u, v) in visited:\n            continue\n        visited.add((u, v))\n        visited.add((v, u))\n        edges.remove((u, v, w))\n        edges.append((u, v, w + 1))\n        if get_cost(n, edges) != mst_cost:\n            ans += 1\n            edges.remove((u, v, w + 1))\n            edges.append((u, v, w))\n    return ans\n\nif __name__ == \"__main__\":\n    n, m = readIntegerSet(2)\n    edges = []\n    for _ in range(0, m):\n        u, v, w = readIntegerSet(3)\n        edges.append((u, v, w))\n    print(solve(n, edges))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nfrom typing import List, Tuple\nfrom collections import defaultdict\n\n\nclass UnionFind:\n    def __init__(self, n: int) -> None:\n        self.parent = list(range(n))\n\n    def find(self, x: int) -> int:\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n\n    def union(self, x: int, y: int) -> None:\n        self.parent[self.find(x)] = self.find(y)\n\n\ndef get_input() -> Tuple[int, int]:\n    n, m = map(int, input().split())\n    return n, m\n\n\ndef get_edges(n: int, m: int) -> List[Tuple[int, int, int]]:\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((u - 1, v - 1, w))\n    return edges\n\n\ndef get_mst(n: int, edges: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:\n    edges.sort(key=lambda x: x[2])\n    uf = UnionFind(n)\n    mst = []\n    for u, v, w in edges:\n        if uf.find(u) != uf.find(v):\n            mst.append((u, v, w))\n            uf.union(u, v)\n    return mst\n\n\ndef get_mst_edge_map(mst: List[Tuple[int, int, int]]) -> defaultdict:\n    edge_map = defaultdict(set)\n    for u, v, w in mst:\n        edge_map[w].add((u, v))\n    return edge_map\n\n\ndef get_edge_map(edges: List[Tuple[int, int, int]]) -> defaultdict:\n    edge_map = defaultdict(set)\n    for u, v, w in edges:\n        edge_map[w].add((u, v))\n    return edge_map\n\n\ndef main() -> None:\n    n, m = get_input()\n    edges = get_edges(n, m)\n    mst = get_mst(n, edges)\n    mst_edge_map = get_mst_edge_map(mst)\n    edge_map = get_edge_map(edges)\n\n    count = 0\n    for w in mst_edge_map.keys():\n        if len(mst_edge_map[w]) == 1:\n            if len(edge_map[w]) == 1:\n                count += 1\n            else:\n                count += len(edge_map[w]) - 1\n\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\ndef kruskal(graph, n):\n    res = 0\n    p = list(range(n))\n\n    def find(x):\n        if p[x] != x:\n            p[x] = find(p[x])\n        return p[x]\n\n    def union(x, y):\n        px, py = find(x), find(y)\n        if px != py:\n            p[py] = px\n            return True\n        return False\n\n    for _, u, v, w in sorted(graph):\n        if union(u, v):\n            res += w\n    return res\n\n\ndef solve(n, m, edges):\n    return kruskal(edges, n)\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((0, u - 1, v - 1, w))\n    print(solve(n, m, edges))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nfrom heapq import heappush, heappop\nfrom collections import defaultdict\n\ndef prim(n, edges):\n    graph = defaultdict(list)\n    for u, v, w in edges:\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n    dist = [float('inf')] * n\n    dist[0] = 0\n    mst = []\n    pq = []\n    heappush(pq, (0, 0))\n    while pq:\n        d, u = heappop(pq)\n        if d > dist[u]:\n            continue\n        mst.append((u, d))\n        for v, w in graph[u]:\n            if dist[v] > w:\n                dist[v] = w\n                heappush(pq, (w, v))\n    return mst\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((u-1, v-1, w))\n    mst = prim(n, edges)\n    mst.sort()\n    print(mst)\n    if len(mst) == n - 1:\n        print(0)\n    else:\n        print(1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Use Kruskal's algorithm to find MST\n# Then, for each edge in MST, check if there are other edges with the same weight\n# If so, increase the weight of the edge by 1 (to make the MST unique)\n# This is the minimum number of operations to make the MST unique\n\n# Complexity: O(m log m)\n\nfrom heapq import heappop, heappush\n\ndef find(x, parent):\n    if parent[x] != x:\n        parent[x] = find(parent[x], parent)\n    return parent[x]\n\ndef union(x, y, parent, rank):\n    xroot = find(x, parent)\n    yroot = find(y, parent)\n    if xroot == yroot:\n        return\n    if rank[xroot] < rank[yroot]:\n        parent[xroot] = yroot\n    elif rank[xroot] > rank[yroot]:\n        parent[yroot] = xroot\n    else:\n        parent[yroot] = xroot\n        rank[xroot] += 1\n\ndef is_cycle(x, y, parent):\n    return find(x, parent) == find(y, parent)\n\ndef main():\n    n, m = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for _ in range(m)]\n    edges.sort(key=lambda x: x[2])\n    parent = [i for i in range(n+1)]\n    rank = [0 for _ in range(n+1)]\n    heap = []\n    count = 0\n    ans = 0\n    for u, v, w in edges:\n        if not is_cycle(u, v, parent):\n            union(u, v, parent, rank)\n            heappush(heap, (w, u, v))\n            count += 1\n            if count == n-1:\n                break\n    for w, u, v in heap:\n        for w1, u1, v1 in edges:\n            if w1 == w and u1 != u and v1 != v:\n                ans += 1\n                break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649881765,
+  "id": "cmpl-4wdu9HQITfg4HkWTiBd3TTjR5PhQH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-13 20:30:02.637881 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:30:02.637961 REASON stop
+2022-04-13 20:30:02.638445 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom heapq import heappush, heappop\nfrom collections import defaultdict\n\nclass Graph:\n    def __init__(self, n):\n        self.n = n\n        self.graph = defaultdict(list)\n    \n    def add_edge(self, u, v, w):\n        self.graph[u].append((v, w))\n        self.graph[v].append((u, w))\n    \n    def prims(self):\n        visited = [False] * self.n\n        min_heap = []\n        heappush(min_heap, (0, 1))\n        mst = 0\n        while min_heap:\n            cost, node = heappop(min_heap)\n            if visited[node-1]:\n                continue\n            visited[node-1] = True\n            mst += cost\n            for v, w in self.graph[node]:\n                if not visited[v-1]:\n                    heappush(min_heap, (w, v))\n        return mst\n\ndef solve(g):\n    mst = g.prims()\n    return g.prims() - mst\n\nn, m = map(int, input().split())\ng = Graph(n)\nfor _ in range(m):\n    u, v, w = map(int, input().split())\n    g.add_edge(u, v, w)\nprint(solve(g))"
+}
+2022-04-13 20:30:02.638603 REASON stop
+2022-04-13 20:30:02.639201 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport os\nimport math\nimport random\nfrom collections import defaultdict\n\ndef readString():\n    return sys.stdin.readline().strip()\n\ndef readInteger():\n    return int(readString())\n\ndef readStringSet(n):\n    return sys.stdin.readline().split(\" \", n)\n\ndef readIntegerSet(n):\n    return list(map(int, readStringSet(n)))\n\ndef readIntegerMatrix(n, m):\n    return [readIntegerSet(m) for _ in range(0, n)]\n\ndef find(u, parent):\n    if parent[u] < 0:\n        return u\n    parent[u] = find(parent[u], parent)\n    return parent[u]\n\ndef union(u, v, parent):\n    u = find(u, parent)\n    v = find(v, parent)\n    if u == v:\n        return\n    if parent[u] > parent[v]:\n        u, v = v, u\n    parent[u] += parent[v]\n    parent[v] = u\n\ndef get_cost(n, edges):\n    cost = 0\n    parent = [-1 for _ in range(0, n + 1)]\n    for u, v, w in sorted(edges, key=lambda x: x[2]):\n        if find(u, parent) != find(v, parent):\n            union(u, v, parent)\n            cost += w\n    return cost\n\ndef solve(n, edges):\n    mst_cost = get_cost(n, edges)\n    edges.sort(key=lambda x: x[2])\n    ans = 0\n    visited = set()\n    for u, v, w in edges:\n        if (u, v) in visited:\n            continue\n        visited.add((u, v))\n        visited.add((v, u))\n        edges.remove((u, v, w))\n        edges.append((u, v, w + 1))\n        if get_cost(n, edges) != mst_cost:\n            ans += 1\n            edges.remove((u, v, w + 1))\n            edges.append((u, v, w))\n    return ans\n\nif __name__ == \"__main__\":\n    n, m = readIntegerSet(2)\n    edges = []\n    for _ in range(0, m):\n        u, v, w = readIntegerSet(3)\n        edges.append((u, v, w))\n    print(solve(n, edges))"
+}
+2022-04-13 20:30:02.639276 REASON stop
+2022-04-13 20:30:02.652761 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nfrom typing import List, Tuple\nfrom collections import defaultdict\n\n\nclass UnionFind:\n    def __init__(self, n: int) -> None:\n        self.parent = list(range(n))\n\n    def find(self, x: int) -> int:\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n\n    def union(self, x: int, y: int) -> None:\n        self.parent[self.find(x)] = self.find(y)\n\n\ndef get_input() -> Tuple[int, int]:\n    n, m = map(int, input().split())\n    return n, m\n\n\ndef get_edges(n: int, m: int) -> List[Tuple[int, int, int]]:\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((u - 1, v - 1, w))\n    return edges\n\n\ndef get_mst(n: int, edges: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int]]:\n    edges.sort(key=lambda x: x[2])\n    uf = UnionFind(n)\n    mst = []\n    for u, v, w in edges:\n        if uf.find(u) != uf.find(v):\n            mst.append((u, v, w))\n            uf.union(u, v)\n    return mst\n\n\ndef get_mst_edge_map(mst: List[Tuple[int, int, int]]) -> defaultdict:\n    edge_map = defaultdict(set)\n    for u, v, w in mst:\n        edge_map[w].add((u, v))\n    return edge_map\n\n\ndef get_edge_map(edges: List[Tuple[int, int, int]]) -> defaultdict:\n    edge_map = defaultdict(set)\n    for u, v, w in edges:\n        edge_map[w].add((u, v))\n    return edge_map\n\n\ndef main() -> None:\n    n, m = get_input()\n    edges = get_edges(n, m)\n    mst = get_mst(n, edges)\n    mst_edge_map = get_mst_edge_map(mst)\n    edge_map = get_edge_map(edges)\n\n    count = 0\n    for w in mst_edge_map.keys():\n        if len(mst_edge_map[w]) == 1:\n            if len(edge_map[w]) == 1:\n                count += 1\n            else:\n                count += len(edge_map[w]) - 1\n\n    print(count)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-13 20:30:02.652882 REASON stop
+2022-04-13 20:30:02.662092 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\ndef kruskal(graph, n):\n    res = 0\n    p = list(range(n))\n\n    def find(x):\n        if p[x] != x:\n            p[x] = find(p[x])\n        return p[x]\n\n    def union(x, y):\n        px, py = find(x), find(y)\n        if px != py:\n            p[py] = px\n            return True\n        return False\n\n    for _, u, v, w in sorted(graph):\n        if union(u, v):\n            res += w\n    return res\n\n\ndef solve(n, m, edges):\n    return kruskal(edges, n)\n\n\nif __name__ == '__main__':\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((0, u - 1, v - 1, w))\n    print(solve(n, m, edges))"
+}
+2022-04-13 20:30:02.662205 REASON stop
+2022-04-13 20:30:02.673300 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nfrom heapq import heappush, heappop\nfrom collections import defaultdict\n\ndef prim(n, edges):\n    graph = defaultdict(list)\n    for u, v, w in edges:\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n    dist = [float('inf')] * n\n    dist[0] = 0\n    mst = []\n    pq = []\n    heappush(pq, (0, 0))\n    while pq:\n        d, u = heappop(pq)\n        if d > dist[u]:\n            continue\n        mst.append((u, d))\n        for v, w in graph[u]:\n            if dist[v] > w:\n                dist[v] = w\n                heappush(pq, (w, v))\n    return mst\n\ndef main():\n    n, m = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        u, v, w = map(int, input().split())\n        edges.append((u-1, v-1, w))\n    mst = prim(n, edges)\n    mst.sort()\n    print(mst)\n    if len(mst) == n - 1:\n        print(0)\n    else:\n        print(1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:30:02.673433 REASON stop
+2022-04-13 20:30:02.674276 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Use Kruskal's algorithm to find MST\n# Then, for each edge in MST, check if there are other edges with the same weight\n# If so, increase the weight of the edge by 1 (to make the MST unique)\n# This is the minimum number of operations to make the MST unique\n\n# Complexity: O(m log m)\n\nfrom heapq import heappop, heappush\n\ndef find(x, parent):\n    if parent[x] != x:\n        parent[x] = find(parent[x], parent)\n    return parent[x]\n\ndef union(x, y, parent, rank):\n    xroot = find(x, parent)\n    yroot = find(y, parent)\n    if xroot == yroot:\n        return\n    if rank[xroot] < rank[yroot]:\n        parent[xroot] = yroot\n    elif rank[xroot] > rank[yroot]:\n        parent[yroot] = xroot\n    else:\n        parent[yroot] = xroot\n        rank[xroot] += 1\n\ndef is_cycle(x, y, parent):\n    return find(x, parent) == find(y, parent)\n\ndef main():\n    n, m = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for _ in range(m)]\n    edges.sort(key=lambda x: x[2])\n    parent = [i for i in range(n+1)]\n    rank = [0 for _ in range(n+1)]\n    heap = []\n    count = 0\n    ans = 0\n    for u, v, w in edges:\n        if not is_cycle(u, v, parent):\n            union(u, v, parent, rank)\n            heappush(heap, (w, u, v))\n            count += 1\n            if count == n-1:\n                break\n    for w, u, v in heap:\n        for w1, u1, v1 in edges:\n            if w1 == w and u1 != u and v1 != v:\n                ans += 1\n                break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-13 20:30:02.674408 REASON stop

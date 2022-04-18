@@ -1,0 +1,99 @@
+2022-04-18 03:31:34.022921 """
+There are N people numbered 1 to N. Each of them is either an honest person whose testimonies are always correct or an unkind person whose testimonies may be correct or not.
+Person i gives A_i testimonies. The j-th testimony by Person i is represented by two integers x_{ij} and y_{ij}. If y_{ij} = 1, the testimony says Person x_{ij} is honest; if y_{ij} = 0, it says Person x_{ij} is unkind.
+How many honest persons can be among those N people at most?
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 15
+ - 0 \leq A_i \leq N - 1
+ - 1 \leq x_{ij} \leq N
+ - x_{ij} \neq i
+ - x_{ij_1} \neq x_{ij_2} (j_1 \neq j_2)
+ - y_{ij} = 0, 1
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1
+x_{11} y_{11}
+x_{12} y_{12}
+:
+x_{1A_1} y_{1A_1}
+A_2
+x_{21} y_{21}
+x_{22} y_{22}
+:
+x_{2A_2} y_{2A_2}
+:
+A_N
+x_{N1} y_{N1}
+x_{N2} y_{N2}
+:
+x_{NA_N} y_{NA_N}
+
+-----Output-----
+Print the maximum possible number of honest persons among the N people.
+
+-----Sample Input-----
+3
+1
+2 1
+1
+1 1
+1
+2 0
+
+-----Sample Output-----
+2
+
+If Person 1 and Person 2 are honest and Person 3 is unkind, we have two honest persons without inconsistencies, which is the maximum possible number of honest persons.
+"""
+2022-04-18 03:31:34.022939 --------------------------
+2022-04-18 03:32:09.224453 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef dfs(v):\n    global visited, honest, unkind\n    visited[v] = True\n    for i in range(len(honest[v])):\n        if not visited[honest[v][i]]:\n            dfs(honest[v][i])\n    for i in range(len(unkind[v])):\n        if not visited[unkind[v][i]]:\n            dfs(unkind[v][i])\n\nN = int(input())\nhonest = [[] for i in range(N)]\nunkind = [[] for i in range(N)]\nfor i in range(N):\n    A_i = int(input())\n    for j in range(A_i):\n        x, y = map(int, sys.stdin.readline().split())\n        if y == 1:\n            honest[i].append(x-1)\n        else:\n            unkind[i].append(x-1)\nvisited = [False] * N\nans = 0\nfor i in range(N):\n    if visited[i]:\n        continue\n    dfs(i)\n    ans += 1\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(input()) for _ in range(n)]\nx = [[0 for _ in range(a[i])] for i in range(n)]\ny = [[0 for _ in range(a[i])] for i in range(n)]\nfor i in range(n):\n    for j in range(a[i]):\n        x[i][j], y[i][j] = map(int, input().split())\n        x[i][j] -= 1\n\ndef dfs(i, honest):\n    if dp[i][honest] != -1:\n        return dp[i][honest]\n    ret = 0\n    if honest:\n        for j in range(a[i]):\n            if y[i][j] == 1:\n                ret = max(ret, dfs(x[i][j], 1))\n            else:\n                ret = max(ret, dfs(x[i][j], 1) + dfs(x[i][j], 0))\n    else:\n        ret = 1\n        for j in range(a[i]):\n            if y[i][j] == 1:\n                ret = max(ret, dfs(x[i][j], 1) + dfs(x[i][j], 0))\n            else:\n                ret = max(ret, dfs(x[i][j], 0))\n    dp[i][honest] = ret\n    return ret\n\ndp = [[-1 for _ in range(2)] for _ in range(n)]\nret = 0\nfor i in range(n):\n    ret = max(ret, dfs(i, 1) + dfs(i, 0))\nprint(ret)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(raw_input())\n\nclass Person:\n    def __init__(self, id, testimonies):\n        self.id = id\n        self.testimonies = testimonies\n        self.kind = None\n\ndef find_max_honest_persons():\n    people = []\n    for i in range(N):\n        testimonies = []\n        for j in range(int(raw_input())):\n            testimony = [int(x) for x in raw_input().split(\" \")]\n            testimonies.append(testimony)\n        people.append(Person(i + 1, testimonies))\n\n    people = set_kind_of_people_recursively(people)\n\n    max_honest_persons = 0\n    for person in people:\n        if person.kind == \"h\":\n            max_honest_persons += 1\n    return max_honest_persons\n\ndef set_kind_of_people_recursively(people):\n    for person in people:\n        if person.kind is None:\n            set_kind_of_person(person, people)\n    return people\n\ndef set_kind_of_person(person, people):\n    if person.kind is None:\n        person.kind = \"h\"\n        for testimony in person.testimonies:\n            if testimony[1] == 1 and not people[testimony[0] - 1].kind == \"h\":\n                person.kind = \"u\"\n                break\n        for testimony in person.testimonies:\n            if testimony[1] == 0 and people[testimony[0] - 1].kind == \"h\":\n                people[testimony[0] - 1].kind = \"u\"\n                set_kind_of_people_recursively(people)\n                break\n\nprint find_max_honest_persons()"
+    }
+  ],
+  "created": 1650252694,
+  "id": "cmpl-4yCOsWEO0h6DYKcVGNTodoVCTT1XH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 03:32:09.224696 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef dfs(v):\n    global visited, honest, unkind\n    visited[v] = True\n    for i in range(len(honest[v])):\n        if not visited[honest[v][i]]:\n            dfs(honest[v][i])\n    for i in range(len(unkind[v])):\n        if not visited[unkind[v][i]]:\n            dfs(unkind[v][i])\n\nN = int(input())\nhonest = [[] for i in range(N)]\nunkind = [[] for i in range(N)]\nfor i in range(N):\n    A_i = int(input())\n    for j in range(A_i):\n        x, y = map(int, sys.stdin.readline().split())\n        if y == 1:\n            honest[i].append(x-1)\n        else:\n            unkind[i].append(x-1)\nvisited = [False] * N\nans = 0\nfor i in range(N):\n    if visited[i]:\n        continue\n    dfs(i)\n    ans += 1\nprint(ans)"
+}
+2022-04-18 03:32:09.224738 REASON stop
+2022-04-18 03:32:09.275690 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(input()) for _ in range(n)]\nx = [[0 for _ in range(a[i])] for i in range(n)]\ny = [[0 for _ in range(a[i])] for i in range(n)]\nfor i in range(n):\n    for j in range(a[i]):\n        x[i][j], y[i][j] = map(int, input().split())\n        x[i][j] -= 1\n\ndef dfs(i, honest):\n    if dp[i][honest] != -1:\n        return dp[i][honest]\n    ret = 0\n    if honest:\n        for j in range(a[i]):\n            if y[i][j] == 1:\n                ret = max(ret, dfs(x[i][j], 1))\n            else:\n                ret = max(ret, dfs(x[i][j], 1) + dfs(x[i][j], 0))\n    else:\n        ret = 1\n        for j in range(a[i]):\n            if y[i][j] == 1:\n                ret = max(ret, dfs(x[i][j], 1) + dfs(x[i][j], 0))\n            else:\n                ret = max(ret, dfs(x[i][j], 0))\n    dp[i][honest] = ret\n    return ret\n\ndp = [[-1 for _ in range(2)] for _ in range(n)]\nret = 0\nfor i in range(n):\n    ret = max(ret, dfs(i, 1) + dfs(i, 0))\nprint(ret)"
+}
+2022-04-18 03:32:09.275757 REASON stop
+2022-04-18 03:32:09.276280 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(raw_input())\n\nclass Person:\n    def __init__(self, id, testimonies):\n        self.id = id\n        self.testimonies = testimonies\n        self.kind = None\n\ndef find_max_honest_persons():\n    people = []\n    for i in range(N):\n        testimonies = []\n        for j in range(int(raw_input())):\n            testimony = [int(x) for x in raw_input().split(\" \")]\n            testimonies.append(testimony)\n        people.append(Person(i + 1, testimonies))\n\n    people = set_kind_of_people_recursively(people)\n\n    max_honest_persons = 0\n    for person in people:\n        if person.kind == \"h\":\n            max_honest_persons += 1\n    return max_honest_persons\n\ndef set_kind_of_people_recursively(people):\n    for person in people:\n        if person.kind is None:\n            set_kind_of_person(person, people)\n    return people\n\ndef set_kind_of_person(person, people):\n    if person.kind is None:\n        person.kind = \"h\"\n        for testimony in person.testimonies:\n            if testimony[1] == 1 and not people[testimony[0] - 1].kind == \"h\":\n                person.kind = \"u\"\n                break\n        for testimony in person.testimonies:\n            if testimony[1] == 0 and people[testimony[0] - 1].kind == \"h\":\n                people[testimony[0] - 1].kind = \"u\"\n                set_kind_of_people_recursively(people)\n                break\n\nprint find_max_honest_persons()"
+}
+2022-04-18 03:32:09.276398 REASON stop
