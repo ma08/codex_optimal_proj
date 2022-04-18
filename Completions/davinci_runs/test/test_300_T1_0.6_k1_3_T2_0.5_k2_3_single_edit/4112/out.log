@@ -1,0 +1,96 @@
+2022-04-18 02:31:37.003444 """
+The only difference between easy and hard versions is the constraints.
+
+Vova likes pictures with kittens. The news feed in the social network he uses can be represented as an array of $n$ consecutive pictures (with kittens, of course). Vova likes all these pictures, but some are more beautiful than the others: the $i$-th picture has beauty $a_i$.
+
+Vova wants to repost exactly $x$ pictures in such a way that:   each segment of the news feed of at least $k$ consecutive pictures has at least one picture reposted by Vova;  the sum of beauty values of reposted pictures is maximum possible. 
+
+For example, if $k=1$ then Vova has to repost all the pictures in the news feed. If $k=2$ then Vova can skip some pictures, but between every pair of consecutive pictures Vova has to repost at least one of them.
+
+Your task is to calculate the maximum possible sum of values of reposted pictures if Vova follows conditions described above, or say that there is no way to satisfy all conditions.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, k$ and $x$ ($1 \le k, x \le n \le 5000$) — the number of pictures in the news feed, the minimum length of segment with at least one repost in it and the number of pictures Vova is ready to repost.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the beauty of the $i$-th picture.
+
+
+-----Output-----
+
+Print -1 if there is no way to repost some pictures to satisfy all the conditions in the problem statement.
+
+Otherwise print one integer — the maximum sum of values of reposted pictures if Vova follows conditions described in the problem statement.
+
+
+-----Examples-----
+Input
+5 2 3
+5 1 3 10 1
+
+Output
+18
+
+Input
+6 1 5
+10 30 30 70 10 10
+
+Output
+-1
+
+Input
+4 3 1
+1 100 1 1
+
+Output
+100
+"""
+2022-04-18 02:31:37.003474 --------------------------
+2022-04-18 02:32:19.749715 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nimport sys\n\ndata = sys.stdin.read().split()\nn, k, x = map(int, data[:3])\na = list(map(int, data[3:]))\n\nif x < k:\n    print(-1)\n    sys.exit(0)\n\nresult = sum(a[:k])\n\nfor i in range(k, n):\n    result += a[i] - a[i - k]\n\nprint(result)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,k,x = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\ndef brute_force(n, k, x, a):\n    if x == 0:\n        return 0\n    if n == k:\n        return sum(a)\n    max_sum = -1\n    for i in range(n-k+1):\n        curr_sum = sum(a[i:i+k])\n        curr_sum += brute_force(n-k, k, x-1, a[i+k:])\n        max_sum = max(max_sum, curr_sum)\n    return max_sum\n\ndef dp(n, k, x, a):\n    if x == 0:\n        return 0\n    if n == k:\n        return sum(a)\n\n    dp = [[[-1 for _ in range(x+1)] for _ in range(k)] for _ in range(n)]\n\n    for i in range(n):\n        for j in range(k):\n            if i+j >= n:\n                break\n            dp[i][j][1] = sum(a[i:i+j+1])\n    \n    for i in range(n):\n        for j in range(k):\n            if i+j >= n:\n                break\n            for l in range(2, x+1):\n                for m in range(i+j+1, n):\n                    if j+m-i+1 >= k:\n                        dp[i][j][l] = max(dp[i][j][l], sum(a[i:i+j+1])+dp[m][j+m-i+1-k][l-1])\n    \n    return max([max(x) for x in dp[0][0]])\n\n#print(brute_force(n,k,x,a))\nprint(dp(n,k,x,a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k, x = map(int, input().split())\narr = list(map(int, input().split()))\n\nif k > x:\n    print(-1)\n    exit()\n\n# For each index i, dp[i] is the max sum of beauty values of pictures that\n# can be posted from index i to the end of the array\ndp = [0] * (n+1)\ndp[-1] = 0\nfor i in range(n-1, -1, -1):\n    dp[i] = max(dp[i+1], dp[max(0, i+k)] + arr[i])\n\nprint(dp[0])"
+    }
+  ],
+  "created": 1650249097,
+  "id": "cmpl-4yBSrBc47lroYvlFGIAmznw1N8lF4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:32:19.750000 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nimport sys\n\ndata = sys.stdin.read().split()\nn, k, x = map(int, data[:3])\na = list(map(int, data[3:]))\n\nif x < k:\n    print(-1)\n    sys.exit(0)\n\nresult = sum(a[:k])\n\nfor i in range(k, n):\n    result += a[i] - a[i - k]\n\nprint(result)"
+}
+2022-04-18 02:32:19.750039 REASON stop
+2022-04-18 02:32:19.781969 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,k,x = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\ndef brute_force(n, k, x, a):\n    if x == 0:\n        return 0\n    if n == k:\n        return sum(a)\n    max_sum = -1\n    for i in range(n-k+1):\n        curr_sum = sum(a[i:i+k])\n        curr_sum += brute_force(n-k, k, x-1, a[i+k:])\n        max_sum = max(max_sum, curr_sum)\n    return max_sum\n\ndef dp(n, k, x, a):\n    if x == 0:\n        return 0\n    if n == k:\n        return sum(a)\n\n    dp = [[[-1 for _ in range(x+1)] for _ in range(k)] for _ in range(n)]\n\n    for i in range(n):\n        for j in range(k):\n            if i+j >= n:\n                break\n            dp[i][j][1] = sum(a[i:i+j+1])\n    \n    for i in range(n):\n        for j in range(k):\n            if i+j >= n:\n                break\n            for l in range(2, x+1):\n                for m in range(i+j+1, n):\n                    if j+m-i+1 >= k:\n                        dp[i][j][l] = max(dp[i][j][l], sum(a[i:i+j+1])+dp[m][j+m-i+1-k][l-1])\n    \n    return max([max(x) for x in dp[0][0]])\n\n#print(brute_force(n,k,x,a))\nprint(dp(n,k,x,a))"
+}
+2022-04-18 02:32:19.782027 REASON stop
+2022-04-18 02:32:19.782533 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k, x = map(int, input().split())\narr = list(map(int, input().split()))\n\nif k > x:\n    print(-1)\n    exit()\n\n# For each index i, dp[i] is the max sum of beauty values of pictures that\n# can be posted from index i to the end of the array\ndp = [0] * (n+1)\ndp[-1] = 0\nfor i in range(n-1, -1, -1):\n    dp[i] = max(dp[i+1], dp[max(0, i+k)] + arr[i])\n\nprint(dp[0])"
+}
+2022-04-18 02:32:19.782598 REASON stop

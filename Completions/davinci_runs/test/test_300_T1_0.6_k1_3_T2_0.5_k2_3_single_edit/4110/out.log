@@ -1,0 +1,91 @@
+2022-04-18 02:31:02.260552 """
+A programming competition site AtCode provides algorithmic problems.
+Each problem is allocated a score based on its difficulty.
+Currently, for each integer i between 1 and D (inclusive), there are p_i problems with a score of 100i points.
+These p_1 + … + p_D problems are all of the problems available on AtCode.
+A user of AtCode has a value called total score.
+The total score of a user is the sum of the following two elements:
+ - Base score: the sum of the scores of all problems solved by the user.
+ - Perfect bonuses: when a user solves all problems with a score of 100i points, he/she earns the perfect bonus of c_i points, aside from the base score (1 ≤ i ≤ D).
+Takahashi, who is the new user of AtCode, has not solved any problem.
+His objective is to have a total score of G or more points.
+At least how many problems does he need to solve for this objective?
+
+-----Constraints-----
+ - 1 ≤ D ≤ 10
+ - 1 ≤ p_i ≤ 100
+ - 100 ≤ c_i ≤ 10^6
+ - 100 ≤ G
+ - All values in input are integers.
+ - c_i and G are all multiples of 100.
+ - It is possible to have a total score of G or more points.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+D G
+p_1 c_1
+:
+p_D c_D
+
+-----Output-----
+Print the minimum number of problems that needs to be solved in order to have a total score of G or more points. Note that this objective is always achievable (see Constraints).
+
+-----Sample Input-----
+2 700
+3 500
+5 800
+
+-----Sample Output-----
+3
+
+In this case, there are three problems each with 100 points and five problems each with 200 points. The perfect bonus for solving all the 100-point problems is 500 points, and the perfect bonus for solving all the 200-point problems is 800 points. Takahashi's objective is to have a total score of 700 points or more.
+One way to achieve this objective is to solve four 200-point problems and earn a base score of 800 points. However, if we solve three 100-point problems, we can earn the perfect bonus of 500 points in addition to the base score of 300 points, for a total score of 800 points, and we can achieve the objective with fewer problems.
+"""
+2022-04-18 02:31:02.260582 --------------------------
+2022-04-18 02:31:35.950794 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nd, g = list(map(int, sys.stdin.readline().split()))\np_c = []\nfor _ in range(d):\n    p_c.append(tuple(map(int, sys.stdin.readline().split())))\n\nn = 0\np_c = sorted(p_c, key=lambda x: x[1], reverse=True)\np_c = [(p, c, i) for i, (p, c) in enumerate(p_c)]\nfor p, c, i in p_c:\n    if g >= c:\n        n += p\n        g -= c\n        break\n    else:\n        n += p\n        g -= p * (i + 1) * 100\n\nif g > 0:\n    n += (g + (i + 1) * 100 - 1) // ((i + 1) * 100)\n\nprint(n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# input\nD, G = map(int, input().split())\npc = [list(map(int, input().split())) for _ in range(D)]\n\n# initialize\nans = G\ndp = [0 for _ in range(D)]\n\n# solve\nfor i in range(D):\n    dp[i] = pc[i][0] * 100 * (i+1) + pc[i][1]\n    if dp[i] >= G:\n        ans = min(ans, pc[i][0])\n        break\n\nif ans == G:\n    for i in range(D-1, -1, -1):\n        if dp[i] < G:\n            for j in range(i, -1, -1):\n                if pc[j][0] > 0:\n                    cnt = (G - dp[i]) // (100 * (j+1))\n                    if cnt >= pc[j][0]:\n                        ans = min(ans, pc[j][0] + (i+1))\n                        dp[i] += pc[j][0] * 100 * (j+1)\n                        pc[j][0] = 0\n                    else:\n                        ans = min(ans, cnt + (i+1))\n                        dp[i] += cnt * 100 * (j+1)\n                        pc[j][0] -= cnt\n            break\n\n# output\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    d, g = map(int, input().split())\n    p_c_list = [list(map(int, input().split())) for i in range(d)]\n    ans = 10000000\n    for i in range(2**d):\n        count = 0\n        bonus = 0\n        remainder = g\n        for j in range(d):\n            if (i >> j) & 1:\n                count += p_c_list[j][0]\n                bonus += p_c_list[j][1]\n            else:\n                remainder -= (j+1)*100*p_c_list[j][0] + p_c_list[j][1]\n        if remainder <= 0:\n            ans = min(ans, count)\n        else:\n            for j in range(d):\n                if not ((i >> j) & 1):\n                    if remainder <= (j+1)*100*(p_c_list[j][0]-1):\n                        count += remainder//((j+1)*100)\n                        ans = min(ans, count)\n                        break\n                    else:\n                        count += p_c_list[j][0]\n                        bonus += p_c_list[j][1]\n                        remainder -= (j+1)*100*p_c_list[j][0]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650249062,
+  "id": "cmpl-4yBSIh4NwCFoCR1gctDIw7AijgNVB",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:31:35.951032 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nd, g = list(map(int, sys.stdin.readline().split()))\np_c = []\nfor _ in range(d):\n    p_c.append(tuple(map(int, sys.stdin.readline().split())))\n\nn = 0\np_c = sorted(p_c, key=lambda x: x[1], reverse=True)\np_c = [(p, c, i) for i, (p, c) in enumerate(p_c)]\nfor p, c, i in p_c:\n    if g >= c:\n        n += p\n        g -= c\n        break\n    else:\n        n += p\n        g -= p * (i + 1) * 100\n\nif g > 0:\n    n += (g + (i + 1) * 100 - 1) // ((i + 1) * 100)\n\nprint(n)"
+}
+2022-04-18 02:31:35.951071 REASON stop
+2022-04-18 02:31:35.952867 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# input\nD, G = map(int, input().split())\npc = [list(map(int, input().split())) for _ in range(D)]\n\n# initialize\nans = G\ndp = [0 for _ in range(D)]\n\n# solve\nfor i in range(D):\n    dp[i] = pc[i][0] * 100 * (i+1) + pc[i][1]\n    if dp[i] >= G:\n        ans = min(ans, pc[i][0])\n        break\n\nif ans == G:\n    for i in range(D-1, -1, -1):\n        if dp[i] < G:\n            for j in range(i, -1, -1):\n                if pc[j][0] > 0:\n                    cnt = (G - dp[i]) // (100 * (j+1))\n                    if cnt >= pc[j][0]:\n                        ans = min(ans, pc[j][0] + (i+1))\n                        dp[i] += pc[j][0] * 100 * (j+1)\n                        pc[j][0] = 0\n                    else:\n                        ans = min(ans, cnt + (i+1))\n                        dp[i] += cnt * 100 * (j+1)\n                        pc[j][0] -= cnt\n            break\n\n# output\nprint(ans)"
+}
+2022-04-18 02:31:35.952931 REASON stop
+2022-04-18 02:31:35.953590 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    d, g = map(int, input().split())\n    p_c_list = [list(map(int, input().split())) for i in range(d)]\n    ans = 10000000\n    for i in range(2**d):\n        count = 0\n        bonus = 0\n        remainder = g\n        for j in range(d):\n            if (i >> j) & 1:\n                count += p_c_list[j][0]\n                bonus += p_c_list[j][1]\n            else:\n                remainder -= (j+1)*100*p_c_list[j][0] + p_c_list[j][1]\n        if remainder <= 0:\n            ans = min(ans, count)\n        else:\n            for j in range(d):\n                if not ((i >> j) & 1):\n                    if remainder <= (j+1)*100*(p_c_list[j][0]-1):\n                        count += remainder//((j+1)*100)\n                        ans = min(ans, count)\n                        break\n                    else:\n                        count += p_c_list[j][0]\n                        bonus += p_c_list[j][1]\n                        remainder -= (j+1)*100*p_c_list[j][0]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 02:31:35.953655 REASON stop
