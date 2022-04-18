@@ -1,0 +1,18 @@
+
+
+# dp[i][j] = max(dp[i][j-1], dp[i-a[j]][j-1] + 1)
+
+def main():
+    a = list(map(int, raw_input().split()))
+    dp = [[0 for _ in range(len(a) + 1)] for _ in range(max(a) + 1)]
+    for i in xrange(len(a)):
+        for j in range(1, max(a) + 1):
+            dp[j][i+1] = dp[j][i]
+            if a[i] <= j:
+                dp[j][i+1] = max(dp[j][i+1], dp[j - a[i]][i] + 1)
+    print max(dp[max(a)])
+    return 0
+
+
+if __name__ == "__main__":
+    main()

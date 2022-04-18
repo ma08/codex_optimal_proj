@@ -1,0 +1,117 @@
+2022-04-18 01:41:31.791208 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$ (or say that there are no such spanning trees). Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains three integers $n$, $m$ and $D$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2}), 1 \le D < n$) — the number of vertices, the number of edges and required degree of the first vertex, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+If there is no spanning tree satisfying the condition from the problem statement, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and then print $n-1$ lines describing the edges of a spanning tree such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+4 5 1
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+2 1
+2 3
+3 4
+
+Input
+4 5 3
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+1 2
+1 3
+4 1
+
+Input
+4 4 3
+1 2
+1 4
+2 3
+3 4
+
+Output
+NO
+
+
+
+-----Note-----
+
+The picture corresponding to the first and second examples: [Image]
+
+The picture corresponding to the third example: [Image]
+"""
+2022-04-18 01:41:31.791248 --------------------------
+2022-04-18 01:42:05.872180 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Read input\nn, m, d = map(int, input().split())\nedges = []\nfor _ in range(m):\n    u, v = map(int, input().split())\n    edges.append((u, v))\n\n# Check if possible\npossible = False\nfor i in range(m):\n    if edges[i][0] == 1:\n        possible = True\n        break\n\nif not possible:\n    print(\"NO\")\n    exit()\n\n# Build graph\ngraph = {}\nfor i in range(1, n+1):\n    graph[i] = []\nfor edge in edges:\n    graph[edge[0]].append(edge[1])\n    graph[edge[1]].append(edge[0])\n\n# Find spanning tree\ntree = []\nvisited = [False for _ in range(n+1)]\nqueue = [1, None]\nvisited[1] = True\nwhile len(queue) > 0:\n    node = queue.pop(0)\n    if node is not None:\n        for neighbor in graph[node]:\n            if not visited[neighbor]:\n                tree.append((node, neighbor))\n                visited[neighbor] = True\n                queue.append(neighbor)\n                queue.append(None)\n                break\n\n# Check if tree is valid\nd1 = 0\nfor edge in tree:\n    if edge[0] == 1 or edge[1] == 1:\n        d1 += 1\nif d1 != d:\n    print(\"NO\")\n    exit()\n\n# Print tree\nprint(\"YES\")\nfor edge in tree:\n    print(edge[0], edge[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import deque\n\nif __name__ == \"__main__\":\n    n, m, d = map(int, input().split())\n    g = [[] for _ in range(n)]\n    for _ in range(m):\n        v, u = map(int, input().split())\n        g[v - 1].append(u - 1)\n        g[u - 1].append(v - 1)\n\n    q = deque([0])\n    used = [False] * n\n    used[0] = True\n    ans = []\n\n    while q:\n        v = q.popleft()\n        for u in g[v]:\n            if not used[u]:\n                used[u] = True\n                ans.append((v, u))\n                q.append(u)\n\n    if len(ans) < n - 1:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        if d == 0:\n            for v, u in ans:\n                print(v + 1, u + 1)\n        else:\n            for v, u in ans[:-1]:\n                print(v + 1, u + 1)\n            print(ans[-1][0] + 1, ans[-1][1] + 1)\n            print(1, ans[-1][0] + 1)\n            for i in range(d - 2):\n                print(1, ans[i][1] + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport random\nimport queue\n\n# Use input() to read input from STDIN and use print to write your output to STDOUT\n\ndef read_data():\n    n, m, D = [int(x) for x in input().split()]\n    edges = []\n    for _ in range(m):\n        u, v = [int(x) for x in input().split()]\n        edges.append((u, v))\n    return n, m, D, edges\n\ndef check_degree(n, m, D, edges):\n    \"\"\"\n    return True if a spanning tree with degree of 1 as D exists.\n    \"\"\"\n    # Construct the graph\n    graph = {}\n    for i in range(1, n + 1):\n        graph[i] = set()\n    for u, v in edges:\n        graph[u].add(v)\n        graph[v].add(u)\n\n    degree_1 = len(graph[1])\n    if degree_1 == D:\n        return True\n    elif degree_1 > D:\n        return False\n\n    # BFS\n    visited = set()\n    visited.add(1)\n    q = queue.Queue()\n    for v in graph[1]:\n        q.put((1, v))\n        visited.add(v)\n\n    while not q.empty():\n        u, v = q.get()\n        for w in graph[v]:\n            if w not in visited:\n                visited.add(w)\n                q.put((v, w))\n                if len(visited) == n:\n                    return True\n    return False\n\ndef main():\n    n, m, D, edges = read_data()\n    if check_degree(n, m, D, edges):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650246091,
+  "id": "cmpl-4yAgNKwyGBfmr7Ll6W81kBzt6klaW",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 01:42:05.872398 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Read input\nn, m, d = map(int, input().split())\nedges = []\nfor _ in range(m):\n    u, v = map(int, input().split())\n    edges.append((u, v))\n\n# Check if possible\npossible = False\nfor i in range(m):\n    if edges[i][0] == 1:\n        possible = True\n        break\n\nif not possible:\n    print(\"NO\")\n    exit()\n\n# Build graph\ngraph = {}\nfor i in range(1, n+1):\n    graph[i] = []\nfor edge in edges:\n    graph[edge[0]].append(edge[1])\n    graph[edge[1]].append(edge[0])\n\n# Find spanning tree\ntree = []\nvisited = [False for _ in range(n+1)]\nqueue = [1, None]\nvisited[1] = True\nwhile len(queue) > 0:\n    node = queue.pop(0)\n    if node is not None:\n        for neighbor in graph[node]:\n            if not visited[neighbor]:\n                tree.append((node, neighbor))\n                visited[neighbor] = True\n                queue.append(neighbor)\n                queue.append(None)\n                break\n\n# Check if tree is valid\nd1 = 0\nfor edge in tree:\n    if edge[0] == 1 or edge[1] == 1:\n        d1 += 1\nif d1 != d:\n    print(\"NO\")\n    exit()\n\n# Print tree\nprint(\"YES\")\nfor edge in tree:\n    print(edge[0], edge[1])"
+}
+2022-04-18 01:42:05.872439 REASON stop
+2022-04-18 01:42:05.900015 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import deque\n\nif __name__ == \"__main__\":\n    n, m, d = map(int, input().split())\n    g = [[] for _ in range(n)]\n    for _ in range(m):\n        v, u = map(int, input().split())\n        g[v - 1].append(u - 1)\n        g[u - 1].append(v - 1)\n\n    q = deque([0])\n    used = [False] * n\n    used[0] = True\n    ans = []\n\n    while q:\n        v = q.popleft()\n        for u in g[v]:\n            if not used[u]:\n                used[u] = True\n                ans.append((v, u))\n                q.append(u)\n\n    if len(ans) < n - 1:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        if d == 0:\n            for v, u in ans:\n                print(v + 1, u + 1)\n        else:\n            for v, u in ans[:-1]:\n                print(v + 1, u + 1)\n            print(ans[-1][0] + 1, ans[-1][1] + 1)\n            print(1, ans[-1][0] + 1)\n            for i in range(d - 2):\n                print(1, ans[i][1] + 1)"
+}
+2022-04-18 01:42:05.900115 REASON stop
+2022-04-18 01:42:05.900609 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport random\nimport queue\n\n# Use input() to read input from STDIN and use print to write your output to STDOUT\n\ndef read_data():\n    n, m, D = [int(x) for x in input().split()]\n    edges = []\n    for _ in range(m):\n        u, v = [int(x) for x in input().split()]\n        edges.append((u, v))\n    return n, m, D, edges\n\ndef check_degree(n, m, D, edges):\n    \"\"\"\n    return True if a spanning tree with degree of 1 as D exists.\n    \"\"\"\n    # Construct the graph\n    graph = {}\n    for i in range(1, n + 1):\n        graph[i] = set()\n    for u, v in edges:\n        graph[u].add(v)\n        graph[v].add(u)\n\n    degree_1 = len(graph[1])\n    if degree_1 == D:\n        return True\n    elif degree_1 > D:\n        return False\n\n    # BFS\n    visited = set()\n    visited.add(1)\n    q = queue.Queue()\n    for v in graph[1]:\n        q.put((1, v))\n        visited.add(v)\n\n    while not q.empty():\n        u, v = q.get()\n        for w in graph[v]:\n            if w not in visited:\n                visited.add(w)\n                q.put((v, w))\n                if len(visited) == n:\n                    return True\n    return False\n\ndef main():\n    n, m, D, edges = read_data()\n    if check_degree(n, m, D, edges):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 01:42:05.900680 REASON stop

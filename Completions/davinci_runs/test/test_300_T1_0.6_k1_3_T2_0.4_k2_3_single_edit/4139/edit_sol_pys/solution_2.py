@@ -1,0 +1,18 @@
+
+N = int(input())
+
+def is_shichigosan(n):
+    if '7' in str(n) and '5' in str(n) and '3' in str(n):
+        for i in range(1, 10):
+            if str(i) in str(n) and not i in [3, 5, 7]:
+                return False
+        return True
+    else:
+        return False
+
+count = 0
+for i in range(1, N+1):
+    if is_shichigosan(str(i)):
+        count += 1
+
+print(count)

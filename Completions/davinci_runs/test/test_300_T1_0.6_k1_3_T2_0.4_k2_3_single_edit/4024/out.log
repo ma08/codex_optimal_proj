@@ -1,0 +1,107 @@
+2022-04-18 01:44:14.551099 """
+The only difference between the easy and the hard versions is constraints.
+
+A subsequence is a string that can be derived from another string by deleting some or no symbols without changing the order of the remaining symbols. Characters to be deleted are not required to go successively, there can be any gaps between them. For example, for the string "abaca" the following strings are subsequences: "abaca", "aba", "aaa", "a" and "" (empty string). But the following strings are not subsequences: "aabaca", "cb" and "bcaa".
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+In one move you can take any subsequence $t$ of the given string and add it to the set $S$. The set $S$ can't contain duplicates. This move costs $n - |t|$, where $|t|$ is the length of the added subsequence (i.e. the price equals to the number of the deleted characters).
+
+Your task is to find out the minimum possible total cost to obtain a set $S$ of size $k$ or report that it is impossible to do so.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n, k \le 100$) — the length of the string and the size of the set, correspondingly.
+
+The second line of the input contains a string $s$ consisting of $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+Print one integer — if it is impossible to obtain the set $S$ of size $k$, print -1. Otherwise, print the minimum possible total cost to do it.
+
+
+-----Examples-----
+Input
+4 5
+asdf
+
+Output
+4
+
+Input
+5 6
+aaaaa
+
+Output
+15
+
+Input
+5 7
+aaaaa
+
+Output
+-1
+
+Input
+10 100
+ajihiushda
+
+Output
+233
+
+
+
+-----Note-----
+
+In the first example we can generate $S$ = { "asdf", "asd", "adf", "asf", "sdf" }. The cost of the first element in $S$ is $0$ and the cost of the others is $1$. So the total cost of $S$ is $4$.
+"""
+2022-04-18 01:44:14.551124 --------------------------
+2022-04-18 01:44:47.934357 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nimport sys\nsys.setrecursionlimit(10**6)\n\n\ndef dfs(i, n, k, s, cost, memo):\n    if memo[i][k] != -1:\n        return memo[i][k]\n\n    if k == 0:\n        return 0\n\n    # if we don't use s[i]\n    res = dfs(i + 1, n, k, s, cost, memo)\n\n    # if we use s[i]\n    if i + 1 <= n and s[i] != s[i + 1]:\n        res = min(res, cost[i + 1] + dfs(i + 1, n, k - 1, s, cost, memo))\n\n    memo[i][k] = res\n    return res\n\n\ndef solve(n, k, s):\n    cost = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        cost[i] = cost[i + 1] + (n - i)\n\n    memo = [[-1] * (k + 1) for _ in range(n + 1)]\n    ans = dfs(0, n, k, s, cost, memo)\n    if ans >= 10**9:\n        return -1\n    return ans\n\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    print(solve(n, k, s))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef minCost(n, k, s):\n  cost = 0\n  while k > 0:\n    if k > len(s):\n      return -1\n    if k == 1:\n      return cost + len(s)\n    counts = defaultdict(int)\n    for c in s:\n      counts[c] += 1\n    maxCount = max(counts.values())\n    cost += (len(s) - maxCount)\n    s = s[:maxCount]\n    k -= 1\n  return cost\n\nif __name__ == \"__main__\":\n  n, k = map(int, sys.stdin.readline().strip().split())\n  s = sys.stdin.readline().strip()\n  print(minCost(n, k, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,k = map(int,input().split())\n    s = list(input())\n    count = 0\n    # print(s)\n    while len(s) > 0:\n        print(s)\n        if len(s) >= 2:\n            if s[0] == s[1]:\n                # print(s[0])\n                count += 1\n                s = s[1:]\n            else:\n                count += n - 1\n                s = s[1:]\n        else:\n            count += n - 1\n            s = s[1:]\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650246254,
+  "id": "cmpl-4yAj08Xybxm1jbdOHkvDdu2suakym",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 01:44:47.934569 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nimport sys\nsys.setrecursionlimit(10**6)\n\n\ndef dfs(i, n, k, s, cost, memo):\n    if memo[i][k] != -1:\n        return memo[i][k]\n\n    if k == 0:\n        return 0\n\n    # if we don't use s[i]\n    res = dfs(i + 1, n, k, s, cost, memo)\n\n    # if we use s[i]\n    if i + 1 <= n and s[i] != s[i + 1]:\n        res = min(res, cost[i + 1] + dfs(i + 1, n, k - 1, s, cost, memo))\n\n    memo[i][k] = res\n    return res\n\n\ndef solve(n, k, s):\n    cost = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        cost[i] = cost[i + 1] + (n - i)\n\n    memo = [[-1] * (k + 1) for _ in range(n + 1)]\n    ans = dfs(0, n, k, s, cost, memo)\n    if ans >= 10**9:\n        return -1\n    return ans\n\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    print(solve(n, k, s))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 01:44:47.934612 REASON stop
+2022-04-18 01:44:48.022121 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\ndef minCost(n, k, s):\n  cost = 0\n  while k > 0:\n    if k > len(s):\n      return -1\n    if k == 1:\n      return cost + len(s)\n    counts = defaultdict(int)\n    for c in s:\n      counts[c] += 1\n    maxCount = max(counts.values())\n    cost += (len(s) - maxCount)\n    s = s[:maxCount]\n    k -= 1\n  return cost\n\nif __name__ == \"__main__\":\n  n, k = map(int, sys.stdin.readline().strip().split())\n  s = sys.stdin.readline().strip()\n  print(minCost(n, k, s))"
+}
+2022-04-18 01:44:48.022209 REASON stop
+2022-04-18 01:44:48.022698 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,k = map(int,input().split())\n    s = list(input())\n    count = 0\n    # print(s)\n    while len(s) > 0:\n        print(s)\n        if len(s) >= 2:\n            if s[0] == s[1]:\n                # print(s[0])\n                count += 1\n                s = s[1:]\n            else:\n                count += n - 1\n                s = s[1:]\n        else:\n            count += n - 1\n            s = s[1:]\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 01:44:48.022752 REASON stop
