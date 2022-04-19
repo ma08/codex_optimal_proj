@@ -1,0 +1,72 @@
+2022-04-18 20:06:49.510290 """
+We have N switches with "on" and "off" state, and M bulbs. The switches are numbered 1 to N, and the bulbs are numbered 1 to M.
+Bulb i is connected to k_i switches: Switch s_{i1}, s_{i2}, ..., and s_{ik_i}. It is lighted when the number of switches that are "on" among these switches is congruent to p_i modulo 2.
+How many combinations of "on" and "off" states of the switches light all the bulbs?
+
+-----Constraints-----
+ - 1 \leq N, M \leq 10
+ - 1 \leq k_i \leq N
+ - 1 \leq s_{ij} \leq N
+ - s_{ia} \neq s_{ib} (a \neq b)
+ - p_i is 0 or 1.
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+k_1 s_{11} s_{12} ... s_{1k_1}
+:
+k_M s_{M1} s_{M2} ... s_{Mk_M}
+p_1 p_2 ... p_M
+
+-----Output-----
+Print the number of combinations of "on" and "off" states of the switches that light all the bulbs.
+
+-----Sample Input-----
+2 2
+2 1 2
+1 2
+0 1
+
+-----Sample Output-----
+1
+
+ - Bulb 1 is lighted when there is an even number of switches that are "on" among the following: Switch 1 and 2.
+ - Bulb 2 is lighted when there is an odd number of switches that are "on" among the following: Switch 2.
+There are four possible combinations of states of (Switch 1, Switch 2): (on, on), (on, off), (off, on) and (off, off). Among them, only (on, on) lights all the bulbs, so we should print 1.
+"""
+2022-04-18 20:06:49.510309 --------------------------
+2022-04-18 20:07:22.709973 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# \u5165\u529b\nN, M = map(int, input().split())\n\n# \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u306e\u30ea\u30b9\u30c8\nswitches = []\nfor i in range(M):\n    switches.append(list(map(int, input().split()))[1:])\n\n# \u5404\u96fb\u7403\u304c\u70b9\u706f\u3059\u308b\u304b\u3069\u3046\u304b\u306e\u30ea\u30b9\u30c8\nbulbs = list(map(int, input().split()))\n\n# \u5404\u96fb\u7403\u304c\u70b9\u706f\u3059\u308b\u304b\u3069\u3046\u304b\u3092\u8a08\u7b97\u3059\u308b\ncount = 0\nfor i in range(2 ** N):\n    # \u5404\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u304b\u3069\u3046\u304b\u306e\u30d5\u30e9\u30b0\n    flag = True\n    for j in range(M):\n        # \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u306e\u500b\u6570\n        k = len(switches[j])\n        # \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u304c\u30aa\u30f3\u306b\u306a\u3063\u3066\u3044\u308b\u500b\u6570\n        on = 0\n        for s in switches[j]:\n            if (i >> (s - 1)) & 1:\n                on += 1\n        # \u5404\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u304b\u3069\u3046\u304b\n        if (on % 2) != bulbs[j]:\n            flag = False\n            break\n    # \u5168\u3066\u306e\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u5834\u5408\u3001\u30ab\u30a6\u30f3\u30c8\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    if flag:\n        count += 1\n\n# \u51fa\u529b\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# N switches, M bulbs\nN, M = map(int, input().split())\n\n# k_i switches connected to bulb i\n# s_{ij} is the number of the j-th switch connected to bulb i\n# p_i is the parity of the number of switches that are \"on\" among the switches connected to bulb i\nk = [0] * M\ns = [0] * M\np = [0] * M\nfor i in range(M):\n    k[i], *s[i] = map(int, input().split())\np = list(map(int, input().split()))\n\n# The number of combinations of \"on\" and \"off\" states of the switches that light all the bulbs\ncount = 0\n\n# Try all combinations of \"on\" and \"off\" states of the switches\nfor i in range(2**N):\n    # Check if all the bulbs are lighted\n    lighted = True\n    for j in range(M):\n        # Count the number of switches that are \"on\" among the switches connected to bulb j\n        on = 0\n        for l in range(k[j]):\n            if i & (1 << (s[j][l] - 1)):\n                on += 1\n        # Check if bulb j is lighted\n        if on % 2 != p[j]:\n            lighted = False\n            break\n    if lighted:\n        count += 1\n\nprint(count)"
+    }
+  ],
+  "created": 1650312409,
+  "id": "cmpl-4yRw1lolUbkVw6bpzL6fkl9d7oPRa",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 20:07:22.710247 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# \u5165\u529b\nN, M = map(int, input().split())\n\n# \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u306e\u30ea\u30b9\u30c8\nswitches = []\nfor i in range(M):\n    switches.append(list(map(int, input().split()))[1:])\n\n# \u5404\u96fb\u7403\u304c\u70b9\u706f\u3059\u308b\u304b\u3069\u3046\u304b\u306e\u30ea\u30b9\u30c8\nbulbs = list(map(int, input().split()))\n\n# \u5404\u96fb\u7403\u304c\u70b9\u706f\u3059\u308b\u304b\u3069\u3046\u304b\u3092\u8a08\u7b97\u3059\u308b\ncount = 0\nfor i in range(2 ** N):\n    # \u5404\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u304b\u3069\u3046\u304b\u306e\u30d5\u30e9\u30b0\n    flag = True\n    for j in range(M):\n        # \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u306e\u500b\u6570\n        k = len(switches[j])\n        # \u5404\u96fb\u7403\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u30b9\u30a4\u30c3\u30c1\u304c\u30aa\u30f3\u306b\u306a\u3063\u3066\u3044\u308b\u500b\u6570\n        on = 0\n        for s in switches[j]:\n            if (i >> (s - 1)) & 1:\n                on += 1\n        # \u5404\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u304b\u3069\u3046\u304b\n        if (on % 2) != bulbs[j]:\n            flag = False\n            break\n    # \u5168\u3066\u306e\u96fb\u7403\u304c\u70b9\u706f\u3057\u3066\u3044\u308b\u5834\u5408\u3001\u30ab\u30a6\u30f3\u30c8\u3092\u30a4\u30f3\u30af\u30ea\u30e1\u30f3\u30c8\n    if flag:\n        count += 1\n\n# \u51fa\u529b\nprint(count)"
+}
+2022-04-18 20:07:22.710295 REASON stop
+2022-04-18 20:07:22.739428 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# N switches, M bulbs\nN, M = map(int, input().split())\n\n# k_i switches connected to bulb i\n# s_{ij} is the number of the j-th switch connected to bulb i\n# p_i is the parity of the number of switches that are \"on\" among the switches connected to bulb i\nk = [0] * M\ns = [0] * M\np = [0] * M\nfor i in range(M):\n    k[i], *s[i] = map(int, input().split())\np = list(map(int, input().split()))\n\n# The number of combinations of \"on\" and \"off\" states of the switches that light all the bulbs\ncount = 0\n\n# Try all combinations of \"on\" and \"off\" states of the switches\nfor i in range(2**N):\n    # Check if all the bulbs are lighted\n    lighted = True\n    for j in range(M):\n        # Count the number of switches that are \"on\" among the switches connected to bulb j\n        on = 0\n        for l in range(k[j]):\n            if i & (1 << (s[j][l] - 1)):\n                on += 1\n        # Check if bulb j is lighted\n        if on % 2 != p[j]:\n            lighted = False\n            break\n    if lighted:\n        count += 1\n\nprint(count)"
+}
+2022-04-18 20:07:22.739581 REASON stop
