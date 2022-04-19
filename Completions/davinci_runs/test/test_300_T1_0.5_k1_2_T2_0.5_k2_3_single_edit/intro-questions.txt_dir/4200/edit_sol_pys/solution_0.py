@@ -1,0 +1,16 @@
+
+
+def main():
+    N, M = map(int, input().split())  # N: number of people, M: number of committees
+    A = list(map(int, input().split()))
+    total_votes = sum(A)
+    if max(A) < total_votes / (4 * M):
+        print('No')
+    else:
+        if max(A) < total_votes / (4 * M):
+            print('No')
+        else:
+            print('Yes')
+
+if __name__ == '__main__':
+    main()
