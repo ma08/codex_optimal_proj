@@ -39,7 +39,7 @@ def set_api_key_rand():
 TEMPERATURE = 0.5 #T
 N_SOLUTIONS = 2 #k
 ENGINE = "code-davinci-002"
-MAX_TOKENS=4096
+MAX_TOKENS=2900
 SLEEP_TIME_SECONDS = 5
 
 def run_davinci(path, out_dir):
