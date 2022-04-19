@@ -1,0 +1,36 @@
+2022-04-19 01:04:18.832586 num operations 1
+2022-04-19 01:04:18.832608 size on input set 1
+2022-04-19 01:04:24.164799 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0]*(m+1) for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] = dp[i-1][j] + dp[i][j-1]\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] -= dp[i-1][j-1]\n    ans = 0\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if a[i-1][j-1] == k:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0]*(m+1) for _ in range(n+1)]\n    dp[1][1] = 1\n    for i in range(1, n+1):  # i\u884c\u76ee\u307e\u3067\n        for j in range(1, m+1):  # j\u5217\u76ee\u307e\u3067\n            dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1]\n    ans = 0\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if a[i-1][j-1] ^ k == 0:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n"
+    }
+  ],
+  "created": 1650330259,
+  "object": "edit"
+}
+2022-04-19 01:04:24.165047 fix syntax errors 2 ['\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0]*(m+1) for _ in range(n+1)]\n    dp[0][0] = 1\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] = dp[i-1][j] + dp[i][j-1]\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            dp[i][j] -= dp[i-1][j-1]\n    ans = 0\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if a[i-1][j-1] == k:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == "__main__":\n    main()\n', '\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0]*(m+1) for _ in range(n+1)]\n    dp[1][1] = 1\n    for i in range(1, n+1):  # i行目まで\n        for j in range(1, m+1):  # j列目まで\n            dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1]\n    ans = 0\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if a[i-1][j-1] ^ k == 0:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == "__main__":\n    main()\n']
+2022-04-19 01:04:24.165096 size on output set 2
+2022-04-19 01:04:24.165110 num operations 1
+2022-04-19 01:04:24.165116 size on input set 1
+2022-04-19 01:04:37.063733 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0 for _ in range(m)] for _ in range(n)]\n    dp[0][0] = 1\n    for i in range(n):\n        for j in range(m):\n            if i + 1 < n:\n                dp[i + 1][j] += dp[i][j]\n            if j + 1 < m:\n                dp[i][j + 1] += dp[i][j]\n    dp2[0][0] = a[0][0]\n    for i in range(1, n):\n        dp2[i][0] = dp2[i - 1][0] ^ a[i][0]\n    for j in range(1, m):\n        dp2[0][j] = dp2[0][j - 1] ^ a[0][j]\n    for i in range(1, n):\n        for j in range(1, m):\n            dp2[i][j] = dp2[i - 1][j] ^ dp2[i][j - 1] ^ dp2[i - 1][j - 1] ^ a[i][j]\n    ans = 0\n    for i in range(n):\n        for j in range(m):\n            if dp2[i][j] == k:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n    import sys\n    sys.setrecursionlimit(10 ** 6)\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0] * m for _ in range(n)]\n    dp[0][0] = 1 % k\n    for i in range(n - 1):\n        dp[i + 1][0] = dp[i][0]\n    for j in range(m - 1):\n        dp[0][j + 1] = dp[0][j]\n    for i in range(1, n):\n        for j in range(1, m):\n            dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % k\n            dp[i][j] = (dp[i][j] * a[i][j]) % k\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650330264,
+  "object": "edit"
+}
+2022-04-19 01:04:37.063925 fix syntax errors 2 ["\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0 for _ in range(m)] for _ in range(n)]\n    dp[0][0] = 1\n    for i in range(n):\n        for j in range(m):\n            if i + 1 < n:\n                dp[i + 1][j] += dp[i][j]\n            if j + 1 < m:\n                dp[i][j + 1] += dp[i][j]\n    dp2[0][0] = a[0][0]\n    for i in range(1, n):\n        dp2[i][0] = dp2[i - 1][0] ^ a[i][0]\n    for j in range(1, m):\n        dp2[0][j] = dp2[0][j - 1] ^ a[0][j]\n    for i in range(1, n):\n        for j in range(1, m):\n            dp2[i][j] = dp2[i - 1][j] ^ dp2[i][j - 1] ^ dp2[i - 1][j - 1] ^ a[i][j]\n    ans = 0\n    for i in range(n):\n        for j in range(m):\n            if dp2[i][j] == k:\n                ans += dp[i][j]\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n", "\n\n    import sys\n    sys.setrecursionlimit(10 ** 6)\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0] * m for _ in range(n)]\n    dp[0][0] = 1 % k\n    for i in range(n - 1):\n        dp[i + 1][0] = dp[i][0]\n    for j in range(m - 1):\n        dp[0][j + 1] = dp[0][j]\n    for i in range(1, n):\n        for j in range(1, m):\n            dp[i][j] = (dp[i - 1][j] + dp[i][j - 1]) % k\n            dp[i][j] = (dp[i][j] * a[i][j]) % k\n    print(dp[-1][-1])\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-19 01:04:37.063960 size on output set 2
