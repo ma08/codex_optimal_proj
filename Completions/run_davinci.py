@@ -12,6 +12,7 @@ import random
 import time
 
 from datetime import datetime
+from functools import wraps
 
 old_print = print
 
@@ -30,9 +31,12 @@ def random_number(tot_num):
 def set_api_key_rand():
     api_key_items = config.items( "keys" )
     api_keys = [key for en, key in config.items("keys")]
-    openai.api_key = api_keys[random_number(len(api_keys))]
-
-
+    api_key_names = [en for en, key in config.items("keys")]
+    ran_num = random_number(len(api_keys))
+    selected_key = api_keys[ran_num]
+    selected_key_name = api_key_names[ran_num]
+    openai.api_key = selected_key
+    print(f"using api key {selected_key_name}")
 
 # openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -42,6 +46,53 @@ ENGINE = "code-davinci-002"
 MAX_TOKENS=4096
 SLEEP_TIME_SECONDS = 5
 
+
+def retry(ExceptionToCheck, tries=4, delay=3, backoff=2, logger=None):
+    """Retry calling the decorated function using an exponential backoff.
+
+    http://www.saltycrane.com/blog/2009/11/trying-out-retry-decorator-python/
+    original from: http://wiki.python.org/moin/PythonDecoratorLibrary#Retry
+
+    :param ExceptionToCheck: the exception to check. may be a tuple of
+        exceptions to check
+    :type ExceptionToCheck: Exception or tuple
+    :param tries: number of times to try (not retry) before giving up
+    :type tries: int
+    :param delay: initial delay between retries in seconds
+    :type delay: int
+    :param backoff: backoff multiplier e.g. value of 2 will double the delay
+        each retry
+    :type backoff: int
+    :param logger: logger to use. If None, print
+    :type logger: logging.Logger instance
+    """
+    def deco_retry(f):
+
+        @wraps(f)
+        def f_retry(*args, **kwargs):
+            mtries, mdelay = tries, delay
+            while mtries > 1:
+                try:
+                    return f(*args, **kwargs)
+                except ExceptionToCheck:
+                    msg = "%s, Retrying in %d seconds..." % (str(ExceptionToCheck), mdelay)
+                    if logger:
+                        #logger.exception(msg) # would print stack trace
+                        logger.warning(msg)
+                    else:
+                        print(f"in retry {mtries} {mdelay} {msg}")
+                    time.sleep(mdelay)
+                    mtries -= 1
+                    mdelay *= backoff
+            return f(*args, **kwargs)
+
+        return f_retry  # true decorator
+
+    return deco_retry
+
+
+
+@retry(Exception, tries=6, delay=SLEEP_TIME_SECONDS,backoff=2)
 def run_davinci(path, out_dir):
     with open(path) as f:
         prompt = f.read()
