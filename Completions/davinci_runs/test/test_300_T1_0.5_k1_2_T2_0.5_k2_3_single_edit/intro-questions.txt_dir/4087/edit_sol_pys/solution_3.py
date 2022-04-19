@@ -1,0 +1,13 @@
+
+def main():
+    a = int(input("Enter a number: "))
+    while True:
+        if a % 4 == 0:
+            print("The next number is " + str(a))
+            break
+        else:
+            a += 1
+
+
+if __name__ == '__main__':
+    main()

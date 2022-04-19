@@ -1,0 +1,81 @@
+2022-04-09 19:15:44.177769 """
+You are given an undirected unweighted graph with N vertices and M edges that contains neither self-loops nor double edges.
+
+Here, a self-loop is an edge where a_i = b_i (1≤i≤M), and double edges are two edges where (a_i,b_i)=(a_j,b_j) or (a_i,b_i)=(b_j,a_j) (1≤i<j≤M).
+
+How many different paths start from vertex 1 and visit all the vertices exactly once?
+
+Here, the endpoints of a path are considered visited.  
+For example, let us assume that the following undirected graph shown in Figure 1 is given.
+Figure 1: an example of an undirected graph
+The following path shown in Figure 2 satisfies the condition.
+Figure 2: an example of a path that satisfies the condition
+However, the following path shown in Figure 3 does not satisfy the condition, because it does not visit all the vertices.
+Figure 3: an example of a path that does not satisfy the condition
+Neither the following path shown in Figure 4, because it does not start from vertex 1.
+Figure 4: another example of a path that does not satisfy the condition
+
+-----Constraints-----
+ - 2≦N≦8 
+ - 0≦M≦N(N-1)/2 
+ - 1≦a_i<b_i≦N 
+ - The given graph contains neither self-loops nor double edges.
+
+-----Input-----
+The input is given from Standard Input in the following format:
+N M  
+a_1 b_1  
+a_2 b_2
+:  
+a_M b_M  
+
+-----Output-----
+Print the number of the different paths that start from vertex 1 and visit all the vertices exactly once.
+
+-----Sample Input-----
+3 3
+1 2
+1 3
+2 3
+
+-----Sample Output-----
+2
+
+The given graph is shown in the following figure:
+The following two paths satisfy the condition:
+"""
+2022-04-09 19:15:44.177797 --------------------------
+2022-04-09 19:16:00.162768 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [0] * n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1] += 1\n    edges[b - 1] += 1\n\n# DP[i][j] = i\u756a\u76ee\u307e\u3067\u306e\u9802\u70b9\u3092\u4f7f\u3063\u3066\u3001j\u3092\u542b\u3080\u5834\u5408\u306e\u30d1\u30bf\u30fc\u30f3\u6570\ndp = [[0] * (2 ** n) for _ in range(n)]\ndp[0][1] = 1\nfor i in range(n - 1):\n    for j in range(2 ** n):\n        if dp[i][j] == 0:\n            continue\n        for k in range(1, n + 1):\n            if j & (1 << k) != 0 or edges[k - 1] == 0:\n                continue\n            dp[i + 1][j | (1 << k)] += dp[i][j]\nprint(dp[n - 1][2 ** n - 1])"
+    }
+  ],
+  "created": 1649546144,
+  "id": "cmpl-4vEauSG8dYzSDW1fHg7xoCopSo1zt",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 19:16:00.163025 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nsys.setrecursionlimit(10**6)\n\nN, M = map(int, input().split())\n\ntree = [[] for _ in range(N)]\nfor _ in range(M):\n    a, b = map(int, input().split())\n    tree[a-1].append(b-1)\n    tree[b-1].append(a-1)\n\ndef dfs(v, visited):\n    visited.add(v)\n    for child in tree[v]:\n        if child not in visited:\n            dfs(child, visited)\n\nvisited = set()\ndfs(0, visited)\n\nif len(visited) != N:\n    print(0)\n    sys.exit()\n\nans = 1\nfor i in range(N):\n    if i == 0:\n        continue\n    if len(tree[i]) > 1:\n        ans *= len(tree[i])\n\nprint(ans)"
+}
+2022-04-09 19:16:00.163083 REASON stop
+2022-04-09 19:16:00.165153 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn, m = map(int, input().split())\nedges = [0] * n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    edges[a - 1] += 1\n    edges[b - 1] += 1\n\n# DP[i][j] = i\u756a\u76ee\u307e\u3067\u306e\u9802\u70b9\u3092\u4f7f\u3063\u3066\u3001j\u3092\u542b\u3080\u5834\u5408\u306e\u30d1\u30bf\u30fc\u30f3\u6570\ndp = [[0] * (2 ** n) for _ in range(n)]\ndp[0][1] = 1\nfor i in range(n - 1):\n    for j in range(2 ** n):\n        if dp[i][j] == 0:\n            continue\n        for k in range(1, n + 1):\n            if j & (1 << k) != 0 or edges[k - 1] == 0:\n                continue\n            dp[i + 1][j | (1 << k)] += dp[i][j]\nprint(dp[n - 1][2 ** n - 1])"
+}
+2022-04-09 19:16:00.165317 REASON stop
