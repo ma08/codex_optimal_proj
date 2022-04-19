@@ -29,7 +29,7 @@ def set_api_key_rand():
     ran_num = random_number(len(api_keys))
     selected_key = api_keys[ran_num]
     selected_key_name = api_key_names[ran_num]
-    openai.api_key = api_keys[selected_key]
+    openai.api_key = selected_key
     print(f"using api key {selected_key_name}")
 
 
