@@ -1,0 +1,75 @@
+2022-04-09 18:37:33.443750 """
+In the Ancient Kingdom of Snuke, there was a pyramid to strengthen the authority of Takahashi, the president of AtCoder Inc.
+
+The pyramid had center coordinates (C_X, C_Y) and height H. The altitude of coordinates (X, Y) is max(H - |X - C_X| - |Y - C_Y|, 0).  
+Aoki, an explorer, conducted a survey to identify the center coordinates and height of this pyramid. As a result, he obtained the following information:  
+ - C_X, C_Y was integers between 0 and 100 (inclusive), and H was an integer not less than 1.  
+ - Additionally, he obtained N pieces of information. The i-th of them is: "the altitude of point (x_i, y_i) is h_i."  
+This was enough to identify the center coordinates and the height of the pyramid. Find these values with the clues above.  
+
+-----Constraints-----
+ - N is an integer between 1 and 100 (inclusive).
+ - x_i and y_i are integers between 0 and 100 (inclusive).
+ - h_i is an integer between 0 and 10^9 (inclusive).
+ - The N coordinates (x_1, y_1), (x_2, y_2), (x_3, y_3), ..., (x_N, y_N) are all different.
+ - The center coordinates and the height of the pyramid can be uniquely identified.
+
+-----Input-----
+Input is given from Standard Input in the following format:  
+N
+x_1 y_1 h_1
+x_2 y_2 h_2
+x_3 y_3 h_3
+:
+x_N y_N h_N
+
+-----Output-----
+Print values C_X, C_Y and H representing the center coordinates and the height of the pyramid in one line, with spaces in between.  
+
+-----Sample Input-----
+4
+2 3 5
+2 1 5
+1 2 5
+3 2 5
+
+-----Sample Output-----
+2 2 6
+
+In this case, the center coordinates and the height can be identified as (2, 2) and 6.
+"""
+2022-04-09 18:37:33.443787 --------------------------
+2022-04-09 18:37:52.221033 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().rstrip())\n    points = []\n    for i in range(n):\n        x, y, h = map(int, sys.stdin.readline().rstrip().split())\n        points.append((x, y, h))\n    # print(points)\n    center_x = 0\n    center_y = 0\n    height = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            x1, y1, h1 = points[i]\n            x2, y2, h2 = points[j]\n            if x1 == x2:\n                center_x = x1\n                center_y = (y1 + y2) // 2\n                height = h1 + abs(y1 - center_y)\n            elif y1 == y2:\n                center_x = (x1 + x2) // 2\n                center_y = y1\n                height = h1 + abs(x1 - center_x)\n            else:\n                center_x = (x1 + x2) // 2\n                center_y = (y1 + y2) // 2\n                height = h1 + abs(x1 - center_x) + abs(y1 - center_y)\n            # print(center_x, center_y, height)\n            if all(h == height - abs(x - center_x) - abs(y - center_y) for x, y, h in points):\n                print(center_x, center_y, height)\n                break\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN = int(input())\n\nx_y_h = []\nfor i in range(N):\n    x_y_h.append(list(map(int, sys.stdin.readline().split())))\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if x_y_h[i][0] == x_y_h[j][0]:\n            if x_y_h[i][1] == x_y_h[j][1]:\n                if x_y_h[i][2] != x_y_h[j][2]:\n                    print(\"No\")\n                    exit()\n            else:\n                C_X = x_y_h[i][0]\n                C_Y = (x_y_h[i][1] + x_y_h[j][1]) / 2\n                if x_y_h[i][2] == x_y_h[j][2]:\n                    H = abs(x_y_h[i][1] - x_y_h[j][1]) + x_y_h[i][2]\n                else:\n                    H = abs(x_y_h[i][1] - x_y_h[j][1]) + max(x_y_h[i][2], x_y_h[j][2])\n                break\n\nfor i in range(N):\n    if x_y_h[i][0] == C_X and x_y_h[i][1] == C_Y:\n        if x_y_h[i][2] != H:\n            print(\"No\")\n            exit()\n    else:\n        if x_y_h[i][2] != abs(C_X - x_y_h[i][0]) + abs(C_Y - x_y_h[i][1]) + H:\n            print(\"No\")\n            exit()\n\nprint(C_X, C_Y, H)"
+    }
+  ],
+  "created": 1649543853,
+  "id": "cmpl-4vDzx8RvrmBjVAIzD3YgCtCesVrC3",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:37:52.221659 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().rstrip())\n    points = []\n    for i in range(n):\n        x, y, h = map(int, sys.stdin.readline().rstrip().split())\n        points.append((x, y, h))\n    # print(points)\n    center_x = 0\n    center_y = 0\n    height = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            x1, y1, h1 = points[i]\n            x2, y2, h2 = points[j]\n            if x1 == x2:\n                center_x = x1\n                center_y = (y1 + y2) // 2\n                height = h1 + abs(y1 - center_y)\n            elif y1 == y2:\n                center_x = (x1 + x2) // 2\n                center_y = y1\n                height = h1 + abs(x1 - center_x)\n            else:\n                center_x = (x1 + x2) // 2\n                center_y = (y1 + y2) // 2\n                height = h1 + abs(x1 - center_x) + abs(y1 - center_y)\n            # print(center_x, center_y, height)\n            if all(h == height - abs(x - center_x) - abs(y - center_y) for x, y, h in points):\n                print(center_x, center_y, height)\n                break\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:37:52.221976 REASON stop
+2022-04-09 18:37:52.234367 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN = int(input())\n\nx_y_h = []\nfor i in range(N):\n    x_y_h.append(list(map(int, sys.stdin.readline().split())))\n\nfor i in range(N):\n    for j in range(i+1, N):\n        if x_y_h[i][0] == x_y_h[j][0]:\n            if x_y_h[i][1] == x_y_h[j][1]:\n                if x_y_h[i][2] != x_y_h[j][2]:\n                    print(\"No\")\n                    exit()\n            else:\n                C_X = x_y_h[i][0]\n                C_Y = (x_y_h[i][1] + x_y_h[j][1]) / 2\n                if x_y_h[i][2] == x_y_h[j][2]:\n                    H = abs(x_y_h[i][1] - x_y_h[j][1]) + x_y_h[i][2]\n                else:\n                    H = abs(x_y_h[i][1] - x_y_h[j][1]) + max(x_y_h[i][2], x_y_h[j][2])\n                break\n\nfor i in range(N):\n    if x_y_h[i][0] == C_X and x_y_h[i][1] == C_Y:\n        if x_y_h[i][2] != H:\n            print(\"No\")\n            exit()\n    else:\n        if x_y_h[i][2] != abs(C_X - x_y_h[i][0]) + abs(C_Y - x_y_h[i][1]) + H:\n            print(\"No\")\n            exit()\n\nprint(C_X, C_Y, H)"
+}
+2022-04-09 18:37:52.234545 REASON stop

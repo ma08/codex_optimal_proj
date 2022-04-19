@@ -1,0 +1,13 @@
+
+s = input()
+
+if s == s[::-1]:
+    print(0)
+
+for i in range(len(s) // 2):
+    if s[i] == s[-1 - i]:
+        continue
+    else:
+        print(1)
+else:
+    print(1)

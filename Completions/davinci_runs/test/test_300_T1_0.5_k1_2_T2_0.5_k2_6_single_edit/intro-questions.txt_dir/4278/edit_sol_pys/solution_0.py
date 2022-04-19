@@ -1,0 +1,42 @@
+
+
+import sys
+
+n = int(input())
+s = [input() for _ in range(n)]
+
+anagrams = {}
+for i in range(n):
+    key = "".join(sorted(s[i]))
+
+    if key in anagrams:
+        anagrams[key].append(i)
+    else:
+        anagrams[key] = [i]
+
+ans = 0
+for key in anagrams:
+    if len(anagrams[key]) >= 2:
+        count += len(anagrams[key]) * (len(anagrams[key]) - 1) // 2
+
+# print the result
+print(count)
+
+# a better solution
+import sys
+
+n = int(sys.stdin.readline())
+
+s = []
+for _ in range(n):
+    s.append(sys.stdin.readline().rstrip())
+
+m = dict()
+for i in range(n):
+    m.setdefault("".join(sorted(s[i])), []).append(i)
+
+ans = 0
+for i in m.values():
+    ans += len(i) * (len(i) - 1) // 2
+
+print(ans)

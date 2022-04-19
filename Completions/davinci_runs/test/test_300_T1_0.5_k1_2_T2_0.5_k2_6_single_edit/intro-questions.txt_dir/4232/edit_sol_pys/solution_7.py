@@ -1,0 +1,24 @@
+
+# This is a comment
+import sys
+    # This is a comment
+def main():
+    n, k = sys.stdin.readline().strip().split()
+    n = int(n)
+    k = int(k)
+    numbers = [int(x) for x in sys.stdin.readline().strip().split()]
+    numbers.sort()
+    answer = 0
+    for i in range(n):
+        if numbers[i] > answer + 1:
+            break
+        if i + 1 >= k:
+            answer = numbers[i]
+    if answer == 0:
+        print("-1")
+    else:
+        print(answer)
+
+if __name__ == "__main__":
+    # This is a comment
+    main()
