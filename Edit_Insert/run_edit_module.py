@@ -25,7 +25,7 @@ def random_number(tot_num):
 def set_api_key_rand():
     api_key_items = config.items( "keys" )
     api_keys = [key for en, key in config.items("keys")]
-    api_key_names = [key for en, key in config.items("keys")]
+    api_key_names = [en for en, key in config.items("keys")]
     ran_num = random_number(len(api_keys))
     selected_key = api_keys[ran_num]
     selected_key_name = api_key_names[ran_num]
