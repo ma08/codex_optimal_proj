@@ -1,0 +1,98 @@
+2022-04-18 02:13:36.038011 """
+You are given an array $a$ consisting of $n$ integers.
+
+You can remove at most one element from this array. Thus, the final length of the array is $n-1$ or $n$.
+
+Your task is to calculate the maximum possible length of the strictly increasing contiguous subarray of the remaining array.
+
+Recall that the contiguous subarray $a$ with indices from $l$ to $r$ is $a[l \dots r] = a_l, a_{l + 1}, \dots, a_r$. The subarray $a[l \dots r]$ is called strictly increasing if $a_l < a_{l+1} < \dots < a_r$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the strictly increasing contiguous subarray of the array $a$ after removing at most one element.
+
+
+-----Examples-----
+Input
+5
+1 2 5 3 4
+
+Output
+4
+
+Input
+2
+1 2
+
+Output
+2
+
+Input
+7
+6 5 4 3 2 4 3
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example, you can delete $a_3=5$. Then the resulting array will be equal to $[1, 2, 3, 4]$ and the length of its largest increasing subarray will be equal to $4$.
+"""
+2022-04-18 02:13:36.038027 --------------------------
+2022-04-18 02:14:05.240263 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    if n == 2:\n        print(2)\n        return\n    ans = 1\n    ans1 = 1\n    ans2 = 1\n    for i in range(1, n):\n        if a[i] > a[i-1]:\n            ans1 += 1\n        else:\n            ans1 = 1\n        ans = max(ans, ans1)\n    for i in range(1, n-1):\n        if a[i-1] < a[i+1]:\n            ans2 += 1\n        else:\n            ans2 = 1\n        ans = max(ans, ans2)\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int,input().split()))\n\n#n = int(input())\n#a = [int(i) for i in input().split()]\n\n#print(n)\n#print(a)\n\nma = []\nma.append(0)\nma.append(1)\n\nfor i in range(1,n):\n    if a[i] > a[i-1]:\n        ma.append(ma[i]+1)\n    else:\n        ma.append(1)\n\n#print(ma)\n\nmb = []\nmb.append(0)\nmb.append(1)\n\nfor i in range(1,n):\n    if a[n-1-i] < a[n-i]:\n        mb.append(mb[i]+1)\n    else:\n        mb.append(1)\n\n#print(mb)\n\nmb.reverse()\n\n#print(mb)\n\nm = 0\n\nfor i in range(1,n+1):\n    m = max(m,ma[i-1] + mb[i]-1)\n\nprint(m)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int,input().split()))\n\ndef max_increasing_subarray(a):\n    max_length = 0\n    length = 0\n    for i in range(1,len(a)):\n        if a[i] > a[i-1]:\n            length += 1\n        else:\n            if length > max_length:\n                max_length = length\n            length = 0\n    return max_length+1\n\nif len(a) == 1:\n    print(1)\nelse:\n    max_length = max_increasing_subarray(a)\n    for i in range(len(a)):\n        if i == 0:\n            if a[i] < a[i+1]:\n                a[i] = a[i+1] - 1\n        elif i == len(a) - 1:\n            if a[i] > a[i-1]:\n                a[i] = a[i-1] + 1\n        else:\n            if a[i] > a[i-1] and a[i] < a[i+1]:\n                a[i] = a[i-1] + 1\n            elif a[i] < a[i-1] and a[i] > a[i+1]:\n                a[i] = a[i+1] - 1\n    if max_increasing_subarray(a) > max_length:\n        max_length = max_increasing_subarray(a)\n    print(max_length)"
+    }
+  ],
+  "created": 1650248016,
+  "id": "cmpl-4yBBQ28N6b6AAMHcERuOtoFlg0RNj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:14:05.240476 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    if n == 2:\n        print(2)\n        return\n    ans = 1\n    ans1 = 1\n    ans2 = 1\n    for i in range(1, n):\n        if a[i] > a[i-1]:\n            ans1 += 1\n        else:\n            ans1 = 1\n        ans = max(ans, ans1)\n    for i in range(1, n-1):\n        if a[i-1] < a[i+1]:\n            ans2 += 1\n        else:\n            ans2 = 1\n        ans = max(ans, ans2)\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 02:14:05.240514 REASON stop
+2022-04-18 02:14:05.271014 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int,input().split()))\n\n#n = int(input())\n#a = [int(i) for i in input().split()]\n\n#print(n)\n#print(a)\n\nma = []\nma.append(0)\nma.append(1)\n\nfor i in range(1,n):\n    if a[i] > a[i-1]:\n        ma.append(ma[i]+1)\n    else:\n        ma.append(1)\n\n#print(ma)\n\nmb = []\nmb.append(0)\nmb.append(1)\n\nfor i in range(1,n):\n    if a[n-1-i] < a[n-i]:\n        mb.append(mb[i]+1)\n    else:\n        mb.append(1)\n\n#print(mb)\n\nmb.reverse()\n\n#print(mb)\n\nm = 0\n\nfor i in range(1,n+1):\n    m = max(m,ma[i-1] + mb[i]-1)\n\nprint(m)"
+}
+2022-04-18 02:14:05.271082 REASON stop
+2022-04-18 02:14:05.271782 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int,input().split()))\n\ndef max_increasing_subarray(a):\n    max_length = 0\n    length = 0\n    for i in range(1,len(a)):\n        if a[i] > a[i-1]:\n            length += 1\n        else:\n            if length > max_length:\n                max_length = length\n            length = 0\n    return max_length+1\n\nif len(a) == 1:\n    print(1)\nelse:\n    max_length = max_increasing_subarray(a)\n    for i in range(len(a)):\n        if i == 0:\n            if a[i] < a[i+1]:\n                a[i] = a[i+1] - 1\n        elif i == len(a) - 1:\n            if a[i] > a[i-1]:\n                a[i] = a[i-1] + 1\n        else:\n            if a[i] > a[i-1] and a[i] < a[i+1]:\n                a[i] = a[i-1] + 1\n            elif a[i] < a[i-1] and a[i] > a[i+1]:\n                a[i] = a[i+1] - 1\n    if max_increasing_subarray(a) > max_length:\n        max_length = max_increasing_subarray(a)\n    print(max_length)"
+}
+2022-04-18 02:14:05.271853 REASON stop

@@ -1,0 +1,74 @@
+2022-04-18 02:50:24.919894 """
+How many integer sequences A_1,A_2,\ldots,A_N of length N satisfy all of the following conditions?
+ - 0 \leq A_i \leq 9
+ - There exists some i such that A_i=0 holds.
+ - There exists some i such that A_i=9 holds.
+The answer can be very large, so output it modulo 10^9 + 7.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^6
+ - N is an integer.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+
+-----Output-----
+Print the answer modulo 10^9 + 7.
+
+-----Sample Input-----
+2
+
+-----Sample Output-----
+2
+
+Two sequences \{0,9\} and \{9,0\} satisfy all conditions.
+"""
+2022-04-18 02:50:24.919910 --------------------------
+2022-04-18 02:51:02.087381 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\n\n# dp[i][j][k] i\u6841\u76ee\u307e\u3067\u3067j\u304c\u51fa\u3066\u304d\u305f\u56de\u6570\u3067\u3001i\u6841\u76ee\u304ck\u3067\u3042\u308b\u3082\u306e\u306e\u500b\u6570\n# i\u6841\u76ee\u304c0\u306e\u3068\u304d\ndp = [[[0]*2 for _ in range(n+1)] for _ in range(n+1)]\ndp[0][0][0] = 1\ndp[0][0][1] = 0\ndp[0][1][0] = 0\ndp[0][1][1] = 1\n\nfor i in range(1, n):\n    for j in range(n):\n        if j == 0:\n            dp[i][j][0] = dp[i-1][j][0] * 8 + dp[i-1][j+1][1]\n            dp[i][j][1] = dp[i-1][j][1]\n        elif j == n-1:\n            dp[i][j][0] = dp[i-1][j][0] * 9 + dp[i-1][j-1][1]\n            dp[i][j][1] = dp[i-1][j][1]\n        else:\n            dp[i][j][0] = dp[i-1][j][0] * 8 + dp[i-1][j+1][1] + dp[i-1][j-1][1]\n            dp[i][j][1] = dp[i-1][j][1]\nans = sum(dp[n-1][j][0] for j in range(n))\nprint(ans % (10**9 + 7))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nimport sys\ndef main():\n    N = int(sys.stdin.readline())\n    mod = 10 ** 9 + 7\n    dp = [0] * (N + 1)\n    dp[1] = 10\n    # dp[i] = dp[i-1] * 9 + dp[i-2] * 10\n    for i in range(2, N + 1):\n        dp[i] = dp[i - 1] * 9 + dp[i - 2] * 10\n        dp[i] %= mod\n    print(dp[N])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\n# A[i] = the number of ways to make a sequence of length i that satisfies all conditions\n# A[i] = A[i-1] + A[i-2]\n# A[i] = A[i-2] + A[i-3] + \\cdots + A[0]\n# A[i] = A[i-1] + A[i-1] - A[0]\n# A[i] = 2*A[i-1] - A[0]\n#\n# A[0] = 1\n# A[1] = 2\nA = [0]*(N+1)\nA[0] = 1\nA[1] = 2\nfor i in range(2,N+1):\n    A[i] = (2*A[i-1] - A[0])%(10**9+7)\nprint(A[N])"
+    }
+  ],
+  "created": 1650250225,
+  "id": "cmpl-4yBl3bWO4SsUUxJPleVRwPH9kN3Zc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:51:02.087692 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\ninput = sys.stdin.readline\n\nn = int(input())\n\n# dp[i][j][k] i\u6841\u76ee\u307e\u3067\u3067j\u304c\u51fa\u3066\u304d\u305f\u56de\u6570\u3067\u3001i\u6841\u76ee\u304ck\u3067\u3042\u308b\u3082\u306e\u306e\u500b\u6570\n# i\u6841\u76ee\u304c0\u306e\u3068\u304d\ndp = [[[0]*2 for _ in range(n+1)] for _ in range(n+1)]\ndp[0][0][0] = 1\ndp[0][0][1] = 0\ndp[0][1][0] = 0\ndp[0][1][1] = 1\n\nfor i in range(1, n):\n    for j in range(n):\n        if j == 0:\n            dp[i][j][0] = dp[i-1][j][0] * 8 + dp[i-1][j+1][1]\n            dp[i][j][1] = dp[i-1][j][1]\n        elif j == n-1:\n            dp[i][j][0] = dp[i-1][j][0] * 9 + dp[i-1][j-1][1]\n            dp[i][j][1] = dp[i-1][j][1]\n        else:\n            dp[i][j][0] = dp[i-1][j][0] * 8 + dp[i-1][j+1][1] + dp[i-1][j-1][1]\n            dp[i][j][1] = dp[i-1][j][1]\nans = sum(dp[n-1][j][0] for j in range(n))\nprint(ans % (10**9 + 7))"
+}
+2022-04-18 02:51:02.087762 REASON stop
+2022-04-18 02:51:02.089272 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nimport sys\ndef main():\n    N = int(sys.stdin.readline())\n    mod = 10 ** 9 + 7\n    dp = [0] * (N + 1)\n    dp[1] = 10\n    # dp[i] = dp[i-1] * 9 + dp[i-2] * 10\n    for i in range(2, N + 1):\n        dp[i] = dp[i - 1] * 9 + dp[i - 2] * 10\n        dp[i] %= mod\n    print(dp[N])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 02:51:02.089350 REASON stop
+2022-04-18 02:51:02.090044 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\n# A[i] = the number of ways to make a sequence of length i that satisfies all conditions\n# A[i] = A[i-1] + A[i-2]\n# A[i] = A[i-2] + A[i-3] + \\cdots + A[0]\n# A[i] = A[i-1] + A[i-1] - A[0]\n# A[i] = 2*A[i-1] - A[0]\n#\n# A[0] = 1\n# A[1] = 2\nA = [0]*(N+1)\nA[0] = 1\nA[1] = 2\nfor i in range(2,N+1):\n    A[i] = (2*A[i-1] - A[0])%(10**9+7)\nprint(A[N])"
+}
+2022-04-18 02:51:02.090135 REASON stop

@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+
+n = int(input())
+a = list(map(int, input().split()))
+
+# print(n)
+# print(a)
+
+ans = [-1] * n
+count = 0
+
+for i in range(n):
+    ans[a[i]-1] = count
+    count = count + 1
+
+print(' '.join(map(str,ans)))

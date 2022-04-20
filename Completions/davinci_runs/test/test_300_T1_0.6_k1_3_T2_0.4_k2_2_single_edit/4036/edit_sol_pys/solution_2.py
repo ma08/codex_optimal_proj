@@ -1,0 +1,23 @@
+
+
+def main():
+    n, k = map(int, input().split())
+    if n < k or (n == k and n != 1):
+        print("NO")
+        return
+    a = [1]
+    for i in range(1, k):
+        if a[-1] * 2 <= n:
+            a.append(a[-1] * 2)
+        else:
+            a.append(n)
+            break
+    else:
+        print("NO")
+        return
+    a[-1] = n - sum(a[:-1])
+    print("YES")
+    print(*a)
+
+if __name__ == "__main__":
+    main()
