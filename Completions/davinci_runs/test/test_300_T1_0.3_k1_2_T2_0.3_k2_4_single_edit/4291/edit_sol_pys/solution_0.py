@@ -1,0 +1,19 @@
+# https://atcoder.jp/contests/abc087/tasks/arc090_a
+
+n, q = map(int, input().split())
+s = input()
+
+# create a list of the indices of where AC occurs
+ac_indices = []
+for i in range(n-1):
+    if s[i] == 'A' and s[i+1] == 'C':
+        ac_indices.append(i)
+
+# for each query, find the number of ACs in the substring
+for i in range(q):
+    l, r = map(int, input().split())
+    count = 0
+    for j in ac_indices:
+        if l <= j+1 <= r:
+            count += 1
+    print(count)
