@@ -1,0 +1,90 @@
+2022-04-18 02:53:11.406763 """
+You have N bamboos. The lengths (in centimeters) of these are l_1, l_2, ..., l_N, respectively.
+Your objective is to use some of these bamboos (possibly all) to obtain three bamboos of length A, B, C. For that, you can use the following three kinds of magics any number:
+ - Extension Magic: Consumes 1 MP (magic point). Choose one bamboo and increase its length by 1.
+ - Shortening Magic: Consumes 1 MP. Choose one bamboo of length at least 2 and decrease its length by 1.
+ - Composition Magic: Consumes 10 MP. Choose two bamboos and combine them into one bamboo. The length of this new bamboo is equal to the sum of the lengths of the two bamboos combined. (Afterwards, further magics can be used on this bamboo.)
+At least how much MP is needed to achieve the objective?
+
+-----Constraints-----
+ - 3 \leq N \leq 8
+ - 1 \leq C < B < A \leq 1000
+ - 1 \leq l_i \leq 1000
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N A B C
+l_1
+l_2
+:
+l_N
+
+-----Output-----
+Print the minimum amount of MP needed to achieve the objective.
+
+-----Sample Input-----
+5 100 90 80
+98
+40
+30
+21
+80
+
+-----Sample Output-----
+23
+
+We are obtaining three bamboos of lengths 100, 90, 80 from five bamboos 98, 40, 30, 21, 80. We already have a bamboo of length 80, and we can obtain bamboos of lengths 100, 90 by using the magics as follows at the total cost of 23 MP, which is optimal.
+ - Use Extension Magic twice on the bamboo of length 98 to obtain a bamboo of length 100. (MP consumed: 2)
+ - Use Composition Magic on the bamboos of lengths 40, 30 to obtain a bamboo of length 70. (MP consumed: 10)
+ - Use Shortening Magic once on the bamboo of length 21 to obtain a bamboo of length 20. (MP consumed: 1)
+ - Use Composition Magic on the bamboo of length 70 obtained in step 2 and the bamboo of length 20 obtained in step 3 to obtain a bamboo of length 90. (MP consumed: 10)
+"""
+2022-04-18 02:53:11.406781 --------------------------
+2022-04-18 02:54:01.105494 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, a, b, c = map(int, input().split())\nl = [int(input()) for _ in range(n)]\n\n# dp[i][j][k] = min(mp) to obtain bamboos with lengths of a, b, c from l[0:i]\n# dp[i][j][k] = min(dp[i-1][j][k], dp[i-1][j-1][k-1] + 10, dp[i-1][j-1][k] + 1, dp[i-1][j-1][k] + 1)\ndp = [[[float(\"inf\") for _ in range(n+1)] for _ in range(n+1)] for _ in range(n+1)]\ndp[0][0][0] = 0\nfor i in range(n):\n    for j in range(i+1):\n        for k in range(j+1):\n            if l[i] == a and j == 0:\n                dp[i+1][j+1][k] = min(dp[i+1][j+1][k], dp[i][j][k])\n            if l[i] == b and k == 0:\n                dp[i+1][j][k+1] = min(dp[i+1][j][k+1], dp[i][j][k])\n            if l[i] == c and k == j:\n                dp[i+1][j][k+1] = min(dp[i+1][j][k+1], dp[i][j][k])\n            if j > 0 and k > 0 and l[i] + a <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and k > 0 and l[i] + b <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and k > 0 and l[i] + c <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and l[i] + 1 <= 1000:\n                dp[i+1][j+1][k] = min(dp[i+1][j+1][k], dp[i][j][k]+1)\n            if j > 0 and l[i] - 1 >= 1:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j][k]+1)\n\nprint(dp[n][1][1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n# Read the input\nN, A, B, C = map(int, sys.stdin.readline().split())\nl = [int(sys.stdin.readline()) for i in range(N)]\n\n# dp[n][a][b][c] is the minimum amount of MP needed to obtain three bamboos of lengths a, b, c from n bamboos\ndp = [[[[float(\"inf\") for i in range(C+1)] for j in range(B+1)] for k in range(A+1)] for l in range(N+1)]\ndp[0][0][0][0] = 0\n\nfor i in range(N):\n    for a in range(A+1):\n        for b in range(B+1):\n            for c in range(C+1):\n                # Do nothing\n                dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c])\n                # Extend a bamboo\n                if a >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a-l[i]][b][c] + 1)\n                if b >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b-l[i]][c] + 1)\n                if c >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c-l[i]] + 1)\n                # Shorten a bamboo\n                if a + l[i] <= A:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a+l[i]][b][c] + 1)\n                if b + l[i] <= B:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b+l[i]][c] + 1)\n                if c + l[i] <= C:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c+l[i]] + 1)\n                # Combine two bamboos\n                if a + l[i] <= A:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a+l[i]][b][c] + 10)\n                if b + l[i] <= B:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b+l[i]][c] + 10)\n                if c + l[i] <= C:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c+l[i]] + 10)\n\n# Print the answer\nprint(dp[N][A][B][C])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef bamboo_magic(A, B, C, bamboos):\n    \"\"\"\n    :type A: int\n    :type B: int\n    :type C: int\n    :type bamboos: list\n    :rtype: int\n    \"\"\"\n    # initialization\n    bamboos.sort()\n    bamboos.reverse()\n    magic_points = 0\n    # check if there is a bamboo of length A\n    if A in bamboos:\n        # remove it to get the bamboos that are shorter than A\n        bamboos.remove(A)\n    # for each bamboo of length b in bamboos that's shorter than A\n    for b in bamboos:\n        # if b is shorter than A - B\n        if b < A - B:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than A - C\n        if b < A - C:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than A\n        if b < A:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # check if there is a bamboo of length B\n    if B in bamboos:\n        # remove it to get the bamboos that are shorter than B\n        bamboos.remove(B)\n    # for each bamboo of length b in bamboos that's shorter than B\n    for b in bamboos:\n        # if b is shorter than B - C\n        if b < B - C:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than B\n        if b < B:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # check if there is a bamboo of length C\n    if C in bamboos:\n        # remove it to get the bamboos that are shorter than C\n        bamboos.remove(C)\n    # for each bamboo of length b in bamboos that's shorter than C\n    for b in bamboos:\n        # if b is shorter than C\n        if b < C:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # return the magic point\n    return magic_points\n\ndef main():\n    \"\"\"\n    :rtype: None\n    \"\"\"\n    # read the inputs\n    N, A, B, C = map(int, input().split())\n    bamboos = list(map(int, [input() for i in range(N)]))\n    # print the minimum amount of MP needed\n    print(bamboo_magic(A, B, C, bamboos))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650250391,
+  "id": "cmpl-4yBnj82fDVg7Oh8BAFvLgudf7FdX2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:54:01.105905 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, a, b, c = map(int, input().split())\nl = [int(input()) for _ in range(n)]\n\n# dp[i][j][k] = min(mp) to obtain bamboos with lengths of a, b, c from l[0:i]\n# dp[i][j][k] = min(dp[i-1][j][k], dp[i-1][j-1][k-1] + 10, dp[i-1][j-1][k] + 1, dp[i-1][j-1][k] + 1)\ndp = [[[float(\"inf\") for _ in range(n+1)] for _ in range(n+1)] for _ in range(n+1)]\ndp[0][0][0] = 0\nfor i in range(n):\n    for j in range(i+1):\n        for k in range(j+1):\n            if l[i] == a and j == 0:\n                dp[i+1][j+1][k] = min(dp[i+1][j+1][k], dp[i][j][k])\n            if l[i] == b and k == 0:\n                dp[i+1][j][k+1] = min(dp[i+1][j][k+1], dp[i][j][k])\n            if l[i] == c and k == j:\n                dp[i+1][j][k+1] = min(dp[i+1][j][k+1], dp[i][j][k])\n            if j > 0 and k > 0 and l[i] + a <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and k > 0 and l[i] + b <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and k > 0 and l[i] + c <= 1000:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j-1][k-1]+10)\n            if j > 0 and l[i] + 1 <= 1000:\n                dp[i+1][j+1][k] = min(dp[i+1][j+1][k], dp[i][j][k]+1)\n            if j > 0 and l[i] - 1 >= 1:\n                dp[i+1][j][k] = min(dp[i+1][j][k], dp[i][j][k]+1)\n\nprint(dp[n][1][1])"
+}
+2022-04-18 02:54:01.106000 REASON stop
+2022-04-18 02:54:01.135624 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n# Read the input\nN, A, B, C = map(int, sys.stdin.readline().split())\nl = [int(sys.stdin.readline()) for i in range(N)]\n\n# dp[n][a][b][c] is the minimum amount of MP needed to obtain three bamboos of lengths a, b, c from n bamboos\ndp = [[[[float(\"inf\") for i in range(C+1)] for j in range(B+1)] for k in range(A+1)] for l in range(N+1)]\ndp[0][0][0][0] = 0\n\nfor i in range(N):\n    for a in range(A+1):\n        for b in range(B+1):\n            for c in range(C+1):\n                # Do nothing\n                dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c])\n                # Extend a bamboo\n                if a >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a-l[i]][b][c] + 1)\n                if b >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b-l[i]][c] + 1)\n                if c >= l[i]:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c-l[i]] + 1)\n                # Shorten a bamboo\n                if a + l[i] <= A:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a+l[i]][b][c] + 1)\n                if b + l[i] <= B:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b+l[i]][c] + 1)\n                if c + l[i] <= C:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c+l[i]] + 1)\n                # Combine two bamboos\n                if a + l[i] <= A:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a+l[i]][b][c] + 10)\n                if b + l[i] <= B:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b+l[i]][c] + 10)\n                if c + l[i] <= C:\n                    dp[i+1][a][b][c] = min(dp[i+1][a][b][c], dp[i][a][b][c+l[i]] + 10)\n\n# Print the answer\nprint(dp[N][A][B][C])"
+}
+2022-04-18 02:54:01.135706 REASON stop
+2022-04-18 02:54:01.136263 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef bamboo_magic(A, B, C, bamboos):\n    \"\"\"\n    :type A: int\n    :type B: int\n    :type C: int\n    :type bamboos: list\n    :rtype: int\n    \"\"\"\n    # initialization\n    bamboos.sort()\n    bamboos.reverse()\n    magic_points = 0\n    # check if there is a bamboo of length A\n    if A in bamboos:\n        # remove it to get the bamboos that are shorter than A\n        bamboos.remove(A)\n    # for each bamboo of length b in bamboos that's shorter than A\n    for b in bamboos:\n        # if b is shorter than A - B\n        if b < A - B:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than A - C\n        if b < A - C:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than A\n        if b < A:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # check if there is a bamboo of length B\n    if B in bamboos:\n        # remove it to get the bamboos that are shorter than B\n        bamboos.remove(B)\n    # for each bamboo of length b in bamboos that's shorter than B\n    for b in bamboos:\n        # if b is shorter than B - C\n        if b < B - C:\n            # decrease its length by 1\n            b -= 1\n            # increase the magic point\n            magic_points += 1\n        # if b is shorter than B\n        if b < B:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # check if there is a bamboo of length C\n    if C in bamboos:\n        # remove it to get the bamboos that are shorter than C\n        bamboos.remove(C)\n    # for each bamboo of length b in bamboos that's shorter than C\n    for b in bamboos:\n        # if b is shorter than C\n        if b < C:\n            # increase its length by 1\n            b += 1\n            # increase the magic point\n            magic_points += 1\n    # return the magic point\n    return magic_points\n\ndef main():\n    \"\"\"\n    :rtype: None\n    \"\"\"\n    # read the inputs\n    N, A, B, C = map(int, input().split())\n    bamboos = list(map(int, [input() for i in range(N)]))\n    # print the minimum amount of MP needed\n    print(bamboo_magic(A, B, C, bamboos))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 02:54:01.136324 REASON stop

@@ -1,0 +1,19 @@
+
+def main():
+    n = int(input())
+    doublets_count = 0
+    for i in range(n):
+        d1, d2, d3 = map(int, input().split())
+        if d1 == d2 == d3:
+            doublets_count += 1
+        else:
+            doublets_count = 0
+        if doublets_count == 2:
+            break
+    if doublets_count == 2:
+        print("Yes")
+    else:
+        print("No")
+
+if __name__ == '__main__':
+    main()

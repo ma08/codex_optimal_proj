@@ -1,0 +1,106 @@
+2022-04-18 01:59:41.049972 """
+You are given two strings $s$ and $t$. Both strings have length $n$ and consist of lowercase Latin letters. The characters in the strings are numbered from $1$ to $n$.
+
+You can successively perform the following move any number of times (possibly, zero):  swap any two adjacent (neighboring) characters of $s$ (i.e. for any $i = \{1, 2, \dots, n - 1\}$ you can swap $s_i$ and $s_{i + 1})$. 
+
+You can't apply a move to the string $t$. The moves are applied to the string $s$ one after another.
+
+Your task is to obtain the string $t$ from the string $s$. Find any way to do it with at most $10^4$ such moves.
+
+You do not have to minimize the number of moves, just find any sequence of moves of length $10^4$ or less to transform $s$ into $t$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 50$) — the length of strings $s$ and $t$.
+
+The second line of the input contains the string $s$ consisting of $n$ lowercase Latin letters.
+
+The third line of the input contains the string $t$ consisting of $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to obtain the string $t$ using moves, print "-1".
+
+Otherwise in the first line print one integer $k$ — the number of moves to transform $s$ to $t$. Note that $k$ must be an integer number between $0$ and $10^4$ inclusive.
+
+In the second line print $k$ integers $c_j$ ($1 \le c_j < n$), where $c_j$ means that on the $j$-th move you swap characters $s_{c_j}$ and $s_{c_j + 1}$.
+
+If you do not need to apply any moves, print a single integer $0$ in the first line and either leave the second line empty or do not print it at all.
+
+
+-----Examples-----
+Input
+6
+abcdef
+abdfec
+
+Output
+4
+3 5 4 5 
+
+Input
+4
+abcd
+accd
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the string $s$ changes as follows: "abcdef" $\rightarrow$ "abdcef" $\rightarrow$ "abdcfe" $\rightarrow$ "abdfce" $\rightarrow$ "abdfec".
+
+In the second example there is no way to transform the string $s$ into the string $t$ through any allowed moves.
+"""
+2022-04-18 01:59:41.049996 --------------------------
+2022-04-18 02:00:24.332505 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef solve(s, t):\n    n = len(s)\n    moves = 0\n    ans = []\n    for i in range(n-1):\n        if s[i] == t[i]:\n            continue\n        else:\n            pos = s[i:].find(t[i]) + i\n            while pos != i:\n                ans.append(pos-1)\n                moves += 1\n                s = swap(s, pos-1, pos)\n                pos = s[i:].find(t[i]) + i\n    if s != t:\n        return -1\n    return moves, ans\n\ndef swap(s, i, j):\n    s = list(s)\n    s[i], s[j] = s[j], s[i]\n    return ''.join(s)\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    t = input()\n    res = solve(s, t)\n    if res == -1:\n        print(-1)\n    else:\n        moves, ans = res\n        print(moves)\n        print(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s, i, j):\n    return s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n\ndef diff(s, t):\n    for i in range(n):\n        if s[i] != t[i]:\n            return i\n    return n\n\ndef solve(s, t):\n    if s == t:\n        return 0\n\n    i = diff(s, t)\n    if i == n:\n        return -1\n\n    j = i + 1\n    while j < n and s[j] == t[i]:\n        j += 1\n    if j < n and s[j] == t[j]:\n        s = swap(s, i, j)\n        return 1 + solve(s, t)\n\n    j = i + 1\n    while j < n and s[j] != t[j]:\n        j += 1\n    if j < n:\n        s = swap(s, i, j)\n        return 1 + solve(s, t)\n    else:\n        return -1\n\ndef solve_slow(s, t):\n    # print(s, t)\n    if s == t:\n        return 0\n\n    for i in range(n - 1):\n        if s[i] != t[i] and s[i+1] != t[i+1]:\n            s = swap(s, i, i+1)\n            return 1 + solve(s, t)\n    return -1\n\nresult = solve(s, t)\nif result == -1:\n    print(-1)\nelse:\n    print(result)\n    i = diff(s, t)\n    j = i + 1\n    while j < n and s[j] == t[i]:\n        j += 1\n    if j < n and s[j] == t[j]:\n        print(i+1, j+1)\n    else:\n        print(i+1, j+1)\n        i = diff(s, t)\n        j = i + 1\n        while j < n and s[j] != t[j]:\n            j += 1\n        print(i+1, j+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef swap(char, i, j):\n    char = list(char)\n    char[i], char[j] = char[j], char[i]\n    return \"\".join(char)\n\ndef is_valid(char, target):\n    i = 0\n    while i < len(char):\n        if char[i] == target[i]:\n            i += 1\n        else:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n            else:\n                char = swap(char, i, j)\n                i += 1\n    return True\n\ndef can_swap(char, target):\n    i = 0\n    while i < len(char):\n        if char[i] != target[i]:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n    return True\n\ndef get_swap(char, target):\n    swaps = []\n    i = 0\n    while i < len(char):\n        if char[i] != target[i]:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n            swaps.append(j)\n            char = swap(char, i, j)\n        i += 1\n    return swaps\n\ndef main():\n    n = int(input())\n    char = input()\n    target = input()\n    if can_swap(char, target):\n        swaps = get_swap(char, target)\n        print(len(swaps))\n        print(\" \".join(map(str, swaps)))\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650247181,
+  "id": "cmpl-4yAxxmiYvJEVxVxJOjo0sLPC3JSGs",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:00:24.332765 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef solve(s, t):\n    n = len(s)\n    moves = 0\n    ans = []\n    for i in range(n-1):\n        if s[i] == t[i]:\n            continue\n        else:\n            pos = s[i:].find(t[i]) + i\n            while pos != i:\n                ans.append(pos-1)\n                moves += 1\n                s = swap(s, pos-1, pos)\n                pos = s[i:].find(t[i]) + i\n    if s != t:\n        return -1\n    return moves, ans\n\ndef swap(s, i, j):\n    s = list(s)\n    s[i], s[j] = s[j], s[i]\n    return ''.join(s)\n\nif __name__ == '__main__':\n    n = int(input())\n    s = input()\n    t = input()\n    res = solve(s, t)\n    if res == -1:\n        print(-1)\n    else:\n        moves, ans = res\n        print(moves)\n        print(*ans)"
+}
+2022-04-18 02:00:24.332808 REASON stop
+2022-04-18 02:00:24.370901 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s, i, j):\n    return s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n\ndef diff(s, t):\n    for i in range(n):\n        if s[i] != t[i]:\n            return i\n    return n\n\ndef solve(s, t):\n    if s == t:\n        return 0\n\n    i = diff(s, t)\n    if i == n:\n        return -1\n\n    j = i + 1\n    while j < n and s[j] == t[i]:\n        j += 1\n    if j < n and s[j] == t[j]:\n        s = swap(s, i, j)\n        return 1 + solve(s, t)\n\n    j = i + 1\n    while j < n and s[j] != t[j]:\n        j += 1\n    if j < n:\n        s = swap(s, i, j)\n        return 1 + solve(s, t)\n    else:\n        return -1\n\ndef solve_slow(s, t):\n    # print(s, t)\n    if s == t:\n        return 0\n\n    for i in range(n - 1):\n        if s[i] != t[i] and s[i+1] != t[i+1]:\n            s = swap(s, i, i+1)\n            return 1 + solve(s, t)\n    return -1\n\nresult = solve(s, t)\nif result == -1:\n    print(-1)\nelse:\n    print(result)\n    i = diff(s, t)\n    j = i + 1\n    while j < n and s[j] == t[i]:\n        j += 1\n    if j < n and s[j] == t[j]:\n        print(i+1, j+1)\n    else:\n        print(i+1, j+1)\n        i = diff(s, t)\n        j = i + 1\n        while j < n and s[j] != t[j]:\n            j += 1\n        print(i+1, j+1)"
+}
+2022-04-18 02:00:24.371012 REASON stop
+2022-04-18 02:00:24.371538 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef swap(char, i, j):\n    char = list(char)\n    char[i], char[j] = char[j], char[i]\n    return \"\".join(char)\n\ndef is_valid(char, target):\n    i = 0\n    while i < len(char):\n        if char[i] == target[i]:\n            i += 1\n        else:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n            else:\n                char = swap(char, i, j)\n                i += 1\n    return True\n\ndef can_swap(char, target):\n    i = 0\n    while i < len(char):\n        if char[i] != target[i]:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n    return True\n\ndef get_swap(char, target):\n    swaps = []\n    i = 0\n    while i < len(char):\n        if char[i] != target[i]:\n            j = i + 1\n            while j < len(char) and char[j] != target[i]:\n                j += 1\n            if j == len(char):\n                return False\n            swaps.append(j)\n            char = swap(char, i, j)\n        i += 1\n    return swaps\n\ndef main():\n    n = int(input())\n    char = input()\n    target = input()\n    if can_swap(char, target):\n        swaps = get_swap(char, target)\n        print(len(swaps))\n        print(\" \".join(map(str, swaps)))\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 02:00:24.371598 REASON stop
