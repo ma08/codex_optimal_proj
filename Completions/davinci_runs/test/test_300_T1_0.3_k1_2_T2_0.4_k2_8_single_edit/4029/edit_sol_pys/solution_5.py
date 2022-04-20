@@ -1,0 +1,10 @@
+
+
+n = int(input())
+if n == 0:
+    print(1)
+else:
+    if n % 25 == 0:
+        print(0)
+    else:
+        print(-1)

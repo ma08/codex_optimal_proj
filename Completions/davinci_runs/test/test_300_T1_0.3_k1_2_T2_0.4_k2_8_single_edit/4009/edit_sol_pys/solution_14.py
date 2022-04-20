@@ -1,0 +1,15 @@
+
+def main():
+    n, x, y = map(int, input().split())  # 入力
+    num = input()  # 入力
+    ans = 0
+    for i in range(y):
+        if num[n - x + i] == '0':
+            ans += 1
+    for i in range(y, x):
+        if num[n - x + i] == '1':
+            ans += 1
+    print(ans)
+
+if __name__ == '__main__':
+    main()

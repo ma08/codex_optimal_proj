@@ -1,0 +1,19 @@
+
+
+import sys
+
+def main():
+    n, k = map(int, input().split())
+    a = list(map(int, input().split()))
+    a.sort()
+    if a[k - 1] == a[k]:
+        print(-1)
+        return
+    elif k == 0:
+        print(1)
+        return
+    else:
+        print(a[k - 1])
+
+if __name__ == '__main__':
+    main()

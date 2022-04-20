@@ -1,0 +1,3 @@
+
+# これはコメントです
+print("Hello, world!")

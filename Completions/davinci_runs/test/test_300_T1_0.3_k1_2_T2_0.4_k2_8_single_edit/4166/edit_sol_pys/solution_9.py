@@ -1,0 +1,27 @@
+import sys
+sys.setrecursionlimit(10**6)
+
+N, M = map(int, input().split())
+
+def rec(i, s, c):
+    if i == M+1:
+        return rec(i+1, s, c)
+    if s[c[i][0]-1] == str(c[i][1]):
+        return s
+    if s[c[i][0]-1] == '-':
+        s[c[i][0]-1] = str(c[i][1])
+        return '-'
+    else:
+        s[c[i][0]-1] = str(c[i][1])
+        return rec(i+1, s, c)
+
+def main():
+    s = ['-' for i in range(N)]
+    c = []
+    for i in range(M):
+        c.append(list(map(int, input().split())))
+    ans = rec(1, s, c)
+    print(''.join(ans) if ans != '-' else -1)
+
+if __name__ == '__main__':
+    main()
