@@ -1,0 +1,19 @@
+
+
+from collections import defaultdict
+from typing import List
+
+from collections import Counter
+def solve(words: List[str]) -> int:
+    word_counts = sorted(Counter(words).items(), key=lambda x: x[1], reverse=True)
+
+    if word_counts[0][1] < 2:
+        return len(words)
+
+    return len(words) - (word_counts[0][1] - 1) * (len(word_counts[0][0]) - 1)
+
+
+if __name__ == '__main__':
+    _ = input()
+    words = input().split()
+    print(solve(words))
