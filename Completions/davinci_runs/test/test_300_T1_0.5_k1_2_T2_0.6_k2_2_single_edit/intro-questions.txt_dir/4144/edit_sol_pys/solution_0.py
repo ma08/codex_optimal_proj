@@ -1,0 +1,23 @@
+
+import sys
+
+sys.setrecursionlimit(10 ** 6)
+
+N = int(input())
+MOD = 10**9 + 7
+
+
+def dfs(s: int, n: int) -> int:
+    if s > 9:
+        return 0
+    if n == 1:
+        return 1
+    res = dfs(s + 1, n - 1) + dfs(s, n - 1)
+    return res % MOD
+
+
+def solve() -> int:
+    return dfs(1, N - 1) * 2 % MOD
+
+
+print(solve())
