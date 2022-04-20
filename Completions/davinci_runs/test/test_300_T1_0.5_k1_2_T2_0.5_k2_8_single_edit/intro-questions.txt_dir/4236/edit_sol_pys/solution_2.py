@@ -1,0 +1,22 @@
+
+n, m = map(int, input().split())
+
+left = [0] * (m + 1)
+right = [0] * (m + 1)
+
+for i in range(n):
+    l, r = map(int, input().split())
+    left[l] += 1
+    right[r] += 1
+
+
+counter = 0
+    if left[i] > right[i]:
+        print(counter)
+        break
+for i in range(1, m + 1):
+    if left[i] == right[i]:
+        counter += 1
+
+else:
+    print(counter)

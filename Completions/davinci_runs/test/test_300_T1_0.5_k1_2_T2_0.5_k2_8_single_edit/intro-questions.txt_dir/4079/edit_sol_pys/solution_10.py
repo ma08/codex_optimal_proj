@@ -1,0 +1,24 @@
+
+
+# Solution 1
+
+n = int(input())
+
+for i in range(n):
+    s = input()
+    ok = True
+    for j in range(1, len(s)):
+        if ord(s[j]) == ord(s[j - 1]) + 1:
+            ok = False
+            break
+    if len(s) != len(set(s)):
+        ok = False
+
+# Solution 2
+
+n = int(input())
+
+for i in range(n):
+    s = input()
+    print('Yes' if len(s) == len(set(s)) and len(s) == len(set(map(ord, s))) else 'No')
+    print('Yes' if ok else 'No')

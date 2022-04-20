@@ -1,0 +1,15 @@
+
+
+S = input()
+#S = "ATCODER"
+ans = 1
+tmp = 1
+
+for i in range(len(S)):
+    for j in range(i, len(S)):
+        if S[i] == "A" or S[i] == "C" or S[i] == "G" or S[i] == "T":
+            ans += 1
+        else:
+            break
+
+print(ans)

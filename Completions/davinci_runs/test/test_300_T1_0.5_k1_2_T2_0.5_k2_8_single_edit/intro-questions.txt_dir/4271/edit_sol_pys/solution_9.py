@@ -1,0 +1,15 @@
+
+from sys import stdin
+
+n = int(stdin.readline())
+dishes = [int(a) - 1 for a in stdin.readline().split()]
+base_points = [int(a) for a in stdin.readline().split()]
+additional_points = [int(a) for a in stdin.readline().split()]
+
+total_points = 0
+for i in range(n):
+    total_points += base_points[dishes[i]]
+    if i != 0 and dishes[i - 1] == dishes[i] - 1:
+        total_points += additional_points[dishes[i] - 1]
+
+print(total_points)
