@@ -1,0 +1,8 @@
+
+
+n = int(input())
+a = list(map(int, input().split()))[:n]
+
+a.sort(reverse=True)
+
+print(a[0] * a[1])

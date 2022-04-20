@@ -1,0 +1,20 @@
+
+
+def solver(n, a):
+    """
+    >>> solver(5, [2, 1, 1, 2, 5])
+    'YES'
+    >>> solver(3, [4, 5, 3])
+    'YES'
+    >>> solver(2, [10, 10])
+    'YES'
+    >>> solver(3, [1, 2, 3])
+    'NO'
+    """
+    return 'YES' if len(set(a)) == 1 or (len(set(a)) == 2 and a.count(max(set(a))) == 1) else 'NO'
+
+
+if __name__ == "__main__":
+    n = int(input())
+    a = list(map(int, input().split()))
+    print(solver(n, a))

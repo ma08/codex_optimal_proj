@@ -1,0 +1,87 @@
+2022-04-09 18:31:53.659676 """
+You are given a permutation $p_1, p_2, \dots, p_n$. A permutation of length $n$ is a sequence such that each integer between $1$ and $n$ occurs exactly once in the sequence.
+
+Find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+The median of a sequence is the value of the element which is in the middle of the sequence after sorting it in non-decreasing order. If the length of the sequence is even, the left of two middle elements is used.
+
+For example, if $a=[4, 2, 7, 5]$ then its median is $4$ since after sorting the sequence, it will look like $[2, 4, 5, 7]$ and the left of two middle elements is equal to $4$. The median of $[7, 1, 2, 9, 6]$ equals $6$ since after sorting, the value $6$ will be in the middle of the sequence.
+
+Write a program to find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of the median of $p_l, p_{l+1}, \dots, p_r$ is exactly the given number $m$.
+
+
+-----Input-----
+
+The first line contains integers $n$ and $m$ ($1 \le n \le 2\cdot10^5$, $1 \le m \le n$) — the length of the given sequence and the required value of the median.
+
+The second line contains a permutation $p_1, p_2, \dots, p_n$ ($1 \le p_i \le n$). Each integer between $1$ and $n$ occurs in $p$ exactly once.
+
+
+-----Output-----
+
+Print the required number.
+
+
+-----Examples-----
+Input
+5 4
+2 4 5 3 1
+
+Output
+4
+
+Input
+5 5
+1 2 3 4 5
+
+Output
+1
+
+Input
+15 8
+1 15 2 14 3 13 4 8 12 5 11 6 10 7 9
+
+Output
+48
+
+
+
+-----Note-----
+
+In the first example, the suitable pairs of indices are: $(1, 3)$, $(2, 2)$, $(2, 3)$ and $(2, 4)$.
+"""
+2022-04-09 18:31:53.659714 --------------------------
+2022-04-09 18:32:09.888957 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    input = sys.stdin.readline\n    n, m = map(int, input().split())\n    p = list(map(int, input().split()))\n    print(solve(n, m, p))\n\ndef solve(n, m, p):\n    left, right = 1, n\n    mid = (left + right) // 2\n    count = 0\n    while left <= right:\n        c = 0\n        for i in range(n):\n            if p[i] == mid:\n                c += 1\n        if c == m:\n            count += 1\n            for i in range(n):\n                if p[i] == mid:\n                    for j in range(n):\n                        if p[j] == mid:\n                            count += (i - j + 1)\n                            break\n                    break\n            break\n        elif c > m:\n            right = mid - 1\n        else:\n            left = mid + 1\n        mid = (left + right) // 2\n    return count\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef median(nums):\n    if len(nums) % 2 == 0:\n        med = nums[len(nums)//2] + nums[len(nums)//2 - 1]\n    else:\n        med = nums[len(nums)//2]\n    return med\n\ndef main():\n    n, m = map(int, input().split())\n    seq = list(map(int, input().split()))\n    c = 0\n    for i in range(n):\n        for j in range(i, n):\n            if median(seq[i:j+1]) == m:\n                c += 1\n    print(c)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649543514,
+  "id": "cmpl-4vDuUMJzFRnCyDL5kWBn2zJwEdypv",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:32:09.889255 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    input = sys.stdin.readline\n    n, m = map(int, input().split())\n    p = list(map(int, input().split()))\n    print(solve(n, m, p))\n\ndef solve(n, m, p):\n    left, right = 1, n\n    mid = (left + right) // 2\n    count = 0\n    while left <= right:\n        c = 0\n        for i in range(n):\n            if p[i] == mid:\n                c += 1\n        if c == m:\n            count += 1\n            for i in range(n):\n                if p[i] == mid:\n                    for j in range(n):\n                        if p[j] == mid:\n                            count += (i - j + 1)\n                            break\n                    break\n            break\n        elif c > m:\n            right = mid - 1\n        else:\n            left = mid + 1\n        mid = (left + right) // 2\n    return count\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:32:09.889329 REASON stop
+2022-04-09 18:32:09.901753 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef median(nums):\n    if len(nums) % 2 == 0:\n        med = nums[len(nums)//2] + nums[len(nums)//2 - 1]\n    else:\n        med = nums[len(nums)//2]\n    return med\n\ndef main():\n    n, m = map(int, input().split())\n    seq = list(map(int, input().split()))\n    c = 0\n    for i in range(n):\n        for j in range(i, n):\n            if median(seq[i:j+1]) == m:\n                c += 1\n    print(c)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 18:32:09.901928 REASON stop

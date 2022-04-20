@@ -1,0 +1,114 @@
+2022-04-09 18:17:41.328683 """
+Alice and Bob have decided to play the game "Rock, Paper, Scissors". 
+
+The game consists of several rounds, each round is independent of each other. In each round, both players show one of the following things at the same time: rock, paper or scissors. If both players showed the same things then the round outcome is a draw. Otherwise, the following rules applied:
+
+  if one player showed rock and the other one showed scissors, then the player who showed rock is considered the winner and the other one is considered the loser;  if one player showed scissors and the other one showed paper, then the player who showed scissors is considered the winner and the other one is considered the loser;  if one player showed paper and the other one showed rock, then the player who showed paper is considered the winner and the other one is considered the loser. 
+
+Alice and Bob decided to play exactly $n$ rounds of the game described above. Alice decided to show rock $a_1$ times, show scissors $a_2$ times and show paper $a_3$ times. Bob decided to show rock $b_1$ times, show scissors $b_2$ times and show paper $b_3$ times. Though, both Alice and Bob did not choose the sequence in which they show things. It is guaranteed that $a_1 + a_2 + a_3 = n$ and $b_1 + b_2 + b_3 = n$.
+
+Your task is to find two numbers:
+
+  the minimum number of round Alice can win;  the maximum number of rounds Alice can win. 
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 10^{9}$) — the number of rounds.
+
+The second line of the input contains three integers $a_1, a_2, a_3$ ($0 \le a_i \le n$) — the number of times Alice will show rock, scissors and paper, respectively. It is guaranteed that $a_1 + a_2 + a_3 = n$.
+
+The third line of the input contains three integers $b_1, b_2, b_3$ ($0 \le b_j \le n$) — the number of times Bob will show rock, scissors and paper, respectively. It is guaranteed that $b_1 + b_2 + b_3 = n$.
+
+
+-----Output-----
+
+Print two integers: the minimum and the maximum number of rounds Alice can win.
+
+
+-----Examples-----
+Input
+2
+0 1 1
+1 1 0
+
+Output
+0 1
+
+Input
+15
+5 5 5
+5 5 5
+
+Output
+0 15
+
+Input
+3
+0 0 3
+3 0 0
+
+Output
+3 3
+
+Input
+686
+479 178 29
+11 145 530
+
+Output
+22 334
+
+Input
+319
+10 53 256
+182 103 34
+
+Output
+119 226
+
+
+
+-----Note-----
+
+In the first example, Alice will not win any rounds if she shows scissors and then paper and Bob shows rock and then scissors. In the best outcome, Alice will win one round if she shows paper and then scissors, and Bob shows rock and then scissors.
+
+In the second example, Alice will not win any rounds if Bob shows the same things as Alice each round.
+
+In the third example, Alice always shows paper and Bob always shows rock so Alice will win all three rounds anyway.
+"""
+2022-04-09 18:17:41.328705 --------------------------
+2022-04-09 18:18:02.183854 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # get input\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    \n    # get min/max\n    min_wins = 0\n    max_wins = 0\n    for i in range(3):\n        for j in range(3):\n            if i == j:\n                continue\n            elif (i + 1) % 3 == j:\n                min_wins += min(a[i], b[j])\n                max_wins += max(a[i], b[j])\n            else:\n                min_wins += max(a[i], b[j])\n                max_wins += min(a[i], b[j])\n    \n    # print result\n    print(min_wins, max_wins)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import Counter\nfrom itertools import combinations\n\ndef min_max_wins(n, a, b):\n    cnt_a = Counter(a)\n    cnt_b = Counter(b)\n    w_a = 0\n    w_b = 0\n    for k, v in cnt_a.items():\n        if k == \"R\":\n            w_a += min(v, cnt_b[\"S\"])\n            w_b += min(v, cnt_b[\"P\"])\n        elif k == \"S\":\n            w_a += min(v, cnt_b[\"P\"])\n            w_b += min(v, cnt_b[\"R\"])\n        elif k == \"P\":\n            w_a += min(v, cnt_b[\"R\"])\n            w_b += min(v, cnt_b[\"S\"])\n    return w_a, w_a + n - w_b\n\ndef main():\n    n = int(stdin.readline().strip())\n    a = stdin.readline().strip().split(\" \")\n    b = stdin.readline().strip().split(\" \")\n    print(\" \".join(map(str, min_max_wins(n, a, b))))\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649542661,
+  "id": "cmpl-4vDgjy1WwKemEqg2Ut3GIikgqRQqt",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:18:02.184210 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # get input\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    b = [int(x) for x in input().split()]\n    \n    # get min/max\n    min_wins = 0\n    max_wins = 0\n    for i in range(3):\n        for j in range(3):\n            if i == j:\n                continue\n            elif (i + 1) % 3 == j:\n                min_wins += min(a[i], b[j])\n                max_wins += max(a[i], b[j])\n            else:\n                min_wins += max(a[i], b[j])\n                max_wins += min(a[i], b[j])\n    \n    # print result\n    print(min_wins, max_wins)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:18:02.184275 REASON stop
+2022-04-09 18:18:02.186375 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import Counter\nfrom itertools import combinations\n\ndef min_max_wins(n, a, b):\n    cnt_a = Counter(a)\n    cnt_b = Counter(b)\n    w_a = 0\n    w_b = 0\n    for k, v in cnt_a.items():\n        if k == \"R\":\n            w_a += min(v, cnt_b[\"S\"])\n            w_b += min(v, cnt_b[\"P\"])\n        elif k == \"S\":\n            w_a += min(v, cnt_b[\"P\"])\n            w_b += min(v, cnt_b[\"R\"])\n        elif k == \"P\":\n            w_a += min(v, cnt_b[\"R\"])\n            w_b += min(v, cnt_b[\"S\"])\n    return w_a, w_a + n - w_b\n\ndef main():\n    n = int(stdin.readline().strip())\n    a = stdin.readline().strip().split(\" \")\n    b = stdin.readline().strip().split(\" \")\n    print(\" \".join(map(str, min_max_wins(n, a, b))))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:18:02.186489 REASON stop

@@ -1,0 +1,30 @@
+
+n = int(input())
+
+
+def cnt(num):
+    cnt_7, cnt_5, cnt_3 = 0, 0, 0
+    for i in str(num):
+        if i == '7':
+            cnt_7 += 1
+        elif i == '5':
+            cnt_5 += 1
+        elif i == '3':
+            cnt_3 += 1
+    return cnt_7, cnt_5, cnt_3
+
+
+def is_sgs(num):
+    cnt_7, cnt_5, cnt_3 = cnt(num)
+    if cnt_7 >= 1 and cnt_5 >= 1 and cnt_3 >= 1:
+        return True
+    else:
+        return False
+
+
+cnt_sgs = 0
+for i in range(1, n+1):
+    if is_sgs(i):
+        cnt_sgs += 1
+
+print(cnt_sgs)

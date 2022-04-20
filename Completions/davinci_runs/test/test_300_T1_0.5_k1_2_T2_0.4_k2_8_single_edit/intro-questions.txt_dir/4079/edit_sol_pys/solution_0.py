@@ -1,0 +1,16 @@
+
+# Solution
+
+n = int(input())
+
+for i in range(n):
+    s = input()
+    ok = True  # is string valid
+    for j in range(1, len(s)):
+        if ord(s[j]) == ord(s[j - 1]) + 1:
+            ok = False
+    # if any character is repeated, string is not valid
+            break
+    if len(s) != len(set(s)):
+        ok = False
+    print('Yes' if ok else 'No')
