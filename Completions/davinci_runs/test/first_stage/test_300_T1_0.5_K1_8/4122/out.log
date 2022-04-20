@@ -1,0 +1,154 @@
+2022-04-19 22:11:21.782035 """
+A superhero fights with a monster. The battle consists of rounds, each of which lasts exactly $n$ minutes. After a round ends, the next round starts immediately. This is repeated over and over again.
+
+Each round has the same scenario. It is described by a sequence of $n$ numbers: $d_1, d_2, \dots, d_n$ ($-10^6 \le d_i \le 10^6$). The $i$-th element means that monster's hp (hit points) changes by the value $d_i$ during the $i$-th minute of each round. Formally, if before the $i$-th minute of a round the monster's hp is $h$, then after the $i$-th minute it changes to $h := h + d_i$.
+
+The monster's initial hp is $H$. It means that before the battle the monster has $H$ hit points. Print the first minute after which the monster dies. The monster dies if its hp is less than or equal to $0$. Print -1 if the battle continues infinitely.
+
+
+-----Input-----
+
+The first line contains two integers $H$ and $n$ ($1 \le H \le 10^{12}$, $1 \le n \le 2\cdot10^5$). The second line contains the sequence of integers $d_1, d_2, \dots, d_n$ ($-10^6 \le d_i \le 10^6$), where $d_i$ is the value to change monster's hp in the $i$-th minute of a round.
+
+
+-----Output-----
+
+Print -1 if the superhero can't kill the monster and the battle will last infinitely. Otherwise, print the positive integer $k$ such that $k$ is the first minute after which the monster is dead.
+
+
+-----Examples-----
+Input
+1000 6
+-100 -200 -300 125 77 -4
+
+Output
+9
+
+Input
+1000000000000 5
+-1 0 0 0 0
+
+Output
+4999999999996
+
+Input
+10 4
+-3 -6 5 4
+
+Output
+-1
+"""
+2022-04-19 22:11:21.782045 --------------------------
+2022-04-19 22:11:21.782150 using api key derek
+2022-04-19 22:11:40.314095 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(H, n, d):\n    \"\"\"\n    >>> solve(1000, 6, [-100, -200, -300, 125, 77, -4])\n    9\n    >>> solve(1000000000000, 5, [-1, 0, 0, 0, 0])\n    4999999999996\n    >>> solve(10, 4, [-3, -6, 5, 4])\n    -1\n    \"\"\"\n    k = 0\n    while H > 0:\n        if k == n:\n            k = 0\n        H += d[k]\n        k += 1\n    if H <= 0:\n        return k\n    else:\n        return -1\n\nif __name__ == \"__main__\":\n    H, n = map(int, sys.stdin.readline().strip().split(' '))\n    d = map(int, sys.stdin.readline().strip().split(' '))\n    print solve(H, n, d)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nH, n = [int(x) for x in sys.stdin.readline().split()]\nd = [int(x) for x in sys.stdin.readline().split()]\n\nh = H\nfor i in range(n):\n    h += d[i]\n    if h <= 0:\n        print(i+1)\n        break\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    H, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    d.append(H)\n    d.sort()\n    # print(d)\n    if d[0] > 0:\n        print(-1)\n        return\n    if d[0] == 0:\n        print(1)\n        return\n    if d[0] == d[-1]:\n        print(H//d[0] + 1)\n        return\n    ans = 0\n    for i in range(n):\n        if d[i] < 0:\n            ans += d[i]\n    ans = -ans\n    # print(ans)\n    if ans <= H:\n        print(ans)\n        return\n    if d[0] < 0:\n        print(-1)\n        return\n    for i in range(n):\n        if d[i] >= 0:\n            ans = d[i]\n            break\n    ans = ans * (H//ans) + 1\n    print(ans)\n    return\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nH, n = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\nif H <= 0:\n    print(1)\n    exit()\n\nh = H\nfor i in range(n):\n    h += d[i]\n    if h <= 0:\n        print(i + 1)\n        exit()\n\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    h, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    if h <= 0:\n        print(0)\n        return\n    if sum(d) >= 0:\n        print(-1)\n        return\n    for i in range(n):\n        h += d[i]\n        if h <= 0:\n            print(i+1)\n            return\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nH, n = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\nif H < 0:\n    print(0)\n    exit(0)\n\n# dp[i] = the number of rounds after which the monster is dead\ndp = [0 for _ in range(n)]\ndp[0] = d[0]\nfor i in range(1, n):\n    dp[i] = max(dp[i - 1] + d[i], d[i])\n\nif dp[-1] < 0:\n    print(-1)\nelse:\n    print(H // dp[-1] * n + (H % dp[-1] - 1) // d[-1] + 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# First attempt\n# Read input\nh, n = map(int, input().split())\nd = [int(i) for i in input().split()]\n\n# Initialize the monster's current health\ncurr_h = h\n\n# Iterate through the list of damage values\nfor i in range(n):\n    # Calculate the new health\n    curr_h += d[i]\n    # If the monster's health is <= 0, print the current round and break\n    if curr_h <= 0:\n        print(i + 1)\n        break\n# Else, print -1 (no round will kill the monster)\nelse:\n    print(-1)\n\n# Second attempt\n# Read input\nh, n = map(int, input().split())\nd = [int(i) for i in input().split()]\n\n# Initialize the monster's current health\ncurr_h = h\n\n# Iterate through the list of damage values\nfor i in range(n):\n    # Calculate the new health\n    curr_h += d[i]\n    # If the monster's health is <= 0, print the current round and break\n    if curr_h <= 0:\n        print(i + 1)\n        break\n# Else, print -1 (no round will kill the monster)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\ndef main():\n    h, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    for i in range(n):\n        h += d[i]\n        if h <= 0:\n            print(i+1)\n            break\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650406281,
+  "id": "cmpl-4yqM5C6DgIiQEKXUQ4qYFIDtaYqPh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:11:40.314437 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(H, n, d):\n    \"\"\"\n    >>> solve(1000, 6, [-100, -200, -300, 125, 77, -4])\n    9\n    >>> solve(1000000000000, 5, [-1, 0, 0, 0, 0])\n    4999999999996\n    >>> solve(10, 4, [-3, -6, 5, 4])\n    -1\n    \"\"\"\n    k = 0\n    while H > 0:\n        if k == n:\n            k = 0\n        H += d[k]\n        k += 1\n    if H <= 0:\n        return k\n    else:\n        return -1\n\nif __name__ == \"__main__\":\n    H, n = map(int, sys.stdin.readline().strip().split(' '))\n    d = map(int, sys.stdin.readline().strip().split(' '))\n    print solve(H, n, d)"
+}
+2022-04-19 22:11:40.314480 REASON stop
+2022-04-19 22:11:40.315291 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nH, n = [int(x) for x in sys.stdin.readline().split()]\nd = [int(x) for x in sys.stdin.readline().split()]\n\nh = H\nfor i in range(n):\n    h += d[i]\n    if h <= 0:\n        print(i+1)\n        break\nelse:\n    print(-1)"
+}
+2022-04-19 22:11:40.315366 REASON stop
+2022-04-19 22:11:40.315785 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    H, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    d.append(H)\n    d.sort()\n    # print(d)\n    if d[0] > 0:\n        print(-1)\n        return\n    if d[0] == 0:\n        print(1)\n        return\n    if d[0] == d[-1]:\n        print(H//d[0] + 1)\n        return\n    ans = 0\n    for i in range(n):\n        if d[i] < 0:\n            ans += d[i]\n    ans = -ans\n    # print(ans)\n    if ans <= H:\n        print(ans)\n        return\n    if d[0] < 0:\n        print(-1)\n        return\n    for i in range(n):\n        if d[i] >= 0:\n            ans = d[i]\n            break\n    ans = ans * (H//ans) + 1\n    print(ans)\n    return\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:11:40.315876 REASON stop
+2022-04-19 22:11:40.348815 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nH, n = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\nif H <= 0:\n    print(1)\n    exit()\n\nh = H\nfor i in range(n):\n    h += d[i]\n    if h <= 0:\n        print(i + 1)\n        exit()\n\nprint(-1)"
+}
+2022-04-19 22:11:40.348947 REASON stop
+2022-04-19 22:11:40.349904 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    h, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    if h <= 0:\n        print(0)\n        return\n    if sum(d) >= 0:\n        print(-1)\n        return\n    for i in range(n):\n        h += d[i]\n        if h <= 0:\n            print(i+1)\n            return\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:11:40.350000 REASON stop
+2022-04-19 22:11:40.361326 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nH, n = [int(x) for x in input().split()]\nd = [int(x) for x in input().split()]\n\nif H < 0:\n    print(0)\n    exit(0)\n\n# dp[i] = the number of rounds after which the monster is dead\ndp = [0 for _ in range(n)]\ndp[0] = d[0]\nfor i in range(1, n):\n    dp[i] = max(dp[i - 1] + d[i], d[i])\n\nif dp[-1] < 0:\n    print(-1)\nelse:\n    print(H // dp[-1] * n + (H % dp[-1] - 1) // d[-1] + 1)"
+}
+2022-04-19 22:11:40.361450 REASON stop
+2022-04-19 22:11:40.365948 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# First attempt\n# Read input\nh, n = map(int, input().split())\nd = [int(i) for i in input().split()]\n\n# Initialize the monster's current health\ncurr_h = h\n\n# Iterate through the list of damage values\nfor i in range(n):\n    # Calculate the new health\n    curr_h += d[i]\n    # If the monster's health is <= 0, print the current round and break\n    if curr_h <= 0:\n        print(i + 1)\n        break\n# Else, print -1 (no round will kill the monster)\nelse:\n    print(-1)\n\n# Second attempt\n# Read input\nh, n = map(int, input().split())\nd = [int(i) for i in input().split()]\n\n# Initialize the monster's current health\ncurr_h = h\n\n# Iterate through the list of damage values\nfor i in range(n):\n    # Calculate the new health\n    curr_h += d[i]\n    # If the monster's health is <= 0, print the current round and break\n    if curr_h <= 0:\n        print(i + 1)\n        break\n# Else, print -1 (no round will kill the monster)\nelse:\n    print(-1)"
+}
+2022-04-19 22:11:40.366070 REASON stop
+2022-04-19 22:11:40.366868 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\ndef main():\n    h, n = map(int, input().split())\n    d = list(map(int, input().split()))\n    for i in range(n):\n        h += d[i]\n        if h <= 0:\n            print(i+1)\n            break\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:11:40.367078 REASON stop

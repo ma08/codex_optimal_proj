@@ -1,0 +1,166 @@
+2022-04-19 23:38:14.473924 """
+Vova is playing a computer game. There are in total $n$ turns in the game and Vova really wants to play all of them. The initial charge of his laptop battery (i.e. the charge before the start of the game) is $k$.
+
+During each turn Vova can choose what to do:   If the current charge of his laptop battery is strictly greater than $a$, Vova can just play, and then the charge of his laptop battery will decrease by $a$;  if the current charge of his laptop battery is strictly greater than $b$ ($b<a$), Vova can play and charge his laptop, and then the charge of his laptop battery will decrease by $b$;  if the current charge of his laptop battery is less than or equal to $a$ and $b$ at the same time then Vova cannot do anything and loses the game. 
+
+Regardless of Vova's turns the charge of the laptop battery is always decreases.
+
+Vova wants to complete the game (Vova can complete the game if after each of $n$ turns the charge of the laptop battery is strictly greater than $0$). Vova has to play exactly $n$ turns. Among all possible ways to complete the game, Vova wants to choose the one where the number of turns when he just plays (first type turn) is the maximum possible. It is possible that Vova cannot complete the game at all.
+
+Your task is to find out the maximum possible number of turns Vova can just play (make the first type turn) or report that Vova cannot complete the game.
+
+You have to answer $q$ independent queries.
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 10^5$) — the number of queries. Each query is presented by a single line.
+
+The only line of the query contains four integers $k, n, a$ and $b$ ($1 \le k, n \le 10^9, 1 \le b < a \le 10^9$) — the initial charge of Vova's laptop battery, the number of turns in the game and values $a$ and $b$, correspondingly.
+
+
+-----Output-----
+
+For each query print one integer: -1 if Vova cannot complete the game or the maximum number of turns Vova can just play (make the first type turn) otherwise.
+
+
+-----Example-----
+Input
+6
+15 5 3 2
+15 5 4 3
+15 5 2 1
+15 5 5 1
+16 7 5 2
+20 5 7 3
+
+Output
+4
+-1
+5
+2
+0
+1
+
+
+
+-----Note-----
+
+In the first example query Vova can just play $4$ turns and spend $12$ units of charge and then one turn play and charge and spend $2$ more units. So the remaining charge of the battery will be $1$.
+
+In the second example query Vova cannot complete the game because even if he will play and charge the battery during each turn then the charge of the laptop battery will be $0$ after the last turn.
+"""
+2022-04-19 23:38:14.473946 --------------------------
+2022-04-19 23:38:14.474059 using api key derek
+2022-04-19 23:38:36.254177 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# This is a greedy problem.\n# We can just play as many times as possible, and then play and charge as many times as possible\n# until the end of the game.\n\n# The first thing we need to do is figure out how many times we can just play.\n# We can do this by dividing the initial charge by the charge used for just playing.\n# The result is the number of times we can just play.\n# We can then subtract this number from the total number of turns in the game.\n# The result is the number of times we can play and charge.\n# If the number of times we can play and charge is at least 1, then we can complete the game.\n# Otherwise, we cannot.\n\n# The second thing we need to do is figure out how many times we can play and charge.\n# We can do this by dividing the initial charge by the charge used for playing and charging.\n# The result is the number of times we can play and charge.\n\n# The third thing we need to do is figure out how many times we can just play.\n# We can do this by subtracting the number of times we can play and charge from the total number of turns.\n# The result is the number of times we can just play.\n\n# We can then print the number of times we can just play, or -1 if we cannot complete the game.\n\nq = int(input())\nfor _ in range(q):\n    k, n, a, b = map(int, input().split())\n    if k < a and k < b:\n        print(-1)\n    else:\n        print(k // a - min(k // a, n - k // b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(k, n, a, b):\n    if (k - n * a) < 0:\n        return -1\n    if (k - n * a) % (a - b) == 0:\n        return n - (k - n * a) // (a - b)\n    else:\n        return n - (k - n * a) // (a - b) - 1\n\n\nif __name__ == '__main__':\n    q = int(input())\n    for _ in range(q):\n        k, n, a, b = map(int, input().split())\n        print(solve(k, n, a, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nq = int(input())\nfor _ in range(q):\n    k, n, a, b = map(int, input().split())\n    if b > k or a > k or b > k - n:\n        print(-1)\n        continue\n    if a > k - n:\n        print(n)\n        continue\n    if b > k - n:\n        print(n - (a - b))\n        continue\n    if a <= b:\n        print(k // a)\n        continue\n    print(n - (a - b) - (k - n - b) // a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    queries = int(input())\n    for i in range(queries):\n        k, n, a, b = map(int, input().split())\n        if k < n*b:\n            print(-1)\n        else:\n            print(k-n*b)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nimport sys\n\ndef get_maximum_play_turns(k, n, a, b):\n    if k < a:\n        return -1\n    elif a == b:\n        return n\n    elif k == a:\n        return n - 1\n    elif k == b:\n        return n\n    else:\n        if n == 1:\n            return 1\n        else:\n            return get_maximum_play_turns(k - a, n - 1, a, b) + 1\n\ndef main():\n    q = int(sys.stdin.readline())\n    for _ in range(q):\n        k, n, a, b = map(int, sys.stdin.readline().split())\n        print(get_maximum_play_turns(k, n, a, b))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\n# TODO: implement the solution\ndef solve(k, n, a, b):\n    return -1\n\n\n# TODO: implement the parser\ndef parse():\n    q = int(input())\n    for _ in range(q):\n        k, n, a, b = map(int, input().split())\n        yield k, n, a, b\n\n\ndef main():\n    for args in parse():\n        print(solve(*args))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(k,n,a,b):\n    if k<a and k<b:\n        return -1\n    if k<a:\n        return 0\n    if a<=b:\n        return n\n    if k<a+b:\n        return 1\n    if k==a+b:\n        return n-1\n    if k==a+b+1:\n        return n-2\n    return n-2-((k-a-b-2)//(b-1))\n\nq = int(input())\nfor i in range(q):\n    k,n,a,b = map(int,input().split())\n    print(solve(k,n,a,b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    q = int(sys.stdin.readline().strip())\n    for _ in range(q):\n        k, n, a, b = map(int, sys.stdin.readline().strip().split())\n        if k >= a*n:\n            print(n)\n            continue\n        if k < b*n:\n            print(-1)\n            continue\n        print(int(k/a))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650411494,
+  "id": "cmpl-4yriAjHzqHDt7FfzGonElR2UgcUg8",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:38:36.254567 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# This is a greedy problem.\n# We can just play as many times as possible, and then play and charge as many times as possible\n# until the end of the game.\n\n# The first thing we need to do is figure out how many times we can just play.\n# We can do this by dividing the initial charge by the charge used for just playing.\n# The result is the number of times we can just play.\n# We can then subtract this number from the total number of turns in the game.\n# The result is the number of times we can play and charge.\n# If the number of times we can play and charge is at least 1, then we can complete the game.\n# Otherwise, we cannot.\n\n# The second thing we need to do is figure out how many times we can play and charge.\n# We can do this by dividing the initial charge by the charge used for playing and charging.\n# The result is the number of times we can play and charge.\n\n# The third thing we need to do is figure out how many times we can just play.\n# We can do this by subtracting the number of times we can play and charge from the total number of turns.\n# The result is the number of times we can just play.\n\n# We can then print the number of times we can just play, or -1 if we cannot complete the game.\n\nq = int(input())\nfor _ in range(q):\n    k, n, a, b = map(int, input().split())\n    if k < a and k < b:\n        print(-1)\n    else:\n        print(k // a - min(k // a, n - k // b))"
+}
+2022-04-19 23:38:36.254687 REASON stop
+2022-04-19 23:38:36.255308 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(k, n, a, b):\n    if (k - n * a) < 0:\n        return -1\n    if (k - n * a) % (a - b) == 0:\n        return n - (k - n * a) // (a - b)\n    else:\n        return n - (k - n * a) // (a - b) - 1\n\n\nif __name__ == '__main__':\n    q = int(input())\n    for _ in range(q):\n        k, n, a, b = map(int, input().split())\n        print(solve(k, n, a, b))"
+}
+2022-04-19 23:38:36.255393 REASON stop
+2022-04-19 23:38:36.255810 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nq = int(input())\nfor _ in range(q):\n    k, n, a, b = map(int, input().split())\n    if b > k or a > k or b > k - n:\n        print(-1)\n        continue\n    if a > k - n:\n        print(n)\n        continue\n    if b > k - n:\n        print(n - (a - b))\n        continue\n    if a <= b:\n        print(k // a)\n        continue\n    print(n - (a - b) - (k - n - b) // a)"
+}
+2022-04-19 23:38:36.255871 REASON stop
+2022-04-19 23:38:36.268791 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    queries = int(input())\n    for i in range(queries):\n        k, n, a, b = map(int, input().split())\n        if k < n*b:\n            print(-1)\n        else:\n            print(k-n*b)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:38:36.268924 REASON stop
+2022-04-19 23:38:36.277395 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nimport sys\n\ndef get_maximum_play_turns(k, n, a, b):\n    if k < a:\n        return -1\n    elif a == b:\n        return n\n    elif k == a:\n        return n - 1\n    elif k == b:\n        return n\n    else:\n        if n == 1:\n            return 1\n        else:\n            return get_maximum_play_turns(k - a, n - 1, a, b) + 1\n\ndef main():\n    q = int(sys.stdin.readline())\n    for _ in range(q):\n        k, n, a, b = map(int, sys.stdin.readline().split())\n        print(get_maximum_play_turns(k, n, a, b))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:38:36.277510 REASON stop
+2022-04-19 23:38:36.278416 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\n# TODO: implement the solution\ndef solve(k, n, a, b):\n    return -1\n\n\n# TODO: implement the parser\ndef parse():\n    q = int(input())\n    for _ in range(q):\n        k, n, a, b = map(int, input().split())\n        yield k, n, a, b\n\n\ndef main():\n    for args in parse():\n        print(solve(*args))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:38:36.278518 REASON stop
+2022-04-19 23:38:36.282361 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(k,n,a,b):\n    if k<a and k<b:\n        return -1\n    if k<a:\n        return 0\n    if a<=b:\n        return n\n    if k<a+b:\n        return 1\n    if k==a+b:\n        return n-1\n    if k==a+b+1:\n        return n-2\n    return n-2-((k-a-b-2)//(b-1))\n\nq = int(input())\nfor i in range(q):\n    k,n,a,b = map(int,input().split())\n    print(solve(k,n,a,b))"
+}
+2022-04-19 23:38:36.282454 REASON stop
+2022-04-19 23:38:36.283751 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    q = int(sys.stdin.readline().strip())\n    for _ in range(q):\n        k, n, a, b = map(int, sys.stdin.readline().strip().split())\n        if k >= a*n:\n            print(n)\n            continue\n        if k < b*n:\n            print(-1)\n            continue\n        print(int(k/a))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:38:36.283926 REASON stop

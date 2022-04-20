@@ -1,0 +1,146 @@
+2022-04-19 21:32:58.737607 """
+Takahashi made N problems for competitive programming.
+The problems are numbered 1 to N, and the difficulty of Problem i is represented as an integer d_i (the higher, the harder).
+He is dividing the problems into two categories by choosing an integer K, as follows:
+ - A problem with difficulty K or higher will be for ARCs.
+ - A problem with difficulty lower than K will be for ABCs.
+How many choices of the integer K make the number of problems for ARCs and the number of problems for ABCs the same?
+
+-----Problem Statement-----
+ - 2 \leq N \leq 10^5
+ - N is an even number.
+ - 1 \leq d_i \leq 10^5
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+d_1 d_2 ... d_N
+
+-----Output-----
+Print the number of choices of the integer K that make the number of problems for ARCs and the number of problems for ABCs the same.
+
+-----Sample Input-----
+6
+9 1 4 4 6 7
+
+-----Sample Output-----
+2
+
+If we choose K=5 or 6, Problem 1, 5, and 6 will be for ARCs, Problem 2, 3, and 4 will be for ABCs, and the objective is achieved.
+Thus, the answer is 2.
+"""
+2022-04-19 21:32:58.737617 --------------------------
+2022-04-19 21:32:58.737722 using api key derek
+2022-04-19 21:33:20.177644 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# -*- coding: utf-8 -*-\n\n# AtCoder Beginner Contest\n# Problem B\n\nif __name__ == '__main__':\n    problem_count = int(input())\n    problem_difficulty = list(map(int, input().split()))\n    problem_difficulty.sort()\n    half_problem_count = problem_count // 2\n    left_sum = sum(problem_difficulty[:half_problem_count])\n    right_sum = sum(problem_difficulty[half_problem_count:])\n    print(left_sum - right_sum)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\n\nN = int(input())\nd = list(map(int, input().split()))\n\nd_counter = Counter(d)\n\n# The number of problems for ARCs and the number of problems for ABCs will be the same if and only if the total number of problems is even and the number of problems with difficulty K is even.\n\n# The total number of problems is even if and only if N is even.\nif N % 2 == 1:\n    print(0)\nelse:\n    # The number of problems with difficulty K is even if and only if the number of problems with difficulty K is even.\n    count_even = 0\n    for k, v in d_counter.items():\n        if v % 2 == 0:\n            count_even += 1\n    print(count_even)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# N is an even number, so the number of problems for ARCs must be N/2.\n# We can use a counter to count the number of problems that have difficulty K or higher.\n# The counter can be implemented using binary search.\n\n# \u95a2\u6570\u5b9a\u7fa9\ndef binary_search(arr, key):\n    left = 0\n    right = len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == key:\n            return mid\n        elif arr[mid] < key:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return left\n\n# \u5165\u529b\nn = int(input())\nd = list(map(int, input().split()))\n\n# \u4e8c\u5206\u63a2\u7d22\n# d_i \u304c d_k \u4ee5\u4e0a\u3067\u3042\u308b\u554f\u984c\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3059\u308b\n# d_k \u3088\u308a\u5c0f\u3055\u3044\u554f\u984c\u6570\u306f n - counter \u3067\u3042\u308b\ncounter = 0\nfor i in range(n):\n    counter = binary_search(d, d[i])\n    if counter == n // 2:\n        print(1)\n        exit()\n    elif counter < n // 2:\n        print(0)\n        exit()\n\n# \u51fa\u529b\nprint(0)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nd = list(map(int, input().split()))\n\nd_sorted = sorted(d)\n\n# print(d)\n# print(d_sorted)\n\nif N%2 == 0:\n    d_mid = d_sorted[N//2-1]\n    d_mid_next = d_sorted[N//2]\n    # print(d_mid, d_mid_next)\n    cnt = 0\n    for i in range(len(d)):\n        if d[i] == d_mid or d[i] == d_mid_next:\n            cnt += 1\n    print(cnt)\nelse:\n    d_mid = d_sorted[N//2]\n    cnt = 0\n    for i in range(len(d)):\n        if d[i] == d_mid:\n            cnt += 1\n    print(cnt)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    # get input\n    n = int(sys.stdin.readline())\n    diff = [int(x) for x in sys.stdin.readline().split()]\n\n    # sort the list\n    diff.sort()\n\n    # get the number of problems for ARCs\n    n_arc = n//2\n    n_abc = n//2\n\n    # get the target difficulty\n    target = diff[n_arc]\n\n    # count the number of choices of K\n    count = 0\n    for i in range(n):\n        if diff[i] >= target:\n            count += 1\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# N\nn = int(input())\n\n# d_1, d_2, ..., d_N\nd = list(map(int, input().split()))\n\n# sort d in ascending order\nd.sort()\n\n# number of choices of K\nans = 0\n\n# loop through all possible values of K\nfor k in range(1, d[-1]):\n    # number of problems for ARCs\n    arcs = 0\n    # number of problems for ABCs\n    abcs = 0\n    # loop through all problems\n    for i in range(n):\n        # if the difficulty of the problem is K or higher\n        if d[i] >= k:\n            # the problem is for ARCs\n            arcs += 1\n        # otherwise\n        else:\n            # the problem is for ABCs\n            abcs += 1\n    # if the number of problems for ARCs is equal to the number of problems for ABCs\n    if arcs == abcs:\n        # increment ans\n        ans += 1\n\n# print ans\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nd = [int(i) for i in input().split()]\n\nd.sort()\n\ntarget = sum(d) // 2\n\ncount = 0\nfor i in range(n):\n    if target < d[i]:\n        break\n    count += 1\n    target -= d[i]\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#import numpy as np\n#import scipy as sp\n\ndef main():\n    N = int(input())\n    d = list(map(int, input().split()))\n    d.sort()\n    cnt = 0\n    for i in range(N):\n        if d[i] == d[N//2-1]:\n            cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650403978,
+  "id": "cmpl-4ypkwEqwC3GIzkDuDM9V5N3bgkiVT",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:33:20.177972 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# -*- coding: utf-8 -*-\n\n# AtCoder Beginner Contest\n# Problem B\n\nif __name__ == '__main__':\n    problem_count = int(input())\n    problem_difficulty = list(map(int, input().split()))\n    problem_difficulty.sort()\n    half_problem_count = problem_count // 2\n    left_sum = sum(problem_difficulty[:half_problem_count])\n    right_sum = sum(problem_difficulty[half_problem_count:])\n    print(left_sum - right_sum)"
+}
+2022-04-19 21:33:20.178008 REASON stop
+2022-04-19 21:33:20.192996 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\n\nN = int(input())\nd = list(map(int, input().split()))\n\nd_counter = Counter(d)\n\n# The number of problems for ARCs and the number of problems for ABCs will be the same if and only if the total number of problems is even and the number of problems with difficulty K is even.\n\n# The total number of problems is even if and only if N is even.\nif N % 2 == 1:\n    print(0)\nelse:\n    # The number of problems with difficulty K is even if and only if the number of problems with difficulty K is even.\n    count_even = 0\n    for k, v in d_counter.items():\n        if v % 2 == 0:\n            count_even += 1\n    print(count_even)"
+}
+2022-04-19 21:33:20.193133 REASON stop
+2022-04-19 21:33:20.264071 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# N is an even number, so the number of problems for ARCs must be N/2.\n# We can use a counter to count the number of problems that have difficulty K or higher.\n# The counter can be implemented using binary search.\n\n# \u95a2\u6570\u5b9a\u7fa9\ndef binary_search(arr, key):\n    left = 0\n    right = len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == key:\n            return mid\n        elif arr[mid] < key:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return left\n\n# \u5165\u529b\nn = int(input())\nd = list(map(int, input().split()))\n\n# \u4e8c\u5206\u63a2\u7d22\n# d_i \u304c d_k \u4ee5\u4e0a\u3067\u3042\u308b\u554f\u984c\u6570\u3092\u30ab\u30a6\u30f3\u30c8\u3059\u308b\n# d_k \u3088\u308a\u5c0f\u3055\u3044\u554f\u984c\u6570\u306f n - counter \u3067\u3042\u308b\ncounter = 0\nfor i in range(n):\n    counter = binary_search(d, d[i])\n    if counter == n // 2:\n        print(1)\n        exit()\n    elif counter < n // 2:\n        print(0)\n        exit()\n\n# \u51fa\u529b\nprint(0)"
+}
+2022-04-19 21:33:20.264297 REASON stop
+2022-04-19 21:33:20.296507 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nd = list(map(int, input().split()))\n\nd_sorted = sorted(d)\n\n# print(d)\n# print(d_sorted)\n\nif N%2 == 0:\n    d_mid = d_sorted[N//2-1]\n    d_mid_next = d_sorted[N//2]\n    # print(d_mid, d_mid_next)\n    cnt = 0\n    for i in range(len(d)):\n        if d[i] == d_mid or d[i] == d_mid_next:\n            cnt += 1\n    print(cnt)\nelse:\n    d_mid = d_sorted[N//2]\n    cnt = 0\n    for i in range(len(d)):\n        if d[i] == d_mid:\n            cnt += 1\n    print(cnt)"
+}
+2022-04-19 21:33:20.296657 REASON stop
+2022-04-19 21:33:20.338806 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    # get input\n    n = int(sys.stdin.readline())\n    diff = [int(x) for x in sys.stdin.readline().split()]\n\n    # sort the list\n    diff.sort()\n\n    # get the number of problems for ARCs\n    n_arc = n//2\n    n_abc = n//2\n\n    # get the target difficulty\n    target = diff[n_arc]\n\n    # count the number of choices of K\n    count = 0\n    for i in range(n):\n        if diff[i] >= target:\n            count += 1\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:33:20.338952 REASON stop
+2022-04-19 21:33:20.378243 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# N\nn = int(input())\n\n# d_1, d_2, ..., d_N\nd = list(map(int, input().split()))\n\n# sort d in ascending order\nd.sort()\n\n# number of choices of K\nans = 0\n\n# loop through all possible values of K\nfor k in range(1, d[-1]):\n    # number of problems for ARCs\n    arcs = 0\n    # number of problems for ABCs\n    abcs = 0\n    # loop through all problems\n    for i in range(n):\n        # if the difficulty of the problem is K or higher\n        if d[i] >= k:\n            # the problem is for ARCs\n            arcs += 1\n        # otherwise\n        else:\n            # the problem is for ABCs\n            abcs += 1\n    # if the number of problems for ARCs is equal to the number of problems for ABCs\n    if arcs == abcs:\n        # increment ans\n        ans += 1\n\n# print ans\nprint(ans)"
+}
+2022-04-19 21:33:20.378400 REASON stop
+2022-04-19 21:33:20.406420 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nd = [int(i) for i in input().split()]\n\nd.sort()\n\ntarget = sum(d) // 2\n\ncount = 0\nfor i in range(n):\n    if target < d[i]:\n        break\n    count += 1\n    target -= d[i]\n\nprint(count)"
+}
+2022-04-19 21:33:20.406570 REASON stop
+2022-04-19 21:33:20.452411 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#import numpy as np\n#import scipy as sp\n\ndef main():\n    N = int(input())\n    d = list(map(int, input().split()))\n    d.sort()\n    cnt = 0\n    for i in range(N):\n        if d[i] == d[N//2-1]:\n            cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:33:20.452649 REASON stop

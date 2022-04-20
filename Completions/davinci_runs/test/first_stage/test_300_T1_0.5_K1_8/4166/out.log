@@ -1,0 +1,147 @@
+2022-04-19 22:39:44.468490 """
+If there is an integer not less than 0 satisfying the following conditions, print the smallest such integer; otherwise, print -1.
+ - The integer has exactly N digits in base ten. (We assume 0 to be a 1-digit integer. For other integers, leading zeros are not allowed.)
+ - The s_i-th digit from the left is c_i. \left(i = 1, 2, \cdots, M\right)
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 3
+ - 0 \leq M \leq 5
+ - 1 \leq s_i \leq N
+ - 0 \leq c_i \leq 9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+s_1 c_1
+\vdots
+s_M c_M
+
+-----Output-----
+Print the answer.
+
+-----Sample Input-----
+3 3
+1 7
+3 2
+1 7
+
+-----Sample Output-----
+702
+
+702 satisfies the conditions - its 1-st and 3-rd digits are 7 and 2, respectively - while no non-negative integer less than 702 satisfies them.
+"""
+2022-04-19 22:39:44.468501 --------------------------
+2022-04-19 22:39:44.468608 using api key derek
+2022-04-19 22:40:09.639011 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\ns_c = [map(int, sys.stdin.readline().split()) for _ in range(m)]\n\nif n == 1:\n    if m == 1 and s_c[0][0] == 1 and s_c[0][1] == 0:\n        print(0)\n    else:\n        print(-1)\nelse:\n    if m == 0:\n        print(10 ** (n - 1))\n    else:\n        ans = [0] * n\n        for i in range(m):\n            ans[s_c[i][0] - 1] = s_c[i][1]\n        if ans[0] == 0:\n            print(-1)\n        else:\n            print(\"\".join(map(str, ans)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\nnumbers = [0] * N\n\nfor _ in range(M):\n    s, c = map(int, input().split())\n    numbers[s-1] = c\n\nif numbers[0] == 0 and N > 1:\n    print(-1)\nelse:\n    print(''.join([str(num) for num in numbers]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\ns = [[0 for i in range(n)] for j in range(m)]\nfor i in range(m):\n    s[i] = list(map(int, input().split()))\n\nfor i in range(10**(n-1), 10**n):\n    num = list(str(i))\n    for j in range(m):\n        if num[s[j][0]-1] != str(s[j][1]):\n            break\n    else:\n        print(i)\n        exit()\n\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\nfor i in range(m):\n    s, c = map(int, sys.stdin.readline().split())\n\nprint(n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\ns_list = []\nc_list = []\n\nfor i in range(M):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\n\n\nif N == 1:\n    if 1 in s_list:\n        print(c_list[s_list.index(1)])\n    else:\n        print(-1)\n\nelif N == 2:\n    if 1 in s_list:\n        if 2 in s_list:\n            print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]))\n        else:\n            if c_list[s_list.index(1)] == 0:\n                print(-1)\n            else:\n                print(str(c_list[s_list.index(1)]) + \"0\")\n    else:\n        if 2 in s_list:\n            if c_list[s_list.index(2)] == 0:\n                print(-1)\n            else:\n                print(\"0\" + str(c_list[s_list.index(2)]))\n        else:\n            print(\"00\")\n\nelif N == 3:\n    if 1 in s_list:\n        if 2 in s_list:\n            if 3 in s_list:\n                print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]) + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]) + \"0\")\n        else:\n            if 3 in s_list:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + \"0\" + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + \"00\")\n    else:\n        if 2 in s_list:\n            if 3 in s_list:\n                if c_list[s_list.index(2)] == 0:\n                    print(-1)\n                else:\n                    print(\"0\" + str(c_list[s_list.index(2)]) + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(2)] == 0:\n                    print(-1)\n                else:\n                    print(\"0\" + str(c_list[s_list.index(2)]) + \"0\")\n        else:\n            if 3 in s_list:\n                if c_list[s_list.index(3)] == 0:\n                    print(-1)\n                else:\n                    print(\"00\" + str(c_list[s_list.index(3)]))\n            else:\n                print(\"000\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn,m = map(int,input().split())\n\ndef check(num):\n    num = str(num)\n    for i in range(m):\n        if num[s[i]-1] != str(c[i]):\n            return False\n    return True\n\ns = []\nc = []\nfor _ in range(m):\n    si,ci = map(int,input().split())\n    s.append(si)\n    c.append(ci)\n\nfor i in range(n**10):\n    if check(i):\n        print(i)\n        exit()\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    digits = [0] * n\n    for _ in range(m):\n        s, c = map(int, input().split())\n        digits[s-1] = c\n    if digits[0] == 0 and n != 1:\n        print(-1)\n    else:\n        print(''.join(list(map(str, digits))))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    s = [0] * m\n    c = [0] * m\n    for i in range(m):\n        s[i], c[i] = map(int, sys.stdin.readline().split())\n    for i in range(10 ** n):\n        str_i = str(i)\n        if len(str_i) < n:\n            str_i = '0' * (n - len(str_i)) + str_i\n        for j in range(m):\n            if str_i[s[j] - 1] != str(c[j]):\n                break\n        else:\n            print(i)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650407984,
+  "id": "cmpl-4yqnYmsvyvfHqnKSUVPk8xwBTcVNF",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:40:09.639359 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\ns_c = [map(int, sys.stdin.readline().split()) for _ in range(m)]\n\nif n == 1:\n    if m == 1 and s_c[0][0] == 1 and s_c[0][1] == 0:\n        print(0)\n    else:\n        print(-1)\nelse:\n    if m == 0:\n        print(10 ** (n - 1))\n    else:\n        ans = [0] * n\n        for i in range(m):\n            ans[s_c[i][0] - 1] = s_c[i][1]\n        if ans[0] == 0:\n            print(-1)\n        else:\n            print(\"\".join(map(str, ans)))"
+}
+2022-04-19 22:40:09.639397 REASON stop
+2022-04-19 22:40:09.640259 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\nnumbers = [0] * N\n\nfor _ in range(M):\n    s, c = map(int, input().split())\n    numbers[s-1] = c\n\nif numbers[0] == 0 and N > 1:\n    print(-1)\nelse:\n    print(''.join([str(num) for num in numbers]))"
+}
+2022-04-19 22:40:09.640332 REASON stop
+2022-04-19 22:40:09.640895 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\ns = [[0 for i in range(n)] for j in range(m)]\nfor i in range(m):\n    s[i] = list(map(int, input().split()))\n\nfor i in range(10**(n-1), 10**n):\n    num = list(str(i))\n    for j in range(m):\n        if num[s[j][0]-1] != str(s[j][1]):\n            break\n    else:\n        print(i)\n        exit()\n\nprint(-1)"
+}
+2022-04-19 22:40:09.640996 REASON stop
+2022-04-19 22:40:09.656459 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\nfor i in range(m):\n    s, c = map(int, sys.stdin.readline().split())\n\nprint(n)"
+}
+2022-04-19 22:40:09.656579 REASON stop
+2022-04-19 22:40:09.670539 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\ns_list = []\nc_list = []\n\nfor i in range(M):\n    s, c = map(int, input().split())\n    s_list.append(s)\n    c_list.append(c)\n\n\nif N == 1:\n    if 1 in s_list:\n        print(c_list[s_list.index(1)])\n    else:\n        print(-1)\n\nelif N == 2:\n    if 1 in s_list:\n        if 2 in s_list:\n            print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]))\n        else:\n            if c_list[s_list.index(1)] == 0:\n                print(-1)\n            else:\n                print(str(c_list[s_list.index(1)]) + \"0\")\n    else:\n        if 2 in s_list:\n            if c_list[s_list.index(2)] == 0:\n                print(-1)\n            else:\n                print(\"0\" + str(c_list[s_list.index(2)]))\n        else:\n            print(\"00\")\n\nelif N == 3:\n    if 1 in s_list:\n        if 2 in s_list:\n            if 3 in s_list:\n                print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]) + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + str(c_list[s_list.index(2)]) + \"0\")\n        else:\n            if 3 in s_list:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + \"0\" + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(1)] == 0:\n                    print(-1)\n                else:\n                    print(str(c_list[s_list.index(1)]) + \"00\")\n    else:\n        if 2 in s_list:\n            if 3 in s_list:\n                if c_list[s_list.index(2)] == 0:\n                    print(-1)\n                else:\n                    print(\"0\" + str(c_list[s_list.index(2)]) + str(c_list[s_list.index(3)]))\n            else:\n                if c_list[s_list.index(2)] == 0:\n                    print(-1)\n                else:\n                    print(\"0\" + str(c_list[s_list.index(2)]) + \"0\")\n        else:\n            if 3 in s_list:\n                if c_list[s_list.index(3)] == 0:\n                    print(-1)\n                else:\n                    print(\"00\" + str(c_list[s_list.index(3)]))\n            else:\n                print(\"000\")"
+}
+2022-04-19 22:40:09.670683 REASON stop
+2022-04-19 22:40:09.671260 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn,m = map(int,input().split())\n\ndef check(num):\n    num = str(num)\n    for i in range(m):\n        if num[s[i]-1] != str(c[i]):\n            return False\n    return True\n\ns = []\nc = []\nfor _ in range(m):\n    si,ci = map(int,input().split())\n    s.append(si)\n    c.append(ci)\n\nfor i in range(n**10):\n    if check(i):\n        print(i)\n        exit()\nprint(-1)"
+}
+2022-04-19 22:40:09.671337 REASON stop
+2022-04-19 22:40:09.673071 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    digits = [0] * n\n    for _ in range(m):\n        s, c = map(int, input().split())\n        digits[s-1] = c\n    if digits[0] == 0 and n != 1:\n        print(-1)\n    else:\n        print(''.join(list(map(str, digits))))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:40:09.673162 REASON stop
+2022-04-19 22:40:09.674555 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    s = [0] * m\n    c = [0] * m\n    for i in range(m):\n        s[i], c[i] = map(int, sys.stdin.readline().split())\n    for i in range(10 ** n):\n        str_i = str(i)\n        if len(str_i) < n:\n            str_i = '0' * (n - len(str_i)) + str_i\n        for j in range(m):\n            if str_i[s[j] - 1] != str(c[j]):\n                break\n        else:\n            print(i)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:40:09.674740 REASON stop

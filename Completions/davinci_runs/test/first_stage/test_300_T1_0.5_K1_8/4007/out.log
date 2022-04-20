@@ -1,0 +1,167 @@
+2022-04-19 20:53:01.834694 """
+There are $n$ friends who want to give gifts for the New Year to each other. Each friend should give exactly one gift and receive exactly one gift. The friend cannot give the gift to himself.
+
+For each friend the value $f_i$ is known: it is either $f_i = 0$ if the $i$-th friend doesn't know whom he wants to give the gift to or $1 \le f_i \le n$ if the $i$-th friend wants to give the gift to the friend $f_i$.
+
+You want to fill in the unknown values ($f_i = 0$) in such a way that each friend gives exactly one gift and receives exactly one gift and there is no friend who gives the gift to himself. It is guaranteed that the initial information isn't contradictory.
+
+If there are several answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of friends.
+
+The second line of the input contains $n$ integers $f_1, f_2, \dots, f_n$ ($0 \le f_i \le n$, $f_i \ne i$, all $f_i \ne 0$ are distinct), where $f_i$ is the either $f_i = 0$ if the $i$-th friend doesn't know whom he wants to give the gift to or $1 \le f_i \le n$ if the $i$-th friend wants to give the gift to the friend $f_i$. It is also guaranteed that there is at least two values $f_i = 0$.
+
+
+-----Output-----
+
+Print $n$ integers $nf_1, nf_2, \dots, nf_n$, where $nf_i$ should be equal to $f_i$ if $f_i \ne 0$ or the number of friend whom the $i$-th friend wants to give the gift to. All values $nf_i$ should be distinct, $nf_i$ cannot be equal to $i$. Each friend gives exactly one gift and receives exactly one gift and there is no friend who gives the gift to himself.
+
+If there are several answers, you can print any.
+
+
+-----Examples-----
+Input
+5
+5 0 0 2 4
+
+Output
+5 3 1 2 4 
+
+Input
+7
+7 0 0 1 4 0 6
+
+Output
+7 3 2 1 4 5 6 
+
+Input
+7
+7 4 0 3 0 5 1
+
+Output
+7 4 2 3 6 5 1 
+
+Input
+5
+2 1 0 0 0
+
+Output
+2 1 4 5 3
+"""
+2022-04-19 20:53:01.834721 --------------------------
+2022-04-19 20:53:01.834878 using api key derek
+2022-04-19 20:53:27.761940 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    for i in range(n):\n        if f[i] == 0:\n            for j in range(1, n+1):\n                if j not in f and j != i+1:\n                    f[i] = j\n                    break\n\n    print(' '.join(map(str, f)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    f = [int(x) for x in sys.stdin.readline().split()]\n    g = [0] * n\n    for i in range(n):\n        if f[i] != 0:\n            g[f[i] - 1] = i + 1\n    for i in range(n):\n        if f[i] == 0:\n            for j in range(n):\n                if g[j] == 0:\n                    g[j] = i + 1\n                    break\n    print(' '.join(map(str, g)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\n# For each friend i, we want to know the friend j whom i wants to give a gift to\n# So we create a dictionary that maps i to j\n# We also keep track of the number of friends who want to give a gift to each friend\n# Each friend i should have 1 outgoing gift and 1 incoming gift\n# If a friend i has 0 outgoing gifts, we give him an outgoing gift to the friend who has the most incoming gifts\n# If a friend i has 2 outgoing gifts, we take one of the outgoing gifts away\n# If a friend i has 1 outgoing gift and 1 incoming gift, we do nothing\n# We keep doing this until no friend has 2 outgoing gifts\n\ngifts = dict()\nincoming = dict()\noutgoing = dict()\n\nfor i in range(n):\n    if f[i] != 0:\n        gifts[i] = f[i] - 1\n        if f[i] - 1 in incoming:\n            incoming[f[i] - 1] += 1\n        else:\n            incoming[f[i] - 1] = 1\n        if i in outgoing:\n            outgoing[i] += 1\n        else:\n            outgoing[i] = 1\n\nwhile any(map(lambda x: x >= 2, outgoing.values())):\n    for i in range(n):\n        if i in outgoing:\n            if outgoing[i] >= 2:\n                del gifts[i]\n                outgoing[i] -= 1\n                incoming[gifts[i]] -= 1\n            elif outgoing[i] == 1 and i not in incoming:\n                most_incoming = max(incoming, key=incoming.get)\n                incoming[most_incoming] += 1\n                outgoing[i] += 1\n                gifts[i] = most_incoming\n\nfor i in range(n):\n    if i not in outgoing:\n        print(1, end=' ')\n    else:\n        print(gifts[i] + 1, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nf = [int(x) for x in input().split()]\n\nif f[0] == 0:\n    for i in range(2,n+1):\n        if i not in f:\n            f[0] = i\n            break\n\nfor i in range(1,n):\n    if f[i] == 0:\n        for j in range(1,n+1):\n            if (j not in f) and (j != f[i-1]):\n                f[i] = j\n                break\n\nprint(*f)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n    f = [0 if x == 0 else x for x in f]\n    f = [x if x != 0 else n+1 for x in f]\n    f = [x if x != 0 else n+2 for x in f]\n    f = [x if x != 0 else n+3 for x in f]\n    f = [x if x != 0 else n+4 for x in f]\n    f = [x if x != 0 else n+5 for x in f]\n    f = [x if x != 0 else n+6 for x in f]\n    f = [x if x != 0 else n+7 for x in f]\n    f = [x if x != 0 else n+8 for x in f]\n    print(*f)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input().strip())\n    f = list(map(int, input().strip().split()))\n    assert n == len(f)\n\n    # There are two cases:\n    #   1. There are only two 0's, in which case we can simply swap them\n    #   2. There are more than two 0's, in which case we can assign the 0's\n    #      in a round robin fashion\n\n    zeros = []\n    for i in range(n):\n        if f[i] == 0:\n            zeros.append(i)\n\n    if len(zeros) == 2:\n        f[zeros[0]], f[zeros[1]] = f[zeros[1]], f[zeros[0]]\n    else:\n        i = 0\n        for j in range(n):\n            if f[j] == 0:\n                f[j] = zeros[i] + 1\n                i += 1\n\n    print(' '.join(map(str, f)))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int,input().split()))\n    for i in range(len(f)):\n        if f[i] == 0:\n            f[i] = i+1\n    for i in range(len(f)):\n        if f[i] == 0:\n            f[i] = i+1\n    for i in range(len(f)):\n        print(f[i],end=\" \")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\n# First, fill in the gift-giving for people who don't know where to give their gift to\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\n# Now, fill in the gift-giving for people who don't know where to receive their gift from\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\n# Now, fill in the gift-giving for people who don't know where to give their gift to\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\nprint(*f)"
+    }
+  ],
+  "created": 1650401581,
+  "id": "cmpl-4yp8HhTLfHNBSMxKO9wISwWdWQBuW",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:53:27.762341 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n\n    for i in range(n):\n        if f[i] == 0:\n            for j in range(1, n+1):\n                if j not in f and j != i+1:\n                    f[i] = j\n                    break\n\n    print(' '.join(map(str, f)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:53:27.762384 REASON stop
+2022-04-19 20:53:27.762951 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    f = [int(x) for x in sys.stdin.readline().split()]\n    g = [0] * n\n    for i in range(n):\n        if f[i] != 0:\n            g[f[i] - 1] = i + 1\n    for i in range(n):\n        if f[i] == 0:\n            for j in range(n):\n                if g[j] == 0:\n                    g[j] = i + 1\n                    break\n    print(' '.join(map(str, g)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:53:27.763019 REASON stop
+2022-04-19 20:53:27.763455 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\n# For each friend i, we want to know the friend j whom i wants to give a gift to\n# So we create a dictionary that maps i to j\n# We also keep track of the number of friends who want to give a gift to each friend\n# Each friend i should have 1 outgoing gift and 1 incoming gift\n# If a friend i has 0 outgoing gifts, we give him an outgoing gift to the friend who has the most incoming gifts\n# If a friend i has 2 outgoing gifts, we take one of the outgoing gifts away\n# If a friend i has 1 outgoing gift and 1 incoming gift, we do nothing\n# We keep doing this until no friend has 2 outgoing gifts\n\ngifts = dict()\nincoming = dict()\noutgoing = dict()\n\nfor i in range(n):\n    if f[i] != 0:\n        gifts[i] = f[i] - 1\n        if f[i] - 1 in incoming:\n            incoming[f[i] - 1] += 1\n        else:\n            incoming[f[i] - 1] = 1\n        if i in outgoing:\n            outgoing[i] += 1\n        else:\n            outgoing[i] = 1\n\nwhile any(map(lambda x: x >= 2, outgoing.values())):\n    for i in range(n):\n        if i in outgoing:\n            if outgoing[i] >= 2:\n                del gifts[i]\n                outgoing[i] -= 1\n                incoming[gifts[i]] -= 1\n            elif outgoing[i] == 1 and i not in incoming:\n                most_incoming = max(incoming, key=incoming.get)\n                incoming[most_incoming] += 1\n                outgoing[i] += 1\n                gifts[i] = most_incoming\n\nfor i in range(n):\n    if i not in outgoing:\n        print(1, end=' ')\n    else:\n        print(gifts[i] + 1, end=' ')"
+}
+2022-04-19 20:53:27.763526 REASON stop
+2022-04-19 20:53:27.766980 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nf = [int(x) for x in input().split()]\n\nif f[0] == 0:\n    for i in range(2,n+1):\n        if i not in f:\n            f[0] = i\n            break\n\nfor i in range(1,n):\n    if f[i] == 0:\n        for j in range(1,n+1):\n            if (j not in f) and (j != f[i-1]):\n                f[i] = j\n                break\n\nprint(*f)"
+}
+2022-04-19 20:53:27.767067 REASON stop
+2022-04-19 20:53:27.796245 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int, input().split()))\n    f = [0 if x == 0 else x for x in f]\n    f = [x if x != 0 else n+1 for x in f]\n    f = [x if x != 0 else n+2 for x in f]\n    f = [x if x != 0 else n+3 for x in f]\n    f = [x if x != 0 else n+4 for x in f]\n    f = [x if x != 0 else n+5 for x in f]\n    f = [x if x != 0 else n+6 for x in f]\n    f = [x if x != 0 else n+7 for x in f]\n    f = [x if x != 0 else n+8 for x in f]\n    print(*f)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:53:27.796373 REASON stop
+2022-04-19 20:53:27.797512 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input().strip())\n    f = list(map(int, input().strip().split()))\n    assert n == len(f)\n\n    # There are two cases:\n    #   1. There are only two 0's, in which case we can simply swap them\n    #   2. There are more than two 0's, in which case we can assign the 0's\n    #      in a round robin fashion\n\n    zeros = []\n    for i in range(n):\n        if f[i] == 0:\n            zeros.append(i)\n\n    if len(zeros) == 2:\n        f[zeros[0]], f[zeros[1]] = f[zeros[1]], f[zeros[0]]\n    else:\n        i = 0\n        for j in range(n):\n            if f[j] == 0:\n                f[j] = zeros[i] + 1\n                i += 1\n\n    print(' '.join(map(str, f)))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:53:27.797617 REASON stop
+2022-04-19 20:53:27.798493 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    f = list(map(int,input().split()))\n    for i in range(len(f)):\n        if f[i] == 0:\n            f[i] = i+1\n    for i in range(len(f)):\n        if f[i] == 0:\n            f[i] = i+1\n    for i in range(len(f)):\n        print(f[i],end=\" \")\n\nmain()"
+}
+2022-04-19 20:53:27.798580 REASON stop
+2022-04-19 20:53:27.799421 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nf = list(map(int, input().split()))\n\n# First, fill in the gift-giving for people who don't know where to give their gift to\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\n# Now, fill in the gift-giving for people who don't know where to receive their gift from\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\n# Now, fill in the gift-giving for people who don't know where to give their gift to\nfor i in range(len(f)):\n    if f[i] == 0:\n        for j in range(len(f)):\n            if f[j] == 0:\n                f[i] = j + 1\n                break\n        break\n\nprint(*f)"
+}
+2022-04-19 20:53:27.799589 REASON stop

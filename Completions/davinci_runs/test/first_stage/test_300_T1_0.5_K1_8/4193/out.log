@@ -1,0 +1,158 @@
+2022-04-19 22:49:03.244243 """
+We have a bingo card with a 3\times3 grid. The square at the i-th row from the top and the j-th column from the left contains the number A_{i, j}.
+The MC will choose N numbers, b_1, b_2, \cdots, b_N. If our bingo sheet contains some of those numbers, we will mark them on our sheet.
+Determine whether we will have a bingo when the N numbers are chosen, that is, the sheet will contain three marked numbers in a row, column, or diagonal.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq A_{i, j} \leq 100
+ - A_{i_1, j_1} \neq A_{i_2, j_2} ((i_1, j_1) \neq (i_2, j_2))
+ - 1 \leq N \leq 10
+ - 1 \leq b_i \leq 100
+ - b_i \neq b_j (i \neq j)
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A_{1, 1} A_{1, 2} A_{1, 3}
+A_{2, 1} A_{2, 2} A_{2, 3}
+A_{3, 1} A_{3, 2} A_{3, 3}
+N
+b_1
+\vdots
+b_N
+
+-----Output-----
+If we will have a bingo, print Yes; otherwise, print No.
+
+-----Sample Input-----
+84 97 66
+79 89 11
+61 59 7
+7
+89
+7
+87
+79
+24
+84
+30
+
+-----Sample Output-----
+Yes
+
+We will mark A_{1, 1}, A_{2, 1}, A_{2, 2}, A_{3, 3}, and complete the diagonal from the top-left to the bottom-right.
+"""
+2022-04-19 22:49:03.244260 --------------------------
+2022-04-19 22:49:03.244412 using api key derek
+2022-04-19 22:49:26.836868 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    a = []\n    for _ in range(3):\n        a.append([int(x) for x in sys.stdin.readline().split()])\n    n = int(sys.stdin.readline())\n    b = [int(sys.stdin.readline()) for _ in range(n)]\n    bingo = [[False] * 3 for _ in range(3)]\n    for i in range(3):\n        for j in range(3):\n            if a[i][j] in b:\n                bingo[i][j] = True\n    if bingo[0][0] and bingo[0][1] and bingo[0][2]:\n        print(\"Yes\")\n        return\n    if bingo[1][0] and bingo[1][1] and bingo[1][2]:\n        print(\"Yes\")\n        return\n    if bingo[2][0] and bingo[2][1] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][0] and bingo[1][0] and bingo[2][0]:\n        print(\"Yes\")\n        return\n    if bingo[0][1] and bingo[1][1] and bingo[2][1]:\n        print(\"Yes\")\n        return\n    if bingo[0][2] and bingo[1][2] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][0] and bingo[1][1] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][2] and bingo[1][1] and bingo[2][0]:\n        print(\"Yes\")\n        return\n    print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\na = []\na.append(list(map(int, input().split())))\na.append(list(map(int, input().split())))\na.append(list(map(int, input().split())))\nb = list(map(int, input().split()))\n\n# search for rows\nfor i in range(3):\n    for j in range(3):\n        if a[i][j] in b:\n            b.remove(a[i][j])\n        else:\n            break\n    else:\n        print('Yes')\n        exit()\n\n# search for columns\nfor i in range(3):\n    for j in range(3):\n        if a[j][i] in b:\n            b.remove(a[j][i])\n        else:\n            break\n    else:\n        print('Yes')\n        exit()\n\n# search for diagonals\nfor i in range(3):\n    if a[i][i] in b:\n        b.remove(a[i][i])\n    else:\n        break\nelse:\n    print('Yes')\n    exit()\n\nfor i in range(3):\n    if a[i][2-i] in b:\n        b.remove(a[i][2-i])\n    else:\n        break\nelse:\n    print('Yes')\n    exit()\n\nprint('No')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef bingo(a, b):\n    \"\"\"\n    Return whether there is a bingo.\n    :param a: 2D list\n    :param b: 1D list\n    :return: bool\n    \"\"\"\n    # Make a set for each row and column\n    row = [set() for _ in range(3)]\n    col = [set() for _ in range(3)]\n    # Make a set for the two diagonals\n    diag = [set(), set()]\n    # Iterate through the bingo card and mark the numbers that are in b\n    for i in range(3):\n        for j in range(3):\n            if a[i][j] in b:\n                row[i].add(a[i][j])\n                col[j].add(a[i][j])\n                if i == j:\n                    diag[0].add(a[i][j])\n                if i + j == 2:\n                    diag[1].add(a[i][j])\n    # Check whether there is a bingo\n    bingo = False\n    for i in range(3):\n        if len(row[i]) == 3 or len(col[i]) == 3:\n            bingo = True\n            break\n    if not bingo:\n        for diag_set in diag:\n            if len(diag_set) == 3:\n                bingo = True\n                break\n    return bingo\n\n\ndef main():\n    # Read input from stdin\n    a = []\n    for _ in range(3):\n        a.append(list(map(int, input().split())))\n    n = int(input())\n    b = []\n    for _ in range(n):\n        b.append(int(input()))\n    # Print output\n    if bingo(a, b):\n        print('Yes')\n    else:\n        print('No')\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef bingo(card, numbers):\n    # check rows\n    for i in range(3):\n        if len(set(card[i]).intersection(numbers)) == 3:\n            return True\n\n    # check columns\n    for i in range(3):\n        if len(set([card[j][i] for j in range(3)]).intersection(numbers)) == 3:\n            return True\n\n    # check diagonals\n    if len(set([card[i][i] for i in range(3)]).intersection(numbers)) == 3:\n        return True\n    if len(set([card[i][2-i] for i in range(3)]).intersection(numbers)) == 3:\n        return True\n\n    return False\n\ndef main():\n    card = []\n    for i in range(3):\n        card.append(list(map(int, sys.stdin.readline().strip().split())))\n\n    num_numbers = int(sys.stdin.readline().strip())\n    numbers = []\n    for i in range(num_numbers):\n        numbers.append(int(sys.stdin.readline().strip()))\n\n    if bingo(card, numbers):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef is_bingo(bingo_card, numbers):\n    \"\"\"\n    @type bingo_card: list[list[int]]\n    @type numbers: list[int]\n    @rtype: bool\n    \"\"\"\n    bingo_card = [list(map(lambda x: 0 if x in numbers else x, row)) for row in bingo_card]\n    if bingo_card[0][0] == 0 and bingo_card[1][1] == 0 and bingo_card[2][2] == 0:\n        return True\n    if bingo_card[0][2] == 0 and bingo_card[1][1] == 0 and bingo_card[2][0] == 0:\n        return True\n    for row in bingo_card:\n        if row[0] == 0 and row[1] == 0 and row[2] == 0:\n            return True\n    for column in zip(*bingo_card):\n        if column[0] == 0 and column[1] == 0 and column[2] == 0:\n            return True\n    return False\n\ndef main():\n    bingo_card = [list(map(int, l.split())) for l in sys.stdin.readlines()[:3]]\n    numbers = list(map(int, sys.stdin.readlines()[4:]))\n    if is_bingo(bingo_card, numbers):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# ==========\n# \u5b9f\u88c5\n# ==========\n# \u5165\u529b\nsheet = []\nfor i in range(3):\n    sheet.append(list(map(int, input().split())))\n\nN = int(input())\nbingo = []\nfor i in range(N):\n    bingo.append(int(input()))\n\n# \u30d3\u30f3\u30b4\u304b\u3069\u3046\u304b\u5224\u5b9a\nfor num in bingo:\n    for i in range(3):\n        for j in range(3):\n            if num == sheet[i][j]:\n                sheet[i][j] = 0\n\n# \u6a2a\u3001\u7e26\u3001\u659c\u3081\u306e\u3069\u308c\u304b\u30670\u304c3\u3064\u4e26\u3093\u3067\u3044\u308b\u304b\u5224\u5b9a\nif sheet[0][0] == 0 and sheet[0][1] == 0 and sheet[0][2] == 0:\n    print(\"Yes\")\nelif sheet[1][0] == 0 and sheet[1][1] == 0 and sheet[1][2] == 0:\n    print(\"Yes\")\nelif sheet[2][0] == 0 and sheet[2][1] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][0] == 0 and sheet[1][0] == 0 and sheet[2][0] == 0:\n    print(\"Yes\")\nelif sheet[0][1] == 0 and sheet[1][1] == 0 and sheet[2][1] == 0:\n    print(\"Yes\")\nelif sheet[0][2] == 0 and sheet[1][2] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][0] == 0 and sheet[1][1] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][2] == 0 and sheet[1][1] == 0 and sheet[2][0] == 0:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# \u5165\u529b\nbingo_card = [list(map(int, input().split())) for _ in range(3)]\nN = int(input())\nb_nums = [int(input()) for _ in range(N)]\n\n# \u5404\u30de\u30b9\u304c\u9078\u629e\u3055\u308c\u305f\u304b\u3069\u3046\u304b\u3092\u7ba1\u7406\u3059\u308b\u30ea\u30b9\u30c8\nselected_num = [[False for _ in range(3)] for _ in range(3)]\n\nfor b_num in b_nums:\n    for i in range(3):\n        for j in range(3):\n            if bingo_card[i][j] == b_num:\n                selected_num[i][j] = True\n                break\n\n# \u6a2a\u4e00\u5217\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\nrow_selected = any([all(selected_num[i]) for i in range(3)])\n# \u7e26\u4e00\u5217\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\ncolumn_selected = any([all([selected_num[i][j] for i in range(3)]) for j in range(3)])\n# \u659c\u3081\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\ndiagonal_selected = all([selected_num[i][i] for i in range(3)]) or all([selected_num[i][2 - i] for i in range(3)])\n\n# \u6a2a\u4e00\u5217\u3001\u7e26\u4e00\u5217\u3001\u659c\u3081\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070BINGO\nif row_selected or column_selected or diagonal_selected:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef bingo(A, b):\n    \"\"\"\n    >>> bingo([[84, 97, 66], [79, 89, 11], [61, 59, 7]], [89, 7, 87, 79, 24, 84, 30])\n    'Yes'\n    >>> bingo([[82, 89, 83], [79, 83, 39], [87, 34, 83]], [55, 31, 77, 82, 85, 61, 74, 55, 89, 85])\n    'No'\n    \"\"\"\n    for i in range(3):\n        for j in range(3):\n            if A[i][j] in b:\n                A[i][j] = 1\n    if sum(A[0]) == 3 or sum(A[1]) == 3 or sum(A[2]) == 3:\n        return 'Yes'\n    elif sum([A[i][0] for i in range(3)]) == 3 or sum([A[i][1] for i in range(3)]) == 3 or sum([A[i][2] for i in range(3)]) == 3:\n        return 'Yes'\n    elif sum([A[i][i] for i in range(3)]) == 3 or sum([A[i][2-i] for i in range(3)]) == 3:\n        return 'Yes'\n    else:\n        return 'No'\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    A = []\n    for i in range(3):\n        A.append(list(map(int, input().split())))\n    N = int(input())\n    b = []\n    for i in range(N):\n        b.append(int(input()))\n    print(bingo(A, b))"
+    }
+  ],
+  "created": 1650408543,
+  "id": "cmpl-4yqwZElNjPC9pzCvhQDrejcV14YAh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:49:26.837331 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    a = []\n    for _ in range(3):\n        a.append([int(x) for x in sys.stdin.readline().split()])\n    n = int(sys.stdin.readline())\n    b = [int(sys.stdin.readline()) for _ in range(n)]\n    bingo = [[False] * 3 for _ in range(3)]\n    for i in range(3):\n        for j in range(3):\n            if a[i][j] in b:\n                bingo[i][j] = True\n    if bingo[0][0] and bingo[0][1] and bingo[0][2]:\n        print(\"Yes\")\n        return\n    if bingo[1][0] and bingo[1][1] and bingo[1][2]:\n        print(\"Yes\")\n        return\n    if bingo[2][0] and bingo[2][1] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][0] and bingo[1][0] and bingo[2][0]:\n        print(\"Yes\")\n        return\n    if bingo[0][1] and bingo[1][1] and bingo[2][1]:\n        print(\"Yes\")\n        return\n    if bingo[0][2] and bingo[1][2] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][0] and bingo[1][1] and bingo[2][2]:\n        print(\"Yes\")\n        return\n    if bingo[0][2] and bingo[1][1] and bingo[2][0]:\n        print(\"Yes\")\n        return\n    print(\"No\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:49:26.837380 REASON stop
+2022-04-19 22:49:26.838440 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\na = []\na.append(list(map(int, input().split())))\na.append(list(map(int, input().split())))\na.append(list(map(int, input().split())))\nb = list(map(int, input().split()))\n\n# search for rows\nfor i in range(3):\n    for j in range(3):\n        if a[i][j] in b:\n            b.remove(a[i][j])\n        else:\n            break\n    else:\n        print('Yes')\n        exit()\n\n# search for columns\nfor i in range(3):\n    for j in range(3):\n        if a[j][i] in b:\n            b.remove(a[j][i])\n        else:\n            break\n    else:\n        print('Yes')\n        exit()\n\n# search for diagonals\nfor i in range(3):\n    if a[i][i] in b:\n        b.remove(a[i][i])\n    else:\n        break\nelse:\n    print('Yes')\n    exit()\n\nfor i in range(3):\n    if a[i][2-i] in b:\n        b.remove(a[i][2-i])\n    else:\n        break\nelse:\n    print('Yes')\n    exit()\n\nprint('No')"
+}
+2022-04-19 22:49:26.838525 REASON stop
+2022-04-19 22:49:26.839058 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef bingo(a, b):\n    \"\"\"\n    Return whether there is a bingo.\n    :param a: 2D list\n    :param b: 1D list\n    :return: bool\n    \"\"\"\n    # Make a set for each row and column\n    row = [set() for _ in range(3)]\n    col = [set() for _ in range(3)]\n    # Make a set for the two diagonals\n    diag = [set(), set()]\n    # Iterate through the bingo card and mark the numbers that are in b\n    for i in range(3):\n        for j in range(3):\n            if a[i][j] in b:\n                row[i].add(a[i][j])\n                col[j].add(a[i][j])\n                if i == j:\n                    diag[0].add(a[i][j])\n                if i + j == 2:\n                    diag[1].add(a[i][j])\n    # Check whether there is a bingo\n    bingo = False\n    for i in range(3):\n        if len(row[i]) == 3 or len(col[i]) == 3:\n            bingo = True\n            break\n    if not bingo:\n        for diag_set in diag:\n            if len(diag_set) == 3:\n                bingo = True\n                break\n    return bingo\n\n\ndef main():\n    # Read input from stdin\n    a = []\n    for _ in range(3):\n        a.append(list(map(int, input().split())))\n    n = int(input())\n    b = []\n    for _ in range(n):\n        b.append(int(input()))\n    # Print output\n    if bingo(a, b):\n        print('Yes')\n    else:\n        print('No')\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:49:26.839152 REASON stop
+2022-04-19 22:49:26.858620 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef bingo(card, numbers):\n    # check rows\n    for i in range(3):\n        if len(set(card[i]).intersection(numbers)) == 3:\n            return True\n\n    # check columns\n    for i in range(3):\n        if len(set([card[j][i] for j in range(3)]).intersection(numbers)) == 3:\n            return True\n\n    # check diagonals\n    if len(set([card[i][i] for i in range(3)]).intersection(numbers)) == 3:\n        return True\n    if len(set([card[i][2-i] for i in range(3)]).intersection(numbers)) == 3:\n        return True\n\n    return False\n\ndef main():\n    card = []\n    for i in range(3):\n        card.append(list(map(int, sys.stdin.readline().strip().split())))\n\n    num_numbers = int(sys.stdin.readline().strip())\n    numbers = []\n    for i in range(num_numbers):\n        numbers.append(int(sys.stdin.readline().strip()))\n\n    if bingo(card, numbers):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:49:26.858754 REASON stop
+2022-04-19 22:49:26.882467 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef is_bingo(bingo_card, numbers):\n    \"\"\"\n    @type bingo_card: list[list[int]]\n    @type numbers: list[int]\n    @rtype: bool\n    \"\"\"\n    bingo_card = [list(map(lambda x: 0 if x in numbers else x, row)) for row in bingo_card]\n    if bingo_card[0][0] == 0 and bingo_card[1][1] == 0 and bingo_card[2][2] == 0:\n        return True\n    if bingo_card[0][2] == 0 and bingo_card[1][1] == 0 and bingo_card[2][0] == 0:\n        return True\n    for row in bingo_card:\n        if row[0] == 0 and row[1] == 0 and row[2] == 0:\n            return True\n    for column in zip(*bingo_card):\n        if column[0] == 0 and column[1] == 0 and column[2] == 0:\n            return True\n    return False\n\ndef main():\n    bingo_card = [list(map(int, l.split())) for l in sys.stdin.readlines()[:3]]\n    numbers = list(map(int, sys.stdin.readlines()[4:]))\n    if is_bingo(bingo_card, numbers):\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:49:26.882616 REASON stop
+2022-04-19 22:49:26.885066 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# ==========\n# \u5b9f\u88c5\n# ==========\n# \u5165\u529b\nsheet = []\nfor i in range(3):\n    sheet.append(list(map(int, input().split())))\n\nN = int(input())\nbingo = []\nfor i in range(N):\n    bingo.append(int(input()))\n\n# \u30d3\u30f3\u30b4\u304b\u3069\u3046\u304b\u5224\u5b9a\nfor num in bingo:\n    for i in range(3):\n        for j in range(3):\n            if num == sheet[i][j]:\n                sheet[i][j] = 0\n\n# \u6a2a\u3001\u7e26\u3001\u659c\u3081\u306e\u3069\u308c\u304b\u30670\u304c3\u3064\u4e26\u3093\u3067\u3044\u308b\u304b\u5224\u5b9a\nif sheet[0][0] == 0 and sheet[0][1] == 0 and sheet[0][2] == 0:\n    print(\"Yes\")\nelif sheet[1][0] == 0 and sheet[1][1] == 0 and sheet[1][2] == 0:\n    print(\"Yes\")\nelif sheet[2][0] == 0 and sheet[2][1] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][0] == 0 and sheet[1][0] == 0 and sheet[2][0] == 0:\n    print(\"Yes\")\nelif sheet[0][1] == 0 and sheet[1][1] == 0 and sheet[2][1] == 0:\n    print(\"Yes\")\nelif sheet[0][2] == 0 and sheet[1][2] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][0] == 0 and sheet[1][1] == 0 and sheet[2][2] == 0:\n    print(\"Yes\")\nelif sheet[0][2] == 0 and sheet[1][1] == 0 and sheet[2][0] == 0:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+}
+2022-04-19 22:49:26.885184 REASON stop
+2022-04-19 22:49:26.888264 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# \u5165\u529b\nbingo_card = [list(map(int, input().split())) for _ in range(3)]\nN = int(input())\nb_nums = [int(input()) for _ in range(N)]\n\n# \u5404\u30de\u30b9\u304c\u9078\u629e\u3055\u308c\u305f\u304b\u3069\u3046\u304b\u3092\u7ba1\u7406\u3059\u308b\u30ea\u30b9\u30c8\nselected_num = [[False for _ in range(3)] for _ in range(3)]\n\nfor b_num in b_nums:\n    for i in range(3):\n        for j in range(3):\n            if bingo_card[i][j] == b_num:\n                selected_num[i][j] = True\n                break\n\n# \u6a2a\u4e00\u5217\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\nrow_selected = any([all(selected_num[i]) for i in range(3)])\n# \u7e26\u4e00\u5217\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\ncolumn_selected = any([all([selected_num[i][j] for i in range(3)]) for j in range(3)])\n# \u659c\u3081\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070True\ndiagonal_selected = all([selected_num[i][i] for i in range(3)]) or all([selected_num[i][2 - i] for i in range(3)])\n\n# \u6a2a\u4e00\u5217\u3001\u7e26\u4e00\u5217\u3001\u659c\u3081\u304c\u9078\u629e\u3055\u308c\u3066\u3044\u308c\u3070BINGO\nif row_selected or column_selected or diagonal_selected:\n    print(\"Yes\")\nelse:\n    print(\"No\")"
+}
+2022-04-19 22:49:26.888411 REASON stop
+2022-04-19 22:49:26.907648 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef bingo(A, b):\n    \"\"\"\n    >>> bingo([[84, 97, 66], [79, 89, 11], [61, 59, 7]], [89, 7, 87, 79, 24, 84, 30])\n    'Yes'\n    >>> bingo([[82, 89, 83], [79, 83, 39], [87, 34, 83]], [55, 31, 77, 82, 85, 61, 74, 55, 89, 85])\n    'No'\n    \"\"\"\n    for i in range(3):\n        for j in range(3):\n            if A[i][j] in b:\n                A[i][j] = 1\n    if sum(A[0]) == 3 or sum(A[1]) == 3 or sum(A[2]) == 3:\n        return 'Yes'\n    elif sum([A[i][0] for i in range(3)]) == 3 or sum([A[i][1] for i in range(3)]) == 3 or sum([A[i][2] for i in range(3)]) == 3:\n        return 'Yes'\n    elif sum([A[i][i] for i in range(3)]) == 3 or sum([A[i][2-i] for i in range(3)]) == 3:\n        return 'Yes'\n    else:\n        return 'No'\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()\n    A = []\n    for i in range(3):\n        A.append(list(map(int, input().split())))\n    N = int(input())\n    b = []\n    for i in range(N):\n        b.append(int(input()))\n    print(bingo(A, b))"
+}
+2022-04-19 22:49:26.907885 REASON stop

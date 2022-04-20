@@ -1,0 +1,163 @@
+2022-04-19 22:00:13.177895 """
+There is a robot staying at $X=0$ on the $Ox$ axis. He has to walk to $X=n$. You are controlling this robot and controlling how he goes. The robot has a battery and an accumulator with a solar panel.
+
+The $i$-th segment of the path (from $X=i-1$ to $X=i$) can be exposed to sunlight or not. The array $s$ denotes which segments are exposed to sunlight: if segment $i$ is exposed, then $s_i = 1$, otherwise $s_i = 0$.
+
+The robot has one battery of capacity $b$ and one accumulator of capacity $a$. For each segment, you should choose which type of energy storage robot will use to go to the next point (it can be either battery or accumulator). If the robot goes using the battery, the current charge of the battery is decreased by one (the robot can't use the battery if its charge is zero). And if the robot goes using the accumulator, the current charge of the accumulator is decreased by one (and the robot also can't use the accumulator if its charge is zero).
+
+If the current segment is exposed to sunlight and the robot goes through it using the battery, the charge of the accumulator increases by one (of course, its charge can't become higher than it's maximum capacity).
+
+If accumulator is used to pass some segment, its charge decreases by 1 no matter if the segment is exposed or not.
+
+You understand that it is not always possible to walk to $X=n$. You want your robot to go as far as possible. Find the maximum number of segments of distance the robot can pass if you control him optimally.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, b, a$ ($1 \le n, b, a \le 2 \cdot 10^5$) — the robot's destination point, the battery capacity and the accumulator capacity, respectively.
+
+The second line of the input contains $n$ integers $s_1, s_2, \dots, s_n$ ($0 \le s_i \le 1$), where $s_i$ is $1$ if the $i$-th segment of distance is exposed to sunlight, and $0$ otherwise.
+
+
+-----Output-----
+
+Print one integer — the maximum number of segments the robot can pass if you control him optimally.
+
+
+-----Examples-----
+Input
+5 2 1
+0 1 0 1 0
+
+Output
+5
+
+Input
+6 2 1
+1 0 0 1 0 1
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the robot can go through the first segment using the accumulator, and charge levels become $b=2$ and $a=0$. The second segment can be passed using the battery, and charge levels become $b=1$ and $a=1$. The third segment can be passed using the accumulator, and charge levels become $b=1$ and $a=0$. The fourth segment can be passed using the battery, and charge levels become $b=0$ and $a=1$. And the fifth segment can be passed using the accumulator.
+
+In the second example the robot can go through the maximum number of segments using battery two times and accumulator one time in any order.
+"""
+2022-04-19 22:00:13.177924 --------------------------
+2022-04-19 22:00:13.178032 using api key sourya
+2022-04-19 22:00:29.717131 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\nfrom collections import deque\n\nn, b, a = map(int, stdin.readline().split())\ns = list(map(int, stdin.readline().split()))\n\nif a == 0:\n    print(b)\n\nelif a == 1:\n    a_ = 0\n    b_ = 0\n    for i in s:\n        if i == 1:\n            a_ += 1\n        else:\n            b_ += 1\n\n    if b_ == 0:\n        print(a_)\n    else:\n        print(1 + min(a_, b_))\n\nelse:\n    z = a + b\n    a_ = 0\n    b_ = 0\n    for i in s:\n        if i == 1:\n            a_ += 1\n        else:\n            b_ += 1\n\n    if b_ == 0:\n        print(a_)\n    else:\n        if a_ <= b:\n            print(a_ + b_)\n        else:\n            a_ -= b\n            b_ -= a_\n            print(a + b_)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        if s[i] == 1:\n            if a < 1:\n                if b < 1:\n                    break\n                b -= 1\n            else:\n                a -= 1\n                b += 1\n        else:\n            if a < 1:\n                if b < 1:\n                    break\n                b -= 1\n            else:\n                a -= 1\n        ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    max_charge = b + a\n    charge = b\n    max_charge_used = 0\n    for i in range(n):\n        if s[i] == 1:\n            if charge < max_charge:\n                charge += 1\n        if charge > 0:\n            charge -= 1\n            max_charge_used += 1\n        else:\n            break\n    print(max_charge_used)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = map(int, sys.stdin.readline().split())\n    l = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b < a:\n                b += 1\n            else:\n                a -= 1\n        if a > 0:\n            a -= 1\n        elif b > 0:\n            b -= 1\n        else:\n            break\n        l += 1\n    print l\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef rob_battery_solar(n, b, a, s):\n    i = 0\n    charge = [b, a]\n    while i < n:\n        if s[i] == 1:\n            if charge[0] > 0:\n                charge[0] -= 1\n                charge[1] += 1\n                if charge[1] > a:\n                    charge[1] -= 1\n            elif charge[1] > 0:\n                charge[1] -= 1\n        else:\n            if charge[0] > 0:\n                charge[0] -= 1\n            else:\n                charge[1] -= 1\n        i += 1\n        if charge[0] < 0 or charge[1] < 0:\n            break\n    return i\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\nprint(rob_battery_solar(n, b, a, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(n, b, a, s):\n    count = 0\n    while n > 0:\n        if s[n-1] == 1:\n            if b > 0:\n                b -= 1\n                a += 1\n            elif a > 0:\n                a -= 1\n            else:\n                break\n        else:\n            if a > 0:\n                a -= 1\n            elif b > 0:\n                b -= 1\n            else:\n                break\n        count += 1\n        n -= 1\n    return count\n\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    print(solve(n, b, a, s))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n\n    b_charge = b\n    a_charge = a\n    max_count = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b_charge > 0:\n                b_charge -= 1\n                a_charge += 1\n            elif a_charge > 0:\n                a_charge -= 1\n        else:\n            if b_charge > 0:\n                b_charge -= 1\n            elif a_charge > 0:\n                a_charge -= 1\n            else:\n                break\n        max_count += 1\n\n    print(max_count)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nans = 0\n\n# (b, a)\n# b: battery\n# a: accumulator\n\nbattery = b\naccumulator = a\n\nfor si in s:\n    if si == 1:\n        if battery < b:\n            battery += 1\n            accumulator -= 1\n        elif accumulator < a:\n            accumulator += 1\n        else:\n            battery = b\n            accumulator = a\n    else:\n        if battery > 0:\n            battery -= 1\n        elif accumulator > 0:\n            accumulator -= 1\n        else:\n            break\n    ans += 1\n\nprint(ans)"
+    }
+  ],
+  "created": 1650405613,
+  "id": "cmpl-4yqBJXUVgT8V7bFeAJ2JhoVzJzWZd",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:00:29.717586 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\nfrom collections import deque\n\nn, b, a = map(int, stdin.readline().split())\ns = list(map(int, stdin.readline().split()))\n\nif a == 0:\n    print(b)\n\nelif a == 1:\n    a_ = 0\n    b_ = 0\n    for i in s:\n        if i == 1:\n            a_ += 1\n        else:\n            b_ += 1\n\n    if b_ == 0:\n        print(a_)\n    else:\n        print(1 + min(a_, b_))\n\nelse:\n    z = a + b\n    a_ = 0\n    b_ = 0\n    for i in s:\n        if i == 1:\n            a_ += 1\n        else:\n            b_ += 1\n\n    if b_ == 0:\n        print(a_)\n    else:\n        if a_ <= b:\n            print(a_ + b_)\n        else:\n            a_ -= b\n            b_ -= a_\n            print(a + b_)"
+}
+2022-04-19 22:00:29.717637 REASON stop
+2022-04-19 22:00:29.718218 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        if s[i] == 1:\n            if a < 1:\n                if b < 1:\n                    break\n                b -= 1\n            else:\n                a -= 1\n                b += 1\n        else:\n            if a < 1:\n                if b < 1:\n                    break\n                b -= 1\n            else:\n                a -= 1\n        ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:00:29.718292 REASON stop
+2022-04-19 22:00:29.718714 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    max_charge = b + a\n    charge = b\n    max_charge_used = 0\n    for i in range(n):\n        if s[i] == 1:\n            if charge < max_charge:\n                charge += 1\n        if charge > 0:\n            charge -= 1\n            max_charge_used += 1\n        else:\n            break\n    print(max_charge_used)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:00:29.718780 REASON stop
+2022-04-19 22:00:29.719953 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, b, a = map(int, sys.stdin.readline().split())\n    s = map(int, sys.stdin.readline().split())\n    l = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b < a:\n                b += 1\n            else:\n                a -= 1\n        if a > 0:\n            a -= 1\n        elif b > 0:\n            b -= 1\n        else:\n            break\n        l += 1\n    print l\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:00:29.720016 REASON stop
+2022-04-19 22:00:29.740466 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef rob_battery_solar(n, b, a, s):\n    i = 0\n    charge = [b, a]\n    while i < n:\n        if s[i] == 1:\n            if charge[0] > 0:\n                charge[0] -= 1\n                charge[1] += 1\n                if charge[1] > a:\n                    charge[1] -= 1\n            elif charge[1] > 0:\n                charge[1] -= 1\n        else:\n            if charge[0] > 0:\n                charge[0] -= 1\n            else:\n                charge[1] -= 1\n        i += 1\n        if charge[0] < 0 or charge[1] < 0:\n            break\n    return i\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\nprint(rob_battery_solar(n, b, a, s))"
+}
+2022-04-19 22:00:29.740601 REASON stop
+2022-04-19 22:00:29.741493 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(n, b, a, s):\n    count = 0\n    while n > 0:\n        if s[n-1] == 1:\n            if b > 0:\n                b -= 1\n                a += 1\n            elif a > 0:\n                a -= 1\n            else:\n                break\n        else:\n            if a > 0:\n                a -= 1\n            elif b > 0:\n                b -= 1\n            else:\n                break\n        count += 1\n        n -= 1\n    return count\n\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n    print(solve(n, b, a, s))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:00:29.741581 REASON stop
+2022-04-19 22:00:29.759470 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\n\ndef main():\n    n, b, a = map(int, input().split())\n    s = list(map(int, input().split()))\n\n    b_charge = b\n    a_charge = a\n    max_count = 0\n    for i in range(n):\n        if s[i] == 1:\n            if b_charge > 0:\n                b_charge -= 1\n                a_charge += 1\n            elif a_charge > 0:\n                a_charge -= 1\n        else:\n            if b_charge > 0:\n                b_charge -= 1\n            elif a_charge > 0:\n                a_charge -= 1\n            else:\n                break\n        max_count += 1\n\n    print(max_count)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:00:29.759573 REASON stop
+2022-04-19 22:00:29.760569 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, b, a = map(int, input().split())\ns = list(map(int, input().split()))\n\nans = 0\n\n# (b, a)\n# b: battery\n# a: accumulator\n\nbattery = b\naccumulator = a\n\nfor si in s:\n    if si == 1:\n        if battery < b:\n            battery += 1\n            accumulator -= 1\n        elif accumulator < a:\n            accumulator += 1\n        else:\n            battery = b\n            accumulator = a\n    else:\n        if battery > 0:\n            battery -= 1\n        elif accumulator > 0:\n            accumulator -= 1\n        else:\n            break\n    ans += 1\n\nprint(ans)"
+}
+2022-04-19 22:00:29.760799 REASON stop

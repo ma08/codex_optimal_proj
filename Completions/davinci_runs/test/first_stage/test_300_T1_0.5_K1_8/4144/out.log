@@ -1,0 +1,169 @@
+2022-04-19 22:24:23.027235 """
+How many integer sequences A_1,A_2,\ldots,A_N of length N satisfy all of the following conditions?
+ - 0 \leq A_i \leq 9
+ - There exists some i such that A_i=0 holds.
+ - There exists some i such that A_i=9 holds.
+The answer can be very large, so output it modulo 10^9 + 7.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^6
+ - N is an integer.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+
+-----Output-----
+Print the answer modulo 10^9 + 7.
+
+-----Sample Input-----
+2
+
+-----Sample Output-----
+2
+
+Two sequences \{0,9\} and \{9,0\} satisfy all conditions.
+"""
+2022-04-19 22:24:23.027251 --------------------------
+2022-04-19 22:24:23.027354 using api key gabby
+2022-04-19 22:24:23.197934 in retry 6 5 <class 'Exception'>, Retrying in 5 seconds...
+2022-04-19 22:24:28.203338 """
+How many integer sequences A_1,A_2,\ldots,A_N of length N satisfy all of the following conditions?
+ - 0 \leq A_i \leq 9
+ - There exists some i such that A_i=0 holds.
+ - There exists some i such that A_i=9 holds.
+The answer can be very large, so output it modulo 10^9 + 7.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^6
+ - N is an integer.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+
+-----Output-----
+Print the answer modulo 10^9 + 7.
+
+-----Sample Input-----
+2
+
+-----Sample Output-----
+2
+
+Two sequences \{0,9\} and \{9,0\} satisfy all conditions.
+"""
+2022-04-19 22:24:28.203376 --------------------------
+2022-04-19 22:24:28.203501 using api key derek
+2022-04-19 22:24:52.484287 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    ans = 0\n    for i in range(1, n+1):\n        if i == 1:\n            ans = 2\n        else:\n            ans = (ans * 10) % 1000000007\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# N = int(input())\nN = 10**6\n\n# \u554f\u984c\u3092\u5206\u89e3\u3059\u308b\n# dp[i][j] := i\u6841\u76ee\u307e\u3067\u898b\u3066\u3001i\u6841\u76ee\u304cj\u3067\u7d42\u308f\u308b\u3068\u304d\u306e\u7dcf\u6570\n# dp[i][j] = sum(dp[i-1][k]) (j-1<=k<=j+1) (k!=0)\n# dp[i][0] = sum(dp[i-1][k]) (k!=0)\n\n# \u521d\u671f\u5024\ndp = [[0]*10 for _ in range(N+1)]\ndp[0][0] = 1\ndp[0][9] = 1\n\n# \u66f4\u65b0\nfor i in range(1, N+1):\n    for j in range(1, 10):\n        k = j-1\n        if k >= 0:\n            dp[i][j] += dp[i-1][k]\n        k = j\n        dp[i][j] += dp[i-1][k]\n        k = j+1\n        if k <= 9:\n            dp[i][j] += dp[i-1][k]\n    # 0\u6841\u76ee\u306f0\u3067\u7d42\u308f\u3089\u306a\u3044\n    dp[i][0] = dp[i-1][1] + dp[i-1][2] + dp[i-1][3] + dp[i-1][4] + dp[i-1][5] + dp[i-1][6] + dp[i-1][7] + dp[i-1][8] + dp[i-1][9]\n\n# \u7b54\u3048\nans = 0\nfor j in range(10):\n    ans += dp[N][j]\nprint(ans % (10**9 + 7))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n# N = int(input())\n\nN = 2\n\nmod = 10**9 + 7\n\ndp = [[0]*10 for _ in range(N+1)]\n\nfor i in range(10):\n    dp[1][i] = 1\n\nfor i in range(2, N+1):\n    for j in range(10):\n        for k in range(10):\n            dp[i][j] += dp[i-1][k]\n            dp[i][j] %= mod\n\nans = 0\nfor i in range(10):\n    ans += dp[N][i]\n    ans %= mod\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    dp = [0]*(n+1)\n    dp[1] = 10\n    mod = 10**9 + 7\n    for i in range(2,n+1):\n        dp[i] = dp[i-1]*9 + dp[i-2]*10\n        dp[i] %= mod\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nmod = 10**9 + 7\n\n# dp[i] = number of sequences of length i\ndp = [0] * (n + 1)\ndp[1] = 2\nfor i in range(2, n + 1):\n    dp[i] = (dp[i - 1] * 10 - dp[i - 2]) % mod\nprint(dp[n])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# \u6570\u5b66\u7684\u306a\u89e3\u6cd5\u304c\u308f\u304b\u3089\u306a\u3044\u304c\u3001\u5b9f\u969b\u306b\u3084\u3063\u3066\u307f\u308b\u3068\n# \uff11\uff10\u9032\u6570\u30670,9\u3092\u542b\u3080\u9577\u3055N\u306e\u6570\u5217\u306f\u3001\n# \u9577\u3055N-1\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u3082\u306e\u3068\u8003\u3048\u308b\u3053\u3068\u304c\u3067\u304d\u308b\n# \u3053\u308c\u3092N\u56de\u7e70\u308a\u8fd4\u3059\u3068\u3001\u7b54\u3048\u304c\u308f\u304b\u308b\n\n# \u9577\u3055N-1\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306f\u3001\n# \u9577\u3055N-2\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306e2\u500d\u3067\u3042\u308a\u3001\n# \u3053\u308c\u306f\u9577\u30552\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306e2^(N-2)\u500d\u3067\u3042\u308b\n# \u3053\u308c\u3092N\u56de\u7e70\u308a\u8fd4\u3059\u3068\u3001\u7b54\u3048\u304c\u308f\u304b\u308b\n\n# \u9577\u3055N\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u3092S(N)\u3068\u3059\u308b\u3068\u3001\n# S(N) = 2 * S(N-1) = 2^2 * S(N-2) = 2^(N-1) * S(1)\n# S(1) = 2\n# \u3053\u308c\u3092\u89e3\u304f\u3068\u3001\n# S(N) = 2^(N-1) * 2 = 2^N\n\n# \u3053\u308c\u309210^9 + 7\u3067\u5272\u3063\u305f\u4f59\u308a\u304c\u7b54\u3048\n\n# \u56de\u7b54\nN = int(input())\nprint(2**N % (10**9 + 7))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    ans = 0\n    for i in range(1,n+1):\n        if i % 2 == 0:\n            ans += 10**((i-1)//2)\n        else:\n            ans += 10**((i-2)//2)\n    print(ans % (10**9 + 7))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nMOD = 10**9 + 7\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    dp = [[0]*10 for i in range(N+1)]\n    for i in range(1, 10):\n        dp[1][i] = 1\n\n    for i in range(2, N+1):\n        for j in range(10):\n            for k in range(10):\n                dp[i][j] += dp[i-1][k]\n                dp[i][j] %= MOD\n\n    ans = 0\n    for i in range(1, 10):\n        ans += dp[N][i]\n        ans %= MOD\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650407068,
+  "id": "cmpl-4yqYmCzxPReHrS1M8P3Ae82c0nBZj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:24:52.484641 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    ans = 0\n    for i in range(1, n+1):\n        if i == 1:\n            ans = 2\n        else:\n            ans = (ans * 10) % 1000000007\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:24:52.484680 REASON stop
+2022-04-19 22:24:52.485502 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# N = int(input())\nN = 10**6\n\n# \u554f\u984c\u3092\u5206\u89e3\u3059\u308b\n# dp[i][j] := i\u6841\u76ee\u307e\u3067\u898b\u3066\u3001i\u6841\u76ee\u304cj\u3067\u7d42\u308f\u308b\u3068\u304d\u306e\u7dcf\u6570\n# dp[i][j] = sum(dp[i-1][k]) (j-1<=k<=j+1) (k!=0)\n# dp[i][0] = sum(dp[i-1][k]) (k!=0)\n\n# \u521d\u671f\u5024\ndp = [[0]*10 for _ in range(N+1)]\ndp[0][0] = 1\ndp[0][9] = 1\n\n# \u66f4\u65b0\nfor i in range(1, N+1):\n    for j in range(1, 10):\n        k = j-1\n        if k >= 0:\n            dp[i][j] += dp[i-1][k]\n        k = j\n        dp[i][j] += dp[i-1][k]\n        k = j+1\n        if k <= 9:\n            dp[i][j] += dp[i-1][k]\n    # 0\u6841\u76ee\u306f0\u3067\u7d42\u308f\u3089\u306a\u3044\n    dp[i][0] = dp[i-1][1] + dp[i-1][2] + dp[i-1][3] + dp[i-1][4] + dp[i-1][5] + dp[i-1][6] + dp[i-1][7] + dp[i-1][8] + dp[i-1][9]\n\n# \u7b54\u3048\nans = 0\nfor j in range(10):\n    ans += dp[N][j]\nprint(ans % (10**9 + 7))"
+}
+2022-04-19 22:24:52.485609 REASON stop
+2022-04-19 22:24:52.486053 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n# N = int(input())\n\nN = 2\n\nmod = 10**9 + 7\n\ndp = [[0]*10 for _ in range(N+1)]\n\nfor i in range(10):\n    dp[1][i] = 1\n\nfor i in range(2, N+1):\n    for j in range(10):\n        for k in range(10):\n            dp[i][j] += dp[i-1][k]\n            dp[i][j] %= mod\n\nans = 0\nfor i in range(10):\n    ans += dp[N][i]\n    ans %= mod\n\nprint(ans)"
+}
+2022-04-19 22:24:52.486111 REASON stop
+2022-04-19 22:24:52.510208 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    dp = [0]*(n+1)\n    dp[1] = 10\n    mod = 10**9 + 7\n    for i in range(2,n+1):\n        dp[i] = dp[i-1]*9 + dp[i-2]*10\n        dp[i] %= mod\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:24:52.510335 REASON stop
+2022-04-19 22:24:52.545264 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nmod = 10**9 + 7\n\n# dp[i] = number of sequences of length i\ndp = [0] * (n + 1)\ndp[1] = 2\nfor i in range(2, n + 1):\n    dp[i] = (dp[i - 1] * 10 - dp[i - 2]) % mod\nprint(dp[n])"
+}
+2022-04-19 22:24:52.545435 REASON stop
+2022-04-19 22:24:52.546511 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# \u6570\u5b66\u7684\u306a\u89e3\u6cd5\u304c\u308f\u304b\u3089\u306a\u3044\u304c\u3001\u5b9f\u969b\u306b\u3084\u3063\u3066\u307f\u308b\u3068\n# \uff11\uff10\u9032\u6570\u30670,9\u3092\u542b\u3080\u9577\u3055N\u306e\u6570\u5217\u306f\u3001\n# \u9577\u3055N-1\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u3082\u306e\u3068\u8003\u3048\u308b\u3053\u3068\u304c\u3067\u304d\u308b\n# \u3053\u308c\u3092N\u56de\u7e70\u308a\u8fd4\u3059\u3068\u3001\u7b54\u3048\u304c\u308f\u304b\u308b\n\n# \u9577\u3055N-1\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306f\u3001\n# \u9577\u3055N-2\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306e2\u500d\u3067\u3042\u308a\u3001\n# \u3053\u308c\u306f\u9577\u30552\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u306e2^(N-2)\u500d\u3067\u3042\u308b\n# \u3053\u308c\u3092N\u56de\u7e70\u308a\u8fd4\u3059\u3068\u3001\u7b54\u3048\u304c\u308f\u304b\u308b\n\n# \u9577\u3055N\u306e\u6570\u5217\u306b0,9\u3092\u305d\u308c\u305e\u308c\u8db3\u3057\u305f\u6570\u5217\u306e\u500b\u6570\u3092S(N)\u3068\u3059\u308b\u3068\u3001\n# S(N) = 2 * S(N-1) = 2^2 * S(N-2) = 2^(N-1) * S(1)\n# S(1) = 2\n# \u3053\u308c\u3092\u89e3\u304f\u3068\u3001\n# S(N) = 2^(N-1) * 2 = 2^N\n\n# \u3053\u308c\u309210^9 + 7\u3067\u5272\u3063\u305f\u4f59\u308a\u304c\u7b54\u3048\n\n# \u56de\u7b54\nN = int(input())\nprint(2**N % (10**9 + 7))"
+}
+2022-04-19 22:24:52.546615 REASON stop
+2022-04-19 22:24:52.547908 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    ans = 0\n    for i in range(1,n+1):\n        if i % 2 == 0:\n            ans += 10**((i-1)//2)\n        else:\n            ans += 10**((i-2)//2)\n    print(ans % (10**9 + 7))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:24:52.548094 REASON stop
+2022-04-19 22:24:52.548846 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nMOD = 10**9 + 7\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    dp = [[0]*10 for i in range(N+1)]\n    for i in range(1, 10):\n        dp[1][i] = 1\n\n    for i in range(2, N+1):\n        for j in range(10):\n            for k in range(10):\n                dp[i][j] += dp[i-1][k]\n                dp[i][j] %= MOD\n\n    ans = 0\n    for i in range(1, 10):\n        ans += dp[N][i]\n        ans %= MOD\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:24:52.548916 REASON stop

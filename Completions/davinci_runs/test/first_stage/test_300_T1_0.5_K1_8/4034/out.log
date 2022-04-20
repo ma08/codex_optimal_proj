@@ -1,0 +1,174 @@
+2022-04-19 21:12:02.631601 """
+This is an easy version of the problem. The actual problems are different, but the easy version is almost a subtask of the hard version. Note that the constraints and the output format are different.
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+You have to color all its characters one of the two colors (each character to exactly one color, the same letters can be colored the same or different colors, i.e. you can choose exactly one color for each index in $s$).
+
+After coloring, you can swap any two neighboring characters of the string that are colored different colors. You can perform such an operation arbitrary (possibly, zero) number of times.
+
+The goal is to make the string sorted, i.e. all characters should be in alphabetical order.
+
+Your task is to say if it is possible to color the given string so that after coloring it can become sorted by some sequence of swaps. Note that you have to restore only coloring, not the sequence of swaps.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 200$) — the length of $s$.
+
+The second line of the input contains the string $s$ consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to color the given string so that after coloring it can become sorted by some sequence of swaps, print "NO" (without quotes) in the first line.
+
+Otherwise, print "YES" in the first line and any correct coloring in the second line (the coloring is the string consisting of $n$ characters, the $i$-th character should be '0' if the $i$-th character is colored the first color and '1' otherwise).
+
+
+-----Examples-----
+Input
+9
+abacbecfd
+
+Output
+YES
+001010101
+
+Input
+8
+aaabbcbb
+
+Output
+YES
+01011011
+
+Input
+7
+abcdedc
+
+Output
+NO
+
+Input
+5
+abcde
+
+Output
+YES
+00000
+"""
+2022-04-19 21:12:02.631630 --------------------------
+2022-04-19 21:12:02.631785 using api key gabby
+2022-04-19 21:12:22.567175 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\ns = input()\n\nif sorted(s) == list(s):\n    print(\"YES\")\n    print(\"0\" * n)\nelse:\n    a = 0\n    b = 0\n    for i in range(len(s)):\n        if s[i] != s[0]:\n            a = i\n            break\n    for i in range(len(s) - 1, -1, -1):\n        if s[i] != s[-1]:\n            b = i\n            break\n    if a == 0 and b == len(s) - 1:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        if a == 0:\n            print(\"0\" * (b + 1) + \"1\" * (len(s) - b - 1))\n        elif b == len(s) - 1:\n            print(\"1\" * a + \"0\" * (len(s) - a))\n        else:\n            print(\"1\" * (a) + \"0\" * (b - a + 1) + \"1\" * (len(s) - b - 1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\ndef check(s):\n    for i in range(1, n):\n        if s[i] < s[i - 1]:\n            return False\n    return True\n\ndef check2(s):\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            return False\n    return True\n\nif check(s):\n    print(\"YES\")\n    print(\"0\" * n)\n    exit()\n\nif check2(s):\n    print(\"YES\")\n    print(\"01\" * (n // 2) + \"0\" * (n % 2))\n    exit()\n\nprint(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\nif s == ''.join(sorted(s)):\n    print('YES')\n    print('0'*n)\nelse:\n    print('YES')\n    for c in s:\n        if c == 'a':\n            print('0', end='')\n        else:\n            print('1', end='')\n    print()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    if n > 200 or n < 1:\n        sys.exit(\"n out of range\")\n    if len(s) != n:\n        sys.exit(\"s does not have n characters\")\n    for c in s:\n        if c < 'a' or c > 'z':\n            sys.exit(\"s has non-lowercase characters\")\n    s = list(s)\n    for i in range(1, len(s)):\n        if s[i] < s[i - 1]:\n            s[i] = '1'\n        else:\n            s[i] = '0'\n    print(\"YES\")\n    print(\"\".join(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n\tn = int(sys.stdin.readline().strip())\n\ts = sys.stdin.readline().strip()\n\tif n == 1:\n\t\tprint(\"YES\")\n\t\tprint(0)\n\t\treturn\n\telif n == 2:\n\t\tif s[0] == s[1]:\n\t\t\tprint(\"YES\")\n\t\t\tprint(0,0)\n\t\telse:\n\t\t\tprint(\"YES\")\n\t\t\tprint(0,1)\n\t\treturn\n\telse:\n\t\tprint(\"YES\")\n\t\tif s[0] == s[1]:\n\t\t\tprint(0, end = \"\")\n\t\telse:\n\t\t\tprint(1, end = \"\")\n\t\tfor i in range(1, n - 1):\n\t\t\tif s[i] == s[i+1]:\n\t\t\t\tprint(0, end = \"\")\n\t\t\telif s[i] == s[i-1]:\n\t\t\t\tprint(1, end = \"\")\n\t\t\telse:\n\t\t\t\tprint(0, end = \"\")\n\t\tif s[n-2] == s[n-1]:\n\t\t\tprint(0)\n\t\telse:\n\t\t\tprint(1)\n\nif __name__ == \"__main__\":\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n\n    if s == ''.join(sorted(s)):\n        print(\"YES\")\n        print(\"0\" * n)\n    else:\n        print(\"YES\")\n        print(\"1\" * n)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# cook your dish here\nt=int(input())\ns=input()\nif t==1:\n    print(\"YES\")\n    print(\"0\")\nelse:\n    if s[0]>s[1]:\n        print(\"YES\")\n        print(\"1\",end=\"\")\n        for i in range(1,t-1):\n            if s[i]<s[i-1] and s[i]<s[i+1]:\n                print(\"1\",end=\"\")\n            else:\n                print(\"0\",end=\"\")\n        if s[t-1]<s[t-2]:\n            print(\"1\")\n        else:\n            print(\"0\")\n    else:\n        print(\"YES\")\n        print(\"0\",end=\"\")\n        for i in range(1,t-1):\n            if s[i]>s[i-1] and s[i]>s[i+1]:\n                print(\"0\",end=\"\")\n            else:\n                print(\"1\",end=\"\")\n        if s[t-1]>s[t-2]:\n            print(\"0\")\n        else:\n            print(\"1\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\n\ndef is_sorted(s):\n    return all(s[i] <= s[i+1] for i in range(len(s)-1))\n\ndef is_sorted_after_swap(s):\n    i = 0\n    while i < len(s)-1:\n        if s[i] > s[i+1]:\n            break\n        i += 1\n    if i == len(s)-1:\n        return True\n    else:\n        j = i+1\n        while j < len(s)-1:\n            if s[j] > s[j+1]:\n                return False\n            j += 1\n        return True\n\ndef get_color(s, i):\n    if i == 0:\n        return '0' if s[i] <= s[i+1] else '1'\n    if i == len(s)-1:\n        return '0' if s[i] >= s[i-1] else '1'\n    return '0' if s[i] >= s[i-1] and s[i] <= s[i+1] else '1'\n\nif is_sorted(s):\n    print('YES')\n    print('0' * n)\nelif is_sorted_after_swap(s):\n    print('YES')\n    print(''.join(get_color(s, i) for i in range(n)))\nelse:\n    print('NO')"
+    }
+  ],
+  "created": 1650402722,
+  "id": "cmpl-4ypQgGSTqjXq3tAGfQReLgvjEIro1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:12:22.567580 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\ns = input()\n\nif sorted(s) == list(s):\n    print(\"YES\")\n    print(\"0\" * n)\nelse:\n    a = 0\n    b = 0\n    for i in range(len(s)):\n        if s[i] != s[0]:\n            a = i\n            break\n    for i in range(len(s) - 1, -1, -1):\n        if s[i] != s[-1]:\n            b = i\n            break\n    if a == 0 and b == len(s) - 1:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        if a == 0:\n            print(\"0\" * (b + 1) + \"1\" * (len(s) - b - 1))\n        elif b == len(s) - 1:\n            print(\"1\" * a + \"0\" * (len(s) - a))\n        else:\n            print(\"1\" * (a) + \"0\" * (b - a + 1) + \"1\" * (len(s) - b - 1))"
+}
+2022-04-19 21:12:22.567713 REASON stop
+2022-04-19 21:12:22.568221 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\ndef check(s):\n    for i in range(1, n):\n        if s[i] < s[i - 1]:\n            return False\n    return True\n\ndef check2(s):\n    for i in range(1, n):\n        if s[i] == s[i - 1]:\n            return False\n    return True\n\nif check(s):\n    print(\"YES\")\n    print(\"0\" * n)\n    exit()\n\nif check2(s):\n    print(\"YES\")\n    print(\"01\" * (n // 2) + \"0\" * (n % 2))\n    exit()\n\nprint(\"NO\")"
+}
+2022-04-19 21:12:22.568275 REASON stop
+2022-04-19 21:12:22.569053 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\nif s == ''.join(sorted(s)):\n    print('YES')\n    print('0'*n)\nelse:\n    print('YES')\n    for c in s:\n        if c == 'a':\n            print('0', end='')\n        else:\n            print('1', end='')\n    print()"
+}
+2022-04-19 21:12:22.569159 REASON stop
+2022-04-19 21:12:22.596201 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nif __name__ == \"__main__\":\n    n = int(input())\n    s = input()\n    if n > 200 or n < 1:\n        sys.exit(\"n out of range\")\n    if len(s) != n:\n        sys.exit(\"s does not have n characters\")\n    for c in s:\n        if c < 'a' or c > 'z':\n            sys.exit(\"s has non-lowercase characters\")\n    s = list(s)\n    for i in range(1, len(s)):\n        if s[i] < s[i - 1]:\n            s[i] = '1'\n        else:\n            s[i] = '0'\n    print(\"YES\")\n    print(\"\".join(s))"
+}
+2022-04-19 21:12:22.596361 REASON stop
+2022-04-19 21:12:22.605854 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n\tn = int(sys.stdin.readline().strip())\n\ts = sys.stdin.readline().strip()\n\tif n == 1:\n\t\tprint(\"YES\")\n\t\tprint(0)\n\t\treturn\n\telif n == 2:\n\t\tif s[0] == s[1]:\n\t\t\tprint(\"YES\")\n\t\t\tprint(0,0)\n\t\telse:\n\t\t\tprint(\"YES\")\n\t\t\tprint(0,1)\n\t\treturn\n\telse:\n\t\tprint(\"YES\")\n\t\tif s[0] == s[1]:\n\t\t\tprint(0, end = \"\")\n\t\telse:\n\t\t\tprint(1, end = \"\")\n\t\tfor i in range(1, n - 1):\n\t\t\tif s[i] == s[i+1]:\n\t\t\t\tprint(0, end = \"\")\n\t\t\telif s[i] == s[i-1]:\n\t\t\t\tprint(1, end = \"\")\n\t\t\telse:\n\t\t\t\tprint(0, end = \"\")\n\t\tif s[n-2] == s[n-1]:\n\t\t\tprint(0)\n\t\telse:\n\t\t\tprint(1)\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-19 21:12:22.605991 REASON stop
+2022-04-19 21:12:22.608985 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n\n    if s == ''.join(sorted(s)):\n        print(\"YES\")\n        print(\"0\" * n)\n    else:\n        print(\"YES\")\n        print(\"1\" * n)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:12:22.609104 REASON stop
+2022-04-19 21:12:22.609862 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# cook your dish here\nt=int(input())\ns=input()\nif t==1:\n    print(\"YES\")\n    print(\"0\")\nelse:\n    if s[0]>s[1]:\n        print(\"YES\")\n        print(\"1\",end=\"\")\n        for i in range(1,t-1):\n            if s[i]<s[i-1] and s[i]<s[i+1]:\n                print(\"1\",end=\"\")\n            else:\n                print(\"0\",end=\"\")\n        if s[t-1]<s[t-2]:\n            print(\"1\")\n        else:\n            print(\"0\")\n    else:\n        print(\"YES\")\n        print(\"0\",end=\"\")\n        for i in range(1,t-1):\n            if s[i]>s[i-1] and s[i]>s[i+1]:\n                print(\"0\",end=\"\")\n            else:\n                print(\"1\",end=\"\")\n        if s[t-1]>s[t-2]:\n            print(\"0\")\n        else:\n            print(\"1\")"
+}
+2022-04-19 21:12:22.609950 REASON stop
+2022-04-19 21:12:22.611731 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\n\ndef is_sorted(s):\n    return all(s[i] <= s[i+1] for i in range(len(s)-1))\n\ndef is_sorted_after_swap(s):\n    i = 0\n    while i < len(s)-1:\n        if s[i] > s[i+1]:\n            break\n        i += 1\n    if i == len(s)-1:\n        return True\n    else:\n        j = i+1\n        while j < len(s)-1:\n            if s[j] > s[j+1]:\n                return False\n            j += 1\n        return True\n\ndef get_color(s, i):\n    if i == 0:\n        return '0' if s[i] <= s[i+1] else '1'\n    if i == len(s)-1:\n        return '0' if s[i] >= s[i-1] else '1'\n    return '0' if s[i] >= s[i-1] and s[i] <= s[i+1] else '1'\n\nif is_sorted(s):\n    print('YES')\n    print('0' * n)\nelif is_sorted_after_swap(s):\n    print('YES')\n    print(''.join(get_color(s, i) for i in range(n)))\nelse:\n    print('NO')"
+}
+2022-04-19 21:12:22.611908 REASON stop

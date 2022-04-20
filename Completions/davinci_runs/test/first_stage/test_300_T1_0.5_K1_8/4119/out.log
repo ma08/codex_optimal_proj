@@ -1,0 +1,153 @@
+2022-04-19 22:09:18.509700 """
+We will play a one-player game using a number line and N pieces.
+First, we place each of these pieces at some integer coordinate.
+Here, multiple pieces can be placed at the same coordinate.
+Our objective is to visit all of the M coordinates X_1, X_2, ..., X_M with these pieces, by repeating the following move:
+Move: Choose a piece and let x be its coordinate. Put that piece at coordinate x+1 or x-1.
+Note that the coordinates where we initially place the pieces are already regarded as visited.
+Find the minimum number of moves required to achieve the objective.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq M \leq 10^5
+ - -10^5 \leq X_i \leq 10^5
+ - X_1, X_2, ..., X_M are all different.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+X_1 X_2 ... X_M
+
+-----Output-----
+Find the minimum number of moves required to achieve the objective.
+
+-----Sample Input-----
+2 5
+10 12 1 2 14
+
+-----Sample Output-----
+5
+
+The objective can be achieved in five moves as follows, and this is the minimum number of moves required.
+ - Initially, put the two pieces at coordinates 1 and 10.
+ - Move the piece at coordinate 1 to 2.
+ - Move the piece at coordinate 10 to 11.
+ - Move the piece at coordinate 11 to 12.
+ - Move the piece at coordinate 12 to 13.
+ - Move the piece at coordinate 13 to 14.
+"""
+2022-04-19 22:09:18.509709 --------------------------
+2022-04-19 22:09:18.509817 using api key gabby
+2022-04-19 22:09:38.545645 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    x_list = list(map(int, input().split()))\n    x_list.sort()\n\n    # \u5de6\u7aef\u3068\u53f3\u7aef\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\n    x_left = x_list[0]\n    x_right = x_list[-1]\n    x_distance = x_right - x_left\n\n    # \u5de6\u7aef\u304b\u3089\u53f3\u7aef\u307e\u3067\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\n    x_sum = sum(x_list)\n    x_sum_distance = x_sum - x_left - x_right\n\n    # \u5de6\u7aef\u3068\u53f3\u7aef\u306e\u8ddd\u96e2\u304c\u77ed\u3044\u65b9\u3092\u79fb\u52d5\u3055\u305b\u308b\n    if x_distance < x_sum_distance:\n        print(x_sum_distance)\n    else:\n        print(x_distance)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    x = list(map(int, input().split()))\n    x = sorted(x)\n    ans = 0\n    for i in range(1, m):\n        ans += max(0, x[i] - x[i-1] - 1)\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\nxs = list(map(int, sys.stdin.readline().split()))\n\nxs.sort()\n\n# print(n, m)\n# print(xs)\n\nans = 0\n\ni = 0\nwhile i < m:\n    l = xs[i]\n    while i < m and xs[i] <= l + n - 1:\n        i += 1\n    ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef main():\n    N, M = map(int, sys.stdin.readline().split())\n    X = list(map(int, sys.stdin.readline().split()))\n    X.sort()\n    ans = 0\n    for i in range(M):\n        if X[i] < 0:\n            ans += abs(X[i])\n            X[i] += abs(X[i])\n        elif X[i] > 0:\n            ans += abs(X[i] - 1)\n            X[i] -= abs(X[i] - 1)\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    Input:\n        N M\n        X_1 X_2 ... X_M\n    Output:\n        The minimum number of moves required to achieve the objective.\n    \"\"\"\n    N, M = map(int, sys.stdin.readline().rstrip().split())\n    X = list(map(int, sys.stdin.readline().rstrip().split()))\n    X.sort()\n    ans = 0\n    for i in range(M):\n        ans += abs(X[i] - (X[0] + i))\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    x = list(map(int, input().split()))\n    x.sort()\n\n    ans = 0\n    for i in range(m):\n        ans += abs(x[i] - x[i-1])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\nN, M = map(int, sys.stdin.readline().split())\nX = list(map(int, sys.stdin.readline().split()))\n\nd = defaultdict(int)\nfor x in X:\n    d[x] += 1\n\nans = 0\nfor k, v in d.items():\n    ans += v - 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = x[0] - 1\n    for i in range(1, m):\n        if x[i] - x[i - 1] > 1:\n            ans += x[i] - x[i - 1] - 1\n    ans += n - x[-1]\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650406158,
+  "id": "cmpl-4yqK6ihin9WPzE201TzDwgGiXDmkO",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:09:38.546010 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    x_list = list(map(int, input().split()))\n    x_list.sort()\n\n    # \u5de6\u7aef\u3068\u53f3\u7aef\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\n    x_left = x_list[0]\n    x_right = x_list[-1]\n    x_distance = x_right - x_left\n\n    # \u5de6\u7aef\u304b\u3089\u53f3\u7aef\u307e\u3067\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\n    x_sum = sum(x_list)\n    x_sum_distance = x_sum - x_left - x_right\n\n    # \u5de6\u7aef\u3068\u53f3\u7aef\u306e\u8ddd\u96e2\u304c\u77ed\u3044\u65b9\u3092\u79fb\u52d5\u3055\u305b\u308b\n    if x_distance < x_sum_distance:\n        print(x_sum_distance)\n    else:\n        print(x_distance)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:09:38.546050 REASON stop
+2022-04-19 22:09:38.557842 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = list(map(int, input().split()))\n    x = list(map(int, input().split()))\n    x = sorted(x)\n    ans = 0\n    for i in range(1, m):\n        ans += max(0, x[i] - x[i-1] - 1)\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:09:38.558005 REASON stop
+2022-04-19 22:09:38.620967 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\nxs = list(map(int, sys.stdin.readline().split()))\n\nxs.sort()\n\n# print(n, m)\n# print(xs)\n\nans = 0\n\ni = 0\nwhile i < m:\n    l = xs[i]\n    while i < m and xs[i] <= l + n - 1:\n        i += 1\n    ans += 1\n\nprint(ans)"
+}
+2022-04-19 22:09:38.621124 REASON stop
+2022-04-19 22:09:38.655933 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef main():\n    N, M = map(int, sys.stdin.readline().split())\n    X = list(map(int, sys.stdin.readline().split()))\n    X.sort()\n    ans = 0\n    for i in range(M):\n        if X[i] < 0:\n            ans += abs(X[i])\n            X[i] += abs(X[i])\n        elif X[i] > 0:\n            ans += abs(X[i] - 1)\n            X[i] -= abs(X[i] - 1)\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:09:38.656081 REASON stop
+2022-04-19 22:09:38.680647 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    \"\"\"\n    Input:\n        N M\n        X_1 X_2 ... X_M\n    Output:\n        The minimum number of moves required to achieve the objective.\n    \"\"\"\n    N, M = map(int, sys.stdin.readline().rstrip().split())\n    X = list(map(int, sys.stdin.readline().rstrip().split()))\n    X.sort()\n    ans = 0\n    for i in range(M):\n        ans += abs(X[i] - (X[0] + i))\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:09:38.680916 REASON stop
+2022-04-19 22:09:38.707298 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    x = list(map(int, input().split()))\n    x.sort()\n\n    ans = 0\n    for i in range(m):\n        ans += abs(x[i] - x[i-1])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:09:38.707482 REASON stop
+2022-04-19 22:09:38.734104 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\nN, M = map(int, sys.stdin.readline().split())\nX = list(map(int, sys.stdin.readline().split()))\n\nd = defaultdict(int)\nfor x in X:\n    d[x] += 1\n\nans = 0\nfor k, v in d.items():\n    ans += v - 1\n\nprint(ans)"
+}
+2022-04-19 22:09:38.734265 REASON stop
+2022-04-19 22:09:38.761516 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = x[0] - 1\n    for i in range(1, m):\n        if x[i] - x[i - 1] > 1:\n            ans += x[i] - x[i - 1] - 1\n    ans += n - x[-1]\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:09:38.761779 REASON stop

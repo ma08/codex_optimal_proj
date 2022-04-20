@@ -1,0 +1,175 @@
+2022-04-19 22:01:59.898034 """
+The king of Berland organizes a ball! $n$ pair are invited to the ball, they are numbered from $1$ to $n$. Each pair consists of one man and one woman. Each dancer (either man or woman) has a monochrome costume. The color of each costume is represented by an integer from $1$ to $k$, inclusive.
+
+Let $b_i$ be the color of the man's costume and $g_i$ be the color of the woman's costume in the $i$-th pair. You have to choose a color for each dancer's costume (i.e. values $b_1, b_2, \dots, b_n$ and $g_1, g_2, \dots g_n$) in such a way that:  for every $i$: $b_i$ and $g_i$ are integers between $1$ and $k$, inclusive;  there are no two completely identical pairs, i.e. no two indices $i, j$ ($i \ne j$) such that $b_i = b_j$ and $g_i = g_j$ at the same time;  there is no pair such that the color of the man's costume is the same as the color of the woman's costume in this pair, i.e. $b_i \ne g_i$ for every $i$;  for each two consecutive (adjacent) pairs both man's costume colors and woman's costume colors differ, i.e. for every $i$ from $1$ to $n-1$ the conditions $b_i \ne b_{i + 1}$ and $g_i \ne g_{i + 1}$ hold. 
+
+Let's take a look at the examples of bad and good color choosing (for $n=4$ and $k=3$, man is the first in a pair and woman is the second):
+
+Bad color choosing:   $(1, 2)$, $(2, 3)$, $(3, 2)$, $(1, 2)$ — contradiction with the second rule (there are equal pairs);  $(2, 3)$, $(1, 1)$, $(3, 2)$, $(1, 3)$ — contradiction with the third rule (there is a pair with costumes of the same color);  $(1, 2)$, $(2, 3)$, $(1, 3)$, $(2, 1)$ — contradiction with the fourth rule (there are two consecutive pairs such that colors of costumes of men/women are the same). 
+
+Good color choosing:   $(1, 2)$, $(2, 1)$, $(1, 3)$, $(3, 1)$;  $(1, 2)$, $(3, 1)$, $(2, 3)$, $(3, 2)$;  $(3, 1)$, $(1, 2)$, $(2, 3)$, $(3, 2)$. 
+
+You have to find any suitable color choosing or say that no suitable choosing exists.
+
+
+-----Input-----
+
+The only line of the input contains two integers $n$ and $k$ ($2 \le n, k \le 2 \cdot 10^5$) — the number of pairs and the number of colors.
+
+
+-----Output-----
+
+If it is impossible to find any suitable colors choosing, print "NO".
+
+Otherwise print "YES" and then the colors of the costumes of pairs in the next $n$ lines. The $i$-th line should contain two integers $b_i$ and $g_i$ — colors of costumes of man and woman in the $i$-th pair, respectively.
+
+You can print each letter in any case (upper or lower). For example, "YeS", "no" and "yES" are all acceptable.
+
+
+-----Examples-----
+Input
+4 3
+
+Output
+YES
+3 1
+1 3
+3 2
+2 3
+
+Input
+10 4
+
+Output
+YES
+2 1
+1 3
+4 2
+3 4
+4 3
+3 2
+2 4
+4 1
+1 4
+3 1
+
+Input
+13 4
+
+Output
+NO
+"""
+2022-04-19 22:01:59.898066 --------------------------
+2022-04-19 22:01:59.898174 using api key sourya
+2022-04-19 22:02:21.316317 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    if k == 1:\n        print('NO')\n        return\n    elif n == 2:\n        print('YES')\n        print(1, k)\n        print(k, 1)\n        return\n    elif n == k:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 1)\n        return\n    elif n == k + 1:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 2)\n        print(2, 1)\n        return\n    else:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 2)\n        print(2, 1)\n        for i in range(k + 2, n):\n            print(1, 2)\n        return\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif k == 1 or n == 2 or n == 3:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(1, n//2+1):\n        print(i, k-i+1)\n        print(k-i+1, i)\n    if n % 2 == 1:\n        print(n//2+1, k-n//2+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif n == 2:\n    print(\"YES\")\n    print(\"1\", \"2\")\n    print(\"2\", \"1\")\nelif n % 2 == 0:\n    print(\"YES\")\n    for i in range(1, n//2 + 1):\n        print(i, (i+1)%k+1)\n        print((i+1)%k+1, i)\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,k=map(int,input().split())\n    if n==2:\n        if k==2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            print(\"1 2\")\n            print(\"2 1\")\n    else:\n        if k==2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            if n%2==0:\n                for i in range(1,n+1,2):\n                    print(\"1\",i+1)\n                    print(\"2\",i)\n            else:\n                for i in range(1,n-1,2):\n                    print(\"1\",i+1)\n                    print(\"2\",i)\n                print(\"3 2\")\n                print(\"4 1\")\n\nif __name__==\"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif n < k:\n    print(\"NO\")\nelif n == k:\n    print(\"YES\")\n    for i in range(1, n + 1):\n        print(i, i)\nelif n > k and n % 2 == 0:\n    print(\"YES\")\n    a = []\n    for i in range(1, n + 1):\n        a.append(i)\n\n    for i in range(0, n, 2):\n        if i == 0:\n            print(a[i], a[i + 1])\n        elif i == n - 2:\n            print(a[i + 1], a[i])\n        else:\n            print(a[i + 1], a[i])\nelif n % 2 == 1 and n > k:\n    print(\"YES\")\n    a = []\n    for i in range(1, n + 1):\n        a.append(i)\n\n    for i in range(0, n - 1, 2):\n        if i == 0:\n            print(a[i], a[i + 1])\n        elif i == n - 2:\n            print(a[i + 1], a[i])\n        else:\n            print(a[i + 1], a[i])\n    print(a[n - 1], a[n - 1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn,k = map(int,input().split())\n\nif n%2==0:\n    print('YES')\n    for i in range(n//2):\n        print(i+1,k-i)\n        print(k-i,i+1)\nelse:\n    print('NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, raw_input().split())\n\nif n == 1:\n    print \"YES\"\n    print 1, 1\nelse:\n    print \"YES\"\n    for i in range(1, n):\n        if i % 2 == 0:\n            print i, i + 1\n        else:\n            print i + 1, i\n    print 1, 2"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\n\nif n == k:\n    print('YES')\n    for i in range(n):\n        print(i+1, i+1)\nelif n == 2*k:\n    print('YES')\n    for i in range(n):\n        print(i+1, i+1)\nelif n < 2*k:\n    print('YES')\n    for i in range(n):\n        if i%2 == 0:\n            print(i+1, i+2)\n        else:\n            print(i+2, i+1)\nelse:\n    print('NO')"
+    }
+  ],
+  "created": 1650405720,
+  "id": "cmpl-4yqD2otBmgPQsOaHBCmxUJ7IoxSDe",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:02:21.316676 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    if k == 1:\n        print('NO')\n        return\n    elif n == 2:\n        print('YES')\n        print(1, k)\n        print(k, 1)\n        return\n    elif n == k:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 1)\n        return\n    elif n == k + 1:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 2)\n        print(2, 1)\n        return\n    else:\n        print('YES')\n        for i in range(1, k):\n            print(i, i + 1)\n        print(k, 2)\n        print(2, 1)\n        for i in range(k + 2, n):\n            print(1, 2)\n        return\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:02:21.316862 REASON stop
+2022-04-19 22:02:21.317279 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif k == 1 or n == 2 or n == 3:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(1, n//2+1):\n        print(i, k-i+1)\n        print(k-i+1, i)\n    if n % 2 == 1:\n        print(n//2+1, k-n//2+1)"
+}
+2022-04-19 22:02:21.317351 REASON stop
+2022-04-19 22:02:21.317744 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif n == 2:\n    print(\"YES\")\n    print(\"1\", \"2\")\n    print(\"2\", \"1\")\nelif n % 2 == 0:\n    print(\"YES\")\n    for i in range(1, n//2 + 1):\n        print(i, (i+1)%k+1)\n        print((i+1)%k+1, i)\nelse:\n    print(\"NO\")"
+}
+2022-04-19 22:02:21.317809 REASON stop
+2022-04-19 22:02:21.319208 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,k=map(int,input().split())\n    if n==2:\n        if k==2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            print(\"1 2\")\n            print(\"2 1\")\n    else:\n        if k==2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            if n%2==0:\n                for i in range(1,n+1,2):\n                    print(\"1\",i+1)\n                    print(\"2\",i)\n            else:\n                for i in range(1,n-1,2):\n                    print(\"1\",i+1)\n                    print(\"2\",i)\n                print(\"3 2\")\n                print(\"4 1\")\n\nif __name__==\"__main__\":\n    main()"
+}
+2022-04-19 22:02:21.319302 REASON stop
+2022-04-19 22:02:21.334264 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif n < k:\n    print(\"NO\")\nelif n == k:\n    print(\"YES\")\n    for i in range(1, n + 1):\n        print(i, i)\nelif n > k and n % 2 == 0:\n    print(\"YES\")\n    a = []\n    for i in range(1, n + 1):\n        a.append(i)\n\n    for i in range(0, n, 2):\n        if i == 0:\n            print(a[i], a[i + 1])\n        elif i == n - 2:\n            print(a[i + 1], a[i])\n        else:\n            print(a[i + 1], a[i])\nelif n % 2 == 1 and n > k:\n    print(\"YES\")\n    a = []\n    for i in range(1, n + 1):\n        a.append(i)\n\n    for i in range(0, n - 1, 2):\n        if i == 0:\n            print(a[i], a[i + 1])\n        elif i == n - 2:\n            print(a[i + 1], a[i])\n        else:\n            print(a[i + 1], a[i])\n    print(a[n - 1], a[n - 1])"
+}
+2022-04-19 22:02:21.334412 REASON stop
+2022-04-19 22:02:21.335213 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn,k = map(int,input().split())\n\nif n%2==0:\n    print('YES')\n    for i in range(n//2):\n        print(i+1,k-i)\n        print(k-i,i+1)\nelse:\n    print('NO')"
+}
+2022-04-19 22:02:21.335324 REASON stop
+2022-04-19 22:02:21.355905 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, raw_input().split())\n\nif n == 1:\n    print \"YES\"\n    print 1, 1\nelse:\n    print \"YES\"\n    for i in range(1, n):\n        if i % 2 == 0:\n            print i, i + 1\n        else:\n            print i + 1, i\n    print 1, 2"
+}
+2022-04-19 22:02:21.356048 REASON stop
+2022-04-19 22:02:21.356836 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\n\nif n == k:\n    print('YES')\n    for i in range(n):\n        print(i+1, i+1)\nelif n == 2*k:\n    print('YES')\n    for i in range(n):\n        print(i+1, i+1)\nelif n < 2*k:\n    print('YES')\n    for i in range(n):\n        if i%2 == 0:\n            print(i+1, i+2)\n        else:\n            print(i+2, i+1)\nelse:\n    print('NO')"
+}
+2022-04-19 22:02:21.357046 REASON stop

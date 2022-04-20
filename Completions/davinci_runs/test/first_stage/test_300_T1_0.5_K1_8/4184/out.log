@@ -1,0 +1,141 @@
+2022-04-19 22:46:44.193727 """
+We have N weights indexed 1 to N. The mass of the weight indexed i is W_i.
+We will divide these weights into two groups: the weights with indices not greater than T, and those with indices greater than T, for some integer 1 \leq T < N. Let S_1 be the sum of the masses of the weights in the former group, and S_2 be the sum of the masses of the weights in the latter group.
+Consider all possible such divisions and find the minimum possible absolute difference of S_1 and S_2.
+
+-----Constraints-----
+ - 2 \leq N \leq 100
+ - 1 \leq W_i \leq 100
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+W_1 W_2 ... W_{N-1} W_N
+
+-----Output-----
+Print the minimum possible absolute difference of S_1 and S_2.
+
+-----Sample Input-----
+3
+1 2 3
+
+-----Sample Output-----
+0
+
+If T = 2, S_1 = 1 + 2 = 3 and S_2 = 3, with the absolute difference of 0.
+"""
+2022-04-19 22:46:44.193738 --------------------------
+2022-04-19 22:46:44.193841 using api key gabby
+2022-04-19 22:46:56.971554 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\nans = sum(W)\nfor i in range(1 << N):\n    s = 0\n    for j in range(N):\n        if i & (1 << j):\n            s += W[j]\n    ans = min(ans, abs(sum(W) - s - s))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nweights = list(map(int, input().split()))\n\nif n == 2:\n    print(abs(weights[0] - weights[1]))\n    exit()\n\n# \u524d\u534a\u5206\u3068\u5f8c\u534a\u5206\u306e\u548c\u306e\u5dee\u5206\u3092\u5168\u63a2\u7d22\nans = 100 * 100\nfor i in range(1, n):\n    ans = min(ans, abs(sum(weights[:i]) - sum(weights[i:])))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nW = [int(i) for i in input().split()]\n\nif N == 2:\n    print(abs(W[0]-W[1]))\nelse:\n    ans = 100 * 100\n    for i in range(2**(N-1)):\n        S1 = 0\n        S2 = sum(W)\n        for j in range(N-1):\n            if i & (1 << j):\n                S1 += W[j]\n                S2 -= W[j]\n        ans = min(ans, abs(S1-S2))\n    print(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\ntotal = sum(W)\nans = total\nfor i in range(N):\n    total -= W[i]\n    ans = min(ans, abs(total - (sum(W[:i+1]))))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# input\nN = int(input())\nW = list(map(int, input().split()))\n\n# initialization\nans = float('inf')\n\n# solve\nfor i in range(1, N):\n    ans = min(ans, abs(sum(W[:i]) - sum(W[i:])))\n\n# output\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\n# S1 + S2 = sum(W)\n# |S1 - S2| = |sum(W[:T+1]) - sum(W[T+1:])|\n# |S1 - S2| = |sum(W[:T]) + W[T] - sum(W[T+1:])|\n# |S1 - S2| = |sum(W[:T]) - sum(W[T+1:]) + W[T]|\n# |S1 - S2| = |sum(W[:T]) - sum(W[T+1:])| + W[T]\n# |S1 - S2| = |S1 - S2| + W[T]\n# |S1 - S2| = W[T]\n\n# |S1 - S2| = min(W[1:])\nprint(min(W[1:]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\n# \u524d\u534a\u3068\u5f8c\u534a\u306e\u548c\u306e\u5dee\u306e\u7d76\u5bfe\u5024\u3092\u5168\u63a2\u7d22\nans = float('inf')\nfor t in range(1, N):\n    ans = min(ans, abs(sum(W[:t]) - sum(W[t:])))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nweights = list(map(int, input().split()))\n\ndef min_diff(weights):\n    min_diff = sum(weights)\n    for i in range(1, len(weights)):\n        s1 = sum(weights[:i])\n        s2 = sum(weights[i:])\n        abs_diff = abs(s1 - s2)\n        if abs_diff < min_diff:\n            min_diff = abs_diff\n    return min_diff\n\nprint(min_diff(weights))"
+    }
+  ],
+  "created": 1650408404,
+  "id": "cmpl-4yquKSrhYiTdO3UcdxEz8jht2CgZZ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:46:56.971892 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\nans = sum(W)\nfor i in range(1 << N):\n    s = 0\n    for j in range(N):\n        if i & (1 << j):\n            s += W[j]\n    ans = min(ans, abs(sum(W) - s - s))\n\nprint(ans)"
+}
+2022-04-19 22:46:56.971931 REASON stop
+2022-04-19 22:46:56.974308 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nweights = list(map(int, input().split()))\n\nif n == 2:\n    print(abs(weights[0] - weights[1]))\n    exit()\n\n# \u524d\u534a\u5206\u3068\u5f8c\u534a\u5206\u306e\u548c\u306e\u5dee\u5206\u3092\u5168\u63a2\u7d22\nans = 100 * 100\nfor i in range(1, n):\n    ans = min(ans, abs(sum(weights[:i]) - sum(weights[i:])))\n\nprint(ans)"
+}
+2022-04-19 22:46:56.974421 REASON stop
+2022-04-19 22:46:56.974915 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nW = [int(i) for i in input().split()]\n\nif N == 2:\n    print(abs(W[0]-W[1]))\nelse:\n    ans = 100 * 100\n    for i in range(2**(N-1)):\n        S1 = 0\n        S2 = sum(W)\n        for j in range(N-1):\n            if i & (1 << j):\n                S1 += W[j]\n                S2 -= W[j]\n        ans = min(ans, abs(S1-S2))\n    print(ans)"
+}
+2022-04-19 22:46:56.974991 REASON stop
+2022-04-19 22:46:56.994261 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\ntotal = sum(W)\nans = total\nfor i in range(N):\n    total -= W[i]\n    ans = min(ans, abs(total - (sum(W[:i+1]))))\n\nprint(ans)"
+}
+2022-04-19 22:46:56.994454 REASON stop
+2022-04-19 22:46:56.995239 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# input\nN = int(input())\nW = list(map(int, input().split()))\n\n# initialization\nans = float('inf')\n\n# solve\nfor i in range(1, N):\n    ans = min(ans, abs(sum(W[:i]) - sum(W[i:])))\n\n# output\nprint(ans)"
+}
+2022-04-19 22:46:56.995357 REASON stop
+2022-04-19 22:46:57.009674 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\n# S1 + S2 = sum(W)\n# |S1 - S2| = |sum(W[:T+1]) - sum(W[T+1:])|\n# |S1 - S2| = |sum(W[:T]) + W[T] - sum(W[T+1:])|\n# |S1 - S2| = |sum(W[:T]) - sum(W[T+1:]) + W[T]|\n# |S1 - S2| = |sum(W[:T]) - sum(W[T+1:])| + W[T]\n# |S1 - S2| = |S1 - S2| + W[T]\n# |S1 - S2| = W[T]\n\n# |S1 - S2| = min(W[1:])\nprint(min(W[1:]))"
+}
+2022-04-19 22:46:57.009812 REASON stop
+2022-04-19 22:46:57.011708 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nW = list(map(int, input().split()))\n\n# \u524d\u534a\u3068\u5f8c\u534a\u306e\u548c\u306e\u5dee\u306e\u7d76\u5bfe\u5024\u3092\u5168\u63a2\u7d22\nans = float('inf')\nfor t in range(1, N):\n    ans = min(ans, abs(sum(W[:t]) - sum(W[t:])))\n\nprint(ans)"
+}
+2022-04-19 22:46:57.011818 REASON stop
+2022-04-19 22:46:57.012571 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nweights = list(map(int, input().split()))\n\ndef min_diff(weights):\n    min_diff = sum(weights)\n    for i in range(1, len(weights)):\n        s1 = sum(weights[:i])\n        s2 = sum(weights[i:])\n        abs_diff = abs(s1 - s2)\n        if abs_diff < min_diff:\n            min_diff = abs_diff\n    return min_diff\n\nprint(min_diff(weights))"
+}
+2022-04-19 22:46:57.012816 REASON stop

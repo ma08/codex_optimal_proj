@@ -1,0 +1,149 @@
+2022-04-19 21:28:17.614145 """
+You are given an array $a$ consisting of $n$ integers.
+
+Your task is to say the number of such positive integers $x$ such that $x$ divides each number from the array. In other words, you have to find the number of common divisors of all elements in the array.
+
+For example, if the array $a$ will be $[2, 4, 6, 2, 10]$, then $1$ and $2$ divide each number from the array (so the answer for this test is $2$).
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 4 \cdot 10^5$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^{12}$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the number of such positive integers $x$ such that $x$ divides each number from the given array (in other words, the answer is the number of common divisors of all elements in the array).
+
+
+-----Examples-----
+Input
+5
+1 2 3 4 5
+
+Output
+1
+
+Input
+6
+6 90 12 18 30 18
+
+Output
+4
+"""
+2022-04-19 21:28:17.614156 --------------------------
+2022-04-19 21:28:17.614262 using api key derek
+2022-04-19 21:28:49.455782 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find gcd of all numbers\ng = a[0]\nfor i in range(1, n):\n    g = gcd(g, a[i])\n\n# count divisors of gcd\ncount = 0\ni = 1\nwhile i * i <= g:\n    if g % i == 0:\n        if g // i == i:\n            count += 1\n        else:\n            count += 2\n    i += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    g = a[0]\n    for i in range(1, n):\n        g = gcd(g, a[i])\n    c = 0\n    for i in range(1, int(g ** 0.5) + 1):\n        if g % i == 0:\n            c += 1\n            if i * i != g:\n                c += 1\n    print(c)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nfrom fractions import gcd\nfrom functools import reduce\n\ndef number_of_common_divisors(numbers):\n    return reduce(gcd, numbers)\n\ndef main():\n    _ = int(input())\n    numbers = list(map(int, input().split()))\n    print(number_of_common_divisors(numbers))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    g = a[0]\n    for i in a[1:]:\n        g = gcd(g, i)\n    cnt = 0\n    for i in range(1, int(g ** 0.5) + 1):\n        if g % i == 0:\n            cnt += 1\n    if g ** 0.5 == int(g ** 0.5):\n        cnt -= 1\n    print(cnt * 2 + 1)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport functools\nimport operator\nimport sys\n\ndef gcd(a, b):\n    if a == 0:\n        return b\n    return gcd(b % a, a)\n\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\nn = int(input())\na = list(map(int, input().split()))\n\nprint(functools.reduce(lambda x, y: gcd(x, y), a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef factors(n):\n    return set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))\n\nn = input()\nnums = map(int, raw_input().split())\nfactors_per_num = [factors(num) for num in nums]\ncommon_factors = factors_per_num[0].intersection(*factors_per_num[1:])\nprint len(common_factors)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#Solution\ninput()\nl = [int(x) for x in input().split()]\nmin_num = min(l)\n\nans = []\nfor i in range(1, min_num+1):\n    if all(x % i == 0 for x in l):\n        ans.append(i)\n\nprint(len(ans))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_primes(n):\n    \"\"\"\n    Returns a list of all primes below n.\n    \"\"\"\n    primes = [2]\n    i = 3\n    while i < n:\n        for p in primes:\n            if i % p == 0:\n                break\n        else:\n            primes.append(i)\n        i += 2\n    return primes\n\n\ndef get_prime_factorization(n, primes):\n    \"\"\"\n    Returns a dictionary of the prime factorization of n.\n    \"\"\"\n    prime_factorization = {}\n    for p in primes:\n        if p > n:\n            break\n        while n % p == 0:\n            n //= p\n            prime_factorization[p] = prime_factorization.get(p, 0) + 1\n    return prime_factorization\n\n\ndef get_prime_factorization_list(numbers, primes):\n    \"\"\"\n    Returns a list of the prime factorizations of the numbers.\n    \"\"\"\n    prime_factorization_list = []\n    for n in numbers:\n        prime_factorization_list.append(get_prime_factorization(n, primes))\n    return prime_factorization_list\n\n\ndef get_max_primes(prime_factorization_list):\n    \"\"\"\n    Returns a dictionary of the maximum exponents of the prime factorizations.\n    \"\"\"\n    max_primes = {}\n    for p in prime_factorization_list[0]:\n        max_primes[p] = prime_factorization_list[0][p]\n    for prime_factorization in prime_factorization_list[1:]:\n        for p in prime_factorization:\n            max_primes[p] = min(max_primes.get(p, 0), prime_factorization[p])\n    return max_primes\n\n\ndef get_num_divisors(max_primes):\n    \"\"\"\n    Returns the number of divisors of the maximum exponents.\n    \"\"\"\n    num_divisors = 1\n    for p in max_primes:\n        num_divisors *= max_primes[p] + 1\n    return num_divisors\n\n\ndef main():\n    n = int(sys.stdin.readline())\n    numbers = [int(x) for x in sys.stdin.readline().split()]\n    primes = get_primes(max(numbers))\n    prime_factorization_list = get_prime_factorization_list(numbers, primes)\n    max_primes = get_max_primes(prime_factorization_list)\n    num_divisors = get_num_divisors(max_primes)\n    print(num_divisors)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650403697,
+  "id": "cmpl-4ypgPnIbhKeqPJrCachlEYRXCBvJC",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:28:49.456119 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    return gcd(b, a % b)\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find gcd of all numbers\ng = a[0]\nfor i in range(1, n):\n    g = gcd(g, a[i])\n\n# count divisors of gcd\ncount = 0\ni = 1\nwhile i * i <= g:\n    if g % i == 0:\n        if g // i == i:\n            count += 1\n        else:\n            count += 2\n    i += 1\n\nprint(count)"
+}
+2022-04-19 21:28:49.456156 REASON stop
+2022-04-19 21:28:49.456676 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    g = a[0]\n    for i in range(1, n):\n        g = gcd(g, a[i])\n    c = 0\n    for i in range(1, int(g ** 0.5) + 1):\n        if g % i == 0:\n            c += 1\n            if i * i != g:\n                c += 1\n    print(c)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:28:49.456807 REASON stop
+2022-04-19 21:28:49.457243 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nfrom fractions import gcd\nfrom functools import reduce\n\ndef number_of_common_divisors(numbers):\n    return reduce(gcd, numbers)\n\ndef main():\n    _ = int(input())\n    numbers = list(map(int, input().split()))\n    print(number_of_common_divisors(numbers))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:28:49.457325 REASON stop
+2022-04-19 21:28:49.474058 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    g = a[0]\n    for i in a[1:]:\n        g = gcd(g, i)\n    cnt = 0\n    for i in range(1, int(g ** 0.5) + 1):\n        if g % i == 0:\n            cnt += 1\n    if g ** 0.5 == int(g ** 0.5):\n        cnt -= 1\n    print(cnt * 2 + 1)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:28:49.474175 REASON stop
+2022-04-19 21:28:49.475524 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport functools\nimport operator\nimport sys\n\ndef gcd(a, b):\n    if a == 0:\n        return b\n    return gcd(b % a, a)\n\ndef lcm(a, b):\n    return (a * b) // gcd(a, b)\n\nn = int(input())\na = list(map(int, input().split()))\n\nprint(functools.reduce(lambda x, y: gcd(x, y), a))"
+}
+2022-04-19 21:28:49.475626 REASON stop
+2022-04-19 21:28:49.479758 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef factors(n):\n    return set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))\n\nn = input()\nnums = map(int, raw_input().split())\nfactors_per_num = [factors(num) for num in nums]\ncommon_factors = factors_per_num[0].intersection(*factors_per_num[1:])\nprint len(common_factors)"
+}
+2022-04-19 21:28:49.479858 REASON stop
+2022-04-19 21:28:49.483147 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#Solution\ninput()\nl = [int(x) for x in input().split()]\nmin_num = min(l)\n\nans = []\nfor i in range(1, min_num+1):\n    if all(x % i == 0 for x in l):\n        ans.append(i)\n\nprint(len(ans))"
+}
+2022-04-19 21:28:49.483251 REASON stop
+2022-04-19 21:28:49.483896 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_primes(n):\n    \"\"\"\n    Returns a list of all primes below n.\n    \"\"\"\n    primes = [2]\n    i = 3\n    while i < n:\n        for p in primes:\n            if i % p == 0:\n                break\n        else:\n            primes.append(i)\n        i += 2\n    return primes\n\n\ndef get_prime_factorization(n, primes):\n    \"\"\"\n    Returns a dictionary of the prime factorization of n.\n    \"\"\"\n    prime_factorization = {}\n    for p in primes:\n        if p > n:\n            break\n        while n % p == 0:\n            n //= p\n            prime_factorization[p] = prime_factorization.get(p, 0) + 1\n    return prime_factorization\n\n\ndef get_prime_factorization_list(numbers, primes):\n    \"\"\"\n    Returns a list of the prime factorizations of the numbers.\n    \"\"\"\n    prime_factorization_list = []\n    for n in numbers:\n        prime_factorization_list.append(get_prime_factorization(n, primes))\n    return prime_factorization_list\n\n\ndef get_max_primes(prime_factorization_list):\n    \"\"\"\n    Returns a dictionary of the maximum exponents of the prime factorizations.\n    \"\"\"\n    max_primes = {}\n    for p in prime_factorization_list[0]:\n        max_primes[p] = prime_factorization_list[0][p]\n    for prime_factorization in prime_factorization_list[1:]:\n        for p in prime_factorization:\n            max_primes[p] = min(max_primes.get(p, 0), prime_factorization[p])\n    return max_primes\n\n\ndef get_num_divisors(max_primes):\n    \"\"\"\n    Returns the number of divisors of the maximum exponents.\n    \"\"\"\n    num_divisors = 1\n    for p in max_primes:\n        num_divisors *= max_primes[p] + 1\n    return num_divisors\n\n\ndef main():\n    n = int(sys.stdin.readline())\n    numbers = [int(x) for x in sys.stdin.readline().split()]\n    primes = get_primes(max(numbers))\n    prime_factorization_list = get_prime_factorization_list(numbers, primes)\n    max_primes = get_max_primes(prime_factorization_list)\n    num_divisors = get_num_divisors(max_primes)\n    print(num_divisors)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:28:49.484086 REASON stop

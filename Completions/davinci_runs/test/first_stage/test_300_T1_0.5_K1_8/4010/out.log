@@ -1,0 +1,175 @@
+2022-04-19 20:54:27.958615 """
+You are given an array $a$ consisting of $n$ integers.
+
+Your task is to determine if $a$ has some subsequence of length at least $3$ that is a palindrome.
+
+Recall that an array $b$ is called a subsequence of the array $a$ if $b$ can be obtained by removing some (possibly, zero) elements from $a$ (not necessarily consecutive) without changing the order of remaining elements. For example, $[2]$, $[1, 2, 1, 3]$ and $[2, 3]$ are subsequences of $[1, 2, 1, 3]$, but $[1, 1, 2]$ and $[4]$ are not.
+
+Also, recall that a palindrome is an array that reads the same backward as forward. In other words, the array $a$ of length $n$ is the palindrome if $a_i = a_{n - i - 1}$ for all $i$ from $1$ to $n$. For example, arrays $[1234]$, $[1, 2, 1]$, $[1, 3, 2, 2, 3, 1]$ and $[10, 100, 10]$ are palindromes, but arrays $[1, 2]$ and $[1, 2, 3, 1]$ are not.
+
+You have to answer $t$ independent test cases.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 100$) — the number of test cases.
+
+Next $2t$ lines describe test cases. The first line of the test case contains one integer $n$ ($3 \le n \le 5000$) — the length of $a$. The second line of the test case contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le n$), where $a_i$ is the $i$-th element of $a$.
+
+It is guaranteed that the sum of $n$ over all test cases does not exceed $5000$ ($\sum n \le 5000$).
+
+
+-----Output-----
+
+For each test case, print the answer — "YES" (without quotes) if $a$ has some subsequence of length at least $3$ that is a palindrome and "NO" otherwise.
+
+
+-----Example-----
+Input
+5
+3
+1 2 1
+5
+1 2 2 3 2
+3
+1 1 2
+4
+1 2 2 1
+10
+1 1 2 2 3 3 4 4 5 5
+
+Output
+YES
+YES
+NO
+YES
+NO
+
+
+
+-----Note-----
+
+In the first test case of the example, the array $a$ has a subsequence $[1, 2, 1]$ which is a palindrome.
+
+In the second test case of the example, the array $a$ has two subsequences of length $3$ which are palindromes: $[2, 3, 2]$ and $[2, 2, 2]$.
+
+In the third test case of the example, the array $a$ has no subsequences of length at least $3$ which are palindromes.
+
+In the fourth test case of the example, the array $a$ has one subsequence of length $4$ which is a palindrome: $[1, 2, 2, 1]$ (and has two subsequences of length $3$ which are palindromes: both are $[1, 2, 1]$).
+
+In the fifth test case of the example, the array $a$ has no subsequences of length at least $3$ which are palindromes.
+"""
+2022-04-19 20:54:27.958634 --------------------------
+2022-04-19 20:54:27.958742 using api key derek
+2022-04-19 20:55:01.220750 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef isPalindrome(a):\n    n = len(a)\n    for i in range(n//2):\n        if a[i] != a[n - i - 1]:\n            return False\n    return True\n\ndef isPalindromeSubsequence(a):\n    n = len(a)\n    for i in range(n - 2):\n        for j in range(i + 2, n + 1):\n            if isPalindrome(a[i:j]):\n                return True\n    return False\n\nt = int(input())\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    if isPalindromeSubsequence(a):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        if n < 3:\n            print(\"NO\")\n        else:\n            print(\"YES\" if check_palindrome(n, a) else \"NO\")\n\ndef check_palindrome(n, a):\n    for i in range(n - 2):\n        if a[i] == a[i + 1] and a[i] == a[i + 2]:\n            return True\n    return False\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The solution is to iterate through the array and check if the elements to the left and right of the current element are the same.\n# If they are, check if the elements to the left and right of the current element are the same, and so on.\n# This is done recursively, and so the function is called recursively.\n# The maximum length of the array is 5000, so a maximum of 5000 recursive calls will be made.\n# The maximum length of the array is 5000, so a maximum of 5000 recursive calls will be made.\n# The time complexity is O(n^2).\n# The space complexity is O(1).\n\ndef check_palindrome(arr, index, length):\n    \"\"\"\n    Checks if the elements of arr from index to index + length - 1 are a palindrome.\n    \"\"\"\n    if length == 1:\n        return True\n    if length == 2:\n        return arr[index] == arr[index + length - 1]\n    if arr[index] != arr[index + length - 1]:\n        return False\n    return check_palindrome(arr, index + 1, length - 2)\n\n\ndef check_subsequence(arr, index):\n    \"\"\"\n    Checks if arr[index] is part of a palindromic subsequence of length at least 3.\n    \"\"\"\n    # Check if the elements to the left of arr[index] are the same.\n    i = index - 1\n    while i >= 0 and arr[i] == arr[index]:\n        i -= 1\n    # Check if the elements to the right of arr[index] are the same.\n    j = index + 1\n    while j < len(arr) and arr[j] == arr[index]:\n        j += 1\n    # Check if arr[i:j] is a palindrome.\n    return check_palindrome(arr, i + 1, j - i - 1)\n\n\ndef check_arr(arr):\n    \"\"\"\n    Checks if arr has a palindromic subsequence of length at least 3.\n    \"\"\"\n    for index in range(len(arr)):\n        if check_subsequence(arr, index):\n            return True\n    return False\n\n\n# Read input.\nt = int(input())\nresults = []\nfor _ in range(t):\n    input()\n    arr = list(map(int, input().split()))\n    results.append(check_arr(arr))\n\n# Print output.\nfor result in results:\n    print('YES' if result else 'NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\ndef is_palindrome(a):\n    return a == a[::-1]\n\n\ndef is_palindrome_subsequence(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(i + 2, n + 1):\n            if is_palindrome(a[i:j]):\n                return True\n    return False\n\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print('YES' if is_palindrome_subsequence(a) else 'NO')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        for i in range(n-2):\n            if a[i] == a[i+1]:\n                print('YES')\n                break\n            if a[i] == a[i+2]:\n                print('YES')\n                break\n        else:\n            print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_ints():\n    return list(map(int, input().split()))\n\ndef read_int():\n    return int(input())\n\ndef main():\n    t = read_int()\n    for _ in range(t):\n        n = read_int()\n        a = read_ints()\n        for i in range(n):\n            for j in range(i+1, n):\n                if a[i] == a[j]:\n                    for k in range(j+1, n):\n                        if a[i] == a[k]:\n                            print(\"YES\")\n                            break\n                    else:\n                        print(\"NO\")\n                    break\n            else:\n                continue\n            break\n        else:\n            print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef isPalindrome(s):\n    return s == s[::-1]\n\n\ndef checkForPalindrome(n, arr):\n    for i in range(n - 2):\n        for j in range(i + 3, n + 1):\n            if isPalindrome(arr[i:j]):\n                return True\n    return False\n\n\nfor _ in range(int(input())):\n    n = int(input())\n    arr = input().split()\n    print(\"YES\" if checkForPalindrome(n, arr) else \"NO\")"
+    }
+  ],
+  "created": 1650401668,
+  "id": "cmpl-4yp9g4pXpzFogIzCY31WWl4t0ANhW",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:55:01.221239 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef isPalindrome(a):\n    n = len(a)\n    for i in range(n//2):\n        if a[i] != a[n - i - 1]:\n            return False\n    return True\n\ndef isPalindromeSubsequence(a):\n    n = len(a)\n    for i in range(n - 2):\n        for j in range(i + 2, n + 1):\n            if isPalindrome(a[i:j]):\n                return True\n    return False\n\nt = int(input())\nfor i in range(t):\n    n = int(input())\n    a = list(map(int, input().split()))\n    if isPalindromeSubsequence(a):\n        print(\"YES\")\n    else:\n        print(\"NO\")"
+}
+2022-04-19 20:55:01.221315 REASON stop
+2022-04-19 20:55:01.221983 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:55:01.222068 REASON stop
+2022-04-19 20:55:01.222635 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        if n < 3:\n            print(\"NO\")\n        else:\n            print(\"YES\" if check_palindrome(n, a) else \"NO\")\n\ndef check_palindrome(n, a):\n    for i in range(n - 2):\n        if a[i] == a[i + 1] and a[i] == a[i + 2]:\n            return True\n    return False\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:55:01.222721 REASON stop
+2022-04-19 20:55:01.226765 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The solution is to iterate through the array and check if the elements to the left and right of the current element are the same.\n# If they are, check if the elements to the left and right of the current element are the same, and so on.\n# This is done recursively, and so the function is called recursively.\n# The maximum length of the array is 5000, so a maximum of 5000 recursive calls will be made.\n# The maximum length of the array is 5000, so a maximum of 5000 recursive calls will be made.\n# The time complexity is O(n^2).\n# The space complexity is O(1).\n\ndef check_palindrome(arr, index, length):\n    \"\"\"\n    Checks if the elements of arr from index to index + length - 1 are a palindrome.\n    \"\"\"\n    if length == 1:\n        return True\n    if length == 2:\n        return arr[index] == arr[index + length - 1]\n    if arr[index] != arr[index + length - 1]:\n        return False\n    return check_palindrome(arr, index + 1, length - 2)\n\n\ndef check_subsequence(arr, index):\n    \"\"\"\n    Checks if arr[index] is part of a palindromic subsequence of length at least 3.\n    \"\"\"\n    # Check if the elements to the left of arr[index] are the same.\n    i = index - 1\n    while i >= 0 and arr[i] == arr[index]:\n        i -= 1\n    # Check if the elements to the right of arr[index] are the same.\n    j = index + 1\n    while j < len(arr) and arr[j] == arr[index]:\n        j += 1\n    # Check if arr[i:j] is a palindrome.\n    return check_palindrome(arr, i + 1, j - i - 1)\n\n\ndef check_arr(arr):\n    \"\"\"\n    Checks if arr has a palindromic subsequence of length at least 3.\n    \"\"\"\n    for index in range(len(arr)):\n        if check_subsequence(arr, index):\n            return True\n    return False\n\n\n# Read input.\nt = int(input())\nresults = []\nfor _ in range(t):\n    input()\n    arr = list(map(int, input().split()))\n    results.append(check_arr(arr))\n\n# Print output.\nfor result in results:\n    print('YES' if result else 'NO')"
+}
+2022-04-19 20:55:01.226888 REASON stop
+2022-04-19 20:55:01.227546 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\ndef is_palindrome(a):\n    return a == a[::-1]\n\n\ndef is_palindrome_subsequence(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(i + 2, n + 1):\n            if is_palindrome(a[i:j]):\n                return True\n    return False\n\n\nif __name__ == '__main__':\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        print('YES' if is_palindrome_subsequence(a) else 'NO')"
+}
+2022-04-19 20:55:01.227635 REASON stop
+2022-04-19 20:55:01.246186 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        a = list(map(int, input().split()))\n        for i in range(n-2):\n            if a[i] == a[i+1]:\n                print('YES')\n                break\n            if a[i] == a[i+2]:\n                print('YES')\n                break\n        else:\n            print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:55:01.246357 REASON stop
+2022-04-19 20:55:01.247151 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_ints():\n    return list(map(int, input().split()))\n\ndef read_int():\n    return int(input())\n\ndef main():\n    t = read_int()\n    for _ in range(t):\n        n = read_int()\n        a = read_ints()\n        for i in range(n):\n            for j in range(i+1, n):\n                if a[i] == a[j]:\n                    for k in range(j+1, n):\n                        if a[i] == a[k]:\n                            print(\"YES\")\n                            break\n                    else:\n                        print(\"NO\")\n                    break\n            else:\n                continue\n            break\n        else:\n            print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:55:01.247254 REASON stop
+2022-04-19 20:55:01.248782 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef isPalindrome(s):\n    return s == s[::-1]\n\n\ndef checkForPalindrome(n, arr):\n    for i in range(n - 2):\n        for j in range(i + 3, n + 1):\n            if isPalindrome(arr[i:j]):\n                return True\n    return False\n\n\nfor _ in range(int(input())):\n    n = int(input())\n    arr = input().split()\n    print(\"YES\" if checkForPalindrome(n, arr) else \"NO\")"
+}
+2022-04-19 20:55:01.249047 REASON stop

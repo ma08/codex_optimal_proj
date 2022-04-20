@@ -1,0 +1,146 @@
+2022-04-19 22:45:51.015150 """
+There are N+1 towns. The i-th town is being attacked by A_i monsters.
+We have N heroes. The i-th hero can defeat monsters attacking the i-th or (i+1)-th town, for a total of at most B_i monsters.
+What is the maximum total number of monsters the heroes can cooperate to defeat?
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq A_i \leq 10^9
+ - 1 \leq B_i \leq 10^9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_{N+1}
+B_1 B_2 ... B_N
+
+-----Output-----
+Print the maximum total number of monsters the heroes can defeat.
+
+-----Sample Input-----
+2
+3 5 2
+4 5
+
+-----Sample Output-----
+9
+
+If the heroes choose the monsters to defeat as follows, they can defeat nine monsters in total, which is the maximum result.
+ - The first hero defeats two monsters attacking the first town and two monsters attacking the second town.
+ - The second hero defeats three monsters attacking the second town and two monsters attacking the third town.
+"""
+2022-04-19 22:45:51.015160 --------------------------
+2022-04-19 22:45:51.015279 using api key derek
+2022-04-19 22:46:13.804593 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += min(a[i], b[i])\n        a[i+1] -= min(a[i], b[i])\n        a[i+1] = max(a[i+1], 0)\n        ans += min(a[i+1], b[i])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nans = 0\nfor i in range(N):\n    ans += min(A[i], B[i]) + min(A[i+1], B[i])\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    ans = 0\n    for i in range(N):\n        ans += min(A[i], B[i])\n        A[i+1] = max(0, A[i+1] - B[i])\n    ans += min(A[-1], B[-1])\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    \"\"\"\n    print(N, A, B)\n    \"\"\"\n\n    \"\"\"\n    # My solution\n    max_num = 0\n    for i in range(N):\n        if A[i] >= B[i]:\n            max_num += B[i]\n            A[i] -= B[i]\n        else:\n            max_num += A[i]\n            A[i] = 0\n            if A[i+1] >= B[i] - A[i]:\n                max_num += B[i] - A[i]\n                A[i+1] -= B[i] - A[i]\n            else:\n                max_num += A[i+1]\n                A[i+1] = 0\n    print(max_num)\n    \"\"\"\n\n    # Better solution\n    max_num = 0\n    for i in range(N):\n        if A[i] < B[i]:\n            max_num += A[i]\n            B[i] -= A[i]\n            A[i] = 0\n            if A[i+1] < B[i]:\n                max_num += A[i+1]\n                A[i+1] = 0\n            else:\n                max_num += B[i]\n                A[i+1] -= B[i]\n        else:\n            max_num += B[i]\n            A[i] -= B[i]\n    print(max_num)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    total = 0\n    for i in range(n):\n        total += min(A[i] + A[i+1], B[i])\n    print(total)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\nN = int(input())\nA = list(map(int,input().split()))\nB = list(map(int,input().split()))\n\n#-----function-----\ndef main(N,A,B):\n    total = 0\n    for i in range(N):\n        total += min(A[i],B[i])\n        total += min(A[i+1],B[i]-min(A[i],B[i]))\n    return total\n\nprint(main(N,A,B))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef solve(N, A, B):\n    A.insert(0, 0)\n    A.append(0)\n    B.append(0)\n    S = 0\n    for i in range(N+1):\n        S += min(A[i]+A[i+1], B[i])\n        A[i+1] = A[i+1] - min(A[i]+A[i+1], B[i])\n        A[i] = A[i] - min(A[i], B[i])\n    return S\n\ndef main():\n    N = int(stdin.readline().strip())\n    A = [int(x) for x in stdin.readline().strip().split()]\n    B = [int(x) for x in stdin.readline().strip().split()]\n    print(solve(N, A, B))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N = int(input())\n    monsters_per_town = list(map(int, input().split()))\n    monsters_per_town_max = list(map(int, input().split()))\n\n    total_monsters = 0\n    for i in range(N):\n        total_monsters += min(monsters_per_town[i], monsters_per_town_max[i])\n        total_monsters += min(monsters_per_town[i+1], monsters_per_town_max[i] - min(monsters_per_town[i], monsters_per_town_max[i]))\n    print(total_monsters)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650408351,
+  "id": "cmpl-4yqtT2T4Kno0lKLOByIKirv8MxRR4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:46:13.804968 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    b = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        ans += min(a[i], b[i])\n        a[i+1] -= min(a[i], b[i])\n        a[i+1] = max(a[i+1], 0)\n        ans += min(a[i+1], b[i])\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:46:13.805008 REASON stop
+2022-04-19 22:46:13.860287 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nans = 0\nfor i in range(N):\n    ans += min(A[i], B[i]) + min(A[i+1], B[i])\nprint(ans)"
+}
+2022-04-19 22:46:13.860425 REASON stop
+2022-04-19 22:46:13.976127 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    ans = 0\n    for i in range(N):\n        ans += min(A[i], B[i])\n        A[i+1] = max(0, A[i+1] - B[i])\n    ans += min(A[-1], B[-1])\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:46:13.976289 REASON stop
+2022-04-19 22:46:14.065395 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    \"\"\"\n    print(N, A, B)\n    \"\"\"\n\n    \"\"\"\n    # My solution\n    max_num = 0\n    for i in range(N):\n        if A[i] >= B[i]:\n            max_num += B[i]\n            A[i] -= B[i]\n        else:\n            max_num += A[i]\n            A[i] = 0\n            if A[i+1] >= B[i] - A[i]:\n                max_num += B[i] - A[i]\n                A[i+1] -= B[i] - A[i]\n            else:\n                max_num += A[i+1]\n                A[i+1] = 0\n    print(max_num)\n    \"\"\"\n\n    # Better solution\n    max_num = 0\n    for i in range(N):\n        if A[i] < B[i]:\n            max_num += A[i]\n            B[i] -= A[i]\n            A[i] = 0\n            if A[i+1] < B[i]:\n                max_num += A[i+1]\n                A[i+1] = 0\n            else:\n                max_num += B[i]\n                A[i+1] -= B[i]\n        else:\n            max_num += B[i]\n            A[i] -= B[i]\n    print(max_num)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:46:14.065550 REASON stop
+2022-04-19 22:46:14.167066 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n\n    total = 0\n    for i in range(n):\n        total += min(A[i] + A[i+1], B[i])\n    print(total)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:46:14.167223 REASON stop
+2022-04-19 22:46:14.273081 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\nN = int(input())\nA = list(map(int,input().split()))\nB = list(map(int,input().split()))\n\n#-----function-----\ndef main(N,A,B):\n    total = 0\n    for i in range(N):\n        total += min(A[i],B[i])\n        total += min(A[i+1],B[i]-min(A[i],B[i]))\n    return total\n\nprint(main(N,A,B))"
+}
+2022-04-19 22:46:14.273226 REASON stop
+2022-04-19 22:46:14.413321 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef solve(N, A, B):\n    A.insert(0, 0)\n    A.append(0)\n    B.append(0)\n    S = 0\n    for i in range(N+1):\n        S += min(A[i]+A[i+1], B[i])\n        A[i+1] = A[i+1] - min(A[i]+A[i+1], B[i])\n        A[i] = A[i] - min(A[i], B[i])\n    return S\n\ndef main():\n    N = int(stdin.readline().strip())\n    A = [int(x) for x in stdin.readline().strip().split()]\n    B = [int(x) for x in stdin.readline().strip().split()]\n    print(solve(N, A, B))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:46:14.413495 REASON stop
+2022-04-19 22:46:14.478367 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N = int(input())\n    monsters_per_town = list(map(int, input().split()))\n    monsters_per_town_max = list(map(int, input().split()))\n\n    total_monsters = 0\n    for i in range(N):\n        total_monsters += min(monsters_per_town[i], monsters_per_town_max[i])\n        total_monsters += min(monsters_per_town[i+1], monsters_per_town_max[i] - min(monsters_per_town[i], monsters_per_town_max[i]))\n    print(total_monsters)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:46:14.478630 REASON stop

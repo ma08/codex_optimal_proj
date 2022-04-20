@@ -1,0 +1,155 @@
+2022-04-19 22:12:11.650402 """
+There are N cities on a number line. The i-th city is located at coordinate x_i.
+Your objective is to visit all these cities at least once.
+In order to do so, you will first set a positive integer D.
+Then, you will depart from coordinate X and perform Move 1 and Move 2 below, as many times as you like:
+ - Move 1: travel from coordinate y to coordinate y + D.
+ - Move 2: travel from coordinate y to coordinate y - D.
+Find the maximum value of D that enables you to visit all the cities.
+Here, to visit a city is to travel to the coordinate where that city is located.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq X \leq 10^9
+ - 1 \leq x_i \leq 10^9
+ - x_i are all different.
+ - x_1, x_2, ..., x_N \neq X
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N X
+x_1 x_2 ... x_N
+
+-----Output-----
+Print the maximum value of D that enables you to visit all the cities.
+
+-----Sample Input-----
+3 3
+1 7 11
+
+-----Sample Output-----
+2
+
+Setting D = 2 enables you to visit all the cities as follows, and this is the maximum value of such D.
+ - Perform Move 2 to travel to coordinate 1.
+ - Perform Move 1 to travel to coordinate 3.
+ - Perform Move 1 to travel to coordinate 5.
+ - Perform Move 1 to travel to coordinate 7.
+ - Perform Move 1 to travel to coordinate 9.
+ - Perform Move 1 to travel to coordinate 11.
+"""
+2022-04-19 22:12:11.650416 --------------------------
+2022-04-19 22:12:11.650538 using api key gabby
+2022-04-19 22:12:35.231917 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, x = map(int, sys.stdin.readline().split())\n    x_list = list(map(int, sys.stdin.readline().split()))\n    x_list.append(x)\n    x_list.sort()\n    i = x_list.index(x)\n    left = x - x_list[i-1]\n    right = x_list[i+1] - x\n    if left > right:\n        x_list = x_list[::-1]\n        i = x_list.index(x)\n        left = x_list[i+1] - x\n        right = x - x_list[i-1]\n    d = min(left, right)\n    for j in range(1, len(x_list)):\n        if x_list[j] - x_list[j-1] > d:\n            d = (x_list[j] - x_list[j-1]) // 2\n    print(d)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN, X = [int(x) for x in input().split()]\ncities = [int(x) for x in input().split()]\n\nmax_dist = 0\nfor city in cities:\n    dist = abs(X - city)\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    x_i = list(map(int, input().split()))\n\n    # x_i\u306e\u4e2d\u3067\u6700\u3082\u5927\u304d\u3044\u5024\u3068\u6700\u3082\u5c0f\u3055\u3044\u5024\u3092\u6c42\u3081\u308b\n    max_x_i = max(x_i)\n    min_x_i = min(x_i)\n\n    # \u6700\u5927\u5024\u3068\u6700\u5c0f\u5024\u306e\u5dee\u3092\u6c42\u3081\u308b\n    diff = max_x_i - min_x_i\n\n    # \u6700\u5927\u5024\u3068\u6700\u5c0f\u5024\u306e\u5dee\u30922\u3067\u5272\u3063\u3066\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\n    print(diff // 2)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, x = map(int, input().split())\n    xs = list(map(int, input().split()))\n    xs.sort()\n    ans = float('inf')\n    for i in range(n):\n        ans = min(ans, max(x - xs[i], xs[i] - x))\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xs = [int(x) for x in input().split()]\n    xs.sort()\n    xs.append(x)\n    d = 0\n    for i in range(len(xs)-1):\n        d = max(d, (xs[i+1] - xs[i]) // 2)\n    print(d)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\"\"\"\n-----Sample Input 1-----\n3 3\n1 7 11\n\n-----Sample Output 1-----\n2\n\n-----Sample Input 2-----\n5 11\n10 12 19 20 21\n\n-----Sample Output 2-----\n6\n\n-----Sample Input 3-----\n3 5\n3 4 6\n\n-----Sample Output 3-----\n1\n\n-----Sample Input 4-----\n8 7\n1 2 4 6 10 13 14 20\n\n-----Sample Output 4-----\n2\n\"\"\"\n\nN, X = map(int, input().split())\nx = list(map(int, input().split()))\n\n# \u5404\u70b9\u304b\u3089\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\ndistance = []\nfor i in range(0, N):\n    distance.append(abs(X-x[i]))\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u3092\u53d6\u5f97\nmax_distance = max(distance)\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u304c\u8ddd\u96e2D\u3067\u3042\u308b\u5834\u5408\u3001\n# \u305d\u306e\u8ddd\u96e2D\u3092\u79fb\u52d5\u3067\u304d\u308b\u5834\u5408\u306e\u307f\u3001D\u3092\u8fd4\u3059\nif max_distance <= X:\n    print(max_distance)\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u304c\u8ddd\u96e2D\u3067\u3042\u308b\u5834\u5408\u3001\n# \u305d\u306e\u8ddd\u96e2D\u3092\u79fb\u52d5\u3067\u304d\u306a\u3044\u5834\u5408\u3001D-1\u3092\u8fd4\u3059\nelse:\n    print(X-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, x = map(int, input().split())\ncities = list(map(int, input().split()))\ncities.sort()\n\nif cities[0] < x:\n    max_dist = x - cities[0]\nelse:\n    max_dist = cities[0] - x\n\nfor i in range(1, n):\n    dist = cities[i] - cities[i-1]\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xi = list(map(int, input().split()))\n    xi.append(x)\n    xi.sort()\n    index = xi.index(x)\n\n    if index == 0:\n        print(xi[index+1]-x)\n    elif index == n:\n        print(x-xi[index-1])\n    else:\n        print(max(x-xi[index-1], xi[index+1]-x))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650406331,
+  "id": "cmpl-4yqMt0WdVKlvFnV43E4YzFAPbyjne",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:12:35.232251 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, x = map(int, sys.stdin.readline().split())\n    x_list = list(map(int, sys.stdin.readline().split()))\n    x_list.append(x)\n    x_list.sort()\n    i = x_list.index(x)\n    left = x - x_list[i-1]\n    right = x_list[i+1] - x\n    if left > right:\n        x_list = x_list[::-1]\n        i = x_list.index(x)\n        left = x_list[i+1] - x\n        right = x - x_list[i-1]\n    d = min(left, right)\n    for j in range(1, len(x_list)):\n        if x_list[j] - x_list[j-1] > d:\n            d = (x_list[j] - x_list[j-1]) // 2\n    print(d)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:12:35.232289 REASON stop
+2022-04-19 22:12:35.239191 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN, X = [int(x) for x in input().split()]\ncities = [int(x) for x in input().split()]\n\nmax_dist = 0\nfor city in cities:\n    dist = abs(X - city)\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+}
+2022-04-19 22:12:35.239309 REASON stop
+2022-04-19 22:12:35.294727 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    x_i = list(map(int, input().split()))\n\n    # x_i\u306e\u4e2d\u3067\u6700\u3082\u5927\u304d\u3044\u5024\u3068\u6700\u3082\u5c0f\u3055\u3044\u5024\u3092\u6c42\u3081\u308b\n    max_x_i = max(x_i)\n    min_x_i = min(x_i)\n\n    # \u6700\u5927\u5024\u3068\u6700\u5c0f\u5024\u306e\u5dee\u3092\u6c42\u3081\u308b\n    diff = max_x_i - min_x_i\n\n    # \u6700\u5927\u5024\u3068\u6700\u5c0f\u5024\u306e\u5dee\u30922\u3067\u5272\u3063\u3066\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\n    print(diff // 2)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:12:35.294902 REASON stop
+2022-04-19 22:12:35.302035 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, x = map(int, input().split())\n    xs = list(map(int, input().split()))\n    xs.sort()\n    ans = float('inf')\n    for i in range(n):\n        ans = min(ans, max(x - xs[i], xs[i] - x))\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:12:35.302189 REASON stop
+2022-04-19 22:12:35.321887 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xs = [int(x) for x in input().split()]\n    xs.sort()\n    xs.append(x)\n    d = 0\n    for i in range(len(xs)-1):\n        d = max(d, (xs[i+1] - xs[i]) // 2)\n    print(d)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:12:35.322025 REASON stop
+2022-04-19 22:12:35.340147 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\"\"\"\n-----Sample Input 1-----\n3 3\n1 7 11\n\n-----Sample Output 1-----\n2\n\n-----Sample Input 2-----\n5 11\n10 12 19 20 21\n\n-----Sample Output 2-----\n6\n\n-----Sample Input 3-----\n3 5\n3 4 6\n\n-----Sample Output 3-----\n1\n\n-----Sample Input 4-----\n8 7\n1 2 4 6 10 13 14 20\n\n-----Sample Output 4-----\n2\n\"\"\"\n\nN, X = map(int, input().split())\nx = list(map(int, input().split()))\n\n# \u5404\u70b9\u304b\u3089\u306e\u8ddd\u96e2\u3092\u8a08\u7b97\ndistance = []\nfor i in range(0, N):\n    distance.append(abs(X-x[i]))\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u3092\u53d6\u5f97\nmax_distance = max(distance)\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u304c\u8ddd\u96e2D\u3067\u3042\u308b\u5834\u5408\u3001\n# \u305d\u306e\u8ddd\u96e2D\u3092\u79fb\u52d5\u3067\u304d\u308b\u5834\u5408\u306e\u307f\u3001D\u3092\u8fd4\u3059\nif max_distance <= X:\n    print(max_distance)\n\n# \u5404\u70b9\u306e\u8ddd\u96e2\u306e\u6700\u5927\u5024\u304c\u8ddd\u96e2D\u3067\u3042\u308b\u5834\u5408\u3001\n# \u305d\u306e\u8ddd\u96e2D\u3092\u79fb\u52d5\u3067\u304d\u306a\u3044\u5834\u5408\u3001D-1\u3092\u8fd4\u3059\nelse:\n    print(X-1)"
+}
+2022-04-19 22:12:35.340301 REASON stop
+2022-04-19 22:12:35.356078 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, x = map(int, input().split())\ncities = list(map(int, input().split()))\ncities.sort()\n\nif cities[0] < x:\n    max_dist = x - cities[0]\nelse:\n    max_dist = cities[0] - x\n\nfor i in range(1, n):\n    dist = cities[i] - cities[i-1]\n    if dist > max_dist:\n        max_dist = dist\n\nprint(max_dist)"
+}
+2022-04-19 22:12:35.356225 REASON stop
+2022-04-19 22:12:35.377058 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x = map(int, input().split())\n    xi = list(map(int, input().split()))\n    xi.append(x)\n    xi.sort()\n    index = xi.index(x)\n\n    if index == 0:\n        print(xi[index+1]-x)\n    elif index == n:\n        print(x-xi[index-1])\n    else:\n        print(max(x-xi[index-1], xi[index+1]-x))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:12:35.377314 REASON stop

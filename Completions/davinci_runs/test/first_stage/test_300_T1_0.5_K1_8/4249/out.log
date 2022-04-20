@@ -1,0 +1,192 @@
+2022-04-19 23:22:32.891741 """
+The only difference between easy and hard versions is the constraints.
+
+Polycarp has to write a coursework. The coursework consists of $m$ pages.
+
+Polycarp also has $n$ cups of coffee. The coffee in the $i$-th cup Polycarp has $a_i$ caffeine in it. Polycarp can drink some cups of coffee (each one no more than once). He can drink cups in any order. Polycarp drinks each cup instantly and completely (i.e. he cannot split any cup into several days).
+
+Surely, courseworks are not being written in a single day (in a perfect world of Berland, at least).
+
+Let's consider some day of Polycarp's work. Consider Polycarp drinks $k$ cups of coffee during this day and caffeine dosages of cups Polycarp drink during this day are $a_{i_1}, a_{i_2}, \dots, a_{i_k}$. Then the first cup he drinks gives him energy to write $a_{i_1}$ pages of coursework, the second cup gives him energy to write $max(0, a_{i_2} - 1)$ pages, the third cup gives him energy to write $max(0, a_{i_3} - 2)$ pages, ..., the $k$-th cup gives him energy to write $max(0, a_{i_k} - k + 1)$ pages.
+
+If Polycarp doesn't drink coffee during some day, he cannot write coursework at all that day.
+
+Polycarp has to finish his coursework as soon as possible (spend the minimum number of days to do it). Your task is to find out this number of days or say that it is impossible.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $1 \le m \le 10^9$) — the number of cups of coffee and the number of pages in the coursework.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the caffeine dosage of coffee in the $i$-th cup.
+
+
+-----Output-----
+
+If it is impossible to write the coursework, print -1. Otherwise print the minimum number of days Polycarp needs to do it.
+
+
+-----Examples-----
+Input
+5 8
+2 3 1 1 2
+
+Output
+4
+
+Input
+7 10
+1 3 4 2 1 4 2
+
+Output
+2
+
+Input
+5 15
+5 5 5 5 5
+
+Output
+1
+
+Input
+5 16
+5 5 5 5 5
+
+Output
+2
+
+Input
+5 26
+5 5 5 5 5
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example Polycarp can drink fourth cup during first day (and write $1$ page), first and second cups during second day (and write $2 + (3 - 1) = 4$ pages), fifth cup during the third day (and write $2$ pages) and third cup during the fourth day (and write $1$ page) so the answer is $4$. It is obvious that there is no way to write the coursework in three or less days.
+
+In the second example Polycarp can drink third, fourth and second cups during first day (and write $4 + (2 - 1) + (3 - 2) = 6$ pages) and sixth cup during second day (and write $4$ pages) so the answer is $2$. It is obvious that Polycarp cannot write the whole coursework in one day in this test.
+
+In the third example Polycarp can drink all cups of coffee during first day and write $5 + (5 - 1) + (5 - 2) + (5 - 3) + (5 - 4) = 15$ pages of coursework.
+
+In the fourth example Polycarp cannot drink all cups during first day and should drink one of them during the second day. So during first day he will write $5 + (5 - 1) + (5 - 2) + (5 - 3) = 14$ pages of coursework and during second day he will write $5$ pages of coursework. This is enough to complete it.
+
+In the fifth example Polycarp cannot write the whole coursework at all, even if he will drink one cup of coffee during each day, so the answer is -1.
+"""
+2022-04-19 23:22:32.891767 --------------------------
+2022-04-19 23:22:32.891875 using api key derek
+2022-04-19 23:24:00.541169 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef min_days(n, m, a):\n    \"\"\"Return the minimum number of days Polycarp needs to write his coursework.\n\n    >>> min_days(5, 8, [2, 3, 1, 1, 2])\n    4\n    >>> min_days(7, 10, [1, 3, 4, 2, 1, 4, 2])\n    2\n    >>> min_days(5, 15, [5, 5, 5, 5, 5])\n    1\n    >>> min_days(5, 16, [5, 5, 5, 5, 5])\n    2\n    >>> min_days(5, 26, [5, 5, 5, 5, 5])\n    -1\n    \"\"\"\n    # TODO: implement this\n    return -1\n\nif __name__ == \"__main__\":\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(min_days(n, m, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort(reverse=True)\n\n# print(a)\n\nif max(a) * (n + 1) < m:\n    print(-1)\nelse:\n    i = 0\n    while m > 0:\n        m -= a[i]\n        i += 1\n    print(i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\na.sort()\n\nif m > sum(a):\n    print(-1)\nelse:\n    days = 0\n    for i in range(n):\n        if a[i] > days:\n            days += 1\n    print(days)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort(reverse=True)\n\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += max(0, a[i] - i)\n        if pages >= m:\n            print(i + 1)\n            return\n    print(-1)\n\nmain()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nn,m = map(int,stdin.readline().split())\na = list(map(int,stdin.readline().split()))\n\n# print(n,m)\n# print(a)\n\n# sum(a) >= m\nif sum(a) < m:\n    print(-1)\n    exit()\n\n# sum(a) <= m + n - 1\nif sum(a) > m + n - 1:\n    print(1)\n    exit()\n\n# sum(a) == m + n - 1\nif sum(a) == m + n - 1:\n    print(n)\n    exit()\n\n\n# sum(a) < m + n - 1\n# b[i] = a[i] - i + 1\nb = [a[i] - i + 1 for i in range(n)]\n# print(b)\n\n# b[i] >= 0\nif min(b) < 0:\n    print(-1)\n    exit()\n\n# b[i] <= m\nif max(b) > m:\n    print(1)\n    exit()\n\n# b[i] == m\nif max(b) == m:\n    print(n)\n    exit()\n\n# b[i] < m\n# sum(b) == m\nif sum(b) == m:\n    print(n)\n    exit()\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef readline_int_list():\n    return [int(x) for x in sys.stdin.readline().split()]\n\ndef solve(m, caffeine_dosages):\n    \"\"\"\n    caffeine_dosages is a list of caffeine dosages\n    \"\"\"\n    # we can simulate the process of writing coursework and drinking coffee\n    # in a single pass\n    # we can only drink coffee that is not yet drunk\n    caffeine_dosages.sort(reverse=True)\n    caffeine_dosages_length = len(caffeine_dosages)\n    remaining_pages = m\n    remaining_cups = caffeine_dosages_length\n    days = 0\n    while remaining_pages > 0 and remaining_cups > 0:\n        # we can drink the remaining cups of coffee and write some pages\n        days += 1\n        # we can drink the remaining cups of coffee\n        # we can write at most remaining_cups pages\n        remaining_pages -= remaining_cups\n        # remove the caffeine dosages that we have already drunk\n        # we can only drink coffee that is not yet drunk\n        caffeine_dosages = caffeine_dosages[remaining_cups:]\n        remaining_cups = len(caffeine_dosages)\n    if remaining_pages > 0:\n        # we cannot write the remaining pages\n        return -1\n    else:\n        # we can write all the pages\n        return days\n\ndef main():\n    n, m = readline_int_list()\n    caffeine_dosages = readline_int_list()\n    assert(len(caffeine_dosages) == n)\n    print(solve(m, caffeine_dosages))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    if max(a) * n < m:\n        print(-1)\n        return\n\n    a.sort(reverse=True)\n    res = 0\n    days = 0\n    for i in range(n):\n        days += 1\n        res += a[i] - days + 1\n        if res >= m:\n            print(days)\n            return\n\n    print(-1)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.reverse()\n    days = 0\n    for i in range(n):\n        if a[i] < i + 1:\n            break\n        days += 1\n        m -= a[i] - i\n        if m <= 0:\n            break\n    if m > 0:\n        print(-1)\n    else:\n        print(days)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650410553,
+  "id": "cmpl-4yrSzb6BMpN76SBGnkLd3ojQ5uVti",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:24:00.541678 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef min_days(n, m, a):\n    \"\"\"Return the minimum number of days Polycarp needs to write his coursework.\n\n    >>> min_days(5, 8, [2, 3, 1, 1, 2])\n    4\n    >>> min_days(7, 10, [1, 3, 4, 2, 1, 4, 2])\n    2\n    >>> min_days(5, 15, [5, 5, 5, 5, 5])\n    1\n    >>> min_days(5, 16, [5, 5, 5, 5, 5])\n    2\n    >>> min_days(5, 26, [5, 5, 5, 5, 5])\n    -1\n    \"\"\"\n    # TODO: implement this\n    return -1\n\nif __name__ == \"__main__\":\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    print(min_days(n, m, a))"
+}
+2022-04-19 23:24:00.541729 REASON stop
+2022-04-19 23:24:00.542498 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\n\na.sort(reverse=True)\n\n# print(a)\n\nif max(a) * (n + 1) < m:\n    print(-1)\nelse:\n    i = 0\n    while m > 0:\n        m -= a[i]\n        i += 1\n    print(i)"
+}
+2022-04-19 23:24:00.542575 REASON stop
+2022-04-19 23:24:00.542999 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = list(map(int, input().split()))\na.sort()\n\nif m > sum(a):\n    print(-1)\nelse:\n    days = 0\n    for i in range(n):\n        if a[i] > days:\n            days += 1\n    print(days)"
+}
+2022-04-19 23:24:00.543060 REASON stop
+2022-04-19 23:24:00.566799 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort(reverse=True)\n\n    days = 0\n    pages = 0\n    for i in range(n):\n        pages += max(0, a[i] - i)\n        if pages >= m:\n            print(i + 1)\n            return\n    print(-1)\n\nmain()"
+}
+2022-04-19 23:24:00.566935 REASON stop
+2022-04-19 23:24:00.588869 4 {
+  "finish_reason": "length",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nn,m = map(int,stdin.readline().split())\na = list(map(int,stdin.readline().split()))\n\n# print(n,m)\n# print(a)\n\n# sum(a) >= m\nif sum(a) < m:\n    print(-1)\n    exit()\n\n# sum(a) <= m + n - 1\nif sum(a) > m + n - 1:\n    print(1)\n    exit()\n\n# sum(a) == m + n - 1\nif sum(a) == m + n - 1:\n    print(n)\n    exit()\n\n\n# sum(a) < m + n - 1\n# b[i] = a[i] - i + 1\nb = [a[i] - i + 1 for i in range(n)]\n# print(b)\n\n# b[i] >= 0\nif min(b) < 0:\n    print(-1)\n    exit()\n\n# b[i] <= m\nif max(b) > m:\n    print(1)\n    exit()\n\n# b[i] == m\nif max(b) == m:\n    print(n)\n    exit()\n\n# b[i] < m\n# sum(b) == m\nif sum(b) == m:\n    print(n)\n    exit()\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n\n# b[i] < m\n# sum(b) < m\n# b[i] >= m - i + 1\n# sum(b) >= m - n + 1\n# m - n + 1 <= sum(b) < m\n# n - 1 <= sum(b) < m\n# n <= sum(b) + 1 <= m\n# n <= sum(b) + 1 <= m\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b)) >= 1\n# (n - sum(b"
+}
+2022-04-19 23:24:00.589038 REASON length
+2022-04-19 23:24:00.589048 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef readline_int_list():\n    return [int(x) for x in sys.stdin.readline().split()]\n\ndef solve(m, caffeine_dosages):\n    \"\"\"\n    caffeine_dosages is a list of caffeine dosages\n    \"\"\"\n    # we can simulate the process of writing coursework and drinking coffee\n    # in a single pass\n    # we can only drink coffee that is not yet drunk\n    caffeine_dosages.sort(reverse=True)\n    caffeine_dosages_length = len(caffeine_dosages)\n    remaining_pages = m\n    remaining_cups = caffeine_dosages_length\n    days = 0\n    while remaining_pages > 0 and remaining_cups > 0:\n        # we can drink the remaining cups of coffee and write some pages\n        days += 1\n        # we can drink the remaining cups of coffee\n        # we can write at most remaining_cups pages\n        remaining_pages -= remaining_cups\n        # remove the caffeine dosages that we have already drunk\n        # we can only drink coffee that is not yet drunk\n        caffeine_dosages = caffeine_dosages[remaining_cups:]\n        remaining_cups = len(caffeine_dosages)\n    if remaining_pages > 0:\n        # we cannot write the remaining pages\n        return -1\n    else:\n        # we can write all the pages\n        return days\n\ndef main():\n    n, m = readline_int_list()\n    caffeine_dosages = readline_int_list()\n    assert(len(caffeine_dosages) == n)\n    print(solve(m, caffeine_dosages))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:24:00.589130 REASON stop
+2022-04-19 23:24:00.590228 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    if max(a) * n < m:\n        print(-1)\n        return\n\n    a.sort(reverse=True)\n    res = 0\n    days = 0\n    for i in range(n):\n        days += 1\n        res += a[i] - days + 1\n        if res >= m:\n            print(days)\n            return\n\n    print(-1)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:24:00.590324 REASON stop
+2022-04-19 23:24:00.591399 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    a.reverse()\n    days = 0\n    for i in range(n):\n        if a[i] < i + 1:\n            break\n        days += 1\n        m -= a[i] - i\n        if m <= 0:\n            break\n    if m > 0:\n        print(-1)\n    else:\n        print(days)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:24:00.591638 REASON stop

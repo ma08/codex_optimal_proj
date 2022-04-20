@@ -1,0 +1,159 @@
+2022-04-19 21:08:26.055100 """
+You are given an integer $n$ from $1$ to $10^{18}$ without leading zeroes.
+
+In one move you can swap any two adjacent digits in the given number in such a way that the resulting number will not contain leading zeroes. In other words, after each move the number you have cannot contain any leading zeroes.
+
+What is the minimum number of moves you have to make to obtain a number that is divisible by $25$? Print -1 if it is impossible to obtain a number that is divisible by $25$.
+
+
+-----Input-----
+
+The first line contains an integer $n$ ($1 \le n \le 10^{18}$). It is guaranteed that the first (left) digit of the number $n$ is not a zero.
+
+
+-----Output-----
+
+If it is impossible to obtain a number that is divisible by $25$, print -1. Otherwise print the minimum number of moves required to obtain such number.
+
+Note that you can swap only adjacent digits in the given number.
+
+
+-----Examples-----
+Input
+5071
+
+Output
+4
+
+Input
+705
+
+Output
+1
+
+Input
+1241367
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example one of the possible sequences of moves is 5071 $\rightarrow$ 5701 $\rightarrow$ 7501 $\rightarrow$ 7510 $\rightarrow$ 7150.
+"""
+2022-04-19 21:08:26.055113 --------------------------
+2022-04-19 21:08:26.055215 using api key derek
+2022-04-19 21:08:53.674147 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\n\n# if n % 25 == 0:\n#     print(0)\n#     exit()\n\n# if n % 5 == 0:\n#     print(1)\n#     exit()\n\n# if n % 25 == 5 or n % 25 == 0:\n#     print(2)\n#     exit()\n\n# if n % 5 == 1:\n#     print(3)\n#     exit()\n\n# if n % 5 == 2 or n % 5 == 3 or n % 5 == 4:\n#     print(4)\n#     exit()\n\n# print(-1)\n\nif n % 25 == 0:\n    print(0)\n    exit()\n\nif n % 5 == 0:\n    print(1)\n    exit()\n\nif n % 25 == 5 or n % 25 == 0:\n    print(2)\n    exit()\n\nif n % 5 == 1:\n    print(3)\n    exit()\n\nif n % 5 == 2 or n % 5 == 3 or n % 5 == 4:\n    print(4)\n    exit()\n\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = input()\n    digits = list(n)\n    moves = 0\n    while len(digits) > 2:\n        if int(digits[-2]) % 2 == 0:\n            digits = digits[:-2]\n        else:\n            digits = digits[:-1]\n        moves += 1\n    if int(digits[0]) % 5 == 0:\n        print(moves)\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # read the input\n    n = int(input())\n\n    # check if the number is already divisible by 25\n    if n % 25 == 0:\n        print(0)\n        return\n\n    # convert the number to a string\n    n_str = str(n)\n\n    # count the number of leading zeroes\n    n_zeroes = 0\n    for i in range(0, len(n_str)):\n        if n_str[i] == '0':\n            n_zeroes += 1\n        else:\n            break\n\n    # check if the number of leading zeroes is more than 1\n    if n_zeroes > 1:\n        print(-1)\n        return\n\n    # count the number of zeroes in the number\n    n_zeroes = n_str.count('0')\n\n    # check if the number of zeroes is more than 1\n    if n_zeroes > 1:\n        print(-1)\n        return\n\n    # count the number of 2s and 5s in the number\n    n_twos = n_str.count('2')\n    n_fives = n_str.count('5')\n\n    # check if the number of 2s and 5s is more than 1\n    if n_twos > 1 or n_fives > 1:\n        print(-1)\n        return\n\n    # check if the number has a 2 and a 5\n    if n_twos == 1 and n_fives == 1:\n        print(1)\n        return\n\n    # check if the number has a 2 or a 5\n    if n_twos == 1 or n_fives == 1:\n        print(2)\n        return\n\n    # check if the number has a zero\n    if n_zeroes == 1:\n        print(3)\n        return\n\n    print(4)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    if n % 25 == 0:\n        print(0)\n    else:\n        print(check(n, 0))\n\ndef check(n, c):\n    if n % 25 == 0:\n        return c\n    else:\n        if len(str(n)) < 3:\n            return -1\n        else:\n            return min(check(swap(n, i), c+1) for i in range(len(str(n))-1))\n\ndef swap(n, i):\n    n = str(n)\n    n = n[:i] + n[i+1] + n[i] + n[i+2:]\n    return int(n)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = sys.stdin.readline().strip()\n\n    if int(n) % 25 == 0:\n        print(0)\n        return\n\n    moves = 0\n    for i in range(len(n)):\n        if int(n[i]) % 2 == 0:\n            moves += 1\n            n = n[:i] + n[i+1:] + n[i]\n            if int(n) % 25 == 0:\n                print(moves)\n                return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The number of moves is equal to the number of zeroes in the number. If the number does not end in zero, then it is impossible to get a number divisible by 25.\n    \"\"\"\n    n = int(input())\n    if n % 5 == 0:\n        print(n.bit_length() - 1)\n    else:\n        print(-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\n\nn = int(input())\n\nif n % 25 == 0:\n    print(0)\nelif n % 5 == 0:\n    print(1)\nelse:\n    s = str(n)\n    flag = True\n    for i in range(len(s)-1):\n        if s[i] == '0' and s[i+1] != '0':\n            s = s[:i] + s[i+1:] + s[i]\n            flag = False\n            break\n    if flag:\n        print(-1)\n    else:\n        n = int(s)\n        if n % 25 == 0:\n            print(1)\n        else:\n            print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n = input()\n    moves = 0\n    for i in range(len(n) - 2, -1, -1):\n        if n[i] != '0':\n            moves += int(n[i]) // 2\n            n = n[:i] + n[i + 1:]\n        else:\n            moves += 1\n            n = n[:i] + n[i + 1:]\n    if n[-1] == '0':\n        print(-1)\n    else:\n        print(moves)\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650402506,
+  "id": "cmpl-4ypNC58IfL3Si4XH3jeRGyjhNWPqc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:08:53.674474 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn = int(sys.stdin.readline())\n\n# if n % 25 == 0:\n#     print(0)\n#     exit()\n\n# if n % 5 == 0:\n#     print(1)\n#     exit()\n\n# if n % 25 == 5 or n % 25 == 0:\n#     print(2)\n#     exit()\n\n# if n % 5 == 1:\n#     print(3)\n#     exit()\n\n# if n % 5 == 2 or n % 5 == 3 or n % 5 == 4:\n#     print(4)\n#     exit()\n\n# print(-1)\n\nif n % 25 == 0:\n    print(0)\n    exit()\n\nif n % 5 == 0:\n    print(1)\n    exit()\n\nif n % 25 == 5 or n % 25 == 0:\n    print(2)\n    exit()\n\nif n % 5 == 1:\n    print(3)\n    exit()\n\nif n % 5 == 2 or n % 5 == 3 or n % 5 == 4:\n    print(4)\n    exit()\n\nprint(-1)"
+}
+2022-04-19 21:08:53.674514 REASON stop
+2022-04-19 21:08:53.675128 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = input()\n    digits = list(n)\n    moves = 0\n    while len(digits) > 2:\n        if int(digits[-2]) % 2 == 0:\n            digits = digits[:-2]\n        else:\n            digits = digits[:-1]\n        moves += 1\n    if int(digits[0]) % 5 == 0:\n        print(moves)\n    else:\n        print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:08:53.675198 REASON stop
+2022-04-19 21:08:53.675631 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # read the input\n    n = int(input())\n\n    # check if the number is already divisible by 25\n    if n % 25 == 0:\n        print(0)\n        return\n\n    # convert the number to a string\n    n_str = str(n)\n\n    # count the number of leading zeroes\n    n_zeroes = 0\n    for i in range(0, len(n_str)):\n        if n_str[i] == '0':\n            n_zeroes += 1\n        else:\n            break\n\n    # check if the number of leading zeroes is more than 1\n    if n_zeroes > 1:\n        print(-1)\n        return\n\n    # count the number of zeroes in the number\n    n_zeroes = n_str.count('0')\n\n    # check if the number of zeroes is more than 1\n    if n_zeroes > 1:\n        print(-1)\n        return\n\n    # count the number of 2s and 5s in the number\n    n_twos = n_str.count('2')\n    n_fives = n_str.count('5')\n\n    # check if the number of 2s and 5s is more than 1\n    if n_twos > 1 or n_fives > 1:\n        print(-1)\n        return\n\n    # check if the number has a 2 and a 5\n    if n_twos == 1 and n_fives == 1:\n        print(1)\n        return\n\n    # check if the number has a 2 or a 5\n    if n_twos == 1 or n_fives == 1:\n        print(2)\n        return\n\n    # check if the number has a zero\n    if n_zeroes == 1:\n        print(3)\n        return\n\n    print(4)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:08:53.675723 REASON stop
+2022-04-19 21:08:53.710901 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    if n % 25 == 0:\n        print(0)\n    else:\n        print(check(n, 0))\n\ndef check(n, c):\n    if n % 25 == 0:\n        return c\n    else:\n        if len(str(n)) < 3:\n            return -1\n        else:\n            return min(check(swap(n, i), c+1) for i in range(len(str(n))-1))\n\ndef swap(n, i):\n    n = str(n)\n    n = n[:i] + n[i+1] + n[i] + n[i+2:]\n    return int(n)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:08:53.711031 REASON stop
+2022-04-19 21:08:53.714734 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = sys.stdin.readline().strip()\n\n    if int(n) % 25 == 0:\n        print(0)\n        return\n\n    moves = 0\n    for i in range(len(n)):\n        if int(n[i]) % 2 == 0:\n            moves += 1\n            n = n[:i] + n[i+1:] + n[i]\n            if int(n) % 25 == 0:\n                print(moves)\n                return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:08:53.714851 REASON stop
+2022-04-19 21:08:53.716341 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The number of moves is equal to the number of zeroes in the number. If the number does not end in zero, then it is impossible to get a number divisible by 25.\n    \"\"\"\n    n = int(input())\n    if n % 5 == 0:\n        print(n.bit_length() - 1)\n    else:\n        print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:08:53.716464 REASON stop
+2022-04-19 21:08:53.725491 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\n\nn = int(input())\n\nif n % 25 == 0:\n    print(0)\nelif n % 5 == 0:\n    print(1)\nelse:\n    s = str(n)\n    flag = True\n    for i in range(len(s)-1):\n        if s[i] == '0' and s[i+1] != '0':\n            s = s[:i] + s[i+1:] + s[i]\n            flag = False\n            break\n    if flag:\n        print(-1)\n    else:\n        n = int(s)\n        if n % 25 == 0:\n            print(1)\n        else:\n            print(-1)"
+}
+2022-04-19 21:08:53.725616 REASON stop
+2022-04-19 21:08:53.727037 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n = input()\n    moves = 0\n    for i in range(len(n) - 2, -1, -1):\n        if n[i] != '0':\n            moves += int(n[i]) // 2\n            n = n[:i] + n[i + 1:]\n        else:\n            moves += 1\n            n = n[:i] + n[i + 1:]\n    if n[-1] == '0':\n        print(-1)\n    else:\n        print(moves)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:08:53.727233 REASON stop

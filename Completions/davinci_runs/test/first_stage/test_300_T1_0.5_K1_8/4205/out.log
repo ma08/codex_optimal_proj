@@ -1,0 +1,141 @@
+2022-04-19 22:56:10.228630 """
+We have a sequence p = {p_1,\ p_2,\ ...,\ p_N} which is a permutation of {1,\ 2,\ ...,\ N}.
+You can perform the following operation at most once: choose integers i and j (1 \leq i < j \leq N), and swap p_i and p_j. Note that you can also choose not to perform it.
+Print YES if you can sort p in ascending order in this way, and NO otherwise.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 50
+ - p is a permutation of {1,\ 2,\ ...,\ N}.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+p_1 p_2 ... p_N
+
+-----Output-----
+Print YES if you can sort p in ascending order in the way stated in the problem statement, and NO otherwise.
+
+-----Sample Input-----
+5
+5 2 3 4 1
+
+-----Sample Output-----
+YES
+
+You can sort p in ascending order by swapping p_1 and p_5.
+"""
+2022-04-19 22:56:10.228641 --------------------------
+2022-04-19 22:56:10.228776 using api key derek
+2022-04-19 22:56:36.128446 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    q = sorted(p)\n    count = 0\n    for i in range(n):\n        if p[i] != q[i]:\n            count += 1\n    if count == 2 or count == 0:\n        print('YES')\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# \u521d\u671f\u5316\nans = 'NO'\nfor i in range(N):\n    if p[i] == i + 1:\n        continue\n    else:\n        # \u5165\u308c\u66ff\u3048\u3089\u308c\u308b\u6570\u5b57\u306e\u5224\u5b9a\n        if i + 1 in p:\n            # \u5165\u308c\u66ff\u3048\u3089\u308c\u308b\u6570\u5b57\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u53d6\u5f97\n            j = p.index(i + 1)\n            p[i], p[j] = p[j], p[i]\n            ans = 'YES'\n            break\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# Check if p is already sorted\np_sorted = p.copy()\np_sorted.sort()\nif p == p_sorted:\n    print('NO')\n    exit()\n\n# Check if p can be sorted by swapping one pair of numbers\ni = 0\nwhile i < N-1 and p[i] < p[i+1]:\n    i += 1\nj = i+1\nwhile j < N-1 and p[j] < p[j+1]:\n    j += 1\nif i == j:\n    print('NO')\n    exit()\np[i], p[j] = p[j], p[i]\nif p == p_sorted:\n    print('YES')\n    exit()\nelse:\n    print('NO')\n    exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    q = sorted(p)\n\n    if p == q:\n        print('YES')\n        sys.exit(0)\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            p[i], p[j] = p[j], p[i]\n            if p == q:\n                print('YES')\n                sys.exit(0)\n            p[i], p[j] = p[j], p[i]\n\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\ndef check():\n    for i in range(n):\n        for j in range(i + 1, n):\n            if p[i] > p[j]:\n                return \"YES\"\n    return \"NO\"\n\nprint(check())"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n#print(N, p)\n\n# \u5165\u529b\u306f\u30bd\u30fc\u30c8\u6e08\u307f\nif p == list(range(1,N+1)):\n  print(\"YES\")\n  exit()\n\n# \u5165\u529b\u306f\u964d\u9806\nif p == list(range(N,0,-1)):\n  print(\"YES\")\n  exit()\n\n# \u5165\u529b\u306f\u6607\u9806\nif p == list(range(1,N+1)):\n  print(\"YES\")\n  exit()\n\n# \u4e21\u7aef\u304b\u3089\u898b\u3066\u3044\u3063\u30662\u3064\u306e\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\n# \u5b9f\u969b\u306b\u306f\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\u5fc5\u8981\u306f\u306a\u304f\u3001\u8981\u7d20\u306e\u5024\u3092\u3069\u3053\u304b\u3067\u5165\u308c\u66ff\u3048\u308b\u3060\u3051\u3067\u3088\u3044\np_min = min(p)\np_max = max(p)\n#print(p_min, p_max)\n\n# \u5165\u308c\u66ff\u3048\u308b\u5834\u6240\u3092\u63a2\u3059\nleft = 0\nright = N-1\nwhile True:\n  if p[left] == p_min:\n    left += 1\n  if p[right] == p_max:\n    right -= 1\n  if left >= right:\n    break\n\n#print(left, right)\n\n# 2\u3064\u306e\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\np[left], p[right] = p[right], p[left]\n#print(p)\n\n# \u5165\u308c\u66ff\u3048\u305f\u5f8c\u304c\u6607\u9806\u306b\u306a\u3063\u3066\u3044\u305f\u3089YES\nif p == list(range(1,N+1)):\n  print(\"YES\")\nelse:\n  print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\nif p[0] == 1:\n    if p[1] == 2:\n        print(\"YES\")\n    else:\n        print(\"NO\")\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    p = list(map(int, sys.stdin.readline().rstrip().split()))\n    print(\"YES\" if can_sort(p) else \"NO\")\n\ndef can_sort(p):\n    for i in range(1, len(p)):\n        if p[i-1] > p[i]:\n            return True\n    return False\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650408970,
+  "id": "cmpl-4yr3SOIkiIMb412bMbjO5SEThdfRP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:56:36.128813 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    q = sorted(p)\n    count = 0\n    for i in range(n):\n        if p[i] != q[i]:\n            count += 1\n    if count == 2 or count == 0:\n        print('YES')\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:56:36.128852 REASON stop
+2022-04-19 22:56:36.129715 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# \u521d\u671f\u5316\nans = 'NO'\nfor i in range(N):\n    if p[i] == i + 1:\n        continue\n    else:\n        # \u5165\u308c\u66ff\u3048\u3089\u308c\u308b\u6570\u5b57\u306e\u5224\u5b9a\n        if i + 1 in p:\n            # \u5165\u308c\u66ff\u3048\u3089\u308c\u308b\u6570\u5b57\u306e\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u3092\u53d6\u5f97\n            j = p.index(i + 1)\n            p[i], p[j] = p[j], p[i]\n            ans = 'YES'\n            break\n\nprint(ans)"
+}
+2022-04-19 22:56:36.129796 REASON stop
+2022-04-19 22:56:36.130228 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\n# Check if p is already sorted\np_sorted = p.copy()\np_sorted.sort()\nif p == p_sorted:\n    print('NO')\n    exit()\n\n# Check if p can be sorted by swapping one pair of numbers\ni = 0\nwhile i < N-1 and p[i] < p[i+1]:\n    i += 1\nj = i+1\nwhile j < N-1 and p[j] < p[j+1]:\n    j += 1\nif i == j:\n    print('NO')\n    exit()\np[i], p[j] = p[j], p[i]\nif p == p_sorted:\n    print('YES')\n    exit()\nelse:\n    print('NO')\n    exit()"
+}
+2022-04-19 22:56:36.130292 REASON stop
+2022-04-19 22:56:36.154029 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    p = list(map(int, input().split()))\n    q = sorted(p)\n\n    if p == q:\n        print('YES')\n        sys.exit(0)\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            p[i], p[j] = p[j], p[i]\n            if p == q:\n                print('YES')\n                sys.exit(0)\n            p[i], p[j] = p[j], p[i]\n\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:56:36.154174 REASON stop
+2022-04-19 22:56:36.175473 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\np = list(map(int, input().split()))\n\ndef check():\n    for i in range(n):\n        for j in range(i + 1, n):\n            if p[i] > p[j]:\n                return \"YES\"\n    return \"NO\"\n\nprint(check())"
+}
+2022-04-19 22:56:36.175647 REASON stop
+2022-04-19 22:56:36.176545 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n#print(N, p)\n\n# \u5165\u529b\u306f\u30bd\u30fc\u30c8\u6e08\u307f\nif p == list(range(1,N+1)):\n  print(\"YES\")\n  exit()\n\n# \u5165\u529b\u306f\u964d\u9806\nif p == list(range(N,0,-1)):\n  print(\"YES\")\n  exit()\n\n# \u5165\u529b\u306f\u6607\u9806\nif p == list(range(1,N+1)):\n  print(\"YES\")\n  exit()\n\n# \u4e21\u7aef\u304b\u3089\u898b\u3066\u3044\u3063\u30662\u3064\u306e\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\n# \u5b9f\u969b\u306b\u306f\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\u5fc5\u8981\u306f\u306a\u304f\u3001\u8981\u7d20\u306e\u5024\u3092\u3069\u3053\u304b\u3067\u5165\u308c\u66ff\u3048\u308b\u3060\u3051\u3067\u3088\u3044\np_min = min(p)\np_max = max(p)\n#print(p_min, p_max)\n\n# \u5165\u308c\u66ff\u3048\u308b\u5834\u6240\u3092\u63a2\u3059\nleft = 0\nright = N-1\nwhile True:\n  if p[left] == p_min:\n    left += 1\n  if p[right] == p_max:\n    right -= 1\n  if left >= right:\n    break\n\n#print(left, right)\n\n# 2\u3064\u306e\u8981\u7d20\u3092\u5165\u308c\u66ff\u3048\u308b\np[left], p[right] = p[right], p[left]\n#print(p)\n\n# \u5165\u308c\u66ff\u3048\u305f\u5f8c\u304c\u6607\u9806\u306b\u306a\u3063\u3066\u3044\u305f\u3089YES\nif p == list(range(1,N+1)):\n  print(\"YES\")\nelse:\n  print(\"NO\")"
+}
+2022-04-19 22:56:36.176647 REASON stop
+2022-04-19 22:56:36.177559 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\np = list(map(int, input().split()))\n\nif p[0] == 1:\n    if p[1] == 2:\n        print(\"YES\")\n    else:\n        print(\"NO\")\nelse:\n    print(\"NO\")"
+}
+2022-04-19 22:56:36.177647 REASON stop
+2022-04-19 22:56:36.178479 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    N = int(sys.stdin.readline().rstrip())\n    p = list(map(int, sys.stdin.readline().rstrip().split()))\n    print(\"YES\" if can_sort(p) else \"NO\")\n\ndef can_sort(p):\n    for i in range(1, len(p)):\n        if p[i-1] > p[i]:\n            return True\n    return False\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:56:36.178643 REASON stop

@@ -1,0 +1,161 @@
+2022-04-19 20:49:28.965081 """
+You are given a matrix $a$ of size $n \times m$ consisting of integers.
+
+You can choose no more than $\left\lfloor\frac{m}{2}\right\rfloor$ elements in each row. Your task is to choose these elements in such a way that their sum is divisible by $k$ and this sum is the maximum.
+
+In other words, you can choose no more than a half (rounded down) of elements in each row, you have to find the maximum sum of these elements divisible by $k$.
+
+Note that you can choose zero elements (and the sum of such set is $0$).
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $m$ and $k$ ($1 \le n, m, k \le 70$) — the number of rows in the matrix, the number of columns in the matrix and the value of $k$. The next $n$ lines contain $m$ elements each, where the $j$-th element of the $i$-th row is $a_{i, j}$ ($1 \le a_{i, j} \le 70$).
+
+
+-----Output-----
+
+Print one integer — the maximum sum divisible by $k$ you can obtain.
+
+
+-----Examples-----
+Input
+3 4 3
+1 2 3 4
+5 2 2 2
+7 1 1 4
+
+Output
+24
+
+Input
+5 5 4
+1 2 4 2 1
+3 5 1 2 4
+1 5 7 1 2
+3 8 7 1 2
+8 4 7 1 6
+
+Output
+56
+
+
+
+-----Note-----
+
+In the first example, the optimal answer is $2$ and $4$ in the first row, $5$ and $2$ in the second row and $7$ and $4$ in the third row. The total sum is $2 + 4 + 5 + 2 + 7 + 4 = 24$.
+"""
+2022-04-19 20:49:28.965098 --------------------------
+2022-04-19 20:49:28.965201 using api key derek
+2022-04-19 20:49:57.101750 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\na = []\nfor _ in range(n):\n    a.append(list(map(int, input().split())))\n\ndp = [[0 for i in range(m + 1)] for j in range(n + 1)]\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        dp[i][j] = dp[i - 1][j] + a[i - 1][j - 1]\n\nans = 0\nfor i in range(1, n + 1):\n    for j in range(0, min(m // 2 + 1, m)):\n        ans = max(ans, dp[i][m] - dp[i][m - j] - dp[i][j])\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = [list(map(int, input().split())) for _ in range(n)]\n\n    # dp[i][j][k] = the maximum sum divisible by k that can be obtained from the first i rows\n    # where the first j columns are used in the first i rows\n    dp = [[[0 for _ in range(k)] for _ in range(m + 1)] for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for p in range(k):\n                dp[i][j][p] = max(dp[i][j][p], dp[i][j - 1][p])\n                if j <= (m + 1) // 2:\n                    dp[i][j][(p + matrix[i - 1][j - 1]) % k] = max(dp[i][j][(p + matrix[i - 1][j - 1]) % k], dp[i][j - 1][p] + matrix[i - 1][j - 1])\n            for p in range(k):\n                dp[i][j][p] = max(dp[i][j][p], dp[i - 1][j][p])\n\n    ans = max(dp[n][m])\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef solve(n, m, k, matrix):\n    \"\"\"\n    >>> solve(3, 4, 3, [[1, 2, 3, 4], [5, 2, 2, 2], [7, 1, 1, 4]])\n    24\n    >>> solve(5, 5, 4, [[1, 2, 4, 2, 1], [3, 5, 1, 2, 4], [1, 5, 7, 1, 2], [3, 8, 7, 1, 2], [8, 4, 7, 1, 6]])\n    56\n    \"\"\"\n    dp = [[0 for _ in range(k)] for _ in range(m + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for l in range(k):\n                dp[j][(l + matrix[i - 1][j - 1]) % k] = max(dp[j - 1][l], dp[j][(l + matrix[i - 1][j - 1]) % k])\n    return dp[m][0]\n\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(solve(n, m, k, matrix))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nimport sys\n\ndef readline(): return sys.stdin.readline().strip()\n\nn, m, k = map(int, readline().split())\na = [list(map(int, readline().split())) for _ in range(n)]\n\ndp = [[0] * (m // 2 + 1) for _ in range(n)]\n\nfor i in range(n):\n    for j in range(m // 2 + 1):\n        if j == 0:\n            dp[i][j] = 0\n        else:\n            dp[i][j] = max([dp[i - 1][j], dp[i - 1][j - 1] + a[i][j * 2 - 2], dp[i - 1][j - 1] + a[i][j * 2 - 1]])\n\nprint(dp[n - 1][m // 2])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn, m, k = map(int, input().split())\n\n# create an array to store the maximum sum of the numbers in each row\n# in the range of [0, k-1]\nmax_sum = [0] * k\n\n# for each row\nfor i in range(n):\n    # create an array to store the sum of the numbers in the range of [0, k-1]\n    sum_array = [0] * k\n    # for each column\n    for j in range(m):\n        # read the number\n        number = int(input())\n        # calculate the sum of the numbers in the range of [0, k-1]\n        # by the formula: sum_array[l] = sum(a[i][j] % k == l)\n        sum_array[number % k] += 1\n    # calculate the maximum sum of the numbers in the range of [0, k-1]\n    # by the formula: max_sum[l] = max(max_sum[l], sum(a[i][j] % k == l))\n    for l in range(k):\n        max_sum[l] = max(max_sum[l], sum_array[l])\n\n# calculate the sum of the maximum sum of the numbers in the range of [0, k-1]\n# by the formula: sum_array[l] = max_sum[l] * l\nsum_array = [0] * k\nfor l in range(k):\n    sum_array[l] = max_sum[l] * l\n\n# calculate the maximum sum of the numbers in the range of [0, k-1]\n# by the formula: max_sum[l] = max(max_sum[l-1], sum_array[l])\nfor l in range(1, k):\n    max_sum[l] = max(max_sum[l-1], sum_array[l])\n\n# print the maximum sum of the numbers in the range of [0, k-1]\nprint(max_sum[k-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0] * (k + 1) for _ in range(m + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for d in range(k):\n                dp[j][(j * a[i - 1][j - 1] + d) % k] = max(dp[j][(j * a[i - 1][j - 1] + d) % k], dp[j - 1][d] + a[i - 1][j - 1])\n    print(dp[m][0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_list_int():\n    return list(map(int, sys.stdin.readline().strip().split(' ')))\n\ndef read_single_int():\n    return int(sys.stdin.readline().strip())\n\ndef main():\n    n, m, k = read_list_int()\n    a = []\n    for _ in range(n):\n        a.append(read_list_int())\n    dp = [[0 for _ in range(k)] for _ in range(m)]\n    for i in range(m):\n        dp[i][0] = 1\n    for i in range(n):\n        for j in range(m):\n            for l in range(k):\n                dp[j][(l*10+a[i][j])%k] += dp[j-1][l]\n    print(dp)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = []\nfor _ in range(n):\n    a.append([int(x) for x in input().split()])\n\n# dp[i][j] = max sum of choosing j elements from the first i rows\ndp = [[0] * (m//2 + 1) for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m//2 + 1):\n        dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n        for k in range(j+1):\n            dp[i][j] = max(dp[i][j], dp[i-1][j-k] + sum(a[i-1][k:m-k]))\n\nprint(dp[-1][-1])"
+    }
+  ],
+  "created": 1650401370,
+  "id": "cmpl-4yp4s4JrkYQqtqYENOZMOLeFDAzTa",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:49:57.102082 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\na = []\nfor _ in range(n):\n    a.append(list(map(int, input().split())))\n\ndp = [[0 for i in range(m + 1)] for j in range(n + 1)]\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        dp[i][j] = dp[i - 1][j] + a[i - 1][j - 1]\n\nans = 0\nfor i in range(1, n + 1):\n    for j in range(0, min(m // 2 + 1, m)):\n        ans = max(ans, dp[i][m] - dp[i][m - j] - dp[i][j])\nprint(ans)"
+}
+2022-04-19 20:49:57.102198 REASON stop
+2022-04-19 20:49:57.102760 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = [list(map(int, input().split())) for _ in range(n)]\n\n    # dp[i][j][k] = the maximum sum divisible by k that can be obtained from the first i rows\n    # where the first j columns are used in the first i rows\n    dp = [[[0 for _ in range(k)] for _ in range(m + 1)] for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for p in range(k):\n                dp[i][j][p] = max(dp[i][j][p], dp[i][j - 1][p])\n                if j <= (m + 1) // 2:\n                    dp[i][j][(p + matrix[i - 1][j - 1]) % k] = max(dp[i][j][(p + matrix[i - 1][j - 1]) % k], dp[i][j - 1][p] + matrix[i - 1][j - 1])\n            for p in range(k):\n                dp[i][j][p] = max(dp[i][j][p], dp[i - 1][j][p])\n\n    ans = max(dp[n][m])\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:49:57.102834 REASON stop
+2022-04-19 20:49:57.103285 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef solve(n, m, k, matrix):\n    \"\"\"\n    >>> solve(3, 4, 3, [[1, 2, 3, 4], [5, 2, 2, 2], [7, 1, 1, 4]])\n    24\n    >>> solve(5, 5, 4, [[1, 2, 4, 2, 1], [3, 5, 1, 2, 4], [1, 5, 7, 1, 2], [3, 8, 7, 1, 2], [8, 4, 7, 1, 6]])\n    56\n    \"\"\"\n    dp = [[0 for _ in range(k)] for _ in range(m + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for l in range(k):\n                dp[j][(l + matrix[i - 1][j - 1]) % k] = max(dp[j - 1][l], dp[j][(l + matrix[i - 1][j - 1]) % k])\n    return dp[m][0]\n\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(solve(n, m, k, matrix))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:49:57.103348 REASON stop
+2022-04-19 20:49:57.124728 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nimport sys\n\ndef readline(): return sys.stdin.readline().strip()\n\nn, m, k = map(int, readline().split())\na = [list(map(int, readline().split())) for _ in range(n)]\n\ndp = [[0] * (m // 2 + 1) for _ in range(n)]\n\nfor i in range(n):\n    for j in range(m // 2 + 1):\n        if j == 0:\n            dp[i][j] = 0\n        else:\n            dp[i][j] = max([dp[i - 1][j], dp[i - 1][j - 1] + a[i][j * 2 - 2], dp[i - 1][j - 1] + a[i][j * 2 - 1]])\n\nprint(dp[n - 1][m // 2])"
+}
+2022-04-19 20:49:57.124859 REASON stop
+2022-04-19 20:49:57.143254 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn, m, k = map(int, input().split())\n\n# create an array to store the maximum sum of the numbers in each row\n# in the range of [0, k-1]\nmax_sum = [0] * k\n\n# for each row\nfor i in range(n):\n    # create an array to store the sum of the numbers in the range of [0, k-1]\n    sum_array = [0] * k\n    # for each column\n    for j in range(m):\n        # read the number\n        number = int(input())\n        # calculate the sum of the numbers in the range of [0, k-1]\n        # by the formula: sum_array[l] = sum(a[i][j] % k == l)\n        sum_array[number % k] += 1\n    # calculate the maximum sum of the numbers in the range of [0, k-1]\n    # by the formula: max_sum[l] = max(max_sum[l], sum(a[i][j] % k == l))\n    for l in range(k):\n        max_sum[l] = max(max_sum[l], sum_array[l])\n\n# calculate the sum of the maximum sum of the numbers in the range of [0, k-1]\n# by the formula: sum_array[l] = max_sum[l] * l\nsum_array = [0] * k\nfor l in range(k):\n    sum_array[l] = max_sum[l] * l\n\n# calculate the maximum sum of the numbers in the range of [0, k-1]\n# by the formula: max_sum[l] = max(max_sum[l-1], sum_array[l])\nfor l in range(1, k):\n    max_sum[l] = max(max_sum[l-1], sum_array[l])\n\n# print the maximum sum of the numbers in the range of [0, k-1]\nprint(max_sum[k-1])"
+}
+2022-04-19 20:49:57.143382 REASON stop
+2022-04-19 20:49:57.145977 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    dp = [[0] * (k + 1) for _ in range(m + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            for d in range(k):\n                dp[j][(j * a[i - 1][j - 1] + d) % k] = max(dp[j][(j * a[i - 1][j - 1] + d) % k], dp[j - 1][d] + a[i - 1][j - 1])\n    print(dp[m][0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:49:57.146080 REASON stop
+2022-04-19 20:49:57.146801 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_list_int():\n    return list(map(int, sys.stdin.readline().strip().split(' ')))\n\ndef read_single_int():\n    return int(sys.stdin.readline().strip())\n\ndef main():\n    n, m, k = read_list_int()\n    a = []\n    for _ in range(n):\n        a.append(read_list_int())\n    dp = [[0 for _ in range(k)] for _ in range(m)]\n    for i in range(m):\n        dp[i][0] = 1\n    for i in range(n):\n        for j in range(m):\n            for l in range(k):\n                dp[j][(l*10+a[i][j])%k] += dp[j-1][l]\n    print(dp)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:49:57.146868 REASON stop
+2022-04-19 20:49:57.147880 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, m, k = [int(x) for x in input().split()]\na = []\nfor _ in range(n):\n    a.append([int(x) for x in input().split()])\n\n# dp[i][j] = max sum of choosing j elements from the first i rows\ndp = [[0] * (m//2 + 1) for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, m//2 + 1):\n        dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n        for k in range(j+1):\n            dp[i][j] = max(dp[i][j], dp[i-1][j-k] + sum(a[i-1][k:m-k]))\n\nprint(dp[-1][-1])"
+}
+2022-04-19 20:49:57.148039 REASON stop

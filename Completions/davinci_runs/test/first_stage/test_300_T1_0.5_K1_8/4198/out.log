@@ -1,0 +1,144 @@
+2022-04-19 22:52:04.482199 """
+Takahashi has come to an integer shop to buy an integer.
+The shop sells the integers from 1 through 10^9. The integer N is sold for A \times N + B \times d(N) yen (the currency of Japan), where d(N) is the number of digits in the decimal notation of N.
+Find the largest integer that Takahashi can buy when he has X yen. If no integer can be bought, print 0.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq A \leq 10^9
+ - 1 \leq B \leq 10^9
+ - 1 \leq X \leq 10^{18}
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A B X
+
+-----Output-----
+Print the greatest integer that Takahashi can buy. If no integer can be bought, print 0.
+
+-----Sample Input-----
+10 7 100
+
+-----Sample Output-----
+9
+
+The integer 9 is sold for 10 \times 9 + 7 \times 1 = 97 yen, and this is the greatest integer that can be bought.
+Some of the other integers are sold for the following prices:
+ - 10: 10 \times 10 + 7 \times 2 = 114 yen
+ - 100: 10 \times 100 + 7 \times 3 = 1021 yen
+ - 12345: 10 \times 12345 + 7 \times 5 = 123485 yen
+"""
+2022-04-19 22:52:04.482210 --------------------------
+2022-04-19 22:52:04.482324 using api key derek
+2022-04-19 22:52:28.146822 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\na, b, x = map(int, input().split())\n\nif x < a:\n    print(0)\nelse:\n    n = (x - b) // a\n    if a * n + b * len(str(n)) > x:\n        print(n - 1)\n    else:\n        print(n)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# A, B, X = map(int, input().split())\nA, B, X = 10, 7, 100\n\ndef main():\n    price = 0\n    for n in range(1, 10**9+1):\n        price = A*n + B*len(str(n))\n        if price > X:\n            break\n    else:\n        n = 0\n    print(n-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# I think this is a good example of the power of a greedy algorithm.\n# It's obvious that we want the largest possible integer for our money,\n# but it's not so obvious how to calculate that.\n# The greedy approach is to use the fact that the cost of an integer is\n# A * N + B * d(N).\n# We can see that the cost of an integer is monotonically increasing in N,\n# but the cost of an integer is monotonically decreasing in d(N).\n# So, we want to use as many digits as possible,\n# and we want to use the largest possible digits.\n# The largest possible digits are 9, so we want to use 9s as much as possible.\n# The cost of the number 9 is 10 * 9 + 7 * 1 = 97,\n# so we can buy a 9 for every 97 yen we have.\n# Once we've used up all of our 9s, we want to use 8s as much as possible,\n# and so on.\n# We can also use 0s as much as we want, since they don't cost anything.\n# We can use a greedy algorithm to find the largest possible integer for our money.\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\n\nimport sys\n\n# Read in the input.\nA, B, X = map(int, sys.stdin.readline().split())\n\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\n# We can use a greedy algorithm to find the largest possible integer for our money.\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\nanswer = \"\"\nfor i in range(9, -1, -1):\n    # We can buy i if we have enough money to buy at least one of them.\n    # The cost of buying one i is A * i + B * 1.\n    if X >= A * i + B:\n        # We can buy as many i as we have money for.\n        # The cost of buying one i is A * i + B * 1,\n        # so the cost of buying n i is A * i * n + B * n.\n        n = (X - B) // (A * i + B)\n        # Add n i to the answer.\n        answer += str(i) * n\n        # Subtract the cost of buying n i from the money we have.\n        X -= (A * i + B) * n\n\n# Print the answer.\nprint(answer)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\na, b, x = map(int, sys.stdin.readline().split())\n\nif x < a + b:\n    print(0)\n    exit()\n\nl, r = 1, 10**9\nwhile l < r:\n    m = (l + r + 1) // 2\n    if a * m + b * len(str(m)) > x:\n        r = m - 1\n    else:\n        l = m\n\nprint(l)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#-----main-----\n\n#read input\na,b,x = list(map(int, input().split()))\n\n#calculate price\ndef price(n):\n    return a * n + b * len(str(n))\n\n#calculate maximum integer that can be bought\ndef max_integer(x):\n    #define upper limit\n    upper = 10 ** 9\n    #define lower limit\n    lower = 0\n    #define middle\n    middle = upper // 2\n    #if price(middle) is less than x, lower limit becomes middle\n    while price(middle) >= x:\n        upper = middle\n        middle = (upper + lower) // 2\n    #if price(middle) is greater than x, upper limit becomes middle\n    while price(middle) < x:\n        lower = middle\n        middle = (upper + lower) // 2\n    #return middle\n    return middle\n\n#print\nprint(max_integer(x))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nif __name__ == \"__main__\":\n    a, b, x = map(int, input().split())\n    if x < a:\n        print(0)\n    else:\n        n = 10**9\n        while n >= 1:\n            if a * n + b * len(str(n)) <= x:\n                print(n)\n                exit()\n            n -= 1\n        print(0)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    a, b, x = map(int, input().split())\n    if x >= a * 10**9 + b * 10:\n        print(10**9)\n    else:\n        print(math.floor((x - b) / a))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    a, b, x = map(int, input().split())\n    n = 0\n    while True:\n        if a * n + b * len(str(n)) > x:\n            break\n        n += 1\n    print(n - 1)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650408724,
+  "id": "cmpl-4yqzUWmd96pxNyrwTv8RjO9kOXrJ4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:52:28.147171 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\na, b, x = map(int, input().split())\n\nif x < a:\n    print(0)\nelse:\n    n = (x - b) // a\n    if a * n + b * len(str(n)) > x:\n        print(n - 1)\n    else:\n        print(n)"
+}
+2022-04-19 22:52:28.147206 REASON stop
+2022-04-19 22:52:28.148170 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# A, B, X = map(int, input().split())\nA, B, X = 10, 7, 100\n\ndef main():\n    price = 0\n    for n in range(1, 10**9+1):\n        price = A*n + B*len(str(n))\n        if price > X:\n            break\n    else:\n        n = 0\n    print(n-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:52:28.148257 REASON stop
+2022-04-19 22:52:28.148788 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# I think this is a good example of the power of a greedy algorithm.\n# It's obvious that we want the largest possible integer for our money,\n# but it's not so obvious how to calculate that.\n# The greedy approach is to use the fact that the cost of an integer is\n# A * N + B * d(N).\n# We can see that the cost of an integer is monotonically increasing in N,\n# but the cost of an integer is monotonically decreasing in d(N).\n# So, we want to use as many digits as possible,\n# and we want to use the largest possible digits.\n# The largest possible digits are 9, so we want to use 9s as much as possible.\n# The cost of the number 9 is 10 * 9 + 7 * 1 = 97,\n# so we can buy a 9 for every 97 yen we have.\n# Once we've used up all of our 9s, we want to use 8s as much as possible,\n# and so on.\n# We can also use 0s as much as we want, since they don't cost anything.\n# We can use a greedy algorithm to find the largest possible integer for our money.\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\n\nimport sys\n\n# Read in the input.\nA, B, X = map(int, sys.stdin.readline().split())\n\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\n# We can use a greedy algorithm to find the largest possible integer for our money.\n# We start with the largest digit, 9, and we buy as many 9s as we can.\n# Then we move on to the next largest digit, 8, and we buy as many 8s as we can.\n# We continue until we run out of money.\n# The largest integer we can buy is the concatenation of all the digits we bought.\nanswer = \"\"\nfor i in range(9, -1, -1):\n    # We can buy i if we have enough money to buy at least one of them.\n    # The cost of buying one i is A * i + B * 1.\n    if X >= A * i + B:\n        # We can buy as many i as we have money for.\n        # The cost of buying one i is A * i + B * 1,\n        # so the cost of buying n i is A * i * n + B * n.\n        n = (X - B) // (A * i + B)\n        # Add n i to the answer.\n        answer += str(i) * n\n        # Subtract the cost of buying n i from the money we have.\n        X -= (A * i + B) * n\n\n# Print the answer.\nprint(answer)"
+}
+2022-04-19 22:52:28.148912 REASON stop
+2022-04-19 22:52:28.181308 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\na, b, x = map(int, sys.stdin.readline().split())\n\nif x < a + b:\n    print(0)\n    exit()\n\nl, r = 1, 10**9\nwhile l < r:\n    m = (l + r + 1) // 2\n    if a * m + b * len(str(m)) > x:\n        r = m - 1\n    else:\n        l = m\n\nprint(l)"
+}
+2022-04-19 22:52:28.181440 REASON stop
+2022-04-19 22:52:28.203506 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#-----main-----\n\n#read input\na,b,x = list(map(int, input().split()))\n\n#calculate price\ndef price(n):\n    return a * n + b * len(str(n))\n\n#calculate maximum integer that can be bought\ndef max_integer(x):\n    #define upper limit\n    upper = 10 ** 9\n    #define lower limit\n    lower = 0\n    #define middle\n    middle = upper // 2\n    #if price(middle) is less than x, lower limit becomes middle\n    while price(middle) >= x:\n        upper = middle\n        middle = (upper + lower) // 2\n    #if price(middle) is greater than x, upper limit becomes middle\n    while price(middle) < x:\n        lower = middle\n        middle = (upper + lower) // 2\n    #return middle\n    return middle\n\n#print\nprint(max_integer(x))"
+}
+2022-04-19 22:52:28.203641 REASON stop
+2022-04-19 22:52:28.204253 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nif __name__ == \"__main__\":\n    a, b, x = map(int, input().split())\n    if x < a:\n        print(0)\n    else:\n        n = 10**9\n        while n >= 1:\n            if a * n + b * len(str(n)) <= x:\n                print(n)\n                exit()\n            n -= 1\n        print(0)"
+}
+2022-04-19 22:52:28.204367 REASON stop
+2022-04-19 22:52:28.207307 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    a, b, x = map(int, input().split())\n    if x >= a * 10**9 + b * 10:\n        print(10**9)\n    else:\n        print(math.floor((x - b) / a))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:52:28.207431 REASON stop
+2022-04-19 22:52:28.208080 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    a, b, x = map(int, input().split())\n    n = 0\n    while True:\n        if a * n + b * len(str(n)) > x:\n            break\n        n += 1\n    print(n - 1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:52:28.208272 REASON stop

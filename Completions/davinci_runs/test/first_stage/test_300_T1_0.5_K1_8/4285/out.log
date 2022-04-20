@@ -1,0 +1,173 @@
+2022-04-19 23:38:36.719330 """
+You are given a string $s$ consisting of lowercase Latin letters "a", "b" and "c" and question marks "?".
+
+Let the number of question marks in the string $s$ be $k$. Let's replace each question mark with one of the letters "a", "b" and "c". Here we can obtain all $3^{k}$ possible strings consisting only of letters "a", "b" and "c". For example, if $s = $"ac?b?c" then we can obtain the following strings: $[$"acabac", "acabbc", "acabcc", "acbbac", "acbbbc", "acbbcc", "accbac", "accbbc", "accbcc"$]$.
+
+Your task is to count the total number of subsequences "abc" in all resulting strings. Since the answer can be very large, print it modulo $10^{9} + 7$.
+
+A subsequence of the string $t$ is such a sequence that can be derived from the string $t$ after removing some (possibly, zero) number of letters without changing the order of remaining letters. For example, the string "baacbc" contains two subsequences "abc" — a subsequence consisting of letters at positions $(2, 5, 6)$ and a subsequence consisting of letters at positions $(3, 5, 6)$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ $(3 \le n \le 200\,000)$ — the length of $s$.
+
+The second line of the input contains the string $s$ of length $n$ consisting of lowercase Latin letters "a", "b" and "c" and question marks"?".
+
+
+-----Output-----
+
+Print the total number of subsequences "abc" in all strings you can obtain if you replace all question marks with letters "a", "b" and "c", modulo $10^{9} + 7$.
+
+
+-----Examples-----
+Input
+6
+ac?b?c
+
+Output
+24
+
+Input
+7
+???????
+
+Output
+2835
+
+Input
+9
+cccbbbaaa
+
+Output
+0
+
+Input
+5
+a???c
+
+Output
+46
+
+
+
+-----Note-----
+
+In the first example, we can obtain $9$ strings:  "acabac" — there are $2$ subsequences "abc",  "acabbc" — there are $4$ subsequences "abc",  "acabcc" — there are $4$ subsequences "abc",  "acbbac" — there are $2$ subsequences "abc",  "acbbbc" — there are $3$ subsequences "abc",  "acbbcc" — there are $4$ subsequences "abc",  "accbac" — there is $1$ subsequence "abc",  "accbbc" — there are $2$ subsequences "abc",  "accbcc" — there are $2$ subsequences "abc". 
+
+So, there are $2 + 4 + 4 + 2 + 3 + 4 + 1 + 2 + 2 = 24$ subsequences "abc" in total.
+"""
+2022-04-19 23:38:36.719346 --------------------------
+2022-04-19 23:38:36.719449 using api key sourya
+2022-04-19 23:39:00.465845 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\n#This is a solution for the problem, but it is too slow.\ndef solution(string):\n    string = string.replace('?', 'abc')\n    total = 0\n    for i in string:\n        for j in string:\n            for k in string:\n                if i+j+k == 'abc':\n                    total += 1\n    return total\n\n#This is the solution for the problem.\ndef solution(s):\n    n = len(s)\n    mod = 10**9 + 7\n    dp = [[0] * 3 for _ in range(n)]\n    dp[0][0] = 1\n    for i in range(1, n):\n        if s[i] == '?':\n            dp[i][0] = dp[i - 1][0] * 3\n            dp[i][1] = dp[i - 1][0] + dp[i - 1][1] * 3\n            dp[i][2] = dp[i - 1][1] + dp[i - 1][2] * 3\n        elif s[i] == 'a':\n            dp[i][0] = dp[i - 1][0]\n            dp[i][1] = dp[i - 1][0]\n            dp[i][2] = dp[i - 1][1]\n        elif s[i] == 'b':\n            dp[i][0] = 0\n            dp[i][1] = dp[i - 1][0]\n            dp[i][2] = dp[i - 1][1]\n        elif s[i] == 'c':\n            dp[i][0] = 0\n            dp[i][1] = 0\n            dp[i][2] = dp[i - 1][1]\n    return dp[-1][2] % mod"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solution():\n    # Solution here\n    n = int(input())\n    s = input()\n    # print(n, s)\n\n    # count the number of question marks\n    k = 0\n    for i in range(n):\n        if s[i] == '?':\n            k += 1\n    # print(k)\n\n    # count the number of subsequences \"abc\" in the original string\n    cnt = 0\n    for i in range(n - 2):\n        if s[i] == 'a' and s[i + 1] == 'b' and s[i + 2] == 'c':\n            cnt += 1\n    # print(cnt)\n\n    # count the number of subsequences \"abc\" in all strings we can obtain if we replace\n    # all question marks with letters \"a\", \"b\" and \"c\"\n    res = 3 ** k * cnt\n\n    # print the result modulo $10^{9} + 7$\n    print(res % (10 ** 9 + 7))\n\n\nsolution()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1. Read input\n    2. Calculate number of subsequences\n    3. Output result\n    \"\"\"\n    # 1. Read input\n    n = int(input())\n    s = input()\n\n    # 2. Calculate number of subsequences\n    # TODO: implement this\n\n    # 3. Output result\n    print(result)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n\n#Solution\n\ndef find_subsequences_abc(n, s):\n    MOD = 10**9 + 7\n    cnt_a, cnt_b, cnt_c = 0, 0, 0\n    for c in s:\n        if c == 'a':\n            cnt_a = (cnt_a + 1) % MOD\n        elif c == 'b':\n            cnt_b = (cnt_b + cnt_a) % MOD\n        elif c == 'c':\n            cnt_c = (cnt_c + cnt_b) % MOD\n    return cnt_c\n\n\nn = int(input())\ns = input()\nprint(find_subsequences_abc(n, s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef readline():\n    return sys.stdin.readline()\n\ndef main():\n    n = int(readline())\n    s = readline()\n    MOD = 10**9 + 7\n\n    cnt = [0] * 26\n    for c in s:\n        if c == '?':\n            cnt[ord(c) - ord('a')] += 1\n        else:\n            cnt[ord(c) - ord('a')] += 1\n    # print(cnt)\n\n    # dp[i][j][k] = the number of ways to insert i 'a's, j 'b's and k 'c's\n    dp = [[[0] * (n+1) for _ in range(n+1)] for _ in range(n+1)]\n    dp[0][0][0] = 1\n    for a in range(n+1):\n        for b in range(n+1):\n            for c in range(n+1):\n                if a < n:\n                    dp[a+1][b][c] += dp[a][b][c]\n                if b < n:\n                    dp[a][b+1][c] += dp[a][b][c]\n                if c < n:\n                    dp[a][b][c+1] += dp[a][b][c]\n                dp[a][b][c] %= MOD\n\n    # print(dp)\n\n    ans = dp[cnt[ord('a')-ord('a')]][cnt[ord('b')-ord('a')]][cnt[ord('c')-ord('a')]]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport random\nimport time\nimport math\n\nclass Timer:\n    def __enter__(self):\n        self.start = time.clock()\n        return self\n\n    def __exit__(self, *args):\n        self.end = time.clock()\n        self.interval = self.end - self.start\n\n\ndef solve(s):\n    n = len(s)\n    d = [0] * n\n    for i in range(n):\n        if s[i] == '?':\n            d[i] = 3\n        else:\n            d[i] = 1\n    for i in range(1, n):\n        d[i] *= d[i - 1]\n\n    res = 0\n    for i in range(n - 2):\n        if s[i] == 'a' or s[i] == '?':\n            for j in range(i + 1, n - 1):\n                if s[j] == 'b' or s[j] == '?':\n                    for k in range(j + 1, n):\n                        if s[k] == 'c' or s[k] == '?':\n                            res += d[i] * d[j - i - 1] * d[n - k - 1]\n    return res % (10 ** 9 + 7)\n\n\ndef main():\n    sys.stdin = open('input.txt')\n    n = int(input())\n    s = input()\n    print(solve(s))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    # count the number of a, b and c\n    a = 0\n    b = 0\n    c = 0\n    for i in range(n):\n        if s[i] == 'a':\n            a += 1\n        elif s[i] == 'b':\n            b += 1\n        elif s[i] == 'c':\n            c += 1\n    \n    # count the number of question mark\n    q = n - a - b - c\n    \n    # calculate the number of subsequences 'abc'\n    ans = a * b * c\n    for i in range(q):\n        ans = (ans * 3) % 1000000007\n    \n    return ans\n\nif __name__ == '__main__':\n    sys.exit(main())"
+    }
+  ],
+  "created": 1650411516,
+  "id": "cmpl-4yriWqj1Z7UL9IR8tioM9qSHLjyjL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:39:00.466266 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\n#This is a solution for the problem, but it is too slow.\ndef solution(string):\n    string = string.replace('?', 'abc')\n    total = 0\n    for i in string:\n        for j in string:\n            for k in string:\n                if i+j+k == 'abc':\n                    total += 1\n    return total\n\n#This is the solution for the problem.\ndef solution(s):\n    n = len(s)\n    mod = 10**9 + 7\n    dp = [[0] * 3 for _ in range(n)]\n    dp[0][0] = 1\n    for i in range(1, n):\n        if s[i] == '?':\n            dp[i][0] = dp[i - 1][0] * 3\n            dp[i][1] = dp[i - 1][0] + dp[i - 1][1] * 3\n            dp[i][2] = dp[i - 1][1] + dp[i - 1][2] * 3\n        elif s[i] == 'a':\n            dp[i][0] = dp[i - 1][0]\n            dp[i][1] = dp[i - 1][0]\n            dp[i][2] = dp[i - 1][1]\n        elif s[i] == 'b':\n            dp[i][0] = 0\n            dp[i][1] = dp[i - 1][0]\n            dp[i][2] = dp[i - 1][1]\n        elif s[i] == 'c':\n            dp[i][0] = 0\n            dp[i][1] = 0\n            dp[i][2] = dp[i - 1][1]\n    return dp[-1][2] % mod"
+}
+2022-04-19 23:39:00.466313 REASON stop
+2022-04-19 23:39:00.503034 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solution():\n    # Solution here\n    n = int(input())\n    s = input()\n    # print(n, s)\n\n    # count the number of question marks\n    k = 0\n    for i in range(n):\n        if s[i] == '?':\n            k += 1\n    # print(k)\n\n    # count the number of subsequences \"abc\" in the original string\n    cnt = 0\n    for i in range(n - 2):\n        if s[i] == 'a' and s[i + 1] == 'b' and s[i + 2] == 'c':\n            cnt += 1\n    # print(cnt)\n\n    # count the number of subsequences \"abc\" in all strings we can obtain if we replace\n    # all question marks with letters \"a\", \"b\" and \"c\"\n    res = 3 ** k * cnt\n\n    # print the result modulo $10^{9} + 7$\n    print(res % (10 ** 9 + 7))\n\n\nsolution()"
+}
+2022-04-19 23:39:00.503169 REASON stop
+2022-04-19 23:39:00.503731 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-19 23:39:00.503799 REASON stop
+2022-04-19 23:39:00.531825 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1. Read input\n    2. Calculate number of subsequences\n    3. Output result\n    \"\"\"\n    # 1. Read input\n    n = int(input())\n    s = input()\n\n    # 2. Calculate number of subsequences\n    # TODO: implement this\n\n    # 3. Output result\n    print(result)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:39:00.531977 REASON stop
+2022-04-19 23:39:00.532606 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n\n#Solution\n\ndef find_subsequences_abc(n, s):\n    MOD = 10**9 + 7\n    cnt_a, cnt_b, cnt_c = 0, 0, 0\n    for c in s:\n        if c == 'a':\n            cnt_a = (cnt_a + 1) % MOD\n        elif c == 'b':\n            cnt_b = (cnt_b + cnt_a) % MOD\n        elif c == 'c':\n            cnt_c = (cnt_c + cnt_b) % MOD\n    return cnt_c\n\n\nn = int(input())\ns = input()\nprint(find_subsequences_abc(n, s))"
+}
+2022-04-19 23:39:00.532683 REASON stop
+2022-04-19 23:39:00.533649 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef readline():\n    return sys.stdin.readline()\n\ndef main():\n    n = int(readline())\n    s = readline()\n    MOD = 10**9 + 7\n\n    cnt = [0] * 26\n    for c in s:\n        if c == '?':\n            cnt[ord(c) - ord('a')] += 1\n        else:\n            cnt[ord(c) - ord('a')] += 1\n    # print(cnt)\n\n    # dp[i][j][k] = the number of ways to insert i 'a's, j 'b's and k 'c's\n    dp = [[[0] * (n+1) for _ in range(n+1)] for _ in range(n+1)]\n    dp[0][0][0] = 1\n    for a in range(n+1):\n        for b in range(n+1):\n            for c in range(n+1):\n                if a < n:\n                    dp[a+1][b][c] += dp[a][b][c]\n                if b < n:\n                    dp[a][b+1][c] += dp[a][b][c]\n                if c < n:\n                    dp[a][b][c+1] += dp[a][b][c]\n                dp[a][b][c] %= MOD\n\n    # print(dp)\n\n    ans = dp[cnt[ord('a')-ord('a')]][cnt[ord('b')-ord('a')]][cnt[ord('c')-ord('a')]]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:39:00.533747 REASON stop
+2022-04-19 23:39:00.534781 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport random\nimport time\nimport math\n\nclass Timer:\n    def __enter__(self):\n        self.start = time.clock()\n        return self\n\n    def __exit__(self, *args):\n        self.end = time.clock()\n        self.interval = self.end - self.start\n\n\ndef solve(s):\n    n = len(s)\n    d = [0] * n\n    for i in range(n):\n        if s[i] == '?':\n            d[i] = 3\n        else:\n            d[i] = 1\n    for i in range(1, n):\n        d[i] *= d[i - 1]\n\n    res = 0\n    for i in range(n - 2):\n        if s[i] == 'a' or s[i] == '?':\n            for j in range(i + 1, n - 1):\n                if s[j] == 'b' or s[j] == '?':\n                    for k in range(j + 1, n):\n                        if s[k] == 'c' or s[k] == '?':\n                            res += d[i] * d[j - i - 1] * d[n - k - 1]\n    return res % (10 ** 9 + 7)\n\n\ndef main():\n    sys.stdin = open('input.txt')\n    n = int(input())\n    s = input()\n    print(solve(s))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:39:00.534875 REASON stop
+2022-04-19 23:39:00.536028 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    s = input()\n    print(solve(n, s))\n\ndef solve(n, s):\n    # count the number of a, b and c\n    a = 0\n    b = 0\n    c = 0\n    for i in range(n):\n        if s[i] == 'a':\n            a += 1\n        elif s[i] == 'b':\n            b += 1\n        elif s[i] == 'c':\n            c += 1\n    \n    # count the number of question mark\n    q = n - a - b - c\n    \n    # calculate the number of subsequences 'abc'\n    ans = a * b * c\n    for i in range(q):\n        ans = (ans * 3) % 1000000007\n    \n    return ans\n\nif __name__ == '__main__':\n    sys.exit(main())"
+}
+2022-04-19 23:39:00.536207 REASON stop

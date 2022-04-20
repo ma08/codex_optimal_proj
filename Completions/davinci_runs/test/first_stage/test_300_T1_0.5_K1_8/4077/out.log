@@ -1,0 +1,166 @@
+2022-04-19 21:40:13.276533 """
+You are given an integer sequence $a_1, a_2, \dots, a_n$.
+
+Find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of median of $a_l, a_{l+1}, \dots, a_r$ is exactly the given number $m$.
+
+The median of a sequence is the value of an element which is in the middle of the sequence after sorting it in non-decreasing order. If the length of the sequence is even, the left of two middle elements is used.
+
+For example, if $a=[4, 2, 7, 5]$ then its median is $4$ since after sorting the sequence, it will look like $[2, 4, 5, 7]$ and the left of two middle elements is equal to $4$. The median of $[7, 1, 2, 9, 6]$ equals $6$ since after sorting, the value $6$ will be in the middle of the sequence.
+
+Write a program to find the number of pairs of indices $(l, r)$ ($1 \le l \le r \le n$) such that the value of median of $a_l, a_{l+1}, \dots, a_r$ is exactly the given number $m$.
+
+
+-----Input-----
+
+The first line contains integers $n$ and $m$ ($1 \le n,m \le 2\cdot10^5$) — the length of the given sequence and the required value of the median.
+
+The second line contains an integer sequence $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2\cdot10^5$).
+
+
+-----Output-----
+
+Print the required number.
+
+
+-----Examples-----
+Input
+5 4
+1 4 5 60 4
+
+Output
+8
+
+Input
+3 1
+1 1 1
+
+Output
+6
+
+Input
+15 2
+1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
+
+Output
+97
+
+
+
+-----Note-----
+
+In the first example, the suitable pairs of indices are: $(1, 3)$, $(1, 4)$, $(1, 5)$, $(2, 2)$, $(2, 3)$, $(2, 5)$, $(4, 5)$ and $(5, 5)$.
+"""
+2022-04-19 21:40:13.276549 --------------------------
+2022-04-19 21:40:13.276657 using api key sourya
+2022-04-19 21:41:34.841465 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    # print(n, m, a)\n    \n    # create a list of tuples (a[i], i)\n    a_i = []\n    for i in range(n):\n        a_i.append((a[i], i))\n    # print(a_i)\n    \n    # sort the list of tuples\n    a_i.sort()\n    # print(a_i)\n    \n    # create a list of tuples (a[i], i, a[i] - m)\n    a_i_m = []\n    for i in range(n):\n        a_i_m.append((a[i], i, a[i] - m))\n    # print(a_i_m)\n    \n    # sort the list of tuples\n    a_i_m.sort()\n    # print(a_i_m)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1)\n    a_i_m_1 = []\n    for i in range(n):\n        a_i_m_1.append((a[i], i, a[i] - m, a[i] - m + 1))\n    # print(a_i_m_1)\n    \n    # sort the list of tuples\n    a_i_m_1.sort()\n    # print(a_i_m_1)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1)\n    a_i_m_1_m1 = []\n    for i in range(n):\n        a_i_m_1_m1.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1))\n    # print(a_i_m_1_m1)\n    \n    # sort the list of tuples\n    a_i_m_1_m1.sort()\n    # print(a_i_m_1_m1)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2)\n    a_i_m_1_m1_2 = []\n    for i in range(n):\n        a_i_m_1_m1_2.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2))\n    # print(a_i_m_1_m1_2)\n    \n    # sort the list of tuples\n    a_i_m_1_m1_2.sort()\n    # print(a_i_m_1_m1_2)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2, a[i] - m - 2)\n    a_i_m_1_m1_2_m2 = []\n    for i in range(n):\n        a_i_m_1_m1_2_m2.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2, a[i] - m - 2))\n    # print(a_i_m_1_m1_2_m2)\n    \n    # sort the list of tuples\n    a_i_m_1_m1_2_m2.sort()\n    # print(a_i_m_1_m1_2_m2)\n    \n    # count the pairs\n    count = 0\n    for i in range(n):\n        if a[i] == m:\n            count += 1\n    \n    # m < a[i]\n    for i in range(n):\n        # m + 1 < a[i]\n        if a[i] - m > 1:\n            # find the number of elements greater than a[i] - m - 1\n            count += i - a_i_m_1_m1_2_m2.index(a[i] - m - 1, i)\n        # m + 1 = a[i]\n        elif a[i] - m == 1:\n            # find the number of elements greater than a[i] - m - 1\n            count += i - a_i_m_1_m1_2.index(a[i] - m - 1, i)\n    # m > a[i]\n    for i in range(n):\n        # m - 1 > a[i]\n        if a[i] - m < -1:\n            # find the number of elements less than a[i] - m + 1\n            count += a_i_m_1_m1_2_m2.index(a[i] - m + 1, i) - i\n        # m - 1 = a[i]\n        elif a[i] - m == -1:\n            # find the number of elements less than a[i] - m + 1\n            count += a_i_m_1_m1_2.index(a[i] - m + 1, i) - i\n    \n    print(count)\n    \n    \nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,m = [int(x) for x in input().split()]\n    arr = [int(x) for x in input().split()]\n    counts = {}\n    for i in arr:\n        if i not in counts:\n            counts[i] = 0\n        counts[i] += 1\n    keys = sorted(counts.keys())\n    left = 0\n    right = len(keys) - 1\n    res = 0\n    while left <= right:\n        if keys[left] + keys[right] == m:\n            if keys[left] == keys[right]:\n                res += counts[keys[left]] * (counts[keys[left]] - 1)\n            else:\n                res += counts[keys[left]] * counts[keys[right]]\n            left += 1\n            right -= 1\n        elif keys[left] + keys[right] < m:\n            left += 1\n        else:\n            right -= 1\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,m = map(int, input().split())\n    a = list(map(int, input().split()))\n    s = 0\n    for i in range(n):\n        for j in range(i,n):\n            if (j-i+1)%2 == 0:\n                if a[(j+i)//2] == m:\n                    s += 1\n            else:\n                if a[(j+i)//2] == m or a[(j+i)//2+1] == m:\n                    s += 1\n    print(s)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = [0] + list(map(int, input().split()))\n\n    # \u524d\u7f00\u548c\n    for i in range(1, n + 1):\n        a[i] += a[i - 1]\n\n    # \u524d\u7f00\u548c\u4e2d\u662f\u5426\u5b58\u5728m\uff0c\u5b58\u5728\u5219\u8bb0\u5f55\u51fa\u73b0\u7684\u6b21\u6570\n    tmp = {}\n    for i in range(1, n + 1):\n        if a[i] - m in tmp:\n            tmp[a[i] - m] += 1\n        else:\n            tmp[a[i] - m] = 1\n\n    # \u6b21\u6570\u7d2f\u52a0\n    for i in range(n):\n        if a[i] in tmp:\n            tmp[a[i]] += 1\n        else:\n            tmp[a[i]] = 1\n\n    res = 0\n    for i in range(1, n + 1):\n        if a[i] - m in tmp:\n            res += tmp[a[i] - m]\n\n    print(res)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n\n    count = 0\n    for i in range(n):\n        if a[i] > m:\n            break\n        elif a[i] == m:\n            count += 1\n\n    for i in range(n):\n        if a[i] > m:\n            break\n        elif a[i] == m:\n            count += 1\n        else:\n            for j in range(i+1, n):\n                if a[j] > m:\n                    break\n                elif a[j] == m:\n                    count += 1\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_median(numbers):\n    numbers = sorted(numbers)\n    if len(numbers) % 2 == 0:\n        return numbers[int(math.floor(len(numbers) / 2))]\n    else:\n        return numbers[int(math.floor(len(numbers) / 2))]\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if get_median(a[i:j+1]) == m:\n                count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport math\nimport copy\n\n# n, m = map(int, input().split())\n# a = list(map(int, input().split()))\n\nn, m = 5, 4\na = [1, 4, 5, 60, 4]\n\n# n, m = 3, 1\n# a = [1, 1, 1]\n\n# n, m = 15, 2\n# a = [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]\n\n\ndef median(a: list):\n    if len(a) % 2 == 0:\n        return (a[len(a) // 2 - 1] + a[len(a) // 2]) / 2\n    else:\n        return a[math.ceil(len(a) / 2) - 1]\n\n\ndef find_median(a: list, m: int):\n    if median(a) == m:\n        return 1\n    else:\n        return 0\n\n\ndef find_median_pairs(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        pairs += find_median(a[i:], m)\n    return pairs\n\n\ndef find_median_pairs_optimized(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            pairs += 1\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                pairs += 1\n                j += 1\n    return pairs\n\n\ndef find_median_pairs_optimized2(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            pairs += 1\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                pairs += 1\n                j += 1\n            i = j - 1\n    return pairs\n\n\ndef find_median_pairs_optimized3(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n    return pairs\n\n\ndef find_median_pairs_optimized4(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized5(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized6(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized7(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized8(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized9(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized10(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized11(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized12(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized13(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized14(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized15(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized16(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized17(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized18(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized19(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized20(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized21(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized22(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized23(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized24(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized25(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized26(a: list, m: int):\n    pairs = 0\n    i"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef readInput():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    return n, m, a\n\ndef solve(n, m, a):\n    pass\n\nn, m, a = readInput()\nprint(solve(n, m, a))"
+    }
+  ],
+  "created": 1650404413,
+  "id": "cmpl-4yprxkmfgz853LEoJY15WHkjrPRvb",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:41:34.841959 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    # print(n, m, a)\n    \n    # create a list of tuples (a[i], i)\n    a_i = []\n    for i in range(n):\n        a_i.append((a[i], i))\n    # print(a_i)\n    \n    # sort the list of tuples\n    a_i.sort()\n    # print(a_i)\n    \n    # create a list of tuples (a[i], i, a[i] - m)\n    a_i_m = []\n    for i in range(n):\n        a_i_m.append((a[i], i, a[i] - m))\n    # print(a_i_m)\n    \n    # sort the list of tuples\n    a_i_m.sort()\n    # print(a_i_m)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1)\n    a_i_m_1 = []\n    for i in range(n):\n        a_i_m_1.append((a[i], i, a[i] - m, a[i] - m + 1))\n    # print(a_i_m_1)\n    \n    # sort the list of tuples\n    a_i_m_1.sort()\n    # print(a_i_m_1)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1)\n    a_i_m_1_m1 = []\n    for i in range(n):\n        a_i_m_1_m1.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1))\n    # print(a_i_m_1_m1)\n    \n    # sort the list of tuples\n    a_i_m_1_m1.sort()\n    # print(a_i_m_1_m1)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2)\n    a_i_m_1_m1_2 = []\n    for i in range(n):\n        a_i_m_1_m1_2.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2))\n    # print(a_i_m_1_m1_2)\n    \n    # sort the list of tuples\n    a_i_m_1_m1_2.sort()\n    # print(a_i_m_1_m1_2)\n    \n    # create a list of tuples (a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2, a[i] - m - 2)\n    a_i_m_1_m1_2_m2 = []\n    for i in range(n):\n        a_i_m_1_m1_2_m2.append((a[i], i, a[i] - m, a[i] - m + 1, a[i] - m - 1, a[i] - m + 2, a[i] - m - 2))\n    # print(a_i_m_1_m1_2_m2)\n    \n    # sort the list of tuples\n    a_i_m_1_m1_2_m2.sort()\n    # print(a_i_m_1_m1_2_m2)\n    \n    # count the pairs\n    count = 0\n    for i in range(n):\n        if a[i] == m:\n            count += 1\n    \n    # m < a[i]\n    for i in range(n):\n        # m + 1 < a[i]\n        if a[i] - m > 1:\n            # find the number of elements greater than a[i] - m - 1\n            count += i - a_i_m_1_m1_2_m2.index(a[i] - m - 1, i)\n        # m + 1 = a[i]\n        elif a[i] - m == 1:\n            # find the number of elements greater than a[i] - m - 1\n            count += i - a_i_m_1_m1_2.index(a[i] - m - 1, i)\n    # m > a[i]\n    for i in range(n):\n        # m - 1 > a[i]\n        if a[i] - m < -1:\n            # find the number of elements less than a[i] - m + 1\n            count += a_i_m_1_m1_2_m2.index(a[i] - m + 1, i) - i\n        # m - 1 = a[i]\n        elif a[i] - m == -1:\n            # find the number of elements less than a[i] - m + 1\n            count += a_i_m_1_m1_2.index(a[i] - m + 1, i) - i\n    \n    print(count)\n    \n    \nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:41:34.842018 REASON stop
+2022-04-19 21:41:34.842598 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,m = [int(x) for x in input().split()]\n    arr = [int(x) for x in input().split()]\n    counts = {}\n    for i in arr:\n        if i not in counts:\n            counts[i] = 0\n        counts[i] += 1\n    keys = sorted(counts.keys())\n    left = 0\n    right = len(keys) - 1\n    res = 0\n    while left <= right:\n        if keys[left] + keys[right] == m:\n            if keys[left] == keys[right]:\n                res += counts[keys[left]] * (counts[keys[left]] - 1)\n            else:\n                res += counts[keys[left]] * counts[keys[right]]\n            left += 1\n            right -= 1\n        elif keys[left] + keys[right] < m:\n            left += 1\n        else:\n            right -= 1\n    print(res)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:41:34.842664 REASON stop
+2022-04-19 21:41:34.843067 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,m = map(int, input().split())\n    a = list(map(int, input().split()))\n    s = 0\n    for i in range(n):\n        for j in range(i,n):\n            if (j-i+1)%2 == 0:\n                if a[(j+i)//2] == m:\n                    s += 1\n            else:\n                if a[(j+i)//2] == m or a[(j+i)//2+1] == m:\n                    s += 1\n    print(s)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:41:34.843126 REASON stop
+2022-04-19 21:41:34.866898 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = map(int, input().split())\n    a = [0] + list(map(int, input().split()))\n\n    # \u524d\u7f00\u548c\n    for i in range(1, n + 1):\n        a[i] += a[i - 1]\n\n    # \u524d\u7f00\u548c\u4e2d\u662f\u5426\u5b58\u5728m\uff0c\u5b58\u5728\u5219\u8bb0\u5f55\u51fa\u73b0\u7684\u6b21\u6570\n    tmp = {}\n    for i in range(1, n + 1):\n        if a[i] - m in tmp:\n            tmp[a[i] - m] += 1\n        else:\n            tmp[a[i] - m] = 1\n\n    # \u6b21\u6570\u7d2f\u52a0\n    for i in range(n):\n        if a[i] in tmp:\n            tmp[a[i]] += 1\n        else:\n            tmp[a[i]] = 1\n\n    res = 0\n    for i in range(1, n + 1):\n        if a[i] - m in tmp:\n            res += tmp[a[i] - m]\n\n    print(res)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:41:34.867031 REASON stop
+2022-04-19 21:41:34.875206 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n\n    count = 0\n    for i in range(n):\n        if a[i] > m:\n            break\n        elif a[i] == m:\n            count += 1\n\n    for i in range(n):\n        if a[i] > m:\n            break\n        elif a[i] == m:\n            count += 1\n        else:\n            for j in range(i+1, n):\n                if a[j] > m:\n                    break\n                elif a[j] == m:\n                    count += 1\n    print(count)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:41:34.875327 REASON stop
+2022-04-19 21:41:34.876368 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_median(numbers):\n    numbers = sorted(numbers)\n    if len(numbers) % 2 == 0:\n        return numbers[int(math.floor(len(numbers) / 2))]\n    else:\n        return numbers[int(math.floor(len(numbers) / 2))]\n\ndef main():\n    n, m = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n    count = 0\n    for i in range(n):\n        for j in range(i, n):\n            if get_median(a[i:j+1]) == m:\n                count += 1\n    print(count)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:41:34.876470 REASON stop
+2022-04-19 21:41:34.877287 6 {
+  "finish_reason": "length",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport math\nimport copy\n\n# n, m = map(int, input().split())\n# a = list(map(int, input().split()))\n\nn, m = 5, 4\na = [1, 4, 5, 60, 4]\n\n# n, m = 3, 1\n# a = [1, 1, 1]\n\n# n, m = 15, 2\n# a = [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]\n\n\ndef median(a: list):\n    if len(a) % 2 == 0:\n        return (a[len(a) // 2 - 1] + a[len(a) // 2]) / 2\n    else:\n        return a[math.ceil(len(a) / 2) - 1]\n\n\ndef find_median(a: list, m: int):\n    if median(a) == m:\n        return 1\n    else:\n        return 0\n\n\ndef find_median_pairs(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        pairs += find_median(a[i:], m)\n    return pairs\n\n\ndef find_median_pairs_optimized(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            pairs += 1\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                pairs += 1\n                j += 1\n    return pairs\n\n\ndef find_median_pairs_optimized2(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            pairs += 1\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                pairs += 1\n                j += 1\n            i = j - 1\n    return pairs\n\n\ndef find_median_pairs_optimized3(a: list, m: int):\n    pairs = 0\n    for i in range(len(a)):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n    return pairs\n\n\ndef find_median_pairs_optimized4(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized5(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized6(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized7(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized8(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized9(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized10(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized11(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized12(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized13(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized14(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized15(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized16(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized17(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized18(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized19(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized20(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized21(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized22(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized23(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized24(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized25(a: list, m: int):\n    pairs = 0\n    i = 0\n    while i < len(a):\n        if a[i] == m:\n            j = i + 1\n            while j < len(a) and a[j] == m:\n                j += 1\n            pairs += j - i\n            i = j - 1\n        i += 1\n    return pairs\n\n\ndef find_median_pairs_optimized26(a: list, m: int):\n    pairs = 0\n    i"
+}
+2022-04-19 21:41:34.877434 REASON length
+2022-04-19 21:41:34.877443 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef readInput():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    return n, m, a\n\ndef solve(n, m, a):\n    pass\n\nn, m, a = readInput()\nprint(solve(n, m, a))"
+}
+2022-04-19 21:41:34.877599 REASON stop

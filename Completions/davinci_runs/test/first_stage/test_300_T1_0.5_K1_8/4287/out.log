@@ -1,0 +1,181 @@
+2022-04-19 23:39:29.856398 """
+Polycarp lives on a coordinate line at the point $x = 0$. He goes to his friend that lives at the point $x = a$. Polycarp can move only from left to right, he can pass one unit of length each second.
+
+Now it's raining, so some segments of his way are in the rain. Formally, it's raining on $n$ non-intersecting segments, the $i$-th segment which is in the rain is represented as $[l_i, r_i]$ ($0 \le l_i < r_i \le a$).
+
+There are $m$ umbrellas lying on the line, the $i$-th umbrella is located at point $x_i$ ($0 \le x_i \le a$) and has weight $p_i$. When Polycarp begins his journey, he doesn't have any umbrellas.
+
+During his journey from $x = 0$ to $x = a$ Polycarp can pick up and throw away umbrellas. Polycarp picks up and throws down any umbrella instantly. He can carry any number of umbrellas at any moment of time. Because Polycarp doesn't want to get wet, he must carry at least one umbrella while he moves from $x$ to $x + 1$ if a segment $[x, x + 1]$ is in the rain (i.e. if there exists some $i$ such that $l_i \le x$ and $x + 1 \le r_i$).
+
+The condition above is the only requirement. For example, it is possible to go without any umbrellas to a point where some rain segment starts, pick up an umbrella at this point and move along with an umbrella. Polycarp can swap umbrellas while he is in the rain.
+
+Each unit of length passed increases Polycarp's fatigue by the sum of the weights of umbrellas he carries while moving.
+
+Can Polycarp make his way from point $x = 0$ to point $x = a$? If yes, find the minimum total fatigue after reaching $x = a$, if Polycarp picks up and throws away umbrellas optimally.
+
+
+-----Input-----
+
+The first line contains three integers $a$, $n$ and $m$ ($1 \le a, m \le 2000, 1 \le n \le \lceil\frac{a}{2}\rceil$) — the point at which Polycarp's friend lives, the number of the segments in the rain and the number of umbrellas.
+
+Each of the next $n$ lines contains two integers $l_i$ and $r_i$ ($0 \le l_i < r_i \le a$) — the borders of the $i$-th segment under rain. It is guaranteed that there is no pair of intersecting segments. In other words, for each pair of segments $i$ and $j$ either $r_i < l_j$ or $r_j < l_i$.
+
+Each of the next $m$ lines contains two integers $x_i$ and $p_i$ ($0 \le x_i \le a$, $1 \le p_i \le 10^5$) — the location and the weight of the $i$-th umbrella.
+
+
+-----Output-----
+
+Print "-1" (without quotes) if Polycarp can't make his way from point $x = 0$ to point $x = a$. Otherwise print one integer — the minimum total fatigue after reaching $x = a$, if Polycarp picks up and throws away umbrellas optimally.
+
+
+-----Examples-----
+Input
+10 2 4
+3 7
+8 10
+0 10
+3 4
+8 1
+1 2
+
+Output
+14
+
+Input
+10 1 1
+0 9
+0 5
+
+Output
+45
+
+Input
+10 1 1
+0 9
+1 5
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the only possible strategy is to take the fourth umbrella at the point $x = 1$, keep it till the point $x = 7$ (the total fatigue at $x = 7$ will be equal to $12$), throw it away, move on from $x = 7$ to $x = 8$ without an umbrella, take the third umbrella at $x = 8$ and keep it till the end (the total fatigue at $x = 10$ will be equal to $14$). 
+
+In the second example the only possible strategy is to take the first umbrella, move with it till the point $x = 9$, throw it away and proceed without an umbrella till the end.
+"""
+2022-04-19 23:39:29.856430 --------------------------
+2022-04-19 23:39:29.856538 using api key gabby
+2022-04-19 23:40:12.865982 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    umbrellas = []\n    for _ in range(n):\n        rain.append(list(map(int, input().split())))\n    for _ in range(m):\n        umbrellas.append(list(map(int, input().split())))\n    umbrellas.sort()\n    rain.sort()\n    # print(rain)\n    # print(umbrellas)\n\n    # dp[i][j] = min fatigue to reach point i with j umbrellas\n    # dp[i][j] = min(dp[i-1][j], dp[i-1][j-1] + weight)\n    dp = [[float('inf') for _ in range(m+1)] for _ in range(a+1)]\n    dp[0][0] = 0\n    for i in range(1, a+1):\n        for j in range(m+1):\n            dp[i][j] = dp[i-1][j]\n            if j > 0:\n                dp[i][j] = min(dp[i][j], dp[i-1][j-1] + umbrellas[j-1][1])\n        for r in rain:\n            if r[0] <= i <= r[1]:\n                dp[i][0] = float('inf')\n\n    # print(dp)\n    if dp[a][0] == float('inf'):\n        print(-1)\n    else:\n        print(dp[a][0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\n\ndef main():\n    a,n,m = map(int,input().split())\n    rain = []\n    for i in range(n):\n        rain.append(list(map(int,input().split())))\n    umbrellas = []\n    for i in range(m):\n        umbrellas.append(list(map(int,input().split())))\n    umbrellas.sort()\n    rain.sort()\n    if rain[0][0] == 0:\n        print(-1)\n        return\n    umbrellas.insert(0,[0,0])\n    umbrellas.append([a,0])\n    rain.insert(0,[0,0])\n    rain.append([a,a])\n    dp = [[] for i in range(n+2)]\n    dp[0] = [0,0]\n    for i in range(1,n+2):\n        for j in range(1,m+2):\n            if rain[i-1][1] <= umbrellas[j][0]:\n                dp[i].append(dp[i-1][j-1])\n            else:\n                dp[i].append(min(dp[i-1][j-1],dp[i][j-1]+umbrellas[j][1]))\n    if dp[n+1][m+1] != dp[n][m+1]:\n        print(-1)\n        return\n    ans = dp[n+1][m+1]\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef solve(a,n,m,segs,umbrellas):\n    pass\n\ndef main():\n    pass\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(a, n, m, l, r, x, p):\n    # dp[i] = (min_fatigue, min_fatigue_with_umbrella)\n    # dp[i][0] = min(dp[i-1][0] + p[i], dp[i-1][1])\n    # dp[i][1] = min(dp[i-1][0] + p[i], dp[i-1][1] + p[i])\n    dp = [[0, 0] for _ in range(m)]\n    for i in range(m):\n        if i == 0:\n            dp[i][0] = sys.maxsize\n            dp[i][1] = p[i]\n        else:\n            dp[i][0] = min(dp[i-1][0], dp[i-1][1])\n            dp[i][1] = min(dp[i-1][0] + p[i], dp[i-1][1] + p[i])\n    # print(dp)\n    min_fatigue = sys.maxsize\n    for i in range(m):\n        if l[i] <= 0 and 0 <= r[i]:\n            min_fatigue = min(min_fatigue, dp[i][1])\n        else:\n            min_fatigue = min(min_fatigue, dp[i][0])\n    return min_fatigue if min_fatigue != sys.maxsize else -1\n\nif __name__ == '__main__':\n    a, n, m = map(int, input().split())\n    l = []\n    r = []\n    for _ in range(n):\n        l_i, r_i = map(int, input().split())\n        l.append(l_i)\n        r.append(r_i)\n    x = []\n    p = []\n    for _ in range(m):\n        x_i, p_i = map(int, input().split())\n        x.append(x_i)\n        p.append(p_i)\n    print(solve(a, n, m, l, r, x, p))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    # Read the input.\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in range(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in range(m):\n        umbrellas.append(list(map(int, input().split())))\n    # Run the algorithm.\n    answer = solve(a, rain, umbrellas)\n    # Print the answer.\n    print(answer)\n\ndef solve(a, rain, umbrellas):\n    \"\"\"\n    The solution function.\n    \"\"\"\n    # Sort the umbrellas by weight.\n    umbrellas.sort(key=lambda x: x[1])\n    # Build the graph.\n    graph = build_graph(a, rain, umbrellas)\n    # Find the shortest path from 0 to a.\n    if not graph.a in graph.shortest_paths(graph.zero):\n        return -1\n    # Find the answer.\n    return graph.shortest_paths(graph.zero)[graph.a]\n\ndef build_graph(a, rain, umbrellas):\n    \"\"\"\n    Builds the graph.\n    \"\"\"\n    # Build the graph.\n    graph = Graph()\n    # Add the zero node.\n    graph.zero = graph.add_node(0)\n    # Add the a node.\n    graph.a = graph.add_node(a)\n    # Add the rain nodes.\n    for segment in rain:\n        graph.add_node(segment[0])\n        graph.add_node(segment[1])\n    # Add the umbrella nodes.\n    for umbrella in umbrellas:\n        graph.add_node(umbrella[0])\n    # Add the edges.\n    for segment in rain:\n        graph.add_edge(segment[0], segment[1], None, 0)\n    for umbrella in umbrellas:\n        graph.add_edge(graph.zero, umbrella[0], None, 0)\n        graph.add_edge(umbrella[0], graph.a, None, umbrella[1])\n    # Return the graph.\n    return graph\n\nclass Graph:\n    \"\"\"\n    A simple graph class.\n    \"\"\"\n    class Node:\n        \"\"\"\n        A simple node class.\n        \"\"\"\n        def __init__(self, value):\n            self.value = value\n            self.edges = []\n\n        def __str__(self):\n            return str(self.value)\n\n        def __hash__(self):\n            return hash(self.value)\n\n    class Edge:\n        \"\"\"\n        A simple edge class.\n        \"\"\"\n        def __init__(self, node, weight):\n            self.node = node\n            self.weight = weight\n\n        def __str__(self):\n            return '{0}:{1}'.format(self.node.value, self.weight)\n\n    def __init__(self):\n        self.nodes = {}\n\n    def __str__(self):\n        result = ''\n        for node in self.nodes.values():\n            result += '{0} -> ['.format(node)\n            for edge in node.edges[:-1]:\n                result += '{0}, '.format(edge)\n            if node.edges:\n                result += '{0}'.format(node.edges[-1])\n            result += ']\\n'\n        return result[:-1]\n\n    def add_node(self, value):\n        node = self.Node(value)\n        self.nodes[value] = node\n        return node\n\n    def add_edge(self, source, target, bidirectional=True, weight=1):\n        source = self.nodes[source]\n        target = self.nodes[target]\n        source.edges.append(self.Edge(target, weight))\n        if bidirectional:\n            target.edges.append(self.Edge(source, weight))\n\n    def shortest_paths(self, source):\n        \"\"\"\n        Finds all shortest paths from the source.\n        \"\"\"\n        # Initialize the distance to infinity.\n        distances = {}\n        for node in self.nodes.values():\n            distances[node] = float('inf')\n        # Initialize the distance to the source to zero.\n        distances[source] = 0\n        # Initialize the queue.\n        queue = [source]\n        # Run the algorithm.\n        while queue:\n            # Get the next node.\n            node = queue.pop(0)\n            # Update the distances.\n            for edge in node.edges:\n                if distances[node] + edge.weight < distances[edge.node]:\n                    distances[edge.node] = distances[node] + edge.weight\n                    queue.append(edge.node)\n        # Return the distances.\n        return distances\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nimport sys\n\ndef main():\n    a, n, m = map(int, sys.stdin.readline().split())\n    rain = [0] * (a + 1)\n    for i in range(n):\n        l, r = map(int, sys.stdin.readline().split())\n        rain[l] += 1\n        rain[r] -= 1\n    for i in range(a):\n        rain[i + 1] += rain[i]\n    umbrellas = []\n    for i in range(m):\n        x, p = map(int, sys.stdin.readline().split())\n        umbrellas.append((x, p))\n    umbrellas.sort()\n    dp = [0] * (a + 1)\n    umbrellas.append((a + 1, 0))\n    for i in range(a + 1):\n        dp[i] = (1 << 30)\n        if rain[i] == 0:\n            continue\n        for j in range(m + 1):\n            if umbrellas[j][0] > i:\n                break\n            dp[i] = min(dp[i], dp[max(0, umbrellas[j][0] - 1)] + umbrellas[j][1])\n    if dp[a] >= (1 << 30):\n        print(-1)\n    else:\n        print(dp[a])\n\nthreading.Thread(target=main).start()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\na, n, m = map(int, input().split())\n\nsegments = []\nfor _ in range(n):\n    l, r = map(int, input().split())\n    segments.append((l, r))\n\numbrellas = []\nfor _ in range(m):\n    x, p = map(int, input().split())\n    umbrellas.append((x, p))\n\n# print(a, n, m)\n# print(segments)\n# print(umbrellas)\n\n# dp[i][j] = min fatigue if we start at segment i and have umbrella j\ndp = [[float('inf') for _ in range(m + 1)] for _ in range(n + 1)]\n\n# base case: no segments and no umbrellas\ndp[0][0] = 0\n\nfor i in range(n):\n    l, r = segments[i]\n    for j in range(m + 1):\n        x, p = umbrellas[j - 1] if j > 0 else (0, 0)\n        dp[i + 1][j] = min(dp[i + 1][j], dp[i][j])\n        if l <= x <= r:\n            dp[i + 1][j] = min(dp[i + 1][j], dp[i][j] + p)\n        if l <= x + 1 <= r:\n            dp[i + 1][j + 1] = min(dp[i + 1][j + 1], dp[i][j] + p)\n\n# print(dp)\n\n# find min of all possible final states\nans = min(dp[n][j] for j in range(m + 1))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#-------------------------------------------------------------------------------\n\n\"\"\"\n    Approach : \n        - Greedy\n        - We need to move in the rain with at least one umbrella.\n        - We can't move in the rain with two umbrella.\n        - We can move in the rain with one umbrella.\n        - We can move outside the rain without umbrella.\n        - We can move outside the rain with umbrella.\n        - We can't move in the rain without umbrella.\n        - We can't move outside the rain with two umbrella.\n\n\n    Complexity Analysis :\n        - Time Complexity: O(N * M)\n        - Space Complexity: O(N + M)\n\"\"\"\n\n#-------------------------------------------------------------------------------\n\n# Python3 program to find minimum fatigue \n# to travel from 0 to a \n\n# Function to find minimum fatigue \ndef findMinFatigue(a, n, m, l, r, x, p): \n\n\t# dp[i][j] is the minimum fatigue \n\t# to travel from 0 to i if we have \n\t# j umbrellas with us \n\tdp = [[float('inf') for i in range(m + 1)] \n\t\t\tfor j in range(a + 1)] \n\n\t# Initialize dp[0][j] = 0 \n\t# It is already 0 \n\n\t# Initialize dp[i][1] \n\tfor i in range(a + 1): \n\t\tif i not in l: \n\t\t\tdp[i][1] = 0\n\n\t# Initialize dp[i][0] \n\t# It is impossible to travel \n\t# from 0 to i with 0 umbrellas \n\tfor i in range(1, a + 1): \n\t\tdp[i][0] = float('inf') \n\n\t# Calculate dp[i][j] \n\tfor i in range(1, a + 1): \n\t\tfor j in range(1, m + 1): \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# with j - 1 umbrellas \n\t\t\tif dp[i][j - 1] != float('inf'): \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i][j - 1]) \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# without umbrella \n\t\t\tif i not in l: \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i - 1][j]) \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# with j - 1 umbrella and we can \n\t\t\t# travel from i - 1 to i with umbrella \n\t\t\tif dp[i][j - 1] != float('inf') and i - 1 in l: \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + p[x.index(i - 1)]) \n\n\t# If we can't travel from 0 to a \n\tif dp[a][m] == float('inf'): \n\t\treturn -1\n\n\t# Else return minimum fatigue \n\treturn dp[a][m] \n\n# Driver Code \nif __name__ == '__main__': \n\ta, n, m = 10, 2, 4\n\tl = [3, 8] \n\tr = [7, 10] \n\tx = [0, 10, 3, 4, 8, 1, 1, 2] \n\tp = [10, 5, 4, 1, 1, 2] \n\tprint(findMinFatigue(a, n, m, l, r, x, p)) \n\n# This code is contributed by AnkitRai01"
+    }
+  ],
+  "created": 1650411570,
+  "id": "cmpl-4yrjOMZg2B7oNg2ACRO3ietrQRd8E",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:40:12.866473 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    a, n, m = map(int, input().split())\n    rain = []\n    umbrellas = []\n    for _ in range(n):\n        rain.append(list(map(int, input().split())))\n    for _ in range(m):\n        umbrellas.append(list(map(int, input().split())))\n    umbrellas.sort()\n    rain.sort()\n    # print(rain)\n    # print(umbrellas)\n\n    # dp[i][j] = min fatigue to reach point i with j umbrellas\n    # dp[i][j] = min(dp[i-1][j], dp[i-1][j-1] + weight)\n    dp = [[float('inf') for _ in range(m+1)] for _ in range(a+1)]\n    dp[0][0] = 0\n    for i in range(1, a+1):\n        for j in range(m+1):\n            dp[i][j] = dp[i-1][j]\n            if j > 0:\n                dp[i][j] = min(dp[i][j], dp[i-1][j-1] + umbrellas[j-1][1])\n        for r in rain:\n            if r[0] <= i <= r[1]:\n                dp[i][0] = float('inf')\n\n    # print(dp)\n    if dp[a][0] == float('inf'):\n        print(-1)\n    else:\n        print(dp[a][0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:40:12.866529 REASON stop
+2022-04-19 23:40:12.867173 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\n\ndef main():\n    a,n,m = map(int,input().split())\n    rain = []\n    for i in range(n):\n        rain.append(list(map(int,input().split())))\n    umbrellas = []\n    for i in range(m):\n        umbrellas.append(list(map(int,input().split())))\n    umbrellas.sort()\n    rain.sort()\n    if rain[0][0] == 0:\n        print(-1)\n        return\n    umbrellas.insert(0,[0,0])\n    umbrellas.append([a,0])\n    rain.insert(0,[0,0])\n    rain.append([a,a])\n    dp = [[] for i in range(n+2)]\n    dp[0] = [0,0]\n    for i in range(1,n+2):\n        for j in range(1,m+2):\n            if rain[i-1][1] <= umbrellas[j][0]:\n                dp[i].append(dp[i-1][j-1])\n            else:\n                dp[i].append(min(dp[i-1][j-1],dp[i][j-1]+umbrellas[j][1]))\n    if dp[n+1][m+1] != dp[n][m+1]:\n        print(-1)\n        return\n    ans = dp[n+1][m+1]\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:40:12.867245 REASON stop
+2022-04-19 23:40:12.867670 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef solve(a,n,m,segs,umbrellas):\n    pass\n\ndef main():\n    pass\n\nmain()"
+}
+2022-04-19 23:40:12.867730 REASON stop
+2022-04-19 23:40:12.896552 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(a, n, m, l, r, x, p):\n    # dp[i] = (min_fatigue, min_fatigue_with_umbrella)\n    # dp[i][0] = min(dp[i-1][0] + p[i], dp[i-1][1])\n    # dp[i][1] = min(dp[i-1][0] + p[i], dp[i-1][1] + p[i])\n    dp = [[0, 0] for _ in range(m)]\n    for i in range(m):\n        if i == 0:\n            dp[i][0] = sys.maxsize\n            dp[i][1] = p[i]\n        else:\n            dp[i][0] = min(dp[i-1][0], dp[i-1][1])\n            dp[i][1] = min(dp[i-1][0] + p[i], dp[i-1][1] + p[i])\n    # print(dp)\n    min_fatigue = sys.maxsize\n    for i in range(m):\n        if l[i] <= 0 and 0 <= r[i]:\n            min_fatigue = min(min_fatigue, dp[i][1])\n        else:\n            min_fatigue = min(min_fatigue, dp[i][0])\n    return min_fatigue if min_fatigue != sys.maxsize else -1\n\nif __name__ == '__main__':\n    a, n, m = map(int, input().split())\n    l = []\n    r = []\n    for _ in range(n):\n        l_i, r_i = map(int, input().split())\n        l.append(l_i)\n        r.append(r_i)\n    x = []\n    p = []\n    for _ in range(m):\n        x_i, p_i = map(int, input().split())\n        x.append(x_i)\n        p.append(p_i)\n    print(solve(a, n, m, l, r, x, p))"
+}
+2022-04-19 23:40:12.896684 REASON stop
+2022-04-19 23:40:12.899198 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    # Read the input.\n    a, n, m = map(int, input().split())\n    rain = []\n    for _ in range(n):\n        rain.append(list(map(int, input().split())))\n    umbrellas = []\n    for _ in range(m):\n        umbrellas.append(list(map(int, input().split())))\n    # Run the algorithm.\n    answer = solve(a, rain, umbrellas)\n    # Print the answer.\n    print(answer)\n\ndef solve(a, rain, umbrellas):\n    \"\"\"\n    The solution function.\n    \"\"\"\n    # Sort the umbrellas by weight.\n    umbrellas.sort(key=lambda x: x[1])\n    # Build the graph.\n    graph = build_graph(a, rain, umbrellas)\n    # Find the shortest path from 0 to a.\n    if not graph.a in graph.shortest_paths(graph.zero):\n        return -1\n    # Find the answer.\n    return graph.shortest_paths(graph.zero)[graph.a]\n\ndef build_graph(a, rain, umbrellas):\n    \"\"\"\n    Builds the graph.\n    \"\"\"\n    # Build the graph.\n    graph = Graph()\n    # Add the zero node.\n    graph.zero = graph.add_node(0)\n    # Add the a node.\n    graph.a = graph.add_node(a)\n    # Add the rain nodes.\n    for segment in rain:\n        graph.add_node(segment[0])\n        graph.add_node(segment[1])\n    # Add the umbrella nodes.\n    for umbrella in umbrellas:\n        graph.add_node(umbrella[0])\n    # Add the edges.\n    for segment in rain:\n        graph.add_edge(segment[0], segment[1], None, 0)\n    for umbrella in umbrellas:\n        graph.add_edge(graph.zero, umbrella[0], None, 0)\n        graph.add_edge(umbrella[0], graph.a, None, umbrella[1])\n    # Return the graph.\n    return graph\n\nclass Graph:\n    \"\"\"\n    A simple graph class.\n    \"\"\"\n    class Node:\n        \"\"\"\n        A simple node class.\n        \"\"\"\n        def __init__(self, value):\n            self.value = value\n            self.edges = []\n\n        def __str__(self):\n            return str(self.value)\n\n        def __hash__(self):\n            return hash(self.value)\n\n    class Edge:\n        \"\"\"\n        A simple edge class.\n        \"\"\"\n        def __init__(self, node, weight):\n            self.node = node\n            self.weight = weight\n\n        def __str__(self):\n            return '{0}:{1}'.format(self.node.value, self.weight)\n\n    def __init__(self):\n        self.nodes = {}\n\n    def __str__(self):\n        result = ''\n        for node in self.nodes.values():\n            result += '{0} -> ['.format(node)\n            for edge in node.edges[:-1]:\n                result += '{0}, '.format(edge)\n            if node.edges:\n                result += '{0}'.format(node.edges[-1])\n            result += ']\\n'\n        return result[:-1]\n\n    def add_node(self, value):\n        node = self.Node(value)\n        self.nodes[value] = node\n        return node\n\n    def add_edge(self, source, target, bidirectional=True, weight=1):\n        source = self.nodes[source]\n        target = self.nodes[target]\n        source.edges.append(self.Edge(target, weight))\n        if bidirectional:\n            target.edges.append(self.Edge(source, weight))\n\n    def shortest_paths(self, source):\n        \"\"\"\n        Finds all shortest paths from the source.\n        \"\"\"\n        # Initialize the distance to infinity.\n        distances = {}\n        for node in self.nodes.values():\n            distances[node] = float('inf')\n        # Initialize the distance to the source to zero.\n        distances[source] = 0\n        # Initialize the queue.\n        queue = [source]\n        # Run the algorithm.\n        while queue:\n            # Get the next node.\n            node = queue.pop(0)\n            # Update the distances.\n            for edge in node.edges:\n                if distances[node] + edge.weight < distances[edge.node]:\n                    distances[edge.node] = distances[node] + edge.weight\n                    queue.append(edge.node)\n        # Return the distances.\n        return distances\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:40:12.899352 REASON stop
+2022-04-19 23:40:12.900563 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nimport sys\n\ndef main():\n    a, n, m = map(int, sys.stdin.readline().split())\n    rain = [0] * (a + 1)\n    for i in range(n):\n        l, r = map(int, sys.stdin.readline().split())\n        rain[l] += 1\n        rain[r] -= 1\n    for i in range(a):\n        rain[i + 1] += rain[i]\n    umbrellas = []\n    for i in range(m):\n        x, p = map(int, sys.stdin.readline().split())\n        umbrellas.append((x, p))\n    umbrellas.sort()\n    dp = [0] * (a + 1)\n    umbrellas.append((a + 1, 0))\n    for i in range(a + 1):\n        dp[i] = (1 << 30)\n        if rain[i] == 0:\n            continue\n        for j in range(m + 1):\n            if umbrellas[j][0] > i:\n                break\n            dp[i] = min(dp[i], dp[max(0, umbrellas[j][0] - 1)] + umbrellas[j][1])\n    if dp[a] >= (1 << 30):\n        print(-1)\n    else:\n        print(dp[a])\n\nthreading.Thread(target=main).start()"
+}
+2022-04-19 23:40:12.900696 REASON stop
+2022-04-19 23:40:12.902849 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\na, n, m = map(int, input().split())\n\nsegments = []\nfor _ in range(n):\n    l, r = map(int, input().split())\n    segments.append((l, r))\n\numbrellas = []\nfor _ in range(m):\n    x, p = map(int, input().split())\n    umbrellas.append((x, p))\n\n# print(a, n, m)\n# print(segments)\n# print(umbrellas)\n\n# dp[i][j] = min fatigue if we start at segment i and have umbrella j\ndp = [[float('inf') for _ in range(m + 1)] for _ in range(n + 1)]\n\n# base case: no segments and no umbrellas\ndp[0][0] = 0\n\nfor i in range(n):\n    l, r = segments[i]\n    for j in range(m + 1):\n        x, p = umbrellas[j - 1] if j > 0 else (0, 0)\n        dp[i + 1][j] = min(dp[i + 1][j], dp[i][j])\n        if l <= x <= r:\n            dp[i + 1][j] = min(dp[i + 1][j], dp[i][j] + p)\n        if l <= x + 1 <= r:\n            dp[i + 1][j + 1] = min(dp[i + 1][j + 1], dp[i][j] + p)\n\n# print(dp)\n\n# find min of all possible final states\nans = min(dp[n][j] for j in range(m + 1))\n\nprint(ans)"
+}
+2022-04-19 23:40:12.902945 REASON stop
+2022-04-19 23:40:12.903626 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#-------------------------------------------------------------------------------\n\n\"\"\"\n    Approach : \n        - Greedy\n        - We need to move in the rain with at least one umbrella.\n        - We can't move in the rain with two umbrella.\n        - We can move in the rain with one umbrella.\n        - We can move outside the rain without umbrella.\n        - We can move outside the rain with umbrella.\n        - We can't move in the rain without umbrella.\n        - We can't move outside the rain with two umbrella.\n\n\n    Complexity Analysis :\n        - Time Complexity: O(N * M)\n        - Space Complexity: O(N + M)\n\"\"\"\n\n#-------------------------------------------------------------------------------\n\n# Python3 program to find minimum fatigue \n# to travel from 0 to a \n\n# Function to find minimum fatigue \ndef findMinFatigue(a, n, m, l, r, x, p): \n\n\t# dp[i][j] is the minimum fatigue \n\t# to travel from 0 to i if we have \n\t# j umbrellas with us \n\tdp = [[float('inf') for i in range(m + 1)] \n\t\t\tfor j in range(a + 1)] \n\n\t# Initialize dp[0][j] = 0 \n\t# It is already 0 \n\n\t# Initialize dp[i][1] \n\tfor i in range(a + 1): \n\t\tif i not in l: \n\t\t\tdp[i][1] = 0\n\n\t# Initialize dp[i][0] \n\t# It is impossible to travel \n\t# from 0 to i with 0 umbrellas \n\tfor i in range(1, a + 1): \n\t\tdp[i][0] = float('inf') \n\n\t# Calculate dp[i][j] \n\tfor i in range(1, a + 1): \n\t\tfor j in range(1, m + 1): \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# with j - 1 umbrellas \n\t\t\tif dp[i][j - 1] != float('inf'): \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i][j - 1]) \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# without umbrella \n\t\t\tif i not in l: \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i - 1][j]) \n\n\t\t\t# If we can travel from 0 to i \n\t\t\t# with j - 1 umbrella and we can \n\t\t\t# travel from i - 1 to i with umbrella \n\t\t\tif dp[i][j - 1] != float('inf') and i - 1 in l: \n\t\t\t\tdp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + p[x.index(i - 1)]) \n\n\t# If we can't travel from 0 to a \n\tif dp[a][m] == float('inf'): \n\t\treturn -1\n\n\t# Else return minimum fatigue \n\treturn dp[a][m] \n\n# Driver Code \nif __name__ == '__main__': \n\ta, n, m = 10, 2, 4\n\tl = [3, 8] \n\tr = [7, 10] \n\tx = [0, 10, 3, 4, 8, 1, 1, 2] \n\tp = [10, 5, 4, 1, 1, 2] \n\tprint(findMinFatigue(a, n, m, l, r, x, p)) \n\n# This code is contributed by AnkitRai01"
+}
+2022-04-19 23:40:12.903860 REASON stop

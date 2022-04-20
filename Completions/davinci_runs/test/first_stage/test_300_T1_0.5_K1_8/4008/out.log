@@ -1,0 +1,168 @@
+2022-04-19 20:53:28.238479 """
+You are given an array $a$ consisting of $n$ integer numbers.
+
+You have to color this array in $k$ colors in such a way that:   Each element of the array should be colored in some color;  For each $i$ from $1$ to $k$ there should be at least one element colored in the $i$-th color in the array;  For each $i$ from $1$ to $k$ all elements colored in the $i$-th color should be distinct. 
+
+Obviously, such coloring might be impossible. In this case, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions above. If there are multiple answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the length of the array $a$ and the number of colors, respectively.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 5000$) — elements of the array $a$.
+
+
+-----Output-----
+
+If there is no answer, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions described in the problem statement. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+4 2
+1 2 2 3
+
+Output
+YES
+1 1 2 2
+
+Input
+5 2
+3 2 1 2 3
+
+Output
+YES
+2 1 1 2 1
+
+Input
+5 2
+2 1 1 2 1
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the first example the answer $2~ 1~ 2~ 1$ is also acceptable.
+
+In the second example the answer $1~ 1~ 1~ 2~ 2$ is also acceptable.
+
+There exist other acceptable answers for both examples.
+"""
+2022-04-19 20:53:28.238498 --------------------------
+2022-04-19 20:53:28.238607 using api key sourya
+2022-04-19 20:54:09.329185 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# if n < k, then there are at least one color that has no elements\n# if n == k, then each color has at least one element\n# if n > k, then there are at least two elements of the same color\nif n < k:\n    print('NO')\nelse:\n    print('YES')\n    if n == k:\n        for i in a:\n            print(i, end=' ')\n    else:\n        for i in range(n):\n            print(i % k + 1, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn,k=map(int,input().split())\na=list(map(int,input().split()))\n\ndef check(a,k):\n    a=sorted(a)\n    d={}\n    for i in a:\n        if i in d:\n            d[i]+=1\n        else:\n            d[i]=1\n    a=sorted(d.items(),key=lambda x:x[1],reverse=True)\n    if len(a)<=k:\n        return True\n    else:\n        return False\n\nif check(a,k):\n    print(\"YES\")\n    d={}\n    for i in a:\n        if i in d:\n            d[i]+=1\n        else:\n            d[i]=1\n    a=sorted(d.items(),key=lambda x:x[1],reverse=True)\n    color=1\n    for i in a:\n        for j in range(i[1]):\n            print(color,end=\" \")\n        color+=1\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    colors = {}\n    for i in range(n):\n        if a[i] in colors:\n            colors[a[i]].append(i)\n        else:\n            colors[a[i]] = [i]\n    if len(colors) > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    used = set()\n    for i in range(n):\n        if a[i] not in used:\n            used.add(a[i])\n            print(a[i], end=\" \")\n        else:\n            print(k, end=\" \")\n            k -= 1\n    print()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    color = [0] * n\n    for i in range(n):\n        color[i] = (a[i] - 1) % k + 1\n    print('YES')\n    print(*color)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k > n:\n    print(\"NO\")\nelse:\n    colors = [0] * n\n    colors[0] = 1\n    for i in range(1, n):\n        if a[i] == a[i-1]:\n            colors[i] = colors[i-1]\n        else:\n            colors[i] = colors[i-1] + 1\n            if colors[i] > k:\n                colors[i] = 1\n    print(\"YES\")\n    print(*colors)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k > n:\n  print(\"NO\")\n  exit()\n\nc = [0] * n\n\nfor i in range(n):\n  for j in range(1, k + 1):\n    if c[i] == 0:\n      c[i] = j\n      for x in range(i):\n        if a[x] == a[i] and c[x] == j:\n          c[i] = 0\n          break\n\nif 0 in c:\n  print(\"NO\")\nelse:\n  print(\"YES\")\n  print(*c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n\n    # We can color each distinct value in the array with a different color,\n    # and all other values with the same color. In this way, we can always\n    # color all distinct values with $k$ colors.\n    #\n    # To see this, consider the following example with $k=2$:\n    #\n    #   a = [1, 2, 2, 3]\n    #\n    # We can color the distinct values with different colors, and color all\n    # other values with the same color:\n    #\n    #   a = [1, 2, 2, 3]\n    #   c = [1, 2, 2, 1]\n    #\n    # This coloring has the following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n    #\n    # Now, consider the following example with $k=3$:\n    #\n    #   a = [1, 2, 2, 3]\n    #\n    # We can color the distinct values with different colors, and color all\n    # other values with the same color:\n    #\n    #   a = [1, 2, 2, 3]\n    #   c = [1, 2, 2, 3]\n    #\n    # This coloring has the following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n    #\n    # In general, we can color the distinct values with different colors, and\n    # color all other values with the same color. This coloring has the\n    # following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n\n    # If there are more than $k$ distinct values, then the coloring is\n    # impossible.\n    if len(set(a)) > k:\n        print(\"NO\")\n    else:\n        # Otherwise, color each distinct value with a different color.\n        c = [0] * n\n        for i, x in enumerate(a):\n            if c[i] == 0:\n                c[i] = x\n        # Color all other values with the same color.\n        for i, x in enumerate(a):\n            if c[i] == 0:\n                c[i] = 1\n        # Print the answer.\n        print(\"YES\")\n        print(\" \".join(str(x) for x in c))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    if len(set(a)) < k:\n        print(\"NO\")\n        return\n\n    colors = [1] * n\n    for i in range(1, n):\n        if a[i] == a[i-1]:\n            colors[i] = colors[i-1]\n        else:\n            colors[i] = colors[i-1] + 1\n\n    print(\"YES\")\n    print(\" \".join(map(str, colors)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650401609,
+  "id": "cmpl-4yp8jobEZ22JjEW07ci4Xhol84F8r",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:54:09.329608 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# if n < k, then there are at least one color that has no elements\n# if n == k, then each color has at least one element\n# if n > k, then there are at least two elements of the same color\nif n < k:\n    print('NO')\nelse:\n    print('YES')\n    if n == k:\n        for i in a:\n            print(i, end=' ')\n    else:\n        for i in range(n):\n            print(i % k + 1, end=' ')"
+}
+2022-04-19 20:54:09.329653 REASON stop
+2022-04-19 20:54:09.330199 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn,k=map(int,input().split())\na=list(map(int,input().split()))\n\ndef check(a,k):\n    a=sorted(a)\n    d={}\n    for i in a:\n        if i in d:\n            d[i]+=1\n        else:\n            d[i]=1\n    a=sorted(d.items(),key=lambda x:x[1],reverse=True)\n    if len(a)<=k:\n        return True\n    else:\n        return False\n\nif check(a,k):\n    print(\"YES\")\n    d={}\n    for i in a:\n        if i in d:\n            d[i]+=1\n        else:\n            d[i]=1\n    a=sorted(d.items(),key=lambda x:x[1],reverse=True)\n    color=1\n    for i in a:\n        for j in range(i[1]):\n            print(color,end=\" \")\n        color+=1\nelse:\n    print(\"NO\")"
+}
+2022-04-19 20:54:09.330271 REASON stop
+2022-04-19 20:54:09.330696 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    colors = {}\n    for i in range(n):\n        if a[i] in colors:\n            colors[a[i]].append(i)\n        else:\n            colors[a[i]] = [i]\n    if len(colors) > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    used = set()\n    for i in range(n):\n        if a[i] not in used:\n            used.add(a[i])\n            print(a[i], end=\" \")\n        else:\n            print(k, end=\" \")\n            k -= 1\n    print()\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:54:09.330765 REASON stop
+2022-04-19 20:54:09.359914 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    color = [0] * n\n    for i in range(n):\n        color[i] = (a[i] - 1) % k + 1\n    print('YES')\n    print(*color)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:54:09.360067 REASON stop
+2022-04-19 20:54:09.366509 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k > n:\n    print(\"NO\")\nelse:\n    colors = [0] * n\n    colors[0] = 1\n    for i in range(1, n):\n        if a[i] == a[i-1]:\n            colors[i] = colors[i-1]\n        else:\n            colors[i] = colors[i-1] + 1\n            if colors[i] > k:\n                colors[i] = 1\n    print(\"YES\")\n    print(*colors)"
+}
+2022-04-19 20:54:09.366628 REASON stop
+2022-04-19 20:54:09.368038 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k > n:\n  print(\"NO\")\n  exit()\n\nc = [0] * n\n\nfor i in range(n):\n  for j in range(1, k + 1):\n    if c[i] == 0:\n      c[i] = j\n      for x in range(i):\n        if a[x] == a[i] and c[x] == j:\n          c[i] = 0\n          break\n\nif 0 in c:\n  print(\"NO\")\nelse:\n  print(\"YES\")\n  print(*c)"
+}
+2022-04-19 20:54:09.368118 REASON stop
+2022-04-19 20:54:09.368890 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    a = [int(x) for x in input().split()]\n\n    # We can color each distinct value in the array with a different color,\n    # and all other values with the same color. In this way, we can always\n    # color all distinct values with $k$ colors.\n    #\n    # To see this, consider the following example with $k=2$:\n    #\n    #   a = [1, 2, 2, 3]\n    #\n    # We can color the distinct values with different colors, and color all\n    # other values with the same color:\n    #\n    #   a = [1, 2, 2, 3]\n    #   c = [1, 2, 2, 1]\n    #\n    # This coloring has the following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n    #\n    # Now, consider the following example with $k=3$:\n    #\n    #   a = [1, 2, 2, 3]\n    #\n    # We can color the distinct values with different colors, and color all\n    # other values with the same color:\n    #\n    #   a = [1, 2, 2, 3]\n    #   c = [1, 2, 2, 3]\n    #\n    # This coloring has the following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n    #\n    # In general, we can color the distinct values with different colors, and\n    # color all other values with the same color. This coloring has the\n    # following properties:\n    #\n    #   1. Each element of the array is colored in some color.\n    #\n    #   2. For each $i$ from $1$ to $k$ there is at least one element colored\n    #      in the $i$-th color in the array.\n    #\n    #   3. For each $i$ from $1$ to $k$ all elements colored in the $i$-th color\n    #      are distinct.\n\n    # If there are more than $k$ distinct values, then the coloring is\n    # impossible.\n    if len(set(a)) > k:\n        print(\"NO\")\n    else:\n        # Otherwise, color each distinct value with a different color.\n        c = [0] * n\n        for i, x in enumerate(a):\n            if c[i] == 0:\n                c[i] = x\n        # Color all other values with the same color.\n        for i, x in enumerate(a):\n            if c[i] == 0:\n                c[i] = 1\n        # Print the answer.\n        print(\"YES\")\n        print(\" \".join(str(x) for x in c))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:54:09.368966 REASON stop
+2022-04-19 20:54:09.369933 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    if len(set(a)) < k:\n        print(\"NO\")\n        return\n\n    colors = [1] * n\n    for i in range(1, n):\n        if a[i] == a[i-1]:\n            colors[i] = colors[i-1]\n        else:\n            colors[i] = colors[i-1] + 1\n\n    print(\"YES\")\n    print(\" \".join(map(str, colors)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:54:09.370112 REASON stop

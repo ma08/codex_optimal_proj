@@ -1,0 +1,166 @@
+2022-04-19 23:00:40.452876 """
+You are given an array $a$, consisting of $n$ positive integers.
+
+Let's call a concatenation of numbers $x$ and $y$ the number that is obtained by writing down numbers $x$ and $y$ one right after another without changing the order. For example, a concatenation of numbers $12$ and $3456$ is a number $123456$.
+
+Count the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5$, $2 \le k \le 10^9$).
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$).
+
+
+-----Output-----
+
+Print a single integer — the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Examples-----
+Input
+6 11
+45 1 10 12 11 7
+
+Output
+7
+
+Input
+4 2
+2 78 4 10
+
+Output
+12
+
+Input
+5 2
+3 7 19 3 3
+
+Output
+0
+
+
+
+-----Note-----
+
+In the first example pairs $(1, 2)$, $(1, 3)$, $(2, 3)$, $(3, 1)$, $(3, 4)$, $(4, 2)$, $(4, 3)$ suffice. They produce numbers $451$, $4510$, $110$, $1045$, $1012$, $121$, $1210$, respectively, each of them is divisible by $11$.
+
+In the second example all $n(n - 1)$ pairs suffice.
+
+In the third example no pair is sufficient.
+"""
+2022-04-19 23:00:40.452895 --------------------------
+2022-04-19 23:00:40.453001 using api key sourya
+2022-04-19 23:02:05.653584 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\nn, k = [int(x) for x in stdin.readline().split()]\na = [int(x) for x in stdin.readline().split()]\n\n# a = [45, 1, 10, 12, 11, 7]\n# n, k = 6, 11\n\n# a = [2, 78, 4, 10]\n# n, k = 4, 2\n\n# a = [3, 7, 19, 3, 3]\n# n, k = 5, 2\n\n\ndef get_digits(a):\n    return len(str(a))\n\n\ndef concatenate(a, b):\n    return int(str(a) + str(b))\n\n\ndef is_divisible(a, b, k):\n    return concatenate(a, b) % k == 0\n\n\ndef get_divisors(k):\n    divisors = []\n\n    for i in range(1, k + 1):\n        if k % i == 0:\n            divisors.append(i)\n\n    return divisors\n\n\ndef get_counts(a):\n    counts = {}\n\n    for num in a:\n        if num not in counts:\n            counts[num] = 1\n        else:\n            counts[num] += 1\n\n    return counts\n\n\ndef get_count_of_pairs_with_divisors(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are divisible by k\n    \"\"\"\n    a_counts = get_counts(a)\n    k_divisors = get_divisors(k)\n\n    count = 0\n\n    for divisor in k_divisors:\n        divisor_count = 0\n        for num, num_count in a_counts.items():\n            if num % divisor == 0:\n                divisor_count += num_count\n\n        count += (divisor_count * (divisor_count - 1)) / 2\n\n    return count\n\n\ndef get_count_of_pairs_without_divisors(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are not divisible by k\n    \"\"\"\n    count = 0\n\n    for i in range(len(a)):\n        for j in range(i + 1, len(a)):\n            if not is_divisible(a[i], a[j], k):\n                count += 1\n\n    return count\n\n\ndef get_count_of_pairs(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are divisible by k\n    \"\"\"\n    return get_count_of_pairs_with_divisors(a, k) + get_count_of_pairs_without_divisors(a, k)\n\n\nprint(int(get_count_of_pairs(a, k)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ncount = 0\n\nfor i in range(n):\n    for j in range(n):\n        if i==j:\n            continue\n        if (str(a[i])+str(a[j])) % k == 0:\n            count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if (a[i] * 10 ** len(str(a[j])) + a[j]) % k == 0:\n                    ans += 1\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    res = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if int(str(a[i]) + str(a[j])) % k == 0:\n                res += 1\n\n    print(res)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    We need to find the number of pairs of numbers that are divisible by k\n    when concatenated.\n    \"\"\"\n    n, k = map(int, input().split())\n    nums = map(int, input().split())\n\n    # Map each number to its remainder when divided by k\n    rems = {}\n    for num in nums:\n        rem = num % k\n        if rem not in rems:\n            rems[rem] = 0\n        rems[rem] += 1\n\n    # Count the number of pairs that are divisible by k\n    count = 0\n    for rem in rems:\n        count += ((rems[rem] * (rems[rem] - 1)) // 2)\n\n    # Count the number of pairs with the same remainder\n    if 0 in rems:\n        count += ((rems[0] * (rems[0] - 1)) // 2)\n\n    for i in range(1, k):\n        if i in rems and (k - i) in rems:\n            count += (rems[i] * rems[k - i])\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    #print(n, k)\n    #print(a)\n\n    answer = 0\n\n    # Compute the number of divisors of k\n    k_divisors = []\n    for i in range(2, int(k**0.5)+1):\n        if k % i == 0:\n            k_divisors.append(i)\n            k_divisors.append(k // i)\n\n    #print(k_divisors)\n\n    # Compute the number of divisors of each a[i]\n    a_divisors = []\n    for i in range(n):\n        a_divisors.append([])\n        for j in range(2, int(a[i]**0.5)+1):\n            if a[i] % j == 0:\n                a_divisors[i].append(j)\n                a_divisors[i].append(a[i] // j)\n\n    #print(a_divisors)\n\n    # Compute the number of divisors of each a[i]*k\n    a_k_divisors = []\n    for i in range(n):\n        a_k_divisors.append([])\n        for j in range(2, int((a[i]*k)**0.5)+1):\n            if (a[i]*k) % j == 0:\n                a_k_divisors[i].append(j)\n                a_k_divisors[i].append(a[i]*k // j)\n\n    #print(a_k_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]\n    a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_divisors[i].append([])\n                for k in range(2, int((a[i]*k/a[j])**0.5)+1):\n                    if (a[i]*k/a[j]) % k == 0:\n                        a_k_a_divisors[i][j].append(k)\n                        a_k_a_divisors[i][j].append(a[i]*k/a[j] // k)\n\n    #print(a_k_a_divisors)\n\n    # Compute the number of divisors of each a[j]*k/a[i]\n    a_k_a_divisors2 = []\n    for i in range(n):\n        a_k_a_divisors2.append([])\n        for j in range(n):\n            if a[i] != 0:\n                a_k_a_divisors2[i].append([])\n                for k in range(2, int((a[j]*k/a[i])**0.5)+1):\n                    if (a[j]*k/a[i]) % k == 0:\n                        a_k_a_divisors2[i][j].append(k)\n                        a_k_a_divisors2[i][j].append(a[j]*k/a[i] // k)\n\n    #print(a_k_a_divisors2)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k\n    a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_divisors[i].append([])\n                for k in range(2, int((a[i]*k/a[j]*k)**0.5)+1):\n                    if (a[i]*k/a[j]*k) % k == 0:\n                        a_k_a_k_divisors[i][j].append(k)\n                        a_k_a_k_divisors[i][j].append(a[i]*k/a[j]*k // k)\n\n    #print(a_k_a_k_divisors)\n\n    # Compute the number of divisors of each a[j]*k/a[i]*k\n    a_k_a_k_divisors2 = []\n    for i in range(n):\n        a_k_a_k_divisors2.append([])\n        for j in range(n):\n            if a[i] != 0:\n                a_k_a_k_divisors2[i].append([])\n                for k in range(2, int((a[j]*k/a[i]*k)**0.5)+1):\n                    if (a[j]*k/a[i]*k) % k == 0:\n                        a_k_a_k_divisors2[i][j].append(k)\n                        a_k_a_k_divisors2[i][j].append(a[j]*k/a[i]*k // k)\n\n    #print(a_k_a_k_divisors2)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]\n    a_k_a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_divisors[i][j].append([])\n                        for l in range(2, int((a[i]*k/a[j]*k/a[k])**0.5)+1):\n                            if (a[i]*k/a[j]*k/a[k]) % l == 0:\n                                a_k_a_k_a_divisors[i][j][k].append(l)\n                                a_k_a_k_a_divisors[i][j][k].append(a[i]*k/a[j]*k/a[k] // l)\n\n    #print(a_k_a_k_a_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k\n    a_k_a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_divisors[i][j][k].append([])\n                                for m in range(2, int((a[i]*k/a[j]*k/a[k]*k/a[l])**0.5)+1):\n                                    if (a[i]*k/a[j]*k/a[k]*k/a[l]) % m == 0:\n                                        a_k_a_k_a_k_divisors[i][j][k][l].append(m)\n                                        a_k_a_k_a_k_divisors[i][j][k][l].append(a[i]*k/a[j]*k/a[k]*k/a[l] // m)\n\n    #print(a_k_a_k_a_k_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k/a[j]\n    a_k_a_k_a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_a_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_a_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_a_divisors[i][j][k].append([])\n                                for m in range(n):\n                                    if a[m] != 0:\n                                        a_k_a_k_a_k_a_divisors[i][j][k][l].append([])\n                                        for o in range(2, int((a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m])**0.5)+1):\n                                            if (a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m]) % o == 0:\n                                                a_k_a_k_a_k_a_divisors[i][j][k][l][m].append(o)\n                                                a_k_a_k_a_k_a_divisors[i][j][k][l][m].append(a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m] // o)\n\n    #print(a_k_a_k_a_k_a_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k/a[j]*k\n    a_k_a_k_a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_a_k_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_a_k_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_a_k_divisors[i][j][k].append([])\n                                for m in range(n):\n                                    if a[m] != 0:\n                                        a_k_a_k_a_k_a_k_divisors[i][j][k][l].append([])\n                                        for o in range(n):\n                                            if a[o] != 0:\n                                                a_k_a_k_a_k_a_k_divisors[i][j][k][l][m].append([])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport sys\nsys.setrecursionlimit(10000)\n\ndef main():\n    n, k = map(int, input().split(' '))\n    a = list(map(int, input().split(' ')))\n\n    def is_divisible(x, y):\n        return int(str(x) + str(y)) % k == 0\n\n    def count_divisible(i):\n        total = 0\n        for j in range(i):\n            if is_divisible(a[i], a[j]):\n                total += 1\n        return total + count_divisible(i + 1) if i < n - 1 else 0\n\n    print(count_divisible(0))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmod_counts = [0] * k\nfor x in a:\n    mod_counts[x % k] += 1\n\ncount = 0\nif mod_counts[0] > 1:\n    count += mod_counts[0] * (mod_counts[0] - 1) // 2\nfor i in range(1, k // 2 + 1):\n    if i == k - i:\n        count += mod_counts[i] * (mod_counts[i] - 1) // 2\n    else:\n        count += mod_counts[i] * mod_counts[k - i]\n\nprint(count)"
+    }
+  ],
+  "created": 1650409240,
+  "id": "cmpl-4yr7orMOiDq68VQT9FJvJ8ha6pKWp",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:02:05.654054 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\nn, k = [int(x) for x in stdin.readline().split()]\na = [int(x) for x in stdin.readline().split()]\n\n# a = [45, 1, 10, 12, 11, 7]\n# n, k = 6, 11\n\n# a = [2, 78, 4, 10]\n# n, k = 4, 2\n\n# a = [3, 7, 19, 3, 3]\n# n, k = 5, 2\n\n\ndef get_digits(a):\n    return len(str(a))\n\n\ndef concatenate(a, b):\n    return int(str(a) + str(b))\n\n\ndef is_divisible(a, b, k):\n    return concatenate(a, b) % k == 0\n\n\ndef get_divisors(k):\n    divisors = []\n\n    for i in range(1, k + 1):\n        if k % i == 0:\n            divisors.append(i)\n\n    return divisors\n\n\ndef get_counts(a):\n    counts = {}\n\n    for num in a:\n        if num not in counts:\n            counts[num] = 1\n        else:\n            counts[num] += 1\n\n    return counts\n\n\ndef get_count_of_pairs_with_divisors(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are divisible by k\n    \"\"\"\n    a_counts = get_counts(a)\n    k_divisors = get_divisors(k)\n\n    count = 0\n\n    for divisor in k_divisors:\n        divisor_count = 0\n        for num, num_count in a_counts.items():\n            if num % divisor == 0:\n                divisor_count += num_count\n\n        count += (divisor_count * (divisor_count - 1)) / 2\n\n    return count\n\n\ndef get_count_of_pairs_without_divisors(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are not divisible by k\n    \"\"\"\n    count = 0\n\n    for i in range(len(a)):\n        for j in range(i + 1, len(a)):\n            if not is_divisible(a[i], a[j], k):\n                count += 1\n\n    return count\n\n\ndef get_count_of_pairs(a, k):\n    \"\"\"\n    Return count of pairs of numbers that when concatenated are divisible by k\n    \"\"\"\n    return get_count_of_pairs_with_divisors(a, k) + get_count_of_pairs_without_divisors(a, k)\n\n\nprint(int(get_count_of_pairs(a, k)))"
+}
+2022-04-19 23:02:05.654106 REASON stop
+2022-04-19 23:02:05.654717 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ncount = 0\n\nfor i in range(n):\n    for j in range(n):\n        if i==j:\n            continue\n        if (str(a[i])+str(a[j])) % k == 0:\n            count += 1\n\nprint(count)"
+}
+2022-04-19 23:02:05.654788 REASON stop
+2022-04-19 23:02:05.655215 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if (a[i] * 10 ** len(str(a[j])) + a[j]) % k == 0:\n                    ans += 1\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:02:05.655275 REASON stop
+2022-04-19 23:02:05.683268 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    res = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if int(str(a[i]) + str(a[j])) % k == 0:\n                res += 1\n\n    print(res)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:02:05.683407 REASON stop
+2022-04-19 23:02:05.700089 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    We need to find the number of pairs of numbers that are divisible by k\n    when concatenated.\n    \"\"\"\n    n, k = map(int, input().split())\n    nums = map(int, input().split())\n\n    # Map each number to its remainder when divided by k\n    rems = {}\n    for num in nums:\n        rem = num % k\n        if rem not in rems:\n            rems[rem] = 0\n        rems[rem] += 1\n\n    # Count the number of pairs that are divisible by k\n    count = 0\n    for rem in rems:\n        count += ((rems[rem] * (rems[rem] - 1)) // 2)\n\n    # Count the number of pairs with the same remainder\n    if 0 in rems:\n        count += ((rems[0] * (rems[0] - 1)) // 2)\n\n    for i in range(1, k):\n        if i in rems and (k - i) in rems:\n            count += (rems[i] * rems[k - i])\n\n    print(count)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:02:05.700221 REASON stop
+2022-04-19 23:02:05.701252 5 {
+  "finish_reason": "length",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    #print(n, k)\n    #print(a)\n\n    answer = 0\n\n    # Compute the number of divisors of k\n    k_divisors = []\n    for i in range(2, int(k**0.5)+1):\n        if k % i == 0:\n            k_divisors.append(i)\n            k_divisors.append(k // i)\n\n    #print(k_divisors)\n\n    # Compute the number of divisors of each a[i]\n    a_divisors = []\n    for i in range(n):\n        a_divisors.append([])\n        for j in range(2, int(a[i]**0.5)+1):\n            if a[i] % j == 0:\n                a_divisors[i].append(j)\n                a_divisors[i].append(a[i] // j)\n\n    #print(a_divisors)\n\n    # Compute the number of divisors of each a[i]*k\n    a_k_divisors = []\n    for i in range(n):\n        a_k_divisors.append([])\n        for j in range(2, int((a[i]*k)**0.5)+1):\n            if (a[i]*k) % j == 0:\n                a_k_divisors[i].append(j)\n                a_k_divisors[i].append(a[i]*k // j)\n\n    #print(a_k_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]\n    a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_divisors[i].append([])\n                for k in range(2, int((a[i]*k/a[j])**0.5)+1):\n                    if (a[i]*k/a[j]) % k == 0:\n                        a_k_a_divisors[i][j].append(k)\n                        a_k_a_divisors[i][j].append(a[i]*k/a[j] // k)\n\n    #print(a_k_a_divisors)\n\n    # Compute the number of divisors of each a[j]*k/a[i]\n    a_k_a_divisors2 = []\n    for i in range(n):\n        a_k_a_divisors2.append([])\n        for j in range(n):\n            if a[i] != 0:\n                a_k_a_divisors2[i].append([])\n                for k in range(2, int((a[j]*k/a[i])**0.5)+1):\n                    if (a[j]*k/a[i]) % k == 0:\n                        a_k_a_divisors2[i][j].append(k)\n                        a_k_a_divisors2[i][j].append(a[j]*k/a[i] // k)\n\n    #print(a_k_a_divisors2)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k\n    a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_divisors[i].append([])\n                for k in range(2, int((a[i]*k/a[j]*k)**0.5)+1):\n                    if (a[i]*k/a[j]*k) % k == 0:\n                        a_k_a_k_divisors[i][j].append(k)\n                        a_k_a_k_divisors[i][j].append(a[i]*k/a[j]*k // k)\n\n    #print(a_k_a_k_divisors)\n\n    # Compute the number of divisors of each a[j]*k/a[i]*k\n    a_k_a_k_divisors2 = []\n    for i in range(n):\n        a_k_a_k_divisors2.append([])\n        for j in range(n):\n            if a[i] != 0:\n                a_k_a_k_divisors2[i].append([])\n                for k in range(2, int((a[j]*k/a[i]*k)**0.5)+1):\n                    if (a[j]*k/a[i]*k) % k == 0:\n                        a_k_a_k_divisors2[i][j].append(k)\n                        a_k_a_k_divisors2[i][j].append(a[j]*k/a[i]*k // k)\n\n    #print(a_k_a_k_divisors2)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]\n    a_k_a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_divisors[i][j].append([])\n                        for l in range(2, int((a[i]*k/a[j]*k/a[k])**0.5)+1):\n                            if (a[i]*k/a[j]*k/a[k]) % l == 0:\n                                a_k_a_k_a_divisors[i][j][k].append(l)\n                                a_k_a_k_a_divisors[i][j][k].append(a[i]*k/a[j]*k/a[k] // l)\n\n    #print(a_k_a_k_a_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k\n    a_k_a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_divisors[i][j][k].append([])\n                                for m in range(2, int((a[i]*k/a[j]*k/a[k]*k/a[l])**0.5)+1):\n                                    if (a[i]*k/a[j]*k/a[k]*k/a[l]) % m == 0:\n                                        a_k_a_k_a_k_divisors[i][j][k][l].append(m)\n                                        a_k_a_k_a_k_divisors[i][j][k][l].append(a[i]*k/a[j]*k/a[k]*k/a[l] // m)\n\n    #print(a_k_a_k_a_k_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k/a[j]\n    a_k_a_k_a_k_a_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_a_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_a_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_a_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_a_divisors[i][j][k].append([])\n                                for m in range(n):\n                                    if a[m] != 0:\n                                        a_k_a_k_a_k_a_divisors[i][j][k][l].append([])\n                                        for o in range(2, int((a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m])**0.5)+1):\n                                            if (a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m]) % o == 0:\n                                                a_k_a_k_a_k_a_divisors[i][j][k][l][m].append(o)\n                                                a_k_a_k_a_k_a_divisors[i][j][k][l][m].append(a[i]*k/a[j]*k/a[k]*k/a[l]*k/a[m] // o)\n\n    #print(a_k_a_k_a_k_a_divisors)\n\n    # Compute the number of divisors of each a[i]*k/a[j]*k/a[i]*k/a[j]*k\n    a_k_a_k_a_k_a_k_divisors = []\n    for i in range(n):\n        a_k_a_k_a_k_a_k_divisors.append([])\n        for j in range(n):\n            if a[j] != 0:\n                a_k_a_k_a_k_a_k_divisors[i].append([])\n                for k in range(n):\n                    if a[k] != 0:\n                        a_k_a_k_a_k_a_k_divisors[i][j].append([])\n                        for l in range(n):\n                            if a[l] != 0:\n                                a_k_a_k_a_k_a_k_divisors[i][j][k].append([])\n                                for m in range(n):\n                                    if a[m] != 0:\n                                        a_k_a_k_a_k_a_k_divisors[i][j][k][l].append([])\n                                        for o in range(n):\n                                            if a[o] != 0:\n                                                a_k_a_k_a_k_a_k_divisors[i][j][k][l][m].append([])"
+}
+2022-04-19 23:02:05.701415 REASON length
+2022-04-19 23:02:05.701426 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport sys\nsys.setrecursionlimit(10000)\n\ndef main():\n    n, k = map(int, input().split(' '))\n    a = list(map(int, input().split(' ')))\n\n    def is_divisible(x, y):\n        return int(str(x) + str(y)) % k == 0\n\n    def count_divisible(i):\n        total = 0\n        for j in range(i):\n            if is_divisible(a[i], a[j]):\n                total += 1\n        return total + count_divisible(i + 1) if i < n - 1 else 0\n\n    print(count_divisible(0))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:02:05.701473 REASON stop
+2022-04-19 23:02:05.702323 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nmod_counts = [0] * k\nfor x in a:\n    mod_counts[x % k] += 1\n\ncount = 0\nif mod_counts[0] > 1:\n    count += mod_counts[0] * (mod_counts[0] - 1) // 2\nfor i in range(1, k // 2 + 1):\n    if i == k - i:\n        count += mod_counts[i] * (mod_counts[i] - 1) // 2\n    else:\n        count += mod_counts[i] * mod_counts[k - i]\n\nprint(count)"
+}
+2022-04-19 23:02:05.702515 REASON stop

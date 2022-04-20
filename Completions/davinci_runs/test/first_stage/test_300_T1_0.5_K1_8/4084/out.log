@@ -1,0 +1,142 @@
+2022-04-19 21:47:11.718633 """
+Takahashi has many red balls and blue balls. Now, he will place them in a row.
+Initially, there is no ball placed.
+Takahashi, who is very patient, will do the following operation 10^{100} times:
+ - Place A blue balls at the end of the row of balls already placed. Then, place B red balls at the end of the row.
+How many blue balls will be there among the first N balls in the row of balls made this way?
+
+-----Constraints-----
+ - 1 \leq N \leq 10^{18}
+ - A, B \geq 0
+ - 0 < A + B \leq 10^{18}
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N A B
+
+-----Output-----
+Print the number of blue balls that will be there among the first N balls in the row of balls.
+
+-----Sample Input-----
+8 3 4
+
+-----Sample Output-----
+4
+
+Let b denote a blue ball, and r denote a red ball. The first eight balls in the row will be bbbrrrrb, among which there are four blue balls.
+"""
+2022-04-19 21:47:11.718642 --------------------------
+2022-04-19 21:47:11.718744 using api key derek
+2022-04-19 21:47:37.881774 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    if a == b:\n        print(n // (a + b) * a)\n    else:\n        print(int(math.ceil(n / (a + b)) * min(a, b)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, A, B = map(int, sys.stdin.readline().split())\n\nprint(N // (A + B) * A + min(N % (A + B), A))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nreadline = sys.stdin.readline\n\n\ndef main():\n    N, A, B = map(int, readline().rstrip().split())\n    ans = N // (A + B) * A + min(N % (A + B), A)\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef solve(n, a, b):\n    if n <= a:\n        return n\n    # a + b * k < n <= a + b * (k + 1)\n    k = math.ceil((n - a) / b) - 1\n    return a + k\n\nif __name__ == \"__main__\":\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    print(solve(n, a, b))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    print(n * a // (a + b))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, a, b = map(int, input().split())\n    n_blue_balls = n // (a + b) * a\n    n_blue_balls += min(n % (a + b), a)\n    print(n_blue_balls)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, a, b = map(int, input().split())\n\n# If you can't understand the problem, think of this as a problem of counting the number of 1's in the binary representation of N-1.\n# Let's define a function f(n) as the number of 1's in the binary representation of n.\n# f(n) = floor(n/2) + n % 2\n# This is because, in the binary representation, the first digit from the right is divided by 2 and the rest of the digits are shifted to the left.\n# This can be proved by induction.\n# Now, let's define a function g(n, k) as the number of 1's in the binary representation of n, when we consider only the first k digits from the right.\n# g(n, k) = f(floor(n/2^k)) + n % 2^k\n# This is because, in the binary representation, the first k digits from the right are divided by 2^k and the rest of the digits are shifted to the left.\n# This can be proved by induction.\n# Now, we can define the number of blue balls among the first N balls as f(N-1).\n# Let's define a function h(n, k) as the number of blue balls among the first n balls, when we consider only the first k digits from the right.\n# h(n, k) = h(floor(n/2^k), k-1) + (n % 2^k) * a + (floor(n/2^k) % 2) * b\n# This is because, in the binary representation, the first k digits from the right are divided by 2^k and the rest of the digits are shifted to the left.\n# And, the last digit is 0 if and only if the number of 1's in the binary representation is even, which means the number of blue balls is even.\n# Therefore, we add b to the number of blue balls.\n# This can be proved by induction.\n# Now, we can calculate the number of blue balls among the first N balls by h(N-1, floor(log_2(N-1))).\n\ndef h(n, k):\n    if k == 0:\n        return n * a\n    return h(n // 2, k - 1) + n % 2 ** k * a + (n // 2 % 2) * b\n\nprint(h(n - 1, len(bin(n - 1)) - 3))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\nimport math\n\ndef main():\n    N, A, B = map(int, input().split())\n\n    # print(N, A, B)\n\n    # If N is less than A + B, then the number of blue balls will be N.\n    if N < A + B:\n        print(N)\n        return\n\n    # If N is greater than A + B, then the number of blue balls will be A.\n    if N > A + B:\n        print(A)\n        return\n\n    # If N is equal to A + B, then we will calculate the number of blue balls.\n    # First, we will calculate the number of blue balls in the first A + B balls.\n    # Then, we will calculate the number of blue balls in the first N balls.\n    # The difference between the two numbers will be the number of blue balls in the first N balls.\n    first_a_plus_b_blue_balls = 0\n    for i in range(1, A + B + 1):\n        first_a_plus_b_blue_balls += math.floor(i / (A + 1))\n    # print(first_a_plus_b_blue_balls)\n\n    first_n_blue_balls = 0\n    for i in range(1, N + 1):\n        first_n_blue_balls += math.floor(i / (A + 1))\n    # print(first_n_blue_balls)\n\n    print(first_n_blue_balls - first_a_plus_b_blue_balls)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650404831,
+  "id": "cmpl-4ypyh2xObMHJ7CHaNgyg9yCD5ZDWA",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:47:37.882095 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    if a == b:\n        print(n // (a + b) * a)\n    else:\n        print(int(math.ceil(n / (a + b)) * min(a, b)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:47:37.882134 REASON stop
+2022-04-19 21:47:37.882747 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, A, B = map(int, sys.stdin.readline().split())\n\nprint(N // (A + B) * A + min(N % (A + B), A))"
+}
+2022-04-19 21:47:37.882816 REASON stop
+2022-04-19 21:47:37.883214 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nreadline = sys.stdin.readline\n\n\ndef main():\n    N, A, B = map(int, readline().rstrip().split())\n    ans = N // (A + B) * A + min(N % (A + B), A)\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:47:37.883266 REASON stop
+2022-04-19 21:47:37.899921 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef solve(n, a, b):\n    if n <= a:\n        return n\n    # a + b * k < n <= a + b * (k + 1)\n    k = math.ceil((n - a) / b) - 1\n    return a + k\n\nif __name__ == \"__main__\":\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    print(solve(n, a, b))"
+}
+2022-04-19 21:47:37.900045 REASON stop
+2022-04-19 21:47:37.906216 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, a, b = map(int, sys.stdin.readline().strip().split())\n    print(n * a // (a + b))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:47:37.906325 REASON stop
+2022-04-19 21:47:37.907605 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, a, b = map(int, input().split())\n    n_blue_balls = n // (a + b) * a\n    n_blue_balls += min(n % (a + b), a)\n    print(n_blue_balls)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:47:37.907738 REASON stop
+2022-04-19 21:47:37.909896 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, a, b = map(int, input().split())\n\n# If you can't understand the problem, think of this as a problem of counting the number of 1's in the binary representation of N-1.\n# Let's define a function f(n) as the number of 1's in the binary representation of n.\n# f(n) = floor(n/2) + n % 2\n# This is because, in the binary representation, the first digit from the right is divided by 2 and the rest of the digits are shifted to the left.\n# This can be proved by induction.\n# Now, let's define a function g(n, k) as the number of 1's in the binary representation of n, when we consider only the first k digits from the right.\n# g(n, k) = f(floor(n/2^k)) + n % 2^k\n# This is because, in the binary representation, the first k digits from the right are divided by 2^k and the rest of the digits are shifted to the left.\n# This can be proved by induction.\n# Now, we can define the number of blue balls among the first N balls as f(N-1).\n# Let's define a function h(n, k) as the number of blue balls among the first n balls, when we consider only the first k digits from the right.\n# h(n, k) = h(floor(n/2^k), k-1) + (n % 2^k) * a + (floor(n/2^k) % 2) * b\n# This is because, in the binary representation, the first k digits from the right are divided by 2^k and the rest of the digits are shifted to the left.\n# And, the last digit is 0 if and only if the number of 1's in the binary representation is even, which means the number of blue balls is even.\n# Therefore, we add b to the number of blue balls.\n# This can be proved by induction.\n# Now, we can calculate the number of blue balls among the first N balls by h(N-1, floor(log_2(N-1))).\n\ndef h(n, k):\n    if k == 0:\n        return n * a\n    return h(n // 2, k - 1) + n % 2 ** k * a + (n // 2 % 2) * b\n\nprint(h(n - 1, len(bin(n - 1)) - 3))"
+}
+2022-04-19 21:47:37.909980 REASON stop
+2022-04-19 21:47:37.911171 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\nimport math\n\ndef main():\n    N, A, B = map(int, input().split())\n\n    # print(N, A, B)\n\n    # If N is less than A + B, then the number of blue balls will be N.\n    if N < A + B:\n        print(N)\n        return\n\n    # If N is greater than A + B, then the number of blue balls will be A.\n    if N > A + B:\n        print(A)\n        return\n\n    # If N is equal to A + B, then we will calculate the number of blue balls.\n    # First, we will calculate the number of blue balls in the first A + B balls.\n    # Then, we will calculate the number of blue balls in the first N balls.\n    # The difference between the two numbers will be the number of blue balls in the first N balls.\n    first_a_plus_b_blue_balls = 0\n    for i in range(1, A + B + 1):\n        first_a_plus_b_blue_balls += math.floor(i / (A + 1))\n    # print(first_a_plus_b_blue_balls)\n\n    first_n_blue_balls = 0\n    for i in range(1, N + 1):\n        first_n_blue_balls += math.floor(i / (A + 1))\n    # print(first_n_blue_balls)\n\n    print(first_n_blue_balls - first_a_plus_b_blue_balls)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:47:37.911349 REASON stop

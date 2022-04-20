@@ -1,0 +1,183 @@
+2022-04-19 21:00:51.974870 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$ (or say that there are no such spanning trees). Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains three integers $n$, $m$ and $D$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2}), 1 \le D < n$) — the number of vertices, the number of edges and required degree of the first vertex, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+If there is no spanning tree satisfying the condition from the problem statement, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and then print $n-1$ lines describing the edges of a spanning tree such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+4 5 1
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+2 1
+2 3
+3 4
+
+Input
+4 5 3
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+1 2
+1 3
+4 1
+
+Input
+4 4 3
+1 2
+1 4
+2 3
+3 4
+
+Output
+NO
+
+
+
+-----Note-----
+
+The picture corresponding to the first and second examples: [Image]
+
+The picture corresponding to the third example: [Image]
+"""
+2022-04-19 21:00:51.974891 --------------------------
+2022-04-19 21:00:51.975005 using api key gabby
+2022-04-19 21:01:45.974899 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = [sys.stdin.readline().split() for _ in range(m)]\n    if d == 0:\n        if n == 2:\n            print(\"YES\")\n            print(\"1 2\")\n        else:\n            print(\"NO\")\n    elif d == 1:\n        if n == 2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(2, n + 1):\n                print(1, i)\n    elif d == n - 1:\n        if n == 2:\n            print(\"YES\")\n            print(\"1 2\")\n        else:\n            print(\"YES\")\n            for i in range(2, n):\n                print(i, i + 1)\n    elif d == n - 2:\n        if n == 3:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(2, n):\n                print(i, i + 1)\n            print(1, n)\n    else:\n        print(\"NO\")\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\n#My solution\n\ndef find_spanning_tree(n, m, d, edges):\n    # If there are not enough edges to form a tree\n    if m < n - 1:\n        return 'NO'\n    # If the degree of the first vertex is already equal to d\n    elif d == 0:\n        return 'YES'\n    # If the degree of the first vertex is greater than d\n    elif d < 0:\n        return 'NO'\n    # If the degree of the first vertex is less than d\n    else:\n        # Find the edges that are connected to the first vertex\n        first_edges = [edge for edge in edges if edge[0] == 1 or edge[1] == 1]\n        # If there are not enough edges to form a tree\n        if len(first_edges) < n - 1:\n            return 'NO'\n        # If there are enough edges to form a tree\n        else:\n            # Check if there is a tree with the required degree\n            for i in range(len(first_edges)):\n                # Create a set of edges to form a tree\n                tree = set(first_edges[:i] + first_edges[i+1:])\n                # If the degree of the first vertex is equal to d\n                if d == len(tree):\n                    return 'YES'\n                # If the degree of the first vertex is less than d\n                else:\n                    # Check if there is a tree with the required degree\n                    for edge in first_edges[i+1:]:\n                        # Create a set of edges to form a tree\n                        tree = set(first_edges[:i] + [edge] + first_edges[i+2:])\n                        # If the degree of the first vertex is equal to d\n                        if d == len(tree):\n                            return 'YES'\n            return 'NO'\n\nn, m, d = map(int, input().split())\nedges = []\nfor i in range(m):\n    edges.append(list(map(int, input().split())))\n\nprint(find_spanning_tree(n, m, d, edges))\n\n#Solution from the editorial\n\ndef find_spanning_tree(n, m, d, edges):\n    if m < n - 1:\n        return 'NO'\n    if d == 0:\n        return 'YES'\n    if d < 0:\n        return 'NO'\n    # If there are enough edges to form a tree\n    else:\n        # Check if there is a tree with the required degree\n        for i in range(len(edges)):\n            # Create a set of edges to form a tree\n            tree = set(edges[:i] + edges[i+1:])\n            # If the degree of the first vertex is equal to d\n            if d == len(tree):\n                return 'YES'\n        return 'NO'\n\nn, m, d = map(int, input().split())\nedges = []\nfor i in range(m):\n    edges.append(list(map(int, input().split())))\n\nprint(find_spanning_tree(n, m, d, edges))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport os\nimport sys\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nsys.setrecursionlimit(200000)\n\ndef read_ints():\n\treturn [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_edge():\n\treturn read_ints()\n\ndef read_edges(m):\n\treturn [read_edge() for _ in range(m)]\n\ndef write_edges(edges):\n\tsys.stdout.write('YES\\n')\n\tfor edge in edges:\n\t\tsys.stdout.write('{} {}\\n'.format(edge[0], edge[1]))\n\ndef dfs(start, graph, visited):\n\tvisited[start] = True\n\tfor neighbour in graph[start]:\n\t\tif not visited[neighbour]:\n\t\t\tdfs(neighbour, graph, visited)\n\ndef solve(n, m, D, edges):\n\t# TODO: Implement this function\n\tgraph = [[] for _ in range(n + 1)]\n\tfor edge in edges:\n\t\tgraph[edge[0]].append(edge[1])\n\t\tgraph[edge[1]].append(edge[0])\n\n\tvisited = [False for _ in range(n + 1)]\n\tdfs(1, graph, visited)\n\n\tif D == 0:\n\t\tif all(visited[1:]):\n\t\t\twrite_edges([])\n\t\t\treturn\n\t\telse:\n\t\t\tsys.stdout.write('NO\\n')\n\t\t\treturn\n\n\tfor edge in edges:\n\t\tif edge[0] == 1:\n\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\tdfs(1, graph, visited)\n\t\t\tif D == 1:\n\t\t\t\tif all(visited[1:]):\n\t\t\t\t\twrite_edges([edge])\n\t\t\t\t\treturn\n\t\t\t\telse:\n\t\t\t\t\tsys.stdout.write('NO\\n')\n\t\t\t\t\treturn\n\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\tgraph[edge[1]].append(edge[0])\n\t\telif edge[1] == 1:\n\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\tdfs(1, graph, visited)\n\t\t\tif D == 1:\n\t\t\t\tif all(visited[1:]):\n\t\t\t\t\twrite_edges([edge])\n\t\t\t\t\treturn\n\t\t\t\telse:\n\t\t\t\t\tsys.stdout.write('NO\\n')\n\t\t\t\t\treturn\n\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\tgraph[edge[1]].append(edge[0])\n\n\tfor edge in edges:\n\t\tif edge[0] == 1:\n\t\t\tfor edge_2 in edges:\n\t\t\t\tif edge_2[0] == 1 and edge_2[1] != edge[1]:\n\t\t\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].remove(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].remove(edge_2[0])\n\t\t\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\t\t\tdfs(1, graph, visited)\n\t\t\t\t\tif D == 2:\n\t\t\t\t\t\tif all(visited[1:]):\n\t\t\t\t\t\t\twrite_edges([edge, edge_2])\n\t\t\t\t\t\t\treturn\n\t\t\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\t\t\tgraph[edge[1]].append(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].append(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].append(edge_2[0])\n\t\telif edge[1] == 1:\n\t\t\tfor edge_2 in edges:\n\t\t\t\tif edge_2[0] == 1 and edge_2[1] != edge[0]:\n\t\t\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].remove(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].remove(edge_2[0])\n\t\t\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\t\t\tdfs(1, graph, visited)\n\t\t\t\t\tif D == 2:\n\t\t\t\t\t\tif all(visited[1:]):\n\t\t\t\t\t\t\twrite_edges([edge, edge_2])\n\t\t\t\t\t\t\treturn\n\t\t\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\t\t\tgraph[edge[1]].append(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].append(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].append(edge_2[0])\n\n\tsys.stdout.write('NO\\n')\n\nn, m, D = read_ints()\nedges = read_edges(m)\nsolve(n, m, D, edges)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(2, n + 1):\n            print(1, i)\n        return\n    if d == n - 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i + 1)\n        return\n    if d == 1:\n        for i in range(2, n + 1):\n            if (1, i) in edges:\n                print(\"YES\")\n                print(1, i)\n                for j in range(1, n + 1):\n                    if j != i:\n                        print(j, 1)\n                return\n        print(\"NO\")\n        return\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\nimport sys\n\ndef main():\n    # Read data\n    n, m, d = map(int, sys.stdin.readline().split())\n    adj = [[] for _ in range(n)]\n    for _ in range(m):\n        a, b = map(int, sys.stdin.readline().split())\n        adj[a - 1].append(b - 1)\n        adj[b - 1].append(a - 1)\n\n    # Check if there exists a spanning tree with degree d for the first vertex\n    if d >= len(adj[0]):\n        print(\"NO\")\n        return\n\n    # Print the edges of a spanning tree\n    print(\"YES\")\n    for _ in range(d):\n        print(\"1\", adj[0][0] + 1)\n        adj[adj[0][0]].remove(0)\n        adj[0].remove(adj[0][0])\n    for i in range(1, n):\n        if adj[i]:\n            print(i + 1, adj[i][0] + 1)\n            adj[adj[i][0]].remove(i)\n            adj[i].remove(adj[i][0])\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef spanning_tree(n, m, D, edges):\n    if D == 0:\n        return \"NO\"\n    if D > n - 1:\n        return \"YES\"\n    if D == n - 1:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges])\n    if D == 1:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[1], edge[0]) for edge in edges])\n    if D == 2:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges[1:]])\n    return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[1], edge[0]) for edge in edges[:D-2]]) + \"\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges[D-2:]])\n\nif __name__ == \"__main__\":\n    n, m, D = [int(x) for x in input().split()]\n    edges = [tuple([int(x) for x in input().split()]) for _ in range(m)]\n    print(spanning_tree(n, m, D, edges))"
+    }
+  ],
+  "created": 1650402052,
+  "id": "cmpl-4ypFsoiwT3GtF5HGsfcy9zR5zgLl1",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:01:45.975390 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = [sys.stdin.readline().split() for _ in range(m)]\n    if d == 0:\n        if n == 2:\n            print(\"YES\")\n            print(\"1 2\")\n        else:\n            print(\"NO\")\n    elif d == 1:\n        if n == 2:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(2, n + 1):\n                print(1, i)\n    elif d == n - 1:\n        if n == 2:\n            print(\"YES\")\n            print(\"1 2\")\n        else:\n            print(\"YES\")\n            for i in range(2, n):\n                print(i, i + 1)\n    elif d == n - 2:\n        if n == 3:\n            print(\"NO\")\n        else:\n            print(\"YES\")\n            for i in range(2, n):\n                print(i, i + 1)\n            print(1, n)\n    else:\n        print(\"NO\")\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:01:45.975441 REASON stop
+2022-04-19 21:01:45.975964 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\n#My solution\n\ndef find_spanning_tree(n, m, d, edges):\n    # If there are not enough edges to form a tree\n    if m < n - 1:\n        return 'NO'\n    # If the degree of the first vertex is already equal to d\n    elif d == 0:\n        return 'YES'\n    # If the degree of the first vertex is greater than d\n    elif d < 0:\n        return 'NO'\n    # If the degree of the first vertex is less than d\n    else:\n        # Find the edges that are connected to the first vertex\n        first_edges = [edge for edge in edges if edge[0] == 1 or edge[1] == 1]\n        # If there are not enough edges to form a tree\n        if len(first_edges) < n - 1:\n            return 'NO'\n        # If there are enough edges to form a tree\n        else:\n            # Check if there is a tree with the required degree\n            for i in range(len(first_edges)):\n                # Create a set of edges to form a tree\n                tree = set(first_edges[:i] + first_edges[i+1:])\n                # If the degree of the first vertex is equal to d\n                if d == len(tree):\n                    return 'YES'\n                # If the degree of the first vertex is less than d\n                else:\n                    # Check if there is a tree with the required degree\n                    for edge in first_edges[i+1:]:\n                        # Create a set of edges to form a tree\n                        tree = set(first_edges[:i] + [edge] + first_edges[i+2:])\n                        # If the degree of the first vertex is equal to d\n                        if d == len(tree):\n                            return 'YES'\n            return 'NO'\n\nn, m, d = map(int, input().split())\nedges = []\nfor i in range(m):\n    edges.append(list(map(int, input().split())))\n\nprint(find_spanning_tree(n, m, d, edges))\n\n#Solution from the editorial\n\ndef find_spanning_tree(n, m, d, edges):\n    if m < n - 1:\n        return 'NO'\n    if d == 0:\n        return 'YES'\n    if d < 0:\n        return 'NO'\n    # If there are enough edges to form a tree\n    else:\n        # Check if there is a tree with the required degree\n        for i in range(len(edges)):\n            # Create a set of edges to form a tree\n            tree = set(edges[:i] + edges[i+1:])\n            # If the degree of the first vertex is equal to d\n            if d == len(tree):\n                return 'YES'\n        return 'NO'\n\nn, m, d = map(int, input().split())\nedges = []\nfor i in range(m):\n    edges.append(list(map(int, input().split())))\n\nprint(find_spanning_tree(n, m, d, edges))"
+}
+2022-04-19 21:01:45.976044 REASON stop
+2022-04-19 21:01:45.976628 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:01:45.976757 REASON stop
+2022-04-19 21:01:45.993591 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport os\nimport sys\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:01:45.993716 REASON stop
+2022-04-19 21:01:46.008508 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nsys.setrecursionlimit(200000)\n\ndef read_ints():\n\treturn [int(x) for x in sys.stdin.readline().strip().split()]\n\ndef read_edge():\n\treturn read_ints()\n\ndef read_edges(m):\n\treturn [read_edge() for _ in range(m)]\n\ndef write_edges(edges):\n\tsys.stdout.write('YES\\n')\n\tfor edge in edges:\n\t\tsys.stdout.write('{} {}\\n'.format(edge[0], edge[1]))\n\ndef dfs(start, graph, visited):\n\tvisited[start] = True\n\tfor neighbour in graph[start]:\n\t\tif not visited[neighbour]:\n\t\t\tdfs(neighbour, graph, visited)\n\ndef solve(n, m, D, edges):\n\t# TODO: Implement this function\n\tgraph = [[] for _ in range(n + 1)]\n\tfor edge in edges:\n\t\tgraph[edge[0]].append(edge[1])\n\t\tgraph[edge[1]].append(edge[0])\n\n\tvisited = [False for _ in range(n + 1)]\n\tdfs(1, graph, visited)\n\n\tif D == 0:\n\t\tif all(visited[1:]):\n\t\t\twrite_edges([])\n\t\t\treturn\n\t\telse:\n\t\t\tsys.stdout.write('NO\\n')\n\t\t\treturn\n\n\tfor edge in edges:\n\t\tif edge[0] == 1:\n\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\tdfs(1, graph, visited)\n\t\t\tif D == 1:\n\t\t\t\tif all(visited[1:]):\n\t\t\t\t\twrite_edges([edge])\n\t\t\t\t\treturn\n\t\t\t\telse:\n\t\t\t\t\tsys.stdout.write('NO\\n')\n\t\t\t\t\treturn\n\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\tgraph[edge[1]].append(edge[0])\n\t\telif edge[1] == 1:\n\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\tdfs(1, graph, visited)\n\t\t\tif D == 1:\n\t\t\t\tif all(visited[1:]):\n\t\t\t\t\twrite_edges([edge])\n\t\t\t\t\treturn\n\t\t\t\telse:\n\t\t\t\t\tsys.stdout.write('NO\\n')\n\t\t\t\t\treturn\n\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\tgraph[edge[1]].append(edge[0])\n\n\tfor edge in edges:\n\t\tif edge[0] == 1:\n\t\t\tfor edge_2 in edges:\n\t\t\t\tif edge_2[0] == 1 and edge_2[1] != edge[1]:\n\t\t\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].remove(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].remove(edge_2[0])\n\t\t\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\t\t\tdfs(1, graph, visited)\n\t\t\t\t\tif D == 2:\n\t\t\t\t\t\tif all(visited[1:]):\n\t\t\t\t\t\t\twrite_edges([edge, edge_2])\n\t\t\t\t\t\t\treturn\n\t\t\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\t\t\tgraph[edge[1]].append(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].append(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].append(edge_2[0])\n\t\telif edge[1] == 1:\n\t\t\tfor edge_2 in edges:\n\t\t\t\tif edge_2[0] == 1 and edge_2[1] != edge[0]:\n\t\t\t\t\tgraph[edge[0]].remove(edge[1])\n\t\t\t\t\tgraph[edge[1]].remove(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].remove(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].remove(edge_2[0])\n\t\t\t\t\tvisited = [False for _ in range(n + 1)]\n\t\t\t\t\tdfs(1, graph, visited)\n\t\t\t\t\tif D == 2:\n\t\t\t\t\t\tif all(visited[1:]):\n\t\t\t\t\t\t\twrite_edges([edge, edge_2])\n\t\t\t\t\t\t\treturn\n\t\t\t\t\tgraph[edge[0]].append(edge[1])\n\t\t\t\t\tgraph[edge[1]].append(edge[0])\n\t\t\t\t\tgraph[edge_2[0]].append(edge_2[1])\n\t\t\t\t\tgraph[edge_2[1]].append(edge_2[0])\n\n\tsys.stdout.write('NO\\n')\n\nn, m, D = read_ints()\nedges = read_edges(m)\nsolve(n, m, D, edges)"
+}
+2022-04-19 21:01:46.008657 REASON stop
+2022-04-19 21:01:46.015651 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(2, n + 1):\n            print(1, i)\n        return\n    if d == n - 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i + 1)\n        return\n    if d == 1:\n        for i in range(2, n + 1):\n            if (1, i) in edges:\n                print(\"YES\")\n                print(1, i)\n                for j in range(1, n + 1):\n                    if j != i:\n                        print(j, 1)\n                return\n        print(\"NO\")\n        return\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:01:46.015785 REASON stop
+2022-04-19 21:01:46.016782 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\nimport sys\n\ndef main():\n    # Read data\n    n, m, d = map(int, sys.stdin.readline().split())\n    adj = [[] for _ in range(n)]\n    for _ in range(m):\n        a, b = map(int, sys.stdin.readline().split())\n        adj[a - 1].append(b - 1)\n        adj[b - 1].append(a - 1)\n\n    # Check if there exists a spanning tree with degree d for the first vertex\n    if d >= len(adj[0]):\n        print(\"NO\")\n        return\n\n    # Print the edges of a spanning tree\n    print(\"YES\")\n    for _ in range(d):\n        print(\"1\", adj[0][0] + 1)\n        adj[adj[0][0]].remove(0)\n        adj[0].remove(adj[0][0])\n    for i in range(1, n):\n        if adj[i]:\n            print(i + 1, adj[i][0] + 1)\n            adj[adj[i][0]].remove(i)\n            adj[i].remove(adj[i][0])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:01:46.016880 REASON stop
+2022-04-19 21:01:46.020048 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef spanning_tree(n, m, D, edges):\n    if D == 0:\n        return \"NO\"\n    if D > n - 1:\n        return \"YES\"\n    if D == n - 1:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges])\n    if D == 1:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[1], edge[0]) for edge in edges])\n    if D == 2:\n        return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges[1:]])\n    return \"YES\\n\" + \"\\n\".join([\"{} {}\".format(edge[1], edge[0]) for edge in edges[:D-2]]) + \"\\n\" + \"\\n\".join([\"{} {}\".format(edge[0], edge[1]) for edge in edges[D-2:]])\n\nif __name__ == \"__main__\":\n    n, m, D = [int(x) for x in input().split()]\n    edges = [tuple([int(x) for x in input().split()]) for _ in range(m)]\n    print(spanning_tree(n, m, D, edges))"
+}
+2022-04-19 21:01:46.020240 REASON stop

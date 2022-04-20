@@ -1,0 +1,172 @@
+2022-04-19 21:26:35.500119 """
+You are given two strings $s$ and $t$. Both strings have length $n$ and consist of lowercase Latin letters. The characters in the strings are numbered from $1$ to $n$.
+
+You can successively perform the following move any number of times (possibly, zero):  swap any two adjacent (neighboring) characters of $s$ (i.e. for any $i = \{1, 2, \dots, n - 1\}$ you can swap $s_i$ and $s_{i + 1})$. 
+
+You can't apply a move to the string $t$. The moves are applied to the string $s$ one after another.
+
+Your task is to obtain the string $t$ from the string $s$. Find any way to do it with at most $10^4$ such moves.
+
+You do not have to minimize the number of moves, just find any sequence of moves of length $10^4$ or less to transform $s$ into $t$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 50$) — the length of strings $s$ and $t$.
+
+The second line of the input contains the string $s$ consisting of $n$ lowercase Latin letters.
+
+The third line of the input contains the string $t$ consisting of $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+If it is impossible to obtain the string $t$ using moves, print "-1".
+
+Otherwise in the first line print one integer $k$ — the number of moves to transform $s$ to $t$. Note that $k$ must be an integer number between $0$ and $10^4$ inclusive.
+
+In the second line print $k$ integers $c_j$ ($1 \le c_j < n$), where $c_j$ means that on the $j$-th move you swap characters $s_{c_j}$ and $s_{c_j + 1}$.
+
+If you do not need to apply any moves, print a single integer $0$ in the first line and either leave the second line empty or do not print it at all.
+
+
+-----Examples-----
+Input
+6
+abcdef
+abdfec
+
+Output
+4
+3 5 4 5 
+
+Input
+4
+abcd
+accd
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the string $s$ changes as follows: "abcdef" $\rightarrow$ "abdcef" $\rightarrow$ "abdcfe" $\rightarrow$ "abdfce" $\rightarrow$ "abdfec".
+
+In the second example there is no way to transform the string $s$ into the string $t$ through any allowed moves.
+"""
+2022-04-19 21:26:35.500145 --------------------------
+2022-04-19 21:26:35.500244 using api key gabby
+2022-04-19 21:27:03.096758 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(0)\n    else:\n        print(1)\n        print(1)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = list(input())\nt = list(input())\n\ndef check(s, t):\n    for i in range(n):\n        if s[i] != t[i]:\n            return False\n    return True\n\ndef swap(s, i, j):\n    s[i], s[j] = s[j], s[i]\n    return s\n\ndef solve(s, t):\n    if check(s, t):\n        return 0\n    if len(s) == 1:\n        return -1\n    for i in range(len(s) - 1):\n        for j in range(i + 1, len(s)):\n            if s[i] == t[j] and s[j] == t[i]:\n                return solve(swap(s, i, j), t) + 1\n    return -1\n\nprint(solve(s, t))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s,i):\n  return s[:i]+s[i+1]+s[i]+s[i+2:]\n\ndef get_swaps(s,t):\n  if s == t:\n    return []\n  for i in range(n-1):\n    if s[i] != t[i]:\n      if s[i+1] == t[i]:\n        return [i+1] + get_swaps(swap(s,i+1),t)\n      else:\n        return [i] + get_swaps(swap(s,i),t)\n  return [-1]\n\nswaps = get_swaps(s,t)\nif swaps[0] == -1:\n  print(-1)\nelse:\n  print(len(swaps))\n  print(*swaps)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn = int(input())\n\ts = input()\n\tt = input()\n\t\n\tif s == t:\n\t\tprint('0')\n\t\treturn\n\t\n\tfor i in range(n):\n\t\tif s[i] == t[i]:\n\t\t\tcontinue\n\t\t\n\t\tfor j in range(i+1,n):\n\t\t\tif s[j] == t[i]:\n\t\t\t\ts = s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n\t\t\t\tprint(i+1,j+1)\n\t\t\t\tbreak\n\n\nif __name__ == '__main__':\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn = int(input())\ns = input()\nt = input()\n\nans = []\nfor i in range(n):\n    if s[i] != t[i]:\n        for j in range(i + 1, n):\n            if s[j] == t[i]:\n                ans += [j + 1]\n                s = s[:j] + s[j - 1:j + 1] + s[j + 1:]\n                break\n\nif s == t:\n    print(len(ans))\n    print(*ans)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    if s == t:\n        print(0)\n        return\n    if n == 2 and s[0] == t[1] and s[1] == t[0]:\n        print(1)\n        print(1)\n        return\n    if n == 2:\n        print(-1)\n        return\n    for i in range(n - 1):\n        if s[i] == t[i] and s[i + 1] == t[i + 1]:\n            continue\n        elif s[i] == t[i + 1] and s[i + 1] == t[i]:\n            print(1)\n            print(i + 1)\n            return\n        elif s[i] == t[i] and s[i + 1] == t[i + 2] and s[i + 2] == t[i + 1]:\n            print(2)\n            print(i + 2, i + 2)\n            return\n        elif s[i] == t[i + 2] and s[i + 1] == t[i + 1] and s[i + 2] == t[i]:\n            print(2)\n            print(i + 2, i + 1)\n            return\n        elif s[i] == t[i + 1] and s[i + 1] == t[i + 2] and s[i + 2] == t[i]:\n            print(3)\n            print(i + 1, i + 2, i + 2)\n            return\n        elif s[i] == t[i + 2] and s[i + 1] == t[i] and s[i + 2] == t[i + 1]:\n            print(3)\n            print(i + 1, i + 1, i + 2)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ns_map = {}\nt_map = {}\nfor i in range(n):\n    s_map[s[i]] = i\n    t_map[t[i]] = i\n\nfor i in range(n):\n    if s_map[t[i]] < i:\n        print(-1)\n        exit(0)\n\nprint(s_map[t[0]])\nfor i in range(1, n):\n    print(s_map[t[i]], end=\" \")\n    s_map[t[i - 1]] = s_map[t[i]]"
+    }
+  ],
+  "created": 1650403595,
+  "id": "cmpl-4ypel6AF8QvNgBLrbCwYpc4dyCays",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:27:03.097179 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    s = input()\n    t = input()\n    if s == t:\n        print(0)\n    else:\n        print(1)\n        print(1)\n\nmain()"
+}
+2022-04-19 21:27:03.097235 REASON stop
+2022-04-19 21:27:03.098011 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = list(input())\nt = list(input())\n\ndef check(s, t):\n    for i in range(n):\n        if s[i] != t[i]:\n            return False\n    return True\n\ndef swap(s, i, j):\n    s[i], s[j] = s[j], s[i]\n    return s\n\ndef solve(s, t):\n    if check(s, t):\n        return 0\n    if len(s) == 1:\n        return -1\n    for i in range(len(s) - 1):\n        for j in range(i + 1, len(s)):\n            if s[i] == t[j] and s[j] == t[i]:\n                return solve(swap(s, i, j), t) + 1\n    return -1\n\nprint(solve(s, t))"
+}
+2022-04-19 21:27:03.098113 REASON stop
+2022-04-19 21:27:03.098695 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn = int(input())\ns = input()\nt = input()\n\ndef swap(s,i):\n  return s[:i]+s[i+1]+s[i]+s[i+2:]\n\ndef get_swaps(s,t):\n  if s == t:\n    return []\n  for i in range(n-1):\n    if s[i] != t[i]:\n      if s[i+1] == t[i]:\n        return [i+1] + get_swaps(swap(s,i+1),t)\n      else:\n        return [i] + get_swaps(swap(s,i),t)\n  return [-1]\n\nswaps = get_swaps(s,t)\nif swaps[0] == -1:\n  print(-1)\nelse:\n  print(len(swaps))\n  print(*swaps)"
+}
+2022-04-19 21:27:03.098822 REASON stop
+2022-04-19 21:27:03.121040 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn = int(input())\n\ts = input()\n\tt = input()\n\t\n\tif s == t:\n\t\tprint('0')\n\t\treturn\n\t\n\tfor i in range(n):\n\t\tif s[i] == t[i]:\n\t\t\tcontinue\n\t\t\n\t\tfor j in range(i+1,n):\n\t\t\tif s[j] == t[i]:\n\t\t\t\ts = s[:i] + s[j] + s[i+1:j] + s[i] + s[j+1:]\n\t\t\t\tprint(i+1,j+1)\n\t\t\t\tbreak\n\n\nif __name__ == '__main__':\n\tmain()"
+}
+2022-04-19 21:27:03.121199 REASON stop
+2022-04-19 21:27:03.122077 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn = int(input())\ns = input()\nt = input()\n\nans = []\nfor i in range(n):\n    if s[i] != t[i]:\n        for j in range(i + 1, n):\n            if s[j] == t[i]:\n                ans += [j + 1]\n                s = s[:j] + s[j - 1:j + 1] + s[j + 1:]\n                break\n\nif s == t:\n    print(len(ans))\n    print(*ans)\nelse:\n    print(-1)"
+}
+2022-04-19 21:27:03.122172 REASON stop
+2022-04-19 21:27:03.128792 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:27:03.128902 REASON stop
+2022-04-19 21:27:03.130135 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n    if s == t:\n        print(0)\n        return\n    if n == 2 and s[0] == t[1] and s[1] == t[0]:\n        print(1)\n        print(1)\n        return\n    if n == 2:\n        print(-1)\n        return\n    for i in range(n - 1):\n        if s[i] == t[i] and s[i + 1] == t[i + 1]:\n            continue\n        elif s[i] == t[i + 1] and s[i + 1] == t[i]:\n            print(1)\n            print(i + 1)\n            return\n        elif s[i] == t[i] and s[i + 1] == t[i + 2] and s[i + 2] == t[i + 1]:\n            print(2)\n            print(i + 2, i + 2)\n            return\n        elif s[i] == t[i + 2] and s[i + 1] == t[i + 1] and s[i + 2] == t[i]:\n            print(2)\n            print(i + 2, i + 1)\n            return\n        elif s[i] == t[i + 1] and s[i + 1] == t[i + 2] and s[i + 2] == t[i]:\n            print(3)\n            print(i + 1, i + 2, i + 2)\n            return\n        elif s[i] == t[i + 2] and s[i + 1] == t[i] and s[i + 2] == t[i + 1]:\n            print(3)\n            print(i + 1, i + 1, i + 2)\n            return\n    print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:27:03.130230 REASON stop
+2022-04-19 21:27:03.138449 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\ns = input()\nt = input()\n\ns_map = {}\nt_map = {}\nfor i in range(n):\n    s_map[s[i]] = i\n    t_map[t[i]] = i\n\nfor i in range(n):\n    if s_map[t[i]] < i:\n        print(-1)\n        exit(0)\n\nprint(s_map[t[0]])\nfor i in range(1, n):\n    print(s_map[t[i]], end=\" \")\n    s_map[t[i - 1]] = s_map[t[i]]"
+}
+2022-04-19 21:27:03.138717 REASON stop

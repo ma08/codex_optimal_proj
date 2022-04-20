@@ -1,0 +1,205 @@
+2022-04-19 23:21:29.360617 """
+-----Input-----
+
+The first line contains a single integer n (1 ≤ n ≤ 1000) — the number of points on a plane.
+
+Each of the next n lines contains two real coordinates x_{i} and y_{i} of the $i^{\text{th}}$ point, specified with exactly 2 fractional digits. All coordinates are between  - 1000 and 1000, inclusive.
+
+
+-----Output-----
+
+Output a single real number θ — the answer to the problem statement. The absolute or relative error of your answer should be at most 10^{ - 2}.
+
+
+-----Examples-----
+Input
+8
+-2.14 2.06
+-1.14 2.04
+-2.16 1.46
+-2.14 0.70
+-1.42 0.40
+-0.94 -0.48
+-1.42 -1.28
+-2.16 -1.62
+
+Output
+5.410
+
+Input
+5
+2.26 1.44
+2.28 0.64
+2.30 -0.30
+1.58 0.66
+3.24 0.66
+
+Output
+5.620
+
+Input
+8
+6.98 2.06
+6.40 1.12
+5.98 0.24
+5.54 -0.60
+7.16 0.30
+7.82 1.24
+8.34 0.24
+8.74 -0.76
+
+Output
+5.480
+
+Input
+5
+10.44 2.06
+10.90 0.80
+11.48 -0.48
+12.06 0.76
+12.54 2.06
+
+Output
+6.040
+
+Input
+8
+16.94 2.42
+15.72 2.38
+14.82 1.58
+14.88 0.50
+15.76 -0.16
+16.86 -0.20
+17.00 0.88
+16.40 0.92
+
+Output
+6.040
+
+Input
+7
+20.62 3.00
+21.06 2.28
+21.56 1.36
+21.66 0.56
+21.64 -0.52
+22.14 2.32
+22.62 3.04
+
+Output
+6.720
+"""
+2022-04-19 23:21:29.360636 --------------------------
+2022-04-19 23:21:29.360783 using api key derek
+2022-04-19 23:22:32.423899 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_theta(points):\n    # Get the point with the highest x-coordinate\n    x_max = 0\n    for point in points:\n        if point[0] > x_max:\n            x_max = point[0]\n            x_max_point = point\n    \n    # Get the point with the highest y-coordinate\n    y_max = 0\n    for point in points:\n        if point[1] > y_max:\n            y_max = point[1]\n            y_max_point = point\n    \n    # Get the point with the lowest x-coordinate\n    x_min = 0\n    for point in points:\n        if point[0] < x_min:\n            x_min = point[0]\n            x_min_point = point\n    \n    # Get the point with the lowest y-coordinate\n    y_min = 0\n    for point in points:\n        if point[1] < y_min:\n            y_min = point[1]\n            y_min_point = point\n    \n    # Get the point with the highest y-coordinate that is not the y_max_point\n    y_max_2 = 0\n    for point in points:\n        if point[1] > y_max_2 and point != y_max_point:\n            y_max_2 = point[1]\n            y_max_2_point = point\n    \n    # Get the point with the lowest y-coordinate that is not the y_min_point\n    y_min_2 = 0\n    for point in points:\n        if point[1] < y_min_2 and point != y_min_point:\n            y_min_2 = point[1]\n            y_min_2_point = point\n    \n    # Get the point with the highest x-coordinate that is not the x_max_point\n    x_max_2 = 0\n    for point in points:\n        if point[0] > x_max_2 and point != x_max_point:\n            x_max_2 = point[0]\n            x_max_2_point = point\n    \n    # Get the point with the lowest x-coordinate that is not the x_min_point\n    x_min_2 = 0\n    for point in points:\n        if point[0] < x_min_2 and point != x_min_point:\n            x_min_2 = point[0]\n            x_min_2_point = point\n    \n    # Get theta\n    theta = 0\n    if x_max_point[1] == y_max_point[1]:\n        theta = math.pi / 2\n    elif x_min_point[1] == y_min_point[1]:\n        theta = math.pi / 2\n    elif x_max_point[1] == y_min_point[1]:\n        theta = 3 * math.pi / 2\n    elif x_min_point[1] == y_max_point[1]:\n        theta = 3 * math.pi / 2\n    elif x_max_point[0] == y_max_point[0]:\n        theta = 0\n    elif x_min_point[0] == y_min_point[0]:\n        theta = 0\n    elif x_max_point[0] == y_min_point[0]:\n        theta = math.pi\n    elif x_min_point[0] == y_max_point[0]:\n        theta = math.pi\n    elif x_max_point[1] == y_max_2_point[1] and x_max_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_max_2_point[1]) / (x_max_point[0] - x_max_2_point[0]))\n    elif x_min_point[1] == y_min_2_point[1] and x_min_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_min_2_point[1]) / (x_min_point[0] - x_min_2_point[0]))\n    elif x_max_point[1] == y_min_2_point[1] and x_max_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_min_2_point[1]) / (x_max_point[0] - x_min_2_point[0]))\n    elif x_min_point[1] == y_max_2_point[1] and x_min_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_max_2_point[1]) / (x_min_point[0] - x_max_2_point[0]))\n    elif x_max_point[1] == y_min_2_point[1] and x_max_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_min_2_point[1]) / (x_max_point[0] - x_min_2_point[0]))\n    elif x_min_point[1] == y_max_2_point[1] and x_min_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_max_2_point[1]) / (x_min_point[0] - x_max_2_point[0]))\n    elif x_max_point[1] == y_max_2_point[1] and x_max_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_max_2_point[1]) / (x_max_point[0] - x_max_2_point[0]))\n    elif x_min_point[1] == y_min_2_point[1] and x_min_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_min_2_point[1]) / (x_min_point[0] - x_min_2_point[0]))\n    \n    return theta\n\n# Get input\nn = int(input())\npoints = []\nfor i in range(n):\n    x, y = map(float, input().split())\n    points.append((x, y))\n\n# Get theta\ntheta = get_theta(points)\n\n# Print theta\nprint(theta)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nfrom sys import stdin\nfrom math import pi, atan2\nfrom decimal import Decimal\n\n\ndef get_angle(x1, y1, x2, y2):\n    return atan2(y2 - y1, x2 - x1)\n\n\ndef get_angle_diff(angle1, angle2):\n    diff = abs(angle1 - angle2)\n    if diff > pi:\n        diff = 2 * pi - diff\n    return diff\n\n\ndef get_min_angle_diff(n, points):\n    min_angle_diff = 2 * pi\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                angle1 = get_angle(*points[i], *points[j])\n                angle2 = get_angle(*points[j], *points[k])\n                angle_diff = get_angle_diff(angle1, angle2)\n                if angle_diff < min_angle_diff:\n                    min_angle_diff = angle_diff\n    return min_angle_diff\n\n\ndef main():\n    n = int(stdin.readline())\n    points = [None] * n\n    for i in range(n):\n        points[i] = tuple(map(Decimal, stdin.readline().split()))\n    print(get_min_angle_diff(n, points))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.degrees(math.atan2(y2 - y1, x2 - x1))\n\ndef get_min_angle(points):\n    min_angle = 0\n    for i in range(len(points)):\n        a1 = get_angle(points[i][0], points[i][1], points[i - 1][0], points[i - 1][1])\n        a2 = get_angle(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1])\n        angle = abs(a1 - a2)\n        if angle < min_angle or i == 0:\n            min_angle = angle\n    return min_angle\n\nn = int(input())\npoints = []\nfor _ in range(n):\n    x, y = map(float, input().split())\n    points.append((x, y))\n\npoints.append(points[0])\npoints.append(points[1])\n\nprint(get_min_angle(points))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef compute_angle(x, y):\n    \"\"\"\n    This function computes the angle between the line formed by the origin and the\n    point (x, y) and the x-axis.\n    \"\"\"\n    if x == 0:\n        if y > 0:\n            return 90\n        elif y < 0:\n            return 270\n        else:\n            return 0\n    elif y == 0:\n        if x > 0:\n            return 0\n        else:\n            return 180\n    else:\n        if x > 0 and y > 0:\n            return math.degrees(math.atan(y / x))\n        elif x < 0 and y > 0:\n            return 180 + math.degrees(math.atan(y / x))\n        elif x < 0 and y < 0:\n            return 180 + math.degrees(math.atan(y / x))\n        else:\n            return 360 + math.degrees(math.atan(y / x))\n\n\ndef get_angle_difference(angle1, angle2):\n    \"\"\"\n    This function computes the difference between two angles.\n    \"\"\"\n    if angle1 > angle2:\n        return angle1 - angle2\n    else:\n        return angle2 - angle1\n\n# Get the number of points.\nn = int(sys.stdin.readline())\n\n# Get the points.\npoints = []\nfor i in range(n):\n    point = sys.stdin.readline().split()\n    points.append((float(point[0]), float(point[1])))\n\n# Get the angles of the points.\nangles = []\nfor i in range(n):\n    angles.append(compute_angle(points[i][0], points[i][1]))\n\n# Find the minimum angle difference.\nmin_angle_difference = 360\nfor i in range(n):\n    for j in range(i + 1, n):\n        angle_difference = get_angle_difference(angles[i], angles[j])\n        if angle_difference < min_angle_difference:\n            min_angle_difference = angle_difference\n\n# Print the answer.\nprint(min_angle_difference)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef is_inside(a,b,c):\n    \"\"\"\n    Determines if point c is inside triangle defined by points a,b\n    \"\"\"\n    # Compute vectors\n    v0 = [c[0] - a[0], c[1] - a[1]]\n    v1 = [b[0] - a[0], b[1] - a[1]]\n    v2 = [c[0] - b[0], c[1] - b[1]]\n    # Compute dot products\n    dot00 = v0[0] * v0[0] + v0[1] * v0[1]\n    dot01 = v0[0] * v1[0] + v0[1] * v1[1]\n    dot02 = v0[0] * v2[0] + v0[1] * v2[1]\n    dot11 = v1[0] * v1[0] + v1[1] * v1[1]\n    dot12 = v1[0] * v2[0] + v1[1] * v2[1]\n    # Compute barycentric coordinates\n    invDenom = 1 / (dot00 * dot11 - dot01 * dot01)\n    u = (dot11 * dot02 - dot01 * dot12) * invDenom\n    v = (dot00 * dot12 - dot01 * dot02) * invDenom\n    # Check if point is in triangle\n    return (u >= 0) and (v >= 0) and (u + v < 1)\n\ndef find_angle(a,b):\n    \"\"\"\n    Finds the angle between two vectors a and b\n    \"\"\"\n    dot = a[0] * b[0] + a[1] * b[1]\n    det = a[0] * b[1] - a[1] * b[0]\n    return math.atan2(det, dot)\n\ndef find_area(a,b,c):\n    \"\"\"\n    Finds the area of a triangle defined by points a,b,c\n    \"\"\"\n    return abs(a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) / 2\n\ndef find_triangle_area(a,b,c):\n    \"\"\"\n    Finds the area of a triangle defined by points a,b,c\n    \"\"\"\n    ab = math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)\n    ac = math.sqrt((c[0] - a[0]) ** 2 + (c[1] - a[1]) ** 2)\n    bc = math.sqrt((c[0] - b[0]) ** 2 + (c[1] - b[1]) ** 2)\n    s = (ab + ac + bc) / 2\n    return math.sqrt(s * (s - ab) * (s - ac) * (s - bc))\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x,y = [float(x) for x in input().split()]\n        points.append([x,y])\n    max_area = 0\n    for i in range(n):\n        for j in range(i+1,n):\n            for k in range(j+1,n):\n                # Check if points are collinear\n                if find_area(points[i],points[j],points[k]) < 1e-10:\n                    continue\n                # Check if points are inside triangle\n                for l in range(n):\n                    if l == i or l == j or l == k:\n                        continue\n                    if is_inside(points[i],points[j],points[l]) or is_inside(points[i],points[k],points[l]) or is_inside(points[j],points[k],points[l]):\n                        break\n                else:\n                    # Find area of triangle\n                    area = find_triangle_area(points[i],points[j],points[k])\n                    if area > max_area:\n                        max_area = area\n    # Find angle\n    angle = find_angle([1,0],[1,1]) + find_angle([1,1],[0,1]) + find_angle([0,1],[-1,0]) + find_angle([-1,0],[-1,-1]) + find_angle([-1,-1],[0,-1]) + find_angle([0,-1],[1,0])\n    # Find radius\n    r = math.sqrt(max_area / angle)\n    print(2 * math.pi * r)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef calc_angle(x1, y1, x2, y2):\n    # calculate the angle between the two points\n    dx = x2 - x1\n    dy = y2 - y1\n    angle = math.atan2(dy, dx)\n    return angle\n\ndef calc_area(points):\n    # calculate the area of the polygon\n    # given a list of points\n    area = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        area += points[i][0] * points[j][1]\n        area -= points[j][0] * points[i][1]\n    area = abs(area) / 2.0\n    return area\n\ndef calc_tangent(points):\n    # calculate the tangent to the polygon\n    # given a list of points\n    # the tangent is the line that is the longest\n    # distance between two points\n    tangent = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            dist = ((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)**(1/2)\n            if dist > tangent:\n                tangent = dist\n    return tangent\n\ndef calc_circumference(points):\n    # calculate the circumference of the polygon\n    # given a list of points\n    # the circumference is the sum of the length of all sides\n    circumference = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        dist = ((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)**(1/2)\n        circumference += dist\n    return circumference\n\ndef solve_problem(points):\n    # solve the problem\n    # given a list of points\n    # the solution is the circumference of the polygon\n    # divided by the tangent of the polygon\n    tangent = calc_tangent(points)\n    circumference = calc_circumference(points)\n    return circumference / tangent\n\ndef main():\n    # read the number of points\n    num_points = int(input())\n\n    # read the points\n    points = []\n    for i in range(num_points):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    # sort the points by angle\n    angles = []\n    for i in range(num_points):\n        angles.append(calc_angle(points[0][0], points[0][1], points[i][0], points[i][1]))\n    points = [x for _,x in sorted(zip(angles, points))]\n\n    # solve the problem\n    answer = solve_problem(points)\n\n    # print the answer\n    print(\"{:.3f}\".format(answer))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom math import *\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    print(degree(points))\n\ndef degree(points):\n    l = len(points)\n    if l == 1:\n        return 0\n    elif l == 2:\n        x1, y1 = points[0]\n        x2, y2 = points[1]\n        return rad2deg(atan((y2-y1)/(x2-x1)))\n    else:\n        x1, y1 = points[0]\n        x2, y2 = points[1]\n        x3, y3 = points[2]\n\n        a = sqrt((x1-x2)**2+(y1-y2)**2)\n        b = sqrt((x2-x3)**2+(y2-y3)**2)\n        c = sqrt((x1-x3)**2+(y1-y3)**2)\n\n        return rad2deg(acos((a**2+b**2-c**2)/(2*a*b)))\n\ndef rad2deg(rad):\n    return rad*180/pi\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\nimport math\n\ndef check_angle(x1, y1, x2, y2):\n    if x2 == x1:\n        if y2 > y1:\n            return 90\n        else:\n            return 270\n    else:\n        return math.degrees(math.atan((y2-y1)/(x2-x1)))\n\ndef get_angle(x1, y1, x2, y2):\n    if x2 < x1:\n        return check_angle(x2, y2, x1, y1)+180\n    elif y2 < y1:\n        return check_angle(x2, y2, x1, y1)+360\n    else:\n        return check_angle(x2, y2, x1, y1)\n\ndef get_min_angle(x1, y1, x2, y2, x3, y3):\n    angle1 = get_angle(x1, y1, x2, y2)\n    angle2 = get_angle(x1, y1, x3, y3)\n    angle3 = get_angle(x2, y2, x3, y3)\n    min_angle = min(angle1, angle2, angle3)\n    if min_angle == angle1:\n        return x2, y2\n    elif min_angle == angle2:\n        return x3, y3\n    else:\n        return x1, y1\n\ndef get_min_dist(x1, y1, x2, y2, x3, y3):\n    x, y = get_min_angle(x1, y1, x2, y2, x3, y3)\n    return math.sqrt((x1-x)**2 + (y1-y)**2)\n\ndef get_max_dist(x1, y1, x2, y2, x3, y3):\n    x, y = get_min_angle(x1, y1, x2, y2, x3, y3)\n    return math.sqrt((x2-x)**2 + (y2-y)**2)\n\ndef get_angle_diff(x1, y1, x2, y2, x3, y3):\n    angle1 = get_angle(x1, y1, x2, y2)\n    angle2 = get_angle(x1, y1, x3, y3)\n    angle3 = get_angle(x2, y2, x3, y3)\n    return min(abs(angle1-angle2), abs(angle1-angle3), abs(angle2-angle3))\n\ndef get_area(x1, y1, x2, y2, x3, y3):\n    return abs((x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))/2)\n\ndef get_perimeter(x1, y1, x2, y2, x3, y3):\n    return get_min_dist(x1, y1, x2, y2, x3, y3) + get_max_dist(x1, y1, x2, y2, x3, y3) + math.sqrt((x3-x2)**2 + (y3-y2)**2)\n\nn = int(input())\nx = []\ny = []\nfor i in range(n):\n    a, b = input().split(\" \")\n    x.append(float(a))\n    y.append(float(b))\n\nmin_area = 10000000000\nfor i in range(n-2):\n    for j in range(i+1, n-1):\n        for k in range(j+1, n):\n            area = get_area(x[i], y[i], x[j], y[j], x[k], y[k])\n            if area < min_area:\n                min_area = area\n                min_perimeter = get_perimeter(x[i], y[i], x[j], y[j], x[k], y[k])\n                min_angle_diff = get_angle_diff(x[i], y[i], x[j], y[j], x[k], y[k])\n            elif area == min_area:\n                perimeter = get_perimeter(x[i], y[i], x[j], y[j], x[k], y[k])\n                angle_diff = get_angle_diff(x[i], y[i], x[j], y[j], x[k], y[k])\n                if perimeter < min_perimeter:\n                    min_perimeter = perimeter\n                    min_angle_diff = angle_diff\n                elif perimeter == min_perimeter:\n                    if angle_diff < min_angle_diff:\n                        min_angle_diff = angle_diff\n\nprint(min_perimeter)"
+    }
+  ],
+  "created": 1650410489,
+  "id": "cmpl-4yrRx81HWE3yCSESidW7ZYHtb8Yrr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:22:32.424391 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_theta(points):\n    # Get the point with the highest x-coordinate\n    x_max = 0\n    for point in points:\n        if point[0] > x_max:\n            x_max = point[0]\n            x_max_point = point\n    \n    # Get the point with the highest y-coordinate\n    y_max = 0\n    for point in points:\n        if point[1] > y_max:\n            y_max = point[1]\n            y_max_point = point\n    \n    # Get the point with the lowest x-coordinate\n    x_min = 0\n    for point in points:\n        if point[0] < x_min:\n            x_min = point[0]\n            x_min_point = point\n    \n    # Get the point with the lowest y-coordinate\n    y_min = 0\n    for point in points:\n        if point[1] < y_min:\n            y_min = point[1]\n            y_min_point = point\n    \n    # Get the point with the highest y-coordinate that is not the y_max_point\n    y_max_2 = 0\n    for point in points:\n        if point[1] > y_max_2 and point != y_max_point:\n            y_max_2 = point[1]\n            y_max_2_point = point\n    \n    # Get the point with the lowest y-coordinate that is not the y_min_point\n    y_min_2 = 0\n    for point in points:\n        if point[1] < y_min_2 and point != y_min_point:\n            y_min_2 = point[1]\n            y_min_2_point = point\n    \n    # Get the point with the highest x-coordinate that is not the x_max_point\n    x_max_2 = 0\n    for point in points:\n        if point[0] > x_max_2 and point != x_max_point:\n            x_max_2 = point[0]\n            x_max_2_point = point\n    \n    # Get the point with the lowest x-coordinate that is not the x_min_point\n    x_min_2 = 0\n    for point in points:\n        if point[0] < x_min_2 and point != x_min_point:\n            x_min_2 = point[0]\n            x_min_2_point = point\n    \n    # Get theta\n    theta = 0\n    if x_max_point[1] == y_max_point[1]:\n        theta = math.pi / 2\n    elif x_min_point[1] == y_min_point[1]:\n        theta = math.pi / 2\n    elif x_max_point[1] == y_min_point[1]:\n        theta = 3 * math.pi / 2\n    elif x_min_point[1] == y_max_point[1]:\n        theta = 3 * math.pi / 2\n    elif x_max_point[0] == y_max_point[0]:\n        theta = 0\n    elif x_min_point[0] == y_min_point[0]:\n        theta = 0\n    elif x_max_point[0] == y_min_point[0]:\n        theta = math.pi\n    elif x_min_point[0] == y_max_point[0]:\n        theta = math.pi\n    elif x_max_point[1] == y_max_2_point[1] and x_max_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_max_2_point[1]) / (x_max_point[0] - x_max_2_point[0]))\n    elif x_min_point[1] == y_min_2_point[1] and x_min_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_min_2_point[1]) / (x_min_point[0] - x_min_2_point[0]))\n    elif x_max_point[1] == y_min_2_point[1] and x_max_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_min_2_point[1]) / (x_max_point[0] - x_min_2_point[0]))\n    elif x_min_point[1] == y_max_2_point[1] and x_min_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_max_2_point[1]) / (x_min_point[0] - x_max_2_point[0]))\n    elif x_max_point[1] == y_min_2_point[1] and x_max_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_min_2_point[1]) / (x_max_point[0] - x_min_2_point[0]))\n    elif x_min_point[1] == y_max_2_point[1] and x_min_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_max_2_point[1]) / (x_min_point[0] - x_max_2_point[0]))\n    elif x_max_point[1] == y_max_2_point[1] and x_max_point[0] == x_max_2_point[0]:\n        theta = math.atan((x_max_point[1] - x_max_2_point[1]) / (x_max_point[0] - x_max_2_point[0]))\n    elif x_min_point[1] == y_min_2_point[1] and x_min_point[0] == x_min_2_point[0]:\n        theta = math.atan((x_min_point[1] - x_min_2_point[1]) / (x_min_point[0] - x_min_2_point[0]))\n    \n    return theta\n\n# Get input\nn = int(input())\npoints = []\nfor i in range(n):\n    x, y = map(float, input().split())\n    points.append((x, y))\n\n# Get theta\ntheta = get_theta(points)\n\n# Print theta\nprint(theta)"
+}
+2022-04-19 23:22:32.424451 REASON stop
+2022-04-19 23:22:32.425107 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nfrom sys import stdin\nfrom math import pi, atan2\nfrom decimal import Decimal\n\n\ndef get_angle(x1, y1, x2, y2):\n    return atan2(y2 - y1, x2 - x1)\n\n\ndef get_angle_diff(angle1, angle2):\n    diff = abs(angle1 - angle2)\n    if diff > pi:\n        diff = 2 * pi - diff\n    return diff\n\n\ndef get_min_angle_diff(n, points):\n    min_angle_diff = 2 * pi\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                angle1 = get_angle(*points[i], *points[j])\n                angle2 = get_angle(*points[j], *points[k])\n                angle_diff = get_angle_diff(angle1, angle2)\n                if angle_diff < min_angle_diff:\n                    min_angle_diff = angle_diff\n    return min_angle_diff\n\n\ndef main():\n    n = int(stdin.readline())\n    points = [None] * n\n    for i in range(n):\n        points[i] = tuple(map(Decimal, stdin.readline().split()))\n    print(get_min_angle_diff(n, points))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:22:32.425192 REASON stop
+2022-04-19 23:22:32.425627 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.degrees(math.atan2(y2 - y1, x2 - x1))\n\ndef get_min_angle(points):\n    min_angle = 0\n    for i in range(len(points)):\n        a1 = get_angle(points[i][0], points[i][1], points[i - 1][0], points[i - 1][1])\n        a2 = get_angle(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1])\n        angle = abs(a1 - a2)\n        if angle < min_angle or i == 0:\n            min_angle = angle\n    return min_angle\n\nn = int(input())\npoints = []\nfor _ in range(n):\n    x, y = map(float, input().split())\n    points.append((x, y))\n\npoints.append(points[0])\npoints.append(points[1])\n\nprint(get_min_angle(points))"
+}
+2022-04-19 23:22:32.425697 REASON stop
+2022-04-19 23:22:32.452414 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef compute_angle(x, y):\n    \"\"\"\n    This function computes the angle between the line formed by the origin and the\n    point (x, y) and the x-axis.\n    \"\"\"\n    if x == 0:\n        if y > 0:\n            return 90\n        elif y < 0:\n            return 270\n        else:\n            return 0\n    elif y == 0:\n        if x > 0:\n            return 0\n        else:\n            return 180\n    else:\n        if x > 0 and y > 0:\n            return math.degrees(math.atan(y / x))\n        elif x < 0 and y > 0:\n            return 180 + math.degrees(math.atan(y / x))\n        elif x < 0 and y < 0:\n            return 180 + math.degrees(math.atan(y / x))\n        else:\n            return 360 + math.degrees(math.atan(y / x))\n\n\ndef get_angle_difference(angle1, angle2):\n    \"\"\"\n    This function computes the difference between two angles.\n    \"\"\"\n    if angle1 > angle2:\n        return angle1 - angle2\n    else:\n        return angle2 - angle1\n\n# Get the number of points.\nn = int(sys.stdin.readline())\n\n# Get the points.\npoints = []\nfor i in range(n):\n    point = sys.stdin.readline().split()\n    points.append((float(point[0]), float(point[1])))\n\n# Get the angles of the points.\nangles = []\nfor i in range(n):\n    angles.append(compute_angle(points[i][0], points[i][1]))\n\n# Find the minimum angle difference.\nmin_angle_difference = 360\nfor i in range(n):\n    for j in range(i + 1, n):\n        angle_difference = get_angle_difference(angles[i], angles[j])\n        if angle_difference < min_angle_difference:\n            min_angle_difference = angle_difference\n\n# Print the answer.\nprint(min_angle_difference)"
+}
+2022-04-19 23:22:32.452567 REASON stop
+2022-04-19 23:22:32.457812 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef is_inside(a,b,c):\n    \"\"\"\n    Determines if point c is inside triangle defined by points a,b\n    \"\"\"\n    # Compute vectors\n    v0 = [c[0] - a[0], c[1] - a[1]]\n    v1 = [b[0] - a[0], b[1] - a[1]]\n    v2 = [c[0] - b[0], c[1] - b[1]]\n    # Compute dot products\n    dot00 = v0[0] * v0[0] + v0[1] * v0[1]\n    dot01 = v0[0] * v1[0] + v0[1] * v1[1]\n    dot02 = v0[0] * v2[0] + v0[1] * v2[1]\n    dot11 = v1[0] * v1[0] + v1[1] * v1[1]\n    dot12 = v1[0] * v2[0] + v1[1] * v2[1]\n    # Compute barycentric coordinates\n    invDenom = 1 / (dot00 * dot11 - dot01 * dot01)\n    u = (dot11 * dot02 - dot01 * dot12) * invDenom\n    v = (dot00 * dot12 - dot01 * dot02) * invDenom\n    # Check if point is in triangle\n    return (u >= 0) and (v >= 0) and (u + v < 1)\n\ndef find_angle(a,b):\n    \"\"\"\n    Finds the angle between two vectors a and b\n    \"\"\"\n    dot = a[0] * b[0] + a[1] * b[1]\n    det = a[0] * b[1] - a[1] * b[0]\n    return math.atan2(det, dot)\n\ndef find_area(a,b,c):\n    \"\"\"\n    Finds the area of a triangle defined by points a,b,c\n    \"\"\"\n    return abs(a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) / 2\n\ndef find_triangle_area(a,b,c):\n    \"\"\"\n    Finds the area of a triangle defined by points a,b,c\n    \"\"\"\n    ab = math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)\n    ac = math.sqrt((c[0] - a[0]) ** 2 + (c[1] - a[1]) ** 2)\n    bc = math.sqrt((c[0] - b[0]) ** 2 + (c[1] - b[1]) ** 2)\n    s = (ab + ac + bc) / 2\n    return math.sqrt(s * (s - ab) * (s - ac) * (s - bc))\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x,y = [float(x) for x in input().split()]\n        points.append([x,y])\n    max_area = 0\n    for i in range(n):\n        for j in range(i+1,n):\n            for k in range(j+1,n):\n                # Check if points are collinear\n                if find_area(points[i],points[j],points[k]) < 1e-10:\n                    continue\n                # Check if points are inside triangle\n                for l in range(n):\n                    if l == i or l == j or l == k:\n                        continue\n                    if is_inside(points[i],points[j],points[l]) or is_inside(points[i],points[k],points[l]) or is_inside(points[j],points[k],points[l]):\n                        break\n                else:\n                    # Find area of triangle\n                    area = find_triangle_area(points[i],points[j],points[k])\n                    if area > max_area:\n                        max_area = area\n    # Find angle\n    angle = find_angle([1,0],[1,1]) + find_angle([1,1],[0,1]) + find_angle([0,1],[-1,0]) + find_angle([-1,0],[-1,-1]) + find_angle([-1,-1],[0,-1]) + find_angle([0,-1],[1,0])\n    # Find radius\n    r = math.sqrt(max_area / angle)\n    print(2 * math.pi * r)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:22:32.457995 REASON stop
+2022-04-19 23:22:32.459706 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef calc_angle(x1, y1, x2, y2):\n    # calculate the angle between the two points\n    dx = x2 - x1\n    dy = y2 - y1\n    angle = math.atan2(dy, dx)\n    return angle\n\ndef calc_area(points):\n    # calculate the area of the polygon\n    # given a list of points\n    area = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        area += points[i][0] * points[j][1]\n        area -= points[j][0] * points[i][1]\n    area = abs(area) / 2.0\n    return area\n\ndef calc_tangent(points):\n    # calculate the tangent to the polygon\n    # given a list of points\n    # the tangent is the line that is the longest\n    # distance between two points\n    tangent = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            dist = ((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)**(1/2)\n            if dist > tangent:\n                tangent = dist\n    return tangent\n\ndef calc_circumference(points):\n    # calculate the circumference of the polygon\n    # given a list of points\n    # the circumference is the sum of the length of all sides\n    circumference = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        dist = ((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)**(1/2)\n        circumference += dist\n    return circumference\n\ndef solve_problem(points):\n    # solve the problem\n    # given a list of points\n    # the solution is the circumference of the polygon\n    # divided by the tangent of the polygon\n    tangent = calc_tangent(points)\n    circumference = calc_circumference(points)\n    return circumference / tangent\n\ndef main():\n    # read the number of points\n    num_points = int(input())\n\n    # read the points\n    points = []\n    for i in range(num_points):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    # sort the points by angle\n    angles = []\n    for i in range(num_points):\n        angles.append(calc_angle(points[0][0], points[0][1], points[i][0], points[i][1]))\n    points = [x for _,x in sorted(zip(angles, points))]\n\n    # solve the problem\n    answer = solve_problem(points)\n\n    # print the answer\n    print(\"{:.3f}\".format(answer))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:22:32.459818 REASON stop
+2022-04-19 23:22:32.460504 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom math import *\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n\n    print(degree(points))\n\ndef degree(points):\n    l = len(points)\n    if l == 1:\n        return 0\n    elif l == 2:\n        x1, y1 = points[0]\n        x2, y2 = points[1]\n        return rad2deg(atan((y2-y1)/(x2-x1)))\n    else:\n        x1, y1 = points[0]\n        x2, y2 = points[1]\n        x3, y3 = points[2]\n\n        a = sqrt((x1-x2)**2+(y1-y2)**2)\n        b = sqrt((x2-x3)**2+(y2-y3)**2)\n        c = sqrt((x1-x3)**2+(y1-y3)**2)\n\n        return rad2deg(acos((a**2+b**2-c**2)/(2*a*b)))\n\ndef rad2deg(rad):\n    return rad*180/pi\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:22:32.460584 REASON stop
+2022-04-19 23:22:32.462688 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\nimport math\n\ndef check_angle(x1, y1, x2, y2):\n    if x2 == x1:\n        if y2 > y1:\n            return 90\n        else:\n            return 270\n    else:\n        return math.degrees(math.atan((y2-y1)/(x2-x1)))\n\ndef get_angle(x1, y1, x2, y2):\n    if x2 < x1:\n        return check_angle(x2, y2, x1, y1)+180\n    elif y2 < y1:\n        return check_angle(x2, y2, x1, y1)+360\n    else:\n        return check_angle(x2, y2, x1, y1)\n\ndef get_min_angle(x1, y1, x2, y2, x3, y3):\n    angle1 = get_angle(x1, y1, x2, y2)\n    angle2 = get_angle(x1, y1, x3, y3)\n    angle3 = get_angle(x2, y2, x3, y3)\n    min_angle = min(angle1, angle2, angle3)\n    if min_angle == angle1:\n        return x2, y2\n    elif min_angle == angle2:\n        return x3, y3\n    else:\n        return x1, y1\n\ndef get_min_dist(x1, y1, x2, y2, x3, y3):\n    x, y = get_min_angle(x1, y1, x2, y2, x3, y3)\n    return math.sqrt((x1-x)**2 + (y1-y)**2)\n\ndef get_max_dist(x1, y1, x2, y2, x3, y3):\n    x, y = get_min_angle(x1, y1, x2, y2, x3, y3)\n    return math.sqrt((x2-x)**2 + (y2-y)**2)\n\ndef get_angle_diff(x1, y1, x2, y2, x3, y3):\n    angle1 = get_angle(x1, y1, x2, y2)\n    angle2 = get_angle(x1, y1, x3, y3)\n    angle3 = get_angle(x2, y2, x3, y3)\n    return min(abs(angle1-angle2), abs(angle1-angle3), abs(angle2-angle3))\n\ndef get_area(x1, y1, x2, y2, x3, y3):\n    return abs((x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2))/2)\n\ndef get_perimeter(x1, y1, x2, y2, x3, y3):\n    return get_min_dist(x1, y1, x2, y2, x3, y3) + get_max_dist(x1, y1, x2, y2, x3, y3) + math.sqrt((x3-x2)**2 + (y3-y2)**2)\n\nn = int(input())\nx = []\ny = []\nfor i in range(n):\n    a, b = input().split(\" \")\n    x.append(float(a))\n    y.append(float(b))\n\nmin_area = 10000000000\nfor i in range(n-2):\n    for j in range(i+1, n-1):\n        for k in range(j+1, n):\n            area = get_area(x[i], y[i], x[j], y[j], x[k], y[k])\n            if area < min_area:\n                min_area = area\n                min_perimeter = get_perimeter(x[i], y[i], x[j], y[j], x[k], y[k])\n                min_angle_diff = get_angle_diff(x[i], y[i], x[j], y[j], x[k], y[k])\n            elif area == min_area:\n                perimeter = get_perimeter(x[i], y[i], x[j], y[j], x[k], y[k])\n                angle_diff = get_angle_diff(x[i], y[i], x[j], y[j], x[k], y[k])\n                if perimeter < min_perimeter:\n                    min_perimeter = perimeter\n                    min_angle_diff = angle_diff\n                elif perimeter == min_perimeter:\n                    if angle_diff < min_angle_diff:\n                        min_angle_diff = angle_diff\n\nprint(min_perimeter)"
+}
+2022-04-19 23:22:32.462879 REASON stop

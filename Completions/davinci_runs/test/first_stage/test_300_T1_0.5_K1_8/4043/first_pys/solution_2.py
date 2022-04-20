@@ -1,0 +1,196 @@
+
+from collections import deque
+
+n, d, k = map(int, input().split())
+
+if d == 1:
+    print("YES")
+    for i in range(2, n + 1):
+        print(i, 1)
+elif d == 2:
+    if n == 2:
+        print("YES")
+    elif n == 3:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+    else:
+        print("NO")
+elif d == 3:
+    if n == 3:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+    elif n == 4:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+    elif n == 5:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+    elif n == 6:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+    elif n == 7:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+    elif n == 8:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+    elif n == 9:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+    elif n == 10:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+        print(2, 10)
+    else:
+        print("NO")
+elif d == 4:
+    if n == 4:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+    elif n == 5:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(1, 5)
+    elif n == 6:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+    elif n == 7:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+    elif n == 8:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+    elif n == 9:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+    elif n == 10:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+        print(2, 10)
+    else:
+        print("NO")
+elif d == 5:
+    if n == 5:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+    elif n == 6:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+    elif n == 7:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+    elif n == 8:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+    elif n == 9:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+    elif n == 10:
+        print("YES")
+        print(1, 2)
+        print(1, 3)
+        print(2, 4)
+        print(3, 5)
+        print(1, 6)
+        print(2, 7)
+        print(3, 8)
+        print(1, 9)
+        print(2, 10)
+    else:
+        print("NO")
+else:
+    print("NO")

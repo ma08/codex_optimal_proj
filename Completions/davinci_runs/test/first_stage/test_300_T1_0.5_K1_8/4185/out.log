@@ -1,0 +1,177 @@
+2022-04-19 22:46:57.448609 """
+You are given a rectangular matrix of size $n \times m$ consisting of integers from $1$ to $2 \cdot 10^5$.
+
+In one move, you can:  choose any element of the matrix and change its value to any integer between $1$ and $n \cdot m$, inclusive;  take any column and shift it one cell up cyclically (see the example of such cyclic shift below). 
+
+A cyclic shift is an operation such that you choose some $j$ ($1 \le j \le m$) and set $a_{1, j} := a_{2, j}, a_{2, j} := a_{3, j}, \dots, a_{n, j} := a_{1, j}$ simultaneously. [Image] Example of cyclic shift of the first column 
+
+You want to perform the minimum number of moves to make this matrix look like this: $\left. \begin{array}{|c c c c|} \hline 1 & {2} & {\ldots} & {m} \\{m + 1} & {m + 2} & {\ldots} & {2m} \\{\vdots} & {\vdots} & {\ddots} & {\vdots} \\{(n - 1) m + 1} & {(n - 1) m + 2} & {\ldots} & {nm} \\ \hline \end{array} \right.$ 
+
+In other words, the goal is to obtain the matrix, where $a_{1, 1} = 1, a_{1, 2} = 2, \dots, a_{1, m} = m, a_{2, 1} = m + 1, a_{2, 2} = m + 2, \dots, a_{n, m} = n \cdot m$ (i.e. $a_{i, j} = (i - 1) \cdot m + j$) with the minimum number of moves performed.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 2 \cdot 10^5, n \cdot m \le 2 \cdot 10^5$) — the size of the matrix.
+
+The next $n$ lines contain $m$ integers each. The number at the line $i$ and position $j$ is $a_{i, j}$ ($1 \le a_{i, j} \le 2 \cdot 10^5$).
+
+
+-----Output-----
+
+Print one integer — the minimum number of moves required to obtain the matrix, where $a_{1, 1} = 1, a_{1, 2} = 2, \dots, a_{1, m} = m, a_{2, 1} = m + 1, a_{2, 2} = m + 2, \dots, a_{n, m} = n \cdot m$ ($a_{i, j} = (i - 1)m + j$).
+
+
+-----Examples-----
+Input
+3 3
+3 2 1
+1 2 3
+4 5 6
+
+Output
+6
+
+Input
+4 3
+1 2 3
+4 5 6
+7 8 9
+10 11 12
+
+Output
+0
+
+Input
+3 4
+1 6 3 4
+5 10 7 8
+9 2 11 12
+
+Output
+2
+
+
+
+-----Note-----
+
+In the first example, you can set $a_{1, 1} := 7, a_{1, 2} := 8$ and $a_{1, 3} := 9$ then shift the first, the second and the third columns cyclically, so the answer is $6$. It can be shown that you cannot achieve a better answer.
+
+In the second example, the matrix is already good so the answer is $0$.
+
+In the third example, it is enough to shift the second column cyclically twice to obtain a good matrix, so the answer is $2$.
+"""
+2022-04-19 22:46:57.448628 --------------------------
+2022-04-19 22:46:57.448764 using api key gabby
+2022-04-19 22:47:20.080808 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m = int(input()), int(input())\n    matrix = [[int(x) for x in input().split()] for _ in range(n)]\n    move = 0\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == (i * m + j + 1):\n                continue\n            else:\n                for k in range(m):\n                    if matrix[i][j] == (i * m + k + 1):\n                        move += k - j\n                        for l in range(k, j, -1):\n                            matrix[i][l] = matrix[i][l - 1]\n                        matrix[i][j] = (i * m + j + 1)\n                        break\n    print(move)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# print(a)\n\nres = 0\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (i * m + j + 1):\n            for k in range(j + 1, m):\n                if a[i][k] == (i * m + j + 1):\n                    for x in range(k, j, -1):\n                        a[i][x], a[i][x - 1] = a[i][x - 1], a[i][x]\n                        res += 1\n                    break\n            else:\n                print(-1)\n                exit()\n\nprint(res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    A = list()\n    for i in range(n):\n        A.append(list(map(int, input().split())))\n    \n    ans = 0\n    for j in range(m):\n        for i in range(n):\n            if A[i][j] != (i * m) + j + 1:\n                ans += 1\n                for k in range(i+1, n):\n                    if A[k][j] == (i * m) + j + 1:\n                        A[i][j], A[k][j] = A[k][j], A[i][j]\n                        break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, m = map(int, input().split())\n\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\nans = 0\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (i * m + j + 1):\n            ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\ndef min_moves(matrix):\n    n, m = len(matrix), len(matrix[0])\n    moves = 0\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != i * m + j + 1:\n                moves += 1\n                for k in range(n):\n                    if matrix[k][j] == i * m + j + 1:\n                        matrix[k][j] = matrix[i][j]\n                        break\n    return moves\n\nn, m = map(int, input().split())\nmatrix = []\nfor _ in range(n):\n    matrix.append(list(map(int, input().split())))\nprint(min_moves(matrix))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\nans = 0\nfor i in range(n):\n    for j in range(m):\n        ans += abs(a[i][j] - (i * m + j + 1))\nprint(ans // 2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_input():\n    n, m = [int(i) for i in input().split()]\n    matrix = []\n    for i in range(n):\n        matrix.append([int(i) for i in input().split()])\n    return n, m, matrix\n\n\ndef get_matrix_value(row, column):\n    return (row - 1) * m + column\n\n\ndef get_required_value(row, column):\n    return matrix[row - 1][column - 1]\n\n\ndef get_required_row(value):\n    return (value - 1) // m + 1\n\n\ndef get_required_column(value):\n    return (value - 1) % m + 1\n\n\ndef get_move_cost(row, column, value):\n    if value == get_matrix_value(row, column):\n        return 0\n    required_row = get_required_row(value)\n    required_column = get_required_column(value)\n    if required_row == row:\n        return 1\n    if required_column == column:\n        return 2\n    return 3\n\n\ndef get_cost_for_row(row):\n    return sum([get_move_cost(row, column, get_required_value(row, column)) for column in range(1, m + 1)])\n\n\ndef get_cost_for_column(column):\n    return sum([get_move_cost(row, column, get_required_value(row, column)) for row in range(1, n + 1)])\n\n\ndef get_cost():\n    return sum([get_cost_for_row(row) for row in range(1, n + 1)]) + sum([get_cost_for_column(column) for column in range(1, m + 1)])\n\n\nif __name__ == \"__main__\":\n    n, m, matrix = get_input()\n    print(get_cost())"
+    }
+  ],
+  "created": 1650408417,
+  "id": "cmpl-4yquX4CpwUx1AGelDM12eSGyErECx",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:47:20.081148 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m = int(input()), int(input())\n    matrix = [[int(x) for x in input().split()] for _ in range(n)]\n    move = 0\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == (i * m + j + 1):\n                continue\n            else:\n                for k in range(m):\n                    if matrix[i][j] == (i * m + k + 1):\n                        move += k - j\n                        for l in range(k, j, -1):\n                            matrix[i][l] = matrix[i][l - 1]\n                        matrix[i][j] = (i * m + j + 1)\n                        break\n    print(move)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:47:20.081317 REASON stop
+2022-04-19 22:47:20.083142 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# print(a)\n\nres = 0\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (i * m + j + 1):\n            for k in range(j + 1, m):\n                if a[i][k] == (i * m + j + 1):\n                    for x in range(k, j, -1):\n                        a[i][x], a[i][x - 1] = a[i][x - 1], a[i][x]\n                        res += 1\n                    break\n            else:\n                print(-1)\n                exit()\n\nprint(res)"
+}
+2022-04-19 22:47:20.083234 REASON stop
+2022-04-19 22:47:20.083740 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:47:20.083813 REASON stop
+2022-04-19 22:47:20.113368 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    A = list()\n    for i in range(n):\n        A.append(list(map(int, input().split())))\n    \n    ans = 0\n    for j in range(m):\n        for i in range(n):\n            if A[i][j] != (i * m) + j + 1:\n                ans += 1\n                for k in range(i+1, n):\n                    if A[k][j] == (i * m) + j + 1:\n                        A[i][j], A[k][j] = A[k][j], A[i][j]\n                        break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:47:20.113509 REASON stop
+2022-04-19 22:47:20.114342 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, m = map(int, input().split())\n\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\nans = 0\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (i * m + j + 1):\n            ans += 1\n\nprint(ans)"
+}
+2022-04-19 22:47:20.114457 REASON stop
+2022-04-19 22:47:20.139632 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\ndef min_moves(matrix):\n    n, m = len(matrix), len(matrix[0])\n    moves = 0\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] != i * m + j + 1:\n                moves += 1\n                for k in range(n):\n                    if matrix[k][j] == i * m + j + 1:\n                        matrix[k][j] = matrix[i][j]\n                        break\n    return moves\n\nn, m = map(int, input().split())\nmatrix = []\nfor _ in range(n):\n    matrix.append(list(map(int, input().split())))\nprint(min_moves(matrix))"
+}
+2022-04-19 22:47:20.139779 REASON stop
+2022-04-19 22:47:20.140877 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\nans = 0\nfor i in range(n):\n    for j in range(m):\n        ans += abs(a[i][j] - (i * m + j + 1))\nprint(ans // 2)"
+}
+2022-04-19 22:47:20.140959 REASON stop
+2022-04-19 22:47:20.141668 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_input():\n    n, m = [int(i) for i in input().split()]\n    matrix = []\n    for i in range(n):\n        matrix.append([int(i) for i in input().split()])\n    return n, m, matrix\n\n\ndef get_matrix_value(row, column):\n    return (row - 1) * m + column\n\n\ndef get_required_value(row, column):\n    return matrix[row - 1][column - 1]\n\n\ndef get_required_row(value):\n    return (value - 1) // m + 1\n\n\ndef get_required_column(value):\n    return (value - 1) % m + 1\n\n\ndef get_move_cost(row, column, value):\n    if value == get_matrix_value(row, column):\n        return 0\n    required_row = get_required_row(value)\n    required_column = get_required_column(value)\n    if required_row == row:\n        return 1\n    if required_column == column:\n        return 2\n    return 3\n\n\ndef get_cost_for_row(row):\n    return sum([get_move_cost(row, column, get_required_value(row, column)) for column in range(1, m + 1)])\n\n\ndef get_cost_for_column(column):\n    return sum([get_move_cost(row, column, get_required_value(row, column)) for row in range(1, n + 1)])\n\n\ndef get_cost():\n    return sum([get_cost_for_row(row) for row in range(1, n + 1)]) + sum([get_cost_for_column(column) for column in range(1, m + 1)])\n\n\nif __name__ == \"__main__\":\n    n, m, matrix = get_input()\n    print(get_cost())"
+}
+2022-04-19 22:47:20.141861 REASON stop

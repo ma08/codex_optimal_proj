@@ -1,0 +1,165 @@
+2022-04-19 22:18:41.936799 """
+In this problem you will write a simple generator of Brainfuck (https://en.wikipedia.org/wiki/Brainfuck) calculators.
+
+You are given an arithmetic expression consisting of integers from 0 to 255 and addition/subtraction signs between them. Output a Brainfuck program which, when executed, will print the result of evaluating this expression.
+
+We use a fairly standard Brainfuck interpreter for checking the programs:
+
+
+
+ 30000 memory cells.
+
+ memory cells store integers from 0 to 255 with unsigned 8-bit wraparound.
+
+ console input (, command) is not supported, but it's not needed for this problem.
+
+
+-----Input-----
+
+The only line of input data contains the arithmetic expression. The expression will contain between 2 and 10 operands, separated with arithmetic signs plus and/or minus. Each operand will be an integer between 0 and 255, inclusive. The calculations result is guaranteed to be an integer between 0 and 255, inclusive (results of intermediary calculations might be outside of these boundaries).
+
+
+-----Output-----
+
+Output a Brainfuck program which, when executed, will print the result of evaluating this expression. The program must be at most 5000000 characters long (including the non-command characters), and its execution must be complete in at most 50000000 steps.
+
+
+-----Examples-----
+Input
+2+3
+
+Output
+++>
++++>
+<[<+>-]<
+++++++++++++++++++++++++++++++++++++++++++++++++.
+
+Input
+9-7
+
+Output
++++++++++>
++++++++>
+<[<->-]<
+++++++++++++++++++++++++++++++++++++++++++++++++.
+
+
+
+-----Note-----
+
+You can download the source code of the Brainfuck interpreter by the link http://assets.codeforces.com/rounds/784/bf.cpp. We use this code to interpret outputs.
+"""
+2022-04-19 22:18:41.936820 --------------------------
+2022-04-19 22:18:41.936982 using api key derek
+2022-04-19 22:20:05.148283 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    line = sys.stdin.readline().strip()\n    tokens = line.split('+')\n    tokens = [int(t) if t.isdigit() else -int(t[1:]) for t in tokens]\n    print(tokens)\n    print(gen_bf(tokens))\n\ndef gen_bf(tokens):\n    bf = ''\n    for i, t in enumerate(tokens):\n        if i == 0:\n            bf += '+'*t\n            bf += '>'\n        else:\n            bf += '+'*t\n            bf += '>'\n            bf += '['\n            bf += '<'\n            if t >= 0:\n                bf += '+'\n            else:\n                bf += '-'\n            bf += '>'\n            bf += '-'\n            bf += ']'\n            bf += '<'\n    bf += '.'\n    return bf\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    expr = input()\n    tokens = expr.split(\"+\")\n    for i in range(len(tokens)):\n        token = tokens[i]\n        if \"-\" in token:\n            tokens[i] = token.split(\"-\")\n\n    print(\"\".join(\"+\" * int(t) for t in tokens[0]))\n    for token in tokens[1:]:\n        print(\"\".join(\"+\" * int(t) for t in token[:-1]))\n        print(\"\".join(\"-\" * int(t) for t in token[-1:]))\n    print(\"<[<+>-]<\" * len(tokens))\n    print(\"+\" * 255)\n    print(\".\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport re\n\ndef brainfuck(s):\n    s = s.split('+')\n    for i in range(len(s)):\n        s[i] = s[i].split('-')\n    #print(s)\n    res = ''\n    for i in range(len(s)):\n        if len(s[i]) > 1:\n            res += '>'*int(s[i][0]) + '<'*int(s[i][1])\n        else:\n            res += '>'*int(s[i][0])\n    res += '<'*len(s)\n    res += '[<+>-]<'\n    res += '>'\n    res += '.'\n    return res\n\ns = sys.stdin.readline().strip()\nprint(brainfuck(s))"
+    },
+    {
+      "finish_reason": "length",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# print(ord(\"a\"))\n# print(chr(97))\n# print(chr(65))\n# print(chr(48))\n# print(chr(9))\n# print(chr(10))\n# print(chr(13))\n# print(chr(32))\n# print(chr(33))\n\n# + - > < [ ] . ,\n\n# print(ord(\"+\"))\n# print(ord(\"-\"))\n# print(ord(\">\"))\n# print(ord(\"<\"))\n# print(ord(\"[\"))\n# print(ord(\"]\"))\n# print(ord(\".\"))\n# print(ord(\",\"))\n\n# print(ord(\"0\"))\n# print(ord(\"9\"))\n# print(ord(\"a\"))\n# print(ord(\"z\"))\n\n# print(ord(\"A\"))\n# print(ord(\"Z\"))\n\n# print(ord(\" \"))\n\n# print(ord(\"~\"))\n# print(ord(\"`\"))\n# print(ord(\"!\"))\n# print(ord(\"@\"))\n# print(ord(\"#\"))\n# print(ord(\"$\"))\n# print(ord(\"%\"))\n# print(ord(\"^\"))\n# print(ord(\"&\"))\n# print(ord(\"*\"))\n# print(ord(\"(\"))\n# print(ord(\")\"))\n# print(ord(\"_\"))\n# print(ord(\"+\"))\n# print(ord(\"=\"))\n# print(ord(\"{\"))\n# print(ord(\"}\"))\n# print(ord(\"[\"))\n# print(ord(\"]\"))\n# print(ord(\"|\"))\n# print(ord(\"\\\\\"))\n# print(ord(\":\"))\n# print(ord(\";\"))\n# print(ord(\"'\"))\n# print(ord(\"\\\"\"))\n# print(ord(\"<\"))\n# print(ord(\">\"))\n# print(ord(\"?\"))\n# print(ord(\",\"))\n# print(ord(\".\"))\n# print(ord(\"/\"))\n\n# print(ord(\"`\"))\n# print(ord(\"~\"))\n\n# print(ord(\"\\t\"))\n# print(ord(\"\\n\"))\n# print(ord(\"\\r\"))\n\n# print(ord(\"\\x00\"))\n# print(ord(\"\\x01\"))\n# print(ord(\"\\x02\"))\n# print(ord(\"\\x03\"))\n# print(ord(\"\\x04\"))\n# print(ord(\"\\x05\"))\n# print(ord(\"\\x06\"))\n# print(ord(\"\\x07\"))\n# print(ord(\"\\x08\"))\n# print(ord(\"\\x09\"))\n# print(ord(\"\\x0a\"))\n# print(ord(\"\\x0b\"))\n# print(ord(\"\\x0c\"))\n# print(ord(\"\\x0d\"))\n# print(ord(\"\\x0e\"))\n# print(ord(\"\\x0f\"))\n# print(ord(\"\\x10\"))\n# print(ord(\"\\x11\"))\n# print(ord(\"\\x12\"))\n# print(ord(\"\\x13\"))\n# print(ord(\"\\x14\"))\n# print(ord(\"\\x15\"))\n# print(ord(\"\\x16\"))\n# print(ord(\"\\x17\"))\n# print(ord(\"\\x18\"))\n# print(ord(\"\\x19\"))\n# print(ord(\"\\x1a\"))\n# print(ord(\"\\x1b\"))\n# print(ord(\"\\x1c\"))\n# print(ord(\"\\x1d\"))\n# print(ord(\"\\x1e\"))\n# print(ord(\"\\x1f\"))\n# print(ord(\"\\x20\"))\n# print(ord(\"\\x21\"))\n# print(ord(\"\\x22\"))\n# print(ord(\"\\x23\"))\n# print(ord(\"\\x24\"))\n# print(ord(\"\\x25\"))\n# print(ord(\"\\x26\"))\n# print(ord(\"\\x27\"))\n# print(ord(\"\\x28\"))\n# print(ord(\"\\x29\"))\n# print(ord(\"\\x2a\"))\n# print(ord(\"\\x2b\"))\n# print(ord(\"\\x2c\"))\n# print(ord(\"\\x2d\"))\n# print(ord(\"\\x2e\"))\n# print(ord(\"\\x2f\"))\n# print(ord(\"\\x30\"))\n# print(ord(\"\\x31\"))\n# print(ord(\"\\x32\"))\n# print(ord(\"\\x33\"))\n# print(ord(\"\\x34\"))\n# print(ord(\"\\x35\"))\n# print(ord(\"\\x36\"))\n# print(ord(\"\\x37\"))\n# print(ord(\"\\x38\"))\n# print(ord(\"\\x39\"))\n# print(ord(\"\\x3a\"))\n# print(ord(\"\\x3b\"))\n# print(ord(\"\\x3c\"))\n# print(ord(\"\\x3d\"))\n# print(ord(\"\\x3e\"))\n# print(ord(\"\\x3f\"))\n# print(ord(\"\\x40\"))\n# print(ord(\"\\x41\"))\n# print(ord(\"\\x42\"))\n# print(ord(\"\\x43\"))\n# print(ord(\"\\x44\"))\n# print(ord(\"\\x45\"))\n# print(ord(\"\\x46\"))\n# print(ord(\"\\x47\"))\n# print(ord(\"\\x48\"))\n# print(ord(\"\\x49\"))\n# print(ord(\"\\x4a\"))\n# print(ord(\"\\x4b\"))\n# print(ord(\"\\x4c\"))\n# print(ord(\"\\x4d\"))\n# print(ord(\"\\x4e\"))\n# print(ord(\"\\x4f\"))\n# print(ord(\"\\x50\"))\n# print(ord(\"\\x51\"))\n# print(ord(\"\\x52\"))\n# print(ord(\"\\x53\"))\n# print(ord(\"\\x54\"))\n# print(ord(\"\\x55\"))\n# print(ord(\"\\x56\"))\n# print(ord(\"\\x57\"))\n# print(ord(\"\\x58\"))\n# print(ord(\"\\x59\"))\n# print(ord(\"\\x5a\"))\n# print(ord(\"\\x5b\"))\n# print(ord(\"\\x5c\"))\n# print(ord(\"\\x5d\"))\n# print(ord(\"\\x5e\"))\n# print(ord(\"\\x5f\"))\n# print(ord(\"\\x60\"))\n# print(ord(\"\\x61\"))\n# print(ord(\"\\x62\"))\n# print(ord(\"\\x63\"))\n# print(ord(\"\\x64\"))\n# print(ord(\"\\x65\"))\n# print(ord(\"\\x66\"))\n# print(ord(\"\\x67\"))\n# print(ord(\"\\x68\"))\n# print(ord(\"\\x69\"))\n# print(ord(\"\\x6a\"))\n# print(ord(\"\\x6b\"))\n# print(ord(\"\\x6c\"))\n# print(ord(\"\\x6d\"))\n# print(ord(\"\\x6e\"))\n# print(ord(\"\\x6f\"))\n# print(ord(\"\\x70\"))\n# print(ord(\"\\x71\"))\n# print(ord(\"\\x72\"))\n# print(ord(\"\\x73\"))\n# print(ord(\"\\x74\"))\n# print(ord(\"\\x75\"))\n# print(ord(\"\\x76\"))\n# print(ord(\"\\x77\"))\n# print(ord(\"\\x78\"))\n# print(ord(\"\\x79\"))\n# print(ord(\"\\x7a\"))\n# print(ord(\"\\x7b\"))\n# print(ord(\"\\x7c\"))\n# print(ord(\"\\x7d\"))\n# print(ord(\"\\x7e\"))\n# print(ord(\"\\x7f\"))\n# print(ord(\"\\x80\"))\n# print(ord(\"\\x81\"))\n# print(ord(\"\\x82\"))\n# print(ord(\"\\x83\"))\n# print(ord(\"\\x84\"))\n# print(ord(\"\\x85\"))\n# print(ord(\"\\x86\"))\n# print(ord(\"\\x87\"))\n# print(ord(\"\\x88\"))\n# print(ord(\"\\x89\"))\n# print(ord(\"\\x8a\"))\n# print(ord(\"\\x8b\"))\n# print(ord(\"\\x8c\"))\n# print(ord(\"\\x8d\"))\n# print(ord(\"\\x8e\"))\n# print(ord(\"\\x8f\"))\n# print(ord(\"\\x90\"))\n# print(ord(\"\\x91\"))\n# print(ord(\"\\x92\"))\n# print(ord(\"\\x93\"))\n# print(ord(\"\\x94\"))\n# print(ord(\"\\x95\"))\n# print(ord(\"\\x96\"))\n# print(ord(\"\\x97\"))\n# print(ord(\"\\x98\"))\n# print(ord(\"\\x99\"))\n# print(ord(\"\\x9a\"))\n# print(ord(\"\\x9b\"))\n# print(ord(\"\\x9c\"))\n# print(ord(\"\\x9d\"))\n# print(ord(\"\\x9e\"))\n# print(ord(\"\\x9f\"))\n# print(ord(\"\\xa0\"))\n# print(ord(\"\\xa1\"))\n# print(ord(\"\\xa2\"))\n# print(ord(\"\\xa3\"))\n# print(ord(\"\\xa4\"))\n# print(ord(\"\\xa5\"))\n# print(ord(\"\\xa6\"))\n# print(ord(\"\\xa7\"))\n# print(ord(\"\\xa8\"))\n# print(ord(\"\\xa9\"))\n# print(ord(\"\\xaa\"))\n# print(ord(\"\\xab\"))\n# print(ord(\"\\xac\"))\n# print(ord(\"\\xad\"))\n# print(ord(\"\\xae\"))\n# print(ord(\"\\xaf\"))\n# print(ord(\"\\xb0\"))\n# print(ord(\"\\xb1\"))\n# print(ord(\"\\xb2\"))\n# print(ord(\"\\xb3\"))\n# print(ord(\"\\xb4\"))\n# print(ord(\"\\xb5\"))\n# print(ord(\"\\xb6\"))\n# print(ord(\"\\xb7\"))\n# print(ord(\"\\xb8\"))\n# print(ord(\"\\xb9\"))\n# print(ord(\"\\xba\"))\n# print(ord(\"\\xbb\"))\n# print(ord(\"\\xbc\"))\n# print(ord(\"\\xbd\"))\n# print(ord(\"\\xbe\"))\n# print(ord(\"\\xbf\"))\n# print(ord(\"\\xc0\"))\n# print(ord(\"\\xc1\"))\n# print(ord(\"\\xc2\"))\n# print(ord(\"\\xc3\"))\n# print(ord(\"\\xc4\"))\n# print(ord(\"\\xc5\"))\n# print(ord(\"\\xc6\"))\n# print(ord(\"\\xc7\"))\n# print(ord(\"\\xc8\"))\n# print(ord(\"\\xc9\"))\n# print(ord(\"\\xca\"))\n# print(ord(\"\\xcb\"))\n# print(ord(\"\\xcc\"))\n# print(ord(\"\\xcd\"))\n# print(ord(\"\\xce\"))\n# print(ord(\"\\xcf\"))\n# print(ord(\"\\xd0\"))\n# print(ord(\"\\xd1\"))\n# print(ord(\"\\xd2\"))\n# print(ord(\"\\xd3\"))\n# print(ord(\"\\xd4\"))\n# print(ord(\"\\xd5\"))\n# print(ord(\"\\xd6\"))\n# print(ord(\"\\xd7\"))\n# print(ord(\"\\xd8\"))\n# print(ord(\"\\xd9\"))\n# print(ord(\"\\xda\"))\n# print(ord(\"\\xdb\"))\n# print(ord(\"\\xdc\"))\n# print(ord(\"\\xdd\"))\n# print(ord(\"\\xde\"))\n# print(ord(\"\\xdf\"))\n# print(ord(\"\\xe0\"))\n# print(ord(\"\\xe1\"))\n# print(ord(\"\\xe2\"))\n# print(ord(\"\\xe3\"))\n# print(ord(\"\\xe4\"))\n# print(ord(\"\\xe5\"))\n# print(ord(\"\\xe6\"))\n# print(ord(\"\\xe7\"))\n# print(ord(\"\\xe8"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef brainfuck_calculator(expression):\n\t# TODO: implement\n\treturn \"\"\n\nif __name__ == '__main__':\n\texpression = input()\n\tprint(brainfuck_calculator(expression))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef bf_calc():\n    expr = list(input())\n    stack = []\n    result = []\n    for char in expr:\n        if char.isdigit():\n            stack.append(int(char))\n        elif char == '+':\n            result.append(sum(stack))\n            stack = []\n        else:\n            result.append(stack[0] - stack[1])\n            stack = []\n    result = result[0]\n    bf = ''\n    while result > 0:\n        bf += '+'\n        result -= 1\n    bf += '>++++++++++++++++++++++++++++++++++++++++++++++++.<'\n    print(bf)\n\nbf_calc()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef bf(x):\n    if x==0:\n        return \"\"\n    if x>0:\n        return \"+\"*x\n    else:\n        return \"-\"*(-x)\n\ndef main():\n    s = sys.stdin.readline().strip().split(\"+\")\n    n = len(s)\n    for i in range(n):\n        s[i] = int(s[i])\n    if n==1:\n        print(bf(s[0]))\n    elif n==2:\n        print(bf(s[0])+\">\"+bf(s[1])+\"<\"+bf(s[0]-s[1]))\n    else:\n        print(bf(s[0])+\">\"+bf(s[1])+\"<\")\n        for i in range(2,n):\n            print(bf(s[i])+\"<\")\n        print(bf(s[0]-s[1])+\"<\"*(n-2)+bf(s[0]-s[1]-sum(s[2:]))+\".\")\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650406722,
+  "id": "cmpl-4yqTC6N9r1RXUhQ5qdTil3gdKBslJ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:20:05.148814 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    line = sys.stdin.readline().strip()\n    tokens = line.split('+')\n    tokens = [int(t) if t.isdigit() else -int(t[1:]) for t in tokens]\n    print(tokens)\n    print(gen_bf(tokens))\n\ndef gen_bf(tokens):\n    bf = ''\n    for i, t in enumerate(tokens):\n        if i == 0:\n            bf += '+'*t\n            bf += '>'\n        else:\n            bf += '+'*t\n            bf += '>'\n            bf += '['\n            bf += '<'\n            if t >= 0:\n                bf += '+'\n            else:\n                bf += '-'\n            bf += '>'\n            bf += '-'\n            bf += ']'\n            bf += '<'\n    bf += '.'\n    return bf\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:20:05.148875 REASON stop
+2022-04-19 22:20:05.149332 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    expr = input()\n    tokens = expr.split(\"+\")\n    for i in range(len(tokens)):\n        token = tokens[i]\n        if \"-\" in token:\n            tokens[i] = token.split(\"-\")\n\n    print(\"\".join(\"+\" * int(t) for t in tokens[0]))\n    for token in tokens[1:]:\n        print(\"\".join(\"+\" * int(t) for t in token[:-1]))\n        print(\"\".join(\"-\" * int(t) for t in token[-1:]))\n    print(\"<[<+>-]<\" * len(tokens))\n    print(\"+\" * 255)\n    print(\".\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:20:05.149388 REASON stop
+2022-04-19 22:20:05.149769 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport re\n\ndef brainfuck(s):\n    s = s.split('+')\n    for i in range(len(s)):\n        s[i] = s[i].split('-')\n    #print(s)\n    res = ''\n    for i in range(len(s)):\n        if len(s[i]) > 1:\n            res += '>'*int(s[i][0]) + '<'*int(s[i][1])\n        else:\n            res += '>'*int(s[i][0])\n    res += '<'*len(s)\n    res += '[<+>-]<'\n    res += '>'\n    res += '.'\n    return res\n\ns = sys.stdin.readline().strip()\nprint(brainfuck(s))"
+}
+2022-04-19 22:20:05.149821 REASON stop
+2022-04-19 22:20:05.173292 3 {
+  "finish_reason": "length",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# print(ord(\"a\"))\n# print(chr(97))\n# print(chr(65))\n# print(chr(48))\n# print(chr(9))\n# print(chr(10))\n# print(chr(13))\n# print(chr(32))\n# print(chr(33))\n\n# + - > < [ ] . ,\n\n# print(ord(\"+\"))\n# print(ord(\"-\"))\n# print(ord(\">\"))\n# print(ord(\"<\"))\n# print(ord(\"[\"))\n# print(ord(\"]\"))\n# print(ord(\".\"))\n# print(ord(\",\"))\n\n# print(ord(\"0\"))\n# print(ord(\"9\"))\n# print(ord(\"a\"))\n# print(ord(\"z\"))\n\n# print(ord(\"A\"))\n# print(ord(\"Z\"))\n\n# print(ord(\" \"))\n\n# print(ord(\"~\"))\n# print(ord(\"`\"))\n# print(ord(\"!\"))\n# print(ord(\"@\"))\n# print(ord(\"#\"))\n# print(ord(\"$\"))\n# print(ord(\"%\"))\n# print(ord(\"^\"))\n# print(ord(\"&\"))\n# print(ord(\"*\"))\n# print(ord(\"(\"))\n# print(ord(\")\"))\n# print(ord(\"_\"))\n# print(ord(\"+\"))\n# print(ord(\"=\"))\n# print(ord(\"{\"))\n# print(ord(\"}\"))\n# print(ord(\"[\"))\n# print(ord(\"]\"))\n# print(ord(\"|\"))\n# print(ord(\"\\\\\"))\n# print(ord(\":\"))\n# print(ord(\";\"))\n# print(ord(\"'\"))\n# print(ord(\"\\\"\"))\n# print(ord(\"<\"))\n# print(ord(\">\"))\n# print(ord(\"?\"))\n# print(ord(\",\"))\n# print(ord(\".\"))\n# print(ord(\"/\"))\n\n# print(ord(\"`\"))\n# print(ord(\"~\"))\n\n# print(ord(\"\\t\"))\n# print(ord(\"\\n\"))\n# print(ord(\"\\r\"))\n\n# print(ord(\"\\x00\"))\n# print(ord(\"\\x01\"))\n# print(ord(\"\\x02\"))\n# print(ord(\"\\x03\"))\n# print(ord(\"\\x04\"))\n# print(ord(\"\\x05\"))\n# print(ord(\"\\x06\"))\n# print(ord(\"\\x07\"))\n# print(ord(\"\\x08\"))\n# print(ord(\"\\x09\"))\n# print(ord(\"\\x0a\"))\n# print(ord(\"\\x0b\"))\n# print(ord(\"\\x0c\"))\n# print(ord(\"\\x0d\"))\n# print(ord(\"\\x0e\"))\n# print(ord(\"\\x0f\"))\n# print(ord(\"\\x10\"))\n# print(ord(\"\\x11\"))\n# print(ord(\"\\x12\"))\n# print(ord(\"\\x13\"))\n# print(ord(\"\\x14\"))\n# print(ord(\"\\x15\"))\n# print(ord(\"\\x16\"))\n# print(ord(\"\\x17\"))\n# print(ord(\"\\x18\"))\n# print(ord(\"\\x19\"))\n# print(ord(\"\\x1a\"))\n# print(ord(\"\\x1b\"))\n# print(ord(\"\\x1c\"))\n# print(ord(\"\\x1d\"))\n# print(ord(\"\\x1e\"))\n# print(ord(\"\\x1f\"))\n# print(ord(\"\\x20\"))\n# print(ord(\"\\x21\"))\n# print(ord(\"\\x22\"))\n# print(ord(\"\\x23\"))\n# print(ord(\"\\x24\"))\n# print(ord(\"\\x25\"))\n# print(ord(\"\\x26\"))\n# print(ord(\"\\x27\"))\n# print(ord(\"\\x28\"))\n# print(ord(\"\\x29\"))\n# print(ord(\"\\x2a\"))\n# print(ord(\"\\x2b\"))\n# print(ord(\"\\x2c\"))\n# print(ord(\"\\x2d\"))\n# print(ord(\"\\x2e\"))\n# print(ord(\"\\x2f\"))\n# print(ord(\"\\x30\"))\n# print(ord(\"\\x31\"))\n# print(ord(\"\\x32\"))\n# print(ord(\"\\x33\"))\n# print(ord(\"\\x34\"))\n# print(ord(\"\\x35\"))\n# print(ord(\"\\x36\"))\n# print(ord(\"\\x37\"))\n# print(ord(\"\\x38\"))\n# print(ord(\"\\x39\"))\n# print(ord(\"\\x3a\"))\n# print(ord(\"\\x3b\"))\n# print(ord(\"\\x3c\"))\n# print(ord(\"\\x3d\"))\n# print(ord(\"\\x3e\"))\n# print(ord(\"\\x3f\"))\n# print(ord(\"\\x40\"))\n# print(ord(\"\\x41\"))\n# print(ord(\"\\x42\"))\n# print(ord(\"\\x43\"))\n# print(ord(\"\\x44\"))\n# print(ord(\"\\x45\"))\n# print(ord(\"\\x46\"))\n# print(ord(\"\\x47\"))\n# print(ord(\"\\x48\"))\n# print(ord(\"\\x49\"))\n# print(ord(\"\\x4a\"))\n# print(ord(\"\\x4b\"))\n# print(ord(\"\\x4c\"))\n# print(ord(\"\\x4d\"))\n# print(ord(\"\\x4e\"))\n# print(ord(\"\\x4f\"))\n# print(ord(\"\\x50\"))\n# print(ord(\"\\x51\"))\n# print(ord(\"\\x52\"))\n# print(ord(\"\\x53\"))\n# print(ord(\"\\x54\"))\n# print(ord(\"\\x55\"))\n# print(ord(\"\\x56\"))\n# print(ord(\"\\x57\"))\n# print(ord(\"\\x58\"))\n# print(ord(\"\\x59\"))\n# print(ord(\"\\x5a\"))\n# print(ord(\"\\x5b\"))\n# print(ord(\"\\x5c\"))\n# print(ord(\"\\x5d\"))\n# print(ord(\"\\x5e\"))\n# print(ord(\"\\x5f\"))\n# print(ord(\"\\x60\"))\n# print(ord(\"\\x61\"))\n# print(ord(\"\\x62\"))\n# print(ord(\"\\x63\"))\n# print(ord(\"\\x64\"))\n# print(ord(\"\\x65\"))\n# print(ord(\"\\x66\"))\n# print(ord(\"\\x67\"))\n# print(ord(\"\\x68\"))\n# print(ord(\"\\x69\"))\n# print(ord(\"\\x6a\"))\n# print(ord(\"\\x6b\"))\n# print(ord(\"\\x6c\"))\n# print(ord(\"\\x6d\"))\n# print(ord(\"\\x6e\"))\n# print(ord(\"\\x6f\"))\n# print(ord(\"\\x70\"))\n# print(ord(\"\\x71\"))\n# print(ord(\"\\x72\"))\n# print(ord(\"\\x73\"))\n# print(ord(\"\\x74\"))\n# print(ord(\"\\x75\"))\n# print(ord(\"\\x76\"))\n# print(ord(\"\\x77\"))\n# print(ord(\"\\x78\"))\n# print(ord(\"\\x79\"))\n# print(ord(\"\\x7a\"))\n# print(ord(\"\\x7b\"))\n# print(ord(\"\\x7c\"))\n# print(ord(\"\\x7d\"))\n# print(ord(\"\\x7e\"))\n# print(ord(\"\\x7f\"))\n# print(ord(\"\\x80\"))\n# print(ord(\"\\x81\"))\n# print(ord(\"\\x82\"))\n# print(ord(\"\\x83\"))\n# print(ord(\"\\x84\"))\n# print(ord(\"\\x85\"))\n# print(ord(\"\\x86\"))\n# print(ord(\"\\x87\"))\n# print(ord(\"\\x88\"))\n# print(ord(\"\\x89\"))\n# print(ord(\"\\x8a\"))\n# print(ord(\"\\x8b\"))\n# print(ord(\"\\x8c\"))\n# print(ord(\"\\x8d\"))\n# print(ord(\"\\x8e\"))\n# print(ord(\"\\x8f\"))\n# print(ord(\"\\x90\"))\n# print(ord(\"\\x91\"))\n# print(ord(\"\\x92\"))\n# print(ord(\"\\x93\"))\n# print(ord(\"\\x94\"))\n# print(ord(\"\\x95\"))\n# print(ord(\"\\x96\"))\n# print(ord(\"\\x97\"))\n# print(ord(\"\\x98\"))\n# print(ord(\"\\x99\"))\n# print(ord(\"\\x9a\"))\n# print(ord(\"\\x9b\"))\n# print(ord(\"\\x9c\"))\n# print(ord(\"\\x9d\"))\n# print(ord(\"\\x9e\"))\n# print(ord(\"\\x9f\"))\n# print(ord(\"\\xa0\"))\n# print(ord(\"\\xa1\"))\n# print(ord(\"\\xa2\"))\n# print(ord(\"\\xa3\"))\n# print(ord(\"\\xa4\"))\n# print(ord(\"\\xa5\"))\n# print(ord(\"\\xa6\"))\n# print(ord(\"\\xa7\"))\n# print(ord(\"\\xa8\"))\n# print(ord(\"\\xa9\"))\n# print(ord(\"\\xaa\"))\n# print(ord(\"\\xab\"))\n# print(ord(\"\\xac\"))\n# print(ord(\"\\xad\"))\n# print(ord(\"\\xae\"))\n# print(ord(\"\\xaf\"))\n# print(ord(\"\\xb0\"))\n# print(ord(\"\\xb1\"))\n# print(ord(\"\\xb2\"))\n# print(ord(\"\\xb3\"))\n# print(ord(\"\\xb4\"))\n# print(ord(\"\\xb5\"))\n# print(ord(\"\\xb6\"))\n# print(ord(\"\\xb7\"))\n# print(ord(\"\\xb8\"))\n# print(ord(\"\\xb9\"))\n# print(ord(\"\\xba\"))\n# print(ord(\"\\xbb\"))\n# print(ord(\"\\xbc\"))\n# print(ord(\"\\xbd\"))\n# print(ord(\"\\xbe\"))\n# print(ord(\"\\xbf\"))\n# print(ord(\"\\xc0\"))\n# print(ord(\"\\xc1\"))\n# print(ord(\"\\xc2\"))\n# print(ord(\"\\xc3\"))\n# print(ord(\"\\xc4\"))\n# print(ord(\"\\xc5\"))\n# print(ord(\"\\xc6\"))\n# print(ord(\"\\xc7\"))\n# print(ord(\"\\xc8\"))\n# print(ord(\"\\xc9\"))\n# print(ord(\"\\xca\"))\n# print(ord(\"\\xcb\"))\n# print(ord(\"\\xcc\"))\n# print(ord(\"\\xcd\"))\n# print(ord(\"\\xce\"))\n# print(ord(\"\\xcf\"))\n# print(ord(\"\\xd0\"))\n# print(ord(\"\\xd1\"))\n# print(ord(\"\\xd2\"))\n# print(ord(\"\\xd3\"))\n# print(ord(\"\\xd4\"))\n# print(ord(\"\\xd5\"))\n# print(ord(\"\\xd6\"))\n# print(ord(\"\\xd7\"))\n# print(ord(\"\\xd8\"))\n# print(ord(\"\\xd9\"))\n# print(ord(\"\\xda\"))\n# print(ord(\"\\xdb\"))\n# print(ord(\"\\xdc\"))\n# print(ord(\"\\xdd\"))\n# print(ord(\"\\xde\"))\n# print(ord(\"\\xdf\"))\n# print(ord(\"\\xe0\"))\n# print(ord(\"\\xe1\"))\n# print(ord(\"\\xe2\"))\n# print(ord(\"\\xe3\"))\n# print(ord(\"\\xe4\"))\n# print(ord(\"\\xe5\"))\n# print(ord(\"\\xe6\"))\n# print(ord(\"\\xe7\"))\n# print(ord(\"\\xe8"
+}
+2022-04-19 22:20:05.173517 REASON length
+2022-04-19 22:20:05.173531 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef brainfuck_calculator(expression):\n\t# TODO: implement\n\treturn \"\"\n\nif __name__ == '__main__':\n\texpression = input()\n\tprint(brainfuck_calculator(expression))"
+}
+2022-04-19 22:20:05.173564 REASON stop
+2022-04-19 22:20:05.193632 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-19 22:20:05.193757 REASON stop
+2022-04-19 22:20:05.194808 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef bf_calc():\n    expr = list(input())\n    stack = []\n    result = []\n    for char in expr:\n        if char.isdigit():\n            stack.append(int(char))\n        elif char == '+':\n            result.append(sum(stack))\n            stack = []\n        else:\n            result.append(stack[0] - stack[1])\n            stack = []\n    result = result[0]\n    bf = ''\n    while result > 0:\n        bf += '+'\n        result -= 1\n    bf += '>++++++++++++++++++++++++++++++++++++++++++++++++.<'\n    print(bf)\n\nbf_calc()"
+}
+2022-04-19 22:20:05.194915 REASON stop
+2022-04-19 22:20:05.195656 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef bf(x):\n    if x==0:\n        return \"\"\n    if x>0:\n        return \"+\"*x\n    else:\n        return \"-\"*(-x)\n\ndef main():\n    s = sys.stdin.readline().strip().split(\"+\")\n    n = len(s)\n    for i in range(n):\n        s[i] = int(s[i])\n    if n==1:\n        print(bf(s[0]))\n    elif n==2:\n        print(bf(s[0])+\">\"+bf(s[1])+\"<\"+bf(s[0]-s[1]))\n    else:\n        print(bf(s[0])+\">\"+bf(s[1])+\"<\")\n        for i in range(2,n):\n            print(bf(s[i])+\"<\")\n        print(bf(s[0]-s[1])+\"<\"*(n-2)+bf(s[0]-s[1]-sum(s[2:]))+\".\")\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:20:05.195896 REASON stop

@@ -1,0 +1,157 @@
+2022-04-19 20:54:09.787666 """
+You are given a huge decimal number consisting of $n$ digits. It is guaranteed that this number has no leading zeros. Each digit of this number is either 0 or 1.
+
+You may perform several (possibly zero) operations with this number. During each operation you are allowed to change any digit of your number; you may change 0 to 1 or 1 to 0. It is possible that after some operation you can obtain a number with leading zeroes, but it does not matter for this problem.
+
+You are also given two integers $0 \le y < x < n$. Your task is to calculate the minimum number of operations you should perform to obtain the number that has remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, x, y$ ($0 \le y < x < n \le 2 \cdot 10^5$) — the length of the number and the integers $x$ and $y$, respectively.
+
+The second line of the input contains one decimal number consisting of $n$ digits, each digit of this number is either 0 or 1. It is guaranteed that the first digit of the number is 1.
+
+
+-----Output-----
+
+Print one integer — the minimum number of operations you should perform to obtain the number having remainder $10^y$ modulo $10^x$. In other words, the obtained number should have remainder $10^y$ when divided by $10^x$.
+
+
+-----Examples-----
+Input
+11 5 2
+11010100101
+
+Output
+1
+
+Input
+11 5 1
+11010100101
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example the number will be $11010100100$ after performing one operation. It has remainder $100$ modulo $100000$.
+
+In the second example the number will be $11010100010$ after performing three operations. It has remainder $10$ modulo $100000$.
+"""
+2022-04-19 20:54:09.787684 --------------------------
+2022-04-19 20:54:09.787791 using api key derek
+2022-04-19 20:54:27.496303 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = input()\n    s = s[:y] + '1'*(x-y) + s[x:]\n    print(s.count('0'))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, x, y = [int(x) for x in input().split()]\nn = input()\n\n# 1) count the number of 1s in the first x digits\n# 2) count the number of 1s in the first y digits\n# 3) subtract to find the number of 1s that we need to add to the first y digits to get a remainder of 10^y\n# 4) subtract the number of 1s in the first x digits from the number of 1s needed in the first y digits\n# 5) if the result is positive, we need to add 1s to the first x digits\n# 6) if the result is negative, we need to add 1s to the first y digits\n\nones_in_x = sum(int(x) for x in n[:x])\nones_in_y = sum(int(x) for x in n[:y])\n\nones_needed_y = 10**y - ones_in_y\nones_needed_x = ones_needed_y - ones_in_x\n\nif ones_needed_x > 0:\n    print(ones_needed_x)\nelse:\n    print(ones_needed_y)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, x, y = [int(i) for i in input().split()]\nnum = input()\n\n#calculate the remainder of the input number\nrem = 0\nfor i in range(n-1, n-x-1, -1):\n    rem = rem*2 + int(num[i])\n\n#calculate the remainder of the desired number\nrem_des = 0\nfor i in range(n-1, n-x-1, -1):\n    if i >= n-y:\n        rem_des = rem_des*2 + 1\n    else:\n        rem_des = rem_des*2\n\nprint(min(rem, rem_des - rem))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, x, y = [int(i) for i in raw_input().split()]\n    num = raw_input()\n    num = num[::-1]\n    total = 0\n    for i in range(n):\n        if i < x:\n            if i < y:\n                if num[i] == '0':\n                    total += 1\n            else:\n                if num[i] == '1':\n                    total += 1\n        else:\n            if num[i] == '1':\n                total += 1\n    print total\n            \nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn,x,y = map(int,input().split())\ns = input()\n\nif s[:x] == '1'*x:\n    if s[x:x+y] == '0'*y:\n        print(0)\n    else:\n        print(1)\nelse:\n    print(x-y)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, x, y = map(int, input().split())\nnum = input()\n\nremainder_10y = int(num[:y+1])\nremainder_10x = int(num[:x+1])\n\nif remainder_10y == 10**y:\n    print(0)\nelse:\n    if remainder_10x == 10**x:\n        print(1)\n    else:\n        print(2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    number = input()\n    remainder = int(number[-y:])\n    mod = 10**x\n    if remainder == 0:\n        print(0)\n    else:\n        print(mod - remainder)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    binary = input()\n    if (int(binary[:x], 2) % 10**x) == 10**y:\n        print(0)\n    else:\n        print(1)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650401650,
+  "id": "cmpl-4yp9OA4DqyFbHzU29MV9z3WBAdBpj",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:54:27.496626 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    s = input()\n    s = s[:y] + '1'*(x-y) + s[x:]\n    print(s.count('0'))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:54:27.496660 REASON stop
+2022-04-19 20:54:27.497371 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, x, y = [int(x) for x in input().split()]\nn = input()\n\n# 1) count the number of 1s in the first x digits\n# 2) count the number of 1s in the first y digits\n# 3) subtract to find the number of 1s that we need to add to the first y digits to get a remainder of 10^y\n# 4) subtract the number of 1s in the first x digits from the number of 1s needed in the first y digits\n# 5) if the result is positive, we need to add 1s to the first x digits\n# 6) if the result is negative, we need to add 1s to the first y digits\n\nones_in_x = sum(int(x) for x in n[:x])\nones_in_y = sum(int(x) for x in n[:y])\n\nones_needed_y = 10**y - ones_in_y\nones_needed_x = ones_needed_y - ones_in_x\n\nif ones_needed_x > 0:\n    print(ones_needed_x)\nelse:\n    print(ones_needed_y)"
+}
+2022-04-19 20:54:27.497442 REASON stop
+2022-04-19 20:54:27.497842 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, x, y = [int(i) for i in input().split()]\nnum = input()\n\n#calculate the remainder of the input number\nrem = 0\nfor i in range(n-1, n-x-1, -1):\n    rem = rem*2 + int(num[i])\n\n#calculate the remainder of the desired number\nrem_des = 0\nfor i in range(n-1, n-x-1, -1):\n    if i >= n-y:\n        rem_des = rem_des*2 + 1\n    else:\n        rem_des = rem_des*2\n\nprint(min(rem, rem_des - rem))"
+}
+2022-04-19 20:54:27.497898 REASON stop
+2022-04-19 20:54:27.516794 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, x, y = [int(i) for i in raw_input().split()]\n    num = raw_input()\n    num = num[::-1]\n    total = 0\n    for i in range(n):\n        if i < x:\n            if i < y:\n                if num[i] == '0':\n                    total += 1\n            else:\n                if num[i] == '1':\n                    total += 1\n        else:\n            if num[i] == '1':\n                total += 1\n    print total\n            \nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:54:27.516951 REASON stop
+2022-04-19 20:54:27.517702 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn,x,y = map(int,input().split())\ns = input()\n\nif s[:x] == '1'*x:\n    if s[x:x+y] == '0'*y:\n        print(0)\n    else:\n        print(1)\nelse:\n    print(x-y)"
+}
+2022-04-19 20:54:27.517829 REASON stop
+2022-04-19 20:54:27.528674 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, x, y = map(int, input().split())\nnum = input()\n\nremainder_10y = int(num[:y+1])\nremainder_10x = int(num[:x+1])\n\nif remainder_10y == 10**y:\n    print(0)\nelse:\n    if remainder_10x == 10**x:\n        print(1)\n    else:\n        print(2)"
+}
+2022-04-19 20:54:27.528811 REASON stop
+2022-04-19 20:54:27.529690 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    number = input()\n    remainder = int(number[-y:])\n    mod = 10**x\n    if remainder == 0:\n        print(0)\n    else:\n        print(mod - remainder)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:54:27.529799 REASON stop
+2022-04-19 20:54:27.531068 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, x, y = map(int, input().split())\n    binary = input()\n    if (int(binary[:x], 2) % 10**x) == 10**y:\n        print(0)\n    else:\n        print(1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:54:27.531240 REASON stop

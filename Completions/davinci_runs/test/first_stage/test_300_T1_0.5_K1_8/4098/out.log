@@ -1,0 +1,160 @@
+2022-04-19 21:58:35.416660 """
+You are a coach at your local university. There are $n$ students under your supervision, the programming skill of the $i$-th student is $a_i$.
+
+You have to form $k$ teams for yet another new programming competition. As you know, the more students are involved in competition the more probable the victory of your university is! So you have to form no more than $k$ (and at least one) non-empty teams so that the total number of students in them is maximized. But you also know that each team should be balanced. It means that the programming skill of each pair of students in each team should differ by no more than $5$. Teams are independent from one another (it means that the difference between programming skills of two students from two different teams does not matter).
+
+It is possible that some students not be included in any team at all.
+
+Your task is to report the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the number of students and the maximum number of teams, correspondingly.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is a programming skill of the $i$-th student.
+
+
+-----Output-----
+
+Print one integer — the maximum possible total number of students in no more than $k$ (and at least one) non-empty balanced teams.
+
+
+-----Examples-----
+Input
+5 2
+1 2 15 15 15
+
+Output
+5
+
+Input
+6 1
+36 4 1 25 9 16
+
+Output
+2
+
+Input
+4 4
+1 10 100 1000
+
+Output
+4
+"""
+2022-04-19 21:58:35.416675 --------------------------
+2022-04-19 21:58:35.416843 using api key derek
+2022-04-19 21:58:55.422734 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, k = map(int, input().split())\na = sorted(list(map(int, input().split())))\n\ndp = [1] * (n+1)\nfor i in range(1, n+1):\n    for j in range(i-1, -1, -1):\n        if a[i-1] - a[j] > 5:\n            break\n        dp[i] = max(dp[i], dp[j] + 1)\n\nprint(max(dp[i] for i in range(n+1)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n\tn, k = map(int, input().split())\n\ta = list(map(int, input().split()))\n\n\t# Sort the list\n\ta.sort()\n\n\t# Initialize the number of students in each team\n\tstudents_in_teams = [0] * k\n\n\t# Initialize the number of teams\n\tnum_teams = 0\n\n\t# Iterate through the list\n\tfor i in range(n):\n\t\t# Check if the number of teams is less than k\n\t\tif num_teams < k:\n\t\t\t# Add the student to the team\n\t\t\tstudents_in_teams[num_teams] += 1\n\t\t\t# Increment the number of teams\n\t\t\tnum_teams += 1\n\t\telse:\n\t\t\t# Iterate through the students in each team\n\t\t\tfor j in range(k):\n\t\t\t\t# Check if the difference between the student and the last student in the team is less than or equal to 5\n\t\t\t\tif a[i] - a[i - students_in_teams[j]] <= 5:\n\t\t\t\t\t# Add the student to the team\n\t\t\t\t\tstudents_in_teams[j] += 1\n\t\t\t\t\t# Break out of the loop\n\t\t\t\t\tbreak\n\n\t# Print the maximum number of students in the teams\n\tprint(max(students_in_teams))\n\nif __name__ == \"__main__\":\n\tmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nif __name__ == '__main__':\n    n, k = map(int, sys.stdin.readline().split())\n    a = sorted(map(int, sys.stdin.readline().split()))\n    ans = 0\n    for i in range(n):\n        if a[i] - a[0] <= 5:\n            ans = max(ans, i+1)\n    print(min(k, ans))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    students = sorted(map(int, input().split()))\n    max_students = 0\n    for i in range(k):\n        max_students += sum(1 for s in students if s >= students[0] + i*5)\n    print(max_students)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, raw_input().split())\n    a = map(int, raw_input().split())\n\n    sortedA = sorted(set(a))\n    maxStudents = 0\n    for i in range(len(sortedA) - k + 1):\n        maxStudents = max(maxStudents, i + 1 + sum(map(lambda x: 1 if x < sortedA[i + k - 1] and x > sortedA[i] else 0, a)))\n    print maxStudents\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0 for _ in range(n + 1)] for _ in range(k + 1)]\n\nfor i in range(1, k + 1):\n    for j in range(1, n + 1):\n        dp[i][j] = dp[i][j - 1]\n        for l in range(j - 1, 0, -1):\n            if a[j - 1] - a[l - 1] <= 5:\n                dp[i][j] = max(dp[i][j], dp[i - 1][l - 1] + j - l)\n\nprint(dp[-1][-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nclass Team(object):\n    def __init__(self, student):\n        self.students = [student]\n        self.min = student\n        self.max = student\n\n    def add(self, student):\n        self.students.append(student)\n        self.min = min(self.min, student)\n        self.max = max(self.max, student)\n        return self.max - self.min <= 5\n\ndef solve(students, k):\n    students.sort()\n    teams = [Team(students[0])]\n    for student in students[1:]:\n        for team in teams:\n            if team.add(student):\n                break\n        else:\n            if len(teams) < k:\n                teams.append(Team(student))\n            else:\n                return len(students) - 1\n    return sum(len(team.students) for team in teams)\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    students = map(int, sys.stdin.readline().split())\n    print solve(students, k)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    d = [a[i+1] - a[i] for i in range(n-1)]\n    d.append(float('inf'))\n    d.sort()\n    print(n - d[k-1] + 1)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650405515,
+  "id": "cmpl-4yq9jAn8vGj7ia1ATIGrrYb9GAXeH",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:58:55.423082 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, k = map(int, input().split())\na = sorted(list(map(int, input().split())))\n\ndp = [1] * (n+1)\nfor i in range(1, n+1):\n    for j in range(i-1, -1, -1):\n        if a[i-1] - a[j] > 5:\n            break\n        dp[i] = max(dp[i], dp[j] + 1)\n\nprint(max(dp[i] for i in range(n+1)))"
+}
+2022-04-19 21:58:55.423120 REASON stop
+2022-04-19 21:58:55.423802 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n\tn, k = map(int, input().split())\n\ta = list(map(int, input().split()))\n\n\t# Sort the list\n\ta.sort()\n\n\t# Initialize the number of students in each team\n\tstudents_in_teams = [0] * k\n\n\t# Initialize the number of teams\n\tnum_teams = 0\n\n\t# Iterate through the list\n\tfor i in range(n):\n\t\t# Check if the number of teams is less than k\n\t\tif num_teams < k:\n\t\t\t# Add the student to the team\n\t\t\tstudents_in_teams[num_teams] += 1\n\t\t\t# Increment the number of teams\n\t\t\tnum_teams += 1\n\t\telse:\n\t\t\t# Iterate through the students in each team\n\t\t\tfor j in range(k):\n\t\t\t\t# Check if the difference between the student and the last student in the team is less than or equal to 5\n\t\t\t\tif a[i] - a[i - students_in_teams[j]] <= 5:\n\t\t\t\t\t# Add the student to the team\n\t\t\t\t\tstudents_in_teams[j] += 1\n\t\t\t\t\t# Break out of the loop\n\t\t\t\t\tbreak\n\n\t# Print the maximum number of students in the teams\n\tprint(max(students_in_teams))\n\nif __name__ == \"__main__\":\n\tmain()"
+}
+2022-04-19 21:58:55.423906 REASON stop
+2022-04-19 21:58:55.424335 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nif __name__ == '__main__':\n    n, k = map(int, sys.stdin.readline().split())\n    a = sorted(map(int, sys.stdin.readline().split()))\n    ans = 0\n    for i in range(n):\n        if a[i] - a[0] <= 5:\n            ans = max(ans, i+1)\n    print(min(k, ans))"
+}
+2022-04-19 21:58:55.424398 REASON stop
+2022-04-19 21:58:55.451241 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    students = sorted(map(int, input().split()))\n    max_students = 0\n    for i in range(k):\n        max_students += sum(1 for s in students if s >= students[0] + i*5)\n    print(max_students)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:58:55.451375 REASON stop
+2022-04-19 21:58:55.466209 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, raw_input().split())\n    a = map(int, raw_input().split())\n\n    sortedA = sorted(set(a))\n    maxStudents = 0\n    for i in range(len(sortedA) - k + 1):\n        maxStudents = max(maxStudents, i + 1 + sum(map(lambda x: 1 if x < sortedA[i + k - 1] and x > sortedA[i] else 0, a)))\n    print maxStudents\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:58:55.466382 REASON stop
+2022-04-19 21:58:55.468838 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0 for _ in range(n + 1)] for _ in range(k + 1)]\n\nfor i in range(1, k + 1):\n    for j in range(1, n + 1):\n        dp[i][j] = dp[i][j - 1]\n        for l in range(j - 1, 0, -1):\n            if a[j - 1] - a[l - 1] <= 5:\n                dp[i][j] = max(dp[i][j], dp[i - 1][l - 1] + j - l)\n\nprint(dp[-1][-1])"
+}
+2022-04-19 21:58:55.468966 REASON stop
+2022-04-19 21:58:55.469939 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nclass Team(object):\n    def __init__(self, student):\n        self.students = [student]\n        self.min = student\n        self.max = student\n\n    def add(self, student):\n        self.students.append(student)\n        self.min = min(self.min, student)\n        self.max = max(self.max, student)\n        return self.max - self.min <= 5\n\ndef solve(students, k):\n    students.sort()\n    teams = [Team(students[0])]\n    for student in students[1:]:\n        for team in teams:\n            if team.add(student):\n                break\n        else:\n            if len(teams) < k:\n                teams.append(Team(student))\n            else:\n                return len(students) - 1\n    return sum(len(team.students) for team in teams)\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    students = map(int, sys.stdin.readline().split())\n    print solve(students, k)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:58:55.470040 REASON stop
+2022-04-19 21:58:55.471356 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    d = [a[i+1] - a[i] for i in range(n-1)]\n    d.append(float('inf'))\n    d.sort()\n    print(n - d[k-1] + 1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:58:55.471544 REASON stop

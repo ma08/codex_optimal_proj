@@ -1,0 +1,189 @@
+2022-04-19 23:02:55.085551 """
+There are N towns in a coordinate plane. Town i is located at coordinates (x_i, y_i). The distance between Town i and Town j is \sqrt{\left(x_i-x_j\right)^2+\left(y_i-y_j\right)^2}.
+There are N! possible paths to visit all of these towns once. Let the length of a path be the distance covered when we start at the first town in the path, visit the second, third, \dots, towns, and arrive at the last town (assume that we travel in a straight line from a town to another). Compute the average length of these N! paths.
+
+-----Constraints-----
+ - 2 \leq N \leq 8
+ - -1000 \leq x_i \leq 1000
+ - -1000 \leq y_i \leq 1000
+ - \left(x_i, y_i\right) \neq \left(x_j, y_j\right) (if i \neq j)
+ - (Added 21:12 JST) All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+x_1 y_1
+:
+x_N y_N
+
+-----Output-----
+Print the average length of the paths.
+Your output will be judges as correct when the absolute difference from the judge's output is at most 10^{-6}.
+
+-----Sample Input-----
+3
+0 0
+1 0
+0 1
+
+-----Sample Output-----
+2.2761423749
+
+There are six paths to visit the towns: 1 → 2 → 3, 1 → 3 → 2, 2 → 1 → 3, 2 → 3 → 1, 3 → 1 → 2, and 3 → 2 → 1.
+The length of the path 1 → 2 → 3 is \sqrt{\left(0-1\right)^2+\left(0-0\right)^2} + \sqrt{\left(1-0\right)^2+\left(0-1\right)^2} = 1+\sqrt{2}.
+By calculating the lengths of the other paths in this way, we see that the average length of all routes is:
+\frac{\left(1+\sqrt{2}\right)+\left(1+\sqrt{2}\right)+\left(2\right)+\left(1+\sqrt{2}\right)+\left(2\right)+\left(1+\sqrt{2}\right)}{6} = 2.276142...
+"""
+2022-04-19 23:02:55.085570 --------------------------
+2022-04-19 23:02:55.085679 using api key sourya
+2022-04-19 23:02:55.249254 in retry 6 5 <class 'Exception'>, Retrying in 5 seconds...
+2022-04-19 23:03:00.254667 """
+There are N towns in a coordinate plane. Town i is located at coordinates (x_i, y_i). The distance between Town i and Town j is \sqrt{\left(x_i-x_j\right)^2+\left(y_i-y_j\right)^2}.
+There are N! possible paths to visit all of these towns once. Let the length of a path be the distance covered when we start at the first town in the path, visit the second, third, \dots, towns, and arrive at the last town (assume that we travel in a straight line from a town to another). Compute the average length of these N! paths.
+
+-----Constraints-----
+ - 2 \leq N \leq 8
+ - -1000 \leq x_i \leq 1000
+ - -1000 \leq y_i \leq 1000
+ - \left(x_i, y_i\right) \neq \left(x_j, y_j\right) (if i \neq j)
+ - (Added 21:12 JST) All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+x_1 y_1
+:
+x_N y_N
+
+-----Output-----
+Print the average length of the paths.
+Your output will be judges as correct when the absolute difference from the judge's output is at most 10^{-6}.
+
+-----Sample Input-----
+3
+0 0
+1 0
+0 1
+
+-----Sample Output-----
+2.2761423749
+
+There are six paths to visit the towns: 1 → 2 → 3, 1 → 3 → 2, 2 → 1 → 3, 2 → 3 → 1, 3 → 1 → 2, and 3 → 2 → 1.
+The length of the path 1 → 2 → 3 is \sqrt{\left(0-1\right)^2+\left(0-0\right)^2} + \sqrt{\left(1-0\right)^2+\left(0-1\right)^2} = 1+\sqrt{2}.
+By calculating the lengths of the other paths in this way, we see that the average length of all routes is:
+\frac{\left(1+\sqrt{2}\right)+\left(1+\sqrt{2}\right)+\left(2\right)+\left(1+\sqrt{2}\right)+\left(2\right)+\left(1+\sqrt{2}\right)}{6} = 2.276142...
+"""
+2022-04-19 23:03:00.254705 --------------------------
+2022-04-19 23:03:00.254820 using api key sourya
+2022-04-19 23:03:23.903287 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef calc_path_length(path):\n    path_length = 0\n    for i in range(len(path) - 1):\n        path_length += math.sqrt((path[i][0] - path[i+1][0])**2 + (path[i][1] - path[i+1][1])**2)\n    return path_length\n\ndef calc_average_path_length(paths):\n    total_path_length = 0\n    for path in paths:\n        total_path_length += calc_path_length(path)\n    return total_path_length / len(paths)\n\ndef make_paths(towns):\n    if len(towns) == 1:\n        return [[towns[0]]]\n    paths = []\n    for i in range(len(towns)):\n        new_towns = towns[:i] + towns[i+1:]\n        new_paths = make_paths(new_towns)\n        for path in new_paths:\n            path.insert(0, towns[i])\n            paths.append(path)\n    return paths\n\nN = int(input())\ntowns = []\nfor i in range(N):\n    towns.append(list(map(int, input().split())))\n\npaths = make_paths(towns)\nprint(calc_average_path_length(paths))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom itertools import permutations\n\nN = int(input())\nX = []\nY = []\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    X.append(x)\n    Y.append(y)\n\nroutes = list(permutations(range(1, N+1)))\n\nsum = 0\nfor route in routes:\n    x = X[0]\n    y = Y[0]\n    for i in route:\n        sum += ((X[i-1]-x)**2+(Y[i-1]-y)**2)**0.5\n        x = X[i-1]\n        y = Y[i-1]\n\nprint(sum/len(routes))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j: continue\n            ans += math.sqrt((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)\n    print(ans/math.factorial(n))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport itertools\nimport math\n\ndef main():\n    N = int(input())\n    towns = []\n    for i in range(N):\n        x, y = map(int, input().split())\n        towns.append((x, y))\n\n    paths = list(itertools.permutations(towns))\n    total_distance = 0\n    for path in paths:\n        distance = 0\n        for i in range(len(path) - 1):\n            distance += math.sqrt((path[i][0] - path[i + 1][0])**2 + (path[i][1] - path[i + 1][1])**2)\n        total_distance += distance\n\n    print(total_distance / len(paths))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport math\nimport itertools\n\nn = int(input())\npoints = []\nfor i in range(n):\n    x, y = map(int, input().split())\n    points.append((x, y))\n\ndef distance(p1, p2):\n    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)\n\ndef distance_2(p1, p2):\n    return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2\n\ndef path_distance(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance(path[i], path[i + 1])\n    return dist\n\ndef path_distance_2(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_2(path[i], path[i + 1])\n    return dist\n\ndef path_distance_3(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_3(path[i], path[i + 1])\n    return dist\n\ndef distance_3(p1, p2):\n    return (p1[0] - p2[0]) * (p1[1] - p2[1])\n\ndef path_distance_4(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_4(path[i], path[i + 1])\n    return dist\n\ndef distance_4(p1, p2):\n    return (p1[0] * p2[1] - p1[1] * p2[0])\n\ndef path_distance_5(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_5(path[i], path[i + 1])\n    return dist\n\ndef distance_5(p1, p2):\n    return (p1[0] * p2[0] + p1[1] * p2[1])\n\npaths = itertools.permutations(points)\ndistances = [path_distance(path) for path in paths]\n\nprint(sum(distances) / len(distances))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    N = int(input())\n    towns = []\n    for i in range(N):\n        x, y = map(int, input().split())\n        towns.append((x, y))\n    sum_lengths = 0\n    for i in range(N):\n        for j in range(i+1, N):\n            x1, y1 = towns[i]\n            x2, y2 = towns[j]\n            sum_lengths += math.sqrt((x1-x2)**2 + (y1-y2)**2)\n    print(sum_lengths * 2 / N / (N-1))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef dist(x1, y1, x2, y2):\n    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)\n\ndef calc_path_length(path):\n    length = 0\n    for i in range(len(path) - 1):\n        length += dist(path[i][0], path[i][1], path[i + 1][0], path[i + 1][1])\n    return length\n\ndef calc_average_length(paths):\n    length = 0\n    for path in paths:\n        length += calc_path_length(path)\n    return length / len(paths)\n\ndef generate_paths(path, xs, ys):\n    if len(xs) == 0:\n        return [path]\n    paths = []\n    for i in range(len(xs)):\n        new_path = path + [(xs[i], ys[i])]\n        new_xs = xs[:i] + xs[i + 1:]\n        new_ys = ys[:i] + ys[i + 1:]\n        paths += generate_paths(new_path, new_xs, new_ys)\n    return paths\n\ndef main():\n    n = int(input())\n    xs = []\n    ys = []\n    for _ in range(n):\n        x, y = map(int, input().split())\n        xs.append(x)\n        ys.append(y)\n    paths = generate_paths([], xs, ys)\n    print(calc_average_length(paths))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\ntowns = [tuple(map(int, input().split())) for _ in range(N)]\n\nimport itertools\n\ntotal = 0\n\nfor path in itertools.permutations(towns):\n    total += sum(((path[i][0] - path[i+1][0]) ** 2 + (path[i][1] - path[i+1][1]) ** 2) ** 0.5 for i in range(N-1))\n\nprint(total / N)"
+    }
+  ],
+  "created": 1650409380,
+  "id": "cmpl-4yrA4hXcd1hcBgXT8YNLcpZSlT9nL",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:03:23.903723 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef calc_path_length(path):\n    path_length = 0\n    for i in range(len(path) - 1):\n        path_length += math.sqrt((path[i][0] - path[i+1][0])**2 + (path[i][1] - path[i+1][1])**2)\n    return path_length\n\ndef calc_average_path_length(paths):\n    total_path_length = 0\n    for path in paths:\n        total_path_length += calc_path_length(path)\n    return total_path_length / len(paths)\n\ndef make_paths(towns):\n    if len(towns) == 1:\n        return [[towns[0]]]\n    paths = []\n    for i in range(len(towns)):\n        new_towns = towns[:i] + towns[i+1:]\n        new_paths = make_paths(new_towns)\n        for path in new_paths:\n            path.insert(0, towns[i])\n            paths.append(path)\n    return paths\n\nN = int(input())\ntowns = []\nfor i in range(N):\n    towns.append(list(map(int, input().split())))\n\npaths = make_paths(towns)\nprint(calc_average_path_length(paths))"
+}
+2022-04-19 23:03:23.903771 REASON stop
+2022-04-19 23:03:23.904657 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom itertools import permutations\n\nN = int(input())\nX = []\nY = []\n\nfor i in range(N):\n    x, y = map(int, input().split())\n    X.append(x)\n    Y.append(y)\n\nroutes = list(permutations(range(1, N+1)))\n\nsum = 0\nfor route in routes:\n    x = X[0]\n    y = Y[0]\n    for i in route:\n        sum += ((X[i-1]-x)**2+(Y[i-1]-y)**2)**0.5\n        x = X[i-1]\n        y = Y[i-1]\n\nprint(sum/len(routes))"
+}
+2022-04-19 23:03:23.904788 REASON stop
+2022-04-19 23:03:23.905269 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j: continue\n            ans += math.sqrt((points[i][0] - points[j][0])**2 + (points[i][1] - points[j][1])**2)\n    print(ans/math.factorial(n))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:03:23.905332 REASON stop
+2022-04-19 23:03:23.926121 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport itertools\nimport math\n\ndef main():\n    N = int(input())\n    towns = []\n    for i in range(N):\n        x, y = map(int, input().split())\n        towns.append((x, y))\n\n    paths = list(itertools.permutations(towns))\n    total_distance = 0\n    for path in paths:\n        distance = 0\n        for i in range(len(path) - 1):\n            distance += math.sqrt((path[i][0] - path[i + 1][0])**2 + (path[i][1] - path[i + 1][1])**2)\n        total_distance += distance\n\n    print(total_distance / len(paths))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:03:23.926247 REASON stop
+2022-04-19 23:03:23.948144 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport math\nimport itertools\n\nn = int(input())\npoints = []\nfor i in range(n):\n    x, y = map(int, input().split())\n    points.append((x, y))\n\ndef distance(p1, p2):\n    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)\n\ndef distance_2(p1, p2):\n    return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2\n\ndef path_distance(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance(path[i], path[i + 1])\n    return dist\n\ndef path_distance_2(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_2(path[i], path[i + 1])\n    return dist\n\ndef path_distance_3(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_3(path[i], path[i + 1])\n    return dist\n\ndef distance_3(p1, p2):\n    return (p1[0] - p2[0]) * (p1[1] - p2[1])\n\ndef path_distance_4(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_4(path[i], path[i + 1])\n    return dist\n\ndef distance_4(p1, p2):\n    return (p1[0] * p2[1] - p1[1] * p2[0])\n\ndef path_distance_5(path):\n    dist = 0\n    for i in range(len(path) - 1):\n        dist += distance_5(path[i], path[i + 1])\n    return dist\n\ndef distance_5(p1, p2):\n    return (p1[0] * p2[0] + p1[1] * p2[1])\n\npaths = itertools.permutations(points)\ndistances = [path_distance(path) for path in paths]\n\nprint(sum(distances) / len(distances))"
+}
+2022-04-19 23:03:23.948284 REASON stop
+2022-04-19 23:03:23.949052 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    N = int(input())\n    towns = []\n    for i in range(N):\n        x, y = map(int, input().split())\n        towns.append((x, y))\n    sum_lengths = 0\n    for i in range(N):\n        for j in range(i+1, N):\n            x1, y1 = towns[i]\n            x2, y2 = towns[j]\n            sum_lengths += math.sqrt((x1-x2)**2 + (y1-y2)**2)\n    print(sum_lengths * 2 / N / (N-1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:03:23.949149 REASON stop
+2022-04-19 23:03:23.952025 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef dist(x1, y1, x2, y2):\n    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)\n\ndef calc_path_length(path):\n    length = 0\n    for i in range(len(path) - 1):\n        length += dist(path[i][0], path[i][1], path[i + 1][0], path[i + 1][1])\n    return length\n\ndef calc_average_length(paths):\n    length = 0\n    for path in paths:\n        length += calc_path_length(path)\n    return length / len(paths)\n\ndef generate_paths(path, xs, ys):\n    if len(xs) == 0:\n        return [path]\n    paths = []\n    for i in range(len(xs)):\n        new_path = path + [(xs[i], ys[i])]\n        new_xs = xs[:i] + xs[i + 1:]\n        new_ys = ys[:i] + ys[i + 1:]\n        paths += generate_paths(new_path, new_xs, new_ys)\n    return paths\n\ndef main():\n    n = int(input())\n    xs = []\n    ys = []\n    for _ in range(n):\n        x, y = map(int, input().split())\n        xs.append(x)\n        ys.append(y)\n    paths = generate_paths([], xs, ys)\n    print(calc_average_length(paths))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:03:23.952212 REASON stop
+2022-04-19 23:03:23.956766 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\ntowns = [tuple(map(int, input().split())) for _ in range(N)]\n\nimport itertools\n\ntotal = 0\n\nfor path in itertools.permutations(towns):\n    total += sum(((path[i][0] - path[i+1][0]) ** 2 + (path[i][1] - path[i+1][1]) ** 2) ** 0.5 for i in range(N-1))\n\nprint(total / N)"
+}
+2022-04-19 23:03:23.956862 REASON stop

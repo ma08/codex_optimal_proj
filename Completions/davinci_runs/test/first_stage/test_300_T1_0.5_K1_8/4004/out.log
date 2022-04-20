@@ -1,0 +1,173 @@
+2022-04-19 20:51:01.203064 """
+You are given a sequence $a_1, a_2, \dots, a_n$ consisting of $n$ integers.
+
+You can choose any non-negative integer $D$ (i.e. $D \ge 0$), and for each $a_i$ you can:
+
+  add $D$ (only once), i. e. perform $a_i := a_i + D$, or  subtract $D$ (only once), i. e. perform $a_i := a_i - D$, or  leave the value of $a_i$ unchanged. 
+
+It is possible that after an operation the value $a_i$ becomes negative.
+
+Your goal is to choose such minimum non-negative integer $D$ and perform changes in such a way, that all $a_i$ are equal (i.e. $a_1=a_2=\dots=a_n$).
+
+Print the required $D$ or, if it is impossible to choose such value $D$, print -1.
+
+For example, for array $[2, 8]$ the value $D=3$ is minimum possible because you can obtain the array $[5, 5]$ if you will add $D$ to $2$ and subtract $D$ from $8$. And for array $[1, 4, 7, 7]$ the value $D=3$ is also minimum possible. You can add it to $1$ and subtract it from $7$ and obtain the array $[4, 4, 4, 4]$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 100$) — the number of elements in $a$.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 100$) — the sequence $a$.
+
+
+-----Output-----
+
+Print one integer — the minimum non-negative integer value $D$ such that if you add this value to some $a_i$, subtract this value from some $a_i$ and leave some $a_i$ without changes, all obtained values become equal.
+
+If it is impossible to choose such value $D$, print -1.
+
+
+-----Examples-----
+Input
+6
+1 4 4 7 4 1
+
+Output
+3
+
+Input
+5
+2 2 5 2 5
+
+Output
+3
+
+Input
+4
+1 3 3 7
+
+Output
+-1
+
+Input
+2
+2 8
+
+Output
+3
+"""
+2022-04-19 20:51:01.203081 --------------------------
+2022-04-19 20:51:01.203185 using api key sourya
+2022-04-19 20:51:18.853840 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\nimport sys\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int,sys.stdin.readline().split()))\n    print(minD(a))\n\ndef minD(a):\n    if (len(a) == 1):\n        return 0\n    a.sort()\n    m = a[0]\n    for i in range(1,len(a)):\n        m = gcd(m,a[i])\n    if m == 1:\n        return -1\n    return m\n\ndef gcd(a,b):\n    while (b != 0):\n        a, b = b, a % b\n    return a\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    if n == 1:\n        print(0)\n        return\n\n    if max(a) - min(a) > sum(a):\n        print(-1)\n        return\n\n    print(max(a) - min(a))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# first, check if all numbers are equal\nif len(set(a)) == 1:\n    print(0)\n    exit()\n\n\n# if all numbers are not equal,\n# then we need to find the minimum difference between them\n# and then add or subtract this difference from the numbers\n# so that all numbers are equal\n\n# find the minimum difference\nd = min(abs(a[i] - a[i+1]) for i in range(n-1))\n\n# check if all numbers are equal after adding or subtracting d from them\nflag = True\nfor i in range(n-1):\n    if abs(a[i] - a[i+1]) % d != 0:\n        flag = False\n        break\n\nif flag:\n    print(d)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nmin_val = min(arr)\nmax_val = max(arr)\n\nif max_val - min_val > 1:\n    print(-1)\nelse:\n    print(max(0, max_val - min_val))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif a[0] == a[-1]:\n    print(0)\nelif a[0] + 1 == a[-1]:\n    print(1)\nelif a[0] + 2 == a[-1]:\n    print(2)\nelse:\n    print(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n\n    if n % 2 == 0:\n        if a[0] == a[-1]:\n            print(0)\n        else:\n            print(-1)\n    else:\n        if a[0] == a[-1]:\n            print(0)\n        elif a[0] + 1 == a[-1] or a[0] == a[-1] + 1:\n            print(1)\n        else:\n            print(-1)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(0)\n    exit()\n\na.sort()\n\n# if all elements are equal, we can make them all equal to any element\nif a[0] == a[-1]:\n    print(0)\n    exit()\n\n# if we have an odd number of elements, we cannot make them all equal\nif n % 2 != 0:\n    print(-1)\n    exit()\n\n# if we have an even number of elements, we can make them all equal to the middle elements\nif n % 2 == 0:\n    if a[n//2-1] == a[n//2]:\n        print(0)\n        exit()\n    else:\n        print(a[n//2]-a[n//2-1])\n        exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    print(max_a - min_a if max_a % 2 == min_a % 2 else max_a - min_a - 1)"
+    }
+  ],
+  "created": 1650401463,
+  "id": "cmpl-4yp6NwPjrctctLbBePk8eU7MGht2A",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 20:51:18.854166 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\nimport sys\ndef main():\n    n = int(sys.stdin.readline())\n    a = list(map(int,sys.stdin.readline().split()))\n    print(minD(a))\n\ndef minD(a):\n    if (len(a) == 1):\n        return 0\n    a.sort()\n    m = a[0]\n    for i in range(1,len(a)):\n        m = gcd(m,a[i])\n    if m == 1:\n        return -1\n    return m\n\ndef gcd(a,b):\n    while (b != 0):\n        a, b = b, a % b\n    return a\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:51:18.854203 REASON stop
+2022-04-19 20:51:18.854733 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    if n == 1:\n        print(0)\n        return\n\n    if max(a) - min(a) > sum(a):\n        print(-1)\n        return\n\n    print(max(a) - min(a))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 20:51:18.854791 REASON stop
+2022-04-19 20:51:18.855274 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# first, check if all numbers are equal\nif len(set(a)) == 1:\n    print(0)\n    exit()\n\n\n# if all numbers are not equal,\n# then we need to find the minimum difference between them\n# and then add or subtract this difference from the numbers\n# so that all numbers are equal\n\n# find the minimum difference\nd = min(abs(a[i] - a[i+1]) for i in range(n-1))\n\n# check if all numbers are equal after adding or subtracting d from them\nflag = True\nfor i in range(n-1):\n    if abs(a[i] - a[i+1]) % d != 0:\n        flag = False\n        break\n\nif flag:\n    print(d)\nelse:\n    print(-1)"
+}
+2022-04-19 20:51:18.855343 REASON stop
+2022-04-19 20:51:18.876067 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\narr = list(map(int, input().split()))\n\nmin_val = min(arr)\nmax_val = max(arr)\n\nif max_val - min_val > 1:\n    print(-1)\nelse:\n    print(max(0, max_val - min_val))"
+}
+2022-04-19 20:51:18.876211 REASON stop
+2022-04-19 20:51:18.896863 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nif a[0] == a[-1]:\n    print(0)\nelif a[0] + 1 == a[-1]:\n    print(1)\nelif a[0] + 2 == a[-1]:\n    print(2)\nelse:\n    print(-1)"
+}
+2022-04-19 20:51:18.897041 REASON stop
+2022-04-19 20:51:18.902973 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n\n    if n % 2 == 0:\n        if a[0] == a[-1]:\n            print(0)\n        else:\n            print(-1)\n    else:\n        if a[0] == a[-1]:\n            print(0)\n        elif a[0] + 1 == a[-1] or a[0] == a[-1] + 1:\n            print(1)\n        else:\n            print(-1)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 20:51:18.903139 REASON stop
+2022-04-19 20:51:18.903971 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nif n == 1:\n    print(0)\n    exit()\n\na.sort()\n\n# if all elements are equal, we can make them all equal to any element\nif a[0] == a[-1]:\n    print(0)\n    exit()\n\n# if we have an odd number of elements, we cannot make them all equal\nif n % 2 != 0:\n    print(-1)\n    exit()\n\n# if we have an even number of elements, we can make them all equal to the middle elements\nif n % 2 == 0:\n    if a[n//2-1] == a[n//2]:\n        print(0)\n        exit()\n    else:\n        print(a[n//2]-a[n//2-1])\n        exit()"
+}
+2022-04-19 20:51:18.904073 REASON stop
+2022-04-19 20:51:18.908770 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [int(x) for x in input().split()]\n\nmin_a = min(a)\nmax_a = max(a)\n\nif min_a == max_a:\n    print(0)\nelse:\n    print(max_a - min_a if max_a % 2 == min_a % 2 else max_a - min_a - 1)"
+}
+2022-04-19 20:51:18.908991 REASON stop

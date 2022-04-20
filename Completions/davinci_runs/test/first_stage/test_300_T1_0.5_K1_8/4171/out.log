@@ -1,0 +1,160 @@
+2022-04-19 22:42:44.422004 """
+The only difference between easy and hard versions is the number of elements in the array.
+
+You are given an array $a$ consisting of $n$ integers. In one move you can choose any $a_i$ and divide it by $2$ rounding down (in other words, in one move you can set $a_i := \lfloor\frac{a_i}{2}\rfloor$).
+
+You can perform such an operation any (possibly, zero) number of times with any $a_i$.
+
+Your task is to calculate the minimum possible number of operations required to obtain at least $k$ equal numbers in the array.
+
+Don't forget that it is possible to have $a_i = 0$ after some operations, thus the answer always exists.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 2 \cdot 10^5$) — the number of elements in the array and the number of equal numbers required.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 2 \cdot 10^5$), where $a_i$ is the $i$-th element of $a$.
+
+
+-----Output-----
+
+Print one integer — the minimum possible number of operations required to obtain at least $k$ equal numbers in the array.
+
+
+-----Examples-----
+Input
+5 3
+1 2 2 4 5
+
+Output
+1
+
+Input
+5 3
+1 2 3 4 5
+
+Output
+2
+
+Input
+5 3
+1 2 3 3 3
+
+Output
+0
+"""
+2022-04-19 22:42:44.422020 --------------------------
+2022-04-19 22:42:44.422123 using api key gabby
+2022-04-19 22:43:10.102476 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef read_ints():\n  temp = input().split()\n  temp = [int(t) for t in temp]\n  return temp\n\ndef solve(n, k, a):\n  count = 0\n  while True:\n    min_num = min(a)\n    if min_num == 0:\n      break\n    for i in range(len(a)):\n      a[i] = a[i] - min_num\n    count += 1\n  print(count)\n\nn, k = read_ints()\na = read_ints()\nsolve(n, k, a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\nimport math\n\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\n# Find the maximum element in the array\nmax_val = max(a)\n\n# Find the maximum number of operations required to make all elements equal\n# We can do this by finding the number of bits in the maximum element\nmax_op = math.floor(math.log(max_val, 2))\n\n# Find the minimum number of operations required to make all elements equal\n# We can do this by finding the number of bits in the minimum element\nmin_op = math.floor(math.log(min(a), 2))\n\n# If the number of operations required to make all elements equal is less than the number of operations required to make at least k elements equal, print the former\nif n * min_op <= k * max_op:\n    print(min_op)\n# Otherwise, print the latter\nelse:\n    print(max_op)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef split(l):\n    a = []\n    b = []\n    for i in l:\n        if i % 2 == 0:\n            a.append(i)\n        else:\n            b.append(i)\n    return a, b\n\ndef get_min_ops(arr, k):\n    if k == 1:\n        return 0\n    if len(arr) < k:\n        return -1\n    if len(arr) == k:\n        return 1\n    if len(arr) == k + 1:\n        return 2\n    if len(arr) > k:\n        a, b = split(arr)\n        if len(a) >= k:\n            return get_min_ops(a, k)\n        if len(a) == k - 1:\n            return 1 + get_min_ops(b, k - len(a))\n        if len(a) < k - 1:\n            return 2 + get_min_ops(b, k - len(a))\n\nprint(get_min_ops(a, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\nif k == 1:\n    print(0)\n    exit()\n\n# a = [x // 2 for x in a]\n\n# print(a)\n\n# ans = 0\n# while len(set(a)) != 1:\n#     ans += 1\n#     a = [x // 2 for x in a]\n\n# print(ans)\n\n# print(set(a))\n\nans = 0\nwhile len(set(a)) >= k:\n    ans += 1\n    a = [x // 2 for x in a]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    m = max(a)\n    ans = 0\n    for i in range(30, -1, -1):\n        if m >> i == 0:\n            break\n        cnt = [0] * (n + 1)\n        for j in range(n):\n            if a[j] >> i & 1:\n                cnt[j + 1] = 1\n        for j in range(1, n + 1):\n            cnt[j] += cnt[j - 1]\n        cnt = [cnt[i + k - 1] - cnt[i] for i in range(n - k + 1)]\n        if sum(cnt) >= k:\n            ans += 1\n            for j in range(n):\n                if a[j] >> i & 1:\n                    a[j] -= 1 << i\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# First, find the maximum value in the array.\nmax_a = max(a)\n\n# Then, find the minimum number of operations needed to get all of the elements to be equal to the maximum value.\n# This is the same as finding the minimum number of operations needed to get all of the elements to be equal to 1,\n# since the maximum value is a power of 2.\ncount = 0\nfor i in range(n):\n    count += a[i] - 1\n\n# If the number of operations needed to get all of the elements to be equal to 1 is less than or equal to k,\n# then the minimum number of operations needed is simply the number of operations needed to get all of the elements\n# to be equal to 1.\nif count <= k:\n    print(count)\n\n# If the number of operations needed to get all of the elements to be equal to 1 is greater than k, then the minimum\n# number of operations needed is k, since that is the maximum number of operations that can be done.\nelse:\n    print(k)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# Solution 1:\n# This is a greedy approach.\n# In order to get k equal numbers, the minimum number of operations is the number of operations needed to make all the numbers equal to the minimum number in the array.\n# So, we first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += a[i] - min_a\nprint(ans)\n\n# Solution 2:\n# This is a greedy approach.\n# We first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += (a[i] - min_a) // 2\n    a[i] -= (a[i] - min_a) // 2 * 2\nif min(a) == min_a:\n    print(ans)\nelse:\n    print(ans + 1)\n\n# Solution 3:\n# This is a greedy approach.\n# We first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += (a[i] - min_a) // 2\n    a[i] -= (a[i] - min_a) // 2 * 2\nprint(ans + 1 if min(a) != min_a else ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    answer = 0\n\n    # Since we can only divide by 2, we take the highest element\n    # and divide it by 2 until it's equal to the lowest element\n    # or until it's less than the lowest element\n    # Then, we do this again with the new highest value\n    # This is the minimum number of operations\n    while max(a) != min(a):\n        highest = max(a)\n        lowest = min(a)\n        if highest % 2 == 1:\n            highest -= 1\n        highest //= 2\n        if highest < lowest:\n            highest = lowest\n        a.append(highest)\n        answer += 1\n\n    print(answer)\n\nmain()"
+    }
+  ],
+  "created": 1650408164,
+  "id": "cmpl-4yqqS73LLnsfh0vMvHamWBUJ6lfyh",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:43:10.102910 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef read_ints():\n  temp = input().split()\n  temp = [int(t) for t in temp]\n  return temp\n\ndef solve(n, k, a):\n  count = 0\n  while True:\n    min_num = min(a)\n    if min_num == 0:\n      break\n    for i in range(len(a)):\n      a[i] = a[i] - min_num\n    count += 1\n  print(count)\n\nn, k = read_ints()\na = read_ints()\nsolve(n, k, a)"
+}
+2022-04-19 22:43:10.102955 REASON stop
+2022-04-19 22:43:10.103656 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\nimport math\n\nn, k = map(int, input().split())\na = [int(x) for x in input().split()]\n\n# Find the maximum element in the array\nmax_val = max(a)\n\n# Find the maximum number of operations required to make all elements equal\n# We can do this by finding the number of bits in the maximum element\nmax_op = math.floor(math.log(max_val, 2))\n\n# Find the minimum number of operations required to make all elements equal\n# We can do this by finding the number of bits in the minimum element\nmin_op = math.floor(math.log(min(a), 2))\n\n# If the number of operations required to make all elements equal is less than the number of operations required to make at least k elements equal, print the former\nif n * min_op <= k * max_op:\n    print(min_op)\n# Otherwise, print the latter\nelse:\n    print(max_op)"
+}
+2022-04-19 22:43:10.103732 REASON stop
+2022-04-19 22:43:10.104153 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef split(l):\n    a = []\n    b = []\n    for i in l:\n        if i % 2 == 0:\n            a.append(i)\n        else:\n            b.append(i)\n    return a, b\n\ndef get_min_ops(arr, k):\n    if k == 1:\n        return 0\n    if len(arr) < k:\n        return -1\n    if len(arr) == k:\n        return 1\n    if len(arr) == k + 1:\n        return 2\n    if len(arr) > k:\n        a, b = split(arr)\n        if len(a) >= k:\n            return get_min_ops(a, k)\n        if len(a) == k - 1:\n            return 1 + get_min_ops(b, k - len(a))\n        if len(a) < k - 1:\n            return 2 + get_min_ops(b, k - len(a))\n\nprint(get_min_ops(a, k))"
+}
+2022-04-19 22:43:10.104220 REASON stop
+2022-04-19 22:43:10.119498 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\n\nif k == 1:\n    print(0)\n    exit()\n\n# a = [x // 2 for x in a]\n\n# print(a)\n\n# ans = 0\n# while len(set(a)) != 1:\n#     ans += 1\n#     a = [x // 2 for x in a]\n\n# print(ans)\n\n# print(set(a))\n\nans = 0\nwhile len(set(a)) >= k:\n    ans += 1\n    a = [x // 2 for x in a]\n\nprint(ans)"
+}
+2022-04-19 22:43:10.119634 REASON stop
+2022-04-19 22:43:10.124956 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    m = max(a)\n    ans = 0\n    for i in range(30, -1, -1):\n        if m >> i == 0:\n            break\n        cnt = [0] * (n + 1)\n        for j in range(n):\n            if a[j] >> i & 1:\n                cnt[j + 1] = 1\n        for j in range(1, n + 1):\n            cnt[j] += cnt[j - 1]\n        cnt = [cnt[i + k - 1] - cnt[i] for i in range(n - k + 1)]\n        if sum(cnt) >= k:\n            ans += 1\n            for j in range(n):\n                if a[j] >> i & 1:\n                    a[j] -= 1 << i\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:43:10.125083 REASON stop
+2022-04-19 22:43:10.135777 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\n# First, find the maximum value in the array.\nmax_a = max(a)\n\n# Then, find the minimum number of operations needed to get all of the elements to be equal to the maximum value.\n# This is the same as finding the minimum number of operations needed to get all of the elements to be equal to 1,\n# since the maximum value is a power of 2.\ncount = 0\nfor i in range(n):\n    count += a[i] - 1\n\n# If the number of operations needed to get all of the elements to be equal to 1 is less than or equal to k,\n# then the minimum number of operations needed is simply the number of operations needed to get all of the elements\n# to be equal to 1.\nif count <= k:\n    print(count)\n\n# If the number of operations needed to get all of the elements to be equal to 1 is greater than k, then the minimum\n# number of operations needed is k, since that is the maximum number of operations that can be done.\nelse:\n    print(k)"
+}
+2022-04-19 22:43:10.135923 REASON stop
+2022-04-19 22:43:10.136838 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# Solution 1:\n# This is a greedy approach.\n# In order to get k equal numbers, the minimum number of operations is the number of operations needed to make all the numbers equal to the minimum number in the array.\n# So, we first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += a[i] - min_a\nprint(ans)\n\n# Solution 2:\n# This is a greedy approach.\n# We first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += (a[i] - min_a) // 2\n    a[i] -= (a[i] - min_a) // 2 * 2\nif min(a) == min_a:\n    print(ans)\nelse:\n    print(ans + 1)\n\n# Solution 3:\n# This is a greedy approach.\n# We first find the minimum number in the array, and then find the number of operations needed to make all the numbers equal to the minimum number.\n# The time complexity is O(n).\n\nn, k = [int(x) for x in input().split()]\na = [int(x) for x in input().split()]\nmin_a = min(a)\nans = 0\nfor i in range(n):\n    ans += (a[i] - min_a) // 2\n    a[i] -= (a[i] - min_a) // 2 * 2\nprint(ans + 1 if min(a) != min_a else ans)"
+}
+2022-04-19 22:43:10.136951 REASON stop
+2022-04-19 22:43:10.140588 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    answer = 0\n\n    # Since we can only divide by 2, we take the highest element\n    # and divide it by 2 until it's equal to the lowest element\n    # or until it's less than the lowest element\n    # Then, we do this again with the new highest value\n    # This is the minimum number of operations\n    while max(a) != min(a):\n        highest = max(a)\n        lowest = min(a)\n        if highest % 2 == 1:\n            highest -= 1\n        highest //= 2\n        if highest < lowest:\n            highest = lowest\n        a.append(highest)\n        answer += 1\n\n    print(answer)\n\nmain()"
+}
+2022-04-19 22:43:10.140798 REASON stop

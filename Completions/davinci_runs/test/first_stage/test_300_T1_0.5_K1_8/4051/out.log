@@ -1,0 +1,161 @@
+2022-04-19 21:26:15.986702 """
+Everybody knows of spaghetti sort. You decided to implement an analog sorting algorithm yourself, but as you survey your pantry you realize you're out of spaghetti! The only type of pasta you have is ravioli, but you are not going to let this stop you...
+
+You come up with the following algorithm. For each number in the array a_{i}, build a stack of a_{i} ravioli. The image shows the stack for a_{i} = 4.
+
+ [Image] 
+
+Arrange the stacks in one row in the order in which the corresponding numbers appear in the input array. Find the tallest one (if there are several stacks of maximal height, use the leftmost one). Remove it and add its height to the end of the output array. Shift the stacks in the row so that there is no gap between them. Repeat the procedure until all stacks have been removed.
+
+At first you are very happy with your algorithm, but as you try it on more inputs you realize that it doesn't always produce the right sorted array. Turns out when two stacks of ravioli are next to each other (at any step of the process) and differ in height by two or more, the top ravioli of the taller stack slides down on top of the lower stack.
+
+Given an input array, figure out whether the described algorithm will sort it correctly.
+
+
+-----Input-----
+
+The first line of input contains a single number n (1 ≤ n ≤ 10) — the size of the array.
+
+The second line of input contains n space-separated integers a_{i} (1 ≤ a_{i} ≤ 100) — the elements of the array.
+
+
+-----Output-----
+
+Output "YES" if the array can be sorted using the described procedure and "NO" if it can not.
+
+
+-----Examples-----
+Input
+3
+1 2 3
+
+Output
+YES
+
+Input
+3
+3 1 2
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the second example the array will change even before the tallest stack is chosen for the first time: ravioli from stack of height 3 will slide on the stack of height 1, and the algorithm will output an array {2, 2, 2}.
+"""
+2022-04-19 21:26:15.986725 --------------------------
+2022-04-19 21:26:15.986831 using api key gabby
+2022-04-19 21:26:35.054821 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# --- Solution 1 ---\n\ndef ravioli_sort(n,a):\n\t# If there is only one element, it is already sorted\n\tif n == 1:\n\t\treturn \"YES\"\n\t# If there are two elements, check if they are sorted\n\tif n == 2:\n\t\tif a[0] > a[1]:\n\t\t\treturn \"NO\"\n\t\telse:\n\t\t\treturn \"YES\"\n\t# If there are more than two elements, check if they are sorted\n\tif n > 2:\n\t\tfor i in range(n-1):\n\t\t\tif a[i] > a[i+1]:\n\t\t\t\treturn \"NO\"\n\t\treturn \"YES\"\n\n# Get number of elements\nn = int(input())\n\n# Get elements\na = [int(i) for i in input().split()]\n\n# Check if array is sorted\nprint(ravioli_sort(n,a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    nums = [int(x) for x in input().split()]\n    stacks = [Stack() for x in range(len(nums))]\n    for i in range(len(nums)):\n        stacks[i].push(nums[i])\n    for i in range(len(nums)):\n        if stacks[i].size() >= 2:\n            if stacks[i].top() > stacks[i+1].top() + 1:\n                print(\"NO\")\n                return\n            elif stacks[i].top() == stacks[i+1].top() + 1:\n                stacks[i+1].push(stacks[i].pop())\n    print(\"YES\")\n\nclass Stack:\n    def __init__(self):\n        self.items = []\n    def isEmpty(self):\n        return self.items == []\n    def push(self, item):\n        self.items.append(item)\n    def pop(self):\n        return self.items.pop()\n    def peek(self):\n        return self.items[len(self.items)-1]\n    def size(self):\n        return len(self.items)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int,input().split()))\n\nfor i in range(n):\n    for j in range(i+1,n):\n        if abs(a[i]-a[j])>=2:\n            print(\"NO\")\n            exit()\nprint(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # If the array is already sorted, it can be sorted correctly.\n    if sorted(a) == a:\n        print('YES')\n        return\n\n    # If there is a number that is 2 or more greater than the number before it,\n    # the algorithm will not sort correctly.\n    for i in range(1, n):\n        if a[i] >= a[i-1] + 2:\n            print('NO')\n            return\n\n    print('YES')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    for i in range(len(arr)-1):\n        if abs(arr[i]-arr[i+1]) > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ninput_list = input().split(' ')\ninput_list = [int(i) for i in input_list]\n\nfor i in range(len(input_list)):\n    if i == len(input_list) - 1:\n        break\n    if input_list[i] + 2 <= input_list[i+1]:\n        print(\"NO\")\n        break\nelse:\n    print(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n#input\nn = int(input())\nravioli = input().split()\nravioli = [int(x) for x in ravioli]\n\n#calculate\n\n#output\nprint(\"YES\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int,input().split()))\n    for i in range(n):\n        if arr[i] > 1:\n            if i == 0:\n                if arr[i+1] == arr[i]-1:\n                    arr[i+1] += 1\n                    arr[i] -= 1\n                    break\n            elif i == n-1:\n                if arr[i-1] == arr[i]-1:\n                    arr[i-1] += 1\n                    arr[i] -= 1\n                    break\n            else:\n                if arr[i-1] == arr[i]-1:\n                    arr[i-1] += 1\n                    arr[i] -= 1\n                    break\n                elif arr[i+1] == arr[i]-1:\n                    arr[i+1] += 1\n                    arr[i] -= 1\n                    break\n    if arr == sorted(arr):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650403576,
+  "id": "cmpl-4ypeSvDvRiD1C3HTTGd8Xhdyt2uax",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:26:35.055172 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# --- Solution 1 ---\n\ndef ravioli_sort(n,a):\n\t# If there is only one element, it is already sorted\n\tif n == 1:\n\t\treturn \"YES\"\n\t# If there are two elements, check if they are sorted\n\tif n == 2:\n\t\tif a[0] > a[1]:\n\t\t\treturn \"NO\"\n\t\telse:\n\t\t\treturn \"YES\"\n\t# If there are more than two elements, check if they are sorted\n\tif n > 2:\n\t\tfor i in range(n-1):\n\t\t\tif a[i] > a[i+1]:\n\t\t\t\treturn \"NO\"\n\t\treturn \"YES\"\n\n# Get number of elements\nn = int(input())\n\n# Get elements\na = [int(i) for i in input().split()]\n\n# Check if array is sorted\nprint(ravioli_sort(n,a))"
+}
+2022-04-19 21:26:35.055213 REASON stop
+2022-04-19 21:26:35.055712 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    nums = [int(x) for x in input().split()]\n    stacks = [Stack() for x in range(len(nums))]\n    for i in range(len(nums)):\n        stacks[i].push(nums[i])\n    for i in range(len(nums)):\n        if stacks[i].size() >= 2:\n            if stacks[i].top() > stacks[i+1].top() + 1:\n                print(\"NO\")\n                return\n            elif stacks[i].top() == stacks[i+1].top() + 1:\n                stacks[i+1].push(stacks[i].pop())\n    print(\"YES\")\n\nclass Stack:\n    def __init__(self):\n        self.items = []\n    def isEmpty(self):\n        return self.items == []\n    def push(self, item):\n        self.items.append(item)\n    def pop(self):\n        return self.items.pop()\n    def peek(self):\n        return self.items[len(self.items)-1]\n    def size(self):\n        return len(self.items)\n\nmain()"
+}
+2022-04-19 21:26:35.055799 REASON stop
+2022-04-19 21:26:35.056213 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int,input().split()))\n\nfor i in range(n):\n    for j in range(i+1,n):\n        if abs(a[i]-a[j])>=2:\n            print(\"NO\")\n            exit()\nprint(\"YES\")"
+}
+2022-04-19 21:26:35.056275 REASON stop
+2022-04-19 21:26:35.058107 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # If the array is already sorted, it can be sorted correctly.\n    if sorted(a) == a:\n        print('YES')\n        return\n\n    # If there is a number that is 2 or more greater than the number before it,\n    # the algorithm will not sort correctly.\n    for i in range(1, n):\n        if a[i] >= a[i-1] + 2:\n            print('NO')\n            return\n\n    print('YES')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:26:35.058182 REASON stop
+2022-04-19 21:26:35.059523 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    for i in range(len(arr)-1):\n        if abs(arr[i]-arr[i+1]) > 1:\n            print(\"NO\")\n            break\n    else:\n        print(\"YES\")\n\nmain()"
+}
+2022-04-19 21:26:35.059595 REASON stop
+2022-04-19 21:26:35.074515 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ninput_list = input().split(' ')\ninput_list = [int(i) for i in input_list]\n\nfor i in range(len(input_list)):\n    if i == len(input_list) - 1:\n        break\n    if input_list[i] + 2 <= input_list[i+1]:\n        print(\"NO\")\n        break\nelse:\n    print(\"YES\")"
+}
+2022-04-19 21:26:35.074640 REASON stop
+2022-04-19 21:26:35.075833 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n#input\nn = int(input())\nravioli = input().split()\nravioli = [int(x) for x in ravioli]\n\n#calculate\n\n#output\nprint(\"YES\")"
+}
+2022-04-19 21:26:35.075924 REASON stop
+2022-04-19 21:26:35.076951 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int,input().split()))\n    for i in range(n):\n        if arr[i] > 1:\n            if i == 0:\n                if arr[i+1] == arr[i]-1:\n                    arr[i+1] += 1\n                    arr[i] -= 1\n                    break\n            elif i == n-1:\n                if arr[i-1] == arr[i]-1:\n                    arr[i-1] += 1\n                    arr[i] -= 1\n                    break\n            else:\n                if arr[i-1] == arr[i]-1:\n                    arr[i-1] += 1\n                    arr[i] -= 1\n                    break\n                elif arr[i+1] == arr[i]-1:\n                    arr[i+1] += 1\n                    arr[i] -= 1\n                    break\n    if arr == sorted(arr):\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:26:35.077125 REASON stop

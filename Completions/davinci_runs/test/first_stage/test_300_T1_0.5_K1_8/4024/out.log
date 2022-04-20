@@ -1,0 +1,173 @@
+2022-04-19 21:04:07.089464 """
+The only difference between the easy and the hard versions is constraints.
+
+A subsequence is a string that can be derived from another string by deleting some or no symbols without changing the order of the remaining symbols. Characters to be deleted are not required to go successively, there can be any gaps between them. For example, for the string "abaca" the following strings are subsequences: "abaca", "aba", "aaa", "a" and "" (empty string). But the following strings are not subsequences: "aabaca", "cb" and "bcaa".
+
+You are given a string $s$ consisting of $n$ lowercase Latin letters.
+
+In one move you can take any subsequence $t$ of the given string and add it to the set $S$. The set $S$ can't contain duplicates. This move costs $n - |t|$, where $|t|$ is the length of the added subsequence (i.e. the price equals to the number of the deleted characters).
+
+Your task is to find out the minimum possible total cost to obtain a set $S$ of size $k$ or report that it is impossible to do so.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n, k \le 100$) — the length of the string and the size of the set, correspondingly.
+
+The second line of the input contains a string $s$ consisting of $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+Print one integer — if it is impossible to obtain the set $S$ of size $k$, print -1. Otherwise, print the minimum possible total cost to do it.
+
+
+-----Examples-----
+Input
+4 5
+asdf
+
+Output
+4
+
+Input
+5 6
+aaaaa
+
+Output
+15
+
+Input
+5 7
+aaaaa
+
+Output
+-1
+
+Input
+10 100
+ajihiushda
+
+Output
+233
+
+
+
+-----Note-----
+
+In the first example we can generate $S$ = { "asdf", "asd", "adf", "asf", "sdf" }. The cost of the first element in $S$ is $0$ and the cost of the others is $1$. So the total cost of $S$ is $4$.
+"""
+2022-04-19 21:04:07.089485 --------------------------
+2022-04-19 21:04:07.089586 using api key sourya
+2022-04-19 21:04:32.880410 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ndef get_subsequences(s):\n    return [s[:i] + s[i+1:] for i in range(len(s))]\n\ndef get_subsequences_recursive(s):\n    if len(s) == 1:\n        return [s]\n    else:\n        return get_subsequences_recursive(s[:-1]) + get_subsequences(s)\n\ndef get_subsequences_dp(s):\n    dp = [[s[:i] + s[i+1:] for i in range(len(s))]]\n    for _ in range(len(s) - 1):\n        dp.append([])\n        for i in range(len(dp[-2])):\n            dp[-1] += get_subsequences(dp[-2][i])\n    return [i for j in dp for i in j]\n\nsubsequences = get_subsequences_dp(s)\n\nif len(subsequences) < k:\n    print(-1)\nelse:\n    print(sum(len(s) for s in subsequences[:k]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    if k > n:\n        print(-1)\n        return\n\n    if k == n:\n        print(0)\n        return\n\n    if k == 1:\n        print(n)\n        return\n\n    if k == 2:\n        if len(set(s)) == 1:\n            print(n)\n            return\n        else:\n            print(n - 1)\n            return\n\n    print(n - k)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport sys\nsys.setrecursionlimit(1000000000)\n\ndef find_subsequence(s, t, i, j, n, m, dp):\n    if i >= n or j >= m:\n        return 0\n    if dp[i][j] != -1:\n        return dp[i][j]\n    if s[i] == t[j]:\n        return dp[i][j] = 1 + find_subsequence(s, t, i+1, j+1, n, m, dp)\n    else:\n        return dp[i][j] = max(find_subsequence(s, t, i+1, j, n, m, dp), find_subsequence(s, t, i, j+1, n, m, dp))\n\ndef solve(s, k):\n    n = len(s)\n    if k > n:\n        return -1\n    dp = [[-1 for _ in range(n)] for _ in range(n)]\n    max_len = 0\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                dp[i][j] = 1\n            else:\n                dp[i][j] = find_subsequence(s[i:j+1], s[j:], 0, 0, j-i+1, j-i+1, dp)\n            max_len = max(max_len, dp[i][j])\n    if max_len < k:\n        return -1\n    else:\n        return n*(k-1) - (n-max_len)*(k-1)\n\nn, k = map(int, input().split())\ns = input()\nprint(solve(s, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\nif k > n:\n    print(-1)\nelse:\n    print(n * (k - 1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef isSubsequence(string, sub):\n    if(len(sub)==0):\n        return True\n    \n    i = 0\n    j = 0\n    \n    while(i<len(string) and j<len(sub)):\n        if string[i] == sub[j]:\n            j+=1\n        i+=1\n    \n    return j == len(sub)\n\ndef subsequence(string, k):\n    if(len(string)<k):\n        return -1\n    \n    subs = []\n    for i in range(1, len(string)+1):\n        for j in range(0, len(string)-i+1):\n            subs.append(string[j:j+i])\n    \n    subs = list(set(subs))\n    subs.sort(key=len)\n    subs.reverse()\n    print(subs)\n    \n    for i in range(0, len(subs)):\n        for j in range(i+1, len(subs)):\n            if(isSubsequence(subs[i], subs[j])):\n                del subs[j]\n                break\n    \n    print(subs)\n    \n    if(len(subs)<k):\n        return -1\n    else:\n        return sum([len(string)-len(sub) for sub in subs[:k]])\n\nn, k = [int(x) for x in input().split()]\nstring = input()\n\nprint(subsequence(string, k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    s = input()\n    if n < k:\n        print(-1)\n        return\n    ans = 0\n    for i in range(n - 1, n - k, -1):\n        ans += i\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\nif k > n:\n    print(-1)\nelse:\n    print(n*k-sum(map(len, s.split(s[0]))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    # parse input\n    n, k = map(int, input().split())\n    s = input()\n\n    # build subsequence generator\n    def subsequences(s):\n        for i in range(len(s) + 1):\n            for j in range(i + 1, len(s) + 1):\n                yield s[i:j]\n\n    # determine if it is possible to generate the set\n    def possible(s, k):\n        # build set of all subsequences of s\n        subsequences_set = set(subsequences(s))\n        # build list of costs to generate each subsequence\n        costs = [len(s) - len(subsequence) for subsequence in subsequences_set]\n        # sort costs\n        costs.sort()\n        # return sum of first k costs\n        return sum(costs[:k])\n\n    # print result\n    print(possible(s, k) if possible(s, k) != 0 else -1)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650402247,
+  "id": "cmpl-4ypJ1FKNnGjzz1FHXj5avGVxNtUYy",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:04:32.880800 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ndef get_subsequences(s):\n    return [s[:i] + s[i+1:] for i in range(len(s))]\n\ndef get_subsequences_recursive(s):\n    if len(s) == 1:\n        return [s]\n    else:\n        return get_subsequences_recursive(s[:-1]) + get_subsequences(s)\n\ndef get_subsequences_dp(s):\n    dp = [[s[:i] + s[i+1:] for i in range(len(s))]]\n    for _ in range(len(s) - 1):\n        dp.append([])\n        for i in range(len(dp[-2])):\n            dp[-1] += get_subsequences(dp[-2][i])\n    return [i for j in dp for i in j]\n\nsubsequences = get_subsequences_dp(s)\n\nif len(subsequences) < k:\n    print(-1)\nelse:\n    print(sum(len(s) for s in subsequences[:k]))"
+}
+2022-04-19 21:04:32.880851 REASON stop
+2022-04-19 21:04:32.881466 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    if k > n:\n        print(-1)\n        return\n\n    if k == n:\n        print(0)\n        return\n\n    if k == 1:\n        print(n)\n        return\n\n    if k == 2:\n        if len(set(s)) == 1:\n            print(n)\n            return\n        else:\n            print(n - 1)\n            return\n\n    print(n - k)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:04:32.881534 REASON stop
+2022-04-19 21:04:32.881940 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport sys\nsys.setrecursionlimit(1000000000)\n\ndef find_subsequence(s, t, i, j, n, m, dp):\n    if i >= n or j >= m:\n        return 0\n    if dp[i][j] != -1:\n        return dp[i][j]\n    if s[i] == t[j]:\n        return dp[i][j] = 1 + find_subsequence(s, t, i+1, j+1, n, m, dp)\n    else:\n        return dp[i][j] = max(find_subsequence(s, t, i+1, j, n, m, dp), find_subsequence(s, t, i, j+1, n, m, dp))\n\ndef solve(s, k):\n    n = len(s)\n    if k > n:\n        return -1\n    dp = [[-1 for _ in range(n)] for _ in range(n)]\n    max_len = 0\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                dp[i][j] = 1\n            else:\n                dp[i][j] = find_subsequence(s[i:j+1], s[j:], 0, 0, j-i+1, j-i+1, dp)\n            max_len = max(max_len, dp[i][j])\n    if max_len < k:\n        return -1\n    else:\n        return n*(k-1) - (n-max_len)*(k-1)\n\nn, k = map(int, input().split())\ns = input()\nprint(solve(s, k))"
+}
+2022-04-19 21:04:32.882003 REASON stop
+2022-04-19 21:04:32.938173 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\nif k > n:\n    print(-1)\nelse:\n    print(n * (k - 1))"
+}
+2022-04-19 21:04:32.938331 REASON stop
+2022-04-19 21:04:32.957712 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef isSubsequence(string, sub):\n    if(len(sub)==0):\n        return True\n    \n    i = 0\n    j = 0\n    \n    while(i<len(string) and j<len(sub)):\n        if string[i] == sub[j]:\n            j+=1\n        i+=1\n    \n    return j == len(sub)\n\ndef subsequence(string, k):\n    if(len(string)<k):\n        return -1\n    \n    subs = []\n    for i in range(1, len(string)+1):\n        for j in range(0, len(string)-i+1):\n            subs.append(string[j:j+i])\n    \n    subs = list(set(subs))\n    subs.sort(key=len)\n    subs.reverse()\n    print(subs)\n    \n    for i in range(0, len(subs)):\n        for j in range(i+1, len(subs)):\n            if(isSubsequence(subs[i], subs[j])):\n                del subs[j]\n                break\n    \n    print(subs)\n    \n    if(len(subs)<k):\n        return -1\n    else:\n        return sum([len(string)-len(sub) for sub in subs[:k]])\n\nn, k = [int(x) for x in input().split()]\nstring = input()\n\nprint(subsequence(string, k))"
+}
+2022-04-19 21:04:32.957874 REASON stop
+2022-04-19 21:04:32.958850 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    s = input()\n    if n < k:\n        print(-1)\n        return\n    ans = 0\n    for i in range(n - 1, n - k, -1):\n        ans += i\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:04:32.958963 REASON stop
+2022-04-19 21:04:32.960183 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\nif k > n:\n    print(-1)\nelse:\n    print(n*k-sum(map(len, s.split(s[0]))))"
+}
+2022-04-19 21:04:32.960265 REASON stop
+2022-04-19 21:04:32.962542 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    # parse input\n    n, k = map(int, input().split())\n    s = input()\n\n    # build subsequence generator\n    def subsequences(s):\n        for i in range(len(s) + 1):\n            for j in range(i + 1, len(s) + 1):\n                yield s[i:j]\n\n    # determine if it is possible to generate the set\n    def possible(s, k):\n        # build set of all subsequences of s\n        subsequences_set = set(subsequences(s))\n        # build list of costs to generate each subsequence\n        costs = [len(s) - len(subsequence) for subsequence in subsequences_set]\n        # sort costs\n        costs.sort()\n        # return sum of first k costs\n        return sum(costs[:k])\n\n    # print result\n    print(possible(s, k) if possible(s, k) != 0 else -1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 21:04:32.962726 REASON stop

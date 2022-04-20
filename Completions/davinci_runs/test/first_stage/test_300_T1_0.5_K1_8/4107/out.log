@@ -1,0 +1,179 @@
+2022-04-19 22:02:48.035203 """
+You work as a system administrator in a dormitory, which has $n$ rooms one after another along a straight hallway. Rooms are numbered from $1$ to $n$.
+
+You have to connect all $n$ rooms to the Internet.
+
+You can connect each room to the Internet directly, the cost of such connection for the $i$-th room is $i$ coins. 
+
+Some rooms also have a spot for a router. The cost of placing a router in the $i$-th room is also $i$ coins. You cannot place a router in a room which does not have a spot for it. When you place a router in the room $i$, you connect all rooms with the numbers from $max(1,~i - k)$ to $min(n,~i + k)$ inclusive to the Internet, where $k$ is the range of router. The value of $k$ is the same for all routers. 
+
+Calculate the minimum total cost of connecting all $n$ rooms to the Internet. You can assume that the number of rooms which have a spot for a router is not greater than the number of routers you have.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n, k \le 2 \cdot 10^5$) — the number of rooms and the range of each router.
+
+The second line of the input contains one string $s$ of length $n$, consisting only of zeros and ones. If the $i$-th character of the string equals to '1' then there is a spot for a router in the $i$-th room. If the $i$-th character of the string equals to '0' then you cannot place a router in the $i$-th room.
+
+
+-----Output-----
+
+Print one integer — the minimum total cost of connecting all $n$ rooms to the Internet.
+
+
+-----Examples-----
+Input
+5 2
+00100
+
+Output
+3
+
+Input
+6 1
+000000
+
+Output
+21
+
+Input
+4 1
+0011
+
+Output
+4
+
+Input
+12 6
+000010000100
+
+Output
+15
+
+
+
+-----Note-----
+
+In the first example it is enough to place the router in the room $3$, then all rooms will be connected to the Internet. The total cost of connection is $3$.
+
+In the second example you can place routers nowhere, so you need to connect all rooms directly. Thus, the total cost of connection of all rooms is $1 + 2 + 3 + 4 + 5 + 6 = 21$.
+
+In the third example you need to connect the room $1$ directly and place the router in the room $3$. Thus, the total cost of connection of all rooms is $1 + 3 = 4$.
+
+In the fourth example you need to place routers in rooms $5$ and $10$. Then all rooms will be connected to the Internet. The total cost of connection is $5 + 10 = 15$.
+"""
+2022-04-19 22:02:48.035223 --------------------------
+2022-04-19 22:02:48.035342 using api key derek
+2022-04-19 22:03:19.768855 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    # We can use a greedy algorithm where we place routers at the first rooms where\n    # there are spots for routers, and then connect the remaining rooms directly.\n    # So the cost of the optimal solution is the sum of the costs of the direct\n    # connections and the costs of the routers.\n\n    # We can find the cost of the direct connections using prefix sums.\n    direct = 0\n    for i in range(n):\n        if s[i] == '0':\n            direct += i + 1\n\n    # We can find the cost of the routers by counting the number of rooms in each\n    # interval of length 2k+1, where we place a router.\n    routers = 0\n    intervals = [0] * n\n    for i in range(n):\n        if s[i] == '1':\n            intervals[max(0, i - k)] += 1\n            if i + k + 1 < n:\n                intervals[i + k + 1] -= 1\n    count = 0\n    for i in range(n):\n        count += intervals[i]\n        if count > 0:\n            routers += i + 1\n\n    print(direct + routers)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\nn, k = map(int, input().split())\ns = input()\n\n# 1. find all the spots for routers\n# 2. sort them by the cost of connecting directly to the internet\n# 3. check if the spot is within the range of the previous router\n# 4. if no, connect directly to the internet\n# 5. if yes, skip\n# 6. add the cost of connecting directly to the internet\n\nspots = []\ntotal_cost = 0\n\nfor i in range(n):\n    if s[i] == '1':\n        spots.append(i+1)\n    else:\n        total_cost += (i+1)\n\nspots.sort()\n\nlast_router_range = 0\n\nfor i in range(len(spots)):\n    if spots[i] > last_router_range:\n        total_cost += spots[i]\n        last_router_range = spots[i] + k\n\nprint(total_cost)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == '1':\n            cost += i + 1\n        else:\n            cost += min(max(1, i - k), max(1, n - k - i))\n    print(cost)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, k = [int(i) for i in input().split()]\ns = input()\n\n# This is the solution I came up with on my own.\n# It's very slow and I haven't been able to figure out why.\n# It's a greedy algorithm that adds routers to the first available spot.\n# The algorithm starts at the beginning of the string and adds a router\n# to the first available spot. Then it moves to the next spot that is not\n# already covered by the first router and adds a router there. It continues\n# until all rooms are covered.\n\n# def get_next_router_spot(s, start=0):\n#     for i in range(start, len(s)):\n#         if s[i] == \"1\":\n#             return i\n#     return None\n\n# routers = []\n# while True:\n#     router = get_next_router_spot(s)\n#     if router is None:\n#         break\n#     routers.append(router)\n#     for i in range(router - k, router + k + 1):\n#         if i >= 0 and i < len(s):\n#             s = s[:i] + \"0\" + s[i+1:]\n\n# print(sum(routers))\n\n# This is the solution I found online.\n# It's much faster than my solution.\n# It's a greedy algorithm that adds routers to the highest available spot.\n# It starts by adding routers to the highest available spot, then it moves\n# to the next highest available spot, etc.\n\n# This is a greedy algorithm. We will always place a router in the highest\n# available spot.\n\n# First, we need to find the highest available spot.\nhighest_spot = 0\nfor i in range(len(s) - 1, -1, -1):\n    if s[i] == \"1\":\n        highest_spot = i\n        break\n\n# Now we start adding routers.\nrouters = []\nwhile highest_spot >= 0:\n    routers.append(highest_spot)\n    # We need to remove all spots that are covered by this router.\n    for i in range(highest_spot - k, highest_spot + k + 1):\n        if i >= 0 and i < len(s):\n            s = s[:i] + \"0\" + s[i+1:]\n    # Now we need to find the next highest available spot.\n    highest_spot = 0\n    for i in range(len(s) - 1, -1, -1):\n        if s[i] == \"1\":\n            highest_spot = i\n            break\n\nprint(sum(routers))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == \"1\":\n            cost += i + 1\n            if i - k >= 0:\n                s[i-k] = \"0\"\n            if i + k < n:\n                s[i+k] = \"0\"\n    for i in range(n):\n        if s[i] == \"1\":\n            cost += i + 1\n    print(cost)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n,k = map(int,sys.stdin.readline().split())\n    s = sys.stdin.readline().strip()\n\n    #print(n,k,s)\n\n    if n==1:\n        print(0)\n        return\n\n    cost = 0\n    for i in range(n):\n        if s[i]=='1':\n            cost += i+1\n        else:\n            if i+k<n and s[i+k]=='1':\n                cost += i+1\n            else:\n                cost += (i+1)*2\n\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    s = input()\n    router_indices = [i for i, x in enumerate(s) if x == '1']\n    router_indices.append(-1)\n    router_indices.append(n)\n    router_indices.sort()\n    router_indices = [0] + router_indices\n    i = 1\n    ans = 0\n    while i < len(router_indices):\n        if router_indices[i] - router_indices[i - 1] - 1 <= k:\n            i += 1\n        else:\n            ans += router_indices[i] - router_indices[i - 1]\n            i += 2\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ncost = 0\nfor i in range(n):\n    if s[i] == '1':\n        cost += i + 1\n        continue\n    if i - k > 0 and s[i - k] == '1':\n        continue\n    if i + k < n and s[i + k] == '1':\n        continue\n    cost += i + 1\n\nprint(cost)"
+    }
+  ],
+  "created": 1650405768,
+  "id": "cmpl-4yqDoRTsKLQcjUHTd4j2zsoLfEv7w",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:03:19.769301 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    # We can use a greedy algorithm where we place routers at the first rooms where\n    # there are spots for routers, and then connect the remaining rooms directly.\n    # So the cost of the optimal solution is the sum of the costs of the direct\n    # connections and the costs of the routers.\n\n    # We can find the cost of the direct connections using prefix sums.\n    direct = 0\n    for i in range(n):\n        if s[i] == '0':\n            direct += i + 1\n\n    # We can find the cost of the routers by counting the number of rooms in each\n    # interval of length 2k+1, where we place a router.\n    routers = 0\n    intervals = [0] * n\n    for i in range(n):\n        if s[i] == '1':\n            intervals[max(0, i - k)] += 1\n            if i + k + 1 < n:\n                intervals[i + k + 1] -= 1\n    count = 0\n    for i in range(n):\n        count += intervals[i]\n        if count > 0:\n            routers += i + 1\n\n    print(direct + routers)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:03:19.769407 REASON stop
+2022-04-19 22:03:19.779407 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\nn, k = map(int, input().split())\ns = input()\n\n# 1. find all the spots for routers\n# 2. sort them by the cost of connecting directly to the internet\n# 3. check if the spot is within the range of the previous router\n# 4. if no, connect directly to the internet\n# 5. if yes, skip\n# 6. add the cost of connecting directly to the internet\n\nspots = []\ntotal_cost = 0\n\nfor i in range(n):\n    if s[i] == '1':\n        spots.append(i+1)\n    else:\n        total_cost += (i+1)\n\nspots.sort()\n\nlast_router_range = 0\n\nfor i in range(len(spots)):\n    if spots[i] > last_router_range:\n        total_cost += spots[i]\n        last_router_range = spots[i] + k\n\nprint(total_cost)"
+}
+2022-04-19 22:03:19.779531 REASON stop
+2022-04-19 22:03:19.779940 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == '1':\n            cost += i + 1\n        else:\n            cost += min(max(1, i - k), max(1, n - k - i))\n    print(cost)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:03:19.780007 REASON stop
+2022-04-19 22:03:19.810915 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, k = [int(i) for i in input().split()]\ns = input()\n\n# This is the solution I came up with on my own.\n# It's very slow and I haven't been able to figure out why.\n# It's a greedy algorithm that adds routers to the first available spot.\n# The algorithm starts at the beginning of the string and adds a router\n# to the first available spot. Then it moves to the next spot that is not\n# already covered by the first router and adds a router there. It continues\n# until all rooms are covered.\n\n# def get_next_router_spot(s, start=0):\n#     for i in range(start, len(s)):\n#         if s[i] == \"1\":\n#             return i\n#     return None\n\n# routers = []\n# while True:\n#     router = get_next_router_spot(s)\n#     if router is None:\n#         break\n#     routers.append(router)\n#     for i in range(router - k, router + k + 1):\n#         if i >= 0 and i < len(s):\n#             s = s[:i] + \"0\" + s[i+1:]\n\n# print(sum(routers))\n\n# This is the solution I found online.\n# It's much faster than my solution.\n# It's a greedy algorithm that adds routers to the highest available spot.\n# It starts by adding routers to the highest available spot, then it moves\n# to the next highest available spot, etc.\n\n# This is a greedy algorithm. We will always place a router in the highest\n# available spot.\n\n# First, we need to find the highest available spot.\nhighest_spot = 0\nfor i in range(len(s) - 1, -1, -1):\n    if s[i] == \"1\":\n        highest_spot = i\n        break\n\n# Now we start adding routers.\nrouters = []\nwhile highest_spot >= 0:\n    routers.append(highest_spot)\n    # We need to remove all spots that are covered by this router.\n    for i in range(highest_spot - k, highest_spot + k + 1):\n        if i >= 0 and i < len(s):\n            s = s[:i] + \"0\" + s[i+1:]\n    # Now we need to find the next highest available spot.\n    highest_spot = 0\n    for i in range(len(s) - 1, -1, -1):\n        if s[i] == \"1\":\n            highest_spot = i\n            break\n\nprint(sum(routers))"
+}
+2022-04-19 22:03:19.811049 REASON stop
+2022-04-19 22:03:19.817691 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == \"1\":\n            cost += i + 1\n            if i - k >= 0:\n                s[i-k] = \"0\"\n            if i + k < n:\n                s[i+k] = \"0\"\n    for i in range(n):\n        if s[i] == \"1\":\n            cost += i + 1\n    print(cost)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:03:19.817831 REASON stop
+2022-04-19 22:03:19.818652 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n,k = map(int,sys.stdin.readline().split())\n    s = sys.stdin.readline().strip()\n\n    #print(n,k,s)\n\n    if n==1:\n        print(0)\n        return\n\n    cost = 0\n    for i in range(n):\n        if s[i]=='1':\n            cost += i+1\n        else:\n            if i+k<n and s[i+k]=='1':\n                cost += i+1\n            else:\n                cost += (i+1)*2\n\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:03:19.818767 REASON stop
+2022-04-19 22:03:19.819765 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = [int(x) for x in input().split()]\n    s = input()\n    router_indices = [i for i, x in enumerate(s) if x == '1']\n    router_indices.append(-1)\n    router_indices.append(n)\n    router_indices.sort()\n    router_indices = [0] + router_indices\n    i = 1\n    ans = 0\n    while i < len(router_indices):\n        if router_indices[i] - router_indices[i - 1] - 1 <= k:\n            i += 1\n        else:\n            ans += router_indices[i] - router_indices[i - 1]\n            i += 2\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:03:19.819868 REASON stop
+2022-04-19 22:03:19.820743 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ncost = 0\nfor i in range(n):\n    if s[i] == '1':\n        cost += i + 1\n        continue\n    if i - k > 0 and s[i - k] == '1':\n        continue\n    if i + k < n and s[i + k] == '1':\n        continue\n    cost += i + 1\n\nprint(cost)"
+}
+2022-04-19 22:03:19.820946 REASON stop

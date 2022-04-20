@@ -1,0 +1,151 @@
+2022-04-19 22:52:55.919042 """
+We have a grid of H rows and W columns of squares. The color of the square at the i-th row from the top and the j-th column from the left (1 \leq i \leq H, 1 \leq j \leq W) is given to you as a character c_{i,j}: the square is white if c_{i,j} is ., and black if c_{i,j} is #.
+Consider doing the following operation:
+ - Choose some number of rows (possibly zero), and some number of columns (possibly zero). Then, paint red all squares in the chosen rows and all squares in the chosen columns.
+You are given a positive integer K. How many choices of rows and columns result in exactly K black squares remaining after the operation? Here, we consider two choices different when there is a row or column chosen in only one of those choices.
+
+-----Constraints-----
+ - 1 \leq H, W \leq 6
+ - 1 \leq K \leq HW
+ - c_{i,j} is . or #.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+H W K
+c_{1,1}c_{1,2}...c_{1,W}
+c_{2,1}c_{2,2}...c_{2,W}
+:
+c_{H,1}c_{H,2}...c_{H,W}
+
+-----Output-----
+Print an integer representing the number of choices of rows and columns satisfying the condition.
+
+-----Sample Input-----
+2 3 2
+..#
+###
+
+-----Sample Output-----
+5
+
+Five choices below satisfy the condition.
+ - The 1-st row and 1-st column
+ - The 1-st row and 2-nd column
+ - The 1-st row and 3-rd column
+ - The 1-st and 2-nd column
+ - The 3-rd column
+"""
+2022-04-19 22:52:55.919054 --------------------------
+2022-04-19 22:52:55.919166 using api key sourya
+2022-04-19 22:54:18.158155 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import combinations\n\nH, W, K = map(int, input().split())\n\nc = [input() for _ in range(H)]\n\nans = 0\n\nfor i in range(H+1):\n    for j in combinations(range(W), i):\n        for k in range(H+1):\n            for l in combinations(range(W), k):\n                x = 0\n                for m in range(H):\n                    for n in range(W):\n                        if m in l or n in j:\n                            if c[m][n] == '#':\n                                x += 1\n                if x == K:\n                    ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# H, W, K = map(int, input().split())\n# c = [list(input()) for _ in range(H)]\n\nH, W, K = 2, 3, 2\nc = [[\".\", \".\", \"#\"], [\"#\", \"#\", \"#\"]]\n\nans = 0\nfor i in range(2 ** H):\n    for j in range(2 ** W):\n        black = 0\n        for k in range(H):\n            for l in range(W):\n                if (i >> k) & 1 or (j >> l) & 1:\n                    if c[k][l] == \"#\":\n                        black += 1\n        if black == K:\n            ans += 1\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    h,w,k = map(int,input().split())\n    c = []\n    for i in range(h):\n        c.append(list(input()))\n\n    cnt = 0\n    for i in range(2**h):\n        row = [0] * h\n        for j in range(h):\n            if (i >> j) & 1 == 1:\n                row[j] = 1\n        for j in range(2**w):\n            col = [0] * w\n            for l in range(w):\n                if (j >> l) & 1 == 1:\n                    col[l] = 1\n            black = 0\n            for m in range(h):\n                for n in range(w):\n                    if c[m][n] == '#' and row[m] == 1 and col[n] == 1:\n                        black += 1\n            if black == k:\n                cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    h, w, k = map(int, input().split())\n    c = [list(input()) for i in range(h)]\n    ans = 0\n    for i in range(2**h):\n        for j in range(2**w):\n            tmp = 0\n            for x in range(h):\n                for y in range(w):\n                    if (i >> x) & 1 and (j >> y) & 1:\n                        if c[x][y] == '#':\n                            tmp += 1\n            if tmp == k:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nfrom itertools import combinations\n\nH, W, K = map(int, input().split())\n\ngrid = [input().split() for _ in range(H)]\n\n# \u5217\u6319\nn_list = []\nfor i in range(H+1):\n    for j in range(W+1):\n        if i*W + j*H - 2*i*j == K:\n            n_list.append((i,j))\n\n# \u5217\u6319\u3057\u305f\u3082\u306e\u3092\u5143\u306b\u63a2\u7d22\nans = 0\nfor n in n_list:\n    ans += len(list(combinations(range(H), n[0]))) * len(list(combinations(range(W), n[1])))\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ninput = sys.stdin.readline\n\ndef main():\n    h, w, k = map(int, input().split())\n    grid = [list(input().rstrip()) for _ in range(h)]\n\n    ans = 0\n    for i in range(2 ** h):\n        for j in range(2 ** w):\n            cnt = 0\n            for x in range(h):\n                if (i >> x) & 1:\n                    continue\n                for y in range(w):\n                    if (j >> y) & 1:\n                        continue\n                    if grid[x][y] == '#':\n                        cnt += 1\n            if cnt == k:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\n# H, W, K = map(int, input().split())\n# c = [list(input()) for i in range(H)]\n\nH, W, K = 2, 3, 2\nc = [['.', '.', '#'], ['#', '#', '#']]\n\n# H, W, K = 3, 3, 5\n# c = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]\n\n# H, W, K = 1, 1, 1\n# c = [['#']]\n\n# H, W, K = 3, 3, 3\n# c = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n\ndef main():\n    # \u5168\u3066\u306e\u884c\u30fb\u5217\u306e\u9078\u629e\u30d1\u30bf\u30fc\u30f3\u3092\u4f5c\u6210\n    # \u4f8b\u3048\u3070\u3001H=3, W=3\u306e\u3068\u304d\u3001\n    # [[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], [0, 0, 4], [0, 0, 5], [0, 1, 1], [0, 1, 2], [0, 1, 3], [0, 1, 4], [0, 1, 5], [0, 2, 2], [0, 2, 3], [0, 2, 4], [0, 2, 5], [0, 3, 3], [0, 3, 4], [0, 3, 5], [0, 4, 4], [0, 4, 5], [0, 5, 5], [1, 1, 1], [1, 1, 2], [1, 1, 3], [1, 1, 4], [1, 1, 5], [1, 2, 2], [1, 2, 3], [1, 2, 4], [1, 2, 5], [1, 3, 3], [1, 3, 4], [1, 3, 5], [1, 4, 4], [1, 4, 5], [1, 5, 5], [2, 2, 2], [2, 2, 3], [2, 2, 4], [2, 2, 5], [2, 3, 3], [2, 3, 4], [2, 3, 5], [2, 4, 4], [2, 4, 5], [2, 5, 5], [3, 3, 3], [3, 3, 4], [3, 3, 5], [3, 4, 4], [3, 4, 5], [3, 5, 5], [4, 4, 4], [4, 4, 5], [4, 5, 5], [5, 5, 5]]\n    # \u306e\u3088\u3046\u306a\u30ea\u30b9\u30c8\u3092\u4f5c\u6210\n    # \u3053\u306e\u30ea\u30b9\u30c8\u306e\u8981\u7d20\u306f\u3001[\u884c\u306e\u500b\u6570, \u5217\u306e\u500b\u6570, \u884c\u306e\u500b\u6570 * \u5217\u306e\u500b\u6570]\u306e\u30ea\u30b9\u30c8\n    # \u4f8b\u3048\u3070\u3001[0, 0, 0]\u306f\u3001\u884c\u3082\u5217\u3082\u9078\u629e\u3057\u306a\u3044\u30d1\u30bf\u30fc\u30f3\n    # [0, 0, 0]\u306f\u3001\u884c\u3082\u5217\u3082\u9078\u629e\u3057\u306a\u3044\u30d1\u30bf\u30fc\u30f3\n    # [0, 1, 1]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30011\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 2, 2]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 3, 3]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 4, 4]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 5, 5]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 1, 1]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30011\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 2, 2]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 3, 3]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 4, 4]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 5, 5]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 2, 2]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 3, 3]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 4, 4]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 5, 5]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 3, 3]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 4, 4]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 5, 5]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [4, 4, 4]\u306f\u30014\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [4, 5, 5]\u306f\u30014\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [5, 5, 5]\u306f\u30015\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    pattern = [[i, j, i * j] for i in range(H + 1) for j in range(W + 1)]\n    # print(pattern)\n\n    # \u5168\u3066\u306e\u884c\u30fb\u5217\u306e\u9078\u629e\u30d1\u30bf\u30fc\u30f3\u306b\u3064\u3044\u3066\u3001\u4ee5\u4e0b\u3092\u7e70\u308a\u8fd4\u3059\n    # - \u4e00\u65e6\u3001\u5168\u3066\u306e\u30de\u30b9\u3092\u9ed2\u30de\u30b9\u306b\u3059\u308b\n    # - \u9078\u629e\u3057\u305f\u884c\u30fb\u5217\u306e\u30de\u30b9\u3092\u8d64\u30de\u30b9\u306b\u3059\u308b\n    # \u9ed2\u30de\u30b9\u306e\u6570\u304cK\u3068\u4e00\u81f4\u3057\u305f\u3089\u3001\u30ab\u30a6\u30f3\u30c8\u30a2\u30c3\u30d7\u3059\u308b\n    ans = 0\n    for i, j, k in pattern:\n        if k != K:\n            continue\n        grid = [['#'] * W for _ in range(H)]\n        for row in range(H):\n            if row in range(i):\n                continue\n            for col in range(W):\n                if col in range(j):\n                    continue\n                grid[row][col] = '.'\n        # print(grid)\n        if sum([row.count('#') for row in grid]) == K:\n            # print(grid)\n            ans += 1\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nH, W, K = map(int, input().split())\n\n# \u7e26\u6a2a\u306b\u5207\u308b\u7dda\u304c\u4f55\u672c\u304b\ncut_lines = H + W - 1\n\n# \u5207\u308b\u7dda\u306e\u6570\u3068\u9ed2\u3044\u30de\u30b9\u306e\u6570\u304b\u3089\u3001\u5207\u308b\u7dda\u306e\u3046\u3061\u4f55\u672c\u3092\u4f7f\u3046\u304b\u3092\u5168\u63a2\u7d22\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\u306f\u3001\u5207\u308b\u7dda\u306e\u6570\u304b\u3089\u9ed2\u3044\u30de\u30b9\u306e\u6570\u3092\u5f15\u3044\u305f\u6570\u306e\u4e8c\u9805\u4fc2\u6570\n# \u3053\u308c\u3092\u5168\u63a2\u7d22\u306e\u500b\u6570\u3068\u3057\u3066\u3001\u305d\u306e\u4e2d\u3067\u9ed2\u3044\u30de\u30b9\u306e\u6570\u304cK\u500b\u306b\u306a\u308b\u3082\u306e\u3092\u6570\u3048\u308b\n\n# \u4e8c\u9805\u4fc2\u6570\u3092\u6c42\u3081\u308b\u95a2\u6570\ndef combination(n, k):\n    res = 1\n    for i in range(k):\n        res *= (n-i)\n        res //= (i+1)\n    return res\n\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\nall_num = combination(cut_lines, K)\n\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\u304b\u3089\u3001K\u500b\u306e\u30de\u30b9\u306b\u306a\u308b\u3082\u306e\u3092\u6570\u3048\u308b\nres = 0\nfor i in range(K+1):\n    # \u5168\u63a2\u7d22\u306e\u500b\u6570\u306e\u3046\u3061\u3001i\u500b\u306e\u7e26\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u3092\u6570\u3048\u308b\n    num = combination(H-1, i)\n    # i\u500b\u306e\u7e26\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u306e\u3046\u3061\u3001K-i\u500b\u306e\u6a2a\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u3092\u6570\u3048\u308b\n    if K-i <= W-1:\n        num *= combination(W-1, K-i)\n        res += num\n\nprint(res)"
+    }
+  ],
+  "created": 1650408776,
+  "id": "cmpl-4yr0KIcGDH80UlaQNPCy7nOITZXa0",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:54:18.158612 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import combinations\n\nH, W, K = map(int, input().split())\n\nc = [input() for _ in range(H)]\n\nans = 0\n\nfor i in range(H+1):\n    for j in combinations(range(W), i):\n        for k in range(H+1):\n            for l in combinations(range(W), k):\n                x = 0\n                for m in range(H):\n                    for n in range(W):\n                        if m in l or n in j:\n                            if c[m][n] == '#':\n                                x += 1\n                if x == K:\n                    ans += 1\n\nprint(ans)"
+}
+2022-04-19 22:54:18.158660 REASON stop
+2022-04-19 22:54:18.159617 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# H, W, K = map(int, input().split())\n# c = [list(input()) for _ in range(H)]\n\nH, W, K = 2, 3, 2\nc = [[\".\", \".\", \"#\"], [\"#\", \"#\", \"#\"]]\n\nans = 0\nfor i in range(2 ** H):\n    for j in range(2 ** W):\n        black = 0\n        for k in range(H):\n            for l in range(W):\n                if (i >> k) & 1 or (j >> l) & 1:\n                    if c[k][l] == \"#\":\n                        black += 1\n        if black == K:\n            ans += 1\nprint(ans)"
+}
+2022-04-19 22:54:18.159695 REASON stop
+2022-04-19 22:54:18.160164 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    h,w,k = map(int,input().split())\n    c = []\n    for i in range(h):\n        c.append(list(input()))\n\n    cnt = 0\n    for i in range(2**h):\n        row = [0] * h\n        for j in range(h):\n            if (i >> j) & 1 == 1:\n                row[j] = 1\n        for j in range(2**w):\n            col = [0] * w\n            for l in range(w):\n                if (j >> l) & 1 == 1:\n                    col[l] = 1\n            black = 0\n            for m in range(h):\n                for n in range(w):\n                    if c[m][n] == '#' and row[m] == 1 and col[n] == 1:\n                        black += 1\n            if black == k:\n                cnt += 1\n    print(cnt)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:54:18.160224 REASON stop
+2022-04-19 22:54:18.173561 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    h, w, k = map(int, input().split())\n    c = [list(input()) for i in range(h)]\n    ans = 0\n    for i in range(2**h):\n        for j in range(2**w):\n            tmp = 0\n            for x in range(h):\n                for y in range(w):\n                    if (i >> x) & 1 and (j >> y) & 1:\n                        if c[x][y] == '#':\n                            tmp += 1\n            if tmp == k:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:54:18.173660 REASON stop
+2022-04-19 22:54:18.193007 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nfrom itertools import combinations\n\nH, W, K = map(int, input().split())\n\ngrid = [input().split() for _ in range(H)]\n\n# \u5217\u6319\nn_list = []\nfor i in range(H+1):\n    for j in range(W+1):\n        if i*W + j*H - 2*i*j == K:\n            n_list.append((i,j))\n\n# \u5217\u6319\u3057\u305f\u3082\u306e\u3092\u5143\u306b\u63a2\u7d22\nans = 0\nfor n in n_list:\n    ans += len(list(combinations(range(H), n[0]))) * len(list(combinations(range(W), n[1])))\n\nprint(ans)"
+}
+2022-04-19 22:54:18.193129 REASON stop
+2022-04-19 22:54:18.211104 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ninput = sys.stdin.readline\n\ndef main():\n    h, w, k = map(int, input().split())\n    grid = [list(input().rstrip()) for _ in range(h)]\n\n    ans = 0\n    for i in range(2 ** h):\n        for j in range(2 ** w):\n            cnt = 0\n            for x in range(h):\n                if (i >> x) & 1:\n                    continue\n                for y in range(w):\n                    if (j >> y) & 1:\n                        continue\n                    if grid[x][y] == '#':\n                        cnt += 1\n            if cnt == k:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:54:18.211224 REASON stop
+2022-04-19 22:54:18.212599 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\n# H, W, K = map(int, input().split())\n# c = [list(input()) for i in range(H)]\n\nH, W, K = 2, 3, 2\nc = [['.', '.', '#'], ['#', '#', '#']]\n\n# H, W, K = 3, 3, 5\n# c = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]\n\n# H, W, K = 1, 1, 1\n# c = [['#']]\n\n# H, W, K = 3, 3, 3\n# c = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n# H, W, K = 6, 6, 20\n# c = [['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.']]\n\n\ndef main():\n    # \u5168\u3066\u306e\u884c\u30fb\u5217\u306e\u9078\u629e\u30d1\u30bf\u30fc\u30f3\u3092\u4f5c\u6210\n    # \u4f8b\u3048\u3070\u3001H=3, W=3\u306e\u3068\u304d\u3001\n    # [[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], [0, 0, 4], [0, 0, 5], [0, 1, 1], [0, 1, 2], [0, 1, 3], [0, 1, 4], [0, 1, 5], [0, 2, 2], [0, 2, 3], [0, 2, 4], [0, 2, 5], [0, 3, 3], [0, 3, 4], [0, 3, 5], [0, 4, 4], [0, 4, 5], [0, 5, 5], [1, 1, 1], [1, 1, 2], [1, 1, 3], [1, 1, 4], [1, 1, 5], [1, 2, 2], [1, 2, 3], [1, 2, 4], [1, 2, 5], [1, 3, 3], [1, 3, 4], [1, 3, 5], [1, 4, 4], [1, 4, 5], [1, 5, 5], [2, 2, 2], [2, 2, 3], [2, 2, 4], [2, 2, 5], [2, 3, 3], [2, 3, 4], [2, 3, 5], [2, 4, 4], [2, 4, 5], [2, 5, 5], [3, 3, 3], [3, 3, 4], [3, 3, 5], [3, 4, 4], [3, 4, 5], [3, 5, 5], [4, 4, 4], [4, 4, 5], [4, 5, 5], [5, 5, 5]]\n    # \u306e\u3088\u3046\u306a\u30ea\u30b9\u30c8\u3092\u4f5c\u6210\n    # \u3053\u306e\u30ea\u30b9\u30c8\u306e\u8981\u7d20\u306f\u3001[\u884c\u306e\u500b\u6570, \u5217\u306e\u500b\u6570, \u884c\u306e\u500b\u6570 * \u5217\u306e\u500b\u6570]\u306e\u30ea\u30b9\u30c8\n    # \u4f8b\u3048\u3070\u3001[0, 0, 0]\u306f\u3001\u884c\u3082\u5217\u3082\u9078\u629e\u3057\u306a\u3044\u30d1\u30bf\u30fc\u30f3\n    # [0, 0, 0]\u306f\u3001\u884c\u3082\u5217\u3082\u9078\u629e\u3057\u306a\u3044\u30d1\u30bf\u30fc\u30f3\n    # [0, 1, 1]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30011\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 2, 2]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 3, 3]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 4, 4]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [0, 5, 5]\u306f\u3001\u884c\u306f\u9078\u629e\u305b\u305a\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 1, 1]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30011\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 2, 2]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 3, 3]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 4, 4]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [1, 5, 5]\u306f\u30011\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 2, 2]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30012\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 3, 3]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 4, 4]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [2, 5, 5]\u306f\u30012\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 3, 3]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30013\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 4, 4]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [3, 5, 5]\u306f\u30013\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [4, 4, 4]\u306f\u30014\u884c\u3060\u3051\u9078\u629e\u3057\u30014\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [4, 5, 5]\u306f\u30014\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    # [5, 5, 5]\u306f\u30015\u884c\u3060\u3051\u9078\u629e\u3057\u30015\u5217\u3060\u3051\u9078\u629e\u3059\u308b\u30d1\u30bf\u30fc\u30f3\n    pattern = [[i, j, i * j] for i in range(H + 1) for j in range(W + 1)]\n    # print(pattern)\n\n    # \u5168\u3066\u306e\u884c\u30fb\u5217\u306e\u9078\u629e\u30d1\u30bf\u30fc\u30f3\u306b\u3064\u3044\u3066\u3001\u4ee5\u4e0b\u3092\u7e70\u308a\u8fd4\u3059\n    # - \u4e00\u65e6\u3001\u5168\u3066\u306e\u30de\u30b9\u3092\u9ed2\u30de\u30b9\u306b\u3059\u308b\n    # - \u9078\u629e\u3057\u305f\u884c\u30fb\u5217\u306e\u30de\u30b9\u3092\u8d64\u30de\u30b9\u306b\u3059\u308b\n    # \u9ed2\u30de\u30b9\u306e\u6570\u304cK\u3068\u4e00\u81f4\u3057\u305f\u3089\u3001\u30ab\u30a6\u30f3\u30c8\u30a2\u30c3\u30d7\u3059\u308b\n    ans = 0\n    for i, j, k in pattern:\n        if k != K:\n            continue\n        grid = [['#'] * W for _ in range(H)]\n        for row in range(H):\n            if row in range(i):\n                continue\n            for col in range(W):\n                if col in range(j):\n                    continue\n                grid[row][col] = '.'\n        # print(grid)\n        if sum([row.count('#') for row in grid]) == K:\n            # print(grid)\n            ans += 1\n    print(ans)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:54:18.212758 REASON stop
+2022-04-19 22:54:18.213997 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nH, W, K = map(int, input().split())\n\n# \u7e26\u6a2a\u306b\u5207\u308b\u7dda\u304c\u4f55\u672c\u304b\ncut_lines = H + W - 1\n\n# \u5207\u308b\u7dda\u306e\u6570\u3068\u9ed2\u3044\u30de\u30b9\u306e\u6570\u304b\u3089\u3001\u5207\u308b\u7dda\u306e\u3046\u3061\u4f55\u672c\u3092\u4f7f\u3046\u304b\u3092\u5168\u63a2\u7d22\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\u306f\u3001\u5207\u308b\u7dda\u306e\u6570\u304b\u3089\u9ed2\u3044\u30de\u30b9\u306e\u6570\u3092\u5f15\u3044\u305f\u6570\u306e\u4e8c\u9805\u4fc2\u6570\n# \u3053\u308c\u3092\u5168\u63a2\u7d22\u306e\u500b\u6570\u3068\u3057\u3066\u3001\u305d\u306e\u4e2d\u3067\u9ed2\u3044\u30de\u30b9\u306e\u6570\u304cK\u500b\u306b\u306a\u308b\u3082\u306e\u3092\u6570\u3048\u308b\n\n# \u4e8c\u9805\u4fc2\u6570\u3092\u6c42\u3081\u308b\u95a2\u6570\ndef combination(n, k):\n    res = 1\n    for i in range(k):\n        res *= (n-i)\n        res //= (i+1)\n    return res\n\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\nall_num = combination(cut_lines, K)\n\n# \u5168\u63a2\u7d22\u306e\u500b\u6570\u304b\u3089\u3001K\u500b\u306e\u30de\u30b9\u306b\u306a\u308b\u3082\u306e\u3092\u6570\u3048\u308b\nres = 0\nfor i in range(K+1):\n    # \u5168\u63a2\u7d22\u306e\u500b\u6570\u306e\u3046\u3061\u3001i\u500b\u306e\u7e26\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u3092\u6570\u3048\u308b\n    num = combination(H-1, i)\n    # i\u500b\u306e\u7e26\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u306e\u3046\u3061\u3001K-i\u500b\u306e\u6a2a\u7dda\u3092\u4f7f\u3063\u305f\u3082\u306e\u3092\u6570\u3048\u308b\n    if K-i <= W-1:\n        num *= combination(W-1, K-i)\n        res += num\n\nprint(res)"
+}
+2022-04-19 22:54:18.214179 REASON stop

@@ -1,0 +1,158 @@
+2022-04-19 22:30:43.285239 """
+You are given an array $a$ consisting of $n$ integers. Let's denote monotonic renumeration of array $a$ as an array $b$ consisting of $n$ integers such that all of the following conditions are met:
+
+  $b_1 = 0$;  for every pair of indices $i$ and $j$ such that $1 \le i, j \le n$, if $a_i = a_j$, then $b_i = b_j$ (note that if $a_i \ne a_j$, it is still possible that $b_i = b_j$);  for every index $i \in [1, n - 1]$ either $b_i = b_{i + 1}$ or $b_i + 1 = b_{i + 1}$. 
+
+For example, if $a = [1, 2, 1, 2, 3]$, then two possible monotonic renumerations of $a$ are $b = [0, 0, 0, 0, 0]$ and $b = [0, 0, 0, 0, 1]$.
+
+Your task is to calculate the number of different monotonic renumerations of $a$. The answer may be large, so print it modulo $998244353$.
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($2 \le n \le 2 \cdot 10^5$) — the number of elements in $a$.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$).
+
+
+-----Output-----
+
+Print one integer — the number of different monotonic renumerations of $a$, taken modulo $998244353$.
+
+
+-----Examples-----
+Input
+5
+1 2 1 2 3
+
+Output
+2
+
+Input
+2
+100 1
+
+Output
+2
+
+Input
+4
+1 3 3 7
+
+Output
+4
+"""
+2022-04-19 22:30:43.285253 --------------------------
+2022-04-19 22:30:43.285362 using api key derek
+2022-04-19 22:31:34.338374 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n    d = {}\n    for i in a:\n        if i in d:\n            d[i] += 1\n        else:\n            d[i] = 1\n    l = len(d)\n    if l == 1:\n        print(1)\n        return\n    m = max(d.values())\n    if m == n:\n        print(l)\n        return\n    if m == n - 1:\n        print(l - 1)\n        return\n    if m == n - 2:\n        if l == 2:\n            print(1)\n            return\n        else:\n            print(l - 2)\n            return\n    print(0)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find the number of distinct elements\ndistinct = []\nfor i in a:\n    if i not in distinct:\n        distinct.append(i)\n\n# find the number of occurences of each distinct element\noccurences = []\nfor i in distinct:\n    occurences.append(a.count(i))\n\n# find the number of ways to arrange the occurences\nways = 1\nfor i in occurences:\n    ways = (ways*(i+1)) % 998244353\n\n# print the answer\nprint(ways)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    d = {}\n    for i in range(n):\n        if a[i] not in d:\n            d[a[i]] = 0\n        d[a[i]] += 1\n    ans = 1\n    for i in d:\n        ans *= d[i] + 1\n        ans %= 998244353\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n#a = [1, 2, 1, 2, 3]\n#a = [100, 1]\n#a = [1, 3, 3, 7]\n\n#n = len(a)\n\nm = max(a)\nc = [0] * (m + 1)\n\nfor i in a:\n    c[i] += 1\n\nf = [0] * (m + 1)\n\nf[0] = 1\nf[1] = 1\n\nfor i in range(2, m + 1):\n    f[i] = f[i - 1] + f[i - 2]\n    f[i] %= 998244353\n\nans = 1\n\nfor i in c:\n    ans *= f[i]\n    ans %= 998244353\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef solve(a):\n    n = len(a)\n    d = {}\n    for i in range(n):\n        if a[i] not in d:\n            d[a[i]] = [i]\n        else:\n            d[a[i]].append(i)\n    # print(d)\n\n    res = 1\n    for i in d:\n        res *= (2**(len(d[i])-1))\n        res %= 998244353\n    return res\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solve(a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn = int(input())\narr = list(map(int, input().split()))\n\nd = {}\nfor i in arr:\n    if i in d:\n        d[i] += 1\n    else:\n        d[i] = 1\n\ncount = 1\nfor i in d:\n    count *= (d[i]+1)\n    count %= 998244353\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom collections import Counter\n\ndef solve(a):\n    c = Counter(a)\n    vals = sorted(c.values())\n    dp = [1]*len(vals)\n    dp[0] = vals[0] + 1\n    for i in range(1, len(vals)):\n        dp[i] = (dp[i-1] * (vals[i] + 1)) % 998244353\n    return dp[-1]\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solve(a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n\n    # see editorial for explanation\n    # we can't get the answer directly, but we can get the answer on the reverse of the array\n    # if we have the answer on the reverse of the array, we can get the answer on the original array\n    # let's solve it on the reverse of the array\n\n    # first, we need a function to calculate the number of different monotonic renumerations of an array\n    # we can use a dynamic programming approach\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[1..i] such that the last number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i - 1][j - 1]\n    # if j == 0 and a[i] == a[i - 1], then dp[i][j] = dp[i - 1][j]\n    # if j == 0 and a[i] != a[i - 1], then dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n    # the answer is dp[n][0]\n    # the complexity is O(n^2)\n\n    # now we have the function to calculate the number of different monotonic renumerations of an array\n    # let's use it to calculate the answer on the reverse of the array\n    # we can use a dynamic programming approach\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[i..n] such that the first number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i + 1][j - 1]\n    # if j == 0 and a[i] == a[i + 1], then dp[i][j] = dp[i + 1][j]\n    # if j == 0 and a[i] != a[i + 1], then dp[i][j] = dp[i + 1][j] + dp[i + 1][j + 1]\n    # the answer is dp[1][0]\n    # the complexity is O(n^2)\n\n    # now we have the answer on the reverse of the array\n    # let's use it to calculate the answer on the original array\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[1..i] such that the last number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i - 1][j - 1]\n    # if j == 0 and a[i] == a[i - 1], then dp[i][j] = dp[i - 1][j]\n    # if j == 0 and a[i] != a[i - 1], then dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n    # the answer is dp[n][0]\n    # the complexity is O(n^2)\n\n    # now we have the answer on the original array\n    # the complexity is O(n^2)\n\n    # let's calculate the answer on the reverse of the array\n    a = a[::-1]\n\n    dp = [[0 for j in range(n + 1)] for i in range(n + 1)]\n    dp[n][0] = 1\n\n    for i in range(n - 1, 0, -1):\n        for j in range(n):\n            if j > 0:\n                dp[i][j] = dp[i + 1][j - 1]\n            else:\n                if a[i] == a[i + 1]:\n                    dp[i][j] = dp[i + 1][j]\n                else:\n                    dp[i][j] = dp[i + 1][j] + dp[i + 1][j + 1]\n\n    answer = dp[1][0]\n\n    # now we have the answer on the reverse of the array\n    # let's use it to calculate the answer on the original array\n    a = a[::-1]\n\n    dp = [[0 for j in range(n + 1)] for i in range(n + 1)]\n    dp[n][0] = answer\n\n    for i in range(n - 1, 0, -1):\n        for j in range(n):\n            if j > 0:\n                dp[i][j] = dp[i - 1][j - 1]\n            else:\n                if a[i] == a[i - 1]:\n                    dp[i][j] = dp[i - 1][j]\n                else:\n                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n\n    answer = dp[1][0]\n\n    # now we have the answer on the original array\n    # the complexity is O(n^2)\n\n    print(answer % 998244353)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650407443,
+  "id": "cmpl-4yqepjmeljg1W2Oed4SrDiOA0qtJn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:31:34.338785 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    a.sort()\n    d = {}\n    for i in a:\n        if i in d:\n            d[i] += 1\n        else:\n            d[i] = 1\n    l = len(d)\n    if l == 1:\n        print(1)\n        return\n    m = max(d.values())\n    if m == n:\n        print(l)\n        return\n    if m == n - 1:\n        print(l - 1)\n        return\n    if m == n - 2:\n        if l == 2:\n            print(1)\n            return\n        else:\n            print(l - 2)\n            return\n    print(0)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:31:34.338830 REASON stop
+2022-04-19 22:31:34.339507 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# find the number of distinct elements\ndistinct = []\nfor i in a:\n    if i not in distinct:\n        distinct.append(i)\n\n# find the number of occurences of each distinct element\noccurences = []\nfor i in distinct:\n    occurences.append(a.count(i))\n\n# find the number of ways to arrange the occurences\nways = 1\nfor i in occurences:\n    ways = (ways*(i+1)) % 998244353\n\n# print the answer\nprint(ways)"
+}
+2022-04-19 22:31:34.339578 REASON stop
+2022-04-19 22:31:34.340011 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    d = {}\n    for i in range(n):\n        if a[i] not in d:\n            d[a[i]] = 0\n        d[a[i]] += 1\n    ans = 1\n    for i in d:\n        ans *= d[i] + 1\n        ans %= 998244353\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 22:31:34.340076 REASON stop
+2022-04-19 22:31:34.363742 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n#a = [1, 2, 1, 2, 3]\n#a = [100, 1]\n#a = [1, 3, 3, 7]\n\n#n = len(a)\n\nm = max(a)\nc = [0] * (m + 1)\n\nfor i in a:\n    c[i] += 1\n\nf = [0] * (m + 1)\n\nf[0] = 1\nf[1] = 1\n\nfor i in range(2, m + 1):\n    f[i] = f[i - 1] + f[i - 2]\n    f[i] %= 998244353\n\nans = 1\n\nfor i in c:\n    ans *= f[i]\n    ans %= 998244353\n\nprint(ans)"
+}
+2022-04-19 22:31:34.363876 REASON stop
+2022-04-19 22:31:34.371930 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef solve(a):\n    n = len(a)\n    d = {}\n    for i in range(n):\n        if a[i] not in d:\n            d[a[i]] = [i]\n        else:\n            d[a[i]].append(i)\n    # print(d)\n\n    res = 1\n    for i in d:\n        res *= (2**(len(d[i])-1))\n        res %= 998244353\n    return res\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solve(a))"
+}
+2022-04-19 22:31:34.372039 REASON stop
+2022-04-19 22:31:34.378450 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn = int(input())\narr = list(map(int, input().split()))\n\nd = {}\nfor i in arr:\n    if i in d:\n        d[i] += 1\n    else:\n        d[i] = 1\n\ncount = 1\nfor i in d:\n    count *= (d[i]+1)\n    count %= 998244353\n\nprint(count)"
+}
+2022-04-19 22:31:34.378567 REASON stop
+2022-04-19 22:31:34.379324 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom collections import Counter\n\ndef solve(a):\n    c = Counter(a)\n    vals = sorted(c.values())\n    dp = [1]*len(vals)\n    dp[0] = vals[0] + 1\n    for i in range(1, len(vals)):\n        dp[i] = (dp[i-1] * (vals[i] + 1)) % 998244353\n    return dp[-1]\n\nn = int(input())\na = list(map(int, input().split()))\nprint(solve(a))"
+}
+2022-04-19 22:31:34.379401 REASON stop
+2022-04-19 22:31:34.387378 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n\n    # see editorial for explanation\n    # we can't get the answer directly, but we can get the answer on the reverse of the array\n    # if we have the answer on the reverse of the array, we can get the answer on the original array\n    # let's solve it on the reverse of the array\n\n    # first, we need a function to calculate the number of different monotonic renumerations of an array\n    # we can use a dynamic programming approach\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[1..i] such that the last number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i - 1][j - 1]\n    # if j == 0 and a[i] == a[i - 1], then dp[i][j] = dp[i - 1][j]\n    # if j == 0 and a[i] != a[i - 1], then dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n    # the answer is dp[n][0]\n    # the complexity is O(n^2)\n\n    # now we have the function to calculate the number of different monotonic renumerations of an array\n    # let's use it to calculate the answer on the reverse of the array\n    # we can use a dynamic programming approach\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[i..n] such that the first number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i + 1][j - 1]\n    # if j == 0 and a[i] == a[i + 1], then dp[i][j] = dp[i + 1][j]\n    # if j == 0 and a[i] != a[i + 1], then dp[i][j] = dp[i + 1][j] + dp[i + 1][j + 1]\n    # the answer is dp[1][0]\n    # the complexity is O(n^2)\n\n    # now we have the answer on the reverse of the array\n    # let's use it to calculate the answer on the original array\n    # let's say we have an array a[1..n]\n    # let's say we have an array dp[1..n][0..n]\n    # dp[i][j] is the number of different monotonic renumerations of a[1..i] such that the last number of the array is j\n    # we can calculate dp[i][j] as follows:\n    # if j > 0, then dp[i][j] = dp[i - 1][j - 1]\n    # if j == 0 and a[i] == a[i - 1], then dp[i][j] = dp[i - 1][j]\n    # if j == 0 and a[i] != a[i - 1], then dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n    # the answer is dp[n][0]\n    # the complexity is O(n^2)\n\n    # now we have the answer on the original array\n    # the complexity is O(n^2)\n\n    # let's calculate the answer on the reverse of the array\n    a = a[::-1]\n\n    dp = [[0 for j in range(n + 1)] for i in range(n + 1)]\n    dp[n][0] = 1\n\n    for i in range(n - 1, 0, -1):\n        for j in range(n):\n            if j > 0:\n                dp[i][j] = dp[i + 1][j - 1]\n            else:\n                if a[i] == a[i + 1]:\n                    dp[i][j] = dp[i + 1][j]\n                else:\n                    dp[i][j] = dp[i + 1][j] + dp[i + 1][j + 1]\n\n    answer = dp[1][0]\n\n    # now we have the answer on the reverse of the array\n    # let's use it to calculate the answer on the original array\n    a = a[::-1]\n\n    dp = [[0 for j in range(n + 1)] for i in range(n + 1)]\n    dp[n][0] = answer\n\n    for i in range(n - 1, 0, -1):\n        for j in range(n):\n            if j > 0:\n                dp[i][j] = dp[i - 1][j - 1]\n            else:\n                if a[i] == a[i - 1]:\n                    dp[i][j] = dp[i - 1][j]\n                else:\n                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1]\n\n    answer = dp[1][0]\n\n    # now we have the answer on the original array\n    # the complexity is O(n^2)\n\n    print(answer % 998244353)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:31:34.387586 REASON stop

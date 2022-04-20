@@ -1,0 +1,204 @@
+2022-04-19 23:14:09.157086 """
+A star is a figure of the following type: an asterisk character '*' in the center of the figure and four rays (to the left, right, top, bottom) of the same positive length. The size of a star is the length of its rays. The size of a star must be a positive number (i.e. rays of length $0$ are not allowed).
+
+Let's consider empty cells are denoted by '.', then the following figures are stars:
+
+ [Image] The leftmost figure is a star of size $1$, the middle figure is a star of size $2$ and the rightmost figure is a star of size $3$. 
+
+You are given a rectangular grid of size $n \times m$ consisting only of asterisks '*' and periods (dots) '.'. Rows are numbered from $1$ to $n$, columns are numbered from $1$ to $m$. Your task is to draw this grid using any number of stars or find out that it is impossible. Stars can intersect, overlap or even coincide with each other. The number of stars in the output can't exceed $n \cdot m$. Each star should be completely inside the grid. You can use stars of same and arbitrary sizes.
+
+In this problem, you do not need to minimize the number of stars. Just find any way to draw the given grid with at most $n \cdot m$ stars.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($3 \le n, m \le 100$) — the sizes of the given grid.
+
+The next $n$ lines contains $m$ characters each, the $i$-th line describes the $i$-th row of the grid. It is guaranteed that grid consists of characters '*' and '.' only.
+
+
+-----Output-----
+
+If it is impossible to draw the given grid using stars only, print "-1".
+
+Otherwise in the first line print one integer $k$ ($0 \le k \le n \cdot m$) — the number of stars needed to draw the given grid. The next $k$ lines should contain three integers each — $x_j$, $y_j$ and $s_j$, where $x_j$ is the row index of the central star character, $y_j$ is the column index of the central star character and $s_j$ is the size of the star. Each star should be completely inside the grid.
+
+
+-----Examples-----
+Input
+6 8
+....*...
+...**...
+..*****.
+...**...
+....*...
+........
+
+Output
+3
+3 4 1
+3 5 2
+3 5 1
+
+Input
+5 5
+.*...
+****.
+.****
+..**.
+.....
+
+Output
+3
+2 2 1
+3 3 1
+3 4 1
+
+Input
+5 5
+.*...
+***..
+.*...
+.*...
+.....
+
+Output
+-1
+
+Input
+3 3
+*.*
+.*.
+*.*
+
+Output
+-1
+
+
+
+-----Note-----
+
+In the first example the output 2
+
+3 4 1
+
+3 5 2
+
+
+
+is also correct.
+"""
+2022-04-19 23:14:09.157108 --------------------------
+2022-04-19 23:14:09.157218 using api key sourya
+2022-04-19 23:14:41.383351 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\ndef draw(grid, n, m):\n    stars = 0\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars += 1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j] == '*' and grid[i][j+s] == '*' and grid[i+s][j+s] == '*':\n                    s += 1\n                for k in range(s):\n                    for l in range(s):\n                        if grid[i+k][j+l] == '*':\n                            grid[i+k][j+l] = '.'\n                        else:\n                            return -1\n    if stars == n*m:\n        return 0\n    else:\n        return stars\n\nn, m = map(int, input().split())\ngrid = [input() for _ in range(n)]\n\nstars = draw(grid, n, m)\nif stars == -1:\n    print(-1)\nelse:\n    print(stars)\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j] == '*' and grid[i][j+s] == '*' and grid[i+s][j+s] == '*':\n                    s += 1\n                print(i+1, j+1, s)\n                for k in range(s):\n                    for l in range(s):\n                        grid[i+k][j+l] = '.'"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(str, input())))\n\ncnt = 0\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == '*':\n            cnt = cnt + 1\n\nif cnt == 0:\n    print(0)\nelse:\n    print(cnt)\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                k = 1\n                while i+k < n and j+k < m and i-k >= 0 and j-k >= 0:\n                    if a[i+k][j] == '*' and a[i-k][j] == '*' and a[i][j+k] == '*' and a[i][j-k] == '*':\n                        k = k + 1\n                    else:\n                        break\n                print(i+1, j+1, k)\n                for l in range(k):\n                    a[i+l][j] = '.'\n                    a[i-l][j] = '.'\n                    a[i][j+l] = '.'\n                    a[i][j-l] = '.'"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n,m = list(map(int, input().split()))\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    stars = 0\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars += 1\n                for k in range(j+1, m):\n                    if grid[i][k] == '*':\n                        continue\n                    else:\n                        break\n\n    print(stars)\n    return\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    # print(grid)\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    # print(stars)\n\n    def check(x, y, size):\n        if x < 0 or x >= n or y < 0 or y >= m:\n            return False\n        if grid[x][y] == '.':\n            return False\n        if size == 1:\n            return True\n        return check(x, y - 1, size - 1) and check(x, y + 1, size - 1) and check(x - 1, y, size - 1) and check(x + 1, y, size - 1)\n\n    def find_star(x, y):\n        for size in range(1, n + m):\n            if check(x, y, size):\n                return (x, y, size)\n        return None\n\n    def solve():\n        for i in range(n):\n            for j in range(m):\n                if grid[i][j] == '*':\n                    star = find_star(i, j)\n                    if star is None:\n                        print(-1)\n                        return\n                    grid[i][j] = '.'\n                    print(star[0] + 1, star[1] + 1, star[2])\n                    for dx in range(-star[2] + 1, star[2]):\n                        for dy in range(-star[2] + 1, star[2]):\n                            if grid[i + dx][j + dy] == '*':\n                                grid[i + dx][j + dy] = '.'\n        return\n\n    solve()\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef is_star(grid, i, j, size):\n    if grid[i][j] == '.':\n        return False\n    if i - size < 0 or i + size >= len(grid):\n        return False\n    if j - size < 0 or j + size >= len(grid[0]):\n        return False\n    for idx in range(i - size, i + size + 1):\n        if grid[idx][j] == '.':\n            return False\n    for idx in range(j - size, j + size + 1):\n        if grid[i][idx] == '.':\n            return False\n    return True\n\ndef draw_star(grid, i, j, size):\n    for idx in range(i - size, i + size + 1):\n        grid[idx][j] = '.'\n    for idx in range(j - size, j + size + 1):\n        grid[i][idx] = '.'\n\ndef is_empty(grid):\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                return False\n    return True\n\ndef compute_grid(grid):\n    stars = []\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            size = 0\n            while is_star(grid, i, j, size):\n                draw_star(grid, i, j, size)\n                stars.append((i, j, size + 1))\n                size += 1\n    if is_empty(grid):\n        print(len(stars))\n        for star in stars:\n            print(star[0] + 1, star[1] + 1, star[2])\n    else:\n        print(\"-1\")\n\ndef read_input():\n    n, m = [int(x) for x in input().split(\" \")]\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n    return grid\n\nif __name__ == \"__main__\":\n    grid = read_input()\n    compute_grid(grid)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import deque\n\ndef get_star_size(r, c):\n    s = 1\n    while r+s < n and c+s < m and grid[r+s][c+s] == '*' and grid[r-s][c-s] == '*' and grid[r+s][c-s] == '*' and grid[r-s][c+s] == '*': s += 1\n    return s\n\ndef is_valid(r, c, s):\n    for i in range(r-s+1, r+s):\n        for j in range(c-s+1, c+s):\n            if grid[i][j] == '.': return False\n    return True\n\ndef check_star(r, c):\n    s = 1\n    while r+s < n and c+s < m and grid[r+s][c+s] == '*' and grid[r-s][c-s] == '*' and grid[r+s][c-s] == '*' and grid[r-s][c+s] == '*': s += 1\n    return s-1\n\ndef bfs(r, c):\n    s = 1\n    if grid[r][c] == '.': return 0\n    q = deque()\n    q.append((r, c, s))\n    while q:\n        r, c, s = q.popleft()\n        if is_valid(r, c, s):\n            for i in range(r-s+1, r+s):\n                for j in range(c-s+1, c+s):\n                    grid[i][j] = '.'\n                stars.append((r, c, s))\n                for x, y in [(r, c+s), (r, c-s), (r+s, c), (r-s, c)]:\n                    if x < n and x >= 0 and y < m and y >= 0:\n                        q.append((x, y, check_star(x, y)))\n    return\n\nn, m = map(int, sys.stdin.readline().split())\ngrid = []\nfor _ in range(n):\n    grid.append(list(sys.stdin.readline().strip()))\n\nstars = []\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == '*':\n            s = get_star_size(i, j)\n            if is_valid(i, j, s):\n                for k in range(i-s+1, i+s):\n                    for l in range(j-s+1, j+s):\n                        grid[k][l] = '.'\n                stars.append((i, j, s))\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == '*':\n            bfs(i, j)\n\nprint(len(stars))\nfor r, c, s in stars:\n    print(r+1, c+1, s)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n,m = map(int, input().split())\n    a = []\n    for i in range(n):\n        a.append(input())\n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                l = 0\n                while j + l < m and a[i][j + l] == '*':\n                    l += 1\n                r = 0\n                while j - r >= 0 and a[i][j - r] == '*':\n                    r += 1\n                u = 0\n                while i - u >= 0 and a[i - u][j] == '*':\n                    u += 1\n                d = 0\n                while i + d < n and a[i + d][j] == '*':\n                    d += 1\n                if l != r or u != d or l != u or r != d:\n                    print(-1)\n                    return\n                for g in range(1,l):\n                    for h in range(1,l):\n                        if a[i + h][j + g] != '*':\n                            print(-1)\n                            return\n                ans.append([i + 1,j + 1,l])\n    print(len(ans))\n    for i in range(len(ans)):\n        print(*ans[i])\n\nmain()"
+    }
+  ],
+  "created": 1650410049,
+  "id": "cmpl-4yrKrpdXyTPe7BK5HbRWEHdJtQtBc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 23:14:41.383815 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\ndef draw(grid, n, m):\n    stars = 0\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars += 1\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j] == '*' and grid[i][j+s] == '*' and grid[i+s][j+s] == '*':\n                    s += 1\n                for k in range(s):\n                    for l in range(s):\n                        if grid[i+k][j+l] == '*':\n                            grid[i+k][j+l] = '.'\n                        else:\n                            return -1\n    if stars == n*m:\n        return 0\n    else:\n        return stars\n\nn, m = map(int, input().split())\ngrid = [input() for _ in range(n)]\n\nstars = draw(grid, n, m)\nif stars == -1:\n    print(-1)\nelse:\n    print(stars)\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                s = 1\n                while i+s < n and j+s < m and grid[i+s][j] == '*' and grid[i][j+s] == '*' and grid[i+s][j+s] == '*':\n                    s += 1\n                print(i+1, j+1, s)\n                for k in range(s):\n                    for l in range(s):\n                        grid[i+k][j+l] = '.'"
+}
+2022-04-19 23:14:41.383862 REASON stop
+2022-04-19 23:14:41.384766 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(str, input())))\n\ncnt = 0\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == '*':\n            cnt = cnt + 1\n\nif cnt == 0:\n    print(0)\nelse:\n    print(cnt)\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                k = 1\n                while i+k < n and j+k < m and i-k >= 0 and j-k >= 0:\n                    if a[i+k][j] == '*' and a[i-k][j] == '*' and a[i][j+k] == '*' and a[i][j-k] == '*':\n                        k = k + 1\n                    else:\n                        break\n                print(i+1, j+1, k)\n                for l in range(k):\n                    a[i+l][j] = '.'\n                    a[i-l][j] = '.'\n                    a[i][j+l] = '.'\n                    a[i][j-l] = '.'"
+}
+2022-04-19 23:14:41.384856 REASON stop
+2022-04-19 23:14:41.385332 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-19 23:14:41.385394 REASON stop
+2022-04-19 23:14:41.401171 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n,m = list(map(int, input().split()))\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    stars = 0\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars += 1\n                for k in range(j+1, m):\n                    if grid[i][k] == '*':\n                        continue\n                    else:\n                        break\n\n    print(stars)\n    return\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 23:14:41.401298 REASON stop
+2022-04-19 23:14:41.428253 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    grid = []\n    for i in range(n):\n        grid.append(list(input()))\n    # print(grid)\n    stars = []\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == '*':\n                stars.append((i, j))\n    # print(stars)\n\n    def check(x, y, size):\n        if x < 0 or x >= n or y < 0 or y >= m:\n            return False\n        if grid[x][y] == '.':\n            return False\n        if size == 1:\n            return True\n        return check(x, y - 1, size - 1) and check(x, y + 1, size - 1) and check(x - 1, y, size - 1) and check(x + 1, y, size - 1)\n\n    def find_star(x, y):\n        for size in range(1, n + m):\n            if check(x, y, size):\n                return (x, y, size)\n        return None\n\n    def solve():\n        for i in range(n):\n            for j in range(m):\n                if grid[i][j] == '*':\n                    star = find_star(i, j)\n                    if star is None:\n                        print(-1)\n                        return\n                    grid[i][j] = '.'\n                    print(star[0] + 1, star[1] + 1, star[2])\n                    for dx in range(-star[2] + 1, star[2]):\n                        for dy in range(-star[2] + 1, star[2]):\n                            if grid[i + dx][j + dy] == '*':\n                                grid[i + dx][j + dy] = '.'\n        return\n\n    solve()\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-19 23:14:41.428394 REASON stop
+2022-04-19 23:14:41.429662 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef is_star(grid, i, j, size):\n    if grid[i][j] == '.':\n        return False\n    if i - size < 0 or i + size >= len(grid):\n        return False\n    if j - size < 0 or j + size >= len(grid[0]):\n        return False\n    for idx in range(i - size, i + size + 1):\n        if grid[idx][j] == '.':\n            return False\n    for idx in range(j - size, j + size + 1):\n        if grid[i][idx] == '.':\n            return False\n    return True\n\ndef draw_star(grid, i, j, size):\n    for idx in range(i - size, i + size + 1):\n        grid[idx][j] = '.'\n    for idx in range(j - size, j + size + 1):\n        grid[i][idx] = '.'\n\ndef is_empty(grid):\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == '*':\n                return False\n    return True\n\ndef compute_grid(grid):\n    stars = []\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            size = 0\n            while is_star(grid, i, j, size):\n                draw_star(grid, i, j, size)\n                stars.append((i, j, size + 1))\n                size += 1\n    if is_empty(grid):\n        print(len(stars))\n        for star in stars:\n            print(star[0] + 1, star[1] + 1, star[2])\n    else:\n        print(\"-1\")\n\ndef read_input():\n    n, m = [int(x) for x in input().split(\" \")]\n    grid = []\n    for _ in range(n):\n        grid.append(list(input()))\n    return grid\n\nif __name__ == \"__main__\":\n    grid = read_input()\n    compute_grid(grid)"
+}
+2022-04-19 23:14:41.429788 REASON stop
+2022-04-19 23:14:41.430900 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import deque\n\ndef get_star_size(r, c):\n    s = 1\n    while r+s < n and c+s < m and grid[r+s][c+s] == '*' and grid[r-s][c-s] == '*' and grid[r+s][c-s] == '*' and grid[r-s][c+s] == '*': s += 1\n    return s\n\ndef is_valid(r, c, s):\n    for i in range(r-s+1, r+s):\n        for j in range(c-s+1, c+s):\n            if grid[i][j] == '.': return False\n    return True\n\ndef check_star(r, c):\n    s = 1\n    while r+s < n and c+s < m and grid[r+s][c+s] == '*' and grid[r-s][c-s] == '*' and grid[r+s][c-s] == '*' and grid[r-s][c+s] == '*': s += 1\n    return s-1\n\ndef bfs(r, c):\n    s = 1\n    if grid[r][c] == '.': return 0\n    q = deque()\n    q.append((r, c, s))\n    while q:\n        r, c, s = q.popleft()\n        if is_valid(r, c, s):\n            for i in range(r-s+1, r+s):\n                for j in range(c-s+1, c+s):\n                    grid[i][j] = '.'\n                stars.append((r, c, s))\n                for x, y in [(r, c+s), (r, c-s), (r+s, c), (r-s, c)]:\n                    if x < n and x >= 0 and y < m and y >= 0:\n                        q.append((x, y, check_star(x, y)))\n    return\n\nn, m = map(int, sys.stdin.readline().split())\ngrid = []\nfor _ in range(n):\n    grid.append(list(sys.stdin.readline().strip()))\n\nstars = []\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == '*':\n            s = get_star_size(i, j)\n            if is_valid(i, j, s):\n                for k in range(i-s+1, i+s):\n                    for l in range(j-s+1, j+s):\n                        grid[k][l] = '.'\n                stars.append((i, j, s))\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == '*':\n            bfs(i, j)\n\nprint(len(stars))\nfor r, c, s in stars:\n    print(r+1, c+1, s)"
+}
+2022-04-19 23:14:41.431016 REASON stop
+2022-04-19 23:14:41.432045 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n,m = map(int, input().split())\n    a = []\n    for i in range(n):\n        a.append(input())\n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == '*':\n                l = 0\n                while j + l < m and a[i][j + l] == '*':\n                    l += 1\n                r = 0\n                while j - r >= 0 and a[i][j - r] == '*':\n                    r += 1\n                u = 0\n                while i - u >= 0 and a[i - u][j] == '*':\n                    u += 1\n                d = 0\n                while i + d < n and a[i + d][j] == '*':\n                    d += 1\n                if l != r or u != d or l != u or r != d:\n                    print(-1)\n                    return\n                for g in range(1,l):\n                    for h in range(1,l):\n                        if a[i + h][j + g] != '*':\n                            print(-1)\n                            return\n                ans.append([i + 1,j + 1,l])\n    print(len(ans))\n    for i in range(len(ans)):\n        print(*ans[i])\n\nmain()"
+}
+2022-04-19 23:14:41.432226 REASON stop

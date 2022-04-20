@@ -1,0 +1,152 @@
+2022-04-19 21:23:11.829745 """
+An array of integers $p_1, p_2, \dots, p_n$ is called a permutation if it contains each number from $1$ to $n$ exactly once. For example, the following arrays are permutations: $[3, 1, 2]$, $[1]$, $[1, 2, 3, 4, 5]$ and $[4, 3, 1, 2]$. The following arrays are not permutations: $[2]$, $[1, 1]$, $[2, 3, 4]$.
+
+Polycarp invented a really cool permutation $p_1, p_2, \dots, p_n$ of length $n$. It is very disappointing, but he forgot this permutation. He only remembers the array $q_1, q_2, \dots, q_{n-1}$ of length $n-1$, where $q_i=p_{i+1}-p_i$.
+
+Given $n$ and $q=q_1, q_2, \dots, q_{n-1}$, help Polycarp restore the invented permutation.
+
+
+-----Input-----
+
+The first line contains the integer $n$ ($2 \le n \le 2\cdot10^5$) — the length of the permutation to restore. The second line contains $n-1$ integers $q_1, q_2, \dots, q_{n-1}$ ($-n < q_i < n$).
+
+
+-----Output-----
+
+Print the integer -1 if there is no such permutation of length $n$ which corresponds to the given array $q$. Otherwise, if it exists, print $p_1, p_2, \dots, p_n$. Print any such permutation if there are many of them.
+
+
+-----Examples-----
+Input
+3
+-2 1
+
+Output
+3 1 2 
+Input
+5
+1 1 1 1
+
+Output
+1 2 3 4 5 
+Input
+4
+-1 2 2
+
+Output
+-1
+"""
+2022-04-19 21:23:11.829757 --------------------------
+2022-04-19 21:23:11.829861 using api key sourya
+2022-04-19 21:23:26.373228 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    q = list(map(int, sys.stdin.readline().split()))\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n-1):\n        p[i] = p[i-1] + q[i]\n    p[n-1] = p[n-2] + q[n-2]\n    if min(p) < 1:\n        print(-1)\n    else:\n        for i in range(n):\n            p[i] += i+1\n        print(*p)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\n# Check if the sequence is possible\nfor i in range(n-1):\n    if abs(q[i]) > 1:\n        print(-1)\n        exit()\n\n# Create the sequence\np = [0]*n\np[0] = q[0]\nfor i in range(1,n):\n    p[i] = p[i-1] + q[i-1]\n\n# Check if the sequence is a permutation\nif len(set(p)) != n or min(p) < 1 or max(p) > n:\n    print(-1)\n    exit()\n\n# Print the sequence\nfor i in range(n):\n    print(p[i], end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": ""
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = [int(x) for x in input().split()]\n\np = [0] * n\np[0] = q[0] + 1\n\nfor i in range(1, n):\n    p[i] = p[i-1] + q[i]\n\nif any([x <= 0 or x > n for x in p]):\n    print(-1)\nelse:\n    print(' '.join([str(x) for x in p]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif sum(q) != 0:\n    print(-1)\n    exit()\n\np = []\nfor i in range(1, n+1):\n    p.append(i)\n\nfor i in range(1, n):\n    if q[i-1] < 0:\n        p[i-1], p[i+q[i-1]] = p[i+q[i-1]], p[i-1]\n    else:\n        p[i+q[i-1]], p[i] = p[i], p[i+q[i-1]]\n\nprint(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0]*n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = q[i]-q[i-1]\np[-1] = q[-1]\n\nif (min(p) < 1) or (max(p) > n):\n    print(-1)\nelse:\n    print(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = [int(x) for x in input().split()]\n\np = [0]*n\np[0] = 0\n\nfor i in range(1, n):\n    p[i] = p[i-1] + q[i-1]\n\nif any(x < 1 or x > n for x in p):\n    print(\"-1\")\n    exit()\n\nif len(set(p)) != n:\n    print(\"-1\")\n    exit()\n\nprint(\" \".join(map(str, p)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = [int(i) for i in input().split()]\n\nif len(q) != n-1:\n    print(-1)\n\np = [0]*n\np[0] = q[0]\n\nfor i in range(1,n-1):\n    p[i] = p[i-1] + q[i]\n\np[n-1] = p[n-2] + q[n-2]\n\nif min(p) < 1 or max(p) > n:\n    print(-1)\n    exit()\n\nfor i in range(n):\n    if p.count(p[i]) > 1:\n        print(-1)\n        exit()\n\nprint(*p)"
+    }
+  ],
+  "created": 1650403391,
+  "id": "cmpl-4ypbTkAkfm4TisnhpauVGFSczZkia",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 21:23:26.373564 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    q = list(map(int, sys.stdin.readline().split()))\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n-1):\n        p[i] = p[i-1] + q[i]\n    p[n-1] = p[n-2] + q[n-2]\n    if min(p) < 1:\n        print(-1)\n    else:\n        for i in range(n):\n            p[i] += i+1\n        print(*p)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 21:23:26.373601 REASON stop
+2022-04-19 21:23:26.374172 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\n# Check if the sequence is possible\nfor i in range(n-1):\n    if abs(q[i]) > 1:\n        print(-1)\n        exit()\n\n# Create the sequence\np = [0]*n\np[0] = q[0]\nfor i in range(1,n):\n    p[i] = p[i-1] + q[i-1]\n\n# Check if the sequence is a permutation\nif len(set(p)) != n or min(p) < 1 or max(p) > n:\n    print(-1)\n    exit()\n\n# Print the sequence\nfor i in range(n):\n    print(p[i], end=' ')"
+}
+2022-04-19 21:23:26.374240 REASON stop
+2022-04-19 21:23:26.374664 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": ""
+}
+2022-04-19 21:23:26.374726 REASON stop
+2022-04-19 21:23:26.402164 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = [int(x) for x in input().split()]\n\np = [0] * n\np[0] = q[0] + 1\n\nfor i in range(1, n):\n    p[i] = p[i-1] + q[i]\n\nif any([x <= 0 or x > n for x in p]):\n    print(-1)\nelse:\n    print(' '.join([str(x) for x in p]))"
+}
+2022-04-19 21:23:26.402307 REASON stop
+2022-04-19 21:23:26.403275 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif sum(q) != 0:\n    print(-1)\n    exit()\n\np = []\nfor i in range(1, n+1):\n    p.append(i)\n\nfor i in range(1, n):\n    if q[i-1] < 0:\n        p[i-1], p[i+q[i-1]] = p[i+q[i-1]], p[i-1]\n    else:\n        p[i+q[i-1]], p[i] = p[i], p[i+q[i-1]]\n\nprint(*p)"
+}
+2022-04-19 21:23:26.403374 REASON stop
+2022-04-19 21:23:26.404164 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0]*n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = q[i]-q[i-1]\np[-1] = q[-1]\n\nif (min(p) < 1) or (max(p) > n):\n    print(-1)\nelse:\n    print(*p)"
+}
+2022-04-19 21:23:26.404233 REASON stop
+2022-04-19 21:23:26.405284 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = [int(x) for x in input().split()]\n\np = [0]*n\np[0] = 0\n\nfor i in range(1, n):\n    p[i] = p[i-1] + q[i-1]\n\nif any(x < 1 or x > n for x in p):\n    print(\"-1\")\n    exit()\n\nif len(set(p)) != n:\n    print(\"-1\")\n    exit()\n\nprint(\" \".join(map(str, p)))"
+}
+2022-04-19 21:23:26.405405 REASON stop
+2022-04-19 21:23:26.406284 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = [int(i) for i in input().split()]\n\nif len(q) != n-1:\n    print(-1)\n\np = [0]*n\np[0] = q[0]\n\nfor i in range(1,n-1):\n    p[i] = p[i-1] + q[i]\n\np[n-1] = p[n-2] + q[n-2]\n\nif min(p) < 1 or max(p) > n:\n    print(-1)\n    exit()\n\nfor i in range(n):\n    if p.count(p[i]) > 1:\n        print(-1)\n        exit()\n\nprint(*p)"
+}
+2022-04-19 21:23:26.406489 REASON stop

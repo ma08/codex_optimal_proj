@@ -1,0 +1,154 @@
+2022-04-19 22:06:52.706516 """
+In the Ancient Kingdom of Snuke, there was a pyramid to strengthen the authority of Takahashi, the president of AtCoder Inc.
+
+The pyramid had center coordinates (C_X, C_Y) and height H. The altitude of coordinates (X, Y) is max(H - |X - C_X| - |Y - C_Y|, 0).  
+Aoki, an explorer, conducted a survey to identify the center coordinates and height of this pyramid. As a result, he obtained the following information:  
+ - C_X, C_Y was integers between 0 and 100 (inclusive), and H was an integer not less than 1.  
+ - Additionally, he obtained N pieces of information. The i-th of them is: "the altitude of point (x_i, y_i) is h_i."  
+This was enough to identify the center coordinates and the height of the pyramid. Find these values with the clues above.  
+
+-----Constraints-----
+ - N is an integer between 1 and 100 (inclusive).
+ - x_i and y_i are integers between 0 and 100 (inclusive).
+ - h_i is an integer between 0 and 10^9 (inclusive).
+ - The N coordinates (x_1, y_1), (x_2, y_2), (x_3, y_3), ..., (x_N, y_N) are all different.
+ - The center coordinates and the height of the pyramid can be uniquely identified.
+
+-----Input-----
+Input is given from Standard Input in the following format:  
+N
+x_1 y_1 h_1
+x_2 y_2 h_2
+x_3 y_3 h_3
+:
+x_N y_N h_N
+
+-----Output-----
+Print values C_X, C_Y and H representing the center coordinates and the height of the pyramid in one line, with spaces in between.  
+
+-----Sample Input-----
+4
+2 3 5
+2 1 5
+1 2 5
+3 2 5
+
+-----Sample Output-----
+2 2 6
+
+In this case, the center coordinates and the height can be identified as (2, 2) and 6.
+"""
+2022-04-19 22:06:52.706525 --------------------------
+2022-04-19 22:06:52.706631 using api key sourya
+2022-04-19 22:07:14.543251 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\n# \u9ad8\u3055\u306e\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\nmax_h = 0\nfor i in range(n):\n    x,y,h = map(int,input().split())\n    if h > max_h:\n        max_h = h\n\n# \u9ad8\u3055\u306e\u6700\u5927\u5024\u3092\u521d\u671f\u5024\u3068\u3057\u3066\u3001\u9ad8\u3055\u304c0\u306b\u306a\u308b\u307e\u3067\u63a2\u7d22\n# \u9ad8\u3055\u304c0\u306b\u306a\u3063\u305f\u6642\u70b9\u3067\u3001\u305d\u306e\u30dd\u30a4\u30f3\u30c8\u304c\u4e2d\u5fc3\u3068\u306a\u308b\nfor x in range(101):\n    for y in range(101):\n        H = max_h - abs(x) - abs(y)\n        if H <= 0:\n            print(x,y,max_h)\n            exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n\n\ndef main():\n    N = int(input())\n    points = []\n    for i in range(N):\n        x, y, h = map(int, input().split())\n        points.append([x, y, h])\n\n    for Cx in range(101):\n        for Cy in range(101):\n            H = 0\n            for i in range(N):\n                H = max(H, abs(points[i][0]-Cx)+abs(points[i][1]-Cy)+points[i][2])\n            if all(abs(points[i][0]-Cx)+abs(points[i][1]-Cy)+H==points[i][2] for i in range(N)):\n                print(Cx, Cy, H)\n                break\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# \u5165\u529b\nn = int(input())\ncoordinate = []\nfor _ in range(n):\n    x, y, h = map(int, input().split())\n    coordinate.append([x, y, h])\n\n# \u56db\u9685\u306e\u5ea7\u6a19\u3092\u6c42\u3081\u308b\nmin_x = coordinate[0][0]\nmin_y = coordinate[0][1]\nmax_x = coordinate[0][0]\nmax_y = coordinate[0][1]\nfor i in range(n):\n    if coordinate[i][0] < min_x:\n        min_x = coordinate[i][0]\n    if coordinate[i][1] < min_y:\n        min_y = coordinate[i][1]\n    if coordinate[i][0] > max_x:\n        max_x = coordinate[i][0]\n    if coordinate[i][1] > max_y:\n        max_y = coordinate[i][1]\n\n# \u4e2d\u5fc3\u5ea7\u6a19\u3092\u6c42\u3081\u308b\nc_x = 0\nc_y = 0\nh = 0\nfor i in range(min_x, max_x+1):\n    for j in range(min_y, max_y+1):\n        for k in range(n):\n            if coordinate[k][0] == i and coordinate[k][1] == j:\n                curr_h = coordinate[k][2]\n                break\n            else:\n                continue\n        if max(h, curr_h - abs(i - coordinate[k][0]) - abs(j - coordinate[k][1])) > h:\n            h = max(h, curr_h - abs(i - coordinate[k][0]) - abs(j - coordinate[k][1]))\n            c_x = i\n            c_y = j\n\n# \u51fa\u529b\nprint(c_x, c_y, h)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = []\n    y = []\n    h = []\n    for i in range(n):\n        x_i, y_i, h_i = map(int, input().split())\n        x.append(x_i)\n        y.append(y_i)\n        h.append(h_i)\n    for i in range(101):\n        for j in range(101):\n            if h[0] == abs(x[0]-i) + abs(y[0]-j):\n                h_ = h[0]\n            else:\n                continue\n            for k in range(n):\n                if h_ != max(h[k] - abs(x[k]-i) - abs(y[k]-j), 0):\n                    break\n            else:\n                print(i, j, h_)\n                exit()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#input\nN = int(input())\n\n#initialize\nx = [0]*N\ny = [0]*N\nh = [0]*N\n\n#input\nfor i in range(N):\n    x[i], y[i], h[i] = map(int, input().split())\n\n#solve\nfor i in range(101):\n    for j in range(101):\n        if N == 1:\n            H = h[0] + abs(x[0] - i) + abs(y[0] - j)\n            print(i, j, H)\n            exit()\n        else:\n            H = h[0] + abs(x[0] - i) + abs(y[0] - j)\n            for k in range(1, N):\n                if h[k] + abs(x[k] - i) + abs(y[k] - j) == H:\n                    continue\n                else:\n                    break\n            if k == N-1:\n                print(i, j, H)\n                exit()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nnum_survey = int(input())\n\nsurvey_list = []\nfor i in range(num_survey):\n    survey_list.append(list(map(int, input().split())))\n\nsurvey_list.sort()\n\nx = y = 0\nfor i in range(num_survey - 1):\n    x += survey_list[i][0]\n    y += survey_list[i][1]\n\nx = round(x / (num_survey - 1))\ny = round(y / (num_survey - 1))\n\nh = 0\nfor i in range(num_survey):\n    h = max(h, survey_list[i][2] + abs(survey_list[i][0] - x) + abs(survey_list[i][1] - y))\n\nprint(\"{} {} {}\".format(x, y, h))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN = int(input())\n\nx = []\ny = []\nh = []\n\nfor _ in range(N):\n    x_i, y_i, h_i = map(int, input().split())\n    x.append(x_i)\n    y.append(y_i)\n    h.append(h_i)\n\nfor C_X in range(101):\n    for C_Y in range(101):\n        H = 0\n        for i in range(N):\n            H_i = h[i] + abs(x[i] - C_X) + abs(y[i] - C_Y)\n            if H_i > H:\n                H = H_i\n        if H > 0:\n            break\n    if H > 0:\n        break\n\nprint(C_X, C_Y, H)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n#Read lines from standard input\nlines = [line.strip() for line in sys.stdin]\n\n#Parse input\nN = int(lines[0])\npoints = [(int(line.split(' ')[0]), int(line.split(' ')[1]), int(line.split(' ')[2])) for line in lines[1:]]\n\n#Find lowest point and get its coordinates\nmin_point = min(points, key=lambda p: p[2])\n\n#Find center coordinates by averaging x and y coordinates of all points\ncenter_x = sum(point[0] for point in points) / len(points)\ncenter_y = sum(point[1] for point in points) / len(points)\n\n#Find height by adding the altitude of all points to the altitude of the lowest point\nheight = sum(point[2] for point in points) / len(points) + min_point[2]\n\n#Print center coordinates and height\nprint(center_x, center_y, height)"
+    }
+  ],
+  "created": 1650406012,
+  "id": "cmpl-4yqHkhdwx5nMa26X4jQarN0qRHOUt",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-19 22:07:14.543618 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\n# \u9ad8\u3055\u306e\u6700\u5927\u5024\u3092\u6c42\u3081\u308b\nmax_h = 0\nfor i in range(n):\n    x,y,h = map(int,input().split())\n    if h > max_h:\n        max_h = h\n\n# \u9ad8\u3055\u306e\u6700\u5927\u5024\u3092\u521d\u671f\u5024\u3068\u3057\u3066\u3001\u9ad8\u3055\u304c0\u306b\u306a\u308b\u307e\u3067\u63a2\u7d22\n# \u9ad8\u3055\u304c0\u306b\u306a\u3063\u305f\u6642\u70b9\u3067\u3001\u305d\u306e\u30dd\u30a4\u30f3\u30c8\u304c\u4e2d\u5fc3\u3068\u306a\u308b\nfor x in range(101):\n    for y in range(101):\n        H = max_h - abs(x) - abs(y)\n        if H <= 0:\n            print(x,y,max_h)\n            exit()"
+}
+2022-04-19 22:07:14.543747 REASON stop
+2022-04-19 22:07:14.544666 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n\n\ndef main():\n    N = int(input())\n    points = []\n    for i in range(N):\n        x, y, h = map(int, input().split())\n        points.append([x, y, h])\n\n    for Cx in range(101):\n        for Cy in range(101):\n            H = 0\n            for i in range(N):\n                H = max(H, abs(points[i][0]-Cx)+abs(points[i][1]-Cy)+points[i][2])\n            if all(abs(points[i][0]-Cx)+abs(points[i][1]-Cy)+H==points[i][2] for i in range(N)):\n                print(Cx, Cy, H)\n                break\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:07:14.544832 REASON stop
+2022-04-19 22:07:14.545421 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# \u5165\u529b\nn = int(input())\ncoordinate = []\nfor _ in range(n):\n    x, y, h = map(int, input().split())\n    coordinate.append([x, y, h])\n\n# \u56db\u9685\u306e\u5ea7\u6a19\u3092\u6c42\u3081\u308b\nmin_x = coordinate[0][0]\nmin_y = coordinate[0][1]\nmax_x = coordinate[0][0]\nmax_y = coordinate[0][1]\nfor i in range(n):\n    if coordinate[i][0] < min_x:\n        min_x = coordinate[i][0]\n    if coordinate[i][1] < min_y:\n        min_y = coordinate[i][1]\n    if coordinate[i][0] > max_x:\n        max_x = coordinate[i][0]\n    if coordinate[i][1] > max_y:\n        max_y = coordinate[i][1]\n\n# \u4e2d\u5fc3\u5ea7\u6a19\u3092\u6c42\u3081\u308b\nc_x = 0\nc_y = 0\nh = 0\nfor i in range(min_x, max_x+1):\n    for j in range(min_y, max_y+1):\n        for k in range(n):\n            if coordinate[k][0] == i and coordinate[k][1] == j:\n                curr_h = coordinate[k][2]\n                break\n            else:\n                continue\n        if max(h, curr_h - abs(i - coordinate[k][0]) - abs(j - coordinate[k][1])) > h:\n            h = max(h, curr_h - abs(i - coordinate[k][0]) - abs(j - coordinate[k][1]))\n            c_x = i\n            c_y = j\n\n# \u51fa\u529b\nprint(c_x, c_y, h)"
+}
+2022-04-19 22:07:14.545495 REASON stop
+2022-04-19 22:07:14.563820 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = []\n    y = []\n    h = []\n    for i in range(n):\n        x_i, y_i, h_i = map(int, input().split())\n        x.append(x_i)\n        y.append(y_i)\n        h.append(h_i)\n    for i in range(101):\n        for j in range(101):\n            if h[0] == abs(x[0]-i) + abs(y[0]-j):\n                h_ = h[0]\n            else:\n                continue\n            for k in range(n):\n                if h_ != max(h[k] - abs(x[k]-i) - abs(y[k]-j), 0):\n                    break\n            else:\n                print(i, j, h_)\n                exit()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-19 22:07:14.563972 REASON stop
+2022-04-19 22:07:14.564868 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#input\nN = int(input())\n\n#initialize\nx = [0]*N\ny = [0]*N\nh = [0]*N\n\n#input\nfor i in range(N):\n    x[i], y[i], h[i] = map(int, input().split())\n\n#solve\nfor i in range(101):\n    for j in range(101):\n        if N == 1:\n            H = h[0] + abs(x[0] - i) + abs(y[0] - j)\n            print(i, j, H)\n            exit()\n        else:\n            H = h[0] + abs(x[0] - i) + abs(y[0] - j)\n            for k in range(1, N):\n                if h[k] + abs(x[k] - i) + abs(y[k] - j) == H:\n                    continue\n                else:\n                    break\n            if k == N-1:\n                print(i, j, H)\n                exit()"
+}
+2022-04-19 22:07:14.564972 REASON stop
+2022-04-19 22:07:14.583395 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nnum_survey = int(input())\n\nsurvey_list = []\nfor i in range(num_survey):\n    survey_list.append(list(map(int, input().split())))\n\nsurvey_list.sort()\n\nx = y = 0\nfor i in range(num_survey - 1):\n    x += survey_list[i][0]\n    y += survey_list[i][1]\n\nx = round(x / (num_survey - 1))\ny = round(y / (num_survey - 1))\n\nh = 0\nfor i in range(num_survey):\n    h = max(h, survey_list[i][2] + abs(survey_list[i][0] - x) + abs(survey_list[i][1] - y))\n\nprint(\"{} {} {}\".format(x, y, h))"
+}
+2022-04-19 22:07:14.583534 REASON stop
+2022-04-19 22:07:14.584826 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN = int(input())\n\nx = []\ny = []\nh = []\n\nfor _ in range(N):\n    x_i, y_i, h_i = map(int, input().split())\n    x.append(x_i)\n    y.append(y_i)\n    h.append(h_i)\n\nfor C_X in range(101):\n    for C_Y in range(101):\n        H = 0\n        for i in range(N):\n            H_i = h[i] + abs(x[i] - C_X) + abs(y[i] - C_Y)\n            if H_i > H:\n                H = H_i\n        if H > 0:\n            break\n    if H > 0:\n        break\n\nprint(C_X, C_Y, H)"
+}
+2022-04-19 22:07:14.584916 REASON stop
+2022-04-19 22:07:14.586130 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n#Read lines from standard input\nlines = [line.strip() for line in sys.stdin]\n\n#Parse input\nN = int(lines[0])\npoints = [(int(line.split(' ')[0]), int(line.split(' ')[1]), int(line.split(' ')[2])) for line in lines[1:]]\n\n#Find lowest point and get its coordinates\nmin_point = min(points, key=lambda p: p[2])\n\n#Find center coordinates by averaging x and y coordinates of all points\ncenter_x = sum(point[0] for point in points) / len(points)\ncenter_y = sum(point[1] for point in points) / len(points)\n\n#Find height by adding the altitude of all points to the altitude of the lowest point\nheight = sum(point[2] for point in points) / len(points) + min_point[2]\n\n#Print center coordinates and height\nprint(center_x, center_y, height)"
+}
+2022-04-19 22:07:14.586324 REASON stop
