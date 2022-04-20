@@ -1,0 +1,20 @@
+
+
+
+def main():
+    l, r = map(int, input().split())
+
+    if r - l >= 2019:
+        print(0)
+        exit()
+
+    mn = 2020
+    for i in range(l, r+1):
+        for j in range(i+1, r+2):
+            mn = min(mn, i*j % 2019)
+
+    print(mn)
+
+
+if __name__ == "__main__":
+    main()

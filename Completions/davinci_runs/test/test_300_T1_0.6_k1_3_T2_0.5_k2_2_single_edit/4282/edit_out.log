@@ -1,0 +1,61 @@
+2022-04-20 20:28:34.623397 num operations 1
+2022-04-20 20:28:34.623418 size on input set 1
+2022-04-20 20:28:34.623584 using api key sourya
+2022-04-20 20:28:34.802912 in retry 6 1.5 <class 'Exception'>, Retrying in 1 seconds...
+2022-04-20 20:28:36.304888 using api key sunu
+2022-04-20 20:28:41.849745 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nfrom collections import defaultdict\n\ndef find_cycle(graph, start):\n    visited = set()\n    cycle = [start]\n    while True:\n        if cycle[-1] in visited:\n            return cycle[cycle.index(cycle[-1]):]\n        else:\n            visited.add(cycle[-1])\n            cycle.append(graph[cycle[-1]])\n\ndef find_all_cycles(graph):\n    cycles = []\n    visited = set()\n    for start in graph:\n        if start not in visited:\n            cycle = find_cycle(graph, start)\n            cycles.append(cycle)\n            visited |= set(cycle)\n    return cycles\n\ndef solve(input):\n    kids = defaultdict(set)\n    for i in range(len(input)):\n        kids[input[i][0]].add(i+1)\n        kids[input[i][1]].add(i+1)\n    cycles = find_all_cycles(kids)\n    res = []\n    for cycle in cycles:\n        res.append(cycle[0])\n        for i in range(1, len(cycle)):\n            res.append(kids[cycle[i-1]].difference(set([cycle[i]])).pop())\n    return res\n\nprint(' '.join(map(str, solve([[3,5],[1,4],[2,4],[1,5],[2,3]]))))\nprint(' '.join(map(str, solve([[2,3],[3,1],[1,2]]))))\n"
+    },
+    {
+      "index": 1,
+      "text": "\nfrom collections import defaultdict\n\ndef find_cycle(graph, start):\n    visited, cycle = set(), [start]\n    while True:\n        if cycle[-1] in visited:\n            return cycle[cycle.index(cycle[-1]):]\n        else:\n            visited.add(cycle[-1])\n            cycle.append(graph[cycle[-1]])\n\ndef find_all_cycles(graph):\n    cycles = []\n    visited = set()\n    for start in graph:\n        if start not in visited:\n            cycle = find_cycle(graph, start)\n            cycles.append(cycle)\n            visited |= set(cycle)\n    return cycles\n\ndef solve(input):\n    kids = defaultdict(set)\n    for i in range(len(input)):\n        kids[input[i][0]].add(i+1)\n        kids[input[i][1]].add(i+1)\n    cycles = find_all_cycles(kids)\n    res = []\n    for cycle in cycles:\n        res.append(cycle[0])\n        for i in range(1, len(cycle)):\n            res.append(kids[cycle[i-1]].difference(set([cycle[i]])).pop())\n    return res\n"
+    }
+  ],
+  "created": 1650486516,
+  "object": "edit"
+}
+2022-04-20 20:28:41.850022 fix syntax errors 2 ["\nfrom collections import defaultdict\n\ndef find_cycle(graph, start):\n    visited = set()\n    cycle = [start]\n    while True:\n        if cycle[-1] in visited:\n            return cycle[cycle.index(cycle[-1]):]\n        else:\n            visited.add(cycle[-1])\n            cycle.append(graph[cycle[-1]])\n\ndef find_all_cycles(graph):\n    cycles = []\n    visited = set()\n    for start in graph:\n        if start not in visited:\n            cycle = find_cycle(graph, start)\n            cycles.append(cycle)\n            visited |= set(cycle)\n    return cycles\n\ndef solve(input):\n    kids = defaultdict(set)\n    for i in range(len(input)):\n        kids[input[i][0]].add(i+1)\n        kids[input[i][1]].add(i+1)\n    cycles = find_all_cycles(kids)\n    res = []\n    for cycle in cycles:\n        res.append(cycle[0])\n        for i in range(1, len(cycle)):\n            res.append(kids[cycle[i-1]].difference(set([cycle[i]])).pop())\n    return res\n\nprint(' '.join(map(str, solve([[3,5],[1,4],[2,4],[1,5],[2,3]]))))\nprint(' '.join(map(str, solve([[2,3],[3,1],[1,2]]))))\n", '\nfrom collections import defaultdict\n\ndef find_cycle(graph, start):\n    visited, cycle = set(), [start]\n    while True:\n        if cycle[-1] in visited:\n            return cycle[cycle.index(cycle[-1]):]\n        else:\n            visited.add(cycle[-1])\n            cycle.append(graph[cycle[-1]])\n\ndef find_all_cycles(graph):\n    cycles = []\n    visited = set()\n    for start in graph:\n        if start not in visited:\n            cycle = find_cycle(graph, start)\n            cycles.append(cycle)\n            visited |= set(cycle)\n    return cycles\n\ndef solve(input):\n    kids = defaultdict(set)\n    for i in range(len(input)):\n        kids[input[i][0]].add(i+1)\n        kids[input[i][1]].add(i+1)\n    cycles = find_all_cycles(kids)\n    res = []\n    for cycle in cycles:\n        res.append(cycle[0])\n        for i in range(1, len(cycle)):\n            res.append(kids[cycle[i-1]].difference(set([cycle[i]])).pop())\n    return res\n']
+2022-04-20 20:28:41.850066 size on output set 2
+2022-04-20 20:28:41.850080 num operations 1
+2022-04-20 20:28:41.850087 size on input set 1
+2022-04-20 20:28:41.850265 using api key sourya
+2022-04-20 20:28:41.891774 in retry 6 1.5 <class 'Exception'>, Retrying in 1 seconds...
+2022-04-20 20:28:43.393692 using api key jaanu
+2022-04-20 20:28:52.048915 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef adj_list(n, a):  # n: number of vertices, a: list of edges\n    adj = [[] for _ in range(n+1)]\n    for u, v in a:\n        adj[u].append(v)\n        adj[v].append(u)\n    return adj[1:]\n\ndef eulerian_cycle(adj):\n    n = len(adj)\n    cycle = []\n    stk = [1]\n    while stk:\n        v = stk[-1]\n        if not adj[v-1]:\n            cycle.append(v)\n            stk.pop()\n        else:\n            w = adj[v-1].pop()\n            stk.append(w)\n    return cycle[::-1]\n\ndef main():\n    n = int(input())\n    a = []\n    for _ in range(n):\n        a.append(tuple(map(int, input().split())))\n    adj = adj_list(n, a)\n    cycle = eulerian_cycle(adj)\n    print(' '.join([str(i) for i in cycle]))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\ndef adj_list(n, a):\n    adj = [[] for _ in range(n)]\n    for i in range(n):\n        adj[a[i][0] - 1].append(a[i][1])\n        adj[a[i][1] - 1].append(a[i][0])\n    return adj\n\ndef eulerian_cycle(adj):\n    n = len(adj)\n    cycle = []\n    stk = [1]\n    while stk:\n        v = stk[-1]\n        if not adj[v-1]:\n            cycle.append(v)\n            stk.pop()\n        else:\n            w = adj[v-1].pop()\n            stk.append(w)\n    return cycle[::-1]\n\ndef main():\n    n = int(input())\n    a = []\n    for _ in range(n):\n        a.append(tuple(map(int, input().split())))\n    adj = adj_list(n, a)\n    cycle = eulerian_cycle(adj)\n    print(' '.join([str(i) for i in cycle]))\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650486523,
+  "object": "edit"
+}
+2022-04-20 20:28:52.049150 fix syntax errors 2 ["\n\ndef adj_list(n, a):  # n: number of vertices, a: list of edges\n    adj = [[] for _ in range(n+1)]\n    for u, v in a:\n        adj[u].append(v)\n        adj[v].append(u)\n    return adj[1:]\n\ndef eulerian_cycle(adj):\n    n = len(adj)\n    cycle = []\n    stk = [1]\n    while stk:\n        v = stk[-1]\n        if not adj[v-1]:\n            cycle.append(v)\n            stk.pop()\n        else:\n            w = adj[v-1].pop()\n            stk.append(w)\n    return cycle[::-1]\n\ndef main():\n    n = int(input())\n    a = []\n    for _ in range(n):\n        a.append(tuple(map(int, input().split())))\n    adj = adj_list(n, a)\n    cycle = eulerian_cycle(adj)\n    print(' '.join([str(i) for i in cycle]))\n\nif __name__ == '__main__':\n    main()\n", "\n\ndef adj_list(n, a):\n    adj = [[] for _ in range(n)]\n    for i in range(n):\n        adj[a[i][0] - 1].append(a[i][1])\n        adj[a[i][1] - 1].append(a[i][0])\n    return adj\n\ndef eulerian_cycle(adj):\n    n = len(adj)\n    cycle = []\n    stk = [1]\n    while stk:\n        v = stk[-1]\n        if not adj[v-1]:\n            cycle.append(v)\n            stk.pop()\n        else:\n            w = adj[v-1].pop()\n            stk.append(w)\n    return cycle[::-1]\n\ndef main():\n    n = int(input())\n    a = []\n    for _ in range(n):\n        a.append(tuple(map(int, input().split())))\n    adj = adj_list(n, a)\n    cycle = eulerian_cycle(adj)\n    print(' '.join([str(i) for i in cycle]))\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-20 20:28:52.049285 size on output set 2
+2022-04-20 20:28:52.049300 num operations 1
+2022-04-20 20:28:52.049306 size on input set 1
+2022-04-20 20:28:52.049503 using api key soukgp
+2022-04-20 20:28:58.568230 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport numpy as np\n\n\ndef main():\n    n = int(input())\n    a = np.zeros((n, 2), dtype=np.int)\n    for i in range(n):\n        a[i, 0], a[i, 1] = map(int, input().split())\n    p = np.full(n, -1, dtype=np.int)\n    p[0] = 1\n    p[1] = a[0, 0]\n    p[2] = a[0, 1]\n    for i in range(2, n):\n        p[i] = a[p[i - 1] - 1, 0] if a[p[i - 1] - 1, 0] != p[i - 2] else a[p[i - 1] - 1, 1]  # noqa: E501\n    print(*p)\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\nimport numpy as np\n\n\ndef main():\n    n = int(input())\n    a = np.zeros((n, 2), dtype=np.int)\n    for i in range(n):\n        a[i, 0], a[i, 1] = map(int, input().split())\n    p = np.full(n, -1, dtype=np.int)\n    p[0] = 1\n    p[1] = a[0, 0]\n    p[2] = a[0, 1]\n    for i in range(2, n):\n        p[i] = a[p[i - 1] - 1, 0] if a[p[i - 1] - 1, 0] != p[i - 2] else a[p[i - 1] - 1, 1]\n    print(*p)\n\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650486532,
+  "object": "edit"
+}
+2022-04-20 20:28:58.568473 fix syntax errors 2 ["\nimport numpy as np\n\n\ndef main():\n    n = int(input())\n    a = np.zeros((n, 2), dtype=np.int)\n    for i in range(n):\n        a[i, 0], a[i, 1] = map(int, input().split())\n    p = np.full(n, -1, dtype=np.int)\n    p[0] = 1\n    p[1] = a[0, 0]\n    p[2] = a[0, 1]\n    for i in range(2, n):\n        p[i] = a[p[i - 1] - 1, 0] if a[p[i - 1] - 1, 0] != p[i - 2] else a[p[i - 1] - 1, 1]  # noqa: E501\n    print(*p)\n\n\nif __name__ == '__main__':\n    main()\n", "\n\nimport numpy as np\n\n\ndef main():\n    n = int(input())\n    a = np.zeros((n, 2), dtype=np.int)\n    for i in range(n):\n        a[i, 0], a[i, 1] = map(int, input().split())\n    p = np.full(n, -1, dtype=np.int)\n    p[0] = 1\n    p[1] = a[0, 0]\n    p[2] = a[0, 1]\n    for i in range(2, n):\n        p[i] = a[p[i - 1] - 1, 0] if a[p[i - 1] - 1, 0] != p[i - 2] else a[p[i - 1] - 1, 1]\n    print(*p)\n\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-20 20:28:58.568506 size on output set 2

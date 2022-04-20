@@ -1,0 +1,92 @@
+2022-04-18 03:16:35.239701 """
+We have a bingo card with a 3\times3 grid. The square at the i-th row from the top and the j-th column from the left contains the number A_{i, j}.
+The MC will choose N numbers, b_1, b_2, \cdots, b_N. If our bingo sheet contains some of those numbers, we will mark them on our sheet.
+Determine whether we will have a bingo when the N numbers are chosen, that is, the sheet will contain three marked numbers in a row, column, or diagonal.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq A_{i, j} \leq 100
+ - A_{i_1, j_1} \neq A_{i_2, j_2} ((i_1, j_1) \neq (i_2, j_2))
+ - 1 \leq N \leq 10
+ - 1 \leq b_i \leq 100
+ - b_i \neq b_j (i \neq j)
+
+-----Input-----
+Input is given from Standard Input in the following format:
+A_{1, 1} A_{1, 2} A_{1, 3}
+A_{2, 1} A_{2, 2} A_{2, 3}
+A_{3, 1} A_{3, 2} A_{3, 3}
+N
+b_1
+\vdots
+b_N
+
+-----Output-----
+If we will have a bingo, print Yes; otherwise, print No.
+
+-----Sample Input-----
+84 97 66
+79 89 11
+61 59 7
+7
+89
+7
+87
+79
+24
+84
+30
+
+-----Sample Output-----
+Yes
+
+We will mark A_{1, 1}, A_{2, 1}, A_{2, 2}, A_{3, 3}, and complete the diagonal from the top-left to the bottom-right.
+"""
+2022-04-18 03:16:35.239716 --------------------------
+2022-04-18 03:17:21.798150 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef read_input(path):\n    if not path:\n        path = './input.txt'\n    with open(path) as f:\n        lines = [line.rstrip() for line in f]\n    return lines\n\ndef process_input(lines):\n    card = []\n    for i in range(3):\n        card.append([int(x) for x in lines[i].split(' ')])\n    bs = [int(x) for x in lines[4:]]\n    return card, bs\n\ndef is_bingo(card, bs):\n    for i in range(3):\n        for j in range(3):\n            for b in bs:\n                if b == card[i][j]:\n                    card[i][j] = -1\n    for i in range(3):\n        if card[i][0] == -1 and card[i][1] == -1 and card[i][2] == -1:\n            return True\n    for j in range(3):\n        if card[0][j] == -1 and card[1][j] == -1 and card[2][j] == -1:\n            return True\n    if card[0][0] == -1 and card[1][1] == -1 and card[2][2] == -1:\n        return True\n    if card[2][0] == -1 and card[1][1] == -1 and card[0][2] == -1:\n        return True\n    return False\n\ndef write_output(path, output):\n    if not path:\n        path = './output.txt'\n    with open(path, mode='w') as f:\n        f.write(output)\n\ndef main(path=''):\n    lines = read_input(path)\n    card, bs = process_input(lines)\n    output = 'Yes' if is_bingo(card, bs) else 'No'\n    write_output(path, output)\n\nif __name__ == \"__main__\":\n    main(sys.argv[1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# --- My answer ---\ndef bingo(sheet):\n    sheet_set = set(sheet)\n    if len(sheet_set) < 3:\n        return False\n    else:\n        for row in sheet:\n            if len(set(row)) == 1:\n                return True\n        for i in range(3):\n            if len(set([row[i] for row in sheet])) == 1:\n                return True\n        if len(set([sheet[i][i] for i in range(3)])) == 1:\n            return True\n        if len(set([sheet[i][2-i] for i in range(3)])) == 1:\n            return True\n    return False\n\ndef main(input_list):\n    sheet = [input_list[i:i+3] for i in range(0, 9, 3)]\n    bingo_nums = [int(input_list[i]) for i in range(9, len(input_list))]\n\n    for b in bingo_nums:\n        for i in range(3):\n            if b in sheet[i]:\n                sheet[i][sheet[i].index(b)] = 0\n\n    if bingo(sheet):\n        print('Yes')\n    else:\n        print('No')\n\nif __name__ == '__main__':\n    input_list = input().split()\n    main(input_list)\n\n# --- Book answer ---\ndef bingo(sheet, nums):\n    for i in range(3):\n        if sum(sheet[i]) == 0:\n            return True\n        if sum([sheet[0][i], sheet[1][i], sheet[2][i]]) == 0:\n            return True\n    if sum([sheet[0][0], sheet[1][1], sheet[2][2]]) == 0:\n        return True\n    if sum([sheet[0][2], sheet[1][1], sheet[2][0]]) == 0:\n        return True\n    return False\n\ndef main(input_list):\n    sheet = [list(map(int, input_list[i:i+3])) for i in range(0, 9, 3)]\n    nums = list(map(int, input_list[9:]))\n\n    for num in nums:\n        for i in range(3):\n            if num in sheet[i]:\n                sheet[i][sheet[i].index(num)] = 0\n    if bingo(sheet, nums):\n        print('Yes')\n    else:\n        print('No')\n\nif __name__ == '__main__':\n    input_list = input().split()\n    main(input_list)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\nimport sys\n\n# Read data\na = [list(map(int, line.split())) for line in sys.stdin.readlines()[:3]]\nb = [int(line.rstrip()) for line in sys.stdin.readlines()[3:]]\n\n# Check bingo\n# Check horizontal\nfor i in range(3):\n    if len(set(a[i]) & set(b)) == 3:\n        print(\"Yes\")\n        sys.exit()\n\n# Check vertical\nfor j in range(3):\n    if len(set([a[i][j] for i in range(3)]) & set(b)) == 3:\n        print(\"Yes\")\n        sys.exit()\n\n# Check diagonal\nif len(set([a[i][i] for i in range(3)]) & set(b)) == 3:\n    print(\"Yes\")\n    sys.exit()\nif len(set([a[i][2-i] for i in range(3)]) & set(b)) == 3:\n    print(\"Yes\")\n    sys.exit()\n\n# No bingo\nprint(\"No\")"
+    }
+  ],
+  "created": 1650251795,
+  "id": "cmpl-4yCANUNCeYBWIRynKD83pdZBheAMt",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 03:17:21.798434 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef read_input(path):\n    if not path:\n        path = './input.txt'\n    with open(path) as f:\n        lines = [line.rstrip() for line in f]\n    return lines\n\ndef process_input(lines):\n    card = []\n    for i in range(3):\n        card.append([int(x) for x in lines[i].split(' ')])\n    bs = [int(x) for x in lines[4:]]\n    return card, bs\n\ndef is_bingo(card, bs):\n    for i in range(3):\n        for j in range(3):\n            for b in bs:\n                if b == card[i][j]:\n                    card[i][j] = -1\n    for i in range(3):\n        if card[i][0] == -1 and card[i][1] == -1 and card[i][2] == -1:\n            return True\n    for j in range(3):\n        if card[0][j] == -1 and card[1][j] == -1 and card[2][j] == -1:\n            return True\n    if card[0][0] == -1 and card[1][1] == -1 and card[2][2] == -1:\n        return True\n    if card[2][0] == -1 and card[1][1] == -1 and card[0][2] == -1:\n        return True\n    return False\n\ndef write_output(path, output):\n    if not path:\n        path = './output.txt'\n    with open(path, mode='w') as f:\n        f.write(output)\n\ndef main(path=''):\n    lines = read_input(path)\n    card, bs = process_input(lines)\n    output = 'Yes' if is_bingo(card, bs) else 'No'\n    write_output(path, output)\n\nif __name__ == \"__main__\":\n    main(sys.argv[1])"
+}
+2022-04-18 03:17:21.798493 REASON stop
+2022-04-18 03:17:21.831657 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# --- My answer ---\ndef bingo(sheet):\n    sheet_set = set(sheet)\n    if len(sheet_set) < 3:\n        return False\n    else:\n        for row in sheet:\n            if len(set(row)) == 1:\n                return True\n        for i in range(3):\n            if len(set([row[i] for row in sheet])) == 1:\n                return True\n        if len(set([sheet[i][i] for i in range(3)])) == 1:\n            return True\n        if len(set([sheet[i][2-i] for i in range(3)])) == 1:\n            return True\n    return False\n\ndef main(input_list):\n    sheet = [input_list[i:i+3] for i in range(0, 9, 3)]\n    bingo_nums = [int(input_list[i]) for i in range(9, len(input_list))]\n\n    for b in bingo_nums:\n        for i in range(3):\n            if b in sheet[i]:\n                sheet[i][sheet[i].index(b)] = 0\n\n    if bingo(sheet):\n        print('Yes')\n    else:\n        print('No')\n\nif __name__ == '__main__':\n    input_list = input().split()\n    main(input_list)\n\n# --- Book answer ---\ndef bingo(sheet, nums):\n    for i in range(3):\n        if sum(sheet[i]) == 0:\n            return True\n        if sum([sheet[0][i], sheet[1][i], sheet[2][i]]) == 0:\n            return True\n    if sum([sheet[0][0], sheet[1][1], sheet[2][2]]) == 0:\n        return True\n    if sum([sheet[0][2], sheet[1][1], sheet[2][0]]) == 0:\n        return True\n    return False\n\ndef main(input_list):\n    sheet = [list(map(int, input_list[i:i+3])) for i in range(0, 9, 3)]\n    nums = list(map(int, input_list[9:]))\n\n    for num in nums:\n        for i in range(3):\n            if num in sheet[i]:\n                sheet[i][sheet[i].index(num)] = 0\n    if bingo(sheet, nums):\n        print('Yes')\n    else:\n        print('No')\n\nif __name__ == '__main__':\n    input_list = input().split()\n    main(input_list)"
+}
+2022-04-18 03:17:21.831774 REASON stop
+2022-04-18 03:17:21.832289 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\nimport sys\n\n# Read data\na = [list(map(int, line.split())) for line in sys.stdin.readlines()[:3]]\nb = [int(line.rstrip()) for line in sys.stdin.readlines()[3:]]\n\n# Check bingo\n# Check horizontal\nfor i in range(3):\n    if len(set(a[i]) & set(b)) == 3:\n        print(\"Yes\")\n        sys.exit()\n\n# Check vertical\nfor j in range(3):\n    if len(set([a[i][j] for i in range(3)]) & set(b)) == 3:\n        print(\"Yes\")\n        sys.exit()\n\n# Check diagonal\nif len(set([a[i][i] for i in range(3)]) & set(b)) == 3:\n    print(\"Yes\")\n    sys.exit()\nif len(set([a[i][2-i] for i in range(3)]) & set(b)) == 3:\n    print(\"Yes\")\n    sys.exit()\n\n# No bingo\nprint(\"No\")"
+}
+2022-04-18 03:17:21.832340 REASON stop

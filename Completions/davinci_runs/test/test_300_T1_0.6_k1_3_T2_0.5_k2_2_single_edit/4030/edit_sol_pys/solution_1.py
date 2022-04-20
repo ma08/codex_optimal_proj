@@ -1,0 +1,24 @@
+from sys import stdin
+
+n = int(input())
+s = stdin.readline().strip()
+
+def solve(n, s):
+    if n == 1:
+        return 1
+    if n == 2:
+        return 1 if s[0] <= s[1] else 2
+
+    start = 0
+    cur = 0
+    res = 0
+    for i in range(1, n):
+        if s[i] < s[i - 1]:
+            cur += 1
+            res = max(res, cur)
+        else:
+            cur = 0
+            
+    return res + 1
+
+print(solve(n, s))

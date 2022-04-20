@@ -1,0 +1,35 @@
+
+
+import sys
+
+def good_string(s):
+    if len(s) % 2 != 0:
+        return False
+    for i in range(0, len(s), 2):
+        if s[i] == s[i+1]:
+            return False
+    return True
+    
+def delete_char(s):
+    if good_string(s):
+        return len(s)
+        
+    if len(s) == 1:
+        return 1
+        
+    for i in range(0, len(s), 2):
+        if s[i] == s[i+1]:
+            return 1 + delete_char(s[:i] + s[i+1:])
+
+    if (len(s) % 2) == 1:
+        return 1 + delete_char(s[:-1])
+    else:
+        return 1 + delete_char(s[1:])
+
+def main():
+    n = int(input())
+    s = input()
+    print(delete_char(s))
+    
+if __name__ == "__main__":
+    main()

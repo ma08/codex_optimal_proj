@@ -1,0 +1,103 @@
+2022-04-18 01:58:35.070499 """
+This problem is given in two editions, which differ exclusively in the constraints on the number $n$.
+
+You are given an array of integers $a[1], a[2], \dots, a[n].$ A block is a sequence of contiguous (consecutive) elements $a[l], a[l+1], \dots, a[r]$ ($1 \le l \le r \le n$). Thus, a block is defined by a pair of indices $(l, r)$.
+
+Find a set of blocks $(l_1, r_1), (l_2, r_2), \dots, (l_k, r_k)$ such that:
+
+  They do not intersect (i.e. they are disjoint). Formally, for each pair of blocks $(l_i, r_i)$ and $(l_j, r_j$) where $i \neq j$ either $r_i < l_j$ or $r_j < l_i$.  For each block the sum of its elements is the same. Formally, $$a[l_1]+a[l_1+1]+\dots+a[r_1]=a[l_2]+a[l_2+1]+\dots+a[r_2]=$$ $$\dots =$$ $$a[l_k]+a[l_k+1]+\dots+a[r_k].$$  The number of the blocks in the set is maximum. Formally, there does not exist a set of blocks $(l_1', r_1'), (l_2', r_2'), \dots, (l_{k'}', r_{k'}')$ satisfying the above two requirements with $k' > k$. 
+
+ $\left. \begin{array}{|l|l|l|l|l|l|} \hline 4 & {1} & {2} & {2} & {1} & {5} & {3} \\ \hline \end{array} \right.$ The picture corresponds to the first example. Blue boxes illustrate blocks. 
+
+Write a program to find such a set of blocks.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 50$) — the length of the given array. The second line contains the sequence of elements $a[1], a[2], \dots, a[n]$ ($-10^5 \le a_i \le 10^5$).
+
+
+-----Output-----
+
+In the first line print the integer $k$ ($1 \le k \le n$). The following $k$ lines should contain blocks, one per line. In each line print a pair of indices $l_i, r_i$ ($1 \le l_i \le r_i \le n$) — the bounds of the $i$-th block. You can print blocks in any order. If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+7
+4 1 2 2 1 5 3
+
+Output
+3
+7 7
+2 3
+4 5
+
+Input
+11
+-5 -4 -3 -2 -1 0 1 2 3 4 5
+
+Output
+2
+3 4
+1 1
+
+Input
+4
+1 1 1 1
+
+Output
+4
+4 4
+1 1
+2 2
+3 3
+"""
+2022-04-18 01:58:35.070520 --------------------------
+2022-04-18 01:59:13.162156 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    sums = {}\n    ret = 1\n    for i in range(n):\n        for j in range(i, n):\n            s = sum(arr[i:j + 1])\n            sums[s] = sums.get(s, 0) + 1\n            ret = max(ret, sums[s])\n    print(ret)\n    for i in range(n):\n        for j in range(i, n):\n            s = sum(arr[i:j + 1])\n            if sums[s] == ret:\n                ret -= 1\n                print(i + 1, j + 1)\n                break\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ntotal = sum(a)\n\nif total % n == 0:\n    avg = total // n\nelse:\n    avg = total // n + 1\n\n# print(\"avg:\", avg)\n\n# find the longest subarray where sum is evenly divisible by avg\n# keep track of the length of each subarray as we find it\nlengths = [[0, 0]]\nsum = a[0]\n\nfor i in range(1, n):\n    if sum == avg:\n        lengths.append([i-1, i-1])\n        sum = 0\n    elif sum > avg:\n        sum -= a[i-1]\n    sum += a[i]\n\nif sum == avg:\n    lengths.append([n-1, n-1])\n\n# print(\"lengths:\", lengths)\n\n# create block list\nblocks = []\n\nfor i in range(len(lengths)):\n    for j in range(lengths[i][0], lengths[i][1]+1):\n        blocks.append([j, j])\n\n# print(\"blocks:\", blocks)\n\n# remove overlapping block\nfor i in range(len(blocks)):\n    for j in range(i+1, len(blocks)):\n        if blocks[j][0] <= blocks[i][1]:\n            blocks[j][0] = blocks[i][1] + 1\n            if blocks[j][0] > blocks[j][1]:\n                blocks.pop(j)\n\nprint(len(blocks))\n\nfor i in range(len(blocks)):\n    print(blocks[i][0]+1, blocks[i][1]+1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef find_blocks(l):\n    if len(l) == 0:\n        return 0\n    elif len(l) == 1:\n        return 1\n    else:\n        total = sum(l)\n        if total % 2 == 0:\n            possible_total = total / 2\n            left = 0\n            right = len(l) - 1\n            while left != right:\n                if l[left] > possible_total:\n                    return 0\n                elif l[left] == possible_total:\n                    return 1\n                elif sum(l[left:right]) == possible_total:\n                    return 2\n                elif sum(l[left:right]) < possible_total:\n                    left += 1\n                else:\n                    right -= 1\n            return 0\n        else:\n            return 0\n\n\ndef main():\n    n = input()\n    l = map(int, raw_input().split())\n    blocks = []\n    for i in range(n):\n        for j in range(i, n):\n            result = find_blocks(l[i:j])\n            if result == 2:\n                blocks.append([i, j])\n    print len(blocks)\n    for i in blocks:\n        print i[0] + 1, i[1]\n\nmain()"
+    }
+  ],
+  "created": 1650247115,
+  "id": "cmpl-4yAwtLKF0JukG8KRilgST3TzpXVjE",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 01:59:13.162364 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    sums = {}\n    ret = 1\n    for i in range(n):\n        for j in range(i, n):\n            s = sum(arr[i:j + 1])\n            sums[s] = sums.get(s, 0) + 1\n            ret = max(ret, sums[s])\n    print(ret)\n    for i in range(n):\n        for j in range(i, n):\n            s = sum(arr[i:j + 1])\n            if sums[s] == ret:\n                ret -= 1\n                print(i + 1, j + 1)\n                break\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-18 01:59:13.162405 REASON stop
+2022-04-18 01:59:13.213357 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ntotal = sum(a)\n\nif total % n == 0:\n    avg = total // n\nelse:\n    avg = total // n + 1\n\n# print(\"avg:\", avg)\n\n# find the longest subarray where sum is evenly divisible by avg\n# keep track of the length of each subarray as we find it\nlengths = [[0, 0]]\nsum = a[0]\n\nfor i in range(1, n):\n    if sum == avg:\n        lengths.append([i-1, i-1])\n        sum = 0\n    elif sum > avg:\n        sum -= a[i-1]\n    sum += a[i]\n\nif sum == avg:\n    lengths.append([n-1, n-1])\n\n# print(\"lengths:\", lengths)\n\n# create block list\nblocks = []\n\nfor i in range(len(lengths)):\n    for j in range(lengths[i][0], lengths[i][1]+1):\n        blocks.append([j, j])\n\n# print(\"blocks:\", blocks)\n\n# remove overlapping block\nfor i in range(len(blocks)):\n    for j in range(i+1, len(blocks)):\n        if blocks[j][0] <= blocks[i][1]:\n            blocks[j][0] = blocks[i][1] + 1\n            if blocks[j][0] > blocks[j][1]:\n                blocks.pop(j)\n\nprint(len(blocks))\n\nfor i in range(len(blocks)):\n    print(blocks[i][0]+1, blocks[i][1]+1)"
+}
+2022-04-18 01:59:13.213457 REASON stop
+2022-04-18 01:59:13.213974 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef find_blocks(l):\n    if len(l) == 0:\n        return 0\n    elif len(l) == 1:\n        return 1\n    else:\n        total = sum(l)\n        if total % 2 == 0:\n            possible_total = total / 2\n            left = 0\n            right = len(l) - 1\n            while left != right:\n                if l[left] > possible_total:\n                    return 0\n                elif l[left] == possible_total:\n                    return 1\n                elif sum(l[left:right]) == possible_total:\n                    return 2\n                elif sum(l[left:right]) < possible_total:\n                    left += 1\n                else:\n                    right -= 1\n            return 0\n        else:\n            return 0\n\n\ndef main():\n    n = input()\n    l = map(int, raw_input().split())\n    blocks = []\n    for i in range(n):\n        for j in range(i, n):\n            result = find_blocks(l[i:j])\n            if result == 2:\n                blocks.append([i, j])\n    print len(blocks)\n    for i in blocks:\n        print i[0] + 1, i[1]\n\nmain()"
+}
+2022-04-18 01:59:13.214061 REASON stop

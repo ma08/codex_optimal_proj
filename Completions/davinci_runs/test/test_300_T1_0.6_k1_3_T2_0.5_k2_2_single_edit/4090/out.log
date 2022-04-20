@@ -1,0 +1,104 @@
+2022-04-18 02:18:02.383463 """
+You are given a text consisting of $n$ space-separated words. There is exactly one space character between any pair of adjacent words. There are no spaces before the first word and no spaces after the last word. The length of text is the number of letters and spaces in it. $w_i$ is the $i$-th word of text. All words consist only of lowercase Latin letters.
+
+Let's denote a segment of words $w[i..j]$ as a sequence of words $w_i, w_{i + 1}, \dots, w_j$. Two segments of words $w[i_1 .. j_1]$ and $w[i_2 .. j_2]$ are considered equal if $j_1 - i_1 = j_2 - i_2$, $j_1 \ge i_1$, $j_2 \ge i_2$, and for every $t \in [0, j_1 - i_1]$ $w_{i_1 + t} = w_{i_2 + t}$. For example, for the text "to be or not to be" the segments $w[1..2]$ and $w[5..6]$ are equal, they correspond to the words "to be".
+
+An abbreviation is a replacement of some segments of words with their first uppercase letters. In order to perform an abbreviation, you have to choose at least two non-intersecting equal segments of words, and replace each chosen segment with the string consisting of first letters of the words in the segment (written in uppercase). For example, for the text "a ab a a b ab a a b c" you can replace segments of words $w[2..4]$ and $w[6..8]$ with an abbreviation "AAA" and obtain the text "a AAA b AAA b c", or you can replace segments of words $w[2..5]$ and $w[6..9]$ with an abbreviation "AAAB" and obtain the text "a AAAB AAAB c".
+
+What is the minimum length of the text after at most one abbreviation?
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 300$) — the number of words in the text.
+
+The next line contains $n$ space-separated words of the text $w_1, w_2, \dots, w_n$. Each word consists only of lowercase Latin letters.
+
+It is guaranteed that the length of text does not exceed $10^5$.
+
+
+-----Output-----
+
+Print one integer — the minimum length of the text after at most one abbreviation.
+
+
+-----Examples-----
+Input
+6
+to be or not to be
+
+Output
+12
+
+Input
+10
+a ab a a b ab a a b c
+
+Output
+13
+
+Input
+6
+aa bb aa aa bb bb
+
+Output
+11
+
+
+
+-----Note-----
+
+In the first example you can obtain the text "TB or not TB".
+
+In the second example you can obtain the text "a AAAB AAAB c".
+
+In the third example you can obtain the text "AB aa AB bb".
+"""
+2022-04-18 02:18:02.383489 --------------------------
+2022-04-18 02:18:48.790666 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nwords = input().split()\n\n# Find all the words that are repeated in the list\nrepeats = set()\nfor word in words:\n    if words.count(word) > 1:\n        repeats.add(word)\n\n# Find the length of the text before abbreviation\nlength_before = len(\" \".join(words))\n\n# Find the length of the text after abbreviating the list\nlength_after = length_before\nfor repeat in repeats:\n    # Find all the indices of a word\n    indices = [i for i, word in enumerate(words) if word == repeat]\n    # Find the length of the text after abbreviating the first occurrence of the word\n    length_after = min(length_after, length_before - (len(repeat) - 1) * len(indices) + len(indices) - 1)\n    # Find the length of the text after abbreviating the second occurrence of the word\n    if len(indices) > 1:\n        length_after = min(length_after, length_before - (len(repeat) - 1) * (len(indices) - 1) + len(indices) - 2)\n\nprint(length_after)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# ======== SOLUTION ========\n\n# The task is to find the minimum length of the text after at most one abbreviation.\n# The first idea is to find the maximum number of words that we can abbreviate.\n# We do it in a greedy way.\n# We start from the beginning of the text.\n# The current word is the first word in the first segment that we want to abbreviate.\n# We go through the text and find all occurrences of the current word.\n# We take the maximum number of occurrences of the current word that do not intersect with each other.\n# We mark them and find the next word that is not marked, and again, we find the maximum number of occurrences of this word that do not intersect with each other.\n# We do this until we have no more unmarked words.\n# We abbreviate the marked words.\n# The length of the abbreviated text is equal to the length of the initial text minus the number of unmarked words.\n\n\ndef find_max_abbrev(words):\n    \"\"\"\n    Find the maximum number of words that we can abbreviate.\n    :param words: list of words\n    :return: list of positions of words that we should abbreviate\n    \"\"\"\n    positions = []\n    n = len(words)\n    marked = [False] * n\n\n    i = 0\n    while i < n:\n        while i < n and marked[i]:\n            i += 1\n        if i >= n:\n            break\n        word = words[i]\n        positions.append(i)\n\n        i += 1\n        while i < n:\n            while i < n and marked[i]:\n                i += 1\n            if i >= n:\n                break\n            if word != words[i]:\n                break\n            positions.append(i)\n            i += 1\n\n    return positions\n\n\ndef abbrev(words):\n    \"\"\"\n    Abbreviate the text.\n    :param words: list of words\n    :return: abbreviated text\n    \"\"\"\n    positions = find_max_abbrev(words)\n    len_words = len(words)\n\n    if len(positions) * 2 > len_words:\n        new_words = []\n        for i in range(len_words):\n            if i not in positions:\n                new_words.append(words[i])\n            elif i == positions[0]:\n                word = words[positions[0]]\n                new_words.append(word[0].upper() + word[1:])\n                del positions[0]\n        return new_words\n    else:\n        return words\n\n\nn = int(input())\nwords = input().split()\n\nprint(len(' '.join(abbrev(words))))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    words = input().split()\n    d = {}\n    for i in range(n):\n        if words[i] in d:\n            d[words[i]] += 1\n        else:\n            d[words[i]] = 1\n\n    d = sorted(d.items(), key=lambda x: x[1], reverse=True)\n    prev = -1\n    res = 0\n    for i in range(len(d)):\n        if d[i][1] != prev:\n            res += len(d[i][0])\n            prev = d[i][1]\n        else:\n            res += 1\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650248282,
+  "id": "cmpl-4yBFimBapKhmPXuoe1uxgyGzwMgLV",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 02:18:48.790947 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nwords = input().split()\n\n# Find all the words that are repeated in the list\nrepeats = set()\nfor word in words:\n    if words.count(word) > 1:\n        repeats.add(word)\n\n# Find the length of the text before abbreviation\nlength_before = len(\" \".join(words))\n\n# Find the length of the text after abbreviating the list\nlength_after = length_before\nfor repeat in repeats:\n    # Find all the indices of a word\n    indices = [i for i, word in enumerate(words) if word == repeat]\n    # Find the length of the text after abbreviating the first occurrence of the word\n    length_after = min(length_after, length_before - (len(repeat) - 1) * len(indices) + len(indices) - 1)\n    # Find the length of the text after abbreviating the second occurrence of the word\n    if len(indices) > 1:\n        length_after = min(length_after, length_before - (len(repeat) - 1) * (len(indices) - 1) + len(indices) - 2)\n\nprint(length_after)"
+}
+2022-04-18 02:18:48.791020 REASON stop
+2022-04-18 02:18:48.814253 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# ======== SOLUTION ========\n\n# The task is to find the minimum length of the text after at most one abbreviation.\n# The first idea is to find the maximum number of words that we can abbreviate.\n# We do it in a greedy way.\n# We start from the beginning of the text.\n# The current word is the first word in the first segment that we want to abbreviate.\n# We go through the text and find all occurrences of the current word.\n# We take the maximum number of occurrences of the current word that do not intersect with each other.\n# We mark them and find the next word that is not marked, and again, we find the maximum number of occurrences of this word that do not intersect with each other.\n# We do this until we have no more unmarked words.\n# We abbreviate the marked words.\n# The length of the abbreviated text is equal to the length of the initial text minus the number of unmarked words.\n\n\ndef find_max_abbrev(words):\n    \"\"\"\n    Find the maximum number of words that we can abbreviate.\n    :param words: list of words\n    :return: list of positions of words that we should abbreviate\n    \"\"\"\n    positions = []\n    n = len(words)\n    marked = [False] * n\n\n    i = 0\n    while i < n:\n        while i < n and marked[i]:\n            i += 1\n        if i >= n:\n            break\n        word = words[i]\n        positions.append(i)\n\n        i += 1\n        while i < n:\n            while i < n and marked[i]:\n                i += 1\n            if i >= n:\n                break\n            if word != words[i]:\n                break\n            positions.append(i)\n            i += 1\n\n    return positions\n\n\ndef abbrev(words):\n    \"\"\"\n    Abbreviate the text.\n    :param words: list of words\n    :return: abbreviated text\n    \"\"\"\n    positions = find_max_abbrev(words)\n    len_words = len(words)\n\n    if len(positions) * 2 > len_words:\n        new_words = []\n        for i in range(len_words):\n            if i not in positions:\n                new_words.append(words[i])\n            elif i == positions[0]:\n                word = words[positions[0]]\n                new_words.append(word[0].upper() + word[1:])\n                del positions[0]\n        return new_words\n    else:\n        return words\n\n\nn = int(input())\nwords = input().split()\n\nprint(len(' '.join(abbrev(words))))"
+}
+2022-04-18 02:18:48.814356 REASON stop
+2022-04-18 02:18:48.814804 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    words = input().split()\n    d = {}\n    for i in range(n):\n        if words[i] in d:\n            d[words[i]] += 1\n        else:\n            d[words[i]] = 1\n\n    d = sorted(d.items(), key=lambda x: x[1], reverse=True)\n    prev = -1\n    res = 0\n    for i in range(len(d)):\n        if d[i][1] != prev:\n            res += len(d[i][0])\n            prev = d[i][1]\n        else:\n            res += 1\n    print(res)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 02:18:48.814855 REASON stop
