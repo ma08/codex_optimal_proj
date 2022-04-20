@@ -1,0 +1,10 @@
+
+print('Enter a noun:')
+noun = input()
+print('Enter a verb:')
+verb = input()
+print('Enter an adjective:')
+adjective = input()
+print('Enter an adverb:')
+adverb = input()
+print('Do you ' + verb + ' your ' + adjective + ' ' + noun + ' ' + adverb + '? That\'s hilarious!')

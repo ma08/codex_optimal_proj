@@ -1,0 +1,16 @@
+
+# AtCoder Beginner Contest 096
+# Problem A
+
+def main():
+    # input
+    S = input()
+
+    if S[2] == S[3] and S[4] == S[5]:
+        print("Yes")
+    else:
+        print("No")
+
+
+if __name__ == "__main__":
+    main()

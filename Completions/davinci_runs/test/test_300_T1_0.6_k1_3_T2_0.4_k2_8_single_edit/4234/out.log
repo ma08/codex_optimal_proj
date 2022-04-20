@@ -1,0 +1,92 @@
+2022-04-18 03:41:03.247520 """
+Let's call (yet again) a string good if its length is even, and every character in odd position of this string is different from the next character (the first character is different from the second, the third is different from the fourth, and so on). For example, the strings good, string and xyyx are good strings, and the strings bad, aa and aabc are not good. Note that the empty string is considered good.
+
+You are given a string $s$, you have to delete minimum number of characters from this string so that it becomes good.
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of characters in $s$.
+
+The second line contains the string $s$, consisting of exactly $n$ lowercase Latin letters.
+
+
+-----Output-----
+
+In the first line, print one integer $k$ ($0 \le k \le n$) — the minimum number of characters you have to delete from $s$ to make it good.
+
+In the second line, print the resulting string $s$. If it is empty, you may leave the second line blank, or not print it at all.
+
+
+-----Examples-----
+Input
+4
+good
+
+Output
+0
+good
+
+Input
+4
+aabc
+
+Output
+2
+ab
+
+Input
+3
+aaa
+
+Output
+3
+"""
+2022-04-18 03:41:03.247543 --------------------------
+2022-04-18 03:42:02.183382 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\n\ndef solve(s):\n    n = len(s)\n    if n == 0:\n        return 0, ''\n    if n == 1:\n        return 1, ''\n    if n == 2:\n        return 1, s[0]\n    if n == 3:\n        return 2, s[:2]\n    if n == 4:\n        return 2, s[:2]\n    if n == 5:\n        if s[0] == s[1] and s[0] == s[3]:\n            return 5, ''\n        if s[0] == s[1]:\n            return 3, s[4]\n        if s[1] == s[2]:\n            return 3, s[:2]\n        if s[3] == s[4]:\n            return 3, s[:3]\n        return 4, s[1:4]\n    if n == 6:\n        if s[0] == s[1] and s[0] == s[3] and s[1] == s[2]:\n            return 6, ''\n        if s[0] == s[1] and s[0] == s[3]:\n            return 4, s[4:6]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 4, s[2:6]\n        if s[0] == s[1]:\n            return 2, s[2:6]\n        if s[1] == s[2]:\n            return 3, s[:2] + s[4:6]\n        if s[3] == s[4]:\n            return 3, s[:3] + s[5:6]\n        if s[4] == s[5]:\n            return 3, s[:4]\n        return 4, s[1:4] + s[5:6]\n    if n == 7:\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4]:\n            return 7, ''\n        if s[0] == s[1] and s[1] == s[2] and s[3] == s[4]:\n            return 5, s[5:7]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 5, s[2:7]\n        if s[0] == s[1] and s[3] == s[4]:\n            return 5, s[1:4] + s[5:7]\n        if s[1] == s[2] and s[3] == s[4]:\n            return 5, s[:2] + s[4:7]\n        if s[0] == s[1]:\n            return 3, s[2:7]\n        if s[1] == s[2]:\n            return 4, s[:2] + s[4:7]\n        if s[3] == s[4]:\n            return 4, s[:3] + s[5:7]\n        if s[4] == s[5]:\n            return 4, s[:4] + s[6:7]\n        if s[5] == s[6]:\n            return 4, s[:5]\n        return 5, s[1:4] + s[5:7]\n    if n == 8:\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4] and s[4] == s[5]:\n            return 8, ''\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4]:\n            return 6, s[5:8]\n        if s[0] == s[1] and s[1] == s[2] and s[3] == s[4]:\n            return 6, s[2:7]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 6, s[2:8]\n        if s[0] == s[1] and s[3] == s[4]:\n            return 6, s[1:4] + s[5:8]\n        if s[1] == s[2] and s[3] == s[4]:\n            return 6, s[:2] + s[4:8]\n        if s[0] == s[1]:\n            return 4, s[2:8]\n        if s[1] == s[2]:\n            return 5, s[:2] + s[4:8]\n        if s[3] == s[4]:\n            return 5, s[:3] + s[5:8]\n        if s[4] == s[5]:\n            return 5, s[:4] + s[6:8]\n        if s[5] == s[6]:\n            return 5, s[:5] + s[7:8]\n        if s[6] == s[7]:\n            return 5, s[:6]\n        return 6, s[1:4] + s[5:8]\n\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline().strip())\n    s = sys.stdin.readline().strip()\n\n    cnt, res = solve(s)\n    print(cnt)\n    print(res)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef good_string(s):\n    if len(s) % 2 == 0:\n        for i in range(0, len(s), 2):\n            if s[i] == s[i+1]:\n                return False\n        return True\n    else:\n        return False\n\ndef delete_char(s):\n    if len(s) == 1:\n        return 0\n    if good_string(s):\n        return 0\n\n    for i in range(0, len(s), 2):\n        if s[i] == s[i+1]:\n            return 1 + delete_char(s[:i] + s[i+1:])\n\n    if (len(s) % 2) == 1:\n        return 1 + delete_char(s[:-1])\n    else:\n        return 1 + delete_char(s[1:])\n\ndef main():\n    n = int(input())\n    s = input()\n    print(delete_char(s))\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nnum_chars = int(input())\nchars = input()\n\nif num_chars % 2 == 1:\n    print(num_chars)\n    print(chars)\nelse:\n    num_deletions = 0\n    for i in range(0, num_chars-1, 2):\n        if chars[i] == chars[i+1]:\n            num_deletions += 1\n    print(num_deletions)\n    if num_deletions == 0:\n        print(chars)\n    else:\n        for i in range(0, num_chars-1, 2):\n            if num_deletions == 0:\n                print(chars[i:])\n                break\n            if chars[i] == chars[i+1]:\n                num_deletions -= 1\n            else:\n                print(chars[i], end='')"
+    }
+  ],
+  "created": 1650253263,
+  "id": "cmpl-4yCY3yK6Gq61nXH8qYRfu8cQAaxMi",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 03:42:02.183673 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\n\ndef solve(s):\n    n = len(s)\n    if n == 0:\n        return 0, ''\n    if n == 1:\n        return 1, ''\n    if n == 2:\n        return 1, s[0]\n    if n == 3:\n        return 2, s[:2]\n    if n == 4:\n        return 2, s[:2]\n    if n == 5:\n        if s[0] == s[1] and s[0] == s[3]:\n            return 5, ''\n        if s[0] == s[1]:\n            return 3, s[4]\n        if s[1] == s[2]:\n            return 3, s[:2]\n        if s[3] == s[4]:\n            return 3, s[:3]\n        return 4, s[1:4]\n    if n == 6:\n        if s[0] == s[1] and s[0] == s[3] and s[1] == s[2]:\n            return 6, ''\n        if s[0] == s[1] and s[0] == s[3]:\n            return 4, s[4:6]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 4, s[2:6]\n        if s[0] == s[1]:\n            return 2, s[2:6]\n        if s[1] == s[2]:\n            return 3, s[:2] + s[4:6]\n        if s[3] == s[4]:\n            return 3, s[:3] + s[5:6]\n        if s[4] == s[5]:\n            return 3, s[:4]\n        return 4, s[1:4] + s[5:6]\n    if n == 7:\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4]:\n            return 7, ''\n        if s[0] == s[1] and s[1] == s[2] and s[3] == s[4]:\n            return 5, s[5:7]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 5, s[2:7]\n        if s[0] == s[1] and s[3] == s[4]:\n            return 5, s[1:4] + s[5:7]\n        if s[1] == s[2] and s[3] == s[4]:\n            return 5, s[:2] + s[4:7]\n        if s[0] == s[1]:\n            return 3, s[2:7]\n        if s[1] == s[2]:\n            return 4, s[:2] + s[4:7]\n        if s[3] == s[4]:\n            return 4, s[:3] + s[5:7]\n        if s[4] == s[5]:\n            return 4, s[:4] + s[6:7]\n        if s[5] == s[6]:\n            return 4, s[:5]\n        return 5, s[1:4] + s[5:7]\n    if n == 8:\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4] and s[4] == s[5]:\n            return 8, ''\n        if s[0] == s[1] and s[1] == s[2] and s[2] == s[4]:\n            return 6, s[5:8]\n        if s[0] == s[1] and s[1] == s[2] and s[3] == s[4]:\n            return 6, s[2:7]\n        if s[0] == s[1] and s[1] == s[2]:\n            return 6, s[2:8]\n        if s[0] == s[1] and s[3] == s[4]:\n            return 6, s[1:4] + s[5:8]\n        if s[1] == s[2] and s[3] == s[4]:\n            return 6, s[:2] + s[4:8]\n        if s[0] == s[1]:\n            return 4, s[2:8]\n        if s[1] == s[2]:\n            return 5, s[:2] + s[4:8]\n        if s[3] == s[4]:\n            return 5, s[:3] + s[5:8]\n        if s[4] == s[5]:\n            return 5, s[:4] + s[6:8]\n        if s[5] == s[6]:\n            return 5, s[:5] + s[7:8]\n        if s[6] == s[7]:\n            return 5, s[:6]\n        return 6, s[1:4] + s[5:8]\n\n\nif __name__ == '__main__':\n    n = int(sys.stdin.readline().strip())\n    s = sys.stdin.readline().strip()\n\n    cnt, res = solve(s)\n    print(cnt)\n    print(res)"
+}
+2022-04-18 03:42:02.183900 REASON stop
+2022-04-18 03:42:02.196883 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef good_string(s):\n    if len(s) % 2 == 0:\n        for i in range(0, len(s), 2):\n            if s[i] == s[i+1]:\n                return False\n        return True\n    else:\n        return False\n\ndef delete_char(s):\n    if len(s) == 1:\n        return 0\n    if good_string(s):\n        return 0\n\n    for i in range(0, len(s), 2):\n        if s[i] == s[i+1]:\n            return 1 + delete_char(s[:i] + s[i+1:])\n\n    if (len(s) % 2) == 1:\n        return 1 + delete_char(s[:-1])\n    else:\n        return 1 + delete_char(s[1:])\n\ndef main():\n    n = int(input())\n    s = input()\n    print(delete_char(s))\n    print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 03:42:02.196975 REASON stop
+2022-04-18 03:42:02.197754 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nnum_chars = int(input())\nchars = input()\n\nif num_chars % 2 == 1:\n    print(num_chars)\n    print(chars)\nelse:\n    num_deletions = 0\n    for i in range(0, num_chars-1, 2):\n        if chars[i] == chars[i+1]:\n            num_deletions += 1\n    print(num_deletions)\n    if num_deletions == 0:\n        print(chars)\n    else:\n        for i in range(0, num_chars-1, 2):\n            if num_deletions == 0:\n                print(chars[i:])\n                break\n            if chars[i] == chars[i+1]:\n                num_deletions -= 1\n            else:\n                print(chars[i], end='')"
+}
+2022-04-18 03:42:02.197840 REASON stop

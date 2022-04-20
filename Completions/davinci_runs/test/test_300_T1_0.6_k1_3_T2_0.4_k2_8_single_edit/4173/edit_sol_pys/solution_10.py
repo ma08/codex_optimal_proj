@@ -1,0 +1,15 @@
+
+
+import sys
+
+def solve(n, a, b):
+    a, b = sorted([a, b])
+    if a == b: return n * a
+    if n % 2 == 0: return (a * (n//2)) + (b * (n//2))
+    return (a * (n//2)) + (b * (n//2)) + a
+
+q = int(raw_input().strip())
+for a0 in xrange(q):
+    n, a, b = raw_input().strip().split(' ')
+    n, a, b = [int(n), int(a), int(b)]
+    print solve(n, a, b)

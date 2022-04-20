@@ -1,0 +1,21 @@
+
+
+def main():
+    n = int(input())
+    arr = list(map(int, input().split()))
+    sums = {}
+    ret = 1
+    for i in range(n):
+        for j in range(i, n):
+            s = sum(arr[i:j + 1])
+            sums[s] = sums.get(s, 0) + 1
+            ret = max(ret, sums[s])
+    print(ret)
+    for k, v in sums.items():
+        if v == ret:
+            ret -= 1
+            print(k)
+            break
+
+if __name__ == '__main__':
+    main()

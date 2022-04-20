@@ -1,0 +1,4 @@
+
+#1時間で何秒かかるか計算して、その秒数を掛け算する
+T,X = map(int, input().split())
+print(T / X)

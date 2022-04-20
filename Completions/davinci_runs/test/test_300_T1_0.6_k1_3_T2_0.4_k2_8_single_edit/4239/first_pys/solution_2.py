@@ -1,0 +1,16 @@
+
+from math import log
+
+n = int(input())
+
+x = int(log(n,6))
+y = int(log(n,9))
+
+if n == 1:
+    print(1)
+elif n == 6**x:
+    print(x)
+elif n == 9**y:
+    print(y)
+else:
+    print(x+y)

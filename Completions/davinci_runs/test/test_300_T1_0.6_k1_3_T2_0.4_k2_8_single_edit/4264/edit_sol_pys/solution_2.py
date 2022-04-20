@@ -1,0 +1,18 @@
+import math
+
+
+def is_prime(n):
+    if n == 1: return False
+
+if N < 10:
+    print(N)
+elif N < 100:
+    print(N - 9)
+elif N < 1000:
+    print(N - 189)
+elif N < 10000:
+    print(N - 2889)
+elif N < 100000:
+    print(N - 38889)
+else:
+    print(N - 488889)
