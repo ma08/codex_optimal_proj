@@ -1,0 +1,18 @@
+
+N = int(input())
+
+if N % 4 == 0 or N % 7 == 0:
+    print("Yes")
+elif N % 11 == 0:
+    print("Yes")
+else:
+    print("No")
+
+N = int(input())
+
+if N % 4 == 0 or N % 7 == 0:
+    print("Yes")
+elif N % 11 == 0:
+    print("Yes")
+else:
+    print("No")
