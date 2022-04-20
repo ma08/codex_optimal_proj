@@ -1,0 +1,148 @@
+2022-04-20 03:00:06.464882 """
+Hearing that energy drinks increase rating in those sites, Takahashi decides to buy up M cans of energy drinks.
+There are N stores that sell energy drinks. In the i-th store, he can buy at most B_i cans of energy drinks for A_i yen (the currency of Japan) each.
+What is the minimum amount of money with which he can buy M cans of energy drinks?
+It is guaranteed that, in the given inputs, a sufficient amount of money can always buy M cans of energy drinks.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N, M \leq 10^5
+ - 1 \leq A_i \leq 10^9
+ - 1 \leq B_i \leq 10^5
+ - B_1 + ... + B_N \geq M
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+A_1 B_1
+A_2 B_2
+\vdots
+A_N B_N
+
+-----Output-----
+Print the minimum amount of money with which Takahashi can buy M cans of energy drinks.
+
+-----Sample Input-----
+2 5
+4 9
+2 4
+
+-----Sample Output-----
+12
+
+With 12 yen, we can buy one drink at the first store and four drinks at the second store, for the total of five drinks. However, we cannot buy 5 drinks with 11 yen or less.
+"""
+2022-04-20 03:00:06.464902 --------------------------
+2022-04-20 03:00:06.465068 using api key gabby
+2022-04-20 03:00:17.416798 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    stores = []\n    for _ in range(n):\n        stores.append(list(map(int, input().split())))\n    stores.sort(key=lambda x: x[0])\n    total = 0\n    for store in stores:\n        if m - store[1] >= 0:\n            total += store[0] * store[1]\n            m -= store[1]\n        else:\n            total += store[0] * m\n            break\n    print(total)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, sys.stdin.readline().split())\n    A.append(a)\n    B.append(b)\n\nmin_cost = 0\nfor i in range(N):\n    if B[i] >= M:\n        min_cost += A[i] * M\n        break\n    else:\n        min_cost += A[i] * B[i]\n        M -= B[i]\n\nprint(min_cost)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\ndrinks = []\nfor i in range(N):\n    drinks.append(list(map(int, sys.stdin.readline().split())))\n\ndrinks.sort(key=lambda x: x[0])\n\nans = 0\nfor i in range(N):\n    if M <= drinks[i][1]:\n        ans += M * drinks[i][0]\n        break\n    else:\n        ans += drinks[i][0] * drinks[i][1]\n        M -= drinks[i][1]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\ndef solve(N, M, A, B):\n    heap = []\n    for i in range(N):\n        heapq.heappush(heap, (A[i], B[i]))\n    ans = 0\n    while M > 0:\n        price, num = heapq.heappop(heap)\n        ans += price * min(num, M)\n        M -= num\n    return ans\n\nif __name__ == '__main__':\n    N, M = map(int, input().split())\n    A = []\n    B = []\n    for i in range(N):\n        a, b = map(int, input().split())\n        A.append(a)\n        B.append(b)\n    print(solve(N, M, A, B))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    a = []\n    b = []\n    for i in range(n):\n        ai, bi = map(int, input().split())\n        a.append(ai)\n        b.append(bi)\n    a.sort()\n    b.sort()\n    ans = 0\n    for i in range(m):\n        ans += a[i]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    N, M = map(int, input().split())\n    A = []\n    B = []\n    for i in range(N):\n        a, b = map(int, input().split())\n        A.append(a)\n        B.append(b)\n    A = sorted(A)\n    B = sorted(B)\n    ans = 0\n    for i in range(N):\n        if B[i] < M:\n            ans += A[i] * B[i]\n            M -= B[i]\n        else:\n            ans += A[i] * M\n            break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, input().split())\n    A.append(a)\n    B.append(b)\n\ndef solve(N, M, A, B):\n    ans = 0\n    for i in range(N):\n        if B[i] <= M:\n            ans += A[i] * B[i]\n            M -= B[i]\n        else:\n            ans += A[i] * M\n            break\n    return ans\n\nprint(solve(N, M, A, B))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, input().split())\n    A.append(a)\n    B.append(b)\n\nA.sort()\nB.sort()\n\nans = 0\nfor i in range(N):\n    if M > B[i]:\n        ans += A[i] * B[i]\n        M -= B[i]\n    else:\n        ans += A[i] * M\n        break\n\nprint(ans)"
+    }
+  ],
+  "created": 1650423606,
+  "id": "cmpl-4yurWTj8U0Px8a1WoeL2exBAPAbU2",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:00:17.417219 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    stores = []\n    for _ in range(n):\n        stores.append(list(map(int, input().split())))\n    stores.sort(key=lambda x: x[0])\n    total = 0\n    for store in stores:\n        if m - store[1] >= 0:\n            total += store[0] * store[1]\n            m -= store[1]\n        else:\n            total += store[0] * m\n            break\n    print(total)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:00:17.417290 REASON stop
+2022-04-20 03:00:17.465360 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, sys.stdin.readline().split())\n    A.append(a)\n    B.append(b)\n\nmin_cost = 0\nfor i in range(N):\n    if B[i] >= M:\n        min_cost += A[i] * M\n        break\n    else:\n        min_cost += A[i] * B[i]\n        M -= B[i]\n\nprint(min_cost)"
+}
+2022-04-20 03:00:17.465516 REASON stop
+2022-04-20 03:00:17.581997 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nN, M = map(int, sys.stdin.readline().split())\n\ndrinks = []\nfor i in range(N):\n    drinks.append(list(map(int, sys.stdin.readline().split())))\n\ndrinks.sort(key=lambda x: x[0])\n\nans = 0\nfor i in range(N):\n    if M <= drinks[i][1]:\n        ans += M * drinks[i][0]\n        break\n    else:\n        ans += drinks[i][0] * drinks[i][1]\n        M -= drinks[i][1]\n\nprint(ans)"
+}
+2022-04-20 03:00:17.582190 REASON stop
+2022-04-20 03:00:17.660385 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\ndef solve(N, M, A, B):\n    heap = []\n    for i in range(N):\n        heapq.heappush(heap, (A[i], B[i]))\n    ans = 0\n    while M > 0:\n        price, num = heapq.heappop(heap)\n        ans += price * min(num, M)\n        M -= num\n    return ans\n\nif __name__ == '__main__':\n    N, M = map(int, input().split())\n    A = []\n    B = []\n    for i in range(N):\n        a, b = map(int, input().split())\n        A.append(a)\n        B.append(b)\n    print(solve(N, M, A, B))"
+}
+2022-04-20 03:00:17.660554 REASON stop
+2022-04-20 03:00:17.716394 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    a = []\n    b = []\n    for i in range(n):\n        ai, bi = map(int, input().split())\n        a.append(ai)\n        b.append(bi)\n    a.sort()\n    b.sort()\n    ans = 0\n    for i in range(m):\n        ans += a[i]\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:00:17.716624 REASON stop
+2022-04-20 03:00:17.778679 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    N, M = map(int, input().split())\n    A = []\n    B = []\n    for i in range(N):\n        a, b = map(int, input().split())\n        A.append(a)\n        B.append(b)\n    A = sorted(A)\n    B = sorted(B)\n    ans = 0\n    for i in range(N):\n        if B[i] < M:\n            ans += A[i] * B[i]\n            M -= B[i]\n        else:\n            ans += A[i] * M\n            break\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:00:17.778845 REASON stop
+2022-04-20 03:00:17.871476 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, input().split())\n    A.append(a)\n    B.append(b)\n\ndef solve(N, M, A, B):\n    ans = 0\n    for i in range(N):\n        if B[i] <= M:\n            ans += A[i] * B[i]\n            M -= B[i]\n        else:\n            ans += A[i] * M\n            break\n    return ans\n\nprint(solve(N, M, A, B))"
+}
+2022-04-20 03:00:17.871651 REASON stop
+2022-04-20 03:00:17.994138 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\nA = []\nB = []\nfor i in range(N):\n    a, b = map(int, input().split())\n    A.append(a)\n    B.append(b)\n\nA.sort()\nB.sort()\n\nans = 0\nfor i in range(N):\n    if M > B[i]:\n        ans += A[i] * B[i]\n        M -= B[i]\n    else:\n        ans += A[i] * M\n        break\n\nprint(ans)"
+}
+2022-04-20 03:00:17.994458 REASON stop

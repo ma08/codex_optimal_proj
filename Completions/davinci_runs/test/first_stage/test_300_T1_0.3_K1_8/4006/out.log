@@ -1,0 +1,153 @@
+2022-04-20 00:44:22.513253 """
+Let's denote a function $f(x)$ in such a way: we add $1$ to $x$, then, while there is at least one trailing zero in the resulting number, we remove that zero. For example,   $f(599) = 6$: $599 + 1 = 600 \rightarrow 60 \rightarrow 6$;  $f(7) = 8$: $7 + 1 = 8$;  $f(9) = 1$: $9 + 1 = 10 \rightarrow 1$;  $f(10099) = 101$: $10099 + 1 = 10100 \rightarrow 1010 \rightarrow 101$. 
+
+We say that some number $y$ is reachable from $x$ if we can apply function $f$ to $x$ some (possibly zero) times so that we get $y$ as a result. For example, $102$ is reachable from $10098$ because $f(f(f(10098))) = f(f(10099)) = f(101) = 102$; and any number is reachable from itself.
+
+You are given a number $n$; your task is to count how many different numbers are reachable from $n$.
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 10^9$).
+
+
+-----Output-----
+
+Print one integer: the number of different numbers that are reachable from $n$.
+
+
+-----Examples-----
+Input
+1098
+
+Output
+20
+
+Input
+10
+
+Output
+19
+
+
+
+-----Note-----
+
+The numbers that are reachable from $1098$ are:
+
+$1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1098, 1099$.
+"""
+2022-04-20 00:44:22.513262 --------------------------
+2022-04-20 00:44:22.513360 using api key derek
+2022-04-20 00:45:03.640778 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# n = int(input())\nn = 1098\n\n# 1. \uc790\ub9ac\uc218\ub97c \uad6c\ud55c\ub2e4.\n\ndef get_digit(n):\n    digit = 0\n    while n > 0:\n        digit += 1\n        n //= 10\n    return digit\n\ndigit = get_digit(n)\n\n# 2. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\uc5d0\uc11c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_num(digit):\n    if digit <= 1:\n        return 1\n    else:\n        return 10 * get_num(digit - 1) + pow(10, digit - 1)\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_num_list(digit):\n    num_list = []\n    for i in range(digit):\n        num_list.append(get_num(i + 1))\n    return num_list\n\nnum_list = get_num_list(digit)\n\n# 3. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_case_list(n, num_list):\n    case_list = []\n    for i in range(digit):\n        case_list.append(n // num_list[i])\n        n %= num_list[i]\n    return case_list\n\ncase_list = get_case_list(n, num_list)\n\n# 4. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_reachable_num(n, case_list, num_list):\n    reachable_num = 0\n    for i in range(digit):\n        if i == 0:\n            reachable_num += case_list[i]\n        elif i == 1:\n            reachable_num += 9 * case_list[i]\n        else:\n            reachable_num += 9 * num_list[i - 1] * case_list[i]\n    return reachable_num\n\nreachable_num = get_reachable_num(n, case_list, num_list)\n\nprint(reachable_num)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    n = int(input())\n    if n % 10 == 0:\n        print(19)\n    else:\n        print(20)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef f(x):\n    x = x + 1\n    while x % 10 == 0:\n        x = x // 10\n    return x\n\ndef main():\n    n = int(input())\n    visited = set()\n    while n not in visited:\n        visited.add(n)\n        n = f(n)\n    print(len(visited))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\nseen = set()\nwhile n not in seen:\n    seen.add(n)\n    n = f(n)\n\nprint(len(seen))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef f(x):\n    x += 1\n    while x % 10 == 0:\n        x //= 10\n    return x\n\ndef main():\n    n = int(input())\n    seen = set()\n    while n not in seen:\n        seen.add(n)\n        n = f(n)\n    print(len(seen))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\ndef main():\n    n = int(input())\n    seen = set()\n    while n not in seen:\n        seen.add(n)\n        n = f(n)\n    print(len(seen))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\ndef main():\n    n = int(input())\n    reachable = set()\n    while n not in reachable:\n        reachable.add(n)\n        n = f(n)\n    print(len(reachable))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\ndef f(x):\n    x += 1\n    while x % 10 == 0:\n        x //= 10\n    return x\n\ndef solution(n):\n    visited = set()\n    visited.add(n)\n    while True:\n        n = f(n)\n        if n in visited:\n            return len(visited)\n        visited.add(n)\n\nprint(solution(n))"
+    }
+  ],
+  "created": 1650415462,
+  "id": "cmpl-4yskAKUeiBijlc9MMrt8FubTu5cl9",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 00:45:03.641216 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# n = int(input())\nn = 1098\n\n# 1. \uc790\ub9ac\uc218\ub97c \uad6c\ud55c\ub2e4.\n\ndef get_digit(n):\n    digit = 0\n    while n > 0:\n        digit += 1\n        n //= 10\n    return digit\n\ndigit = get_digit(n)\n\n# 2. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\uc5d0\uc11c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_num(digit):\n    if digit <= 1:\n        return 1\n    else:\n        return 10 * get_num(digit - 1) + pow(10, digit - 1)\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_num_list(digit):\n    num_list = []\n    for i in range(digit):\n        num_list.append(get_num(i + 1))\n    return num_list\n\nnum_list = get_num_list(digit)\n\n# 3. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_case_list(n, num_list):\n    case_list = []\n    for i in range(digit):\n        case_list.append(n // num_list[i])\n        n %= num_list[i]\n    return case_list\n\ncase_list = get_case_list(n, num_list)\n\n# 4. \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud55c\ub2e4.\n\n# \uac01 \uc790\ub9ac\uc218\ubcc4\ub85c \uac00\ub2a5\ud55c \uacbd\uc6b0\uc758 \uc218\ub97c \uad6c\ud558\ub294 \ud568\uc218\ndef get_reachable_num(n, case_list, num_list):\n    reachable_num = 0\n    for i in range(digit):\n        if i == 0:\n            reachable_num += case_list[i]\n        elif i == 1:\n            reachable_num += 9 * case_list[i]\n        else:\n            reachable_num += 9 * num_list[i - 1] * case_list[i]\n    return reachable_num\n\nreachable_num = get_reachable_num(n, case_list, num_list)\n\nprint(reachable_num)"
+}
+2022-04-20 00:45:03.641287 REASON stop
+2022-04-20 00:45:03.641958 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    The main function.\n    \"\"\"\n    n = int(input())\n    if n % 10 == 0:\n        print(19)\n    else:\n        print(20)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:45:03.642057 REASON stop
+2022-04-20 00:45:03.642602 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef f(x):\n    x = x + 1\n    while x % 10 == 0:\n        x = x // 10\n    return x\n\ndef main():\n    n = int(input())\n    visited = set()\n    while n not in visited:\n        visited.add(n)\n        n = f(n)\n    print(len(visited))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:45:03.642689 REASON stop
+2022-04-20 00:45:03.660587 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\nseen = set()\nwhile n not in seen:\n    seen.add(n)\n    n = f(n)\n\nprint(len(seen))"
+}
+2022-04-20 00:45:03.660783 REASON stop
+2022-04-20 00:45:03.661433 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef f(x):\n    x += 1\n    while x % 10 == 0:\n        x //= 10\n    return x\n\ndef main():\n    n = int(input())\n    seen = set()\n    while n not in seen:\n        seen.add(n)\n        n = f(n)\n    print(len(seen))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:45:03.661535 REASON stop
+2022-04-20 00:45:03.681231 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\ndef main():\n    n = int(input())\n    seen = set()\n    while n not in seen:\n        seen.add(n)\n        n = f(n)\n    print(len(seen))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:45:03.681393 REASON stop
+2022-04-20 00:45:03.682239 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef f(x):\n    while x % 10 == 0:\n        x //= 10\n    return x + 1\n\ndef main():\n    n = int(input())\n    reachable = set()\n    while n not in reachable:\n        reachable.add(n)\n        n = f(n)\n    print(len(reachable))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:45:03.682340 REASON stop
+2022-04-20 00:45:03.683022 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\ndef f(x):\n    x += 1\n    while x % 10 == 0:\n        x //= 10\n    return x\n\ndef solution(n):\n    visited = set()\n    visited.add(n)\n    while True:\n        n = f(n)\n        if n in visited:\n            return len(visited)\n        visited.add(n)\n\nprint(solution(n))"
+}
+2022-04-20 00:45:03.683258 REASON stop

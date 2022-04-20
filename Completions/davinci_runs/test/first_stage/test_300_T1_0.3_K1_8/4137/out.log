@@ -1,0 +1,165 @@
+2022-04-20 02:37:37.994668 """
+In this problem you will write a simple generator of Brainfuck (https://en.wikipedia.org/wiki/Brainfuck) calculators.
+
+You are given an arithmetic expression consisting of integers from 0 to 255 and addition/subtraction signs between them. Output a Brainfuck program which, when executed, will print the result of evaluating this expression.
+
+We use a fairly standard Brainfuck interpreter for checking the programs:
+
+
+
+ 30000 memory cells.
+
+ memory cells store integers from 0 to 255 with unsigned 8-bit wraparound.
+
+ console input (, command) is not supported, but it's not needed for this problem.
+
+
+-----Input-----
+
+The only line of input data contains the arithmetic expression. The expression will contain between 2 and 10 operands, separated with arithmetic signs plus and/or minus. Each operand will be an integer between 0 and 255, inclusive. The calculations result is guaranteed to be an integer between 0 and 255, inclusive (results of intermediary calculations might be outside of these boundaries).
+
+
+-----Output-----
+
+Output a Brainfuck program which, when executed, will print the result of evaluating this expression. The program must be at most 5000000 characters long (including the non-command characters), and its execution must be complete in at most 50000000 steps.
+
+
+-----Examples-----
+Input
+2+3
+
+Output
+++>
++++>
+<[<+>-]<
+++++++++++++++++++++++++++++++++++++++++++++++++.
+
+Input
+9-7
+
+Output
++++++++++>
++++++++>
+<[<->-]<
+++++++++++++++++++++++++++++++++++++++++++++++++.
+
+
+
+-----Note-----
+
+You can download the source code of the Brainfuck interpreter by the link http://assets.codeforces.com/rounds/784/bf.cpp. We use this code to interpret outputs.
+"""
+2022-04-20 02:37:37.994685 --------------------------
+2022-04-20 02:37:37.994846 using api key derek
+2022-04-20 02:38:01.340765 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef bf_calc(expr):\n    op = expr.split('+')\n    op = [x.split('-') for x in op]\n    op = [x for y in op for x in y]\n    op = [int(x) for x in op]\n    print(op)\n\n    bf = ''\n    for i in range(len(op)):\n        if i == 0:\n            bf += '+' * op[i]\n            bf += '>'\n        else:\n            if op[i] > op[i-1]:\n                bf += '+' * (op[i] - op[i-1])\n                bf += '>'\n            elif op[i] < op[i-1]:\n                bf += '-' * (op[i-1] - op[i])\n                bf += '>'\n            else:\n                bf += '>'\n\n    bf += '<' * (len(op) - 1)\n    bf += '[<+>-]<'\n    bf += '+' * op[0]\n    bf += '.'\n\n    return bf\n\n\nif __name__ == '__main__':\n    expr = input()\n    print(bf_calc(expr))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef get_input():\n    return sys.stdin.readline().strip()\n\ndef get_output(input_str):\n    input_str = input_str.replace(' ', '')\n    input_str = input_str.replace('+', ' + ')\n    input_str = input_str.replace('-', ' - ')\n    input_str = input_str.split(' ')\n    input_str = [int(x) for x in input_str if x]\n    print(input_str)\n    output = ''\n    for i in range(len(input_str)):\n        output += '+' * input_str[i]\n        if i < len(input_str) - 1:\n            output += '>'\n    output += '<' * (len(input_str) - 1)\n    output += '['\n    for i in range(len(input_str) - 1):\n        output += '<'\n        output += '+' * input_str[i]\n        output += '>'\n        output += '-'\n        output += '>'\n    output += '<'\n    output += ']'\n    output += '<'\n    output += '+' * input_str[-1]\n    output += '.'\n    return output\n\ndef main():\n    input_str = get_input()\n    output = get_output(input_str)\n    print(output)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    nums = sys.stdin.readline().strip().split(\"+\")\n    nums = [int(x) for x in nums]\n    total = sum(nums)\n    print(\"+\"*total, end=\"\")\n    print(\">\")\n    for num in nums:\n        print(\"+\"*num, end=\"\")\n        print(\">\")\n    print(\"<[<+>-]<\")\n    print(\"+\"*total, end=\"\")\n    print(\".\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    data = sys.stdin.readline().strip()\n    data = data.split('+')\n    print(data)\n    for i in range(len(data)):\n        if '-' in data[i]:\n            data[i] = data[i].split('-')\n            for j in range(len(data[i])):\n                data[i][j] = int(data[i][j])\n        else:\n            data[i] = int(data[i])\n    print(data)\n    out = ''\n    for i in range(len(data)):\n        if type(data[i]) is int:\n            out += '+' * data[i]\n            if i != len(data) - 1:\n                out += '>'\n        else:\n            for j in range(len(data[i])):\n                out += '+' * data[i][j]\n                if j != len(data[i]) - 1:\n                    out += '>'\n            if i != len(data) - 1:\n                out += '>'\n    out += '<' * (len(data) - 1)\n    out += '[<'\n    for i in range(len(data)):\n        if type(data[i]) is int:\n            out += '+' * data[i]\n            if i != len(data) - 1:\n                out += '>'\n        else:\n            for j in range(len(data[i])):\n                out += '+' * data[i][j]\n                if j != len(data[i]) - 1:\n                    out += '>'\n            if i != len(data) - 1:\n                out += '>'\n    out += '-]<'\n    out += '.'\n    print(out)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    input_str = sys.stdin.readline().strip()\n    input_str = input_str.replace('+', ' + ')\n    input_str = input_str.replace('-', ' - ')\n    input_str = input_str.split()\n    nums = [int(i) for i in input_str[::2]]\n    ops = input_str[1::2]\n    result = nums[0]\n    for i in range(len(ops)):\n        if ops[i] == '+':\n            result += nums[i+1]\n        else:\n            result -= nums[i+1]\n    result = result % 256\n    print('+'*result + '>')\n    print('+'*(result+1) + '>')\n    print('<[<+>-]<')\n    print('+'*result + '.')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    expr = sys.stdin.readline().strip()\n    operands = expr.split('+')\n    if len(operands) == 1:\n        operands = expr.split('-')\n    operands = [int(x) for x in operands]\n    if len(operands) == 1:\n        print('+' * operands[0])\n        print('.')\n    else:\n        print('+' * operands[0])\n        print('>')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('>')\n        print('<')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('<')\n        print('[<')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('>')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('-')\n            else:\n                print('+')\n        print('-]<')\n        print('+' * (operands[0] + sum(operands[1:])))\n        print('.')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef brainfuck(expression):\n    \"\"\"\n    >>> brainfuck('2+3')\n    '++>+++>\\\\n<[<+>-]<\\\\n++++++++++++++++++++++++++++++++++++++++++++++++.'\n    >>> brainfuck('9-7')\n    '+++++++++>+++++++>\\\\n<[<->-]<\\\\n++++++++++++++++++++++++++++++++++++++++++++++++.'\n    \"\"\"\n    expression = expression.replace(' ', '')\n    expression = expression.split('+')\n    expression = [int(x) for x in expression]\n    result = sum(expression)\n    return '+' * result + '.'\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+    }
+  ],
+  "created": 1650422258,
+  "id": "cmpl-4yuVmwvfhzhccoiUBxWkdQxEUoeoc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:38:01.341344 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef bf_calc(expr):\n    op = expr.split('+')\n    op = [x.split('-') for x in op]\n    op = [x for y in op for x in y]\n    op = [int(x) for x in op]\n    print(op)\n\n    bf = ''\n    for i in range(len(op)):\n        if i == 0:\n            bf += '+' * op[i]\n            bf += '>'\n        else:\n            if op[i] > op[i-1]:\n                bf += '+' * (op[i] - op[i-1])\n                bf += '>'\n            elif op[i] < op[i-1]:\n                bf += '-' * (op[i-1] - op[i])\n                bf += '>'\n            else:\n                bf += '>'\n\n    bf += '<' * (len(op) - 1)\n    bf += '[<+>-]<'\n    bf += '+' * op[0]\n    bf += '.'\n\n    return bf\n\n\nif __name__ == '__main__':\n    expr = input()\n    print(bf_calc(expr))"
+}
+2022-04-20 02:38:01.341433 REASON stop
+2022-04-20 02:38:01.342060 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef get_input():\n    return sys.stdin.readline().strip()\n\ndef get_output(input_str):\n    input_str = input_str.replace(' ', '')\n    input_str = input_str.replace('+', ' + ')\n    input_str = input_str.replace('-', ' - ')\n    input_str = input_str.split(' ')\n    input_str = [int(x) for x in input_str if x]\n    print(input_str)\n    output = ''\n    for i in range(len(input_str)):\n        output += '+' * input_str[i]\n        if i < len(input_str) - 1:\n            output += '>'\n    output += '<' * (len(input_str) - 1)\n    output += '['\n    for i in range(len(input_str) - 1):\n        output += '<'\n        output += '+' * input_str[i]\n        output += '>'\n        output += '-'\n        output += '>'\n    output += '<'\n    output += ']'\n    output += '<'\n    output += '+' * input_str[-1]\n    output += '.'\n    return output\n\ndef main():\n    input_str = get_input()\n    output = get_output(input_str)\n    print(output)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:38:01.342155 REASON stop
+2022-04-20 02:38:01.342958 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    nums = sys.stdin.readline().strip().split(\"+\")\n    nums = [int(x) for x in nums]\n    total = sum(nums)\n    print(\"+\"*total, end=\"\")\n    print(\">\")\n    for num in nums:\n        print(\"+\"*num, end=\"\")\n        print(\">\")\n    print(\"<[<+>-]<\")\n    print(\"+\"*total, end=\"\")\n    print(\".\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:38:01.343056 REASON stop
+2022-04-20 02:38:01.361701 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    data = sys.stdin.readline().strip()\n    data = data.split('+')\n    print(data)\n    for i in range(len(data)):\n        if '-' in data[i]:\n            data[i] = data[i].split('-')\n            for j in range(len(data[i])):\n                data[i][j] = int(data[i][j])\n        else:\n            data[i] = int(data[i])\n    print(data)\n    out = ''\n    for i in range(len(data)):\n        if type(data[i]) is int:\n            out += '+' * data[i]\n            if i != len(data) - 1:\n                out += '>'\n        else:\n            for j in range(len(data[i])):\n                out += '+' * data[i][j]\n                if j != len(data[i]) - 1:\n                    out += '>'\n            if i != len(data) - 1:\n                out += '>'\n    out += '<' * (len(data) - 1)\n    out += '[<'\n    for i in range(len(data)):\n        if type(data[i]) is int:\n            out += '+' * data[i]\n            if i != len(data) - 1:\n                out += '>'\n        else:\n            for j in range(len(data[i])):\n                out += '+' * data[i][j]\n                if j != len(data[i]) - 1:\n                    out += '>'\n            if i != len(data) - 1:\n                out += '>'\n    out += '-]<'\n    out += '.'\n    print(out)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:38:01.361862 REASON stop
+2022-04-20 02:38:01.397556 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    input_str = sys.stdin.readline().strip()\n    input_str = input_str.replace('+', ' + ')\n    input_str = input_str.replace('-', ' - ')\n    input_str = input_str.split()\n    nums = [int(i) for i in input_str[::2]]\n    ops = input_str[1::2]\n    result = nums[0]\n    for i in range(len(ops)):\n        if ops[i] == '+':\n            result += nums[i+1]\n        else:\n            result -= nums[i+1]\n    result = result % 256\n    print('+'*result + '>')\n    print('+'*(result+1) + '>')\n    print('<[<+>-]<')\n    print('+'*result + '.')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:38:01.397724 REASON stop
+2022-04-20 02:38:01.398332 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:38:01.398431 REASON stop
+2022-04-20 02:38:01.401428 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    expr = sys.stdin.readline().strip()\n    operands = expr.split('+')\n    if len(operands) == 1:\n        operands = expr.split('-')\n    operands = [int(x) for x in operands]\n    if len(operands) == 1:\n        print('+' * operands[0])\n        print('.')\n    else:\n        print('+' * operands[0])\n        print('>')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('>')\n        print('<')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('<')\n        print('[<')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('+' * operands[i])\n            else:\n                print('-' * operands[i])\n            print('>')\n        for i in range(1, len(operands)):\n            if expr[i * 2 - 1] == '+':\n                print('-')\n            else:\n                print('+')\n        print('-]<')\n        print('+' * (operands[0] + sum(operands[1:])))\n        print('.')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:38:01.401559 REASON stop
+2022-04-20 02:38:01.405583 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef brainfuck(expression):\n    \"\"\"\n    >>> brainfuck('2+3')\n    '++>+++>\\\\n<[<+>-]<\\\\n++++++++++++++++++++++++++++++++++++++++++++++++.'\n    >>> brainfuck('9-7')\n    '+++++++++>+++++++>\\\\n<[<->-]<\\\\n++++++++++++++++++++++++++++++++++++++++++++++++.'\n    \"\"\"\n    expression = expression.replace(' ', '')\n    expression = expression.split('+')\n    expression = [int(x) for x in expression]\n    result = sum(expression)\n    return '+' * result + '.'\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+}
+2022-04-20 02:38:01.405841 REASON stop

@@ -1,0 +1,173 @@
+2022-04-20 03:18:06.282952 """
+Polycarp likes numbers that are divisible by 3.
+
+He has a huge number $s$. Polycarp wants to cut from it the maximum number of numbers that are divisible by $3$. To do this, he makes an arbitrary number of vertical cuts between pairs of adjacent digits. As a result, after $m$ such cuts, there will be $m+1$ parts in total. Polycarp analyzes each of the obtained numbers and finds the number of those that are divisible by $3$.
+
+For example, if the original number is $s=3121$, then Polycarp can cut it into three parts with two cuts: $3|1|21$. As a result, he will get two numbers that are divisible by $3$.
+
+Polycarp can make an arbitrary number of vertical cuts, where each cut is made between a pair of adjacent digits. The resulting numbers cannot contain extra leading zeroes (that is, the number can begin with 0 if and only if this number is exactly one character '0'). For example, 007, 01 and 00099 are not valid numbers, but 90, 0 and 10001 are valid.
+
+What is the maximum number of numbers divisible by $3$ that Polycarp can obtain?
+
+
+-----Input-----
+
+The first line of the input contains a positive integer $s$. The number of digits of the number $s$ is between $1$ and $2\cdot10^5$, inclusive. The first (leftmost) digit is not equal to 0.
+
+
+-----Output-----
+
+Print the maximum number of numbers divisible by $3$ that Polycarp can get by making vertical cuts in the given number $s$.
+
+
+-----Examples-----
+Input
+3121
+
+Output
+2
+
+Input
+6
+
+Output
+1
+
+Input
+1000000000000000000000000000000000
+
+Output
+33
+
+Input
+201920181
+
+Output
+4
+
+
+
+-----Note-----
+
+In the first example, an example set of optimal cuts on the number is 3|1|21.
+
+In the second example, you do not need to make any cuts. The specified number 6 forms one number that is divisible by $3$.
+
+In the third example, cuts must be made between each pair of digits. As a result, Polycarp gets one digit 1 and $33$ digits 0. Each of the $33$ digits 0 forms a number that is divisible by $3$.
+
+In the fourth example, an example set of optimal cuts is 2|0|1|9|201|81. The numbers $0$, $9$, $201$ and $81$ are divisible by $3$.
+"""
+2022-04-20 03:18:06.282975 --------------------------
+2022-04-20 03:18:06.283129 using api key gabby
+2022-04-20 03:18:32.109432 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    s = list(s)\n    s = [int(x) for x in s]\n    s = sum(s)\n    if s % 3 == 0:\n        print(len(s))\n    else:\n        print(len(s) - 1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef get_divisible_numbers(s):\n    \"\"\"\n    Returns the number of divisible numbers that can be cut from the number s.\n    \"\"\"\n    # The number of divisible numbers is equal to the number of zeros in the number s.\n    return s.count(\"0\")\n\ndef main():\n    # Read the number s.\n    s = input()\n    # Print the number of divisible numbers that can be cut from s.\n    print(get_divisible_numbers(s))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    \"\"\"\n    1. We can make cuts between each pair of digits.\n    2. We can make cuts between each pair of digits and the last digit.\n    3. We can make cuts between each pair of digits and the first digit.\n    4. We can make cuts between each pair of digits and the first and last digits.\n    \"\"\"\n    s = input()\n    n = len(s)\n    dp = [[0] * 3 for _ in range(n)]\n    dp[0][int(s[0]) % 3] = 1\n    for i in range(1, n):\n        for j in range(3):\n            dp[i][j] = dp[i - 1][j]\n            dp[i][(j + int(s[i])) % 3] += 1\n    print(max(dp[n - 1][0], dp[n - 1][1] + 1, dp[n - 1][2] + 1))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ns = input()\n\ndef check_divisible_by_3(number):\n    if int(number) % 3 == 0:\n        return True\n    else:\n        return False\n\ndef find_max_cuts(s):\n    if check_divisible_by_3(s):\n        return len(s) - 1\n    else:\n        return len(s)\n\nprint(find_max_cuts(s))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    s = input()\n    n = len(s)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1]\n        if int(s[i - 2:i]) % 3 == 0:\n            dp[i] = max(dp[i], dp[i - 2] + 1)\n    print(dp[n])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ns = input()\n\ndp = [0] * len(s)\n\nfor i in range(len(s)):\n    dp[i] = int(s[i]) % 3 == 0\n    if i > 0:\n        dp[i] += dp[i - 1]\n\nprint(dp[-1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = input()\n    s = list(s)\n    s = list(map(int, s))\n    s = sum(s)\n    print(s%3)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef max_div_by_3(s):\n    # s = str(s)\n    # n = len(s)\n    # dp = [[0] * n for _ in range(n)]\n    # for i in range(n):\n    #     for j in range(i, n):\n    #         if i == j:\n    #             dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n    #         else:\n    #             dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    # return dp[0][n-1]\n\n    # s = str(s)\n    # n = len(s)\n    # dp = [[0] * n for _ in range(n)]\n    # for i in range(n):\n    #     for j in range(i, n):\n    #         if i == j:\n    #             dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n    #         else:\n    #             dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    # return dp[0][n-1]\n\n    s = str(s)\n    n = len(s)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n            else:\n                dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    return dp[0][n-1]\n\n\nif __name__ == '__main__':\n    s = int(input())\n    print(max_div_by_3(s))"
+    }
+  ],
+  "created": 1650424686,
+  "id": "cmpl-4yv8wp42unDKznHNGTtSHD8uTCjk8",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:18:32.109872 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    s = list(s)\n    s = [int(x) for x in s]\n    s = sum(s)\n    if s % 3 == 0:\n        print(len(s))\n    else:\n        print(len(s) - 1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:18:32.109946 REASON stop
+2022-04-20 03:18:32.111109 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef get_divisible_numbers(s):\n    \"\"\"\n    Returns the number of divisible numbers that can be cut from the number s.\n    \"\"\"\n    # The number of divisible numbers is equal to the number of zeros in the number s.\n    return s.count(\"0\")\n\ndef main():\n    # Read the number s.\n    s = input()\n    # Print the number of divisible numbers that can be cut from s.\n    print(get_divisible_numbers(s))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:18:32.111215 REASON stop
+2022-04-20 03:18:32.111923 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    \"\"\"\n    1. We can make cuts between each pair of digits.\n    2. We can make cuts between each pair of digits and the last digit.\n    3. We can make cuts between each pair of digits and the first digit.\n    4. We can make cuts between each pair of digits and the first and last digits.\n    \"\"\"\n    s = input()\n    n = len(s)\n    dp = [[0] * 3 for _ in range(n)]\n    dp[0][int(s[0]) % 3] = 1\n    for i in range(1, n):\n        for j in range(3):\n            dp[i][j] = dp[i - 1][j]\n            dp[i][(j + int(s[i])) % 3] += 1\n    print(max(dp[n - 1][0], dp[n - 1][1] + 1, dp[n - 1][2] + 1))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:18:32.112054 REASON stop
+2022-04-20 03:18:32.135922 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ns = input()\n\ndef check_divisible_by_3(number):\n    if int(number) % 3 == 0:\n        return True\n    else:\n        return False\n\ndef find_max_cuts(s):\n    if check_divisible_by_3(s):\n        return len(s) - 1\n    else:\n        return len(s)\n\nprint(find_max_cuts(s))"
+}
+2022-04-20 03:18:32.136117 REASON stop
+2022-04-20 03:18:32.158121 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    s = input()\n    n = len(s)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n    dp[1] = 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1]\n        if int(s[i - 2:i]) % 3 == 0:\n            dp[i] = max(dp[i], dp[i - 2] + 1)\n    print(dp[n])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:18:32.158278 REASON stop
+2022-04-20 03:18:32.159009 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ns = input()\n\ndp = [0] * len(s)\n\nfor i in range(len(s)):\n    dp[i] = int(s[i]) % 3 == 0\n    if i > 0:\n        dp[i] += dp[i - 1]\n\nprint(dp[-1])"
+}
+2022-04-20 03:18:32.159116 REASON stop
+2022-04-20 03:18:32.159799 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = input()\n    s = list(s)\n    s = list(map(int, s))\n    s = sum(s)\n    print(s%3)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:18:32.159885 REASON stop
+2022-04-20 03:18:32.161616 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef max_div_by_3(s):\n    # s = str(s)\n    # n = len(s)\n    # dp = [[0] * n for _ in range(n)]\n    # for i in range(n):\n    #     for j in range(i, n):\n    #         if i == j:\n    #             dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n    #         else:\n    #             dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    # return dp[0][n-1]\n\n    # s = str(s)\n    # n = len(s)\n    # dp = [[0] * n for _ in range(n)]\n    # for i in range(n):\n    #     for j in range(i, n):\n    #         if i == j:\n    #             dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n    #         else:\n    #             dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    # return dp[0][n-1]\n\n    s = str(s)\n    n = len(s)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(i, n):\n            if i == j:\n                dp[i][j] = 1 if int(s[i]) % 3 == 0 else 0\n            else:\n                dp[i][j] = dp[i][j-1] + (1 if int(s[j]) % 3 == 0 else 0)\n    return dp[0][n-1]\n\n\nif __name__ == '__main__':\n    s = int(input())\n    print(max_div_by_3(s))"
+}
+2022-04-20 03:18:32.161867 REASON stop

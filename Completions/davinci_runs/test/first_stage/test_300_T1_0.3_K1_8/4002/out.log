@@ -1,0 +1,161 @@
+2022-04-20 00:40:52.282986 """
+You are given a matrix $a$ of size $n \times m$ consisting of integers.
+
+You can choose no more than $\left\lfloor\frac{m}{2}\right\rfloor$ elements in each row. Your task is to choose these elements in such a way that their sum is divisible by $k$ and this sum is the maximum.
+
+In other words, you can choose no more than a half (rounded down) of elements in each row, you have to find the maximum sum of these elements divisible by $k$.
+
+Note that you can choose zero elements (and the sum of such set is $0$).
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $m$ and $k$ ($1 \le n, m, k \le 70$) — the number of rows in the matrix, the number of columns in the matrix and the value of $k$. The next $n$ lines contain $m$ elements each, where the $j$-th element of the $i$-th row is $a_{i, j}$ ($1 \le a_{i, j} \le 70$).
+
+
+-----Output-----
+
+Print one integer — the maximum sum divisible by $k$ you can obtain.
+
+
+-----Examples-----
+Input
+3 4 3
+1 2 3 4
+5 2 2 2
+7 1 1 4
+
+Output
+24
+
+Input
+5 5 4
+1 2 4 2 1
+3 5 1 2 4
+1 5 7 1 2
+3 8 7 1 2
+8 4 7 1 6
+
+Output
+56
+
+
+
+-----Note-----
+
+In the first example, the optimal answer is $2$ and $4$ in the first row, $5$ and $2$ in the second row and $7$ and $4$ in the third row. The total sum is $2 + 4 + 5 + 2 + 7 + 4 = 24$.
+"""
+2022-04-20 00:40:52.282999 --------------------------
+2022-04-20 00:40:52.283098 using api key sourya
+2022-04-20 00:41:05.227889 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        s = 0\n        for j in range(m):\n            s += a[i][j]\n        ans += s // k\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\ndp = [[0] * (m + 1) for _ in range(n + 1)]\n\nfor i in range(n):\n    for j in range(m):\n        dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j], dp[i][j] + a[i][j])\n\nprint(dp[n][m])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    dp = [[0 for i in range(m + 1)] for j in range(n + 1)]\n    for i in range(n):\n        for j in range(m):\n            dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])\n            if j + 1 <= m // 2:\n                dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + a[i][j])\n    print(dp[n][m // 2])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\n# dp[i][j] = max sum of first i rows and j columns\ndp = [[0] * (m + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        # if we don't choose this element\n        dp[i][j] = dp[i][j - 1]\n        # if we choose this element\n        if j <= m // 2:\n            dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + a[i - 1][j - 1])\n\nprint(max(dp[n]))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, k = map(int, sys.stdin.readline().split())\n    matrix = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]\n    dp = [[0] * (m + 1) for _ in range(n + 1)]\n    for i in range(n):\n        for j in range(m):\n            dp[i + 1][j + 1] = dp[i + 1][j] + matrix[i][j]\n    ans = 0\n    for i in range(n):\n        for j in range(i + 1, n + 1):\n            for l in range(m // 2 + 1):\n                for r in range(l, m + 1):\n                    if (dp[j][r] - dp[j][l]) % k > ans:\n                        ans = (dp[j][r] - dp[j][l]) % k\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m, k = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\ndp = [[0] * (m + 1) for i in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        if j <= m // 2:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1] + a[i - 1][j - 1])\n        else:\n            dp[i][j] = dp[i - 1][j]\n\nprint(dp[n][m // 2] - dp[n][m // 2 + 1])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, m, k, matrix):\n    dp = [[0 for _ in range(k)] for _ in range(n)]\n    for i in range(n):\n        for j in range(m):\n            for l in range(k):\n                dp[i][l] = max(dp[i][l], dp[i - 1][l])\n                dp[i][(l + matrix[i][j]) % k] = max(dp[i][(l + matrix[i][j]) % k], dp[i - 1][l] + matrix[i][j])\n    return dp[n - 1][0]\n\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(solve(n, m, k, matrix))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport numpy as np\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = np.array([list(map(int, input().split())) for _ in range(n)])\n    a = a.reshape(n, m)\n    # print(a)\n\n    # dp[i][j] = max sum of first i rows, with j elements in each row\n    dp = np.zeros((n+1, m+1), dtype=int)\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if j > m/2:\n                dp[i][j] = dp[i-1][j]\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1][j-1])\n\n    # print(dp)\n    print(dp[n][int(m/2)])\n\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650415252,
+  "id": "cmpl-4ysgmFJZaSsb6ZFDHkbspmrELtR4w",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 00:41:05.228215 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = [list(map(int, input().split())) for _ in range(n)]\n    ans = 0\n    for i in range(n):\n        s = 0\n        for j in range(m):\n            s += a[i][j]\n        ans += s // k\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:41:05.228250 REASON stop
+2022-04-20 00:41:05.228942 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\ndp = [[0] * (m + 1) for _ in range(n + 1)]\n\nfor i in range(n):\n    for j in range(m):\n        dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j], dp[i][j] + a[i][j])\n\nprint(dp[n][m])"
+}
+2022-04-20 00:41:05.229039 REASON stop
+2022-04-20 00:41:05.234007 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    dp = [[0 for i in range(m + 1)] for j in range(n + 1)]\n    for i in range(n):\n        for j in range(m):\n            dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])\n            if j + 1 <= m // 2:\n                dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + a[i][j])\n    print(dp[n][m // 2])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:41:05.234107 REASON stop
+2022-04-20 00:41:05.265799 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\n# dp[i][j] = max sum of first i rows and j columns\ndp = [[0] * (m + 1) for _ in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        # if we don't choose this element\n        dp[i][j] = dp[i][j - 1]\n        # if we choose this element\n        if j <= m // 2:\n            dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + a[i - 1][j - 1])\n\nprint(max(dp[n]))"
+}
+2022-04-20 00:41:05.265963 REASON stop
+2022-04-20 00:41:05.282597 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, k = map(int, sys.stdin.readline().split())\n    matrix = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]\n    dp = [[0] * (m + 1) for _ in range(n + 1)]\n    for i in range(n):\n        for j in range(m):\n            dp[i + 1][j + 1] = dp[i + 1][j] + matrix[i][j]\n    ans = 0\n    for i in range(n):\n        for j in range(i + 1, n + 1):\n            for l in range(m // 2 + 1):\n                for r in range(l, m + 1):\n                    if (dp[j][r] - dp[j][l]) % k > ans:\n                        ans = (dp[j][r] - dp[j][l]) % k\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:41:05.282732 REASON stop
+2022-04-20 00:41:05.285620 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m, k = map(int, input().split())\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\ndp = [[0] * (m + 1) for i in range(n + 1)]\n\nfor i in range(1, n + 1):\n    for j in range(1, m + 1):\n        if j <= m // 2:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - 1] + a[i - 1][j - 1])\n        else:\n            dp[i][j] = dp[i - 1][j]\n\nprint(dp[n][m // 2] - dp[n][m // 2 + 1])"
+}
+2022-04-20 00:41:05.285738 REASON stop
+2022-04-20 00:41:05.286853 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, m, k, matrix):\n    dp = [[0 for _ in range(k)] for _ in range(n)]\n    for i in range(n):\n        for j in range(m):\n            for l in range(k):\n                dp[i][l] = max(dp[i][l], dp[i - 1][l])\n                dp[i][(l + matrix[i][j]) % k] = max(dp[i][(l + matrix[i][j]) % k], dp[i - 1][l] + matrix[i][j])\n    return dp[n - 1][0]\n\n\ndef main():\n    n, m, k = map(int, input().split())\n    matrix = []\n    for _ in range(n):\n        matrix.append(list(map(int, input().split())))\n    print(solve(n, m, k, matrix))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:41:05.286969 REASON stop
+2022-04-20 00:41:05.288022 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport numpy as np\n\ndef main():\n    n, m, k = map(int, input().split())\n    a = np.array([list(map(int, input().split())) for _ in range(n)])\n    a = a.reshape(n, m)\n    # print(a)\n\n    # dp[i][j] = max sum of first i rows, with j elements in each row\n    dp = np.zeros((n+1, m+1), dtype=int)\n    for i in range(1, n+1):\n        for j in range(1, m+1):\n            if j > m/2:\n                dp[i][j] = dp[i-1][j]\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i-1][j-1] + a[i-1][j-1])\n\n    # print(dp)\n    print(dp[n][int(m/2)])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:41:05.288249 REASON stop

@@ -1,0 +1,179 @@
+2022-04-20 02:20:52.718746 """
+You work as a system administrator in a dormitory, which has $n$ rooms one after another along a straight hallway. Rooms are numbered from $1$ to $n$.
+
+You have to connect all $n$ rooms to the Internet.
+
+You can connect each room to the Internet directly, the cost of such connection for the $i$-th room is $i$ coins. 
+
+Some rooms also have a spot for a router. The cost of placing a router in the $i$-th room is also $i$ coins. You cannot place a router in a room which does not have a spot for it. When you place a router in the room $i$, you connect all rooms with the numbers from $max(1,~i - k)$ to $min(n,~i + k)$ inclusive to the Internet, where $k$ is the range of router. The value of $k$ is the same for all routers. 
+
+Calculate the minimum total cost of connecting all $n$ rooms to the Internet. You can assume that the number of rooms which have a spot for a router is not greater than the number of routers you have.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le n, k \le 2 \cdot 10^5$) — the number of rooms and the range of each router.
+
+The second line of the input contains one string $s$ of length $n$, consisting only of zeros and ones. If the $i$-th character of the string equals to '1' then there is a spot for a router in the $i$-th room. If the $i$-th character of the string equals to '0' then you cannot place a router in the $i$-th room.
+
+
+-----Output-----
+
+Print one integer — the minimum total cost of connecting all $n$ rooms to the Internet.
+
+
+-----Examples-----
+Input
+5 2
+00100
+
+Output
+3
+
+Input
+6 1
+000000
+
+Output
+21
+
+Input
+4 1
+0011
+
+Output
+4
+
+Input
+12 6
+000010000100
+
+Output
+15
+
+
+
+-----Note-----
+
+In the first example it is enough to place the router in the room $3$, then all rooms will be connected to the Internet. The total cost of connection is $3$.
+
+In the second example you can place routers nowhere, so you need to connect all rooms directly. Thus, the total cost of connection of all rooms is $1 + 2 + 3 + 4 + 5 + 6 = 21$.
+
+In the third example you need to connect the room $1$ directly and place the router in the room $3$. Thus, the total cost of connection of all rooms is $1 + 3 = 4$.
+
+In the fourth example you need to place routers in rooms $5$ and $10$. Then all rooms will be connected to the Internet. The total cost of connection is $5 + 10 = 15$.
+"""
+2022-04-20 02:20:52.718768 --------------------------
+2022-04-20 02:20:52.718877 using api key sourya
+2022-04-20 02:21:12.136153 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    s = sys.stdin.readline().strip()\n\n    # dp[i] is the minimum cost to connect rooms 1 to i\n    dp = [0] * (n+1)\n    for i in range(1, n+1):\n        dp[i] = dp[i-1] + i\n        if s[i-1] == '1':\n            # if there is a router spot in room i,\n            # the minimum cost to connect rooms 1 to i\n            # is the minimum cost to connect rooms 1 to i-k-1\n            # plus the cost to place a router in room i\n            dp[i] = min(dp[i], dp[max(0, i-k-1)] + i)\n\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef solve(n, k, s):\n    cost = 0\n    for i in range(n):\n        if s[i] == '1':\n            cost += i + 1\n            continue\n        if i == 0:\n            cost += 1\n            continue\n        if i == n - 1:\n            cost += n\n            continue\n        if s[i - 1] == '1':\n            continue\n        if s[i + 1] == '1':\n            continue\n        cost += i + 1\n    return cost\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    s = sys.stdin.readline().strip()\n    print(solve(n, k, s))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ncost = 0\n\nfor i in range(n):\n    if s[i] == '1':\n        cost += i + 1\n    else:\n        if i == 0:\n            cost += 1\n        else:\n            if i - k > 0:\n                if s[i - k - 1] == '0':\n                    cost += i + 1\n            else:\n                cost += i + 1\n\nprint(cost)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    # print(n, k, s)\n    # print(type(n), type(k), type(s))\n\n    # \u5168\u90e8\u76f4\u63a5\u8fde\u63a5\n    cost_direct = 0\n    for i in range(1, n+1):\n        cost_direct += i\n\n    # \u5168\u90e8\u8def\u7531\u5668\u8fde\u63a5\n    cost_router = 0\n    for i in range(1, n+1):\n        if s[i-1] == '1':\n            cost_router += i\n\n    # \u5168\u90e8\u76f4\u63a5\u8fde\u63a5\n    cost_mix = 0\n    for i in range(1, n+1):\n        if s[i-1] == '1':\n            cost_mix += i\n        else:\n            cost_mix += min(i, n-i+1)\n\n    # print(cost_direct, cost_router, cost_mix)\n    print(min(cost_direct, cost_router, cost_mix))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\n# The number of routers that can be placed\nr = sum(map(int, s))\n\n# The number of routers that can be placed is not greater than the number of routers you have\nif r > k:\n    r = k\n\n# The number of routers that can be placed is not greater than the number of rooms which have a spot for a router\nif r > n:\n    r = n\n\n# The total cost of connection is the sum of the cost of placing a router in the $i$-th room and the cost of connecting the room $i$ directly\nprint(sum(map(int, s)) + sum(range(1, n + 1)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    s = [int(i) for i in s]\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1] + i\n        if s[i - 1] == 1:\n            dp[i] = min(dp[i], dp[max(0, i - k - 1)] + i)\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == '0':\n            cost += i + 1\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\ns = input()\n\n# Idea:\n# 1. Find the first room that has a router\n# 2. Find the last room that has a router\n# 3. Find the first room that does not have a router\n# 4. Find the last room that does not have a router\n# 5. Calculate the cost of connecting the rooms that do not have a router\n# 6. Calculate the cost of connecting the rooms that have a router\n\n# 1. Find the first room that has a router\ni = 0\nwhile i < n and s[i] == '0':\n    i += 1\nfirst_router = i\n\n# 2. Find the last room that has a router\ni = n - 1\nwhile i >= 0 and s[i] == '0':\n    i -= 1\nlast_router = i\n\n# 3. Find the first room that does not have a router\ni = 0\nwhile i < n and s[i] == '1':\n    i += 1\nfirst_no_router = i\n\n# 4. Find the last room that does not have a router\ni = n - 1\nwhile i >= 0 and s[i] == '1':\n    i -= 1\nlast_no_router = i\n\n# 5. Calculate the cost of connecting the rooms that do not have a router\ncost_no_router = 0\nfor i in range(first_no_router, last_no_router + 1):\n    cost_no_router += i + 1\n\n# 6. Calculate the cost of connecting the rooms that have a router\ncost_router = 0\nfor i in range(first_router, last_router + 1):\n    cost_router += i + 1\n\nprint(min(cost_no_router, cost_router))"
+    }
+  ],
+  "created": 1650421252,
+  "id": "cmpl-4yuFYfpxEcEigWkswZKWn8amUOem4",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:21:12.136565 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = map(int, sys.stdin.readline().split())\n    s = sys.stdin.readline().strip()\n\n    # dp[i] is the minimum cost to connect rooms 1 to i\n    dp = [0] * (n+1)\n    for i in range(1, n+1):\n        dp[i] = dp[i-1] + i\n        if s[i-1] == '1':\n            # if there is a router spot in room i,\n            # the minimum cost to connect rooms 1 to i\n            # is the minimum cost to connect rooms 1 to i-k-1\n            # plus the cost to place a router in room i\n            dp[i] = min(dp[i], dp[max(0, i-k-1)] + i)\n\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:21:12.136610 REASON stop
+2022-04-20 02:21:12.137092 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef solve(n, k, s):\n    cost = 0\n    for i in range(n):\n        if s[i] == '1':\n            cost += i + 1\n            continue\n        if i == 0:\n            cost += 1\n            continue\n        if i == n - 1:\n            cost += n\n            continue\n        if s[i - 1] == '1':\n            continue\n        if s[i + 1] == '1':\n            continue\n        cost += i + 1\n    return cost\n\ndef main():\n    n, k = map(int, sys.stdin.readline().strip().split())\n    s = sys.stdin.readline().strip()\n    print(solve(n, k, s))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:21:12.137147 REASON stop
+2022-04-20 02:21:12.137590 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\ncost = 0\n\nfor i in range(n):\n    if s[i] == '1':\n        cost += i + 1\n    else:\n        if i == 0:\n            cost += 1\n        else:\n            if i - k > 0:\n                if s[i - k - 1] == '0':\n                    cost += i + 1\n            else:\n                cost += i + 1\n\nprint(cost)"
+}
+2022-04-20 02:21:12.137647 REASON stop
+2022-04-20 02:21:12.159200 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n\n    # print(n, k, s)\n    # print(type(n), type(k), type(s))\n\n    # \u5168\u90e8\u76f4\u63a5\u8fde\u63a5\n    cost_direct = 0\n    for i in range(1, n+1):\n        cost_direct += i\n\n    # \u5168\u90e8\u8def\u7531\u5668\u8fde\u63a5\n    cost_router = 0\n    for i in range(1, n+1):\n        if s[i-1] == '1':\n            cost_router += i\n\n    # \u5168\u90e8\u76f4\u63a5\u8fde\u63a5\n    cost_mix = 0\n    for i in range(1, n+1):\n        if s[i-1] == '1':\n            cost_mix += i\n        else:\n            cost_mix += min(i, n-i+1)\n\n    # print(cost_direct, cost_router, cost_mix)\n    print(min(cost_direct, cost_router, cost_mix))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:21:12.159379 REASON stop
+2022-04-20 02:21:12.179614 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\n# The number of routers that can be placed\nr = sum(map(int, s))\n\n# The number of routers that can be placed is not greater than the number of routers you have\nif r > k:\n    r = k\n\n# The number of routers that can be placed is not greater than the number of rooms which have a spot for a router\nif r > n:\n    r = n\n\n# The total cost of connection is the sum of the cost of placing a router in the $i$-th room and the cost of connecting the room $i$ directly\nprint(sum(map(int, s)) + sum(range(1, n + 1)))"
+}
+2022-04-20 02:21:12.179750 REASON stop
+2022-04-20 02:21:12.180731 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    s = [int(i) for i in s]\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1] + i\n        if s[i - 1] == 1:\n            dp[i] = min(dp[i], dp[max(0, i - k - 1)] + i)\n    print(dp[n])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:21:12.180836 REASON stop
+2022-04-20 02:21:12.181700 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    s = input()\n    cost = 0\n    for i in range(n):\n        if s[i] == '0':\n            cost += i + 1\n    print(cost)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:21:12.181781 REASON stop
+2022-04-20 02:21:12.183073 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\ns = input()\n\n# Idea:\n# 1. Find the first room that has a router\n# 2. Find the last room that has a router\n# 3. Find the first room that does not have a router\n# 4. Find the last room that does not have a router\n# 5. Calculate the cost of connecting the rooms that do not have a router\n# 6. Calculate the cost of connecting the rooms that have a router\n\n# 1. Find the first room that has a router\ni = 0\nwhile i < n and s[i] == '0':\n    i += 1\nfirst_router = i\n\n# 2. Find the last room that has a router\ni = n - 1\nwhile i >= 0 and s[i] == '0':\n    i -= 1\nlast_router = i\n\n# 3. Find the first room that does not have a router\ni = 0\nwhile i < n and s[i] == '1':\n    i += 1\nfirst_no_router = i\n\n# 4. Find the last room that does not have a router\ni = n - 1\nwhile i >= 0 and s[i] == '1':\n    i -= 1\nlast_no_router = i\n\n# 5. Calculate the cost of connecting the rooms that do not have a router\ncost_no_router = 0\nfor i in range(first_no_router, last_no_router + 1):\n    cost_no_router += i + 1\n\n# 6. Calculate the cost of connecting the rooms that have a router\ncost_router = 0\nfor i in range(first_router, last_router + 1):\n    cost_router += i + 1\n\nprint(min(cost_no_router, cost_router))"
+}
+2022-04-20 02:21:12.183246 REASON stop

@@ -1,0 +1,169 @@
+2022-04-20 01:34:30.255144 """
+This problem is given in two editions, which differ exclusively in the constraints on the number $n$.
+
+You are given an array of integers $a[1], a[2], \dots, a[n].$ A block is a sequence of contiguous (consecutive) elements $a[l], a[l+1], \dots, a[r]$ ($1 \le l \le r \le n$). Thus, a block is defined by a pair of indices $(l, r)$.
+
+Find a set of blocks $(l_1, r_1), (l_2, r_2), \dots, (l_k, r_k)$ such that:
+
+  They do not intersect (i.e. they are disjoint). Formally, for each pair of blocks $(l_i, r_i)$ and $(l_j, r_j$) where $i \neq j$ either $r_i < l_j$ or $r_j < l_i$.  For each block the sum of its elements is the same. Formally, $$a[l_1]+a[l_1+1]+\dots+a[r_1]=a[l_2]+a[l_2+1]+\dots+a[r_2]=$$ $$\dots =$$ $$a[l_k]+a[l_k+1]+\dots+a[r_k].$$  The number of the blocks in the set is maximum. Formally, there does not exist a set of blocks $(l_1', r_1'), (l_2', r_2'), \dots, (l_{k'}', r_{k'}')$ satisfying the above two requirements with $k' > k$. 
+
+ $\left. \begin{array}{|l|l|l|l|l|l|} \hline 4 & {1} & {2} & {2} & {1} & {5} & {3} \\ \hline \end{array} \right.$ The picture corresponds to the first example. Blue boxes illustrate blocks. 
+
+Write a program to find such a set of blocks.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 50$) — the length of the given array. The second line contains the sequence of elements $a[1], a[2], \dots, a[n]$ ($-10^5 \le a_i \le 10^5$).
+
+
+-----Output-----
+
+In the first line print the integer $k$ ($1 \le k \le n$). The following $k$ lines should contain blocks, one per line. In each line print a pair of indices $l_i, r_i$ ($1 \le l_i \le r_i \le n$) — the bounds of the $i$-th block. You can print blocks in any order. If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+7
+4 1 2 2 1 5 3
+
+Output
+3
+7 7
+2 3
+4 5
+
+Input
+11
+-5 -4 -3 -2 -1 0 1 2 3 4 5
+
+Output
+2
+3 4
+1 1
+
+Input
+4
+1 1 1 1
+
+Output
+4
+4 4
+1 1
+2 2
+3 3
+"""
+2022-04-20 01:34:30.255161 --------------------------
+2022-04-20 01:34:30.255266 using api key gabby
+2022-04-20 01:34:59.972937 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef find_blocks(arr):\n    n = len(arr)\n    s = [0] * n\n    s[0] = arr[0]\n    for i in range(1, n):\n        s[i] = s[i-1] + arr[i]\n    # print(s)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = 1\n    for i in range(n-1):\n        dp[i][i+1] = 1 if arr[i] == arr[i+1] else 2\n    for i in range(n-2):\n        for j in range(i+2, n):\n            if s[j] - s[i] + arr[i] == arr[i]:\n                dp[i][j] = dp[i][j-1]\n            else:\n                dp[i][j] = dp[i][j-1] + 1\n            for k in range(i, j):\n                if s[k] - s[i] + arr[i] == s[j] - s[k]:\n                    dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j])\n    # print(dp)\n    print(dp[0][n-1])\n    # print_blocks(dp, 0, n-1, arr)\n\ndef print_blocks(dp, i, j, arr):\n    if i == j:\n        print(i+1, i+1)\n        return\n    if i+1 == j:\n        print(i+1, i+1)\n        print(j+1, j+1)\n        return\n    if dp[i][j] == dp[i][j-1]:\n        print_blocks(dp, i, j-1, arr)\n        return\n    for k in range(i, j):\n        if s[k] - s[i] + arr[i] == s[j] - s[k]:\n            if dp[i][j] == dp[i][k] + dp[k+1][j]:\n                print_blocks(dp, i, k, arr)\n                print_blocks(dp, k+1, j, arr)\n                return\n\nif __name__ == '__main__':\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    find_blocks(arr)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    p = [0]\n    for i in range(1, n+1):\n        p.append(p[i-1] + a[i-1])\n    d = {}\n    for i in range(1, n+1):\n        for j in range(i, n+1):\n            s = p[j] - p[i-1]\n            if s not in d:\n                d[s] = []\n            d[s].append((i, j))\n    m = 0\n    for k in d:\n        if len(d[k]) > m:\n            m = len(d[k])\n    print(m)\n    for k in d:\n        if len(d[k]) == m:\n            for i in d[k]:\n                print(i[0], i[1])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# Solution 1\nn = int(input())\na = list(map(int, input().split()))\ns = sum(a)\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i + 1, i + 1)\nelse:\n    print(n - 1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)\n\n# Solution 2\nn = int(input())\na = list(map(int, input().split()))\ns = sum(a)\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i + 1, i + 1)\nelse:\n    print(n - 1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = list(map(int, sys.stdin.readline().strip().split()))\n    s = [0]\n    for i in range(n):\n        s.append(s[-1] + a[i])\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n+1):\n            if s[j] - s[i] not in d:\n                d[s[j] - s[i]] = []\n            d[s[j] - s[i]].append((i+1, j))\n    m = 0\n    ans = []\n    for i in d:\n        if len(d[i]) > m:\n            m = len(d[i])\n            ans = d[i]\n    print(len(ans))\n    for i in ans:\n        print(i[0], i[1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef max_blocks(a):\n    n = len(a)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = a[i]\n    for i in range(n):\n        for j in range(i + 1, n):\n            dp[i][j] = dp[i][j - 1] + a[j]\n\n    dp_max = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp_max[i][i] = 1\n    for i in range(n):\n        for j in range(i + 1, n):\n            if dp[i][j] == dp[i][j - 1]:\n                dp_max[i][j] = dp_max[i][j - 1] + 1\n            else:\n                dp_max[i][j] = dp_max[i][j - 1]\n\n    return dp_max[0][n - 1]\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(max_blocks(a))\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = sum(a)\n    if s % n != 0:\n        print(n)\n        for i in range(1, n+1):\n            print(i, i)\n    else:\n        k = 0\n        l = []\n        for i in range(n):\n            if a[i] != s // n:\n                k += 1\n                l.append([i+1, i+1])\n            else:\n                if k != 0:\n                    l[-1][1] = i\n                    k = 0\n        if k != 0:\n            l[-1][1] = n\n        print(len(l))\n        for i in l:\n            print(i[0], i[1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    s = sum(a)\n    if s % n != 0:\n        print(1)\n        print(1, n)\n        return\n    else:\n        s = s // n\n\n    ans = []\n    i = 0\n    while i < n:\n        j = i\n        while j < n and a[j] == s:\n            j += 1\n        if j > i:\n            ans.append((i+1, j))\n        i = j + 1\n\n    print(len(ans))\n    for a in ans:\n        print(a[0], a[1])\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = [0] * n\ns[0] = a[0]\nfor i in range(1, n):\n    s[i] = s[i - 1] + a[i]\n\nd = {}\nfor i in range(n):\n    for j in range(i, n):\n        if s[j] - s[i] + a[i] in d:\n            d[s[j] - s[i] + a[i]].append((i, j))\n        else:\n            d[s[j] - s[i] + a[i]] = [(i, j)]\n\nans = []\nfor v in d.values():\n    v.sort()\n    for i in range(len(v) - 1):\n        if v[i][1] >= v[i + 1][0]:\n            continue\n        ans.append(v[i])\n    ans.append(v[-1])\n\nprint(len(ans))\nfor i in ans:\n    print(i[0] + 1, i[1] + 1)"
+    }
+  ],
+  "created": 1650418470,
+  "id": "cmpl-4ytWg8Ga8k2sZSj55W0HsXkiyAm50",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 01:34:59.973416 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef find_blocks(arr):\n    n = len(arr)\n    s = [0] * n\n    s[0] = arr[0]\n    for i in range(1, n):\n        s[i] = s[i-1] + arr[i]\n    # print(s)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = 1\n    for i in range(n-1):\n        dp[i][i+1] = 1 if arr[i] == arr[i+1] else 2\n    for i in range(n-2):\n        for j in range(i+2, n):\n            if s[j] - s[i] + arr[i] == arr[i]:\n                dp[i][j] = dp[i][j-1]\n            else:\n                dp[i][j] = dp[i][j-1] + 1\n            for k in range(i, j):\n                if s[k] - s[i] + arr[i] == s[j] - s[k]:\n                    dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j])\n    # print(dp)\n    print(dp[0][n-1])\n    # print_blocks(dp, 0, n-1, arr)\n\ndef print_blocks(dp, i, j, arr):\n    if i == j:\n        print(i+1, i+1)\n        return\n    if i+1 == j:\n        print(i+1, i+1)\n        print(j+1, j+1)\n        return\n    if dp[i][j] == dp[i][j-1]:\n        print_blocks(dp, i, j-1, arr)\n        return\n    for k in range(i, j):\n        if s[k] - s[i] + arr[i] == s[j] - s[k]:\n            if dp[i][j] == dp[i][k] + dp[k+1][j]:\n                print_blocks(dp, i, k, arr)\n                print_blocks(dp, k+1, j, arr)\n                return\n\nif __name__ == '__main__':\n    n = int(input())\n    arr = [int(x) for x in input().split()]\n    find_blocks(arr)"
+}
+2022-04-20 01:34:59.973481 REASON stop
+2022-04-20 01:34:59.973949 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [int(x) for x in input().split()]\n    p = [0]\n    for i in range(1, n+1):\n        p.append(p[i-1] + a[i-1])\n    d = {}\n    for i in range(1, n+1):\n        for j in range(i, n+1):\n            s = p[j] - p[i-1]\n            if s not in d:\n                d[s] = []\n            d[s].append((i, j))\n    m = 0\n    for k in d:\n        if len(d[k]) > m:\n            m = len(d[k])\n    print(m)\n    for k in d:\n        if len(d[k]) == m:\n            for i in d[k]:\n                print(i[0], i[1])\n\nmain()"
+}
+2022-04-20 01:34:59.974004 REASON stop
+2022-04-20 01:34:59.974441 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# Solution 1\nn = int(input())\na = list(map(int, input().split()))\ns = sum(a)\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i + 1, i + 1)\nelse:\n    print(n - 1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)\n\n# Solution 2\nn = int(input())\na = list(map(int, input().split()))\ns = sum(a)\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i + 1, i + 1)\nelse:\n    print(n - 1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)"
+}
+2022-04-20 01:34:59.974505 REASON stop
+2022-04-20 01:35:00.007953 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    a = list(map(int, sys.stdin.readline().strip().split()))\n    s = [0]\n    for i in range(n):\n        s.append(s[-1] + a[i])\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n+1):\n            if s[j] - s[i] not in d:\n                d[s[j] - s[i]] = []\n            d[s[j] - s[i]].append((i+1, j))\n    m = 0\n    ans = []\n    for i in d:\n        if len(d[i]) > m:\n            m = len(d[i])\n            ans = d[i]\n    print(len(ans))\n    for i in ans:\n        print(i[0], i[1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 01:35:00.008094 REASON stop
+2022-04-20 01:35:00.012659 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef max_blocks(a):\n    n = len(a)\n    dp = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp[i][i] = a[i]\n    for i in range(n):\n        for j in range(i + 1, n):\n            dp[i][j] = dp[i][j - 1] + a[j]\n\n    dp_max = [[0] * n for _ in range(n)]\n    for i in range(n):\n        dp_max[i][i] = 1\n    for i in range(n):\n        for j in range(i + 1, n):\n            if dp[i][j] == dp[i][j - 1]:\n                dp_max[i][j] = dp_max[i][j - 1] + 1\n            else:\n                dp_max[i][j] = dp_max[i][j - 1]\n\n    return dp_max[0][n - 1]\n\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(max_blocks(a))\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:35:00.012834 REASON stop
+2022-04-20 01:35:00.014549 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = sum(a)\n    if s % n != 0:\n        print(n)\n        for i in range(1, n+1):\n            print(i, i)\n    else:\n        k = 0\n        l = []\n        for i in range(n):\n            if a[i] != s // n:\n                k += 1\n                l.append([i+1, i+1])\n            else:\n                if k != 0:\n                    l[-1][1] = i\n                    k = 0\n        if k != 0:\n            l[-1][1] = n\n        print(len(l))\n        for i in l:\n            print(i[0], i[1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 01:35:00.014667 REASON stop
+2022-04-20 01:35:00.015487 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    s = sum(a)\n    if s % n != 0:\n        print(1)\n        print(1, n)\n        return\n    else:\n        s = s // n\n\n    ans = []\n    i = 0\n    while i < n:\n        j = i\n        while j < n and a[j] == s:\n            j += 1\n        if j > i:\n            ans.append((i+1, j))\n        i = j + 1\n\n    print(len(ans))\n    for a in ans:\n        print(a[0], a[1])\n\nmain()"
+}
+2022-04-20 01:35:00.015577 REASON stop
+2022-04-20 01:35:00.016659 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = [0] * n\ns[0] = a[0]\nfor i in range(1, n):\n    s[i] = s[i - 1] + a[i]\n\nd = {}\nfor i in range(n):\n    for j in range(i, n):\n        if s[j] - s[i] + a[i] in d:\n            d[s[j] - s[i] + a[i]].append((i, j))\n        else:\n            d[s[j] - s[i] + a[i]] = [(i, j)]\n\nans = []\nfor v in d.values():\n    v.sort()\n    for i in range(len(v) - 1):\n        if v[i][1] >= v[i + 1][0]:\n            continue\n        ans.append(v[i])\n    ans.append(v[-1])\n\nprint(len(ans))\nfor i in ans:\n    print(i[0] + 1, i[1] + 1)"
+}
+2022-04-20 01:35:00.016871 REASON stop

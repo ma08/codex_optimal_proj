@@ -1,0 +1,171 @@
+2022-04-20 01:40:57.656603 """
+The only difference between easy and hard versions is the length of the string.
+
+You are given a string $s$ and a string $t$, both consisting only of lowercase Latin letters. It is guaranteed that $t$ can be obtained from $s$ by removing some (possibly, zero) number of characters (not necessary contiguous) from $s$ without changing order of remaining characters (in other words, it is guaranteed that $t$ is a subsequence of $s$).
+
+For example, the strings "test", "tst", "tt", "et" and "" are subsequences of the string "test". But the strings "tset", "se", "contest" are not subsequences of the string "test".
+
+You want to remove some substring (contiguous subsequence) from $s$ of maximum possible length such that after removing this substring $t$ will remain a subsequence of $s$.
+
+If you want to remove the substring $s[l;r]$ then the string $s$ will be transformed to $s_1 s_2 \dots s_{l-1} s_{r+1} s_{r+2} \dots s_{|s|-1} s_{|s|}$ (where $|s|$ is the length of $s$).
+
+Your task is to find the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Input-----
+
+The first line of the input contains one string $s$ consisting of at least $1$ and at most $2 \cdot 10^5$ lowercase Latin letters.
+
+The second line of the input contains one string $t$ consisting of at least $1$ and at most $2 \cdot 10^5$ lowercase Latin letters.
+
+It is guaranteed that $t$ is a subsequence of $s$.
+
+
+-----Output-----
+
+Print one integer — the maximum possible length of the substring you can remove so that $t$ is still a subsequence of $s$.
+
+
+-----Examples-----
+Input
+bbaba
+bb
+
+Output
+3
+
+Input
+baaba
+ab
+
+Output
+2
+
+Input
+abcde
+abcde
+
+Output
+0
+
+Input
+asdfasdf
+fasd
+
+Output
+3
+"""
+2022-04-20 01:40:57.656618 --------------------------
+2022-04-20 01:40:57.656765 using api key derek
+2022-04-20 01:42:16.190360 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef max_substring_removal(s, t):\n    \"\"\"\n    >>> max_substring_removal('bbaba', 'bb')\n    3\n    >>> max_substring_removal('baaba', 'ab')\n    2\n    >>> max_substring_removal('abcde', 'abcde')\n    0\n    >>> max_substring_removal('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    s_ind, t_ind = 0, 0\n    while s_ind < len(s) and t_ind < len(t):\n        if s[s_ind] == t[t_ind]:\n            t_ind += 1\n        s_ind += 1\n    return len(s) - s_ind + t_ind\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\ns = input()\nt = input()\n\n# The idea is to find the longest common subsequence between s and t\n# and then the answer is the length of s minus the length of the LCS\n\n# LCS\ndef LCS(s, t):\n    # DP table\n    dp = [[0 for _ in range(len(t)+1)] for _ in range(len(s)+1)]\n    for i in range(1, len(s)+1):\n        for j in range(1, len(t)+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return dp[-1][-1]\n\nprint(len(s) - LCS(s, t))"
+    },
+    {
+      "finish_reason": "length",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n\n    # s = \"bbaba\"\n    # t = \"bb\"\n\n    # s = \"baaba\"\n    # t = \"ab\"\n\n    # s = \"abcde\"\n    # t = \"abcde\"\n\n    # s = \"asdfasdf\"\n    # t = \"fasd\"\n\n    # s = \"aabb\"\n    # t = \"ab\"\n\n    # s = \"aabb\"\n    # t = \"a\"\n\n    # s = \"aabb\"\n    # t = \"b\"\n\n    # s = \"aabb\"\n    # t = \"ba\"\n\n    # s = \"aabb\"\n    # t = \"bb\"\n\n    # s = \"aabb\"\n    # t = \"bbb\"\n\n    # s = \"aabb\"\n    # t = \"bbba\"\n\n    # s = \"aabb\"\n    # t = \"bbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbb"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef subsequence(s, t):\n    \"\"\"\n    >>> subsequence('bbaba', 'bb')\n    3\n    >>> subsequence('baaba', 'ab')\n    2\n    >>> subsequence('abcde', 'abcde')\n    0\n    >>> subsequence('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    # s = 'bbaba'\n    # t = 'bb'\n    # s = 'baaba'\n    # t = 'ab'\n    # s = 'abcde'\n    # t = 'abcde'\n    # s = 'asdfasdf'\n    # t = 'fasd'\n    s_len = len(s)\n    t_len = len(t)\n    i = 0\n    j = 0\n    while i < s_len and j < t_len:\n        if s[i] == t[j]:\n            i += 1\n            j += 1\n        else:\n            i += 1\n    return s_len - i\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n#!/usr/bin/python\n\ns = raw_input()\nt = raw_input()\n\ns_len = len(s)\nt_len = len(t)\n\ndp = [[0] * (s_len + 1) for _ in range(t_len + 1)]\n\nfor i in range(1, t_len + 1):\n    for j in range(1, s_len + 1):\n        if t[i - 1] == s[j - 1]:\n            dp[i][j] = dp[i - 1][j - 1] + 1\n        else:\n            dp[i][j] = max(dp[i][j - 1], dp[i - 1][j])\n\nprint s_len - dp[-1][-1]"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef solve(s, t):\n    if len(s) == len(t):\n        return 0\n    else:\n        return len(s) - len(t)\n\ndef main():\n    s = input()\n    t = input()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nfrom sys import stdin\n\ndef main():\n    s = stdin.readline().strip()\n    t = stdin.readline().strip()\n\n    # find the number of common characters\n    common = 0\n    for i in range(len(s)):\n        if s[i] == t[common]:\n            common += 1\n            if common == len(t):\n                break\n\n    # the number of characters to remove is the difference between the lengths of s and t\n    print(len(s) - common)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n\n    # dp[i][j] = longest common subsequence of s[:i] and t[:j]\n    dp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\n\n    for i in range(1, len(s) + 1):\n        for j in range(1, len(t) + 1):\n            if s[i - 1] == t[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n\n    print(len(s) - dp[-1][-1])\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650418857,
+  "id": "cmpl-4ytcvmY7ZZ4oOr6VLQrjKXJ5vS7ft",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 01:42:16.190816 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef max_substring_removal(s, t):\n    \"\"\"\n    >>> max_substring_removal('bbaba', 'bb')\n    3\n    >>> max_substring_removal('baaba', 'ab')\n    2\n    >>> max_substring_removal('abcde', 'abcde')\n    0\n    >>> max_substring_removal('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    s_ind, t_ind = 0, 0\n    while s_ind < len(s) and t_ind < len(t):\n        if s[s_ind] == t[t_ind]:\n            t_ind += 1\n        s_ind += 1\n    return len(s) - s_ind + t_ind\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+}
+2022-04-20 01:42:16.190866 REASON stop
+2022-04-20 01:42:16.191309 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\ns = input()\nt = input()\n\n# The idea is to find the longest common subsequence between s and t\n# and then the answer is the length of s minus the length of the LCS\n\n# LCS\ndef LCS(s, t):\n    # DP table\n    dp = [[0 for _ in range(len(t)+1)] for _ in range(len(s)+1)]\n    for i in range(1, len(s)+1):\n        for j in range(1, len(t)+1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    return dp[-1][-1]\n\nprint(len(s) - LCS(s, t))"
+}
+2022-04-20 01:42:16.191364 REASON stop
+2022-04-20 01:42:16.191811 2 {
+  "finish_reason": "length",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n\n    # s = \"bbaba\"\n    # t = \"bb\"\n\n    # s = \"baaba\"\n    # t = \"ab\"\n\n    # s = \"abcde\"\n    # t = \"abcde\"\n\n    # s = \"asdfasdf\"\n    # t = \"fasd\"\n\n    # s = \"aabb\"\n    # t = \"ab\"\n\n    # s = \"aabb\"\n    # t = \"a\"\n\n    # s = \"aabb\"\n    # t = \"b\"\n\n    # s = \"aabb\"\n    # t = \"ba\"\n\n    # s = \"aabb\"\n    # t = \"bb\"\n\n    # s = \"aabb\"\n    # t = \"bbb\"\n\n    # s = \"aabb\"\n    # t = \"bbba\"\n\n    # s = \"aabb\"\n    # t = \"bbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n\n    # s = \"aabb\"\n    # t = \"bbbbbbbbbbbbbbbb"
+}
+2022-04-20 01:42:16.191902 REASON length
+2022-04-20 01:42:16.191909 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef subsequence(s, t):\n    \"\"\"\n    >>> subsequence('bbaba', 'bb')\n    3\n    >>> subsequence('baaba', 'ab')\n    2\n    >>> subsequence('abcde', 'abcde')\n    0\n    >>> subsequence('asdfasdf', 'fasd')\n    3\n    \"\"\"\n    # s = 'bbaba'\n    # t = 'bb'\n    # s = 'baaba'\n    # t = 'ab'\n    # s = 'abcde'\n    # t = 'abcde'\n    # s = 'asdfasdf'\n    # t = 'fasd'\n    s_len = len(s)\n    t_len = len(t)\n    i = 0\n    j = 0\n    while i < s_len and j < t_len:\n        if s[i] == t[j]:\n            i += 1\n            j += 1\n        else:\n            i += 1\n    return s_len - i\n\nif __name__ == '__main__':\n    import doctest\n    doctest.testmod()"
+}
+2022-04-20 01:42:16.191962 REASON stop
+2022-04-20 01:42:16.238012 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n#!/usr/bin/python\n\ns = raw_input()\nt = raw_input()\n\ns_len = len(s)\nt_len = len(t)\n\ndp = [[0] * (s_len + 1) for _ in range(t_len + 1)]\n\nfor i in range(1, t_len + 1):\n    for j in range(1, s_len + 1):\n        if t[i - 1] == s[j - 1]:\n            dp[i][j] = dp[i - 1][j - 1] + 1\n        else:\n            dp[i][j] = max(dp[i][j - 1], dp[i - 1][j])\n\nprint s_len - dp[-1][-1]"
+}
+2022-04-20 01:42:16.238146 REASON stop
+2022-04-20 01:42:16.242522 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef solve(s, t):\n    if len(s) == len(t):\n        return 0\n    else:\n        return len(s) - len(t)\n\ndef main():\n    s = input()\n    t = input()\n    print(solve(s, t))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 01:42:16.242634 REASON stop
+2022-04-20 01:42:16.246120 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nfrom sys import stdin\n\ndef main():\n    s = stdin.readline().strip()\n    t = stdin.readline().strip()\n\n    # find the number of common characters\n    common = 0\n    for i in range(len(s)):\n        if s[i] == t[common]:\n            common += 1\n            if common == len(t):\n                break\n\n    # the number of characters to remove is the difference between the lengths of s and t\n    print(len(s) - common)\n\nmain()"
+}
+2022-04-20 01:42:16.246220 REASON stop
+2022-04-20 01:42:16.248882 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    s = sys.stdin.readline().strip()\n    t = sys.stdin.readline().strip()\n\n    # dp[i][j] = longest common subsequence of s[:i] and t[:j]\n    dp = [[0] * (len(t) + 1) for _ in range(len(s) + 1)]\n\n    for i in range(1, len(s) + 1):\n        for j in range(1, len(t) + 1):\n            if s[i - 1] == t[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n\n    print(len(s) - dp[-1][-1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 01:42:16.249071 REASON stop

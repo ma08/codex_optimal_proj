@@ -1,0 +1,152 @@
+2022-04-20 01:31:18.548895 """
+An array of integers $p_1, p_2, \dots, p_n$ is called a permutation if it contains each number from $1$ to $n$ exactly once. For example, the following arrays are permutations: $[3, 1, 2]$, $[1]$, $[1, 2, 3, 4, 5]$ and $[4, 3, 1, 2]$. The following arrays are not permutations: $[2]$, $[1, 1]$, $[2, 3, 4]$.
+
+Polycarp invented a really cool permutation $p_1, p_2, \dots, p_n$ of length $n$. It is very disappointing, but he forgot this permutation. He only remembers the array $q_1, q_2, \dots, q_{n-1}$ of length $n-1$, where $q_i=p_{i+1}-p_i$.
+
+Given $n$ and $q=q_1, q_2, \dots, q_{n-1}$, help Polycarp restore the invented permutation.
+
+
+-----Input-----
+
+The first line contains the integer $n$ ($2 \le n \le 2\cdot10^5$) — the length of the permutation to restore. The second line contains $n-1$ integers $q_1, q_2, \dots, q_{n-1}$ ($-n < q_i < n$).
+
+
+-----Output-----
+
+Print the integer -1 if there is no such permutation of length $n$ which corresponds to the given array $q$. Otherwise, if it exists, print $p_1, p_2, \dots, p_n$. Print any such permutation if there are many of them.
+
+
+-----Examples-----
+Input
+3
+-2 1
+
+Output
+3 1 2 
+Input
+5
+1 1 1 1
+
+Output
+1 2 3 4 5 
+Input
+4
+-1 2 2
+
+Output
+-1
+"""
+2022-04-20 01:31:18.548907 --------------------------
+2022-04-20 01:31:18.549011 using api key derek
+2022-04-20 01:31:32.384792 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    q = list(map(int, input().split()))\n    p = [0]*n\n    p[0] = q[0]\n    for i in range(1, n-1):\n        p[i] = p[i-1] + q[i]\n    p[n-1] = p[n-2] + q[n-2]\n    if min(p) < 1 or max(p) > n:\n        print(-1)\n    else:\n        print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    q = [int(x) for x in sys.stdin.readline().strip().split()]\n    if n == 2:\n        if q[0] == -1:\n            print(\"1 2\")\n        elif q[0] == 1:\n            print(\"2 1\")\n        else:\n            print(\"-1\")\n    else:\n        p = [0] * n\n        p[0] = 1\n        p[1] = p[0] + q[0]\n        if p[1] < 1 or p[1] > n:\n            print(\"-1\")\n        else:\n            for i in range(2, n):\n                p[i] = p[i-1] + q[i-1]\n                if p[i] < 1 or p[i] > n:\n                    print(\"-1\")\n                    break\n            else:\n                print(\" \".join([str(x) for x in p]))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0] * n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = q[i] + p[i-1]\np[n-1] = p[n-2] + q[n-2]\n\nif min(p) < 1 or max(p) > n:\n    print(-1)\nelse:\n    print(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    q = [int(x) for x in input().split()]\n    if n == 2:\n        if q[0] == -1:\n            print(2,1)\n        elif q[0] == 1:\n            print(1,2)\n        else:\n            print(-1)\n    else:\n        p = [0] * n\n        p[0] = q[0]\n        for i in range(1,n-1):\n            p[i] = q[i] + p[i-1]\n        p[n-1] = p[n-2] + q[n-2]\n        for i in range(n):\n            if p[i] < 1 or p[i] > n:\n                print(-1)\n                return\n            if p[i] in p[:i]:\n                print(-1)\n                return\n        print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = [int(i) for i in input().split()]\n\nif n == 2:\n    print(1, 2)\n    exit()\n\nif sum(q) != 0:\n    print(-1)\n    exit()\n\nif max(q) > 0:\n    print(-1)\n    exit()\n\nif min(q) < 0:\n    print(-1)\n    exit()\n\np = [0] * n\n\np[0] = 1\np[1] = 1 + q[0]\n\nfor i in range(1, n - 1):\n    p[i + 1] = p[i] + q[i]\n\nif min(p) < 1:\n    print(-1)\n    exit()\n\nif max(p) > n:\n    print(-1)\n    exit()\n\nprint(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif sum(q) != 0:\n    print(-1)\nelse:\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n):\n        p[i] = p[i-1] + q[i]\n    if min(p) < 1 or max(p) > n:\n        print(-1)\n    else:\n        print(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif n == 2:\n    if q[0] == -1:\n        print(2, 1)\n    else:\n        print(-1)\nelse:\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n):\n        p[i] = p[i-1] + q[i-1]\n    if max(p) > n or min(p) < 1:\n        print(-1)\n    else:\n        for i in range(n):\n            p[i] += i + 1\n        print(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0] * n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = p[i-1] + q[i]\np[n-1] = p[n-2] + q[n-2]\n\nif max(p) > n or min(p) < 1:\n    print(-1)\nelse:\n    print(*p)"
+    }
+  ],
+  "created": 1650418278,
+  "id": "cmpl-4ytTaxStDZ0RqT15qTqfdCMFZsxEs",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 01:31:32.385497 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    q = list(map(int, input().split()))\n    p = [0]*n\n    p[0] = q[0]\n    for i in range(1, n-1):\n        p[i] = p[i-1] + q[i]\n    p[n-1] = p[n-2] + q[n-2]\n    if min(p) < 1 or max(p) > n:\n        print(-1)\n    else:\n        print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:31:32.385546 REASON stop
+2022-04-20 01:31:32.386025 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    q = [int(x) for x in sys.stdin.readline().strip().split()]\n    if n == 2:\n        if q[0] == -1:\n            print(\"1 2\")\n        elif q[0] == 1:\n            print(\"2 1\")\n        else:\n            print(\"-1\")\n    else:\n        p = [0] * n\n        p[0] = 1\n        p[1] = p[0] + q[0]\n        if p[1] < 1 or p[1] > n:\n            print(\"-1\")\n        else:\n            for i in range(2, n):\n                p[i] = p[i-1] + q[i-1]\n                if p[i] < 1 or p[i] > n:\n                    print(\"-1\")\n                    break\n            else:\n                print(\" \".join([str(x) for x in p]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:31:32.386083 REASON stop
+2022-04-20 01:31:32.386517 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0] * n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = q[i] + p[i-1]\np[n-1] = p[n-2] + q[n-2]\n\nif min(p) < 1 or max(p) > n:\n    print(-1)\nelse:\n    print(*p)"
+}
+2022-04-20 01:31:32.386576 REASON stop
+2022-04-20 01:31:32.413565 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    q = [int(x) for x in input().split()]\n    if n == 2:\n        if q[0] == -1:\n            print(2,1)\n        elif q[0] == 1:\n            print(1,2)\n        else:\n            print(-1)\n    else:\n        p = [0] * n\n        p[0] = q[0]\n        for i in range(1,n-1):\n            p[i] = q[i] + p[i-1]\n        p[n-1] = p[n-2] + q[n-2]\n        for i in range(n):\n            if p[i] < 1 or p[i] > n:\n                print(-1)\n                return\n            if p[i] in p[:i]:\n                print(-1)\n                return\n        print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:31:32.413683 REASON stop
+2022-04-20 01:31:32.420576 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = [int(i) for i in input().split()]\n\nif n == 2:\n    print(1, 2)\n    exit()\n\nif sum(q) != 0:\n    print(-1)\n    exit()\n\nif max(q) > 0:\n    print(-1)\n    exit()\n\nif min(q) < 0:\n    print(-1)\n    exit()\n\np = [0] * n\n\np[0] = 1\np[1] = 1 + q[0]\n\nfor i in range(1, n - 1):\n    p[i + 1] = p[i] + q[i]\n\nif min(p) < 1:\n    print(-1)\n    exit()\n\nif max(p) > n:\n    print(-1)\n    exit()\n\nprint(*p)"
+}
+2022-04-20 01:31:32.420769 REASON stop
+2022-04-20 01:31:32.424495 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif sum(q) != 0:\n    print(-1)\nelse:\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n):\n        p[i] = p[i-1] + q[i]\n    if min(p) < 1 or max(p) > n:\n        print(-1)\n    else:\n        print(*p)"
+}
+2022-04-20 01:31:32.424613 REASON stop
+2022-04-20 01:31:32.425410 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\nif n == 2:\n    if q[0] == -1:\n        print(2, 1)\n    else:\n        print(-1)\nelse:\n    p = [0] * n\n    p[0] = q[0]\n    for i in range(1, n):\n        p[i] = p[i-1] + q[i-1]\n    if max(p) > n or min(p) < 1:\n        print(-1)\n    else:\n        for i in range(n):\n            p[i] += i + 1\n        print(*p)"
+}
+2022-04-20 01:31:32.425482 REASON stop
+2022-04-20 01:31:32.426275 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nq = list(map(int, input().split()))\n\np = [0] * n\np[0] = q[0]\nfor i in range(1, n-1):\n    p[i] = p[i-1] + q[i]\np[n-1] = p[n-2] + q[n-2]\n\nif max(p) > n or min(p) < 1:\n    print(-1)\nelse:\n    print(*p)"
+}
+2022-04-20 01:31:32.426437 REASON stop

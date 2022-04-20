@@ -1,0 +1,150 @@
+2022-04-20 02:02:34.633947 """
+We guessed some integer number $x$. You are given a list of almost all its divisors. Almost all means that there are all divisors except $1$ and $x$ in the list.
+
+Your task is to find the minimum possible integer $x$ that can be the guessed number, or say that the input data is contradictory and it is impossible to find such number.
+
+You have to answer $t$ independent queries.
+
+
+-----Input-----
+
+The first line of the input contains one integer $t$ ($1 \le t \le 25$) — the number of queries. Then $t$ queries follow.
+
+The first line of the query contains one integer $n$ ($1 \le n \le 300$) — the number of divisors in the list.
+
+The second line of the query contains $n$ integers $d_1, d_2, \dots, d_n$ ($2 \le d_i \le 10^6$), where $d_i$ is the $i$-th divisor of the guessed number. It is guaranteed that all values $d_i$ are distinct.
+
+
+-----Output-----
+
+For each query print the answer to it.
+
+If the input data in the query is contradictory and it is impossible to find such number $x$ that the given list of divisors is the list of almost all its divisors, print -1. Otherwise print the minimum possible $x$.
+
+
+-----Example-----
+Input
+2
+8
+8 2 12 6 4 24 16 3
+1
+2
+
+Output
+48
+4
+"""
+2022-04-20 02:02:34.633958 --------------------------
+2022-04-20 02:02:34.634056 using api key derek
+2022-04-20 02:03:06.112073 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        n = int(sys.stdin.readline())\n        divisors = list(map(int, sys.stdin.readline().split()))\n        divisors.sort()\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            print(divisors[0] * divisors[n - 1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    divisors = list(map(int, input().split()))\n    divisors.sort()\n    if n == 1:\n        print(divisors[0] * 2)\n    else:\n        max_divisor = divisors[-1]\n        for j in range(n-1):\n            if divisors[j] * 2 != divisors[j+1]:\n                print(divisors[j] * divisors[j+1])\n                break\n        else:\n            print(max_divisor * 2)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = list(map(int, input().split()))\n        divisors.sort()\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            x = divisors[0]\n            for i in range(1, n):\n                if divisors[i] % x != 0:\n                    print(-1)\n                    break\n            else:\n                print(x)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = [int(x) for x in input().split()]\n        divisors.sort()\n        # print(divisors)\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            if divisors[0] == divisors[1]:\n                print(divisors[0] * divisors[-1])\n            else:\n                print(divisors[0] * divisors[1])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The smallest possible number is the product of the smallest prime factors of all the numbers in the list.\n# The largest possible number is the product of the largest prime factors of all the numbers in the list.\n# The smallest possible number is the product of the smallest prime factors of all the numbers in the list.\n# The largest possible number is the product of the largest prime factors of all the numbers in the list.\n# If the largest possible number is greater than the product of all the numbers in the list, then the answer is the largest possible number.\n# Otherwise, the answer is -1.\n\n# We can use a Sieve of Eratosthenes to find the prime factors of all the numbers in the list.\n\n# TIME: O(n * log(log(n)))\n# SPACE: O(n)\n\nimport math\n\ndef find_smallest_possible_number(numbers):\n    max_number = max(numbers)\n    prime_factors = sieve_of_eratosthenes(max_number)\n    smallest_possible_number = 1\n    for number in numbers:\n        smallest_possible_number *= prime_factors[number]\n    return smallest_possible_number\n\ndef find_largest_possible_number(numbers):\n    max_number = max(numbers)\n    prime_factors = sieve_of_eratosthenes(max_number)\n    largest_possible_number = 1\n    for number in numbers:\n        largest_possible_number *= prime_factors[number]\n    return largest_possible_number\n\ndef sieve_of_eratosthenes(max_number):\n    prime_factors = [0] * (max_number + 1)\n    for number in range(2, max_number + 1):\n        if prime_factors[number] == 0:\n            prime_factors[number] = number\n            for multiple in range(number * 2, max_number + 1, number):\n                if prime_factors[multiple] == 0:\n                    prime_factors[multiple] = number\n    return prime_factors\n\ndef main():\n    number_of_queries = int(input())\n    for _ in range(number_of_queries):\n        number_of_divisors = int(input())\n        divisors = [int(x) for x in input().split()]\n        smallest_possible_number = find_smallest_possible_number(divisors)\n        largest_possible_number = find_largest_possible_number(divisors)\n        if largest_possible_number > smallest_possible_number:\n            print(largest_possible_number)\n        else:\n            print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = list(map(int, input().split()))\n        divisors.sort()\n        if divisors[0] == 2:\n            print(divisors[-1]*2)\n        else:\n            print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = [int(x) for x in input().split()]\n        divisors.sort()\n        if n == 1:\n            print(divisors[0]*2)\n        elif n == 2:\n            print(divisors[0]*divisors[1])\n        else:\n            for i in range(1, n-1):\n                if divisors[i] != divisors[i-1] * divisors[i+1]:\n                    print(-1)\n                    break\n            else:\n                print(divisors[0]*divisors[-1])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    divisors = list(map(int, input().split()))\n    divisors.sort()\n    if divisors[0] == 2:\n        print(2*divisors[-1])\n    else:\n        print(-1)"
+    }
+  ],
+  "created": 1650420154,
+  "id": "cmpl-4ytxqIcNPOPrGc9eudEDvNQoxnTeE",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:03:06.112405 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    t = int(sys.stdin.readline())\n    for _ in range(t):\n        n = int(sys.stdin.readline())\n        divisors = list(map(int, sys.stdin.readline().split()))\n        divisors.sort()\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            print(divisors[0] * divisors[n - 1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:03:06.112441 REASON stop
+2022-04-20 02:03:06.113083 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    divisors = list(map(int, input().split()))\n    divisors.sort()\n    if n == 1:\n        print(divisors[0] * 2)\n    else:\n        max_divisor = divisors[-1]\n        for j in range(n-1):\n            if divisors[j] * 2 != divisors[j+1]:\n                print(divisors[j] * divisors[j+1])\n                break\n        else:\n            print(max_divisor * 2)"
+}
+2022-04-20 02:03:06.113181 REASON stop
+2022-04-20 02:03:06.113597 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = list(map(int, input().split()))\n        divisors.sort()\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            x = divisors[0]\n            for i in range(1, n):\n                if divisors[i] % x != 0:\n                    print(-1)\n                    break\n            else:\n                print(x)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:03:06.113662 REASON stop
+2022-04-20 02:03:06.131042 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = [int(x) for x in input().split()]\n        divisors.sort()\n        # print(divisors)\n        if n == 1:\n            print(divisors[0] * 2)\n        else:\n            if divisors[0] == divisors[1]:\n                print(divisors[0] * divisors[-1])\n            else:\n                print(divisors[0] * divisors[1])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:03:06.131155 REASON stop
+2022-04-20 02:03:06.169388 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The smallest possible number is the product of the smallest prime factors of all the numbers in the list.\n# The largest possible number is the product of the largest prime factors of all the numbers in the list.\n# The smallest possible number is the product of the smallest prime factors of all the numbers in the list.\n# The largest possible number is the product of the largest prime factors of all the numbers in the list.\n# If the largest possible number is greater than the product of all the numbers in the list, then the answer is the largest possible number.\n# Otherwise, the answer is -1.\n\n# We can use a Sieve of Eratosthenes to find the prime factors of all the numbers in the list.\n\n# TIME: O(n * log(log(n)))\n# SPACE: O(n)\n\nimport math\n\ndef find_smallest_possible_number(numbers):\n    max_number = max(numbers)\n    prime_factors = sieve_of_eratosthenes(max_number)\n    smallest_possible_number = 1\n    for number in numbers:\n        smallest_possible_number *= prime_factors[number]\n    return smallest_possible_number\n\ndef find_largest_possible_number(numbers):\n    max_number = max(numbers)\n    prime_factors = sieve_of_eratosthenes(max_number)\n    largest_possible_number = 1\n    for number in numbers:\n        largest_possible_number *= prime_factors[number]\n    return largest_possible_number\n\ndef sieve_of_eratosthenes(max_number):\n    prime_factors = [0] * (max_number + 1)\n    for number in range(2, max_number + 1):\n        if prime_factors[number] == 0:\n            prime_factors[number] = number\n            for multiple in range(number * 2, max_number + 1, number):\n                if prime_factors[multiple] == 0:\n                    prime_factors[multiple] = number\n    return prime_factors\n\ndef main():\n    number_of_queries = int(input())\n    for _ in range(number_of_queries):\n        number_of_divisors = int(input())\n        divisors = [int(x) for x in input().split()]\n        smallest_possible_number = find_smallest_possible_number(divisors)\n        largest_possible_number = find_largest_possible_number(divisors)\n        if largest_possible_number > smallest_possible_number:\n            print(largest_possible_number)\n        else:\n            print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:03:06.169519 REASON stop
+2022-04-20 02:03:06.177467 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = list(map(int, input().split()))\n        divisors.sort()\n        if divisors[0] == 2:\n            print(divisors[-1]*2)\n        else:\n            print(-1)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:03:06.177602 REASON stop
+2022-04-20 02:03:06.178441 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    t = int(input())\n    for i in range(t):\n        n = int(input())\n        divisors = [int(x) for x in input().split()]\n        divisors.sort()\n        if n == 1:\n            print(divisors[0]*2)\n        elif n == 2:\n            print(divisors[0]*divisors[1])\n        else:\n            for i in range(1, n-1):\n                if divisors[i] != divisors[i-1] * divisors[i+1]:\n                    print(-1)\n                    break\n            else:\n                print(divisors[0]*divisors[-1])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:03:06.178547 REASON stop
+2022-04-20 02:03:06.184171 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nt = int(input())\n\nfor i in range(t):\n    n = int(input())\n    divisors = list(map(int, input().split()))\n    divisors.sort()\n    if divisors[0] == 2:\n        print(2*divisors[-1])\n    else:\n        print(-1)"
+}
+2022-04-20 02:03:06.184377 REASON stop

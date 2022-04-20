@@ -1,0 +1,183 @@
+2022-04-20 00:55:40.948455 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$ (or say that there are no such spanning trees). Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains three integers $n$, $m$ and $D$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2}), 1 \le D < n$) — the number of vertices, the number of edges and required degree of the first vertex, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+If there is no spanning tree satisfying the condition from the problem statement, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and then print $n-1$ lines describing the edges of a spanning tree such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+4 5 1
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+2 1
+2 3
+3 4
+
+Input
+4 5 3
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+1 2
+1 3
+4 1
+
+Input
+4 4 3
+1 2
+1 4
+2 3
+3 4
+
+Output
+NO
+
+
+
+-----Note-----
+
+The picture corresponding to the first and second examples: [Image]
+
+The picture corresponding to the third example: [Image]
+"""
+2022-04-20 00:55:40.948473 --------------------------
+2022-04-20 00:55:40.948578 using api key derek
+2022-04-20 00:55:57.506722 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, D = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = [[] for _ in range(n+1)]\n    for edge in edges:\n        graph[edge[0]].append(edge[1])\n        graph[edge[1]].append(edge[0])\n    if len(graph[1]) != D:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    for i in range(2, n+1):\n        if i in graph[1]:\n            print(1, i)\n            graph[1].remove(i)\n            graph[i].remove(1)\n            break\n    for i in range(2, n+1):\n        if i == 1:\n            continue\n        for j in range(2, n+1):\n            if j == i:\n                continue\n            if j in graph[i]:\n                print(i, j)\n                graph[i].remove(j)\n                graph[j].remove(i)\n                break\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for _ in range(m)]\n    if d == 1:\n        print('YES')\n        for i in range(2, n+1):\n            print(1, i)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        return\n    if d == n-1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        return\n    if d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    if d == n-2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = [list(map(int, input().split())) for _ in range(m)]\n    if d == 1:\n        print('YES')\n        for i in range(1, n):\n            print(1, i+1)\n    elif d == n-1:\n        print('YES')\n        for i in range(1, n):\n            print(i, i+1)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    elif d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    elif d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print('YES')\n        for i in range(2, n + 1):\n            print(1, i)\n    else:\n        print('YES')\n        for i in range(d):\n            print(1, i + 2)\n        for i in range(d, n - 1):\n            print(2, i + 2)\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for i in range(m):\n        edges.append(list(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n    elif d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n    elif d == n-1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        print(1, n)\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print('YES')\n        for i in range(2, n+1):\n            print(1, i)\n    elif d == n-1:\n        print('YES')\n        for i in range(2, n):\n            print(i, i+1)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650416141,
+  "id": "cmpl-4ysv7UNHlyWjQIaj6QEluUDSFtnXi",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 00:55:57.507053 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, D = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    graph = [[] for _ in range(n+1)]\n    for edge in edges:\n        graph[edge[0]].append(edge[1])\n        graph[edge[1]].append(edge[0])\n    if len(graph[1]) != D:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    for i in range(2, n+1):\n        if i in graph[1]:\n            print(1, i)\n            graph[1].remove(i)\n            graph[i].remove(1)\n            break\n    for i in range(2, n+1):\n        if i == 1:\n            continue\n        for j in range(2, n+1):\n            if j == i:\n                continue\n            if j in graph[i]:\n                print(i, j)\n                graph[i].remove(j)\n                graph[j].remove(i)\n                break\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:55:57.507171 REASON stop
+2022-04-20 00:55:57.507685 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = [tuple(map(int, input().split())) for _ in range(m)]\n    if d == 1:\n        print('YES')\n        for i in range(2, n+1):\n            print(1, i)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:55:57.507748 REASON stop
+2022-04-20 00:55:57.508195 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        return\n    if d == n-1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    if d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        return\n    if d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    if d == n-2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n        return\n    print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:55:57.508258 REASON stop
+2022-04-20 00:55:57.522521 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = [list(map(int, input().split())) for _ in range(m)]\n    if d == 1:\n        print('YES')\n        for i in range(1, n):\n            print(1, i+1)\n    elif d == n-1:\n        print('YES')\n        for i in range(1, n):\n            print(i, i+1)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:55:57.522642 REASON stop
+2022-04-20 00:55:57.539944 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for i in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    elif d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    elif d == 2:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i + 1)\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:55:57.540081 REASON stop
+2022-04-20 00:55:57.541057 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\n\ndef main():\n    n, m, d = map(int, input().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, input().split())))\n    if d == 0:\n        print('YES')\n        for i in range(2, n + 1):\n            print(1, i)\n    else:\n        print('YES')\n        for i in range(d):\n            print(1, i + 2)\n        for i in range(d, n - 1):\n            print(2, i + 2)\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:55:57.541147 REASON stop
+2022-04-20 00:55:57.541885 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for i in range(m):\n        edges.append(list(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print(\"YES\")\n        for i in range(1, n):\n            print(1, i+1)\n    elif d == 1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n    elif d == n-1:\n        print(\"YES\")\n        for i in range(1, n):\n            print(i, i+1)\n        print(1, n)\n    else:\n        print(\"NO\")\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:55:57.541945 REASON stop
+2022-04-20 00:55:57.543079 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n, m, d = map(int, sys.stdin.readline().split())\n    edges = []\n    for _ in range(m):\n        edges.append(tuple(map(int, sys.stdin.readline().split())))\n    if d == 0:\n        print('YES')\n        for i in range(2, n+1):\n            print(1, i)\n    elif d == n-1:\n        print('YES')\n        for i in range(2, n):\n            print(i, i+1)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 00:55:57.543240 REASON stop

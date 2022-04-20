@@ -1,0 +1,162 @@
+2022-04-20 02:19:30.650686 """
+The only difference between easy and hard versions is the constraints.
+
+Vova likes pictures with kittens. The news feed in the social network he uses can be represented as an array of $n$ consecutive pictures (with kittens, of course). Vova likes all these pictures, but some are more beautiful than the others: the $i$-th picture has beauty $a_i$.
+
+Vova wants to repost exactly $x$ pictures in such a way that:   each segment of the news feed of at least $k$ consecutive pictures has at least one picture reposted by Vova;  the sum of beauty values of reposted pictures is maximum possible. 
+
+For example, if $k=1$ then Vova has to repost all the pictures in the news feed. If $k=2$ then Vova can skip some pictures, but between every pair of consecutive pictures Vova has to repost at least one of them.
+
+Your task is to calculate the maximum possible sum of values of reposted pictures if Vova follows conditions described above, or say that there is no way to satisfy all conditions.
+
+
+-----Input-----
+
+The first line of the input contains three integers $n, k$ and $x$ ($1 \le k, x \le n \le 200$) — the number of pictures in the news feed, the minimum length of segment with at least one repost in it and the number of pictures Vova is ready to repost.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$), where $a_i$ is the beauty of the $i$-th picture.
+
+
+-----Output-----
+
+Print -1 if there is no way to repost some pictures to satisfy all the conditions in the problem statement.
+
+Otherwise print one integer — the maximum sum of values of reposted pictures if Vova follows conditions described in the problem statement.
+
+
+-----Examples-----
+Input
+5 2 3
+5 1 3 10 1
+
+Output
+18
+
+Input
+6 1 5
+10 30 30 70 10 10
+
+Output
+-1
+
+Input
+4 3 1
+1 100 1 1
+
+Output
+100
+"""
+2022-04-20 02:19:30.650703 --------------------------
+2022-04-20 02:19:30.650805 using api key gabby
+2022-04-20 02:20:52.198516 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k, x = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0 for i in range(x+1)] for j in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, x+1):\n        if i < k:\n            dp[i][j] = max(dp[i-1][j], a[i-1])\n        else:\n            dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + a[i-1])\n\nif dp[n][x] == 0:\n    print(-1)\nelse:\n    print(dp[n][x])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k, x = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0] * (x + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, x + 1):\n            dp[i][j] = max(dp[i - 1][j], dp[i - k][j - 1] + sum(a[i - k:i]))\n    print(dp[n][x])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The problem is a variation of the Knapsack problem.\n# The key is to use a 2D array to store the maximum beauty value\n# that can be achieved by reposting pictures from the first i pictures\n# and j pictures have been reposted.\n# The array is filled in a bottom-up manner.\n# The first row is filled with the beauty value of each picture.\n# The first column is filled with 0s.\n# Each cell is filled by taking the maximum of the following two values:\n# 1. The maximum beauty value that can be achieved by reposting pictures\n#    from the first i-1 pictures and j pictures have been reposted.\n# 2. The maximum beauty value that can be achieved by reposting pictures\n#    from the first i-k pictures and j-1 pictures have been reposted plus\n#    the beauty value of the i-th picture.\n# The second value is taken only if the first value is less than the second value.\n# The final answer is the value in the cell at the intersection of the x-th column\n# and the n-th row.\n\n# FUNCTIONS\ndef knapsack(n, k, x, a):\n    # Initialize the 2D array.\n    dp = [[0 for j in range(x + 1)] for i in range(n + 1)]\n    \n    # Fill the first row.\n    for j in range(1, x + 1):\n        dp[1][j] = a[0]\n    \n    # Fill the 2D array.\n    for i in range(2, n + 1):\n        for j in range(1, x + 1):\n            # If the maximum beauty value that can be achieved by reposting\n            # pictures from the first i-1 pictures and j pictures have been\n            # reposted is less than the maximum beauty value that can be\n            # achieved by reposting pictures from the first i-k pictures and\n            # j-1 pictures have been reposted plus the beauty value of the\n            # i-th picture, then take the second value.\n            if dp[i - 1][j] < dp[i - k][j - 1] + a[i - 1]:\n                dp[i][j] = dp[i - k][j - 1] + a[i - 1]\n            # Otherwise, take the first value.\n            else:\n                dp[i][j] = dp[i - 1][j]\n    \n    # Return the final answer.\n    return dp[n][x]\n\n# MAIN\nn, k, x = [int(i) for i in input().split()]\na = [int(i) for i in input().split()]\n\n# If x is greater than n, then there is no way to satisfy all conditions.\nif x > n:\n    print(-1)\nelse:\n    print(knapsack(n, k, x, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef max_beauty_sum(n, k, x, a):\n    \"\"\"\n    >>> max_beauty_sum(5, 2, 3, [5, 1, 3, 10, 1])\n    18\n    >>> max_beauty_sum(6, 1, 5, [10, 30, 30, 70, 10, 10])\n    -1\n    >>> max_beauty_sum(4, 3, 1, [1, 100, 1, 1])\n    100\n    \"\"\"\n    # dp[i][j] is the max beauty sum of the first i pictures with j reposts\n    dp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n    return dp[n][x]\n\nif __name__ == '__main__':\n    n, k, x = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    print(max_beauty_sum(n, k, x, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k, x = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    # dp[i][j] = max sum of first i elements with j elements selected\n    dp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            if i >= k:\n                dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[n][x])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k, x = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0] * (x+1) for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            dp[i][j] = dp[i-1][j]\n            for l in range(i-1, max(i-k, -1), -1):\n                dp[i][j] = max(dp[i][j], dp[l][j-1] + sum(a[l:i]))\n    if dp[n][x] == 0:\n        print(-1)\n    else:\n        print(dp[n][x])\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k, x = map(int, input().split())\na = list(map(int, input().split()))\n\n# dp[i][j] is the maximum sum of values of reposted pictures if Vova follows conditions described in the problem statement\n# and the last picture reposted is the i-th picture\n# and the number of pictures reposted is j\ndp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, x+1):\n        dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n\nprint(dp[n][x])"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k, x = [int(i) for i in sys.stdin.readline().split()]\n    a = [int(i) for i in sys.stdin.readline().split()]\n    if x < k:\n        print(-1)\n        return\n    if x == n:\n        print(sum(a))\n        return\n    if k == 1:\n        print(-1)\n        return\n    if k == 2:\n        print(sum(a))\n        return\n    if k == 3:\n        print(sum(a[:x]))\n        return\n    if k == 4:\n        print(sum(a[:x]))\n        return\n    if k == 5:\n        print(sum(a[:x]))\n        return\n    if k == 6:\n        print(sum(a[:x]))\n        return\n    if k == 7:\n        print(sum(a[:x]))\n        return\n    if k == 8:\n        print(sum(a[:x]))\n        return\n    if k == 9:\n        print(sum(a[:x]))\n        return\n    if k == 10:\n        print(sum(a[:x]))\n        return\n    if k == 11:\n        print(sum(a[:x]))\n        return\n    if k == 12:\n        print(sum(a[:x]))\n        return\n    if k == 13:\n        print(sum(a[:x]))\n        return\n    if k == 14:\n        print(sum(a[:x]))\n        return\n    if k == 15:\n        print(sum(a[:x]))\n        return\n    if k == 16:\n        print(sum(a[:x]))\n        return\n    if k == 17:\n        print(sum(a[:x]))\n        return\n    if k == 18:\n        print(sum(a[:x]))\n        return\n    if k == 19:\n        print(sum(a[:x]))\n        return\n    if k == 20:\n        print(sum(a[:x]))\n        return\n    if k == 21:\n        print(sum(a[:x]))\n        return\n    if k == 22:\n        print(sum(a[:x]))\n        return\n    if k == 23:\n        print(sum(a[:x]))\n        return\n    if k == 24:\n        print(sum(a[:x]))\n        return\n    if k == 25:\n        print(sum(a[:x]))\n        return\n    if k == 26:\n        print(sum(a[:x]))\n        return\n    if k == 27:\n        print(sum(a[:x]))\n        return\n    if k == 28:\n        print(sum(a[:x]))\n        return\n    if k == 29:\n        print(sum(a[:x]))\n        return\n    if k == 30:\n        print(sum(a[:x]))\n        return\n    if k == 31:\n        print(sum(a[:x]))\n        return\n    if k == 32:\n        print(sum(a[:x]))\n        return\n    if k == 33:\n        print(sum(a[:x]))\n        return\n    if k == 34:\n        print(sum(a[:x]))\n        return\n    if k == 35:\n        print(sum(a[:x]))\n        return\n    if k == 36:\n        print(sum(a[:x]))\n        return\n    if k == 37:\n        print(sum(a[:x]))\n        return\n    if k == 38:\n        print(sum(a[:x]))\n        return\n    if k == 39:\n        print(sum(a[:x]))\n        return\n    if k == 40:\n        print(sum(a[:x]))\n        return\n    if k == 41:\n        print(sum(a[:x]))\n        return\n    if k == 42:\n        print(sum(a[:x]))\n        return\n    if k == 43:\n        print(sum(a[:x]))\n        return\n    if k == 44:\n        print(sum(a[:x]))\n        return\n    if k == 45:\n        print(sum(a[:x]))\n        return\n    if k == 46:\n        print(sum(a[:x]))\n        return\n    if k == 47:\n        print(sum(a[:x]))\n        return\n    if k == 48:\n        print(sum(a[:x]))\n        return\n    if k == 49:\n        print(sum(a[:x]))\n        return\n    if k == 50:\n        print(sum(a[:x]))\n        return\n    if k == 51:\n        print(sum(a[:x]))\n        return\n    if k == 52:\n        print(sum(a[:x]))\n        return\n    if k == 53:\n        print(sum(a[:x]))\n        return\n    if k == 54:\n        print(sum(a[:x]))\n        return\n    if k == 55:\n        print(sum(a[:x]))\n        return\n    if k == 56:\n        print(sum(a[:x]))\n        return\n    if k == 57:\n        print(sum(a[:x]))\n        return\n    if k == 58:\n        print(sum(a[:x]))\n        return\n    if k == 59:\n        print(sum(a[:x]))\n        return\n    if k == 60:\n        print(sum(a[:x]))\n        return\n    if k == 61:\n        print(sum(a[:x]))\n        return\n    if k == 62:\n        print(sum(a[:x]))\n        return\n    if k == 63:\n        print(sum(a[:x]))\n        return\n    if k == 64:\n        print(sum(a[:x]))\n        return\n    if k == 65:\n        print(sum(a[:x]))\n        return\n    if k == 66:\n        print(sum(a[:x]))\n        return\n    if k == 67:\n        print(sum(a[:x]))\n        return\n    if k == 68:\n        print(sum(a[:x]))\n        return\n    if k == 69:\n        print(sum(a[:x]))\n        return\n    if k == 70:\n        print(sum(a[:x]))\n        return\n    if k == 71:\n        print(sum(a[:x]))\n        return\n    if k == 72:\n        print(sum(a[:x]))\n        return\n    if k == 73:\n        print(sum(a[:x]))\n        return\n    if k == 74:\n        print(sum(a[:x]))\n        return\n    if k == 75:\n        print(sum(a[:x]))\n        return\n    if k == 76:\n        print(sum(a[:x]))\n        return\n    if k == 77:\n        print(sum(a[:x]))\n        return\n    if k == 78:\n        print(sum(a[:x]))\n        return\n    if k == 79:\n        print(sum(a[:x]))\n        return\n    if k == 80:\n        print(sum(a[:x]))\n        return\n    if k == 81:\n        print(sum(a[:x]))\n        return\n    if k == 82:\n        print(sum(a[:x]))\n        return\n    if k == 83:\n        print(sum(a[:x]))\n        return\n    if k == 84:\n        print(sum(a[:x]))\n        return\n    if k == 85:\n        print(sum(a[:x]))\n        return\n    if k == 86:\n        print(sum(a[:x]))\n        return\n    if k == 87:\n        print(sum(a[:x]))\n        return\n    if k == 88:\n        print(sum(a[:x]))\n        return\n    if k == 89:\n        print(sum(a[:x]))\n        return\n    if k == 90:\n        print(sum(a[:x]))\n        return\n    if k == 91:\n        print(sum(a[:x]))\n        return\n    if k == 92:\n        print(sum(a[:x]))\n        return\n    if k == 93:\n        print(sum(a[:x]))\n        return\n    if k == 94:\n        print(sum(a[:x]))\n        return\n    if k == 95:\n        print(sum(a[:x]))\n        return\n    if k == 96:\n        print(sum(a[:x]))\n        return\n    if k == 97:\n        print(sum(a[:x]))\n        return\n    if k == 98:\n        print(sum(a[:x]))\n        return\n    if k == 99:\n        print(sum(a[:x]))\n        return\n    if k == 100:\n        print(sum(a[:x]))\n        return\n    if k == 101:\n        print(sum(a[:x]))\n        return\n    if k == 102:\n        print(sum(a[:x]))\n        return\n    if k == 103:\n        print(sum(a[:x]))\n        return\n    if k == 104:\n        print(sum(a[:x]))\n        return\n    if k == 105:\n        print(sum(a[:x]))\n        return\n    if k == 106:\n        print(sum(a[:x]))\n        return\n    if k == 107:\n        print(sum(a[:x]))\n        return\n    if k == 108:\n        print(sum(a[:x]))\n        return\n    if k == 109:\n        print(sum(a[:x]))\n        return\n    if k == 110:\n        print(sum(a[:x]))\n        return\n    if k == 111:\n        print(sum(a[:x]))\n        return\n    if k == 112:\n        print(sum(a[:x]))\n        return\n    if k == 113:\n        print(sum(a[:x]))\n        return\n    if k == 114:\n        print(sum(a[:x]))\n        return\n    if k == 115:\n        print(sum(a[:x]))\n        return\n    if k == 116:\n        print(sum(a[:x]))\n        return\n    if k == 117:\n        print(sum(a[:x]))\n        return\n    if k == 118:\n        print(sum(a[:x]))\n        return\n    if k == 119:\n        print(sum(a[:x]))\n        return\n    if k == 120:\n        print(sum(a[:x]))\n        return\n    if k == 121:\n        print(sum(a[:x]))\n        return\n    if k == 122:\n        print(sum(a[:x]))\n        return\n    if k == 123:\n        print(sum(a[:x]))\n        return\n    if k == 124:\n        print(sum(a[:x]))\n        return\n    if k == 125:\n        print(sum(a[:x]))\n        return\n    if k == 126:\n        print(sum(a[:x]))\n        return\n    if k == 127:\n        print(sum(a[:x]))\n        return\n    if k == 128:\n        print(sum(a[:x]))\n        return\n"
+    }
+  ],
+  "created": 1650421170,
+  "id": "cmpl-4yuEE8TvJ2WJlMS3HF1WN7oqDLUIi",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:20:52.198996 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k, x = map(int, input().split())\na = list(map(int, input().split()))\n\ndp = [[0 for i in range(x+1)] for j in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, x+1):\n        if i < k:\n            dp[i][j] = max(dp[i-1][j], a[i-1])\n        else:\n            dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + a[i-1])\n\nif dp[n][x] == 0:\n    print(-1)\nelse:\n    print(dp[n][x])"
+}
+2022-04-20 02:20:52.199041 REASON stop
+2022-04-20 02:20:52.199457 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k, x = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0] * (x + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        for j in range(1, x + 1):\n            dp[i][j] = max(dp[i - 1][j], dp[i - k][j - 1] + sum(a[i - k:i]))\n    print(dp[n][x])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:20:52.199506 REASON stop
+2022-04-20 02:20:52.199909 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The problem is a variation of the Knapsack problem.\n# The key is to use a 2D array to store the maximum beauty value\n# that can be achieved by reposting pictures from the first i pictures\n# and j pictures have been reposted.\n# The array is filled in a bottom-up manner.\n# The first row is filled with the beauty value of each picture.\n# The first column is filled with 0s.\n# Each cell is filled by taking the maximum of the following two values:\n# 1. The maximum beauty value that can be achieved by reposting pictures\n#    from the first i-1 pictures and j pictures have been reposted.\n# 2. The maximum beauty value that can be achieved by reposting pictures\n#    from the first i-k pictures and j-1 pictures have been reposted plus\n#    the beauty value of the i-th picture.\n# The second value is taken only if the first value is less than the second value.\n# The final answer is the value in the cell at the intersection of the x-th column\n# and the n-th row.\n\n# FUNCTIONS\ndef knapsack(n, k, x, a):\n    # Initialize the 2D array.\n    dp = [[0 for j in range(x + 1)] for i in range(n + 1)]\n    \n    # Fill the first row.\n    for j in range(1, x + 1):\n        dp[1][j] = a[0]\n    \n    # Fill the 2D array.\n    for i in range(2, n + 1):\n        for j in range(1, x + 1):\n            # If the maximum beauty value that can be achieved by reposting\n            # pictures from the first i-1 pictures and j pictures have been\n            # reposted is less than the maximum beauty value that can be\n            # achieved by reposting pictures from the first i-k pictures and\n            # j-1 pictures have been reposted plus the beauty value of the\n            # i-th picture, then take the second value.\n            if dp[i - 1][j] < dp[i - k][j - 1] + a[i - 1]:\n                dp[i][j] = dp[i - k][j - 1] + a[i - 1]\n            # Otherwise, take the first value.\n            else:\n                dp[i][j] = dp[i - 1][j]\n    \n    # Return the final answer.\n    return dp[n][x]\n\n# MAIN\nn, k, x = [int(i) for i in input().split()]\na = [int(i) for i in input().split()]\n\n# If x is greater than n, then there is no way to satisfy all conditions.\nif x > n:\n    print(-1)\nelse:\n    print(knapsack(n, k, x, a))"
+}
+2022-04-20 02:20:52.199987 REASON stop
+2022-04-20 02:20:52.249386 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef max_beauty_sum(n, k, x, a):\n    \"\"\"\n    >>> max_beauty_sum(5, 2, 3, [5, 1, 3, 10, 1])\n    18\n    >>> max_beauty_sum(6, 1, 5, [10, 30, 30, 70, 10, 10])\n    -1\n    >>> max_beauty_sum(4, 3, 1, [1, 100, 1, 1])\n    100\n    \"\"\"\n    # dp[i][j] is the max beauty sum of the first i pictures with j reposts\n    dp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n    return dp[n][x]\n\nif __name__ == '__main__':\n    n, k, x = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    print(max_beauty_sum(n, k, x, a))"
+}
+2022-04-20 02:20:52.249525 REASON stop
+2022-04-20 02:20:52.250545 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k, x = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    # dp[i][j] = max sum of first i elements with j elements selected\n    dp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            if i >= k:\n                dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n            else:\n                dp[i][j] = dp[i-1][j]\n    print(dp[n][x])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:20:52.250654 REASON stop
+2022-04-20 02:20:52.273683 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k, x = map(int, input().split())\n    a = list(map(int, input().split()))\n    dp = [[0] * (x+1) for _ in range(n+1)]\n    for i in range(1, n+1):\n        for j in range(1, x+1):\n            dp[i][j] = dp[i-1][j]\n            for l in range(i-1, max(i-k, -1), -1):\n                dp[i][j] = max(dp[i][j], dp[l][j-1] + sum(a[l:i]))\n    if dp[n][x] == 0:\n        print(-1)\n    else:\n        print(dp[n][x])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:20:52.273813 REASON stop
+2022-04-20 02:20:52.277657 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k, x = map(int, input().split())\na = list(map(int, input().split()))\n\n# dp[i][j] is the maximum sum of values of reposted pictures if Vova follows conditions described in the problem statement\n# and the last picture reposted is the i-th picture\n# and the number of pictures reposted is j\ndp = [[0 for _ in range(x+1)] for _ in range(n+1)]\n\nfor i in range(1, n+1):\n    for j in range(1, x+1):\n        dp[i][j] = max(dp[i-1][j], dp[i-k][j-1] + sum(a[i-k:i]))\n\nprint(dp[n][x])"
+}
+2022-04-20 02:20:52.277770 REASON stop
+2022-04-20 02:20:52.278518 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k, x = [int(i) for i in sys.stdin.readline().split()]\n    a = [int(i) for i in sys.stdin.readline().split()]\n    if x < k:\n        print(-1)\n        return\n    if x == n:\n        print(sum(a))\n        return\n    if k == 1:\n        print(-1)\n        return\n    if k == 2:\n        print(sum(a))\n        return\n    if k == 3:\n        print(sum(a[:x]))\n        return\n    if k == 4:\n        print(sum(a[:x]))\n        return\n    if k == 5:\n        print(sum(a[:x]))\n        return\n    if k == 6:\n        print(sum(a[:x]))\n        return\n    if k == 7:\n        print(sum(a[:x]))\n        return\n    if k == 8:\n        print(sum(a[:x]))\n        return\n    if k == 9:\n        print(sum(a[:x]))\n        return\n    if k == 10:\n        print(sum(a[:x]))\n        return\n    if k == 11:\n        print(sum(a[:x]))\n        return\n    if k == 12:\n        print(sum(a[:x]))\n        return\n    if k == 13:\n        print(sum(a[:x]))\n        return\n    if k == 14:\n        print(sum(a[:x]))\n        return\n    if k == 15:\n        print(sum(a[:x]))\n        return\n    if k == 16:\n        print(sum(a[:x]))\n        return\n    if k == 17:\n        print(sum(a[:x]))\n        return\n    if k == 18:\n        print(sum(a[:x]))\n        return\n    if k == 19:\n        print(sum(a[:x]))\n        return\n    if k == 20:\n        print(sum(a[:x]))\n        return\n    if k == 21:\n        print(sum(a[:x]))\n        return\n    if k == 22:\n        print(sum(a[:x]))\n        return\n    if k == 23:\n        print(sum(a[:x]))\n        return\n    if k == 24:\n        print(sum(a[:x]))\n        return\n    if k == 25:\n        print(sum(a[:x]))\n        return\n    if k == 26:\n        print(sum(a[:x]))\n        return\n    if k == 27:\n        print(sum(a[:x]))\n        return\n    if k == 28:\n        print(sum(a[:x]))\n        return\n    if k == 29:\n        print(sum(a[:x]))\n        return\n    if k == 30:\n        print(sum(a[:x]))\n        return\n    if k == 31:\n        print(sum(a[:x]))\n        return\n    if k == 32:\n        print(sum(a[:x]))\n        return\n    if k == 33:\n        print(sum(a[:x]))\n        return\n    if k == 34:\n        print(sum(a[:x]))\n        return\n    if k == 35:\n        print(sum(a[:x]))\n        return\n    if k == 36:\n        print(sum(a[:x]))\n        return\n    if k == 37:\n        print(sum(a[:x]))\n        return\n    if k == 38:\n        print(sum(a[:x]))\n        return\n    if k == 39:\n        print(sum(a[:x]))\n        return\n    if k == 40:\n        print(sum(a[:x]))\n        return\n    if k == 41:\n        print(sum(a[:x]))\n        return\n    if k == 42:\n        print(sum(a[:x]))\n        return\n    if k == 43:\n        print(sum(a[:x]))\n        return\n    if k == 44:\n        print(sum(a[:x]))\n        return\n    if k == 45:\n        print(sum(a[:x]))\n        return\n    if k == 46:\n        print(sum(a[:x]))\n        return\n    if k == 47:\n        print(sum(a[:x]))\n        return\n    if k == 48:\n        print(sum(a[:x]))\n        return\n    if k == 49:\n        print(sum(a[:x]))\n        return\n    if k == 50:\n        print(sum(a[:x]))\n        return\n    if k == 51:\n        print(sum(a[:x]))\n        return\n    if k == 52:\n        print(sum(a[:x]))\n        return\n    if k == 53:\n        print(sum(a[:x]))\n        return\n    if k == 54:\n        print(sum(a[:x]))\n        return\n    if k == 55:\n        print(sum(a[:x]))\n        return\n    if k == 56:\n        print(sum(a[:x]))\n        return\n    if k == 57:\n        print(sum(a[:x]))\n        return\n    if k == 58:\n        print(sum(a[:x]))\n        return\n    if k == 59:\n        print(sum(a[:x]))\n        return\n    if k == 60:\n        print(sum(a[:x]))\n        return\n    if k == 61:\n        print(sum(a[:x]))\n        return\n    if k == 62:\n        print(sum(a[:x]))\n        return\n    if k == 63:\n        print(sum(a[:x]))\n        return\n    if k == 64:\n        print(sum(a[:x]))\n        return\n    if k == 65:\n        print(sum(a[:x]))\n        return\n    if k == 66:\n        print(sum(a[:x]))\n        return\n    if k == 67:\n        print(sum(a[:x]))\n        return\n    if k == 68:\n        print(sum(a[:x]))\n        return\n    if k == 69:\n        print(sum(a[:x]))\n        return\n    if k == 70:\n        print(sum(a[:x]))\n        return\n    if k == 71:\n        print(sum(a[:x]))\n        return\n    if k == 72:\n        print(sum(a[:x]))\n        return\n    if k == 73:\n        print(sum(a[:x]))\n        return\n    if k == 74:\n        print(sum(a[:x]))\n        return\n    if k == 75:\n        print(sum(a[:x]))\n        return\n    if k == 76:\n        print(sum(a[:x]))\n        return\n    if k == 77:\n        print(sum(a[:x]))\n        return\n    if k == 78:\n        print(sum(a[:x]))\n        return\n    if k == 79:\n        print(sum(a[:x]))\n        return\n    if k == 80:\n        print(sum(a[:x]))\n        return\n    if k == 81:\n        print(sum(a[:x]))\n        return\n    if k == 82:\n        print(sum(a[:x]))\n        return\n    if k == 83:\n        print(sum(a[:x]))\n        return\n    if k == 84:\n        print(sum(a[:x]))\n        return\n    if k == 85:\n        print(sum(a[:x]))\n        return\n    if k == 86:\n        print(sum(a[:x]))\n        return\n    if k == 87:\n        print(sum(a[:x]))\n        return\n    if k == 88:\n        print(sum(a[:x]))\n        return\n    if k == 89:\n        print(sum(a[:x]))\n        return\n    if k == 90:\n        print(sum(a[:x]))\n        return\n    if k == 91:\n        print(sum(a[:x]))\n        return\n    if k == 92:\n        print(sum(a[:x]))\n        return\n    if k == 93:\n        print(sum(a[:x]))\n        return\n    if k == 94:\n        print(sum(a[:x]))\n        return\n    if k == 95:\n        print(sum(a[:x]))\n        return\n    if k == 96:\n        print(sum(a[:x]))\n        return\n    if k == 97:\n        print(sum(a[:x]))\n        return\n    if k == 98:\n        print(sum(a[:x]))\n        return\n    if k == 99:\n        print(sum(a[:x]))\n        return\n    if k == 100:\n        print(sum(a[:x]))\n        return\n    if k == 101:\n        print(sum(a[:x]))\n        return\n    if k == 102:\n        print(sum(a[:x]))\n        return\n    if k == 103:\n        print(sum(a[:x]))\n        return\n    if k == 104:\n        print(sum(a[:x]))\n        return\n    if k == 105:\n        print(sum(a[:x]))\n        return\n    if k == 106:\n        print(sum(a[:x]))\n        return\n    if k == 107:\n        print(sum(a[:x]))\n        return\n    if k == 108:\n        print(sum(a[:x]))\n        return\n    if k == 109:\n        print(sum(a[:x]))\n        return\n    if k == 110:\n        print(sum(a[:x]))\n        return\n    if k == 111:\n        print(sum(a[:x]))\n        return\n    if k == 112:\n        print(sum(a[:x]))\n        return\n    if k == 113:\n        print(sum(a[:x]))\n        return\n    if k == 114:\n        print(sum(a[:x]))\n        return\n    if k == 115:\n        print(sum(a[:x]))\n        return\n    if k == 116:\n        print(sum(a[:x]))\n        return\n    if k == 117:\n        print(sum(a[:x]))\n        return\n    if k == 118:\n        print(sum(a[:x]))\n        return\n    if k == 119:\n        print(sum(a[:x]))\n        return\n    if k == 120:\n        print(sum(a[:x]))\n        return\n    if k == 121:\n        print(sum(a[:x]))\n        return\n    if k == 122:\n        print(sum(a[:x]))\n        return\n    if k == 123:\n        print(sum(a[:x]))\n        return\n    if k == 124:\n        print(sum(a[:x]))\n        return\n    if k == 125:\n        print(sum(a[:x]))\n        return\n    if k == 126:\n        print(sum(a[:x]))\n        return\n    if k == 127:\n        print(sum(a[:x]))\n        return\n    if k == 128:\n        print(sum(a[:x]))\n        return\n"
+}
+2022-04-20 02:20:52.278754 REASON length

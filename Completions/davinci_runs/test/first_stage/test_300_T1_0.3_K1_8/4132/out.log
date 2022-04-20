@@ -1,0 +1,145 @@
+2022-04-20 02:34:55.249647 """
+There are N monsters, numbered 1, 2, ..., N.
+Initially, the health of Monster i is A_i.
+Below, a monster with at least 1 health is called alive.
+Until there is only one alive monster, the following is repeated:
+ - A random alive monster attacks another random alive monster.
+ - As a result, the health of the monster attacked is reduced by the amount equal to the current health of the monster attacking.
+Find the minimum possible final health of the last monster alive.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 2 \leq N \leq 10^5
+ - 1 \leq A_i \leq 10^9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N
+A_1 A_2 ... A_N
+
+-----Output-----
+Print the minimum possible final health of the last monster alive.
+
+-----Sample Input-----
+4
+2 10 8 40
+
+-----Sample Output-----
+2
+
+When only the first monster keeps on attacking, the final health of the last monster will be 2, which is minimum.
+"""
+2022-04-20 02:34:55.249673 --------------------------
+2022-04-20 02:34:55.249827 using api key sourya
+2022-04-20 02:35:11.504812 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    while len(a) > 1:\n        a[-2] -= a.pop()\n        a.sort()\n    print(a[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        attacker = random.randint(0, len(A)-1)\n        defender = random.randint(0, len(A)-1)\n        if attacker != defender:\n            A[defender] -= A[attacker]\n            if A[defender] <= 0:\n                A.pop(defender)\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        i = random.randint(0, len(A) - 1)\n        j = random.randint(0, len(A) - 1)\n        if A[i] > 0 and A[j] > 0:\n            A[j] -= A[i]\n            A = [a for a in A if a > 0]\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # \u30e9\u30f3\u30c0\u30e0\u306b\u653b\u6483\u3059\u308b\n    while True:\n        # \u5168\u6ec5\u3057\u3066\u3044\u305f\u3089\u7d42\u4e86\n        if sum(a) == 0:\n            break\n        # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u3076\n        attacker = random.randint(0, n-1)\n        while a[attacker] == 0:\n            attacker = random.randint(0, n-1)\n        # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u3076\n        defender = random.randint(0, n-1)\n        while a[defender] == 0:\n            defender = random.randint(0, n-1)\n        # \u653b\u6483\n        a[defender] -= a[attacker]\n        if a[defender] < 0:\n            a[defender] = 0\n    # \u751f\u304d\u6b8b\u3063\u305f\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u51fa\u529b\n    print(a[attacker])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        a = random.randint(0, len(A)-1)\n        b = random.randint(0, len(A)-1)\n        if a == b:\n            continue\n        A[b] -= A[a]\n        if A[b] <= 0:\n            A.pop(b)\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        a = random.randint(0, len(A)-1)\n        b = random.randint(0, len(A)-1)\n        while a == b:\n            b = random.randint(0, len(A)-1)\n        A[b] -= A[a]\n        if A[b] <= 0:\n            del A[b]\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport random\n\nN = int(input())\nA = list(map(int, input().split()))\n\nwhile len(A) > 1:\n    attacker = random.randint(0, len(A)-1)\n    defender = random.randint(0, len(A)-1)\n    if attacker == defender:\n        continue\n    A[defender] -= A[attacker]\n    if A[defender] <= 0:\n        A.pop(defender)\n\nprint(A[0])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# N = int(input())\n# A = list(map(int, input().split()))\n\nN = 4\nA = [2, 10, 8, 40]\n\nA.sort()\n\nfor i in range(N-1):\n    A[i+1] = A[i+1] % A[i]\n\nprint(A[N-1])"
+    }
+  ],
+  "created": 1650422095,
+  "id": "cmpl-4yuT9YOZwS1UVqHMc1aUzx4Tcm66T",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:35:11.505284 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    a.sort()\n    while len(a) > 1:\n        a[-2] -= a.pop()\n        a.sort()\n    print(a[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.505360 REASON stop
+2022-04-20 02:35:11.521640 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        attacker = random.randint(0, len(A)-1)\n        defender = random.randint(0, len(A)-1)\n        if attacker != defender:\n            A[defender] -= A[attacker]\n            if A[defender] <= 0:\n                A.pop(defender)\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.521812 REASON stop
+2022-04-20 02:35:11.587146 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        i = random.randint(0, len(A) - 1)\n        j = random.randint(0, len(A) - 1)\n        if A[i] > 0 and A[j] > 0:\n            A[j] -= A[i]\n            A = [a for a in A if a > 0]\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.587325 REASON stop
+2022-04-20 02:35:11.630812 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    # \u30e9\u30f3\u30c0\u30e0\u306b\u653b\u6483\u3059\u308b\n    while True:\n        # \u5168\u6ec5\u3057\u3066\u3044\u305f\u3089\u7d42\u4e86\n        if sum(a) == 0:\n            break\n        # \u653b\u6483\u3059\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u3076\n        attacker = random.randint(0, n-1)\n        while a[attacker] == 0:\n            attacker = random.randint(0, n-1)\n        # \u653b\u6483\u3055\u308c\u308b\u30e2\u30f3\u30b9\u30bf\u30fc\u3092\u9078\u3076\n        defender = random.randint(0, n-1)\n        while a[defender] == 0:\n            defender = random.randint(0, n-1)\n        # \u653b\u6483\n        a[defender] -= a[attacker]\n        if a[defender] < 0:\n            a[defender] = 0\n    # \u751f\u304d\u6b8b\u3063\u305f\u30e2\u30f3\u30b9\u30bf\u30fc\u306e\u4f53\u529b\u3092\u51fa\u529b\n    print(a[attacker])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.631021 REASON stop
+2022-04-20 02:35:11.689759 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        a = random.randint(0, len(A)-1)\n        b = random.randint(0, len(A)-1)\n        if a == b:\n            continue\n        A[b] -= A[a]\n        if A[b] <= 0:\n            A.pop(b)\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.690079 REASON stop
+2022-04-20 02:35:11.728891 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport random\n\ndef main():\n    N = int(input())\n    A = list(map(int, input().split()))\n    while len(A) > 1:\n        a = random.randint(0, len(A)-1)\n        b = random.randint(0, len(A)-1)\n        while a == b:\n            b = random.randint(0, len(A)-1)\n        A[b] -= A[a]\n        if A[b] <= 0:\n            del A[b]\n    print(A[0])\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:35:11.729108 REASON stop
+2022-04-20 02:35:11.770381 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport random\n\nN = int(input())\nA = list(map(int, input().split()))\n\nwhile len(A) > 1:\n    attacker = random.randint(0, len(A)-1)\n    defender = random.randint(0, len(A)-1)\n    if attacker == defender:\n        continue\n    A[defender] -= A[attacker]\n    if A[defender] <= 0:\n        A.pop(defender)\n\nprint(A[0])"
+}
+2022-04-20 02:35:11.770575 REASON stop
+2022-04-20 02:35:11.819979 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# N = int(input())\n# A = list(map(int, input().split()))\n\nN = 4\nA = [2, 10, 8, 40]\n\nA.sort()\n\nfor i in range(N-1):\n    A[i+1] = A[i+1] % A[i]\n\nprint(A[N-1])"
+}
+2022-04-20 02:35:11.820319 REASON stop

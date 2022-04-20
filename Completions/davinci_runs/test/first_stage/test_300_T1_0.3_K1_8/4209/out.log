@@ -1,0 +1,165 @@
+2022-04-20 03:20:29.416163 """
+This problem is given in two editions, which differ exclusively in the constraints on the number $n$.
+
+You are given an array of integers $a[1], a[2], \dots, a[n].$ A block is a sequence of contiguous (consecutive) elements $a[l], a[l+1], \dots, a[r]$ ($1 \le l \le r \le n$). Thus, a block is defined by a pair of indices $(l, r)$.
+
+Find a set of blocks $(l_1, r_1), (l_2, r_2), \dots, (l_k, r_k)$ such that:  They do not intersect (i.e. they are disjoint). Formally, for each pair of blocks $(l_i, r_i)$ and $(l_j, r_j$) where $i \neq j$ either $r_i < l_j$ or $r_j < l_i$.  For each block the sum of its elements is the same. Formally, $$a[l_1]+a[l_1+1]+\dots+a[r_1]=a[l_2]+a[l_2+1]+\dots+a[r_2]=$$ $$\dots =$$ $$a[l_k]+a[l_k+1]+\dots+a[r_k].$$  The number of the blocks in the set is maximum. Formally, there does not exist a set of blocks $(l_1', r_1'), (l_2', r_2'), \dots, (l_{k'}', r_{k'}')$ satisfying the above two requirements with $k' > k$.  $\left. \begin{array}{|l|l|l|l|l|l|} \hline 4 & {1} & {2} & {2} & {1} & {5} & {3} \\ \hline \end{array} \right.$ The picture corresponds to the first example. Blue boxes illustrate blocks. 
+
+Write a program to find such a set of blocks.
+
+
+-----Input-----
+
+The first line contains integer $n$ ($1 \le n \le 1500$) — the length of the given array. The second line contains the sequence of elements $a[1], a[2], \dots, a[n]$ ($-10^5 \le a_i \le 10^5$).
+
+
+-----Output-----
+
+In the first line print the integer $k$ ($1 \le k \le n$). The following $k$ lines should contain blocks, one per line. In each line print a pair of indices $l_i, r_i$ ($1 \le l_i \le r_i \le n$) — the bounds of the $i$-th block. You can print blocks in any order. If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+7
+4 1 2 2 1 5 3
+
+Output
+3
+7 7
+2 3
+4 5
+
+Input
+11
+-5 -4 -3 -2 -1 0 1 2 3 4 5
+
+Output
+2
+3 4
+1 1
+
+Input
+4
+1 1 1 1
+
+Output
+4
+4 4
+1 1
+2 2
+3 3
+"""
+2022-04-20 03:20:29.416195 --------------------------
+2022-04-20 03:20:29.416362 using api key derek
+2022-04-20 03:21:52.096797 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [1] * n\nfor i in range(n):\n    for j in range(i):\n        if a[i] == a[j] and dp[j] + 1 > dp[i]:\n            dp[i] = dp[j] + 1\n\nprint(max(dp))\n\nfor i in range(n):\n    if dp[i] == max(dp):\n        print(i + 1, i + 1)"
+    },
+    {
+      "finish_reason": "length",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef find_blocks(arr):\n    n = len(arr)\n    dp = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        dp[i][i] = arr[i]\n    for i in range(n-1):\n        dp[i][i+1] = arr[i] + arr[i+1]\n    for i in range(n-2):\n        for j in range(i+2, n):\n            dp[i][j] = dp[i][j-1] + arr[j]\n    for i in range(n-2):\n        for j in range(i+2, n):\n            if dp[i][j] % dp[i][i] == 0:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-3):\n        for j in range(i+3, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-4):\n        for j in range(i+4, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-5):\n        for j in range(i+5, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-6):\n        for j in range(i+6, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-7):\n        for j in range(i+7, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-8):\n        for j in range(i+8, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-9):\n        for j in range(i+9, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-10):\n        for j in range(i+10, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-11):\n        for j in range(i+11, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-12):\n        for j in range(i+12, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10][i+10]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-13):\n        for j in range(i+13, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10][i+10] and dp[i+11][j-11] == dp[i+11][i+11]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-14):\n        for j in range(i+14, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10]["
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef solve(n, a):\n    s = [0] * (n + 1)\n    for i in range(1, n + 1):\n        s[i] = s[i - 1] + a[i - 1]\n    d = {}\n    for i in range(1, n + 1):\n        for j in range(i, n + 1):\n            d[s[j] - s[i - 1]] = d.get(s[j] - s[i - 1], []) + [(i, j)]\n    ans = []\n    for v in d.values():\n        v.sort()\n        i = 0\n        while i < len(v):\n            j = i + 1\n            while j < len(v) and v[j][0] <= v[i][1]:\n                j += 1\n            ans.append(v[i])\n            i = j\n    ans.sort()\n    return ans\n\nans = solve(n, a)\nprint(len(ans))\nfor l, r in ans:\n    print(l, r)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = sum(a)\n    if s % n != 0:\n        print(1)\n        print(1, n)\n    else:\n        s = s // n\n        l = 1\n        r = 1\n        ans = []\n        for i in range(1, n + 1):\n            if a[i - 1] == s:\n                r = i\n            else:\n                if r >= l:\n                    ans.append((l, r))\n                l = i + 1\n                r = i + 1\n        if r >= l:\n            ans.append((l, r))\n        print(len(ans))\n        for i in ans:\n            print(i[0], i[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# dp[i][j] = max number of blocks from i to j\ndp = [[0 for i in range(n)] for j in range(n)]\n\n# dp[i][j] = max(dp[i][j-1], dp[i+1][j])\n# if sum(a[i:j+1]) % (j-i+1) == 0: dp[i][j] += 1\n\nfor i in range(n):\n    dp[i][i] = 1\n\nfor i in range(n-1, -1, -1):\n    for j in range(i, n):\n        dp[i][j] = max(dp[i][j-1], dp[i+1][j])\n        if sum(a[i:j+1]) % (j-i+1) == 0:\n            dp[i][j] += 1\n\n# print(dp)\n\n# reconstruct solution\ndef reconstruct(i, j):\n    if i == j:\n        print(i+1, j+1)\n    else:\n        if dp[i][j] == dp[i][j-1]:\n            reconstruct(i, j-1)\n        elif dp[i][j] == dp[i+1][j]:\n            reconstruct(i+1, j)\n        else:\n            print(i+1, j+1)\n            reconstruct(i+1, j-1)\n\nprint(dp[0][n-1])\nreconstruct(0, n-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = 0\nfor i in range(n):\n    s += a[i]\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i+1, i+1)\nelse:\n    print(n-1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef solve(n, a):\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1] + a[i - 1]\n\n    d = {}\n    for i in range(n + 1):\n        for j in range(i + 1, n + 1):\n            s = dp[j] - dp[i]\n            if s in d:\n                d[s].append((i, j))\n            else:\n                d[s] = [(i, j)]\n\n    res = []\n    for k in d:\n        v = d[k]\n        v.sort()\n        for i in range(len(v) - 1):\n            if v[i][1] >= v[i + 1][0]:\n                continue\n            res.append(v[i])\n        res.append(v[-1])\n\n    res.sort()\n    print(len(res))\n    for r in res:\n        print(r[0], r[1])\n\nsolve(n, a)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# dp[i][j] = max number of blocks with sum j ending at i\ndp = [[0] * (2*10**5 + 1) for _ in range(n+1)]\n\nfor i in range(n):\n    for j in range(2*10**5 + 1):\n        dp[i+1][j] = max(dp[i][j], dp[i][j-a[i]] + 1)\n\n# print(dp)\n\n# find the max number of blocks\nmax_blocks = 0\nfor j in range(2*10**5 + 1):\n    max_blocks = max(max_blocks, dp[n][j])\n\nprint(max_blocks)\n\n# find the blocks\nblocks = []\nfor j in range(2*10**5 + 1):\n    if dp[n][j] == max_blocks:\n        i = n\n        while i > 0:\n            if dp[i][j] == max_blocks:\n                # print(i, j)\n                blocks.append((i, j))\n                j -= a[i-1]\n                max_blocks -= 1\n            i -= 1\n\n# print(blocks)\n\n# output\nfor i, j in blocks:\n    print(i, i)"
+    }
+  ],
+  "created": 1650424829,
+  "id": "cmpl-4yvBFqJnejmxXLruCqt0y3mjseqZV",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:21:52.097412 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndp = [1] * n\nfor i in range(n):\n    for j in range(i):\n        if a[i] == a[j] and dp[j] + 1 > dp[i]:\n            dp[i] = dp[j] + 1\n\nprint(max(dp))\n\nfor i in range(n):\n    if dp[i] == max(dp):\n        print(i + 1, i + 1)"
+}
+2022-04-20 03:21:52.097502 REASON stop
+2022-04-20 03:21:52.098442 1 {
+  "finish_reason": "length",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef find_blocks(arr):\n    n = len(arr)\n    dp = [[0 for i in range(n)] for j in range(n)]\n    for i in range(n):\n        dp[i][i] = arr[i]\n    for i in range(n-1):\n        dp[i][i+1] = arr[i] + arr[i+1]\n    for i in range(n-2):\n        for j in range(i+2, n):\n            dp[i][j] = dp[i][j-1] + arr[j]\n    for i in range(n-2):\n        for j in range(i+2, n):\n            if dp[i][j] % dp[i][i] == 0:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-3):\n        for j in range(i+3, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-4):\n        for j in range(i+4, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-5):\n        for j in range(i+5, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-6):\n        for j in range(i+6, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-7):\n        for j in range(i+7, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-8):\n        for j in range(i+8, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-9):\n        for j in range(i+9, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-10):\n        for j in range(i+10, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-11):\n        for j in range(i+11, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-12):\n        for j in range(i+12, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10][i+10]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-13):\n        for j in range(i+13, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10][i+10] and dp[i+11][j-11] == dp[i+11][i+11]:\n                dp[i][j] = dp[i][i]\n            else:\n                dp[i][j] = 0\n    for i in range(n-14):\n        for j in range(i+14, n):\n            if dp[i][j] == dp[i][i] and dp[i+1][j-1] == dp[i+1][i+1] and dp[i+2][j-2] == dp[i+2][i+2] and dp[i+3][j-3] == dp[i+3][i+3] and dp[i+4][j-4] == dp[i+4][i+4] and dp[i+5][j-5] == dp[i+5][i+5] and dp[i+6][j-6] == dp[i+6][i+6] and dp[i+7][j-7] == dp[i+7][i+7] and dp[i+8][j-8] == dp[i+8][i+8] and dp[i+9][j-9] == dp[i+9][i+9] and dp[i+10][j-10] == dp[i+10]["
+}
+2022-04-20 03:21:52.098551 REASON length
+2022-04-20 03:21:52.098566 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n#Solution\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef solve(n, a):\n    s = [0] * (n + 1)\n    for i in range(1, n + 1):\n        s[i] = s[i - 1] + a[i - 1]\n    d = {}\n    for i in range(1, n + 1):\n        for j in range(i, n + 1):\n            d[s[j] - s[i - 1]] = d.get(s[j] - s[i - 1], []) + [(i, j)]\n    ans = []\n    for v in d.values():\n        v.sort()\n        i = 0\n        while i < len(v):\n            j = i + 1\n            while j < len(v) and v[j][0] <= v[i][1]:\n                j += 1\n            ans.append(v[i])\n            i = j\n    ans.sort()\n    return ans\n\nans = solve(n, a)\nprint(len(ans))\nfor l, r in ans:\n    print(l, r)"
+}
+2022-04-20 03:21:52.098625 REASON stop
+2022-04-20 03:21:52.099285 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    s = sum(a)\n    if s % n != 0:\n        print(1)\n        print(1, n)\n    else:\n        s = s // n\n        l = 1\n        r = 1\n        ans = []\n        for i in range(1, n + 1):\n            if a[i - 1] == s:\n                r = i\n            else:\n                if r >= l:\n                    ans.append((l, r))\n                l = i + 1\n                r = i + 1\n        if r >= l:\n            ans.append((l, r))\n        print(len(ans))\n        for i in ans:\n            print(i[0], i[1])\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:21:52.099366 REASON stop
+2022-04-20 03:21:52.122802 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# dp[i][j] = max number of blocks from i to j\ndp = [[0 for i in range(n)] for j in range(n)]\n\n# dp[i][j] = max(dp[i][j-1], dp[i+1][j])\n# if sum(a[i:j+1]) % (j-i+1) == 0: dp[i][j] += 1\n\nfor i in range(n):\n    dp[i][i] = 1\n\nfor i in range(n-1, -1, -1):\n    for j in range(i, n):\n        dp[i][j] = max(dp[i][j-1], dp[i+1][j])\n        if sum(a[i:j+1]) % (j-i+1) == 0:\n            dp[i][j] += 1\n\n# print(dp)\n\n# reconstruct solution\ndef reconstruct(i, j):\n    if i == j:\n        print(i+1, j+1)\n    else:\n        if dp[i][j] == dp[i][j-1]:\n            reconstruct(i, j-1)\n        elif dp[i][j] == dp[i+1][j]:\n            reconstruct(i+1, j)\n        else:\n            print(i+1, j+1)\n            reconstruct(i+1, j-1)\n\nprint(dp[0][n-1])\nreconstruct(0, n-1)"
+}
+2022-04-20 03:21:52.123005 REASON stop
+2022-04-20 03:21:52.133445 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = 0\nfor i in range(n):\n    s += a[i]\n\nif s % n == 0:\n    print(n)\n    for i in range(n):\n        print(i+1, i+1)\nelse:\n    print(n-1)\n    print(1, n)\n    for i in range(1, n):\n        print(i, i)"
+}
+2022-04-20 03:21:52.133625 REASON stop
+2022-04-20 03:21:52.134659 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ndef solve(n, a):\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1] + a[i - 1]\n\n    d = {}\n    for i in range(n + 1):\n        for j in range(i + 1, n + 1):\n            s = dp[j] - dp[i]\n            if s in d:\n                d[s].append((i, j))\n            else:\n                d[s] = [(i, j)]\n\n    res = []\n    for k in d:\n        v = d[k]\n        v.sort()\n        for i in range(len(v) - 1):\n            if v[i][1] >= v[i + 1][0]:\n                continue\n            res.append(v[i])\n        res.append(v[-1])\n\n    res.sort()\n    print(len(res))\n    for r in res:\n        print(r[0], r[1])\n\nsolve(n, a)"
+}
+2022-04-20 03:21:52.134789 REASON stop
+2022-04-20 03:21:52.135483 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\n# dp[i][j] = max number of blocks with sum j ending at i\ndp = [[0] * (2*10**5 + 1) for _ in range(n+1)]\n\nfor i in range(n):\n    for j in range(2*10**5 + 1):\n        dp[i+1][j] = max(dp[i][j], dp[i][j-a[i]] + 1)\n\n# print(dp)\n\n# find the max number of blocks\nmax_blocks = 0\nfor j in range(2*10**5 + 1):\n    max_blocks = max(max_blocks, dp[n][j])\n\nprint(max_blocks)\n\n# find the blocks\nblocks = []\nfor j in range(2*10**5 + 1):\n    if dp[n][j] == max_blocks:\n        i = n\n        while i > 0:\n            if dp[i][j] == max_blocks:\n                # print(i, j)\n                blocks.append((i, j))\n                j -= a[i-1]\n                max_blocks -= 1\n            i -= 1\n\n# print(blocks)\n\n# output\nfor i, j in blocks:\n    print(i, i)"
+}
+2022-04-20 03:21:52.135715 REASON stop

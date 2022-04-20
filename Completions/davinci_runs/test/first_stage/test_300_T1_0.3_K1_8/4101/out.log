@@ -1,0 +1,167 @@
+2022-04-20 02:14:54.390178 """
+You are given a binary matrix $a$ of size $n \times m$. A binary matrix is a matrix where each element is either $0$ or $1$.
+
+You may perform some (possibly zero) operations with this matrix. During each operation you can inverse the row of this matrix or a column of this matrix. Formally, inverting a row is changing all values in this row to the opposite ($0$ to $1$, $1$ to $0$). Inverting a column is changing all values in this column to the opposite.
+
+Your task is to sort the initial matrix by some sequence of such operations. The matrix is considered sorted if the array $[a_{1, 1}, a_{1, 2}, \dots, a_{1, m}, a_{2, 1}, a_{2, 2}, \dots, a_{2, m}, \dots, a_{n, m - 1}, a_{n, m}]$ is sorted in non-descending order.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 200$) — the number of rows and the number of columns in the matrix.
+
+The next $n$ lines contain $m$ integers each. The $j$-th element in the $i$-th line is $a_{i, j}$ ($0 \le a_{i, j} \le 1$) — the element of $a$ at position $(i, j)$.
+
+
+-----Output-----
+
+If it is impossible to obtain a sorted matrix, print "NO" in the first line.
+
+Otherwise print "YES" in the first line. In the second line print a string $r$ of length $n$. The $i$-th character $r_i$ of this string should be '1' if the $i$-th row of the matrix is inverted and '0' otherwise. In the third line print a string $c$ of length $m$. The $j$-th character $c_j$ of this string should be '1' if the $j$-th column of the matrix is inverted and '0' otherwise. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+2 2
+1 1
+0 1
+
+Output
+YES
+00
+10
+
+Input
+3 4
+0 0 0 1
+0 0 0 0
+1 1 1 1
+
+Output
+YES
+010
+0000
+
+Input
+3 3
+0 0 0
+1 0 1
+1 1 0
+
+Output
+NO
+"""
+2022-04-20 02:14:54.390193 --------------------------
+2022-04-20 02:14:54.390300 using api key derek
+2022-04-20 02:16:15.341511 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\nr = [0] * n\nc = [0] * m\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1:\n            r[i] = 1\n            c[j] = 1\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (r[i] ^ c[j]):\n            print('NO')\n            exit(0)\n\nprint('YES')\nprint(''.join(map(str, r)))\nprint(''.join(map(str, c)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, sys.stdin.readline().split())))\n    r = [0] * n\n    c = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (r[i] ^ c[j]):\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = []\n    for _ in range(n):\n        a.append(list(map(int, input().split())))\n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                ans.append((i, j))\n                break\n    if len(ans) == n:\n        print('YES')\n        print('0' * n)\n        print('0' * m)\n        return\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                ans.append((i, j))\n                break\n    if len(ans) == n + m:\n        print('YES')\n        print('0' * n)\n        print('0' * m)\n        return\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, sys.stdin.readline().split())))\n    r = [0] * n\n    c = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if r[i] == 1 and c[j] == 1:\n                a[i][j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = []\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                for k in range(m):\n                    matrix[i][k] = 1 - matrix[i][k]\n                for k in range(n):\n                    matrix[k][j] = 1 - matrix[k][j]\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"0\" * n)\n    print(\"0\" * m)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\na = []\n\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# print(a)\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#    "
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\nr = [0] * n\nc = [0] * m\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1:\n            r[i] = 1\n            c[j] = 1\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1 and r[i] == 0 and c[j] == 0:\n            print(\"NO\")\n            exit()\n\nprint(\"YES\")\nprint(\"\".join(map(str, r)))\nprint(\"\".join(map(str, c)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\ndef check(a):\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != a[0][0]:\n                return False\n    return True\n\ndef invert_row(a, i):\n    for j in range(m):\n        a[i][j] = 1 - a[i][j]\n\ndef invert_column(a, j):\n    for i in range(n):\n        a[i][j] = 1 - a[i][j]\n\ndef solve(a):\n    if check(a):\n        return 'YES\\n' + '0' * n + '\\n' + '0' * m\n    for i in range(n):\n        invert_row(a, i)\n        if check(a):\n            return 'YES\\n' + '1' * i + '0' * (n - i - 1) + '\\n' + '0' * m\n        invert_row(a, i)\n    for j in range(m):\n        invert_column(a, j)\n        if check(a):\n            return 'YES\\n' + '0' * n + '\\n' + '1' * j + '0' * (m - j - 1)\n        invert_column(a, j)\n    return 'NO'\n\nprint(solve(a))"
+    }
+  ],
+  "created": 1650420894,
+  "id": "cmpl-4yu9mm7kzY9doYMOCo1SphRWbHOOv",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:16:15.341958 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for i in range(n)]\n\nr = [0] * n\nc = [0] * m\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1:\n            r[i] = 1\n            c[j] = 1\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] != (r[i] ^ c[j]):\n            print('NO')\n            exit(0)\n\nprint('YES')\nprint(''.join(map(str, r)))\nprint(''.join(map(str, c)))"
+}
+2022-04-20 02:16:15.342003 REASON stop
+2022-04-20 02:16:15.342419 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, sys.stdin.readline().split())))\n    r = [0] * n\n    c = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != (r[i] ^ c[j]):\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:16:15.342482 REASON stop
+2022-04-20 02:16:15.342865 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = []\n    for _ in range(n):\n        a.append(list(map(int, input().split())))\n    ans = []\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                ans.append((i, j))\n                break\n    if len(ans) == n:\n        print('YES')\n        print('0' * n)\n        print('0' * m)\n        return\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 1:\n                ans.append((i, j))\n                break\n    if len(ans) == n + m:\n        print('YES')\n        print('0' * n)\n        print('0' * m)\n        return\n    print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:16:15.342927 REASON stop
+2022-04-20 02:16:15.357408 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, sys.stdin.readline().split())))\n    r = [0] * n\n    c = [0] * m\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                r[i] = 1\n                c[j] = 1\n    for i in range(n):\n        for j in range(m):\n            if r[i] == 1 and c[j] == 1:\n                a[i][j] = 1\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] == 0:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"\".join(map(str, r)))\n    print(\"\".join(map(str, c)))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:16:15.357533 REASON stop
+2022-04-20 02:16:15.376259 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    matrix = []\n    for i in range(n):\n        matrix.append(list(map(int, input().split())))\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                for k in range(m):\n                    matrix[i][k] = 1 - matrix[i][k]\n                for k in range(n):\n                    matrix[k][j] = 1 - matrix[k][j]\n    for i in range(n):\n        for j in range(m):\n            if matrix[i][j] == 1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    print(\"0\" * n)\n    print(\"0\" * m)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:16:15.376401 REASON stop
+2022-04-20 02:16:15.397031 5 {
+  "finish_reason": "length",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\na = []\n\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\n# print(a)\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#     for j in range(m):\n#         print(a[i][j], end=' ')\n#     print()\n\n# print()\n\n# for i in range(n):\n#     for j in range(m):\n#         if a[i][j] == 0:\n#             a[i][j] = 1\n#         else:\n#             a[i][j] = 0\n\n# for i in range(n):\n#    "
+}
+2022-04-20 02:16:15.397224 REASON length
+2022-04-20 02:16:15.397234 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\na = []\nfor i in range(n):\n    a.append(list(map(int, input().split())))\n\nr = [0] * n\nc = [0] * m\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1:\n            r[i] = 1\n            c[j] = 1\n\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] == 1 and r[i] == 0 and c[j] == 0:\n            print(\"NO\")\n            exit()\n\nprint(\"YES\")\nprint(\"\".join(map(str, r)))\nprint(\"\".join(map(str, c)))"
+}
+2022-04-20 02:16:15.397267 REASON stop
+2022-04-20 02:16:15.397720 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\n# Solution\n\nn, m = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\n\ndef check(a):\n    for i in range(n):\n        for j in range(m):\n            if a[i][j] != a[0][0]:\n                return False\n    return True\n\ndef invert_row(a, i):\n    for j in range(m):\n        a[i][j] = 1 - a[i][j]\n\ndef invert_column(a, j):\n    for i in range(n):\n        a[i][j] = 1 - a[i][j]\n\ndef solve(a):\n    if check(a):\n        return 'YES\\n' + '0' * n + '\\n' + '0' * m\n    for i in range(n):\n        invert_row(a, i)\n        if check(a):\n            return 'YES\\n' + '1' * i + '0' * (n - i - 1) + '\\n' + '0' * m\n        invert_row(a, i)\n    for j in range(m):\n        invert_column(a, j)\n        if check(a):\n            return 'YES\\n' + '0' * n + '\\n' + '1' * j + '0' * (m - j - 1)\n        invert_column(a, j)\n    return 'NO'\n\nprint(solve(a))"
+}
+2022-04-20 02:16:15.397879 REASON stop

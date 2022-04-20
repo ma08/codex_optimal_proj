@@ -1,0 +1,158 @@
+2022-04-20 02:54:14.510941 """
+There are $n$ distinct points on a coordinate line, the coordinate of $i$-th point equals to $x_i$. Choose a subset of the given set of points such that the distance between each pair of points in a subset is an integral power of two. It is necessary to consider each pair of points, not only adjacent. Note that any subset containing one element satisfies the condition above. Among all these subsets, choose a subset with maximum possible size.
+
+In other words, you have to choose the maximum possible number of points $x_{i_1}, x_{i_2}, \dots, x_{i_m}$ such that for each pair $x_{i_j}$, $x_{i_k}$ it is true that $|x_{i_j} - x_{i_k}| = 2^d$ where $d$ is some non-negative integer number (not necessarily the same for each pair of points).
+
+
+-----Input-----
+
+The first line contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of points.
+
+The second line contains $n$ pairwise distinct integers $x_1, x_2, \dots, x_n$ ($-10^9 \le x_i \le 10^9$) — the coordinates of points.
+
+
+-----Output-----
+
+In the first line print $m$ — the maximum possible number of points in a subset that satisfies the conditions described above.
+
+In the second line print $m$ integers — the coordinates of points in the subset you have chosen.
+
+If there are multiple answers, print any of them.
+
+
+-----Examples-----
+Input
+6
+3 5 4 7 10 12
+
+Output
+3
+7 3 5
+Input
+5
+-1 2 5 8 11
+
+Output
+1
+8
+
+
+
+-----Note-----
+
+In the first example the answer is $[7, 3, 5]$. Note, that $|7-3|=4=2^2$, $|7-5|=2=2^1$ and $|3-5|=2=2^1$. You can't find a subset having more points satisfying the required property.
+"""
+2022-04-20 02:54:14.510978 --------------------------
+2022-04-20 02:54:14.511133 using api key derek
+2022-04-20 02:54:33.376052 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn = int(input())\nx = list(map(int, input().split()))\n\nl = [0] * (2 * 10 ** 5 + 1)\nfor i in x:\n    l[i] = 1\n\nans = 0\nfor i in range(2 * 10 ** 5 + 1):\n    if l[i] == 1:\n        j = i\n        while j < 2 * 10 ** 5 + 1:\n            if l[j] == 1:\n                ans += 1\n            j *= 2\n\nprint(ans)\n\nfor i in range(2 * 10 ** 5 + 1):\n    if l[i] == 1:\n        j = i\n        while j < 2 * 10 ** 5 + 1:\n            if l[j] == 1:\n                print(j, end=' ')\n            j *= 2"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int, input().split()))\n\nx = sorted(x)\n\nans = []\n\nfor i in range(n-1):\n    if x[i+1] - x[i] == 2:\n        ans.append(x[i])\n        ans.append(x[i+1])\n    elif x[i+1] - x[i] > 2:\n        ans.append(x[i])\n\nans.append(x[-1])\n\nprint(len(ans))\nprint(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    x = [int(i) for i in sys.stdin.readline().strip().split()]\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[abs(x[i]-x[j])] = d.get(abs(x[i]-x[j]), 0) + 1\n    max_d = max(d.values())\n    for i in d:\n        if d[i] == max_d:\n            max_d = i\n            break\n    ans = []\n    for i in range(n):\n        for j in range(i+1, n):\n            if abs(x[i]-x[j]) == max_d:\n                ans.append(x[i])\n                ans.append(x[j])\n    ans = list(set(ans))\n    ans.sort()\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = [int(i) for i in input().split()]\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[x[j] - x[i]] = d.get(x[j] - x[i], []) + [(x[i], x[j])]\n    ans = 0\n    for i in range(1, 31):\n        c = 0\n        for j in d.get(2**i, []):\n            if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                c += 1\n        ans = max(ans, c)\n    print(ans)\n    for i in range(1, 31):\n        c = 0\n        for j in d.get(2**i, []):\n            if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                c += 1\n        if c == ans:\n            for j in d.get(2**i, []):\n                if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                    print(j[0], j[1], end=' ')\n            break\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    x = [int(i) for i in sys.stdin.readline().split()]\n    x.sort()\n    ans = []\n    for i in range(n):\n        if len(ans) == 0:\n            ans.append(x[i])\n        else:\n            if x[i] - ans[-1] == 2:\n                ans.append(x[i])\n            elif x[i] - ans[-1] == 1:\n                ans[-1] = x[i]\n            elif x[i] - ans[-1] == 0:\n                pass\n            else:\n                ans = []\n                ans.append(x[i])\n    print(len(ans))\n    print(' '.join([str(i) for i in ans]))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = []\n    for i in range(n):\n        flag = True\n        for j in range(i+1, n):\n            if abs(x[i]-x[j]) not in ans:\n                ans.append(abs(x[i]-x[j]))\n            else:\n                flag = False\n                break\n        if flag:\n            break\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            if x[j] - x[i] in d:\n                d[x[j] - x[i]].append((x[i], x[j]))\n            else:\n                d[x[j] - x[i]] = [(x[i], x[j])]\n    m = 0\n    for i in d:\n        if len(d[i]) > m:\n            m = len(d[i])\n            t = i\n    print(m)\n    for i in d[t]:\n        print(i[0], end=' ')\n    print(d[t][-1][1])\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nd = {}\nfor i in range(n):\n    for j in range(i+1, n):\n        k = a[j] - a[i]\n        if k not in d:\n            d[k] = []\n        d[k].append((a[i], a[j]))\n\nans = []\nfor k in d:\n    if k == 0:\n        continue\n    if k not in d:\n        continue\n    if k % 2 != 0:\n        continue\n    if k//2 not in d:\n        continue\n    for x in d[k]:\n        if x[0]//2 in d[k//2] or x[1]//2 in d[k//2]:\n            ans.append(x)\n\nprint(len(ans))\nfor x in ans:\n    print(x[0], x[1], sep=\" \")"
+    }
+  ],
+  "created": 1650423254,
+  "id": "cmpl-4yulqRW1QALhhQSFPlL15A0SBAd9R",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:54:33.376491 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn = int(input())\nx = list(map(int, input().split()))\n\nl = [0] * (2 * 10 ** 5 + 1)\nfor i in x:\n    l[i] = 1\n\nans = 0\nfor i in range(2 * 10 ** 5 + 1):\n    if l[i] == 1:\n        j = i\n        while j < 2 * 10 ** 5 + 1:\n            if l[j] == 1:\n                ans += 1\n            j *= 2\n\nprint(ans)\n\nfor i in range(2 * 10 ** 5 + 1):\n    if l[i] == 1:\n        j = i\n        while j < 2 * 10 ** 5 + 1:\n            if l[j] == 1:\n                print(j, end=' ')\n            j *= 2"
+}
+2022-04-20 02:54:33.376562 REASON stop
+2022-04-20 02:54:33.377675 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\nn = int(input())\nx = list(map(int, input().split()))\n\nx = sorted(x)\n\nans = []\n\nfor i in range(n-1):\n    if x[i+1] - x[i] == 2:\n        ans.append(x[i])\n        ans.append(x[i+1])\n    elif x[i+1] - x[i] > 2:\n        ans.append(x[i])\n\nans.append(x[-1])\n\nprint(len(ans))\nprint(*ans)"
+}
+2022-04-20 02:54:33.377808 REASON stop
+2022-04-20 02:54:33.378492 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    x = [int(i) for i in sys.stdin.readline().strip().split()]\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[abs(x[i]-x[j])] = d.get(abs(x[i]-x[j]), 0) + 1\n    max_d = max(d.values())\n    for i in d:\n        if d[i] == max_d:\n            max_d = i\n            break\n    ans = []\n    for i in range(n):\n        for j in range(i+1, n):\n            if abs(x[i]-x[j]) == max_d:\n                ans.append(x[i])\n                ans.append(x[j])\n    ans = list(set(ans))\n    ans.sort()\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:54:33.378579 REASON stop
+2022-04-20 02:54:33.379656 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = [int(i) for i in input().split()]\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            d[x[j] - x[i]] = d.get(x[j] - x[i], []) + [(x[i], x[j])]\n    ans = 0\n    for i in range(1, 31):\n        c = 0\n        for j in d.get(2**i, []):\n            if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                c += 1\n        ans = max(ans, c)\n    print(ans)\n    for i in range(1, 31):\n        c = 0\n        for j in d.get(2**i, []):\n            if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                c += 1\n        if c == ans:\n            for j in d.get(2**i, []):\n                if j[0] in d.get(2**(i-1), []) or j[1] in d.get(2**(i-1), []):\n                    print(j[0], j[1], end=' ')\n            break\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:54:33.379745 REASON stop
+2022-04-20 02:54:33.380698 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    x = [int(i) for i in sys.stdin.readline().split()]\n    x.sort()\n    ans = []\n    for i in range(n):\n        if len(ans) == 0:\n            ans.append(x[i])\n        else:\n            if x[i] - ans[-1] == 2:\n                ans.append(x[i])\n            elif x[i] - ans[-1] == 1:\n                ans[-1] = x[i]\n            elif x[i] - ans[-1] == 0:\n                pass\n            else:\n                ans = []\n                ans.append(x[i])\n    print(len(ans))\n    print(' '.join([str(i) for i in ans]))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:54:33.380833 REASON stop
+2022-04-20 02:54:33.381631 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    ans = []\n    for i in range(n):\n        flag = True\n        for j in range(i+1, n):\n            if abs(x[i]-x[j]) not in ans:\n                ans.append(abs(x[i]-x[j]))\n            else:\n                flag = False\n                break\n        if flag:\n            break\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:54:33.381726 REASON stop
+2022-04-20 02:54:33.382702 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    x = list(map(int, input().split()))\n    x.sort()\n    d = {}\n    for i in range(n):\n        for j in range(i+1, n):\n            if x[j] - x[i] in d:\n                d[x[j] - x[i]].append((x[i], x[j]))\n            else:\n                d[x[j] - x[i]] = [(x[i], x[j])]\n    m = 0\n    for i in d:\n        if len(d[i]) > m:\n            m = len(d[i])\n            t = i\n    print(m)\n    for i in d[t]:\n        print(i[0], end=' ')\n    print(d[t][-1][1])\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:54:33.382794 REASON stop
+2022-04-20 02:54:33.384175 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\na.sort()\n\nd = {}\nfor i in range(n):\n    for j in range(i+1, n):\n        k = a[j] - a[i]\n        if k not in d:\n            d[k] = []\n        d[k].append((a[i], a[j]))\n\nans = []\nfor k in d:\n    if k == 0:\n        continue\n    if k not in d:\n        continue\n    if k % 2 != 0:\n        continue\n    if k//2 not in d:\n        continue\n    for x in d[k]:\n        if x[0]//2 in d[k//2] or x[1]//2 in d[k//2]:\n            ans.append(x)\n\nprint(len(ans))\nfor x in ans:\n    print(x[0], x[1], sep=\" \")"
+}
+2022-04-20 02:54:33.384393 REASON stop

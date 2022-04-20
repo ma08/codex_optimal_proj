@@ -1,0 +1,155 @@
+2022-04-20 03:57:30.716083 """
+There are $n$ kids, numbered from $1$ to $n$, dancing in a circle around the Christmas tree. Let's enumerate them in a clockwise direction as $p_1$, $p_2$, ..., $p_n$ (all these numbers are from $1$ to $n$ and are distinct, so $p$ is a permutation). Let the next kid for a kid $p_i$ be kid $p_{i + 1}$ if $i < n$ and $p_1$ otherwise. After the dance, each kid remembered two kids: the next kid (let's call him $x$) and the next kid for $x$. Each kid told you which kids he/she remembered: the kid $i$ remembered kids $a_{i, 1}$ and $a_{i, 2}$. However, the order of $a_{i, 1}$ and $a_{i, 2}$ can differ from their order in the circle. [Image] Example: 5 kids in a circle, $p=[3, 2, 4, 1, 5]$ (or any cyclic shift). The information kids remembered is: $a_{1,1}=3$, $a_{1,2}=5$; $a_{2,1}=1$, $a_{2,2}=4$; $a_{3,1}=2$, $a_{3,2}=4$; $a_{4,1}=1$, $a_{4,2}=5$; $a_{5,1}=2$, $a_{5,2}=3$. 
+
+You have to restore the order of the kids in the circle using this information. If there are several answers, you may print any. It is guaranteed that at least one solution exists.
+
+If you are Python programmer, consider using PyPy instead of Python when you submit your code.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($3 \le n \le 2 \cdot 10^5$) — the number of the kids.
+
+The next $n$ lines contain $2$ integers each. The $i$-th line contains two integers $a_{i, 1}$ and $a_{i, 2}$ ($1 \le a_{i, 1}, a_{i, 2} \le n, a_{i, 1} \ne a_{i, 2}$) — the kids the $i$-th kid remembered, given in arbitrary order.
+
+
+-----Output-----
+
+Print $n$ integers $p_1$, $p_2$, ..., $p_n$ — permutation of integers from $1$ to $n$, which corresponds to the order of kids in the circle. If there are several answers, you may print any (for example, it doesn't matter which kid is the first in the circle). It is guaranteed that at least one solution exists.
+
+
+-----Examples-----
+Input
+5
+3 5
+1 4
+2 4
+1 5
+2 3
+
+Output
+3 2 4 1 5 
+
+Input
+3
+2 3
+3 1
+1 2
+
+Output
+3 1 2
+"""
+2022-04-20 03:57:30.716113 --------------------------
+2022-04-20 03:57:30.716270 using api key sourya
+2022-04-20 03:58:56.267815 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    kids = [[] for i in range(n)]\n    for i in range(n):\n        a, b = [int(x) for x in input().split()]\n        kids[i] = [a, b]\n    # print(kids)\n\n    # find the first kid\n    for i in range(n):\n        if kids[i][0] in kids[kids[i][1] - 1] and kids[i][1] in kids[kids[i][0] - 1]:\n            first = i + 1\n            break\n    # print(first)\n\n    # find the rest of the order\n    order = [first]\n    for i in range(n - 1):\n        if kids[order[i] - 1][0] in kids[order[i] - 1]:\n            order.append(kids[order[i] - 1][0])\n        else:\n            order.append(kids[order[i] - 1][1])\n    # print(order)\n\n    for i in range(n):\n        print(order[i], end=' ')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    b = [0] * n\n    for i in range(n):\n        for j in range(2):\n            b[a[i][j] - 1] += 1\n    for i in range(n):\n        if b[i] == 1:\n            c = i + 1\n            break\n    d = [c]\n    for i in range(n - 1):\n        for j in range(2):\n            if a[d[i] - 1][j] != c:\n                c = a[d[i] - 1][j]\n                break\n        d.append(c)\n    print(' '.join(map(str, d)))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# n = int(input())\n# a = []\n# for i in range(n):\n#     a.append(list(map(int, input().split())))\n\nn = 5\na = [[3, 5], [1, 4], [2, 4], [1, 5], [2, 3]]\n\n# n = 3\n# a = [[2, 3], [3, 1], [1, 2]]\n\n# n = 4\n# a = [[2, 4], [3, 1], [4, 3], [1, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = [[0,0] for i in range(n)]\n    for i in range(n):\n        a[i][0], a[i][1] = map(int, input().split())\n    p = [0 for i in range(n)]\n    p[0] = a[0][0]\n    p[1] = a[p[0]-1][0]\n    for i in range(2,n):\n        p[i] = a[p[i-2]-1][0]\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = [[0, 0] for i in range(n)]\n    for i in range(n):\n        a[i][0], a[i][1] = map(int, sys.stdin.readline().split())\n    p = [0] * n\n    p[0] = 1\n    p[1] = a[0][0]\n    p[2] = a[0][1]\n    for i in range(3, n):\n        for j in range(0, i):\n            if p[j] == a[p[i - 1] - 1][0]:\n                p[i] = a[p[i - 1] - 1][1]\n                break\n            elif p[j] == a[p[i - 1] - 1][1]:\n                p[i] = a[p[i - 1] - 1][0]\n                break\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = [[0 for i in range(2)] for j in range(n)]\nfor i in range(n):\n    a[i] = list(map(int, input().split()))\n\n#print(a)\n\np = [0 for i in range(n)]\n\np[0] = a[0][0]\np[1] = a[0][1]\n\nfor i in range(2, n):\n    if a[p[i-1]-1][0] == p[i-2]:\n        p[i] = a[p[i-1]-1][1]\n    else:\n        p[i] = a[p[i-1]-1][0]\n\nprint(*p)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    p = [0]*n\n    p[0] = 1\n    p[a[0][0]-1] = a[0][1]\n    p[a[0][1]-1] = a[0][0]\n    for i in range(1, n):\n        if p[i] == 0:\n            p[i] = a[i][0]\n            p[a[i][0]-1] = a[i][1]\n            p[a[i][1]-1] = a[i][0]\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    for i in range(n):\n        if a[i][0] == i + 1:\n            a[i][0] = a[i][1]\n            a[i][1] = i + 1\n    b = [0] * n\n    for i in range(n):\n        b[i] = a[i][0]\n    for i in range(n):\n        if b[i] == 0:\n            b[i] = i + 1\n    for i in range(n):\n        if b[i] == 0:\n            b[i] = a[i][1]\n    print(*b)\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650427050,
+  "id": "cmpl-4yvl4rGU0iMVRnaw31pPhj9JlhwG5",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:58:56.268446 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    kids = [[] for i in range(n)]\n    for i in range(n):\n        a, b = [int(x) for x in input().split()]\n        kids[i] = [a, b]\n    # print(kids)\n\n    # find the first kid\n    for i in range(n):\n        if kids[i][0] in kids[kids[i][1] - 1] and kids[i][1] in kids[kids[i][0] - 1]:\n            first = i + 1\n            break\n    # print(first)\n\n    # find the rest of the order\n    order = [first]\n    for i in range(n - 1):\n        if kids[order[i] - 1][0] in kids[order[i] - 1]:\n            order.append(kids[order[i] - 1][0])\n        else:\n            order.append(kids[order[i] - 1][1])\n    # print(order)\n\n    for i in range(n):\n        print(order[i], end=' ')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:58:56.268542 REASON stop
+2022-04-20 03:58:56.269529 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    b = [0] * n\n    for i in range(n):\n        for j in range(2):\n            b[a[i][j] - 1] += 1\n    for i in range(n):\n        if b[i] == 1:\n            c = i + 1\n            break\n    d = [c]\n    for i in range(n - 1):\n        for j in range(2):\n            if a[d[i] - 1][j] != c:\n                c = a[d[i] - 1][j]\n                break\n        d.append(c)\n    print(' '.join(map(str, d)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:58:56.269627 REASON stop
+2022-04-20 03:58:56.270287 2 {
+  "finish_reason": "length",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# n = int(input())\n# a = []\n# for i in range(n):\n#     a.append(list(map(int, input().split())))\n\nn = 5\na = [[3, 5], [1, 4], [2, 4], [1, 5], [2, 3]]\n\n# n = 3\n# a = [[2, 3], [3, 1], [1, 2]]\n\n# n = 4\n# a = [[2, 4], [3, 1], [4, 3], [1, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5\n# a = [[2, 4], [3, 1], [4, 3], [1, 5], [5, 2]]\n\n# n = 5"
+}
+2022-04-20 03:58:56.270393 REASON length
+2022-04-20 03:58:56.270404 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = [[0,0] for i in range(n)]\n    for i in range(n):\n        a[i][0], a[i][1] = map(int, input().split())\n    p = [0 for i in range(n)]\n    p[0] = a[0][0]\n    p[1] = a[p[0]-1][0]\n    for i in range(2,n):\n        p[i] = a[p[i-2]-1][0]\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:58:56.270461 REASON stop
+2022-04-20 03:58:56.293413 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    a = [[0, 0] for i in range(n)]\n    for i in range(n):\n        a[i][0], a[i][1] = map(int, sys.stdin.readline().split())\n    p = [0] * n\n    p[0] = 1\n    p[1] = a[0][0]\n    p[2] = a[0][1]\n    for i in range(3, n):\n        for j in range(0, i):\n            if p[j] == a[p[i - 1] - 1][0]:\n                p[i] = a[p[i - 1] - 1][1]\n                break\n            elif p[j] == a[p[i - 1] - 1][1]:\n                p[i] = a[p[i - 1] - 1][0]\n                break\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:58:56.293571 REASON stop
+2022-04-20 03:58:56.294396 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = [[0 for i in range(2)] for j in range(n)]\nfor i in range(n):\n    a[i] = list(map(int, input().split()))\n\n#print(a)\n\np = [0 for i in range(n)]\n\np[0] = a[0][0]\np[1] = a[0][1]\n\nfor i in range(2, n):\n    if a[p[i-1]-1][0] == p[i-2]:\n        p[i] = a[p[i-1]-1][1]\n    else:\n        p[i] = a[p[i-1]-1][0]\n\nprint(*p)"
+}
+2022-04-20 03:58:56.294551 REASON stop
+2022-04-20 03:58:56.308602 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    p = [0]*n\n    p[0] = 1\n    p[a[0][0]-1] = a[0][1]\n    p[a[0][1]-1] = a[0][0]\n    for i in range(1, n):\n        if p[i] == 0:\n            p[i] = a[i][0]\n            p[a[i][0]-1] = a[i][1]\n            p[a[i][1]-1] = a[i][0]\n    print(*p)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:58:56.308788 REASON stop
+2022-04-20 03:58:56.309430 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = []\n    for i in range(n):\n        a.append(list(map(int, input().split())))\n    for i in range(n):\n        if a[i][0] == i + 1:\n            a[i][0] = a[i][1]\n            a[i][1] = i + 1\n    b = [0] * n\n    for i in range(n):\n        b[i] = a[i][0]\n    for i in range(n):\n        if b[i] == 0:\n            b[i] = i + 1\n    for i in range(n):\n        if b[i] == 0:\n            b[i] = a[i][1]\n    print(*b)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:58:56.309660 REASON stop

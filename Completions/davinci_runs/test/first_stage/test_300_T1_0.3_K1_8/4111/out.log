@@ -1,0 +1,170 @@
+2022-04-20 02:23:10.182792 """
+Tanya has $n$ candies numbered from $1$ to $n$. The $i$-th candy has the weight $a_i$.
+
+She plans to eat exactly $n-1$ candies and give the remaining candy to her dad. Tanya eats candies in order of increasing their numbers, exactly one candy per day.
+
+Your task is to find the number of such candies $i$ (let's call these candies good) that if dad gets the $i$-th candy then the sum of weights of candies Tanya eats in even days will be equal to the sum of weights of candies Tanya eats in odd days. Note that at first, she will give the candy, after it she will eat the remaining candies one by one.
+
+For example, $n=4$ and weights are $[1, 4, 3, 3]$. Consider all possible cases to give a candy to dad:  Tanya gives the $1$-st candy to dad ($a_1=1$), the remaining candies are $[4, 3, 3]$. She will eat $a_2=4$ in the first day, $a_3=3$ in the second day, $a_4=3$ in the third day. So in odd days she will eat $4+3=7$ and in even days she will eat $3$. Since $7 \ne 3$ this case shouldn't be counted to the answer (this candy isn't good).  Tanya gives the $2$-nd candy to dad ($a_2=4$), the remaining candies are $[1, 3, 3]$. She will eat $a_1=1$ in the first day, $a_3=3$ in the second day, $a_4=3$ in the third day. So in odd days she will eat $1+3=4$ and in even days she will eat $3$. Since $4 \ne 3$ this case shouldn't be counted to the answer (this candy isn't good).  Tanya gives the $3$-rd candy to dad ($a_3=3$), the remaining candies are $[1, 4, 3]$. She will eat $a_1=1$ in the first day, $a_2=4$ in the second day, $a_4=3$ in the third day. So in odd days she will eat $1+3=4$ and in even days she will eat $4$. Since $4 = 4$ this case should be counted to the answer (this candy is good).  Tanya gives the $4$-th candy to dad ($a_4=3$), the remaining candies are $[1, 4, 3]$. She will eat $a_1=1$ in the first day, $a_2=4$ in the second day, $a_3=3$ in the third day. So in odd days she will eat $1+3=4$ and in even days she will eat $4$. Since $4 = 4$ this case should be counted to the answer (this candy is good). 
+
+In total there $2$ cases which should counted (these candies are good), so the answer is $2$.
+
+
+-----Input-----
+
+The first line of the input contains one integer $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of candies.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^4$), where $a_i$ is the weight of the $i$-th candy.
+
+
+-----Output-----
+
+Print one integer — the number of such candies $i$ (good candies) that if dad gets the $i$-th candy then the sum of weights of candies Tanya eats in even days will be equal to the sum of weights of candies Tanya eats in odd days.
+
+
+-----Examples-----
+Input
+7
+5 5 4 5 5 5 6
+
+Output
+2
+
+Input
+8
+4 8 8 7 8 4 4 5
+
+Output
+2
+
+Input
+9
+2 3 4 2 2 3 2 2 4
+
+Output
+3
+
+
+
+-----Note-----
+
+In the first example indices of good candies are $[1, 2]$.
+
+In the second example indices of good candies are $[2, 3]$.
+
+In the third example indices of good candies are $[4, 5, 9]$.
+"""
+2022-04-20 02:23:10.182812 --------------------------
+2022-04-20 02:23:10.182927 using api key gabby
+2022-04-20 02:23:20.609229 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n    if even == odd:\n        ans += 1\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    i = 0\n    j = n-1\n    cnt = 0\n    while i < j:\n        if a[i] == a[j]:\n            cnt += 1\n        i += 1\n        j -= 1\n    print(cnt)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = 0\nfor i in range(n):\n    s += a[i]\n\nodd = 0\neven = 0\nans = 0\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n    if odd + (s - odd - a[i]) == even:\n        ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    odd = 0\n    even = 0\n    ans = 0\n    for i in range(n):\n        if i % 2 == 0:\n            odd += a[i]\n        else:\n            even += a[i]\n    for i in range(n):\n        if i % 2 == 0:\n            if odd - a[i] == even:\n                ans += 1\n        else:\n            if even - a[i] == odd:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\neven = 0\nodd = 0\n\nfor i in range(n):\n    if i%2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\nfor i in range(n):\n    if i%2 == 0:\n        even -= a[i]\n        if even == odd:\n            ans += 1\n        odd += a[i]\n    else:\n        odd -= a[i]\n        if even == odd:\n            ans += 1\n        even += a[i]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n    if even == odd:\n        ans += 1\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = sum(a)\n\nodd = 0\neven = 0\n\nans = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n\n    if odd == even:\n        ans += 1\n\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nif even == odd:\n    print(1)\nelse:\n    print(0)"
+    }
+  ],
+  "created": 1650421390,
+  "id": "cmpl-4yuHmlrs200rLggastOTpD1L3wLvK",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:23:20.609577 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#-----Solution-----\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n    if even == odd:\n        ans += 1\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+}
+2022-04-20 02:23:20.609614 REASON stop
+2022-04-20 02:23:20.610106 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    i = 0\n    j = n-1\n    cnt = 0\n    while i < j:\n        if a[i] == a[j]:\n            cnt += 1\n        i += 1\n        j -= 1\n    print(cnt)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:23:20.610160 REASON stop
+2022-04-20 02:23:20.610570 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = 0\nfor i in range(n):\n    s += a[i]\n\nodd = 0\neven = 0\nans = 0\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n    if odd + (s - odd - a[i]) == even:\n        ans += 1\n\nprint(ans)"
+}
+2022-04-20 02:23:20.610653 REASON stop
+2022-04-20 02:23:20.611977 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    odd = 0\n    even = 0\n    ans = 0\n    for i in range(n):\n        if i % 2 == 0:\n            odd += a[i]\n        else:\n            even += a[i]\n    for i in range(n):\n        if i % 2 == 0:\n            if odd - a[i] == even:\n                ans += 1\n        else:\n            if even - a[i] == odd:\n                ans += 1\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:23:20.612045 REASON stop
+2022-04-20 02:23:20.621096 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\neven = 0\nodd = 0\n\nfor i in range(n):\n    if i%2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\nfor i in range(n):\n    if i%2 == 0:\n        even -= a[i]\n        if even == odd:\n            ans += 1\n        odd += a[i]\n    else:\n        odd -= a[i]\n        if even == odd:\n            ans += 1\n        even += a[i]\n\nprint(ans)"
+}
+2022-04-20 02:23:20.621212 REASON stop
+2022-04-20 02:23:20.621880 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nans = 0\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n    if even == odd:\n        ans += 1\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+}
+2022-04-20 02:23:20.621964 REASON stop
+2022-04-20 02:23:20.637252 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\ns = sum(a)\n\nodd = 0\neven = 0\n\nans = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nfor i in range(n):\n    if i % 2 == 0:\n        even -= a[i]\n    else:\n        odd -= a[i]\n\n    if odd == even:\n        ans += 1\n\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nprint(ans)"
+}
+2022-04-20 02:23:20.637412 REASON stop
+2022-04-20 02:23:20.638565 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\na = list(map(int, input().split()))\n\nodd = 0\neven = 0\n\nfor i in range(n):\n    if i % 2 == 0:\n        even += a[i]\n    else:\n        odd += a[i]\n\nif even == odd:\n    print(1)\nelse:\n    print(0)"
+}
+2022-04-20 02:23:20.638775 REASON stop

@@ -1,0 +1,166 @@
+2022-04-20 03:21:52.825811 """
+You are given an array $a$, consisting of $n$ positive integers.
+
+Let's call a concatenation of numbers $x$ and $y$ the number that is obtained by writing down numbers $x$ and $y$ one right after another without changing the order. For example, a concatenation of numbers $12$ and $3456$ is a number $123456$.
+
+Count the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $k$ ($1 \le n \le 2 \cdot 10^5$, $2 \le k \le 10^9$).
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^9$).
+
+
+-----Output-----
+
+Print a single integer — the number of ordered pairs of positions $(i, j)$ ($i \neq j$) in array $a$ such that the concatenation of $a_i$ and $a_j$ is divisible by $k$.
+
+
+-----Examples-----
+Input
+6 11
+45 1 10 12 11 7
+
+Output
+7
+
+Input
+4 2
+2 78 4 10
+
+Output
+12
+
+Input
+5 2
+3 7 19 3 3
+
+Output
+0
+
+
+
+-----Note-----
+
+In the first example pairs $(1, 2)$, $(1, 3)$, $(2, 3)$, $(3, 1)$, $(3, 4)$, $(4, 2)$, $(4, 3)$ suffice. They produce numbers $451$, $4510$, $110$, $1045$, $1012$, $121$, $1210$, respectively, each of them is divisible by $11$.
+
+In the second example all $n(n - 1)$ pairs suffice.
+
+In the third example no pair is sufficient.
+"""
+2022-04-20 03:21:52.825834 --------------------------
+2022-04-20 03:21:52.826011 using api key sourya
+2022-04-20 03:22:08.562730 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef solve(n, k, a):\n    \"\"\"\n    >>> solve(6, 11, [45, 1, 10, 12, 11, 7])\n    7\n    >>> solve(4, 2, [2, 78, 4, 10])\n    12\n    >>> solve(5, 2, [3, 7, 19, 3, 3])\n    0\n    \"\"\"\n    # TODO: write your code here\n    return 0\n\n\n# Do not edit code below this line\ndef main():\n    import sys\n    if (len(sys.argv) <= 1):\n        import doctest\n        doctest.testmod()\n    else:\n        import json\n        test_cases = open(sys.argv[1], 'r')\n        for test in test_cases:\n            test = test.rstrip('\\n')\n            if not test: continue # ignore an empty line\n            print(solve(*json.loads(test)))\n\n        test_cases.close()\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y, k):\n    if x % k == 0 or y % k == 0:\n        return True\n    if x < k and y < k:\n        return (x * y) % k == 0\n    if x < k:\n        return y % k == 0\n    if y < k:\n        return x % k == 0\n    return False\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j], k):\n            count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef concat(x, y):\n    return int(str(x) + str(y))\n\ndef check(x):\n    return x % k == 0\n\ndef solve(n, k, a):\n    cnt = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if check(concat(a[i], a[j])):\n                cnt += 1\n    return cnt\n\nprint(solve(n, k, a))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    return (x * (10 ** (len(str(y)))) + y) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j]):\n            count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    if x < 10 and y < 10:\n        return (x + y) % k == 0\n    return (x % k) * (y % k) % k == 0\n\nans = 0\nfor i in range(n):\n    for j in range(i + 1, n):\n        if is_divisible(a[i], a[j]):\n            ans += 1\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef concat(a, b):\n    return int(str(a) + str(b))\n\ndef is_divisible(a, b):\n    return concat(a, b) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j:\n            if is_divisible(a[i], a[j]):\n                count += 1\n\nprint(count)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if (a[i]*10**len(str(a[j])) + a[j]) % k == 0:\n                    ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    return int(str(x) + str(y)) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j]):\n            count += 1\n\nprint(count)"
+    }
+  ],
+  "created": 1650424912,
+  "id": "cmpl-4yvCa3wDm1McrJD9wjcrNO0obKf6l",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:22:08.563217 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef solve(n, k, a):\n    \"\"\"\n    >>> solve(6, 11, [45, 1, 10, 12, 11, 7])\n    7\n    >>> solve(4, 2, [2, 78, 4, 10])\n    12\n    >>> solve(5, 2, [3, 7, 19, 3, 3])\n    0\n    \"\"\"\n    # TODO: write your code here\n    return 0\n\n\n# Do not edit code below this line\ndef main():\n    import sys\n    if (len(sys.argv) <= 1):\n        import doctest\n        doctest.testmod()\n    else:\n        import json\n        test_cases = open(sys.argv[1], 'r')\n        for test in test_cases:\n            test = test.rstrip('\\n')\n            if not test: continue # ignore an empty line\n            print(solve(*json.loads(test)))\n\n        test_cases.close()\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:22:08.563301 REASON stop
+2022-04-20 03:22:08.564215 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y, k):\n    if x % k == 0 or y % k == 0:\n        return True\n    if x < k and y < k:\n        return (x * y) % k == 0\n    if x < k:\n        return y % k == 0\n    if y < k:\n        return x % k == 0\n    return False\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j], k):\n            count += 1\n\nprint(count)"
+}
+2022-04-20 03:22:08.564310 REASON stop
+2022-04-20 03:22:08.565016 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef concat(x, y):\n    return int(str(x) + str(y))\n\ndef check(x):\n    return x % k == 0\n\ndef solve(n, k, a):\n    cnt = 0\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue\n            if check(concat(a[i], a[j])):\n                cnt += 1\n    return cnt\n\nprint(solve(n, k, a))"
+}
+2022-04-20 03:22:08.565096 REASON stop
+2022-04-20 03:22:08.586953 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    return (x * (10 ** (len(str(y)))) + y) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j]):\n            count += 1\n\nprint(count)"
+}
+2022-04-20 03:22:08.587115 REASON stop
+2022-04-20 03:22:08.591886 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    if x < 10 and y < 10:\n        return (x + y) % k == 0\n    return (x % k) * (y % k) % k == 0\n\nans = 0\nfor i in range(n):\n    for j in range(i + 1, n):\n        if is_divisible(a[i], a[j]):\n            ans += 1\n\nprint(ans)"
+}
+2022-04-20 03:22:08.592083 REASON stop
+2022-04-20 03:22:08.594879 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef concat(a, b):\n    return int(str(a) + str(b))\n\ndef is_divisible(a, b):\n    return concat(a, b) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j:\n            if is_divisible(a[i], a[j]):\n                count += 1\n\nprint(count)"
+}
+2022-04-20 03:22:08.595003 REASON stop
+2022-04-20 03:22:08.597015 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    ans = 0\n    for i in range(n):\n        for j in range(n):\n            if i != j:\n                if (a[i]*10**len(str(a[j])) + a[j]) % k == 0:\n                    ans += 1\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:22:08.597135 REASON stop
+2022-04-20 03:22:08.598211 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef is_divisible(x, y):\n    return int(str(x) + str(y)) % k == 0\n\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        if i != j and is_divisible(a[i], a[j]):\n            count += 1\n\nprint(count)"
+}
+2022-04-20 03:22:08.598427 REASON stop

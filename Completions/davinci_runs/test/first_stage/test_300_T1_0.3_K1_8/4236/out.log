@@ -1,0 +1,163 @@
+2022-04-20 03:38:28.647486 """
+You are given a set of $n$ segments on the axis $Ox$, each segment has integer endpoints between $1$ and $m$ inclusive. Segments may intersect, overlap or even coincide with each other. Each segment is characterized by two integers $l_i$ and $r_i$ ($1 \le l_i \le r_i \le m$) — coordinates of the left and of the right endpoints. 
+
+Consider all integer points between $1$ and $m$ inclusive. Your task is to print all such points that don't belong to any segment. The point $x$ belongs to the segment $[l; r]$ if and only if $l \le x \le r$.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $m$ ($1 \le n, m \le 100$) — the number of segments and the upper bound for coordinates.
+
+The next $n$ lines contain two integers each $l_i$ and $r_i$ ($1 \le l_i \le r_i \le m$) — the endpoints of the $i$-th segment. Segments may intersect, overlap or even coincide with each other. Note, it is possible that $l_i=r_i$, i.e. a segment can degenerate to a point.
+
+
+-----Output-----
+
+In the first line print one integer $k$ — the number of points that don't belong to any segment.
+
+In the second line print exactly $k$ integers in any order — the points that don't belong to any segment. All points you print should be distinct.
+
+If there are no such points at all, print a single integer $0$ in the first line and either leave the second line empty or do not print it at all.
+
+
+-----Examples-----
+Input
+3 5
+2 2
+1 2
+5 5
+
+Output
+2
+3 4 
+
+Input
+1 7
+1 7
+
+Output
+0
+
+
+
+
+-----Note-----
+
+In the first example the point $1$ belongs to the second segment, the point $2$ belongs to the first and the second segments and the point $5$ belongs to the third segment. The points $3$ and $4$ do not belong to any segment.
+
+In the second example all the points from $1$ to $7$ belong to the first segment.
+"""
+2022-04-20 03:38:28.647516 --------------------------
+2022-04-20 03:38:28.647671 using api key sourya
+2022-04-20 03:38:40.278529 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\n# Create a list of all the points from 1 to m\npoints = list(range(1, m + 1))\n\n# Loop through the number of segments\nfor i in range(n):\n    # Get the left and right points\n    l, r = map(int, input().split())\n    # Loop through the points\n    for j in range(l, r + 1):\n        # If the point is in the list, remove it\n        if j in points:\n            points.remove(j)\n\n# Print the number of points left\nprint(len(points))\n# Print the points\nprint(*points)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn, m = map(int, input().split())\n\nlst = []\n\nfor i in range(n):\n    l, r = map(int, input().split())\n    lst.append([l, r])\n\nlst.sort()\n\n# print(lst)\n\nans = []\n\nfor i in range(1, m+1):\n    flag = True\n    for j in range(n):\n        if lst[j][0] <= i <= lst[j][1]:\n            flag = False\n            break\n    if flag:\n        ans.append(i)\n\nprint(len(ans))\nprint(*ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\n# create a list of tuples of the endpoints\nsegments = []\nfor i in range(n):\n    segments.append(tuple(map(int, input().split())))\n\n# create a list of all possible points\npoints = list(range(1, m+1))\n\n# iterate through the segments\nfor segment in segments:\n    # iterate through the points\n    for point in points:\n        # if the point is in the segment, remove it from the list\n        if segment[0] <= point <= segment[1]:\n            points.remove(point)\n\n# print the number of points that don't belong to any segment\nprint(len(points))\n\n# print the points that don't belong to any segment\nfor point in points:\n    print(point, end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\nsegments = []\nfor i in range(n):\n    segments.append(list(map(int, input().split())))\n\n# print(segments)\n\npoints = []\nfor i in range(1,m+1):\n    points.append(i)\n\n# print(points)\n\nfor i in range(len(segments)):\n    for j in range(segments[i][0],segments[i][1]+1):\n        if j in points:\n            points.remove(j)\n\nprint(len(points))\nfor i in points:\n    print(i, end=\" \")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    segments = []\n    for i in range(n):\n        segments.append(list(map(int, sys.stdin.readline().split())))\n    segments.sort()\n    #print(segments)\n    points = []\n    for i in range(n-1):\n        if segments[i][1] < segments[i+1][0]:\n            points.append(segments[i][1]+1)\n            points.append(segments[i+1][0]-1)\n    #print(points)\n    points = list(set(points))\n    points.sort()\n    #print(points)\n    print(len(points))\n    for i in points:\n        print(i, end=' ')\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\nsegments = []\nfor i in range(n):\n    l, r = map(int, input().split())\n    segments.append([l, r])\n\nsegments.sort()\n\npoints = []\nfor i in range(1, m + 1):\n    points.append(i)\n\nfor i in range(len(segments)):\n    for j in range(segments[i][0], segments[i][1] + 1):\n        if j in points:\n            points.remove(j)\n\nprint(len(points))\nfor i in range(len(points)):\n    print(points[i], end=' ')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\npoints = set(range(1, m+1))\n\nfor i in range(n):\n    l, r = map(int, input().split())\n    points = points - set(range(l, r+1))\n\nprint(len(points))\nprint(*points)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    segs = []\n    for _ in range(n):\n        segs.append(tuple(map(int, input().split())))\n    segs.sort()\n    # print(segs)\n    i = 0\n    ans = []\n    for x in range(1, m+1):\n        if i < n and x == segs[i][0]:\n            i += 1\n        else:\n            ans.append(x)\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650425908,
+  "id": "cmpl-4yvSe2Z3LhCFPOPATTTnd6UmHTjUP",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:38:40.278949 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\n# Create a list of all the points from 1 to m\npoints = list(range(1, m + 1))\n\n# Loop through the number of segments\nfor i in range(n):\n    # Get the left and right points\n    l, r = map(int, input().split())\n    # Loop through the points\n    for j in range(l, r + 1):\n        # If the point is in the list, remove it\n        if j in points:\n            points.remove(j)\n\n# Print the number of points left\nprint(len(points))\n# Print the points\nprint(*points)"
+}
+2022-04-20 03:38:40.279028 REASON stop
+2022-04-20 03:38:40.279993 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn, m = map(int, input().split())\n\nlst = []\n\nfor i in range(n):\n    l, r = map(int, input().split())\n    lst.append([l, r])\n\nlst.sort()\n\n# print(lst)\n\nans = []\n\nfor i in range(1, m+1):\n    flag = True\n    for j in range(n):\n        if lst[j][0] <= i <= lst[j][1]:\n            flag = False\n            break\n    if flag:\n        ans.append(i)\n\nprint(len(ans))\nprint(*ans)"
+}
+2022-04-20 03:38:40.280098 REASON stop
+2022-04-20 03:38:40.280873 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\n# create a list of tuples of the endpoints\nsegments = []\nfor i in range(n):\n    segments.append(tuple(map(int, input().split())))\n\n# create a list of all possible points\npoints = list(range(1, m+1))\n\n# iterate through the segments\nfor segment in segments:\n    # iterate through the points\n    for point in points:\n        # if the point is in the segment, remove it from the list\n        if segment[0] <= point <= segment[1]:\n            points.remove(point)\n\n# print the number of points that don't belong to any segment\nprint(len(points))\n\n# print the points that don't belong to any segment\nfor point in points:\n    print(point, end=' ')"
+}
+2022-04-20 03:38:40.281010 REASON stop
+2022-04-20 03:38:40.309016 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\nsegments = []\nfor i in range(n):\n    segments.append(list(map(int, input().split())))\n\n# print(segments)\n\npoints = []\nfor i in range(1,m+1):\n    points.append(i)\n\n# print(points)\n\nfor i in range(len(segments)):\n    for j in range(segments[i][0],segments[i][1]+1):\n        if j in points:\n            points.remove(j)\n\nprint(len(points))\nfor i in points:\n    print(i, end=\" \")"
+}
+2022-04-20 03:38:40.309170 REASON stop
+2022-04-20 03:38:40.310095 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    segments = []\n    for i in range(n):\n        segments.append(list(map(int, sys.stdin.readline().split())))\n    segments.sort()\n    #print(segments)\n    points = []\n    for i in range(n-1):\n        if segments[i][1] < segments[i+1][0]:\n            points.append(segments[i][1]+1)\n            points.append(segments[i+1][0]-1)\n    #print(points)\n    points = list(set(points))\n    points.sort()\n    #print(points)\n    print(len(points))\n    for i in points:\n        print(i, end=' ')\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 03:38:40.310206 REASON stop
+2022-04-20 03:38:40.311715 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\nsegments = []\nfor i in range(n):\n    l, r = map(int, input().split())\n    segments.append([l, r])\n\nsegments.sort()\n\npoints = []\nfor i in range(1, m + 1):\n    points.append(i)\n\nfor i in range(len(segments)):\n    for j in range(segments[i][0], segments[i][1] + 1):\n        if j in points:\n            points.remove(j)\n\nprint(len(points))\nfor i in range(len(points)):\n    print(points[i], end=' ')"
+}
+2022-04-20 03:38:40.311812 REASON stop
+2022-04-20 03:38:40.312810 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\npoints = set(range(1, m+1))\n\nfor i in range(n):\n    l, r = map(int, input().split())\n    points = points - set(range(l, r+1))\n\nprint(len(points))\nprint(*points)"
+}
+2022-04-20 03:38:40.312896 REASON stop
+2022-04-20 03:38:40.313792 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    segs = []\n    for _ in range(n):\n        segs.append(tuple(map(int, input().split())))\n    segs.sort()\n    # print(segs)\n    i = 0\n    ans = []\n    for x in range(1, m+1):\n        if i < n and x == segs[i][0]:\n            i += 1\n        else:\n            ans.append(x)\n    print(len(ans))\n    print(*ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:38:40.314004 REASON stop

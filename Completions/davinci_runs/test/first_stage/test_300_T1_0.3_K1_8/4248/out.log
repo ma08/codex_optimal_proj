@@ -1,0 +1,299 @@
+2022-04-20 03:42:49.262019 """
+-----Input-----
+
+The first line contains a single integer n (1 ≤ n ≤ 1000) — the number of points on a plane.
+
+Each of the next n lines contains two real coordinates x_{i} and y_{i} of the $i^{\text{th}}$ point, specified with exactly 2 fractional digits. All coordinates are between  - 1000 and 1000, inclusive.
+
+
+-----Output-----
+
+Output a single real number θ — the answer to the problem statement. The absolute or relative error of your answer should be at most 10^{ - 2}.
+
+
+-----Examples-----
+Input
+8
+-2.14 2.06
+-1.14 2.04
+-2.16 1.46
+-2.14 0.70
+-1.42 0.40
+-0.94 -0.48
+-1.42 -1.28
+-2.16 -1.62
+
+Output
+5.410
+
+Input
+5
+2.26 1.44
+2.28 0.64
+2.30 -0.30
+1.58 0.66
+3.24 0.66
+
+Output
+5.620
+
+Input
+8
+6.98 2.06
+6.40 1.12
+5.98 0.24
+5.54 -0.60
+7.16 0.30
+7.82 1.24
+8.34 0.24
+8.74 -0.76
+
+Output
+5.480
+
+Input
+5
+10.44 2.06
+10.90 0.80
+11.48 -0.48
+12.06 0.76
+12.54 2.06
+
+Output
+6.040
+
+Input
+8
+16.94 2.42
+15.72 2.38
+14.82 1.58
+14.88 0.50
+15.76 -0.16
+16.86 -0.20
+17.00 0.88
+16.40 0.92
+
+Output
+6.040
+
+Input
+7
+20.62 3.00
+21.06 2.28
+21.56 1.36
+21.66 0.56
+21.64 -0.52
+22.14 2.32
+22.62 3.04
+
+Output
+6.720
+"""
+2022-04-20 03:42:49.262044 --------------------------
+2022-04-20 03:42:49.262200 using api key gabby
+2022-04-20 03:42:49.383017 in retry 8 5 <class 'Exception'>, Retrying in 5 seconds...
+2022-04-20 03:42:54.388450 """
+-----Input-----
+
+The first line contains a single integer n (1 ≤ n ≤ 1000) — the number of points on a plane.
+
+Each of the next n lines contains two real coordinates x_{i} and y_{i} of the $i^{\text{th}}$ point, specified with exactly 2 fractional digits. All coordinates are between  - 1000 and 1000, inclusive.
+
+
+-----Output-----
+
+Output a single real number θ — the answer to the problem statement. The absolute or relative error of your answer should be at most 10^{ - 2}.
+
+
+-----Examples-----
+Input
+8
+-2.14 2.06
+-1.14 2.04
+-2.16 1.46
+-2.14 0.70
+-1.42 0.40
+-0.94 -0.48
+-1.42 -1.28
+-2.16 -1.62
+
+Output
+5.410
+
+Input
+5
+2.26 1.44
+2.28 0.64
+2.30 -0.30
+1.58 0.66
+3.24 0.66
+
+Output
+5.620
+
+Input
+8
+6.98 2.06
+6.40 1.12
+5.98 0.24
+5.54 -0.60
+7.16 0.30
+7.82 1.24
+8.34 0.24
+8.74 -0.76
+
+Output
+5.480
+
+Input
+5
+10.44 2.06
+10.90 0.80
+11.48 -0.48
+12.06 0.76
+12.54 2.06
+
+Output
+6.040
+
+Input
+8
+16.94 2.42
+15.72 2.38
+14.82 1.58
+14.88 0.50
+15.76 -0.16
+16.86 -0.20
+17.00 0.88
+16.40 0.92
+
+Output
+6.040
+
+Input
+7
+20.62 3.00
+21.06 2.28
+21.56 1.36
+21.66 0.56
+21.64 -0.52
+22.14 2.32
+22.62 3.04
+
+Output
+6.720
+"""
+2022-04-20 03:42:54.388498 --------------------------
+2022-04-20 03:42:54.388663 using api key derek
+2022-04-20 03:44:20.450844 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n    points.sort()\n    print(solve(points))\n\ndef solve(points):\n    n = len(points)\n    ans = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            x1, y1 = points[i]\n            x2, y2 = points[j]\n            if x1 == x2:\n                continue\n            for k in range(j + 1, n):\n                x3, y3 = points[k]\n                if x1 == x3 or x2 == x3:\n                    continue\n                if (y1 - y2) / (x1 - x2) == (y1 - y3) / (x1 - x3):\n                    continue\n                ans = max(ans, area(points[i], points[j], points[k]))\n    return ans\n\ndef area(p1, p2, p3):\n    x1, y1 = p1\n    x2, y2 = p2\n    x3, y3 = p3\n    return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_difference(angle1, angle2):\n    return (angle2 - angle1) % (2 * math.pi)\n\ndef get_min_angle_difference(angles):\n    min_angle_difference = math.pi\n    for i in range(len(angles)):\n        for j in range(i + 1, len(angles)):\n            angle_difference = get_angle_difference(angles[i], angles[j])\n            if angle_difference < min_angle_difference:\n                min_angle_difference = angle_difference\n    return min_angle_difference\n\ndef get_min_angle_difference_from_origin(points):\n    angles = []\n    for point in points:\n        angles.append(get_angle(0, 0, point[0], point[1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin(points):\n    angles = []\n    for point in points:\n        angles.append(get_angle(0, 0, point[0], point[1]))\n        angles.append(get_angle(point[0], point[1], 0, 0))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n            angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n            angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n            angles.append(get_angle(points[j][0], points[j][1], points[i][0], points[i][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[k][0], points[k][1], points[i][0], points[i][1]))\n                angles.append(get_angle(points[k][0], points[k][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                    angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                    angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                    angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[k][0], points[k][1], points[l][0], points[l][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                    angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                    angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                    angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[k][0], points[k][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[i][0], points[i][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[k][0], points[k][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    for m in range(l + 1, len(points)):\n                        angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                        angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                        angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                        angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                        angles.append(get_angle(0, 0, points[m][0], points[m][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[m][0], points[m][1]))\n                        angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                        angles.append(get_angle(points[j][0], points[j"
+    },
+    {
+      "finish_reason": "length",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    \"\"\"\n    Return angle between two points in degrees\n    \"\"\"\n    dx = x2 - x1\n    dy = y2 - y1\n    rads = math.atan2(-dy, dx)\n    rads %= 2 * math.pi\n    return math.degrees(rads)\n\ndef get_dist(x1, y1, x2, y2):\n    \"\"\"\n    Return distance between two points\n    \"\"\"\n    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)\n\ndef get_min_angle(points):\n    \"\"\"\n    Return minimum angle between two points in a list of points\n    \"\"\"\n    min_angle = 360\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle < min_angle:\n                min_angle = angle\n    return min_angle\n\ndef get_min_dist(points):\n    \"\"\"\n    Return minimum distance between two points in a list of points\n    \"\"\"\n    min_dist = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if dist < min_dist:\n                min_dist = dist\n    return min_dist\n\ndef get_min_angle_dist(points):\n    \"\"\"\n    Return minimum angle and distance between two points in a list of points\n    \"\"\"\n    min_angle = 360\n    min_dist = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle < min_angle:\n                min_angle = angle\n            if dist < min_dist:\n                min_dist = dist\n    return min_angle, min_dist\n\ndef get_max_angle_dist(points):\n    \"\"\"\n    Return maximum angle and distance between two points in a list of points\n    \"\"\"\n    max_angle = 0\n    max_dist = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle > max_angle:\n                max_angle = angle\n            if dist > max_dist:\n                max_dist = dist\n    return max_angle, max_dist\n\ndef get_min_angle_dist_ratio(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_2(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_2(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_3(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_3(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_4(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_4(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_5(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_5(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_6(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    if x1 == x2:\n        if y1 > y2:\n            return math.pi/2\n        else:\n            return 3*math.pi/2\n    else:\n        if x1 > x2:\n            return math.atan((y1-y2)/(x1-x2)) + math.pi\n        else:\n            return math.atan((y1-y2)/(x1-x2))\n\ndef get_angle_diff(a1, a2):\n    if a1 >= a2:\n        return a1 - a2\n    else:\n        return 2*math.pi - a2 + a1\n\ndef get_max_angle(x, y):\n    max_angle = 0\n    for i in range(len(x)):\n        for j in range(i+1, len(x)):\n            angle = get_angle_diff(get_angle(x[i], y[i], x[j], y[j]), get_angle(x[i], y[i], x[i+1], y[i+1]))\n            if angle > max_angle:\n                max_angle = angle\n    return max_angle\n\nif __name__ == \"__main__\":\n    n = int(input())\n    x = []\n    y = []\n    for i in range(n):\n        xi, yi = map(float, input().split())\n        x.append(xi)\n        y.append(yi)\n    x.append(x[0])\n    y.append(y[0])\n    print(round(get_max_angle(x, y), 3))"
+    },
+    {
+      "finish_reason": "length",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_area(x1, y1, x2, y2, x3, y3):\n    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)\n\ndef get_area_of_triangle(x1, y1, x2, y2, x3, y3):\n    return get_area(x1, y1, x2, y2, x3, y3)\n\ndef get_area_of_polygon(points):\n    area = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        area += points[i][0] * points[j][1] - points[j][0] * points[i][1]\n    return abs(area) / 2.0\n\ndef get_angle_between_points(x1, y1, x2, y2, x3, y3):\n    a = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)\n    b = math.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2)\n    c = math.sqrt((x2 - x3) ** 2 + (y2 - y3) ** 2)\n    return math.acos((a ** 2 + b ** 2 - c ** 2) / (2 * a * b))\n\ndef get_angle_between_vectors(x1, y1, x2, y2):\n    return math.acos((x1 * x2 + y1 * y2) / (math.sqrt(x1 ** 2 + y1 ** 2) * math.sqrt(x2 ** 2 + y2 ** 2)))\n\ndef get_angle_between_vectors_2(x1, y1, x2, y2):\n    return math.atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2)\n\ndef get_angle_between_vectors_3(x1, y1, x2, y2):\n    return math.atan2(y2, x2) - math.atan2(y1, x1)\n\ndef get_angle_between_vectors_4(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_5(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_6(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_7(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_8(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_9(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_10(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_11(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_12(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_13(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_14(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_15(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_16(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_17(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_18(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_19(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_20(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_21(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_22(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_23(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_24(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_25(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_26(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_27(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_28(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_29(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_30(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_31(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_32(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_33(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_34(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_35(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_36(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_37(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_38(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_39(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_40(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_41(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_42(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_43(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_44(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_45(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_46(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_47(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_48(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_49(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_50(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_51(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_52(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_53(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_54(x1, y1,"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append([x, y])\n    points.sort()\n    min_angle = math.pi\n    for i in range(n - 2):\n        for j in range(i + 1, n - 1):\n            for k in range(j + 1, n):\n                angle = math.acos((points[j][0] - points[i][0]) * (points[k][0] - points[i][0]) + (points[j][1] - points[i][1]) * (points[k][1] - points[i][1]))\n                if angle < min_angle:\n                    min_angle = angle\n    print(min_angle)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    points = []\n    for i in range(n):\n        x, y = map(float, sys.stdin.readline().strip().split())\n        points.append((x, y))\n    points.sort()\n    #print(points)\n    max_dist = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            dist = math.sqrt((points[i][0]-points[j][0])**2 + (points[i][1]-points[j][1])**2)\n            if dist > max_dist:\n                max_dist = dist\n    print(\"{:.3f}\".format(max_dist))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        points.append(list(map(float, input().split())))\n    points = sorted(points, key=lambda x: x[0])\n    points = sorted(points, key=lambda x: x[1])\n    print(calculate_angle(points))\n\ndef calculate_angle(points):\n    x1, y1 = points[0]\n    x2, y2 = points[1]\n    x3, y3 = points[-1]\n    a = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)\n    b = math.sqrt((x3 - x2) ** 2 + (y3 - y2) ** 2)\n    c = math.sqrt((x3 - x1) ** 2 + (y3 - y1) ** 2)\n    return math.degrees(math.acos((a ** 2 + b ** 2 - c ** 2) / (2 * a * b)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650426174,
+  "id": "cmpl-4yvWwXfw2Lgx94xQW6DIIQ6kWDj6u",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 03:44:20.453333 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append((x, y))\n    points.sort()\n    print(solve(points))\n\ndef solve(points):\n    n = len(points)\n    ans = 0\n    for i in range(n):\n        for j in range(i + 1, n):\n            x1, y1 = points[i]\n            x2, y2 = points[j]\n            if x1 == x2:\n                continue\n            for k in range(j + 1, n):\n                x3, y3 = points[k]\n                if x1 == x3 or x2 == x3:\n                    continue\n                if (y1 - y2) / (x1 - x2) == (y1 - y3) / (x1 - x3):\n                    continue\n                ans = max(ans, area(points[i], points[j], points[k]))\n    return ans\n\ndef area(p1, p2, p3):\n    x1, y1 = p1\n    x2, y2 = p2\n    x3, y3 = p3\n    return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:44:20.453477 REASON stop
+2022-04-20 03:44:20.454286 1 {
+  "finish_reason": "length",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_difference(angle1, angle2):\n    return (angle2 - angle1) % (2 * math.pi)\n\ndef get_min_angle_difference(angles):\n    min_angle_difference = math.pi\n    for i in range(len(angles)):\n        for j in range(i + 1, len(angles)):\n            angle_difference = get_angle_difference(angles[i], angles[j])\n            if angle_difference < min_angle_difference:\n                min_angle_difference = angle_difference\n    return min_angle_difference\n\ndef get_min_angle_difference_from_origin(points):\n    angles = []\n    for point in points:\n        angles.append(get_angle(0, 0, point[0], point[1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin(points):\n    angles = []\n    for point in points:\n        angles.append(get_angle(0, 0, point[0], point[1]))\n        angles.append(get_angle(point[0], point[1], 0, 0))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n            angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n            angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n            angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n            angles.append(get_angle(points[j][0], points[j][1], points[i][0], points[i][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                angles.append(get_angle(points[k][0], points[k][1], points[i][0], points[i][1]))\n                angles.append(get_angle(points[k][0], points[k][1], points[j][0], points[j][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                    angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                    angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                    angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[k][0], points[k][1], points[l][0], points[l][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points_and_origin(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                    angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                    angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                    angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                    angles.append(get_angle(points[j][0], points[j][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[k][0], points[k][1], points[l][0], points[l][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[i][0], points[i][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[j][0], points[j][1]))\n                    angles.append(get_angle(points[l][0], points[l][1], points[k][0], points[k][1]))\n    return get_min_angle_difference(angles)\n\ndef get_min_angle_difference_between_points_and_origin_and_points_and_origin_and_points_and_origin_and_points_and_origin_and_points(points):\n    angles = []\n    for i in range(len(points)):\n        for j in range(i + 1, len(points)):\n            for k in range(j + 1, len(points)):\n                for l in range(k + 1, len(points)):\n                    for m in range(l + 1, len(points)):\n                        angles.append(get_angle(0, 0, points[i][0], points[i][1]))\n                        angles.append(get_angle(0, 0, points[j][0], points[j][1]))\n                        angles.append(get_angle(0, 0, points[k][0], points[k][1]))\n                        angles.append(get_angle(0, 0, points[l][0], points[l][1]))\n                        angles.append(get_angle(0, 0, points[m][0], points[m][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[j][0], points[j][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[k][0], points[k][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[l][0], points[l][1]))\n                        angles.append(get_angle(points[i][0], points[i][1], points[m][0], points[m][1]))\n                        angles.append(get_angle(points[j][0], points[j][1], points[k][0], points[k][1]))\n                        angles.append(get_angle(points[j][0], points[j"
+}
+2022-04-20 03:44:20.454460 REASON length
+2022-04-20 03:44:20.454476 2 {
+  "finish_reason": "length",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    \"\"\"\n    Return angle between two points in degrees\n    \"\"\"\n    dx = x2 - x1\n    dy = y2 - y1\n    rads = math.atan2(-dy, dx)\n    rads %= 2 * math.pi\n    return math.degrees(rads)\n\ndef get_dist(x1, y1, x2, y2):\n    \"\"\"\n    Return distance between two points\n    \"\"\"\n    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)\n\ndef get_min_angle(points):\n    \"\"\"\n    Return minimum angle between two points in a list of points\n    \"\"\"\n    min_angle = 360\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle < min_angle:\n                min_angle = angle\n    return min_angle\n\ndef get_min_dist(points):\n    \"\"\"\n    Return minimum distance between two points in a list of points\n    \"\"\"\n    min_dist = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if dist < min_dist:\n                min_dist = dist\n    return min_dist\n\ndef get_min_angle_dist(points):\n    \"\"\"\n    Return minimum angle and distance between two points in a list of points\n    \"\"\"\n    min_angle = 360\n    min_dist = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle < min_angle:\n                min_angle = angle\n            if dist < min_dist:\n                min_dist = dist\n    return min_angle, min_dist\n\ndef get_max_angle_dist(points):\n    \"\"\"\n    Return maximum angle and distance between two points in a list of points\n    \"\"\"\n    max_angle = 0\n    max_dist = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            if angle > max_angle:\n                max_angle = angle\n            if dist > max_dist:\n                max_dist = dist\n    return max_angle, max_dist\n\ndef get_min_angle_dist_ratio(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_2(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_2(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_3(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_3(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_4(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_4(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_5(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio < min_angle_dist_ratio:\n                min_angle_dist_ratio = angle_dist_ratio\n    return min_angle_dist_ratio\n\ndef get_max_angle_dist_ratio_5(points):\n    \"\"\"\n    Return maximum angle/distance ratio between two points in a list of points\n    \"\"\"\n    max_angle_dist_ratio = 0\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n            dist = get_dist(points[i][0], points[i][1], points[j][0], points[j][1])\n            angle_dist_ratio = angle / dist\n            if angle_dist_ratio > max_angle_dist_ratio:\n                max_angle_dist_ratio = angle_dist_ratio\n    return max_angle_dist_ratio\n\ndef get_min_angle_dist_ratio_6(points):\n    \"\"\"\n    Return minimum angle/distance ratio between two points in a list of points\n    \"\"\"\n    min_angle_dist_ratio = float('inf')\n    for i in range(len(points)):\n        for j in range(i+1, len(points)):\n            angle = get_angle(points[i][0], points[i"
+}
+2022-04-20 03:44:20.454631 REASON length
+2022-04-20 03:44:20.454643 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    if x1 == x2:\n        if y1 > y2:\n            return math.pi/2\n        else:\n            return 3*math.pi/2\n    else:\n        if x1 > x2:\n            return math.atan((y1-y2)/(x1-x2)) + math.pi\n        else:\n            return math.atan((y1-y2)/(x1-x2))\n\ndef get_angle_diff(a1, a2):\n    if a1 >= a2:\n        return a1 - a2\n    else:\n        return 2*math.pi - a2 + a1\n\ndef get_max_angle(x, y):\n    max_angle = 0\n    for i in range(len(x)):\n        for j in range(i+1, len(x)):\n            angle = get_angle_diff(get_angle(x[i], y[i], x[j], y[j]), get_angle(x[i], y[i], x[i+1], y[i+1]))\n            if angle > max_angle:\n                max_angle = angle\n    return max_angle\n\nif __name__ == \"__main__\":\n    n = int(input())\n    x = []\n    y = []\n    for i in range(n):\n        xi, yi = map(float, input().split())\n        x.append(xi)\n        y.append(yi)\n    x.append(x[0])\n    y.append(y[0])\n    print(round(get_max_angle(x, y), 3))"
+}
+2022-04-20 03:44:20.454695 REASON stop
+2022-04-20 03:44:20.455352 4 {
+  "finish_reason": "length",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport math\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_area(x1, y1, x2, y2, x3, y3):\n    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0)\n\ndef get_area_of_triangle(x1, y1, x2, y2, x3, y3):\n    return get_area(x1, y1, x2, y2, x3, y3)\n\ndef get_area_of_polygon(points):\n    area = 0\n    for i in range(len(points)):\n        j = (i + 1) % len(points)\n        area += points[i][0] * points[j][1] - points[j][0] * points[i][1]\n    return abs(area) / 2.0\n\ndef get_angle_between_points(x1, y1, x2, y2, x3, y3):\n    a = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)\n    b = math.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2)\n    c = math.sqrt((x2 - x3) ** 2 + (y2 - y3) ** 2)\n    return math.acos((a ** 2 + b ** 2 - c ** 2) / (2 * a * b))\n\ndef get_angle_between_vectors(x1, y1, x2, y2):\n    return math.acos((x1 * x2 + y1 * y2) / (math.sqrt(x1 ** 2 + y1 ** 2) * math.sqrt(x2 ** 2 + y2 ** 2)))\n\ndef get_angle_between_vectors_2(x1, y1, x2, y2):\n    return math.atan2(x1 * y2 - y1 * x2, x1 * x2 + y1 * y2)\n\ndef get_angle_between_vectors_3(x1, y1, x2, y2):\n    return math.atan2(y2, x2) - math.atan2(y1, x1)\n\ndef get_angle_between_vectors_4(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_5(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_6(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_7(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_8(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_9(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_10(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_11(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_12(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_13(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_14(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_15(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_16(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_17(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_18(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_19(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_20(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_21(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_22(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_23(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_24(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_25(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_26(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_27(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_28(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_29(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_30(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_31(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_32(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_33(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_34(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_35(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_36(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_37(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_38(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_39(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_40(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_41(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_42(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_43(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_44(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_45(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_46(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_47(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_48(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_49(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_50(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_51(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_52(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_53(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\ndef get_angle_between_vectors_54(x1, y1,"
+}
+2022-04-20 03:44:20.455469 REASON length
+2022-04-20 03:44:20.455480 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        x, y = map(float, input().split())\n        points.append([x, y])\n    points.sort()\n    min_angle = math.pi\n    for i in range(n - 2):\n        for j in range(i + 1, n - 1):\n            for k in range(j + 1, n):\n                angle = math.acos((points[j][0] - points[i][0]) * (points[k][0] - points[i][0]) + (points[j][1] - points[i][1]) * (points[k][1] - points[i][1]))\n                if angle < min_angle:\n                    min_angle = angle\n    print(min_angle)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:44:20.455542 REASON stop
+2022-04-20 03:44:20.477658 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\ndef main():\n    n = int(sys.stdin.readline().strip())\n    points = []\n    for i in range(n):\n        x, y = map(float, sys.stdin.readline().strip().split())\n        points.append((x, y))\n    points.sort()\n    #print(points)\n    max_dist = 0\n    for i in range(n):\n        for j in range(i+1, n):\n            dist = math.sqrt((points[i][0]-points[j][0])**2 + (points[i][1]-points[j][1])**2)\n            if dist > max_dist:\n                max_dist = dist\n    print(\"{:.3f}\".format(max_dist))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:44:20.477984 REASON stop
+2022-04-20 03:44:20.479770 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    points = []\n    for i in range(n):\n        points.append(list(map(float, input().split())))\n    points = sorted(points, key=lambda x: x[0])\n    points = sorted(points, key=lambda x: x[1])\n    print(calculate_angle(points))\n\ndef calculate_angle(points):\n    x1, y1 = points[0]\n    x2, y2 = points[1]\n    x3, y3 = points[-1]\n    a = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)\n    b = math.sqrt((x3 - x2) ** 2 + (y3 - y2) ** 2)\n    c = math.sqrt((x3 - x1) ** 2 + (y3 - y1) ** 2)\n    return math.degrees(math.acos((a ** 2 + b ** 2 - c ** 2) / (2 * a * b)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 03:44:20.479878 REASON stop

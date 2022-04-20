@@ -1,0 +1,172 @@
+2022-04-20 04:00:44.604110 """
+You are given an undirected graph consisting of $n$ vertices. A number is written on each vertex; the number on vertex $i$ is $a_i$. Initially there are no edges in the graph.
+
+You may add some edges to this graph, but you have to pay for them. The cost of adding an edge between vertices $x$ and $y$ is $a_x + a_y$ coins. There are also $m$ special offers, each of them is denoted by three numbers $x$, $y$ and $w$, and means that you can add an edge connecting vertices $x$ and $y$ and pay $w$ coins for it. You don't have to use special offers: if there is a pair of vertices $x$ and $y$ that has a special offer associated with it, you still may connect these two vertices paying $a_x + a_y$ coins for it.
+
+What is the minimum number of coins you have to spend to make the graph connected? Recall that a graph is connected if it's possible to get from any vertex to any other vertex using only the edges belonging to this graph.
+
+
+-----Input-----
+
+The first line contains two integers $n$ and $m$ ($1 \le n \le 2 \cdot 10^5$, $0 \le m \le 2 \cdot 10^5$) — the number of vertices in the graph and the number of special offers, respectively.
+
+The second line contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 10^{12}$) — the numbers written on the vertices.
+
+Then $m$ lines follow, each containing three integers $x$, $y$ and $w$ ($1 \le x, y \le n$, $1 \le w \le 10^{12}$, $x \ne y$) denoting a special offer: you may add an edge connecting vertex $x$ and vertex $y$, and this edge will cost $w$ coins.
+
+
+-----Output-----
+
+Print one integer — the minimum number of coins you have to pay to make the graph connected.
+
+
+-----Examples-----
+Input
+3 2
+1 3 3
+2 3 5
+2 1 1
+
+Output
+5
+
+Input
+4 0
+1 3 3 7
+
+Output
+16
+
+Input
+5 4
+1 2 3 4 5
+1 2 8
+1 3 10
+1 4 7
+1 5 15
+
+Output
+18
+
+
+
+-----Note-----
+
+In the first example it is possible to connect $1$ to $2$ using special offer $2$, and then $1$ to $3$ without using any offers.
+
+In next two examples the optimal answer may be achieved without using special offers.
+"""
+2022-04-20 04:00:44.604136 --------------------------
+2022-04-20 04:00:44.604282 using api key sourya
+2022-04-20 04:02:06.852812 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, sys.stdin.readline().split())\n        offers.append((x, y, w))\n    print(solve(n, a, offers))\n\ndef solve(n, a, offers):\n    # TODO\n    return 0\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, sys.stdin.readline().split())\n        offers.append((x, y, w))\n    offers.sort(key=lambda x: x[2])\n    print(offers)\n    # TODO\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    edges = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        edges.append((x, y, w))\n    edges.sort(key=lambda x: x[2])\n    dsu = DSU(n)\n    res = 0\n    for x, y, w in edges:\n        x -= 1\n        y -= 1\n        if dsu.find(x) != dsu.find(y):\n            dsu.union(x, y)\n            res += w\n    for i in range(n):\n        if dsu.find(i) != i:\n            res += a[i]\n    print(res)\n\n\nclass DSU:\n    def __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [0] * n\n\n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n\n    def union(self, x, y):\n        x = self.find(x)\n        y = self.find(y)\n        if x == y:\n            return\n        if self.rank[x] < self.rank[y]:\n            self.parent[x] = y\n        else:\n            self.parent[y] = x\n            if self.rank[x] == self.rank[y]:\n                self.rank[x] += 1\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        offers.append((x, y, w))\n    offers.sort(key=lambda x: x[2])\n    p = [i for i in range(n + 1)]\n    r = [0] * (n + 1)\n    def find(x):\n        if p[x] != x:\n            p[x] = find(p[x])\n        return p[x]\n    def union(x, y):\n        xr = find(x)\n        yr = find(y)\n        if xr == yr:\n            return\n        if r[xr] < r[yr]:\n            p[xr] = yr\n        elif r[xr] > r[yr]:\n            p[yr] = xr\n        else:\n            p[yr] = xr\n            r[xr] += 1\n    ans = 0\n    for x, y, w in offers:\n        if find(x) != find(y):\n            union(x, y)\n            ans += w\n    for i in range(1, n + 1):\n        if find(i) != find(1):\n            ans += a[i - 1]\n            union(i, 1)\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "length",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for i in range(m):\n        offers.append(list(map(int, sys.stdin.readline().split())))\n    offers.sort(key=lambda x: x[2])\n    # print(offers)\n    # print(a)\n    # print(n)\n    # print(m)\n    # print(offers)\n    # print(a)\n    # print(offers[0][0])\n    # print(offers[0][1])\n    # print(offers[0][2])\n    # print(offers[0][0] - 1)\n    # print(offers[0][1] - 1)\n    # print(offers[0][2])\n    # print(offers[1][0] - 1)\n    # print(offers[1][1] - 1)\n    # print(offers[1][2])\n    # print(offers[2][0] - 1)\n    # print(offers[2][1] - 1)\n    # print(offers[2][2])\n    # print(offers[3][0] - 1)\n    # print(offers[3][1] - 1)\n    # print(offers[3][2])\n    # print(offers[4][0] - 1)\n    # print(offers[4][1] - 1)\n    # print(offers[4][2])\n    # print(offers[5][0] - 1)\n    # print(offers[5][1] - 1)\n    # print(offers[5][2])\n    # print(offers[6][0] - 1)\n    # print(offers[6][1] - 1)\n    # print(offers[6][2])\n    # print(offers[7][0] - 1)\n    # print(offers[7][1] - 1)\n    # print(offers[7][2])\n    # print(offers[8][0] - 1)\n    # print(offers[8][1] - 1)\n    # print(offers[8][2])\n    # print(offers[9][0] - 1)\n    # print(offers[9][1] - 1)\n    # print(offers[9][2])\n    # print(offers[10][0] - 1)\n    # print(offers[10][1] - 1)\n    # print(offers[10][2])\n    # print(offers[11][0] - 1)\n    # print(offers[11][1] - 1)\n    # print(offers[11][2])\n    # print(offers[12][0] - 1)\n    # print(offers[12][1] - 1)\n    # print(offers[12][2])\n    # print(offers[13][0] - 1)\n    # print(offers[13][1] - 1)\n    # print(offers[13][2])\n    # print(offers[14][0] - 1)\n    # print(offers[14][1] - 1)\n    # print(offers[14][2])\n    # print(offers[15][0] - 1)\n    # print(offers[15][1] - 1)\n    # print(offers[15][2])\n    # print(offers[16][0] - 1)\n    # print(offers[16][1] - 1)\n    # print(offers[16][2])\n    # print(offers[17][0] - 1)\n    # print(offers[17][1] - 1)\n    # print(offers[17][2])\n    # print(offers[18][0] - 1)\n    # print(offers[18][1] - 1)\n    # print(offers[18][2])\n    # print(offers[19][0] - 1)\n    # print(offers[19][1] - 1)\n    # print(offers[19][2])\n    # print(offers[20][0] - 1)\n    # print(offers[20][1] - 1)\n    # print(offers[20][2])\n    # print(offers[21][0] - 1)\n    # print(offers[21][1] - 1)\n    # print(offers[21][2])\n    # print(offers[22][0] - 1)\n    # print(offers[22][1] - 1)\n    # print(offers[22][2])\n    # print(offers[23][0] - 1)\n    # print(offers[23][1] - 1)\n    # print(offers[23][2])\n    # print(offers[24][0] - 1)\n    # print(offers[24][1] - 1)\n    # print(offers[24][2])\n    # print(offers[25][0] - 1)\n    # print(offers[25][1] - 1)\n    # print(offers[25][2])\n    # print(offers[26][0] - 1)\n    # print(offers[26][1] - 1)\n    # print(offers[26][2])\n    # print(offers[27][0] - 1)\n    # print(offers[27][1] - 1)\n    # print(offers[27][2])\n    # print(offers[28][0] - 1)\n    # print(offers[28][1] - 1)\n    # print(offers[28][2])\n    # print(offers[29][0] - 1)\n    # print(offers[29][1] - 1)\n    # print(offers[29][2])\n    # print(offers[30][0] - 1)\n    # print(offers[30][1] - 1)\n    # print(offers[30][2])\n    # print(offers[31][0] - 1)\n    # print(offers[31][1] - 1)\n    # print(offers[31][2])\n    # print(offers[32][0] - 1)\n    # print(offers[32][1] - 1)\n    # print(offers[32][2])\n    # print(offers[33][0] - 1)\n    # print(offers[33][1] - 1)\n    # print(offers[33][2])\n    # print(offers[34][0] - 1)\n    # print(offers[34][1] - 1)\n    # print(offers[34][2])\n    # print(offers[35][0] - 1)\n    # print(offers[35][1] - 1)\n    # print(offers[35][2])\n    # print(offers[36][0] - 1)\n    # print(offers[36][1] - 1)\n    # print(offers[36][2])\n    # print(offers[37][0] - 1)\n    # print(offers[37][1] - 1)\n    # print(offers[37][2])\n    # print(offers[38][0] - 1)\n    # print(offers[38][1] - 1)\n    # print(offers[38][2])\n    # print(offers[39][0] - 1)\n    # print(offers[39][1] - 1)\n    # print(offers[39][2])\n    # print(offers[40][0] - 1)\n    # print(offers[40][1] - 1)\n    # print(offers[40][2])\n    # print(offers[41][0] - 1)\n    # print(offers[41][1] - 1)\n    # print(offers[41][2])\n    # print(offers[42][0] - 1)\n    # print(offers[42][1] - 1)\n    # print(offers[42][2])\n    # print(offers[43][0] - 1)\n    # print(offers[43][1] - 1)\n    # print(offers[43][2])\n    # print(offers[44][0] - 1)\n    # print(offers[44][1] - 1)\n    # print(offers[44][2])\n    # print(offers[45][0] - 1)\n    # print(offers[45][1] - 1)\n    # print(offers[45][2])\n    # print(offers[46][0] - 1)\n    # print(offers[46][1] - 1)\n    # print(offers[46][2])\n    # print(offers[47][0] - 1)\n    # print(offers[47][1] - 1)\n    # print(offers[47][2])\n    # print(offers[48][0] - 1)\n    # print(offers[48][1] - 1)\n    # print(offers[48][2])\n    # print(offers[49][0] - 1)\n    # print(offers[49][1] - 1)\n    # print(offers[49][2])\n    # print(offers[50][0] - 1)\n    # print(offers[50][1] - 1)\n    # print(offers[50][2])\n    # print(offers[51][0] - 1)\n    # print(offers[51][1] - 1)\n    # print(offers[51][2])\n    # print(offers[52][0] - 1)\n    # print(offers[52][1] - 1)\n    # print(offers[52][2])\n    # print(offers[53][0] - 1)\n    # print(offers[53][1] - 1)\n    # print(offers[53][2])\n    # print(offers[54][0] - 1)\n    # print(offers[54][1] - 1)\n    # print(offers[54][2])\n    # print(offers[55][0] - 1)\n    # print(offers[55][1] - 1)\n    # print(offers[55][2])\n    # print(offers[56][0] - 1)\n    # print(offers[56][1] - 1)\n    # print(offers[56][2])\n    # print(offers[57][0] - 1)\n    # print(offers[57][1] - 1)\n    # print(offers[57][2])\n    # print(offers[58][0] - 1)\n    # print(offers[58][1] - 1)\n    # print(offers[58][2])\n    # print(offers[59][0] - 1)\n    # print(offers[59][1] - 1)\n    # print(offers[59][2])\n    # print(offers[60][0] - 1)\n    # print(offers[60][1] - 1)\n    # print(offers[60][2])\n    # print(offers[61][0] - 1)\n    # print(offers[61][1] - 1)\n    # print(offers[61][2])\n    # print(offers[62][0] - 1)\n    # print(offers[62][1] - 1)\n    # print(offers[62][2])\n    # print(offers[63][0] - 1)\n    # print(offers[63][1] - 1)\n    # print(offers[63][2])\n    # print(offers[64][0] - 1)\n    # print(offers[64][1] - 1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for i in range(m):\n        x, y, w = map(int, input().split())\n        offers.append((x, y, w))\n    print(solve(n, a, offers))\n\ndef solve(n, a, offers):\n    # TODO\n    return 0\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nimport heapq\n\ndef prim(n, edges):\n    \"\"\"\n    Prim's algorithm to find the minimum spanning tree of a graph.\n    \"\"\"\n\n    # Initialize the heap with the first vertex.\n    heap = [(0, 0)]\n    visited = set()\n    total = 0\n\n    # While there are still vertices to visit.\n    while heap:\n        # Get the next lowest cost vertex.\n        cost, vertex = heapq.heappop(heap)\n\n        # If we've already visited this vertex, skip it.\n        if vertex in visited:\n            continue\n\n        # Add the cost of this vertex to the total.\n        total += cost\n\n        # Add this vertex to the visited set.\n        visited.add(vertex)\n\n        # Add all of the edges from this vertex to the heap.\n        for edge in edges[vertex]:\n            heapq.heappush(heap, edge)\n\n    # If we didn't visit all of the vertices, the graph is not connected.\n    if len(visited) != n:\n        return -1\n\n    return total\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # Initialize the edges list.\n    edges = [[] for _ in range(n)]\n\n    # Add the edges to the list.\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        edges[x - 1].append((w, y - 1))\n        edges[y - 1].append((w, x - 1))\n\n    # Add the edges that are not in the special offers.\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges[i].append((a[i] + a[j], j))\n            edges[j].append((a[i] + a[j], i))\n\n    # Use Prim's algorithm to find the minimum spanning tree.\n    print(prim(n, edges))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1650427244,
+  "id": "cmpl-4yvoCSkc0w08L0qaYrHs2TYCPOBXk",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 04:02:06.853439 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, sys.stdin.readline().split())\n        offers.append((x, y, w))\n    print(solve(n, a, offers))\n\ndef solve(n, a, offers):\n    # TODO\n    return 0\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.853625 REASON stop
+2022-04-20 04:02:06.854657 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, sys.stdin.readline().split())\n        offers.append((x, y, w))\n    offers.sort(key=lambda x: x[2])\n    print(offers)\n    # TODO\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.854780 REASON stop
+2022-04-20 04:02:06.855556 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    edges = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        edges.append((x, y, w))\n    edges.sort(key=lambda x: x[2])\n    dsu = DSU(n)\n    res = 0\n    for x, y, w in edges:\n        x -= 1\n        y -= 1\n        if dsu.find(x) != dsu.find(y):\n            dsu.union(x, y)\n            res += w\n    for i in range(n):\n        if dsu.find(i) != i:\n            res += a[i]\n    print(res)\n\n\nclass DSU:\n    def __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [0] * n\n\n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n\n    def union(self, x, y):\n        x = self.find(x)\n        y = self.find(y)\n        if x == y:\n            return\n        if self.rank[x] < self.rank[y]:\n            self.parent[x] = y\n        else:\n            self.parent[y] = x\n            if self.rank[x] == self.rank[y]:\n                self.rank[x] += 1\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.855653 REASON stop
+2022-04-20 04:02:06.876615 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        offers.append((x, y, w))\n    offers.sort(key=lambda x: x[2])\n    p = [i for i in range(n + 1)]\n    r = [0] * (n + 1)\n    def find(x):\n        if p[x] != x:\n            p[x] = find(p[x])\n        return p[x]\n    def union(x, y):\n        xr = find(x)\n        yr = find(y)\n        if xr == yr:\n            return\n        if r[xr] < r[yr]:\n            p[xr] = yr\n        elif r[xr] > r[yr]:\n            p[yr] = xr\n        else:\n            p[yr] = xr\n            r[xr] += 1\n    ans = 0\n    for x, y, w in offers:\n        if find(x) != find(y):\n            union(x, y)\n            ans += w\n    for i in range(1, n + 1):\n        if find(i) != find(1):\n            ans += a[i - 1]\n            union(i, 1)\n    print(ans)\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.876811 REASON stop
+2022-04-20 04:02:06.877518 4 {
+  "finish_reason": "length",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    offers = []\n    for i in range(m):\n        offers.append(list(map(int, sys.stdin.readline().split())))\n    offers.sort(key=lambda x: x[2])\n    # print(offers)\n    # print(a)\n    # print(n)\n    # print(m)\n    # print(offers)\n    # print(a)\n    # print(offers[0][0])\n    # print(offers[0][1])\n    # print(offers[0][2])\n    # print(offers[0][0] - 1)\n    # print(offers[0][1] - 1)\n    # print(offers[0][2])\n    # print(offers[1][0] - 1)\n    # print(offers[1][1] - 1)\n    # print(offers[1][2])\n    # print(offers[2][0] - 1)\n    # print(offers[2][1] - 1)\n    # print(offers[2][2])\n    # print(offers[3][0] - 1)\n    # print(offers[3][1] - 1)\n    # print(offers[3][2])\n    # print(offers[4][0] - 1)\n    # print(offers[4][1] - 1)\n    # print(offers[4][2])\n    # print(offers[5][0] - 1)\n    # print(offers[5][1] - 1)\n    # print(offers[5][2])\n    # print(offers[6][0] - 1)\n    # print(offers[6][1] - 1)\n    # print(offers[6][2])\n    # print(offers[7][0] - 1)\n    # print(offers[7][1] - 1)\n    # print(offers[7][2])\n    # print(offers[8][0] - 1)\n    # print(offers[8][1] - 1)\n    # print(offers[8][2])\n    # print(offers[9][0] - 1)\n    # print(offers[9][1] - 1)\n    # print(offers[9][2])\n    # print(offers[10][0] - 1)\n    # print(offers[10][1] - 1)\n    # print(offers[10][2])\n    # print(offers[11][0] - 1)\n    # print(offers[11][1] - 1)\n    # print(offers[11][2])\n    # print(offers[12][0] - 1)\n    # print(offers[12][1] - 1)\n    # print(offers[12][2])\n    # print(offers[13][0] - 1)\n    # print(offers[13][1] - 1)\n    # print(offers[13][2])\n    # print(offers[14][0] - 1)\n    # print(offers[14][1] - 1)\n    # print(offers[14][2])\n    # print(offers[15][0] - 1)\n    # print(offers[15][1] - 1)\n    # print(offers[15][2])\n    # print(offers[16][0] - 1)\n    # print(offers[16][1] - 1)\n    # print(offers[16][2])\n    # print(offers[17][0] - 1)\n    # print(offers[17][1] - 1)\n    # print(offers[17][2])\n    # print(offers[18][0] - 1)\n    # print(offers[18][1] - 1)\n    # print(offers[18][2])\n    # print(offers[19][0] - 1)\n    # print(offers[19][1] - 1)\n    # print(offers[19][2])\n    # print(offers[20][0] - 1)\n    # print(offers[20][1] - 1)\n    # print(offers[20][2])\n    # print(offers[21][0] - 1)\n    # print(offers[21][1] - 1)\n    # print(offers[21][2])\n    # print(offers[22][0] - 1)\n    # print(offers[22][1] - 1)\n    # print(offers[22][2])\n    # print(offers[23][0] - 1)\n    # print(offers[23][1] - 1)\n    # print(offers[23][2])\n    # print(offers[24][0] - 1)\n    # print(offers[24][1] - 1)\n    # print(offers[24][2])\n    # print(offers[25][0] - 1)\n    # print(offers[25][1] - 1)\n    # print(offers[25][2])\n    # print(offers[26][0] - 1)\n    # print(offers[26][1] - 1)\n    # print(offers[26][2])\n    # print(offers[27][0] - 1)\n    # print(offers[27][1] - 1)\n    # print(offers[27][2])\n    # print(offers[28][0] - 1)\n    # print(offers[28][1] - 1)\n    # print(offers[28][2])\n    # print(offers[29][0] - 1)\n    # print(offers[29][1] - 1)\n    # print(offers[29][2])\n    # print(offers[30][0] - 1)\n    # print(offers[30][1] - 1)\n    # print(offers[30][2])\n    # print(offers[31][0] - 1)\n    # print(offers[31][1] - 1)\n    # print(offers[31][2])\n    # print(offers[32][0] - 1)\n    # print(offers[32][1] - 1)\n    # print(offers[32][2])\n    # print(offers[33][0] - 1)\n    # print(offers[33][1] - 1)\n    # print(offers[33][2])\n    # print(offers[34][0] - 1)\n    # print(offers[34][1] - 1)\n    # print(offers[34][2])\n    # print(offers[35][0] - 1)\n    # print(offers[35][1] - 1)\n    # print(offers[35][2])\n    # print(offers[36][0] - 1)\n    # print(offers[36][1] - 1)\n    # print(offers[36][2])\n    # print(offers[37][0] - 1)\n    # print(offers[37][1] - 1)\n    # print(offers[37][2])\n    # print(offers[38][0] - 1)\n    # print(offers[38][1] - 1)\n    # print(offers[38][2])\n    # print(offers[39][0] - 1)\n    # print(offers[39][1] - 1)\n    # print(offers[39][2])\n    # print(offers[40][0] - 1)\n    # print(offers[40][1] - 1)\n    # print(offers[40][2])\n    # print(offers[41][0] - 1)\n    # print(offers[41][1] - 1)\n    # print(offers[41][2])\n    # print(offers[42][0] - 1)\n    # print(offers[42][1] - 1)\n    # print(offers[42][2])\n    # print(offers[43][0] - 1)\n    # print(offers[43][1] - 1)\n    # print(offers[43][2])\n    # print(offers[44][0] - 1)\n    # print(offers[44][1] - 1)\n    # print(offers[44][2])\n    # print(offers[45][0] - 1)\n    # print(offers[45][1] - 1)\n    # print(offers[45][2])\n    # print(offers[46][0] - 1)\n    # print(offers[46][1] - 1)\n    # print(offers[46][2])\n    # print(offers[47][0] - 1)\n    # print(offers[47][1] - 1)\n    # print(offers[47][2])\n    # print(offers[48][0] - 1)\n    # print(offers[48][1] - 1)\n    # print(offers[48][2])\n    # print(offers[49][0] - 1)\n    # print(offers[49][1] - 1)\n    # print(offers[49][2])\n    # print(offers[50][0] - 1)\n    # print(offers[50][1] - 1)\n    # print(offers[50][2])\n    # print(offers[51][0] - 1)\n    # print(offers[51][1] - 1)\n    # print(offers[51][2])\n    # print(offers[52][0] - 1)\n    # print(offers[52][1] - 1)\n    # print(offers[52][2])\n    # print(offers[53][0] - 1)\n    # print(offers[53][1] - 1)\n    # print(offers[53][2])\n    # print(offers[54][0] - 1)\n    # print(offers[54][1] - 1)\n    # print(offers[54][2])\n    # print(offers[55][0] - 1)\n    # print(offers[55][1] - 1)\n    # print(offers[55][2])\n    # print(offers[56][0] - 1)\n    # print(offers[56][1] - 1)\n    # print(offers[56][2])\n    # print(offers[57][0] - 1)\n    # print(offers[57][1] - 1)\n    # print(offers[57][2])\n    # print(offers[58][0] - 1)\n    # print(offers[58][1] - 1)\n    # print(offers[58][2])\n    # print(offers[59][0] - 1)\n    # print(offers[59][1] - 1)\n    # print(offers[59][2])\n    # print(offers[60][0] - 1)\n    # print(offers[60][1] - 1)\n    # print(offers[60][2])\n    # print(offers[61][0] - 1)\n    # print(offers[61][1] - 1)\n    # print(offers[61][2])\n    # print(offers[62][0] - 1)\n    # print(offers[62][1] - 1)\n    # print(offers[62][2])\n    # print(offers[63][0] - 1)\n    # print(offers[63][1] - 1)\n    # print(offers[63][2])\n    # print(offers[64][0] - 1)\n    # print(offers[64][1] - 1)"
+}
+2022-04-20 04:02:06.877685 REASON length
+2022-04-20 04:02:06.877698 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n    offers = []\n    for i in range(m):\n        x, y, w = map(int, input().split())\n        offers.append((x, y, w))\n    print(solve(n, a, offers))\n\ndef solve(n, a, offers):\n    # TODO\n    return 0\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 04:02:06.877776 REASON stop
+2022-04-20 04:02:06.878373 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nimport heapq\n\ndef prim(n, edges):\n    \"\"\"\n    Prim's algorithm to find the minimum spanning tree of a graph.\n    \"\"\"\n\n    # Initialize the heap with the first vertex.\n    heap = [(0, 0)]\n    visited = set()\n    total = 0\n\n    # While there are still vertices to visit.\n    while heap:\n        # Get the next lowest cost vertex.\n        cost, vertex = heapq.heappop(heap)\n\n        # If we've already visited this vertex, skip it.\n        if vertex in visited:\n            continue\n\n        # Add the cost of this vertex to the total.\n        total += cost\n\n        # Add this vertex to the visited set.\n        visited.add(vertex)\n\n        # Add all of the edges from this vertex to the heap.\n        for edge in edges[vertex]:\n            heapq.heappush(heap, edge)\n\n    # If we didn't visit all of the vertices, the graph is not connected.\n    if len(visited) != n:\n        return -1\n\n    return total\n\ndef main():\n    n, m = map(int, input().split())\n    a = list(map(int, input().split()))\n\n    # Initialize the edges list.\n    edges = [[] for _ in range(n)]\n\n    # Add the edges to the list.\n    for _ in range(m):\n        x, y, w = map(int, input().split())\n        edges[x - 1].append((w, y - 1))\n        edges[y - 1].append((w, x - 1))\n\n    # Add the edges that are not in the special offers.\n    for i in range(n):\n        for j in range(i + 1, n):\n            edges[i].append((a[i] + a[j], j))\n            edges[j].append((a[i] + a[j], i))\n\n    # Use Prim's algorithm to find the minimum spanning tree.\n    print(prim(n, edges))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.878463 REASON stop
+2022-04-20 04:02:06.879242 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 04:02:06.879472 REASON stop

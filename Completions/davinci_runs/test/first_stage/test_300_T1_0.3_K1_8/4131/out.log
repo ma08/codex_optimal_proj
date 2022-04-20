@@ -1,0 +1,157 @@
+2022-04-20 02:34:32.267873 """
+In Republic of Atcoder, there are N prefectures, and a total of M cities that belong to those prefectures.
+City i is established in year Y_i and belongs to Prefecture P_i.
+You can assume that there are no multiple cities that are established in the same year.
+It is decided to allocate a 12-digit ID number to each city.
+If City i is the x-th established city among the cities that belong to Prefecture i, the first six digits of the ID number of City i is P_i, and the last six digits of the ID number is x.
+Here, if P_i or x (or both) has less than six digits, zeros are added to the left until it has six digits.
+Find the ID numbers for all the cities.
+Note that there can be a prefecture with no cities.
+
+-----Constraints-----
+ - 1 \leq N \leq 10^5
+ - 1 \leq M \leq 10^5
+ - 1 \leq P_i \leq N
+ - 1 \leq Y_i \leq 10^9
+ - Y_i are all different.
+ - All values in input are integers.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+P_1 Y_1
+:
+P_M Y_M
+
+-----Output-----
+Print the ID numbers for all the cities, in ascending order of indices (City 1, City 2, ...).
+
+-----Sample Input-----
+2 3
+1 32
+2 63
+1 12
+
+-----Sample Output-----
+000001000002
+000002000001
+000001000001
+
+ - As City 1 is the second established city among the cities that belong to Prefecture 1, its ID number is 000001000002.
+ - As City 2 is the first established city among the cities that belong to Prefecture 2, its ID number is 000002000001.
+ - As City 3 is the first established city among the cities that belong to Prefecture 1, its ID number is 000001000001.
+"""
+2022-04-20 02:34:32.267890 --------------------------
+2022-04-20 02:34:32.268042 using api key derek
+2022-04-20 02:34:51.891374 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\nprefecture_dict = {}\n\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    if p in prefecture_dict:\n        prefecture_dict[p].append(y)\n    else:\n        prefecture_dict[p] = [y]\n\nfor p in prefecture_dict:\n    prefecture_dict[p].sort()\n\nfor p in prefecture_dict:\n    for i in range(len(prefecture_dict[p])):\n        print(\"{:06d}{:06d}\".format(p, i + 1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\nfrom collections import defaultdict\n\nn, m = map(int, input().split())\n\n# Create a dictionary of prefectures and their cities\nprefectures = defaultdict(list)\nfor _ in range(m):\n    p, y = map(int, input().split())\n    prefectures[p].append(y)\n\n# Sort the cities in each prefecture\nfor p in prefectures:\n    prefectures[p].sort()\n\n# Create a dictionary of cities and their IDs\ncities = {}\nfor p in prefectures:\n    for i, y in enumerate(prefectures[p]):\n        cities[(p, y)] = str(p).zfill(6) + str(i + 1).zfill(6)\n\n# Print the IDs of the cities in ascending order of indices\nfor p, y in sorted(cities):\n    print(cities[(p, y)])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\n# \u5165\u529b\nn, m = map(int, input().split())\np_list = []\ny_list = []\nfor i in range(m):\n    p, y = map(int, input().split())\n    p_list.append(p)\n    y_list.append(y)\n\n# \u5404\u770c\u306e\u90fd\u5e02\u6570\u3092\u30ab\u30a6\u30f3\u30c8\np_count = [0] * n\nfor i in range(m):\n    p_count[p_list[i] - 1] += 1\n\n# \u5404\u770c\u306e\u90fd\u5e02\u6570\u3092\u7d2f\u7a4d\u548c\np_sum = [0] * n\nfor i in range(n):\n    if i == 0:\n        p_sum[i] = p_count[i]\n    else:\n        p_sum[i] = p_sum[i - 1] + p_count[i]\n\n# \u5404\u90fd\u5e02\u306eID\u3092\u7b97\u51fa\nid_list = []\nfor i in range(m):\n    id_list.append(str(p_list[i]).zfill(6) + str(p_sum[p_list[i] - 1] - p_count[p_list[i] - 1] + y_list[i]).zfill(6))\n    p_count[p_list[i] - 1] -= 1\n\n# \u51fa\u529b\nfor i in range(m):\n    print(id_list[i])"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefecture = [[] for _ in range(n)]\n    for _ in range(m):\n        p, y = map(int, sys.stdin.readline().split())\n        prefecture[p-1].append(y)\n    for p in prefecture:\n        p.sort()\n    for p, y in zip(prefecture, sys.stdin.readlines()):\n        p, y = map(int, y.split())\n        print(\"{:06d}{:06d}\".format(p, p.index(y)+1))\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    prefecture_cities = [[] for _ in range(n)]\n    for i in range(m):\n        p, y = map(int, input().split())\n        prefecture_cities[p-1].append(y)\n    for i in range(n):\n        prefecture_cities[i].sort()\n    for i in range(m):\n        p, y = map(int, input().split())\n        print(\"{:06}{:06}\".format(p, prefecture_cities[p-1].index(y)+1))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport bisect\nfrom collections import defaultdict\n\nn, m = map(int, sys.stdin.readline().split())\n\nd = defaultdict(list)\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    d[p].append(y)\n\nfor k, v in d.items():\n    v.sort()\n\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    idx = bisect.bisect_left(d[p], y) + 1\n    print(f'{p:06}{idx:06}')"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\npref = [[] for _ in range(n)]\nfor _ in range(m):\n    p, y = map(int, input().split())\n    pref[p-1].append(y)\n\nfor p in pref:\n    p.sort()\n\nfor i in range(m):\n    p, y = map(int, input().split())\n    print(\"{:06}{:06}\".format(p, pref[p-1].index(y)+1))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, m = map(int, input().split())\n\nprefecture = [[] for _ in range(n)]\nfor _ in range(m):\n    p, y = map(int, input().split())\n    prefecture[p-1].append(y)\n\nfor p in prefecture:\n    p.sort()\n\nfor p, y in zip(map(int, input().split()), map(int, input().split())):\n    print(\"{:06}{:06}\".format(p, prefecture[p-1].index(y)+1))"
+    }
+  ],
+  "created": 1650422072,
+  "id": "cmpl-4yuSmU7CzXd3hS42aDVYQ4AXP3lhy",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 02:34:51.891798 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, m = map(int, sys.stdin.readline().split())\n\nprefecture_dict = {}\n\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    if p in prefecture_dict:\n        prefecture_dict[p].append(y)\n    else:\n        prefecture_dict[p] = [y]\n\nfor p in prefecture_dict:\n    prefecture_dict[p].sort()\n\nfor p in prefecture_dict:\n    for i in range(len(prefecture_dict[p])):\n        print(\"{:06d}{:06d}\".format(p, i + 1))"
+}
+2022-04-20 02:34:51.891914 REASON stop
+2022-04-20 02:34:51.967478 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\nfrom collections import defaultdict\n\nn, m = map(int, input().split())\n\n# Create a dictionary of prefectures and their cities\nprefectures = defaultdict(list)\nfor _ in range(m):\n    p, y = map(int, input().split())\n    prefectures[p].append(y)\n\n# Sort the cities in each prefecture\nfor p in prefectures:\n    prefectures[p].sort()\n\n# Create a dictionary of cities and their IDs\ncities = {}\nfor p in prefectures:\n    for i, y in enumerate(prefectures[p]):\n        cities[(p, y)] = str(p).zfill(6) + str(i + 1).zfill(6)\n\n# Print the IDs of the cities in ascending order of indices\nfor p, y in sorted(cities):\n    print(cities[(p, y)])"
+}
+2022-04-20 02:34:51.967648 REASON stop
+2022-04-20 02:34:52.203831 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\n# \u5165\u529b\nn, m = map(int, input().split())\np_list = []\ny_list = []\nfor i in range(m):\n    p, y = map(int, input().split())\n    p_list.append(p)\n    y_list.append(y)\n\n# \u5404\u770c\u306e\u90fd\u5e02\u6570\u3092\u30ab\u30a6\u30f3\u30c8\np_count = [0] * n\nfor i in range(m):\n    p_count[p_list[i] - 1] += 1\n\n# \u5404\u770c\u306e\u90fd\u5e02\u6570\u3092\u7d2f\u7a4d\u548c\np_sum = [0] * n\nfor i in range(n):\n    if i == 0:\n        p_sum[i] = p_count[i]\n    else:\n        p_sum[i] = p_sum[i - 1] + p_count[i]\n\n# \u5404\u90fd\u5e02\u306eID\u3092\u7b97\u51fa\nid_list = []\nfor i in range(m):\n    id_list.append(str(p_list[i]).zfill(6) + str(p_sum[p_list[i] - 1] - p_count[p_list[i] - 1] + y_list[i]).zfill(6))\n    p_count[p_list[i] - 1] -= 1\n\n# \u51fa\u529b\nfor i in range(m):\n    print(id_list[i])"
+}
+2022-04-20 02:34:52.204088 REASON stop
+2022-04-20 02:34:52.583749 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, sys.stdin.readline().split())\n    prefecture = [[] for _ in range(n)]\n    for _ in range(m):\n        p, y = map(int, sys.stdin.readline().split())\n        prefecture[p-1].append(y)\n    for p in prefecture:\n        p.sort()\n    for p, y in zip(prefecture, sys.stdin.readlines()):\n        p, y = map(int, y.split())\n        print(\"{:06d}{:06d}\".format(p, p.index(y)+1))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 02:34:52.583965 REASON stop
+2022-04-20 02:34:52.805439 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    prefecture_cities = [[] for _ in range(n)]\n    for i in range(m):\n        p, y = map(int, input().split())\n        prefecture_cities[p-1].append(y)\n    for i in range(n):\n        prefecture_cities[i].sort()\n    for i in range(m):\n        p, y = map(int, input().split())\n        print(\"{:06}{:06}\".format(p, prefecture_cities[p-1].index(y)+1))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 02:34:52.805638 REASON stop
+2022-04-20 02:34:53.163284 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport bisect\nfrom collections import defaultdict\n\nn, m = map(int, sys.stdin.readline().split())\n\nd = defaultdict(list)\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    d[p].append(y)\n\nfor k, v in d.items():\n    v.sort()\n\nfor i in range(m):\n    p, y = map(int, sys.stdin.readline().split())\n    idx = bisect.bisect_left(d[p], y) + 1\n    print(f'{p:06}{idx:06}')"
+}
+2022-04-20 02:34:53.163479 REASON stop
+2022-04-20 02:34:53.525383 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\npref = [[] for _ in range(n)]\nfor _ in range(m):\n    p, y = map(int, input().split())\n    pref[p-1].append(y)\n\nfor p in pref:\n    p.sort()\n\nfor i in range(m):\n    p, y = map(int, input().split())\n    print(\"{:06}{:06}\".format(p, pref[p-1].index(y)+1))"
+}
+2022-04-20 02:34:53.525593 REASON stop
+2022-04-20 02:34:53.880831 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, m = map(int, input().split())\n\nprefecture = [[] for _ in range(n)]\nfor _ in range(m):\n    p, y = map(int, input().split())\n    prefecture[p-1].append(y)\n\nfor p in prefecture:\n    p.sort()\n\nfor p, y in zip(map(int, input().split()), map(int, input().split())):\n    print(\"{:06}{:06}\".format(p, prefecture[p-1].index(y)+1))"
+}
+2022-04-20 02:34:53.881213 REASON stop

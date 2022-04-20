@@ -1,0 +1,182 @@
+2022-04-20 01:02:59.411799 """
+You are given $n$ strings. Each string consists of lowercase English letters. Rearrange (reorder) the given strings in such a way that for every string, all strings that are placed before it are its substrings.
+
+String $a$ is a substring of string $b$ if it is possible to choose several consecutive letters in $b$ in such a way that they form $a$. For example, string "for" is contained as a substring in strings "codeforces", "for" and "therefore", but is not contained as a substring in strings "four", "fofo" and "rof".
+
+
+-----Input-----
+
+The first line contains an integer $n$ ($1 \le n \le 100$) — the number of strings.
+
+The next $n$ lines contain the given strings. The number of letters in each string is from $1$ to $100$, inclusive. Each string consists of lowercase English letters.
+
+Some strings might be equal.
+
+
+-----Output-----
+
+If it is impossible to reorder $n$ given strings in required order, print "NO" (without quotes).
+
+Otherwise print "YES" (without quotes) and $n$ given strings in required order.
+
+
+-----Examples-----
+Input
+5
+a
+aba
+abacaba
+ba
+aba
+
+Output
+YES
+a
+ba
+aba
+aba
+abacaba
+
+Input
+5
+a
+abacaba
+ba
+aba
+abab
+
+Output
+NO
+
+Input
+3
+qwerty
+qwerty
+qwerty
+
+Output
+YES
+qwerty
+qwerty
+qwerty
+
+
+
+-----Note-----
+
+In the second example you cannot reorder the strings because the string "abab" is not a substring of the string "abacaba".
+"""
+2022-04-20 01:02:59.411814 --------------------------
+2022-04-20 01:02:59.411918 using api key gabby
+2022-04-20 01:03:14.249626 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    strings = []\n    for i in range(n):\n        strings.append(sys.stdin.readline().strip())\n    strings.sort(key=len)\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for _ in range(n):\n        strings.append(input())\n\n    strings.sort(key=lambda x: len(x))\n\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\n\nstrings = []\n\nfor i in range(n):\n    strings.append(input())\n\nstrings.sort(key=len)\n\nfor i in range(n-1):\n    if strings[i] not in strings[i+1]:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")\nprint(\"\\n\".join(strings))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\nn = int(input())\nstrings = []\nfor _ in range(n):\n    strings.append(input())\n\ndef is_substring(a, b):\n    for i in range(len(b)):\n        if a == b[i:i+len(a)]:\n            return True\n    return False\n\ndef is_valid(strings):\n    for i in range(len(strings)):\n        for j in range(i):\n            if not is_substring(strings[j], strings[i]):\n                return False\n    return True\n\ndef sort_strings(strings):\n    if is_valid(strings):\n        print('YES')\n        for s in strings:\n            print(s)\n    else:\n        print('NO')\n\nsort_strings(strings)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    strings = []\n    for i in range(n):\n        strings.append(sys.stdin.readline().strip())\n    strings.sort(key=len)\n    for i in range(n):\n        for j in range(i):\n            if strings[i].find(strings[j]) == -1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\ndef is_substring(s1, s2):\n    if s1 == s2:\n        return True\n    if len(s1) > len(s2):\n        return False\n    for i in range(len(s2) - len(s1) + 1):\n        if s2[i:i+len(s1)] == s1:\n            return True\n    return False\n\ndef is_substring_list(s1, l):\n    for s in l:\n        if is_substring(s1, s):\n            return True\n    return False\n\ndef solve(l):\n    l.sort(key=lambda x: len(x))\n    for i in range(len(l)):\n        if not is_substring_list(l[i], l[:i]):\n            return False\n    return True\n\ndef main():\n    n = int(input())\n    l = []\n    for _ in range(n):\n        l.append(input())\n    if solve(l):\n        print('YES')\n        for s in l:\n            print(s)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for _ in range(n):\n        strings.append(input())\n    strings.sort(key=len)\n    for i in range(1, n):\n        if strings[i] not in strings[i-1]:\n            print(\"NO\")\n            return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for i in range(n):\n        strings.append(input())\n    strings.sort(key=lambda x: len(x))\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for i in range(n):\n        print(strings[i])\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650416579,
+  "id": "cmpl-4yt2BU1R89MLFp9p15erO0JtJtMBl",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 01:03:14.249951 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    strings = []\n    for i in range(n):\n        strings.append(sys.stdin.readline().strip())\n    strings.sort(key=len)\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:03:14.249987 REASON stop
+2022-04-20 01:03:14.250513 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for _ in range(n):\n        strings.append(input())\n\n    strings.sort(key=lambda x: len(x))\n\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:03:14.250574 REASON stop
+2022-04-20 01:03:14.250981 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\n\nstrings = []\n\nfor i in range(n):\n    strings.append(input())\n\nstrings.sort(key=len)\n\nfor i in range(n-1):\n    if strings[i] not in strings[i+1]:\n        print(\"NO\")\n        exit()\n\nprint(\"YES\")\nprint(\"\\n\".join(strings))"
+}
+2022-04-20 01:03:14.251043 REASON stop
+2022-04-20 01:03:14.265432 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\nn = int(input())\nstrings = []\nfor _ in range(n):\n    strings.append(input())\n\ndef is_substring(a, b):\n    for i in range(len(b)):\n        if a == b[i:i+len(a)]:\n            return True\n    return False\n\ndef is_valid(strings):\n    for i in range(len(strings)):\n        for j in range(i):\n            if not is_substring(strings[j], strings[i]):\n                return False\n    return True\n\ndef sort_strings(strings):\n    if is_valid(strings):\n        print('YES')\n        for s in strings:\n            print(s)\n    else:\n        print('NO')\n\nsort_strings(strings)"
+}
+2022-04-20 01:03:14.265596 REASON stop
+2022-04-20 01:03:14.273747 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n = int(sys.stdin.readline())\n    strings = []\n    for i in range(n):\n        strings.append(sys.stdin.readline().strip())\n    strings.sort(key=len)\n    for i in range(n):\n        for j in range(i):\n            if strings[i].find(strings[j]) == -1:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nmain()"
+}
+2022-04-20 01:03:14.273863 REASON stop
+2022-04-20 01:03:14.274699 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\ndef is_substring(s1, s2):\n    if s1 == s2:\n        return True\n    if len(s1) > len(s2):\n        return False\n    for i in range(len(s2) - len(s1) + 1):\n        if s2[i:i+len(s1)] == s1:\n            return True\n    return False\n\ndef is_substring_list(s1, l):\n    for s in l:\n        if is_substring(s1, s):\n            return True\n    return False\n\ndef solve(l):\n    l.sort(key=lambda x: len(x))\n    for i in range(len(l)):\n        if not is_substring_list(l[i], l[:i]):\n            return False\n    return True\n\ndef main():\n    n = int(input())\n    l = []\n    for _ in range(n):\n        l.append(input())\n    if solve(l):\n        print('YES')\n        for s in l:\n            print(s)\n    else:\n        print('NO')\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-20 01:03:14.274780 REASON stop
+2022-04-20 01:03:14.275652 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for _ in range(n):\n        strings.append(input())\n    strings.sort(key=len)\n    for i in range(1, n):\n        if strings[i] not in strings[i-1]:\n            print(\"NO\")\n            return\n    print(\"YES\")\n    for s in strings:\n        print(s)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:03:14.275732 REASON stop
+2022-04-20 01:03:14.276801 7 {
+  "finish_reason": "stop",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n = int(input())\n    strings = []\n    for i in range(n):\n        strings.append(input())\n    strings.sort(key=lambda x: len(x))\n    for i in range(n):\n        for j in range(i+1, n):\n            if strings[i] not in strings[j]:\n                print(\"NO\")\n                return\n    print(\"YES\")\n    for i in range(n):\n        print(strings[i])\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 01:03:14.276970 REASON stop

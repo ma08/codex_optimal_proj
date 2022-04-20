@@ -1,0 +1,168 @@
+2022-04-20 00:46:25.352278 """
+You are given an array $a$ consisting of $n$ integer numbers.
+
+You have to color this array in $k$ colors in such a way that:   Each element of the array should be colored in some color;  For each $i$ from $1$ to $k$ there should be at least one element colored in the $i$-th color in the array;  For each $i$ from $1$ to $k$ all elements colored in the $i$-th color should be distinct. 
+
+Obviously, such coloring might be impossible. In this case, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions above. If there are multiple answers, you can print any.
+
+
+-----Input-----
+
+The first line of the input contains two integers $n$ and $k$ ($1 \le k \le n \le 5000$) — the length of the array $a$ and the number of colors, respectively.
+
+The second line of the input contains $n$ integers $a_1, a_2, \dots, a_n$ ($1 \le a_i \le 5000$) — elements of the array $a$.
+
+
+-----Output-----
+
+If there is no answer, print "NO". Otherwise print "YES" and any coloring (i.e. numbers $c_1, c_2, \dots c_n$, where $1 \le c_i \le k$ and $c_i$ is the color of the $i$-th element of the given array) satisfying the conditions described in the problem statement. If there are multiple answers, you can print any.
+
+
+-----Examples-----
+Input
+4 2
+1 2 2 3
+
+Output
+YES
+1 1 2 2
+
+Input
+5 2
+3 2 1 2 3
+
+Output
+YES
+2 1 1 2 1
+
+Input
+5 2
+2 1 1 2 1
+
+Output
+NO
+
+
+
+-----Note-----
+
+In the first example the answer $2~ 1~ 2~ 1$ is also acceptable.
+
+In the second example the answer $1~ 1~ 1~ 2~ 2$ is also acceptable.
+
+There exist other acceptable answers for both examples.
+"""
+2022-04-20 00:46:25.352293 --------------------------
+2022-04-20 00:46:25.352395 using api key sourya
+2022-04-20 00:47:45.663981 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef check(c):\n    for i in range(1, k+1):\n        if c.count(i) < a.count(i):\n            return False\n    return True\n\ndef solve(n, k, a):\n    c = [0] * n\n    for i in range(n):\n        c[i] = a[i]\n    if check(c):\n        return c\n    c = [0] * n\n    for i in range(n):\n        c[i] = a[i] % k + 1\n    if check(c):\n        return c\n    return None\n\nc = solve(n, k, a)\nif c is None:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    print(*c)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif len(set(a)) == n:\n    print(\"YES\")\n    for i in range(n):\n        print(i % k + 1, end=' ')\nelse:\n    print(\"NO\")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    d = {}\n    for i in range(n):\n        if a[i] in d:\n            d[a[i]].append(i)\n        else:\n            d[a[i]] = [i]\n\n    if len(d) < k:\n        print(\"NO\")\n        return\n\n    ans = [0] * n\n    for i in range(1, k + 1):\n        if i <= len(d):\n            for j in d[i]:\n                ans[j] = i\n        else:\n            for j in d[i - k]:\n                ans[j] = i\n\n    print(\"YES\")\n    print(\" \".join([str(x) for x in ans]))\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 3,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nd = {}\n\nfor i in range(n):\n    d[a[i]] = d.get(a[i], 0) + 1\n\nif len(d) > k:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(n):\n        print(d.get(a[i], 0), end=\" \")"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 4,
+      "logprobs": null,
+      "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    if a[0] == a[-1]:\n        print(\"NO\")\n        return\n    colors = [1] * n\n    for i in range(1, n):\n        if a[i] == a[i - 1]:\n            colors[i] = colors[i - 1]\n        else:\n            colors[i] = colors[i - 1] + 1\n    if colors[-1] > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    print(*colors)\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 5,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif max(a) > k:\n    print(\"NO\")\n    sys.exit()\n\nprint(\"YES\")\nc = [0] * n\nfor i in range(n):\n    c[i] = a[i]\n    if c[i] == 0:\n        c[i] = 1\n\nprint(\" \".join(map(str, c)))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 6,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k < n:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(n):\n        print(i % k + 1, end=\" \")"
+    },
+    {
+      "finish_reason": "length",
+      "index": 7,
+      "logprobs": null,
+      "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif n == k:\n    print(\"YES\")\n    print(\" \".join(str(i) for i in range(1, n+1)))\n    exit()\n\nif k > n:\n    print(\"NO\")\n    exit()\n\n# if k == 1:\n#     print(\"YES\")\n#     print(\"1 \" * n)\n#     exit()\n\n# if k == 2:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//2) + \"2 \" * (n//2 + n%2))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 3:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//3) + \"2 \" * (n//3) + \"3 \" * (n//3 + n%3))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 4:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//4) + \"2 \" * (n//4) + \"3 \" * (n//4) + \"4 \" * (n//4 + n%4))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 5:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//5) + \"2 \" * (n//5) + \"3 \" * (n//5) + \"4 \" * (n//5) + \"5 \" * (n//5 + n%5))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 6:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//6) + \"2 \" * (n//6) + \"3 \" * (n//6) + \"4 \" * (n//6) + \"5 \" * (n//6) + \"6 \" * (n//6 + n%6))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 7:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//7) + \"2 \" * (n//7) + \"3 \" * (n//7) + \"4 \" * (n//7) + \"5 \" * (n//7) + \"6 \" * (n//7) + \"7 \" * (n//7 + n%7))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 8:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//8) + \"2 \" * (n//8) + \"3 \" * (n//8) + \"4 \" * (n//8) + \"5 \" * (n//8) + \"6 \" * (n//8) + \"7 \" * (n//8) + \"8 \" * (n//8 + n%8))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 9:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//9) + \"2 \" * (n//9) + \"3 \" * (n//9) + \"4 \" * (n//9) + \"5 \" * (n//9) + \"6 \" * (n//9) + \"7 \" * (n//9) + \"8 \" * (n//9) + \"9 \" * (n//9 + n%9))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 10:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//10) + \"2 \" * (n//10) + \"3 \" * (n//10) + \"4 \" * (n//10) + \"5 \" * (n//10) + \"6 \" * (n//10) + \"7 \" * (n//10) + \"8 \" * (n//10) + \"9 \" * (n//10) + \"10 \" * (n//10 + n%10))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 11:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//11) + \"2 \" * (n//11) + \"3 \" * (n//11) + \"4 \" * (n//11) + \"5 \" * (n//11) + \"6 \" * (n//11) + \"7 \" * (n//11) + \"8 \" * (n//11) + \"9 \" * (n//11) + \"10 \" * (n//11) + \"11 \" * (n//11 + n%11))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 12:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//12) + \"2 \" * (n//12) + \"3 \" * (n//12) + \"4 \" * (n//12) + \"5 \" * (n//12) + \"6 \" * (n//12) + \"7 \" * (n//12) + \"8 \" * (n//12) + \"9 \" * (n//12) + \"10 \" * (n//12) + \"11 \" * (n//12) + \"12 \" * (n//12 + n%12))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 13:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//13) + \"2 \" * (n//13) + \"3 \" * (n//13) + \"4 \" * (n//13) + \"5 \" * (n//13) + \"6 \" * (n//13) + \"7 \" * (n//13) + \"8 \" * (n//13) + \"9 \" * (n//13) + \"10 \" * (n//13) + \"11 \" * (n//13) + \"12 \" * (n//13) + \"13 \" * (n//13 + n%13))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 14:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//14) + \"2 \" * (n//14) + \"3 \" * (n//14) + \"4 \" * (n//14) + \"5 \" * (n//14) + \"6 \" * (n//14) + \"7 \" * (n//14) + \"8 \" * (n//14) + \"9 \" * (n//14) + \"10 \" * (n//14) + \"11 \" * (n//14) + \"12 \" * (n//14) + \"13 \" * (n//14) + \"14 \" * (n//14 + n%14))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 15:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//15) + \"2 \" * (n//15) + \"3 \" * (n//15) + \"4 \" * (n//15) + \"5 \" * (n//15) + \"6 \" * (n//15) + \"7 \" * (n//15) + \"8 \" * (n//15) + \"9 \" * (n//15) + \"10 \" * (n//15) + \"11 \" * (n//15) + \"12 \" * (n//15) + \"13 \" * (n//15) + \"14 \" * (n//15) + \"15 \" * (n//15 + n%15))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 16:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//16) + \"2 \" * (n//16) + \"3 \" * (n//16) + \"4 \" * (n//16) + \"5 \" * (n//16) + \"6 \" * (n//16) + \"7 \" * (n//16) + \"8 \" * (n//16) + \"9 \" * (n//16) + \"10 \" * (n//16) + \"11 \" * (n//16) + \"12 \" * (n//16) + \"13 \" * (n//16) + \"14 \" * (n//16) + \"15 \" * (n//16) + \"16 \" * (n//16 + n%16))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 17:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//17) + \"2 \" * (n//17) + \"3 \" * (n//17) + \"4 \" * (n//17) + \"5 \" * (n//17) + \"6 \" * (n//17) + \"7 \" * (n//17) + \"8 \" * (n//17) + \"9 \" * (n//17) + \"10 \" * (n//17) + \"11 \" * (n//17) + \"12 \" * (n//17) + \"13 \" * (n//17) + \"14 \" * (n//17) + \"15 \" * (n//17) + \"16 \" * (n//17) + \"17 \" * (n//17 + n%17))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 18:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//18) + \"2 \" * (n//18) + \"3 \" * (n//18) + \"4 \" * (n//18) + \"5 \" * (n//18) + \"6 \" * (n//18) + \"7 \" * (n//18) + \"8 \" * (n//18) + \"9 \" * (n//18) + \"10 \" * (n//18) + \"11 \" * (n//18) + \"12 \" * (n//18) + \"13 \" * (n//18) + \"14 \" * (n//18) + \"15 \" * (n//18) + \"16 \" * (n//18) + \"17 \" * (n//18) + \"18 \" * (n//18 + n%18))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 19:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//19) + \"2 \" * (n//19) + \"3 \" * (n//19) + \"4 \" * (n//19) + \"5 \" * (n//19) + \"6 \" * (n//19) + \"7 \" * (n//19) + \"8 \" * (n//19) + \"9 \" * (n//19) + \"10 \" * (n//19) + \"11 \" * (n//19) + \"12 \" * (n//19) + \"13 \" * (n//19) + \"14 \" * (n//19) + \"15 \" * (n//19) + \"16 \" * (n//19) + \"17 \" * (n//19) +"
+    }
+  ],
+  "created": 1650415585,
+  "id": "cmpl-4ysm9DAY0UXqOkXFtHPWd7yxMuUgn",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-20 00:47:45.664444 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\ndef check(c):\n    for i in range(1, k+1):\n        if c.count(i) < a.count(i):\n            return False\n    return True\n\ndef solve(n, k, a):\n    c = [0] * n\n    for i in range(n):\n        c[i] = a[i]\n    if check(c):\n        return c\n    c = [0] * n\n    for i in range(n):\n        c[i] = a[i] % k + 1\n    if check(c):\n        return c\n    return None\n\nc = solve(n, k, a)\nif c is None:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    print(*c)"
+}
+2022-04-20 00:47:45.664498 REASON stop
+2022-04-20 00:47:45.664999 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif len(set(a)) == n:\n    print(\"YES\")\n    for i in range(n):\n        print(i % k + 1, end=' ')\nelse:\n    print(\"NO\")"
+}
+2022-04-20 00:47:45.665057 REASON stop
+2022-04-20 00:47:45.665484 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, k = [int(x) for x in sys.stdin.readline().split()]\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    d = {}\n    for i in range(n):\n        if a[i] in d:\n            d[a[i]].append(i)\n        else:\n            d[a[i]] = [i]\n\n    if len(d) < k:\n        print(\"NO\")\n        return\n\n    ans = [0] * n\n    for i in range(1, k + 1):\n        if i <= len(d):\n            for j in d[i]:\n                ans[j] = i\n        else:\n            for j in d[i - k]:\n                ans[j] = i\n\n    print(\"YES\")\n    print(\" \".join([str(x) for x in ans]))\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:47:45.665544 REASON stop
+2022-04-20 00:47:45.684863 3 {
+  "finish_reason": "stop",
+  "index": 3,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nd = {}\n\nfor i in range(n):\n    d[a[i]] = d.get(a[i], 0) + 1\n\nif len(d) > k:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(n):\n        print(d.get(a[i], 0), end=\" \")"
+}
+2022-04-20 00:47:45.685004 REASON stop
+2022-04-20 00:47:45.704554 4 {
+  "finish_reason": "stop",
+  "index": 4,
+  "logprobs": null,
+  "text": "\n\ndef main():\n    n, k = map(int, input().split())\n    a = list(map(int, input().split()))\n    a.sort()\n    if a[0] == a[-1]:\n        print(\"NO\")\n        return\n    colors = [1] * n\n    for i in range(1, n):\n        if a[i] == a[i - 1]:\n            colors[i] = colors[i - 1]\n        else:\n            colors[i] = colors[i - 1] + 1\n    if colors[-1] > k:\n        print(\"NO\")\n        return\n    print(\"YES\")\n    print(*colors)\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-20 00:47:45.704691 REASON stop
+2022-04-20 00:47:45.712163 5 {
+  "finish_reason": "stop",
+  "index": 5,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif max(a) > k:\n    print(\"NO\")\n    sys.exit()\n\nprint(\"YES\")\nc = [0] * n\nfor i in range(n):\n    c[i] = a[i]\n    if c[i] == 0:\n        c[i] = 1\n\nprint(\" \".join(map(str, c)))"
+}
+2022-04-20 00:47:45.712298 REASON stop
+2022-04-20 00:47:45.713100 6 {
+  "finish_reason": "stop",
+  "index": 6,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif k < n:\n    print(\"NO\")\nelse:\n    print(\"YES\")\n    for i in range(n):\n        print(i % k + 1, end=\" \")"
+}
+2022-04-20 00:47:45.713191 REASON stop
+2022-04-20 00:47:45.713983 7 {
+  "finish_reason": "length",
+  "index": 7,
+  "logprobs": null,
+  "text": "\n\nn, k = map(int, input().split())\na = list(map(int, input().split()))\n\nif n == k:\n    print(\"YES\")\n    print(\" \".join(str(i) for i in range(1, n+1)))\n    exit()\n\nif k > n:\n    print(\"NO\")\n    exit()\n\n# if k == 1:\n#     print(\"YES\")\n#     print(\"1 \" * n)\n#     exit()\n\n# if k == 2:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//2) + \"2 \" * (n//2 + n%2))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 3:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//3) + \"2 \" * (n//3) + \"3 \" * (n//3 + n%3))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 4:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//4) + \"2 \" * (n//4) + \"3 \" * (n//4) + \"4 \" * (n//4 + n%4))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 5:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//5) + \"2 \" * (n//5) + \"3 \" * (n//5) + \"4 \" * (n//5) + \"5 \" * (n//5 + n%5))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 6:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//6) + \"2 \" * (n//6) + \"3 \" * (n//6) + \"4 \" * (n//6) + \"5 \" * (n//6) + \"6 \" * (n//6 + n%6))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 7:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//7) + \"2 \" * (n//7) + \"3 \" * (n//7) + \"4 \" * (n//7) + \"5 \" * (n//7) + \"6 \" * (n//7) + \"7 \" * (n//7 + n%7))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 8:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//8) + \"2 \" * (n//8) + \"3 \" * (n//8) + \"4 \" * (n//8) + \"5 \" * (n//8) + \"6 \" * (n//8) + \"7 \" * (n//8) + \"8 \" * (n//8 + n%8))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 9:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//9) + \"2 \" * (n//9) + \"3 \" * (n//9) + \"4 \" * (n//9) + \"5 \" * (n//9) + \"6 \" * (n//9) + \"7 \" * (n//9) + \"8 \" * (n//9) + \"9 \" * (n//9 + n%9))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 10:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//10) + \"2 \" * (n//10) + \"3 \" * (n//10) + \"4 \" * (n//10) + \"5 \" * (n//10) + \"6 \" * (n//10) + \"7 \" * (n//10) + \"8 \" * (n//10) + \"9 \" * (n//10) + \"10 \" * (n//10 + n%10))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 11:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//11) + \"2 \" * (n//11) + \"3 \" * (n//11) + \"4 \" * (n//11) + \"5 \" * (n//11) + \"6 \" * (n//11) + \"7 \" * (n//11) + \"8 \" * (n//11) + \"9 \" * (n//11) + \"10 \" * (n//11) + \"11 \" * (n//11 + n%11))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 12:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//12) + \"2 \" * (n//12) + \"3 \" * (n//12) + \"4 \" * (n//12) + \"5 \" * (n//12) + \"6 \" * (n//12) + \"7 \" * (n//12) + \"8 \" * (n//12) + \"9 \" * (n//12) + \"10 \" * (n//12) + \"11 \" * (n//12) + \"12 \" * (n//12 + n%12))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 13:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//13) + \"2 \" * (n//13) + \"3 \" * (n//13) + \"4 \" * (n//13) + \"5 \" * (n//13) + \"6 \" * (n//13) + \"7 \" * (n//13) + \"8 \" * (n//13) + \"9 \" * (n//13) + \"10 \" * (n//13) + \"11 \" * (n//13) + \"12 \" * (n//13) + \"13 \" * (n//13 + n%13))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 14:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//14) + \"2 \" * (n//14) + \"3 \" * (n//14) + \"4 \" * (n//14) + \"5 \" * (n//14) + \"6 \" * (n//14) + \"7 \" * (n//14) + \"8 \" * (n//14) + \"9 \" * (n//14) + \"10 \" * (n//14) + \"11 \" * (n//14) + \"12 \" * (n//14) + \"13 \" * (n//14) + \"14 \" * (n//14 + n%14))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 15:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//15) + \"2 \" * (n//15) + \"3 \" * (n//15) + \"4 \" * (n//15) + \"5 \" * (n//15) + \"6 \" * (n//15) + \"7 \" * (n//15) + \"8 \" * (n//15) + \"9 \" * (n//15) + \"10 \" * (n//15) + \"11 \" * (n//15) + \"12 \" * (n//15) + \"13 \" * (n//15) + \"14 \" * (n//15) + \"15 \" * (n//15 + n%15))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 16:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//16) + \"2 \" * (n//16) + \"3 \" * (n//16) + \"4 \" * (n//16) + \"5 \" * (n//16) + \"6 \" * (n//16) + \"7 \" * (n//16) + \"8 \" * (n//16) + \"9 \" * (n//16) + \"10 \" * (n//16) + \"11 \" * (n//16) + \"12 \" * (n//16) + \"13 \" * (n//16) + \"14 \" * (n//16) + \"15 \" * (n//16) + \"16 \" * (n//16 + n%16))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 17:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//17) + \"2 \" * (n//17) + \"3 \" * (n//17) + \"4 \" * (n//17) + \"5 \" * (n//17) + \"6 \" * (n//17) + \"7 \" * (n//17) + \"8 \" * (n//17) + \"9 \" * (n//17) + \"10 \" * (n//17) + \"11 \" * (n//17) + \"12 \" * (n//17) + \"13 \" * (n//17) + \"14 \" * (n//17) + \"15 \" * (n//17) + \"16 \" * (n//17) + \"17 \" * (n//17 + n%17))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 18:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//18) + \"2 \" * (n//18) + \"3 \" * (n//18) + \"4 \" * (n//18) + \"5 \" * (n//18) + \"6 \" * (n//18) + \"7 \" * (n//18) + \"8 \" * (n//18) + \"9 \" * (n//18) + \"10 \" * (n//18) + \"11 \" * (n//18) + \"12 \" * (n//18) + \"13 \" * (n//18) + \"14 \" * (n//18) + \"15 \" * (n//18) + \"16 \" * (n//18) + \"17 \" * (n//18) + \"18 \" * (n//18 + n%18))\n#     else:\n#         print(\"NO\")\n#     exit()\n\n# if k == 19:\n#     if len(set(a)) == n:\n#         print(\"YES\")\n#         print(\"1 \" * (n//19) + \"2 \" * (n//19) + \"3 \" * (n//19) + \"4 \" * (n//19) + \"5 \" * (n//19) + \"6 \" * (n//19) + \"7 \" * (n//19) + \"8 \" * (n//19) + \"9 \" * (n//19) + \"10 \" * (n//19) + \"11 \" * (n//19) + \"12 \" * (n//19) + \"13 \" * (n//19) + \"14 \" * (n//19) + \"15 \" * (n//19) + \"16 \" * (n//19) + \"17 \" * (n//19) +"
+}
+2022-04-20 00:47:45.714248 REASON length
