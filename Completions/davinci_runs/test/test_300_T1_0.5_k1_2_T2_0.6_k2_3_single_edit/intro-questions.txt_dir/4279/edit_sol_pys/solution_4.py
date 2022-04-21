@@ -1,0 +1,35 @@
+
+import math
+
+def count_digits(n):
+    digits = 0
+    while n > 0:
+        n = n / 10
+        digits += 1
+    return digits
+
+def find_digit(n):
+    if n == 1:
+        return 1
+    digits = count_digits(n)
+    # print(digits)
+    group_len = 9 * 10 ** (digits - 1)
+    group_len = group_len * digits
+    # print(group_len)
+    groups = math.ceil(n / group_len) - 1
+    # print(groups)
+    num = n - (groups * group_len)
+    # print(num)
+    num_in_group = math.ceil(num / digits)
+    # print(num_in_group)
+    num_in_group_pos = num % digits
+    if num_in_group_pos == 0:
+        num_in_group_pos = digits
+    # print(num_in_group_pos)
+    return int(str(num_in_group)[num_in_group_pos - 1])
+
+if __name__ == "__main__":
+    q = int(input())
+    for _ in range(q):
+        n = int(input())
+        print(find_digit(n))

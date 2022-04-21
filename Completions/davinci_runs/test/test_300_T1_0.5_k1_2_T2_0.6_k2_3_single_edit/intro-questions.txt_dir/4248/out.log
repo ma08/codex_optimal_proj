@@ -1,0 +1,126 @@
+2022-04-09 19:21:40.050882 """
+-----Input-----
+
+The first line contains a single integer n (1 ≤ n ≤ 1000) — the number of points on a plane.
+
+Each of the next n lines contains two real coordinates x_{i} and y_{i} of the $i^{\text{th}}$ point, specified with exactly 2 fractional digits. All coordinates are between  - 1000 and 1000, inclusive.
+
+
+-----Output-----
+
+Output a single real number θ — the answer to the problem statement. The absolute or relative error of your answer should be at most 10^{ - 2}.
+
+
+-----Examples-----
+Input
+8
+-2.14 2.06
+-1.14 2.04
+-2.16 1.46
+-2.14 0.70
+-1.42 0.40
+-0.94 -0.48
+-1.42 -1.28
+-2.16 -1.62
+
+Output
+5.410
+
+Input
+5
+2.26 1.44
+2.28 0.64
+2.30 -0.30
+1.58 0.66
+3.24 0.66
+
+Output
+5.620
+
+Input
+8
+6.98 2.06
+6.40 1.12
+5.98 0.24
+5.54 -0.60
+7.16 0.30
+7.82 1.24
+8.34 0.24
+8.74 -0.76
+
+Output
+5.480
+
+Input
+5
+10.44 2.06
+10.90 0.80
+11.48 -0.48
+12.06 0.76
+12.54 2.06
+
+Output
+6.040
+
+Input
+8
+16.94 2.42
+15.72 2.38
+14.82 1.58
+14.88 0.50
+15.76 -0.16
+16.86 -0.20
+17.00 0.88
+16.40 0.92
+
+Output
+6.040
+
+Input
+7
+20.62 3.00
+21.06 2.28
+21.56 1.36
+21.66 0.56
+21.64 -0.52
+22.14 2.32
+22.62 3.04
+
+Output
+6.720
+"""
+2022-04-09 19:21:40.050912 --------------------------
+2022-04-09 19:22:50.047876 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\nimport math\n\nn = int(sys.stdin.readline())\npoints = []\n\nfor i in range(n):\n    x, y = map(float, sys.stdin.readline().split())\n    points.append((x, y))\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\nangles = []\nfor i in range(n):\n    for j in range(i+1, n):\n        a = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n        angles.append(a)\n\nangles.sort()\n\nmax_diff = -1\nfor i in range(len(angles)-1):\n    diff = angles[i+1] - angles[i]\n    if diff > max_diff:\n        max_diff = diff\n\nprint(max_diff * 180 / math.pi)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport math\n\nclass Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __str__(self):\n        return \"(%f, %f)\" % (self.x, self.y)\n\n    def __repr__(self):\n        return \"(%f, %f)\" % (self.x, self.y)\n\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def distance(self, other):\n        \"\"\"Returns the distance between this point and another point.\"\"\"\n        dist_x = self.x - other.x\n        dist_y = self.y - other.y\n        return math.sqrt(dist_x ** 2 + dist_y ** 2)\n\n    def angle(self, other):\n        \"\"\"Returns the angle (in radians) of the line between this point and another point.\"\"\"\n        dist_x = other.x - self.x\n        dist_y = other.y - self.y\n        return math.atan2(dist_y, dist_x)\n\nclass Line:\n    def __init__(self, point1, point2):\n        self.p1 = point1\n        self.p2 = point2\n        self.slope = (point2.y - point1.y) / (point2.x - point1.x)\n        self.y_int = point1.y - self.slope * point1.x\n\n    def __str__(self):\n        return \"%s -> %s\" % (self.p1, self.p2)\n\n    def __repr__(self):\n        return \"%s -> %s\" % (self.p1, self.p2)\n\n    def __eq__(self, other):\n        return self.slope == other.slope and self.y_int == other.y_int\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def distance(self, point):\n        \"\"\"Returns the distance between the given point and the line.\"\"\"\n        return abs(self.slope * point.x - point.y + self.y_int) / math.sqrt(self.slope ** 2 + 1)\n\nclass Circle:\n    def __init__(self, center, radius):\n        self.center = center\n        self.radius = radius\n\n    def __str__(self):\n        return \"Center: %s, Radius: %f\" % (self.center, self.radius)\n\n    def __repr__(self):\n        return \"Center: %s, Radius: %f\" % (self.center, self.radius)\n\n    def __eq__(self, other):\n        return self.center == other.center and self.radius == other.radius\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def is_inside(self, point):\n        \"\"\"Returns True if the given point is inside the circle, False otherwise.\"\"\"\n        return self.center.distance(point) < self.radius\n\n    def is_outside(self, point):\n        \"\"\"Returns True if the given point is outside the circle, False otherwise.\"\"\"\n        return self.center.distance(point) > self.radius\n\n    def is_on(self, point):\n        \"\"\"Returns True if the given point is on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) == self.radius\n\n    def is_inside_or_on(self, point):\n        \"\"\"Returns True if the given point is inside or on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) <= self.radius\n\n    def is_outside_or_on(self, point):\n        \"\"\"Returns True if the given point is outside or on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) >= self.radius\n\n    def point_distance(self, point):\n        \"\"\"Returns the distance between the given point and the circle.\"\"\"\n        return self.center.distance(point) - self.radius\n\n    def line_distance(self, line):\n        \"\"\"Returns the distance between the given line and the circle.\"\"\"\n        return line.distance(self.center) - self.radius\n\n    def intersection(self, line):\n        \"\"\"Returns the intersection points between the given line and the circle.\"\"\"\n        if line.distance(self.center) > self.radius:\n            return []\n        elif line.distance(self.center) == self.radius:\n            return [self.center]\n        else:\n            dist_x = self.center.x - line.p1.x\n            dist_y = self.center.y - line.p1.y\n            d = math.sqrt(dist_x ** 2 + dist_y ** 2)\n            if d == 0:\n                return [line.p1]\n            else:\n                a = math.acos((self.radius ** 2 + d ** 2 - line.distance(self.center) ** 2) / (2 * d * self.radius))\n                b = math.atan2(dist_y, dist_x)\n                return [Point(self.center.x + self.radius * math.cos(b - a), self.center.y + self.radius * math.sin(b - a)),\n                        Point(self.center.x + self.radius * math.cos(b + a), self.center.y + self.radius * math.sin(b + a))]\n\nclass Triangle:\n    def __init__(self, point1, point2, point3):\n        self.p1 = point1\n        self.p2 = point2\n        self.p3 = point3\n        self.s1 = self.p1.distance(self.p2)\n        self.s2 = self.p2.distance(self.p3)\n        self.s3 = self.p3.distance(self.p1)\n        self.a = self.p1.angle(self.p2)\n        self.b = self.p2.angle(self.p3)\n        self.c = self.p3.angle(self.p1)\n        self.area = 0.5 * self.s1 * self.s2 * math.sin(self.c)\n\n    def __str__(self):\n        return \"%s, %s, %s\" % (self.p1, self.p2, self.p3)\n\n    def __repr__(self):\n        return \"%s, %s, %s\" % (self.p1, self.p2, self.p3)\n\n    def __eq__(self, other):\n        return self.p1 == other.p1 and self.p2 == other.p2 and self.p3 == other.p3\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def is_inside(self, point):\n        \"\"\"Returns True if the given point is inside the triangle, False otherwise.\"\"\"\n        t1 = Triangle(self.p1, self.p2, point)\n        t2 = Triangle(self.p2, self.p3, point)\n        t3 = Triangle(self.p3, self.p1, point)\n        return t1.area + t2.area + t3.area < self.area\n\n    def is_outside(self, point):\n        \"\"\"Returns True if the given point is outside the triangle, False otherwise.\"\"\"\n        return not self.is_inside(point)\n\n    def is_on(self, point):\n        \"\"\"Returns True if the given point is on the triangle, False otherwise.\"\"\"\n        return self.p1.distance(point) + self.p2.distance(point) + self.p3.distance(point) == self.s1 + self.s2 + self.s3\n\n    def is_inside_or_on(self, point):\n        \"\"\"Returns True if the given point is inside or on the triangle, False otherwise.\"\"\"\n        return self.is_inside(point) or self.is_on(point)\n\n    def is_outside_or_on(self, point):\n        \"\"\"Returns True if the given point is outside or on the triangle, False otherwise.\"\"\"\n        return not self.is_inside(point) or self.is_on(point)\n\n    def point_distance(self, point):\n        \"\"\"Returns the distance between the given point and the triangle.\"\"\"\n        if self.is_on(point):\n            return 0\n        elif self.is_inside(point):\n            return -1\n        else:\n            d1 = Line(self.p1, self.p2).distance(point)\n            d2 = Line(self.p2, self.p3).distance(point)\n            d3 = Line(self.p3, self.p1).distance(point)\n            return min(d1, d2, d3)\n\n    def line_distance(self, line):\n        \"\"\"Returns the distance between the given line and the triangle.\"\"\"\n        if self.is_inside_or_on(line.p1) and self.is_inside_or_on(line.p2):\n            return -1\n        else:\n            d1 = line.distance(self.p1)\n            d2 = line.distance(self.p2)\n            d3 = line.distance(self.p3)\n            return min(d1, d2, d3)\n\n    def circle_distance(self, circle):\n        \"\"\"Returns the distance between the given circle and the triangle.\"\"\"\n        if self.is_inside_or_on(circle.center):\n            return -1\n        else:\n            d1 = circle.line_distance(Line(self.p1, self.p2))\n            d2 = circle.line_distance(Line(self.p2, self.p3))\n            d3 = circle.line_distance(Line(self.p3, self.p1))\n            return min(d1, d2, d3)\n\ndef read_points(n):\n    \"\"\"Reads n points from the input, returns a list of the points.\"\"\"\n    points = []\n    for i in range(n):\n        x, y = [float(x) for x in input().split()]\n        points.append(Point(x, y))\n    return points\n\ndef main():\n    n = int(input())\n    points = read_points(n)\n    points.sort(key=lambda p: p.x)\n    triangle = Triangle(points[0], points[1], points[2])\n    while triangle.is_inside(points[3]):\n        triangle = Triangle(points[1], points[2], points[3])\n    while triangle.is_outside(points[3]):\n        triangle = Triangle(points[0], points[1], points[2])\n    for i in range(4, n):\n        if triangle.is_inside(points[i]):\n            while triangle.is_inside(points[i]):\n                triangle = Triangle(points[1], points[2], points[i])\n        elif triangle.is_outside(points[i]):\n            while triangle.is_outside(points[i]):\n                triangle = Triangle(points[0], points[1], points[2])\n    print(triangle.circle_distance(Circle(triangle.p1, triangle.s1)))\n\nif __name__ == '__main__':\n    main()"
+    }
+  ],
+  "created": 1649546500,
+  "id": "cmpl-4vEgeVsLSWjvkv11gAY5OyMxbn61i",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 19:22:50.048728 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\nimport math\n\nn = int(sys.stdin.readline())\npoints = []\n\nfor i in range(n):\n    x, y = map(float, sys.stdin.readline().split())\n    points.append((x, y))\n\ndef get_angle(x1, y1, x2, y2):\n    return math.atan2(y2 - y1, x2 - x1)\n\nangles = []\nfor i in range(n):\n    for j in range(i+1, n):\n        a = get_angle(points[i][0], points[i][1], points[j][0], points[j][1])\n        angles.append(a)\n\nangles.sort()\n\nmax_diff = -1\nfor i in range(len(angles)-1):\n    diff = angles[i+1] - angles[i]\n    if diff > max_diff:\n        max_diff = diff\n\nprint(max_diff * 180 / math.pi)"
+}
+2022-04-09 19:22:50.049087 REASON stop
+2022-04-09 19:22:50.051516 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport math\n\nclass Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __str__(self):\n        return \"(%f, %f)\" % (self.x, self.y)\n\n    def __repr__(self):\n        return \"(%f, %f)\" % (self.x, self.y)\n\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def distance(self, other):\n        \"\"\"Returns the distance between this point and another point.\"\"\"\n        dist_x = self.x - other.x\n        dist_y = self.y - other.y\n        return math.sqrt(dist_x ** 2 + dist_y ** 2)\n\n    def angle(self, other):\n        \"\"\"Returns the angle (in radians) of the line between this point and another point.\"\"\"\n        dist_x = other.x - self.x\n        dist_y = other.y - self.y\n        return math.atan2(dist_y, dist_x)\n\nclass Line:\n    def __init__(self, point1, point2):\n        self.p1 = point1\n        self.p2 = point2\n        self.slope = (point2.y - point1.y) / (point2.x - point1.x)\n        self.y_int = point1.y - self.slope * point1.x\n\n    def __str__(self):\n        return \"%s -> %s\" % (self.p1, self.p2)\n\n    def __repr__(self):\n        return \"%s -> %s\" % (self.p1, self.p2)\n\n    def __eq__(self, other):\n        return self.slope == other.slope and self.y_int == other.y_int\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def distance(self, point):\n        \"\"\"Returns the distance between the given point and the line.\"\"\"\n        return abs(self.slope * point.x - point.y + self.y_int) / math.sqrt(self.slope ** 2 + 1)\n\nclass Circle:\n    def __init__(self, center, radius):\n        self.center = center\n        self.radius = radius\n\n    def __str__(self):\n        return \"Center: %s, Radius: %f\" % (self.center, self.radius)\n\n    def __repr__(self):\n        return \"Center: %s, Radius: %f\" % (self.center, self.radius)\n\n    def __eq__(self, other):\n        return self.center == other.center and self.radius == other.radius\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def is_inside(self, point):\n        \"\"\"Returns True if the given point is inside the circle, False otherwise.\"\"\"\n        return self.center.distance(point) < self.radius\n\n    def is_outside(self, point):\n        \"\"\"Returns True if the given point is outside the circle, False otherwise.\"\"\"\n        return self.center.distance(point) > self.radius\n\n    def is_on(self, point):\n        \"\"\"Returns True if the given point is on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) == self.radius\n\n    def is_inside_or_on(self, point):\n        \"\"\"Returns True if the given point is inside or on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) <= self.radius\n\n    def is_outside_or_on(self, point):\n        \"\"\"Returns True if the given point is outside or on the circle, False otherwise.\"\"\"\n        return self.center.distance(point) >= self.radius\n\n    def point_distance(self, point):\n        \"\"\"Returns the distance between the given point and the circle.\"\"\"\n        return self.center.distance(point) - self.radius\n\n    def line_distance(self, line):\n        \"\"\"Returns the distance between the given line and the circle.\"\"\"\n        return line.distance(self.center) - self.radius\n\n    def intersection(self, line):\n        \"\"\"Returns the intersection points between the given line and the circle.\"\"\"\n        if line.distance(self.center) > self.radius:\n            return []\n        elif line.distance(self.center) == self.radius:\n            return [self.center]\n        else:\n            dist_x = self.center.x - line.p1.x\n            dist_y = self.center.y - line.p1.y\n            d = math.sqrt(dist_x ** 2 + dist_y ** 2)\n            if d == 0:\n                return [line.p1]\n            else:\n                a = math.acos((self.radius ** 2 + d ** 2 - line.distance(self.center) ** 2) / (2 * d * self.radius))\n                b = math.atan2(dist_y, dist_x)\n                return [Point(self.center.x + self.radius * math.cos(b - a), self.center.y + self.radius * math.sin(b - a)),\n                        Point(self.center.x + self.radius * math.cos(b + a), self.center.y + self.radius * math.sin(b + a))]\n\nclass Triangle:\n    def __init__(self, point1, point2, point3):\n        self.p1 = point1\n        self.p2 = point2\n        self.p3 = point3\n        self.s1 = self.p1.distance(self.p2)\n        self.s2 = self.p2.distance(self.p3)\n        self.s3 = self.p3.distance(self.p1)\n        self.a = self.p1.angle(self.p2)\n        self.b = self.p2.angle(self.p3)\n        self.c = self.p3.angle(self.p1)\n        self.area = 0.5 * self.s1 * self.s2 * math.sin(self.c)\n\n    def __str__(self):\n        return \"%s, %s, %s\" % (self.p1, self.p2, self.p3)\n\n    def __repr__(self):\n        return \"%s, %s, %s\" % (self.p1, self.p2, self.p3)\n\n    def __eq__(self, other):\n        return self.p1 == other.p1 and self.p2 == other.p2 and self.p3 == other.p3\n\n    def __ne__(self, other):\n        return not self.__eq__(other)\n\n    def is_inside(self, point):\n        \"\"\"Returns True if the given point is inside the triangle, False otherwise.\"\"\"\n        t1 = Triangle(self.p1, self.p2, point)\n        t2 = Triangle(self.p2, self.p3, point)\n        t3 = Triangle(self.p3, self.p1, point)\n        return t1.area + t2.area + t3.area < self.area\n\n    def is_outside(self, point):\n        \"\"\"Returns True if the given point is outside the triangle, False otherwise.\"\"\"\n        return not self.is_inside(point)\n\n    def is_on(self, point):\n        \"\"\"Returns True if the given point is on the triangle, False otherwise.\"\"\"\n        return self.p1.distance(point) + self.p2.distance(point) + self.p3.distance(point) == self.s1 + self.s2 + self.s3\n\n    def is_inside_or_on(self, point):\n        \"\"\"Returns True if the given point is inside or on the triangle, False otherwise.\"\"\"\n        return self.is_inside(point) or self.is_on(point)\n\n    def is_outside_or_on(self, point):\n        \"\"\"Returns True if the given point is outside or on the triangle, False otherwise.\"\"\"\n        return not self.is_inside(point) or self.is_on(point)\n\n    def point_distance(self, point):\n        \"\"\"Returns the distance between the given point and the triangle.\"\"\"\n        if self.is_on(point):\n            return 0\n        elif self.is_inside(point):\n            return -1\n        else:\n            d1 = Line(self.p1, self.p2).distance(point)\n            d2 = Line(self.p2, self.p3).distance(point)\n            d3 = Line(self.p3, self.p1).distance(point)\n            return min(d1, d2, d3)\n\n    def line_distance(self, line):\n        \"\"\"Returns the distance between the given line and the triangle.\"\"\"\n        if self.is_inside_or_on(line.p1) and self.is_inside_or_on(line.p2):\n            return -1\n        else:\n            d1 = line.distance(self.p1)\n            d2 = line.distance(self.p2)\n            d3 = line.distance(self.p3)\n            return min(d1, d2, d3)\n\n    def circle_distance(self, circle):\n        \"\"\"Returns the distance between the given circle and the triangle.\"\"\"\n        if self.is_inside_or_on(circle.center):\n            return -1\n        else:\n            d1 = circle.line_distance(Line(self.p1, self.p2))\n            d2 = circle.line_distance(Line(self.p2, self.p3))\n            d3 = circle.line_distance(Line(self.p3, self.p1))\n            return min(d1, d2, d3)\n\ndef read_points(n):\n    \"\"\"Reads n points from the input, returns a list of the points.\"\"\"\n    points = []\n    for i in range(n):\n        x, y = [float(x) for x in input().split()]\n        points.append(Point(x, y))\n    return points\n\ndef main():\n    n = int(input())\n    points = read_points(n)\n    points.sort(key=lambda p: p.x)\n    triangle = Triangle(points[0], points[1], points[2])\n    while triangle.is_inside(points[3]):\n        triangle = Triangle(points[1], points[2], points[3])\n    while triangle.is_outside(points[3]):\n        triangle = Triangle(points[0], points[1], points[2])\n    for i in range(4, n):\n        if triangle.is_inside(points[i]):\n            while triangle.is_inside(points[i]):\n                triangle = Triangle(points[1], points[2], points[i])\n        elif triangle.is_outside(points[i]):\n            while triangle.is_outside(points[i]):\n                triangle = Triangle(points[0], points[1], points[2])\n    print(triangle.circle_distance(Circle(triangle.p1, triangle.s1)))\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 19:22:50.051717 REASON stop

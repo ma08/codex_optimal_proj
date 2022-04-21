@@ -1,0 +1,18 @@
+
+
+def main():
+    n = int(input())
+    a = [int(i) for i in input().split()]
+    b = [int(i) for i in input().split()]
+    
+    a.sort()
+    b.sort()
+    ans = n
+    for i in range(n):
+        if a[i] * b[n - 1 - i] > 0:
+            break
+        ans -= 1
+    print(ans)
+
+if __name__ == '__main__':
+    main()
