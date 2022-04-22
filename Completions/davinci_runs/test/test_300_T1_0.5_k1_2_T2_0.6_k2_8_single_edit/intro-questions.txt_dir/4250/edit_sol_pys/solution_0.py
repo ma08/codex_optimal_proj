@@ -1,0 +1,16 @@
+
+
+# Solution
+
+#!/usr/bin/env python3
+
+import numpy as np
+
+n, k = map(int, input().split())
+s = np.array(list(map(int, input().split())), dtype=int)
+
+s_unique, s_count = np.unique(s, return_counts=True)
+s_indices = np.argsort(-s_count)
+
+t = s_unique[s_indices[:k]]
+print(*t)

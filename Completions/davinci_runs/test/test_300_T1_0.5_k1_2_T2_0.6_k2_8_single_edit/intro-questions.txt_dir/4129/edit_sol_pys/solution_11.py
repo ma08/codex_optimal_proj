@@ -1,0 +1,32 @@
+
+
+import sys
+
+def dfs(v, visited):
+	visited[v] = True
+	for u in rev_adj_list[v]:
+		if not visited[u]:
+			dfs(u, visited)
+
+def main():
+	global rev_adj_list
+	n, m, s = map(int, sys.stdin.readline().split())
+	adj_list = [[] for _ in range(n + 1)]
+	rev_adj_list = [[] for _ in range(n + 1)]
+	for _ in range(m):
+		u, v = map(int, sys.stdin.readline().split())
+		adj_list[u] = adj_list[u] + [v]
+		rev_adj_list[v] = rev_adj_list[v] + [u]
+	visited = [False] * (n + 1)
+	dfs(s, visited)
+	count = 0
+	for v in range(1, n + 1):
+		if not visited[v]:
+			for u in adj_list[v]:
+				if visited[u]:
+					count += 1
+					break
+	print count
+
+if __name__ == '__main__':
+	main()

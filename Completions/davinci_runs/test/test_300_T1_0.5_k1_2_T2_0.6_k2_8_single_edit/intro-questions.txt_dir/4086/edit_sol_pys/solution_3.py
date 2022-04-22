@@ -1,0 +1,15 @@
+
+
+from collections import deque
+
+def main():
+    n = int(input())
+    nums = []
+    for i in range(n):
+        nums.append(input())
+    nums = set(nums)
+    nums = list(nums)
+    print(len(nums))
+    print(*nums)
+
+main()

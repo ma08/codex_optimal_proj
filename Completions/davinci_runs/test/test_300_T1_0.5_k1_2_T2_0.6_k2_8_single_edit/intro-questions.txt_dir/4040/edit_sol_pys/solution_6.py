@@ -1,0 +1,20 @@
+
+
+#submitted
+n, m, d = map(int, input().split())
+c = list(map(int, input().split()))
+
+def get_river():
+    platforms = [[i+1]*c[i] for i in range(m)]
+    river = [0] * n
+    for i in range(n):
+        for j in range(m):
+            if len(platforms[j]) == 0:
+                continue
+            if platforms[j][0] == i+1:
+                river[i] = j+1
+                platforms[j] = platforms[j][1:]
+    return river
+
+print("YES")
+print(*get_river())

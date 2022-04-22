@@ -1,0 +1,86 @@
+2022-04-22 10:46:40.068175 num operations 1
+2022-04-22 10:46:40.068195 size on input set 1
+2022-04-22 10:46:40.068364 using api key jaanu
+2022-04-22 10:47:15.290770 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "n, w = map(int, input().split())\na = list(map(int, input().split()))\nprint(w - abs(sum(a)))\n"
+    },
+    {
+      "index": 1,
+      "text": "\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w<0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n"
+    },
+    {
+      "index": 2,
+      "text": "\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w<0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n"
+    },
+    {
+      "index": 3,
+      "text": "\na=list(map(int,input().split()))[0]\nif a%2==0:\n    print(a)\nelif a%2==1:\n    print(a-1)\n"
+    },
+    {
+      "index": 4,
+      "text": "\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w>0 or sum(a)==w:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n"
+    },
+    {
+      "index": 5,
+      "text": "\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w>0 or sum(a)==0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n"
+    },
+    {
+      "index": 6,
+      "text": "s=input()\ns=s[::-1]\nprint(s)\n"
+    },
+    {
+      "index": 7,
+      "text": "import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.metrics import roc_curve\nfrom sklearn.metrics import roc_auc_score\n\nfrom sklearn.preprocessing import MinMaxScaler\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.preprocessing import LabelEncoder\nfrom sklearn.preprocessing import OneHotEncoder\n\nfrom sklearn.feature_selection import SelectKBest\nfrom sklearn.feature_selection import chi2\nfrom sklearn.feature_selection import VarianceThreshold\nfrom sklearn.feature_selection import SelectFromModel\n\nfrom sklearn.svm import LinearSVC\nfrom sklearn.ensemble import RandomForestClassifier\n\nfrom sklearn.model_selection import GridSearchCV\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.model_selection import StratifiedKFold\n\nfrom sklearn.pipeline import Pipeline\n\n# Data\ndf = pd.read_csv(\"data.csv\")\n\n# Data Exploration\nprint(df.head())\nprint(df.info())\n\n# Data Cleaning\ndf.drop(['Unnamed: 32', 'id'], axis=1, inplace=True)\n\n# Data Exploration\nprint(df[\"diagnosis\"].value_counts())\n\n# Plotting\nsns.countplot(df[\"diagnosis\"], label=\"Count\")\n\n# Plotting\nplt.figure(figsize=(10,10))\nsns.heatmap(df.corr(), annot=True)\n\n# Data Encoding\nlabel_encoder = LabelEncoder()\ndf[\"diagnosis\"] = label_encoder.fit_transform(df[\"diagnosis\"])\n\n# Plotting\nsns.pairplot(df, hue=\"diagnosis\")\n\n# Splitting\nx = df.drop(\"diagnosis\", axis=1)\ny = df[\"diagnosis\"]\n\n# Feature Scaling\nscaler = MinMaxScaler()\nx = scaler.fit_transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint(\"Accuracy score: \", accuracy_score(y_test, y_pred))\nprint(\"Confusion matrix: \\n\", confusion_matrix(y_test, y_pred))\n\n# Roc Curve\nfpr, tpr, thresholds = roc_curve(y_test, y_pred)\n\n# Plotting\nplt.plot(fpr, tpr, label=\"Logistic Regression\")\nplt.plot([0,1], [0,1], \"r--\")\nplt.xlabel(\"False Positive Rate\")\nplt.ylabel(\"True Positive Rate\")\nplt.title(\"Logistic Regression ROC Curve\")\nplt.legend(loc=\"lower right\")\n\n# ROC AUC Score\nprint(\"ROC AUC score: \", roc_auc_score(y_test, y_pred))\n\n# Feature Selection\nbest_features = SelectKBest(score_func=chi2, k=10)\nfit = best_features.fit(x, y)\n\n# Printing\nprint(fit.scores_)\ndf_scores = pd.DataFrame(fit.scores_)\ndf_columns = pd.DataFrame(df.columns)\n\n# Concatenation\nfeature_scores = pd.concat([df_columns, df_scores], axis=1)\nfeature_scores.columns = [\"Feature\", \"Score\"]\n\n# Printing\nprint(feature_scores.nlargest(10, \"Score\"))\n\n# Variance Threshold\nthreshold = VarianceThreshold(threshold=0.1)\nx = threshold.fit_transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint(\"Accuracy score: \", accuracy_score(y_test, y_pred))\nprint(\"Confusion matrix: \\n\", confusion_matrix(y_test, y_pred))\n\n# Feature Selection\nmodel = LinearSVC(C=0.1, penalty=\"l1\", dual=False)\nmodel.fit(x, y)\nmodel = SelectFromModel(model, prefit=True)\nx = model.transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint(\"Accuracy score: \", accuracy_score(y_test, y_pred))\nprint(\"Confusion matrix: \\n\", confusion_matrix(y_test, y_pred))\n\n# Pipeline\npipeline = Pipeline([\n    (\"scaler\", MinMaxScaler()),\n    (\"model\", LogisticRegression())\n])\n\n# Cross Validation\ncv_scores = cross_val_score(pipeline, x, y, cv=10, scoring=\"accuracy\")\n\n# Printing\nprint(cv_scores)\nprint(cv_scores.mean())\n"
+    }
+  ],
+  "created": 1650624400,
+  "object": "edit"
+}
+2022-04-22 10:47:15.291099 fix syntax errors 8 ['n, w = map(int, input().split())\na = list(map(int, input().split()))\nprint(w - abs(sum(a)))\n', '\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w<0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n', '\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w<0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n', '\na=list(map(int,input().split()))[0]\nif a%2==0:\n    print(a)\nelif a%2==1:\n    print(a-1)\n', '\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w>0 or sum(a)==w:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n', '\nn,w=map(int,input().split())\na=list(map(int,input().split()))\nif sum(a)>w or sum(a)<-w or sum(a)+w<0 or sum(a)-w>0 or sum(a)==0:\n    print(0)\nelse:\n    print(w-abs(sum(a)))\n', 's=input()\ns=s[::-1]\nprint(s)\n', 'import numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score\nfrom sklearn.metrics import confusion_matrix\nfrom sklearn.metrics import roc_curve\nfrom sklearn.metrics import roc_auc_score\n\nfrom sklearn.preprocessing import MinMaxScaler\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.preprocessing import LabelEncoder\nfrom sklearn.preprocessing import OneHotEncoder\n\nfrom sklearn.feature_selection import SelectKBest\nfrom sklearn.feature_selection import chi2\nfrom sklearn.feature_selection import VarianceThreshold\nfrom sklearn.feature_selection import SelectFromModel\n\nfrom sklearn.svm import LinearSVC\nfrom sklearn.ensemble import RandomForestClassifier\n\nfrom sklearn.model_selection import GridSearchCV\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.model_selection import StratifiedKFold\n\nfrom sklearn.pipeline import Pipeline\n\n# Data\ndf = pd.read_csv("data.csv")\n\n# Data Exploration\nprint(df.head())\nprint(df.info())\n\n# Data Cleaning\ndf.drop([\'Unnamed: 32\', \'id\'], axis=1, inplace=True)\n\n# Data Exploration\nprint(df["diagnosis"].value_counts())\n\n# Plotting\nsns.countplot(df["diagnosis"], label="Count")\n\n# Plotting\nplt.figure(figsize=(10,10))\nsns.heatmap(df.corr(), annot=True)\n\n# Data Encoding\nlabel_encoder = LabelEncoder()\ndf["diagnosis"] = label_encoder.fit_transform(df["diagnosis"])\n\n# Plotting\nsns.pairplot(df, hue="diagnosis")\n\n# Splitting\nx = df.drop("diagnosis", axis=1)\ny = df["diagnosis"]\n\n# Feature Scaling\nscaler = MinMaxScaler()\nx = scaler.fit_transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint("Accuracy score: ", accuracy_score(y_test, y_pred))\nprint("Confusion matrix: \\n", confusion_matrix(y_test, y_pred))\n\n# Roc Curve\nfpr, tpr, thresholds = roc_curve(y_test, y_pred)\n\n# Plotting\nplt.plot(fpr, tpr, label="Logistic Regression")\nplt.plot([0,1], [0,1], "r--")\nplt.xlabel("False Positive Rate")\nplt.ylabel("True Positive Rate")\nplt.title("Logistic Regression ROC Curve")\nplt.legend(loc="lower right")\n\n# ROC AUC Score\nprint("ROC AUC score: ", roc_auc_score(y_test, y_pred))\n\n# Feature Selection\nbest_features = SelectKBest(score_func=chi2, k=10)\nfit = best_features.fit(x, y)\n\n# Printing\nprint(fit.scores_)\ndf_scores = pd.DataFrame(fit.scores_)\ndf_columns = pd.DataFrame(df.columns)\n\n# Concatenation\nfeature_scores = pd.concat([df_columns, df_scores], axis=1)\nfeature_scores.columns = ["Feature", "Score"]\n\n# Printing\nprint(feature_scores.nlargest(10, "Score"))\n\n# Variance Threshold\nthreshold = VarianceThreshold(threshold=0.1)\nx = threshold.fit_transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint("Accuracy score: ", accuracy_score(y_test, y_pred))\nprint("Confusion matrix: \\n", confusion_matrix(y_test, y_pred))\n\n# Feature Selection\nmodel = LinearSVC(C=0.1, penalty="l1", dual=False)\nmodel.fit(x, y)\nmodel = SelectFromModel(model, prefit=True)\nx = model.transform(x)\n\n# Splitting\nx_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=101)\n\n# Logistic Regression\nlog_reg = LogisticRegression()\nlog_reg.fit(x_train, y_train)\ny_pred = log_reg.predict(x_test)\n\n# Evaluation\nprint("Accuracy score: ", accuracy_score(y_test, y_pred))\nprint("Confusion matrix: \\n", confusion_matrix(y_test, y_pred))\n\n# Pipeline\npipeline = Pipeline([\n    ("scaler", MinMaxScaler()),\n    ("model", LogisticRegression())\n])\n\n# Cross Validation\ncv_scores = cross_val_score(pipeline, x, y, cv=10, scoring="accuracy")\n\n# Printing\nprint(cv_scores)\nprint(cv_scores.mean())\n']
+2022-04-22 10:47:15.291252 size on output set 7
+2022-04-22 10:47:15.291266 num operations 1
+2022-04-22 10:47:15.291273 size on input set 1
+2022-04-22 10:47:15.291426 using api key soukgp
+2022-04-22 10:47:23.508423 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1 if j > 0 else w+j+1)\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\nif i == n-1:\n    print(w-j+1)\n"
+    },
+    {
+      "index": 2,
+      "text": "\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w - j + 1)\n"
+    },
+    {
+      "index": 3,
+      "text": "\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1)\n"
+    },
+    {
+      "index": 4,
+      "text": "\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w - j + 1)\n"
+    },
+    {
+      "index": 5,
+      "text": "#!/usr/bin/python3\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1)\n"
+    },
+    {
+      "index": 6,
+      "text": "\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j)\n"
+    },
+    {
+      "index": 7,
+      "text": "\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w-j+1)\n"
+    }
+  ],
+  "created": 1650624435,
+  "object": "edit"
+}
+2022-04-22 10:47:23.508787 fix syntax errors 8 ['\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1 if j > 0 else w+j+1)\n', '\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\nif i == n-1:\n    print(w-j+1)\n', '\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w - j + 1)\n', '\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1)\n', '\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < -w:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w - j + 1)\n', '#!/usr/bin/python3\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j+1)\n', '\n\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n-1:\n    print(w-j)\n', '\nn, w = map(int, input().split())\na = list(map(int, input().split()))\n\ni = 0\nj = 0\n\nfor i in range(n):\n    if a[i] > w or a[i] < -w:\n        print(0)\n        break\n    j += a[i]\n    if j > w or j < 0:\n        print(0)\n        break\n\nif i == n - 1:\n    print(w-j+1)\n']
+2022-04-22 10:47:23.508839 size on output set 8

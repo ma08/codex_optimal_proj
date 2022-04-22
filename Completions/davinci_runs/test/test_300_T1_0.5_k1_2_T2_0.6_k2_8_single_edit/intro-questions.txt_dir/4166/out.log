@@ -1,0 +1,68 @@
+2022-04-09 18:54:09.278506 """
+If there is an integer not less than 0 satisfying the following conditions, print the smallest such integer; otherwise, print -1.
+ - The integer has exactly N digits in base ten. (We assume 0 to be a 1-digit integer. For other integers, leading zeros are not allowed.)
+ - The s_i-th digit from the left is c_i. \left(i = 1, 2, \cdots, M\right)
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 3
+ - 0 \leq M \leq 5
+ - 1 \leq s_i \leq N
+ - 0 \leq c_i \leq 9
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+s_1 c_1
+\vdots
+s_M c_M
+
+-----Output-----
+Print the answer.
+
+-----Sample Input-----
+3 3
+1 7
+3 2
+1 7
+
+-----Sample Output-----
+702
+
+702 satisfies the conditions - its 1-st and 3-rd digits are 7 and 2, respectively - while no non-negative integer less than 702 satisfies them.
+"""
+2022-04-09 18:54:09.278521 --------------------------
+2022-04-09 18:54:40.428876 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nN, M = map(int, input().split())\n\ns = []\nc = []\n\nfor i in range(M):\n    tmp = list(map(int, input().split()))\n    s.append(tmp[0])\n    c.append(tmp[1])\n\nmin_num = 0\nmax_num = 10**N\n\nfor i in range(min_num, max_num):\n    num_str = str(i)\n    if len(num_str) != N:\n        continue\n    is_match = True\n    for j in range(M):\n        if int(num_str[s[j]-1]) != c[j]:\n            is_match = False\n            break\n    if is_match:\n        print(i)\n        exit()\n\nprint(-1)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# My code\nimport itertools\n\nn, m = map(int, input().split())\nq = [list(map(int, input().split())) for i in range(m)]\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u308b\n# \u3053\u3053\u3067\u306f\u30010~9\u307e\u3067\u306e\u5168\u3066\u306e\u6570\u5b57\u304c\u5165\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b\u3068\u3059\u308b\npossible_numbers = [str(i) for i in range(10)]\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u308b\nfor i in range(m):\n    # s_i-1: s_i\u756a\u76ee\u306e\u6841\u3092\u8868\u3059\n    # c_i: \u6841\u306b\u5165\u308b\u6570\u5b57\n    s_i, c_i = q[i][0] - 1, str(q[i][1])\n    # possible_numbers[s_i]\u306b\u306f\u3001s_i\u756a\u76ee\u306e\u6841\u306b\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u304c\u5165\u3063\u3066\u3044\u308b\n    # \u3053\u3053\u3067\u306f\u3001c_i\u3092s_i\u756a\u76ee\u306e\u6841\u306b\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u306b\u8ffd\u52a0\u3057\u3001\n    # \u305d\u308c\u4ee5\u5916\u306e\u6570\u5b57\u3092\u524a\u9664\u3059\u308b\n    possible_numbers[s_i] = c_i\n    for j in range(10):\n        if str(j) != c_i:\n            possible_numbers[s_i] = possible_numbers[s_i].replace(str(j), '')\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u305f\u306e\u3067\u3001\n# \u305d\u308c\u3089\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u3001n\u6841\u306e\u6570\u5b57\u3092\u4f5c\u308b\n# itertools.product(*possible_numbers)\u306f\u3001\n# possible_numbers\u306e\u8981\u7d20\u3092\u305d\u308c\u305e\u308c\u53d6\u308a\u51fa\u3057\u3001\u305d\u308c\u3089\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u3001\n# \u5168\u3066\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u5217\u6319\u3059\u308b\nans = -1\nfor i in itertools.product(*possible_numbers):\n    i = int(''.join(i))\n    if len(str(i)) == n and i >= 0:\n        if ans == -1:\n            ans = i\n        else:\n            ans = min(ans, i)\nprint(ans)\n\n# Reference code\nn, m = map(int, input().split())\nq = [list(map(int, input().split())) for i in range(m)]\n\nans = -1\nfor i in range(1000, 10000):\n    s = str(i)\n    ok = True\n    for j in range(m):\n        if s[q[j][0]-1] != str(q[j][1]):\n            ok = False\n    if ok:\n        ans = i\n        break\nprint(ans)"
+    }
+  ],
+  "created": 1649544849,
+  "id": "cmpl-4vEG1A3UGj9u50X5daTX2TJ4CjvoQ",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:54:40.429263 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nN, M = map(int, input().split())\n\ns = []\nc = []\n\nfor i in range(M):\n    tmp = list(map(int, input().split()))\n    s.append(tmp[0])\n    c.append(tmp[1])\n\nmin_num = 0\nmax_num = 10**N\n\nfor i in range(min_num, max_num):\n    num_str = str(i)\n    if len(num_str) != N:\n        continue\n    is_match = True\n    for j in range(M):\n        if int(num_str[s[j]-1]) != c[j]:\n            is_match = False\n            break\n    if is_match:\n        print(i)\n        exit()\n\nprint(-1)"
+}
+2022-04-09 18:54:40.429339 REASON stop
+2022-04-09 18:54:40.430896 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# My code\nimport itertools\n\nn, m = map(int, input().split())\nq = [list(map(int, input().split())) for i in range(m)]\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u308b\n# \u3053\u3053\u3067\u306f\u30010~9\u307e\u3067\u306e\u5168\u3066\u306e\u6570\u5b57\u304c\u5165\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b\u3068\u3059\u308b\npossible_numbers = [str(i) for i in range(10)]\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u308b\nfor i in range(m):\n    # s_i-1: s_i\u756a\u76ee\u306e\u6841\u3092\u8868\u3059\n    # c_i: \u6841\u306b\u5165\u308b\u6570\u5b57\n    s_i, c_i = q[i][0] - 1, str(q[i][1])\n    # possible_numbers[s_i]\u306b\u306f\u3001s_i\u756a\u76ee\u306e\u6841\u306b\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u304c\u5165\u3063\u3066\u3044\u308b\n    # \u3053\u3053\u3067\u306f\u3001c_i\u3092s_i\u756a\u76ee\u306e\u6841\u306b\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u306b\u8ffd\u52a0\u3057\u3001\n    # \u305d\u308c\u4ee5\u5916\u306e\u6570\u5b57\u3092\u524a\u9664\u3059\u308b\n    possible_numbers[s_i] = c_i\n    for j in range(10):\n        if str(j) != c_i:\n            possible_numbers[s_i] = possible_numbers[s_i].replace(str(j), '')\n\n# \u5168\u3066\u306e\u6841\u306b\u3064\u3044\u3066\u3001c_i\u304c\u5165\u308b\u53ef\u80fd\u6027\u306e\u3042\u308b\u6570\u5b57\u3092\u6c7a\u3081\u305f\u306e\u3067\u3001\n# \u305d\u308c\u3089\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u3001n\u6841\u306e\u6570\u5b57\u3092\u4f5c\u308b\n# itertools.product(*possible_numbers)\u306f\u3001\n# possible_numbers\u306e\u8981\u7d20\u3092\u305d\u308c\u305e\u308c\u53d6\u308a\u51fa\u3057\u3001\u305d\u308c\u3089\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u3001\n# \u5168\u3066\u306e\u7d44\u307f\u5408\u308f\u305b\u3092\u5217\u6319\u3059\u308b\nans = -1\nfor i in itertools.product(*possible_numbers):\n    i = int(''.join(i))\n    if len(str(i)) == n and i >= 0:\n        if ans == -1:\n            ans = i\n        else:\n            ans = min(ans, i)\nprint(ans)\n\n# Reference code\nn, m = map(int, input().split())\nq = [list(map(int, input().split())) for i in range(m)]\n\nans = -1\nfor i in range(1000, 10000):\n    s = str(i)\n    ok = True\n    for j in range(m):\n        if s[q[j][0]-1] != str(q[j][1]):\n            ok = False\n    if ok:\n        ans = i\n        break\nprint(ans)"
+}
+2022-04-09 18:54:40.431000 REASON stop

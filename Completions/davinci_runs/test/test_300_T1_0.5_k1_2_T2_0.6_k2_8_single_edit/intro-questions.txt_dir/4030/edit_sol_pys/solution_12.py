@@ -1,0 +1,61 @@
+
+
+def main():
+    n = int(input())
+    s = input()
+    if (n == 1):
+        print(1)
+        print(1)
+    elif (n == 2):
+        if (s[0] < s[1]):
+            print(1)
+            print(1, 1)
+        else:
+            print(2)
+            print(1, 2)
+    elif (n == 3):
+        if (s[0] < s[1] and s[1] < s[2]):
+            print(1)
+            print(1, 1, 1)
+        elif (s[0] < s[1] and s[1] > s[2]):
+            print(2)
+            print(1, 2, 1)
+        elif (s[0] > s[1] and s[1] < s[2]):
+            print(2)
+            print(2, 1, 1)
+        else:
+            print(3)
+            print(1, 2, 3)
+    elif (s[0] == s[1]):
+        print(1)
+        print(1, 1, 1, 1, 1, 1, 1, 1, 1)
+    elif (s[0] < s[1]):
+        print(1)
+        print(1, 1, 1, 1, 1, 1, 1, 1)
+    elif (s[1] < s[2]):
+        print(1)
+        print(2, 1, 1, 1, 1, 1, 1, 1)
+    elif (s[2] < s[3]):
+        print(1)
+        print(2, 2, 1, 1, 1, 1, 1, 1)
+    elif (s[3] < s[4]):
+        print(1)
+        print(2, 2, 2, 1, 1, 1, 1, 1)
+    elif (s[4] < s[5]):
+        print(1)
+        print(2, 2, 2, 2, 1, 1, 1, 1)
+    elif (s[5] < s[6]):
+        print(1)
+        print(2, 2, 2, 2, 2, 1, 1, 1)
+    elif (s[6] < s[7]):
+        print(1)
+        print(2, 2, 2, 2, 2, 2, 1, 1)
+    elif (s[7] < s[8]):
+        print(1)
+        print(2, 2, 2, 2, 2, 2, 2, 1)
+    else:
+        print(2)
+        print(1, 2, 1, 2, 1, 2, 1, 2, 1)
+
+if __name__ == "__main__":
+    main()

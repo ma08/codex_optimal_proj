@@ -1,0 +1,19 @@
+
+def main():
+    n, m, q = map(int, input().split())
+    abcd = [list(map(int, input().split())) for _ in range(q)]
+    abcd.sort(key=lambda x: (x[1], x[0]), reverse=True)
+    dp = [[0 for _ in range(m)] for _ in range(n+1)]
+
+    for i in range(n):
+        for j in range(m):
+            dp[i+1][j] = dp[i][j]
+
+    for a, b, c, d in reversed(abcd):
+        for j in range(c):
+            dp[b][j] = max(dp[b][j], dp[a][j+c] + d)
+
+    print(max(dp[n]))
+
+if __name__ == '__main__':
+    main()
