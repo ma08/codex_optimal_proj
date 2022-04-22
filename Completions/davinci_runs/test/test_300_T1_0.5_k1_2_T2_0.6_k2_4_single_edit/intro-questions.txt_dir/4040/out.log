@@ -1,0 +1,102 @@
+2022-04-09 18:14:16.108254 """
+There is a river of width $n$. The left bank of the river is cell $0$ and the right bank is cell $n + 1$ (more formally, the river can be represented as a sequence of $n + 2$ cells numbered from $0$ to $n + 1$). There are also $m$ wooden platforms on a river, the $i$-th platform has length $c_i$ (so the $i$-th platform takes $c_i$ consecutive cells of the river). It is guaranteed that the sum of lengths of platforms does not exceed $n$.
+
+You are standing at $0$ and want to reach $n+1$ somehow. If you are standing at the position $x$, you can jump to any position in the range $[x + 1; x + d]$. However you don't really like the water so you can jump only to such cells that belong to some wooden platform. For example, if $d=1$, you can jump only to the next position (if it belongs to the wooden platform). You can assume that cells $0$ and $n+1$ belong to wooden platforms.
+
+You want to know if it is possible to reach $n+1$ from $0$ if you can move any platform to the left or to the right arbitrary number of times (possibly, zero) as long as they do not intersect each other (but two platforms can touch each other). It also means that you cannot change the relative order of platforms.
+
+Note that you should move platforms until you start jumping (in other words, you first move the platforms and then start jumping).
+
+For example, if $n=7$, $m=3$, $d=2$ and $c = [1, 2, 1]$, then one of the ways to reach $8$ from $0$ is follow:
+
+ [Image] The first example: $n=7$. 
+
+
+-----Input-----
+
+The first line of the input contains three integers $n$, $m$ and $d$ ($1 \le n, m, d \le 1000, m \le n$) — the width of the river, the number of platforms and the maximum distance of your jump, correspondingly.
+
+The second line of the input contains $m$ integers $c_1, c_2, \dots, c_m$ ($1 \le c_i \le n, \sum\limits_{i=1}^{m} c_i \le n$), where $c_i$ is the length of the $i$-th platform.
+
+
+-----Output-----
+
+If it is impossible to reach $n+1$ from $0$, print NO in the first line. Otherwise, print YES in the first line and the array $a$ of length $n$ in the second line — the sequence of river cells (excluding cell $0$ and cell $n + 1$).
+
+If the cell $i$ does not belong to any platform, $a_i$ should be $0$. Otherwise, it should be equal to the index of the platform ($1$-indexed, platforms are numbered from $1$ to $m$ in order of input) to which the cell $i$ belongs.
+
+Note that all $a_i$ equal to $1$ should form a contiguous subsegment of the array $a$ of length $c_1$, all $a_i$ equal to $2$ should form a contiguous subsegment of the array $a$ of length $c_2$, ..., all $a_i$ equal to $m$ should form a contiguous subsegment of the array $a$ of length $c_m$. The leftmost position of $2$ in $a$ should be greater than the rightmost position of $1$, the leftmost position of $3$ in $a$ should be greater than the rightmost position of $2$, ..., the leftmost position of $m$ in $a$ should be greater than the rightmost position of $m-1$.
+
+See example outputs for better understanding.
+
+
+-----Examples-----
+Input
+7 3 2
+1 2 1
+
+Output
+YES
+0 1 0 2 2 0 3 
+
+Input
+10 1 11
+1
+
+Output
+YES
+0 0 0 0 0 0 0 0 0 1 
+
+Input
+10 1 5
+2
+
+Output
+YES
+0 0 0 0 1 1 0 0 0 0 
+
+
+
+-----Note-----
+
+Consider the first example: the answer is $[0, 1, 0, 2, 2, 0, 3]$. The sequence of jumps you perform is $0 \rightarrow 2 \rightarrow 4 \rightarrow 5 \rightarrow 7 \rightarrow 8$.
+
+Consider the second example: it does not matter how to place the platform because you always can jump from $0$ to $11$.
+
+Consider the third example: the answer is $[0, 0, 0, 0, 1, 1, 0, 0, 0, 0]$. The sequence of jumps you perform is $0 \rightarrow 5 \rightarrow 6 \rightarrow 11$.
+"""
+2022-04-09 18:14:16.108309 --------------------------
+2022-04-09 18:14:50.683835 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n#submitted\nn, m, d = map(int, input().split())\nc = list(map(int, input().split()))\n\ndef get_platforms(n, m, d, c):\n    platforms = []\n    for i in range(m):\n        platforms.append([i+1]*c[i])\n    return platforms\n\ndef get_river(n, m, d, c):\n    platforms = get_platforms(n, m, d, c)\n    river = [0] * n\n    for i in range(n):\n        for j in range(m):\n            if len(platforms[j]) == 0:\n                continue\n            if platforms[j][0] == i+1:\n                river[i] = j+1\n                platforms[j] = platforms[j][1:]\n    return river\n\nprint(\"YES\")\nprint(*get_river(n, m, d, c))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\n# SOLUTION\n# The problem is essentially asking if the platform lengths can be arranged in such a way that you can jump from 0 to n+1.\n# This can be done by arranging the platforms in non-decreasing order and then checking if the first platform is at least d units away from 0.\n\n# CAREFUL: The platforms can be moved to the left or right, but their relative order must be maintained.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 1, 2] or [1, 2, 1] or [2, 1, 1].\n\n# CAREFUL: The platforms can touch each other, but they cannot intersect.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 2, 1] or [2, 1, 1] or [1, 1, 2].\n\n# CAREFUL: Also, the platforms cannot be moved to the left of 0 or to the right of n+1.\n\n# CAREFUL: The platforms can be moved to the left or right, but their relative order must be maintained.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 1, 2] or [1, 2, 1] or [2, 1, 1].\n\n# CAREFUL: The platforms can touch each other, but they cannot intersect.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 2, 1] or [2, 1, 1] or [1, 1, 2].\n\n# CAREFUL: Also, the platforms cannot be moved to the left of 0 or to the right of n+1.\n\n# CAREFUL: Also, you can jump to any position in the range [x + 1; x + d] where x is your current position.\n# So, if your current position is x, then you can jump to x + 1, x + 2, ..., x + d.\n# But, you can jump only to such cells that belong to some wooden platform.\n\n# CAREFUL: You can assume that cells 0 and n+1 belong to wooden platforms.\n\n# CAREFUL: You should move platforms until you start jumping (in other words, you first move the platforms and then start jumping).\n\n# CAREFUL: You want to know if it is possible to reach n+1 from 0 if you can move any platform to the left or to the right arbitrary number of times (possibly, zero) as long as they do not intersect each other (but two platforms can touch each other). It also means that you cannot change the relative order of platforms."
+    }
+  ],
+  "created": 1649542456,
+  "id": "cmpl-4vDdQPbhAGSglwHVqtDocKxZEi1NY",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:14:50.684171 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n#submitted\nn, m, d = map(int, input().split())\nc = list(map(int, input().split()))\n\ndef get_platforms(n, m, d, c):\n    platforms = []\n    for i in range(m):\n        platforms.append([i+1]*c[i])\n    return platforms\n\ndef get_river(n, m, d, c):\n    platforms = get_platforms(n, m, d, c)\n    river = [0] * n\n    for i in range(n):\n        for j in range(m):\n            if len(platforms[j]) == 0:\n                continue\n            if platforms[j][0] == i+1:\n                river[i] = j+1\n                platforms[j] = platforms[j][1:]\n    return river\n\nprint(\"YES\")\nprint(*get_river(n, m, d, c))"
+}
+2022-04-09 18:14:50.684213 REASON stop
+2022-04-09 18:14:50.686185 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\n# SOLUTION\n# The problem is essentially asking if the platform lengths can be arranged in such a way that you can jump from 0 to n+1.\n# This can be done by arranging the platforms in non-decreasing order and then checking if the first platform is at least d units away from 0.\n\n# CAREFUL: The platforms can be moved to the left or right, but their relative order must be maintained.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 1, 2] or [1, 2, 1] or [2, 1, 1].\n\n# CAREFUL: The platforms can touch each other, but they cannot intersect.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 2, 1] or [2, 1, 1] or [1, 1, 2].\n\n# CAREFUL: Also, the platforms cannot be moved to the left of 0 or to the right of n+1.\n\n# CAREFUL: The platforms can be moved to the left or right, but their relative order must be maintained.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 1, 2] or [1, 2, 1] or [2, 1, 1].\n\n# CAREFUL: The platforms can touch each other, but they cannot intersect.\n# So, if the platform lengths are [1, 2, 1], then the platform lengths can be arranged as [2, 1, 1] or [1, 2, 1] or [1, 1, 2].\n# But, the platform lengths cannot be arranged as [1, 2, 1] or [2, 1, 1] or [1, 1, 2].\n\n# CAREFUL: Also, the platforms cannot be moved to the left of 0 or to the right of n+1.\n\n# CAREFUL: Also, you can jump to any position in the range [x + 1; x + d] where x is your current position.\n# So, if your current position is x, then you can jump to x + 1, x + 2, ..., x + d.\n# But, you can jump only to such cells that belong to some wooden platform.\n\n# CAREFUL: You can assume that cells 0 and n+1 belong to wooden platforms.\n\n# CAREFUL: You should move platforms until you start jumping (in other words, you first move the platforms and then start jumping).\n\n# CAREFUL: You want to know if it is possible to reach n+1 from 0 if you can move any platform to the left or to the right arbitrary number of times (possibly, zero) as long as they do not intersect each other (but two platforms can touch each other). It also means that you cannot change the relative order of platforms."
+}
+2022-04-09 18:14:50.686552 REASON stop
