@@ -1,0 +1,17 @@
+import sys
+
+def main():
+    n = int(sys.stdin.readline())
+    arr = list(map(int,sys.stdin.readline().split()))
+    d = arr[1] - arr[0]
+    ans = 0
+    for i in range(2,n):
+        if arr[i] - arr[i-1] != d:
+            ans += 1
+    if ans > 1:
+        print(-1)
+    else:
+        print(ans)
+
+if __name__ == "__main__":
+    main()

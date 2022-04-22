@@ -1,0 +1,25 @@
+
+def main():
+    n, b, a = map(int, input().split())  # n:個数, b:消費電力, a:充電電力 s:消費電力or充電電力
+    s = list(map(int, input().split()))
+    ans = 0
+    i = 0
+    while i < n:
+        if s[i] == 1:  # 消費電力
+            if a < b:
+                a += 1
+            else:
+                b += 1
+        if a > 0:  # 充電電力
+            a -= 1
+            ans += 1
+        elif b > 0:
+            b -= 1
+            ans += 1
+        else:
+            break
+        i += 1
+    print(ans)
+
+if __name__ == "__main__":
+    main()

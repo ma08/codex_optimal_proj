@@ -1,0 +1,28 @@
+
+
+def main():
+    n, k = map(int, input().split())
+    a = list(map(int, input().split()))  # [1, 2, 1, 2, 1]
+    d = {}
+    for i in range(n):
+        d[a[i]] = d.get(a[i], 0) + 1  # {1: 3, 2: 2}
+    if len(d) > k:
+        print("NO")
+        return
+    ans = [0] * n
+    cnt = 1
+    for i in range(n):
+        if a[i] in d:
+            ans[i] = cnt
+            d[a[i]] -= 1
+            if d[a[i]] == 0:
+                cnt += 1
+            if cnt > k:
+                print("NO")
+                return
+    print("YES")
+    print(' '.join(map(str, ans)))
+
+
+if __name__ == '__main__':
+    main()

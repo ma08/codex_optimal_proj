@@ -1,0 +1,26 @@
+
+
+def gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
+
+def lcm(a, b):
+    return (a * b) // gcd(a, b)
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    max_lcm = lcm(a[0], a[1])  # initialize max_lcm
+    min_i = 1
+    min_j = 2  # initialize min_i and min_j
+    for i in range(len(a)):
+        for j in range(i + 1, len(a)):
+            if lcm(a[i], a[j]) > max_lcm:
+                max_lcm = lcm(a[i], a[j])
+                min_i = i + 1
+                min_j = j + 1
+    print(min_i, min_j)
+
+if __name__ == '__main__':
+    main()
