@@ -1,0 +1,23 @@
+
+
+def main():
+    n = int(input())
+    x = list(map(int, input().split()))
+    x.sort()
+    if x[0] == 1 and x[-1] == n:
+        ans_min = 1
+        ans_max = 1
+        for i in range(1, n):
+            if x[i] != x[i - 1]:
+                ans_min += 1
+        if x[0] != 1:
+            ans_max += 1
+        if x[-1] != n:
+            ans_max += 1
+        print(ans_min, ans_max)
+    else:
+        print(-1)
+
+
+if __name__ == "__main__":
+    main()

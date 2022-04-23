@@ -1,0 +1,34 @@
+
+
+def find_blocks(a):
+    n = len(a)
+    d = {0: [(0, 0)]}
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            s = sum(a[i:j])
+            if s not in d:
+                d[s] = [(i, j)]
+            else:
+                d[s].append((i, j))
+    res = []
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            s = sum(a[i:j])
+            if s in d:
+                for l, r in d[s]:
+                    if l > j or r < i:
+                        res.append((i, j))
+    return res
+
+
+def main():
+    n = int(input())
+    a = [int(s) for s in input().split()]
+    res = find_blocks(a)
+    print(len(res))
+    for l, r in res:
+        print(l + 1, r + 1)
+
+
+if __name__ == "__main__":
+    main()

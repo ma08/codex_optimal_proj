@@ -1,0 +1,11 @@
+
+
+file_name = input().strip()
+n = len(file_name)
+
+count = 0
+for i in range(2, n):
+    if file_name[i-2] == file_name[i-1] and file_name[i-1] == file_name[i]:
+        count += 1
+
+print(count)

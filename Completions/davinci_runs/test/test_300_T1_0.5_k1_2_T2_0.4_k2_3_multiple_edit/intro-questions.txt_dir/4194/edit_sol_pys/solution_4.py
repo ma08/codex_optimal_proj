@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().rstrip().split())
+a = list(map(int, input().rstrip().split()))
+
+a.sort()
+
+if a[-1] > n:
+    print(-1)
+    exit()
+
+s = 0
+for i in range(m):
+    s += a[i]
+
+print(n - s)

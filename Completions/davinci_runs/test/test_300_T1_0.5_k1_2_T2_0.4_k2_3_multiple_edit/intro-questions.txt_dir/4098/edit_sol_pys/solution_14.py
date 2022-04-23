@@ -1,0 +1,16 @@
+
+
+def solve(n, k, b):
+    b = sorted(b)
+    ans = 0
+    for i in range(n):
+        for j in range(i+1, n):
+            if b[j] - b[i] <= 5:
+                ans = max(ans, j - i + 1)
+    return ans
+
+
+if __name__ == "__main__":
+    n, k = map(int, input().split())
+    b = list(map(int, input().split()))
+    print(solve(n, k, b))

@@ -1,0 +1,9 @@
+def main():
+    N, D = map(int, input().split())
+    if N <= D:
+        print(1)
+    else:
+        print((N - D) // (2 * D + 1) + 1)
+
+if __name__ == "__main__":
+    main()

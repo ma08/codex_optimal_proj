@@ -1,0 +1,76 @@
+
+import sys
+import re
+import math
+import string
+import itertools
+import collections
+import bisect
+import queue
+import heapq
+import time
+import random
+import copy
+
+sys.setrecursionlimit(10**8)
+INF = float('inf')
+mod = 10**9+7
+eps = 10**-7
+
+
+def inp(): return int(sys.stdin.readline())
+
+
+def inp_list(): return list(map(int, sys.stdin.readline().split()))
+
+
+def lcm(x, y): return (x * y) // math.gcd(x, y)
+
+
+def comb(n, r): return math.factorial(n) // (math.factorial(n - r) * math.factorial(r))
+
+
+def perm(n, r): return math.factorial(n) // math.factorial(n - r)
+
+
+def dist(x1, y1, x2, y2): return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
+
+def solve():
+    n, m, k = inp_list()
+
+    if k > m or k > n - 1:
+        print(-1)
+        return
+
+    if k == m:
+        print(k)
+        for i in range(k):
+            print('1' * (i + 1) + '0' * (m - i - 1))
+        return
+
+    if k == n - 1:
+        print(k)
+        for i in range(k):
+            print('0' * (i + 1) + '1' * (m - i - 1))
+        return
+
+        visited = [False] * n
+        dfs(0)
+        if False in visited:
+            diff.append(i)
+
+        graph[a - 1] = tmp1
+        graph[b - 1] = tmp2
+
+    if len(diff) < k:
+        print(len(diff))
+        for i in diff:
+            print('1' * (i + 1) + '0' * (m - i - 1))
+    else:
+        print(k)
+        for i in range(k):
+            print('1' * (diff[i] + 1) + '0' * (m - diff[i] - 1))
+
+
+solve(inp(), inp(), inp())

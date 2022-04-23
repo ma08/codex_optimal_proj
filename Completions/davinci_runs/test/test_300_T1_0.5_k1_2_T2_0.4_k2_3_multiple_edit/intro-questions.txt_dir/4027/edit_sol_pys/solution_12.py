@@ -1,0 +1,2 @@
+# comment
+print(0)

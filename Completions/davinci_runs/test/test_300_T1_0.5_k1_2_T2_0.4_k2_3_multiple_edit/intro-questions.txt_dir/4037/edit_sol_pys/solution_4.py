@@ -1,0 +1,24 @@
+
+
+def main():
+	n, r = map(int, input().split())
+	projects = []
+		
+	for i in range(n):
+		a, b = map(int, input().split())
+		projects.append((a, b))
+
+	projects.sort(key = lambda x: x[0]) # sort by the first element of the tuple
+
+	count = 0
+	for project in projects:
+		if r >= project[0]: # if the rating is greater than the minimum rating needed
+			r += project[1]
+			count += 1
+		else:
+			break
+
+	print(count)
+
+if __name__ == '__main__':
+	main()

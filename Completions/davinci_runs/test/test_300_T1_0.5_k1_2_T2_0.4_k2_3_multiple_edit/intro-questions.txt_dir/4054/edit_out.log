@@ -1,0 +1,110 @@
+2022-04-22 17:41:04.187853 num operations 2
+2022-04-22 17:41:04.187871 size on input set 1
+2022-04-22 17:41:04.188034 using api key jaanu
+2022-04-22 17:41:10.079782 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n"
+    }
+  ],
+  "created": 1650649264,
+  "object": "edit"
+}
+2022-04-22 17:41:10.080055 fix spelling mistakes 3 ["\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n", "\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n", '\n']
+2022-04-22 17:41:10.080093 size on output set 2
+2022-04-22 17:41:10.080101 size on input set 2
+2022-04-22 17:41:10.080242 using api key sunu
+2022-04-22 17:41:49.791743 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "#!/usr/bin/env python\n# encoding: utf-8\n\nfrom __future__ import division\n\nimport math\nimport numpy as np\n\nimport rospy\nimport tf\nfrom geometry_msgs.msg import PoseStamped\nfrom geometry_msgs.msg import TwistStamped\nfrom geometry_msgs.msg import Vector3Stamped\nfrom mavros_msgs.msg import AttitudeTarget\nfrom mavros_msgs.msg import Thrust\nfrom mavros_msgs.srv import CommandBool\nfrom mavros_msgs.srv import SetMode\nfrom sensor_msgs.msg import Imu\nfrom std_msgs.msg import Float32\nfrom std_msgs.msg import Header\nfrom tf.transformations import euler_from_quaternion\n\n\nclass PositionController(object):\n\n    def __init__(self):\n        self.rate = rospy.Rate(30)\n        self.imu_sub = rospy.Subscriber(\"/mavros/imu/data\", Imu, self.imu_callback)\n        self.local_pos_sub = rospy.Subscriber(\"/mavros/local_position/pose\", PoseStamped, self.local_pos_callback)\n        self.local_vel_sub = rospy.Subscriber(\"/mavros/local_position/velocity_local\", TwistStamped, self.local_vel_callback)\n        self.att_target_pub = rospy.Publisher(\"/mavros/setpoint_raw/attitude\", AttitudeTarget, queue_size=10)\n        self.thrust_pub = rospy.Publisher(\"/mavros/setpoint_attitude/thrust\", Thrust, queue_size=10)\n        self.arming_client = rospy.ServiceProxy(\"/mavros/cmd/arming\", CommandBool)\n        self.set_mode_client = rospy.ServiceProxy(\"/mavros/set_mode\", SetMode)\n\n        self.local_pos = PoseStamped()\n        self.local_vel = TwistStamped()\n        self.attitude = Imu()\n        self.thrust = 0.0\n\n        self.Kp_xy = np.array([1.5, 1.5, 0.0])\n        self.Kp_z = np.array([0.3, 0.3, 0.0])\n        self.Kd_xy = np.array([1.0, 1.0, 0.0])\n        self.Kd_z = np.array([0.2, 0.2, 0.0])\n        self.Ki_xy = np.array([0.0, 0.0, 0.0])\n        self.Ki_z = np.array([0.0, 0.0, 0.0])\n\n        self.desired_pos = np.array([0.0, 0.0, 1.0])\n        self.desired_vel = np.array([0.0, 0.0, 0.0])\n        self.desired_acc = np.array([0.0, 0.0, 0.0])\n        self.desired_yaw = 0.0\n\n        self.error_pos = np.array([0.0, 0.0, 0.0])\n        self.error_vel = np.array([0.0, 0.0, 0.0])\n        self.error_acc = np.array([0.0, 0.0, 0.0])\n        self.error_pos_prev = np.array([0.0, 0.0, 0.0])\n        self.error_vel_prev = np.array([0.0, 0.0, 0.0])\n        self.error_pos_sum = np.array([0.0, 0.0, 0.0])\n        self.error_vel_sum = np.array([0.0, 0.0, 0.0])\n\n        self.desired_attitude = AttitudeTarget()\n        self.desired_attitude.thrust = 0.0\n        self.desired_attitude.body_rate = Vector3Stamped()\n        self.desired_attitude.orientation = Vector3Stamped()\n        self.desired_attitude.type_mask = 7\n\n        self.desired_thrust = Thrust()\n\n        self.desired_yaw_rate = 0.0\n        self.desired_pitch = 0.0\n        self.desired_roll = 0.0\n        self.desired_pitch_rate = 0.0\n        self.desired_roll_rate = 0.0\n\n    def imu_callback(self, data):\n        self.attitude = data\n\n    def local_pos_callback(self, data):\n        self.local_pos = data\n\n    def local_vel_callback(self, data):\n        self.local_vel = data\n\n    def run(self):\n        while not rospy.is_shutdown():\n            # Get current position, velocity and attitude\n            curr_pos = np.array([self.local_pos.pose.position.x, self.local_pos.pose.position.y, self.local_pos.pose.position.z])\n            curr_vel = np.array([self.local_vel.twist.linear.x, self.local_vel.twist.linear.y, self.local_vel.twist.linear.z])\n            curr_attitude = euler_from_quaternion([self.attitude.orientation.x, self.attitude.orientation.y, self.attitude.orientation.z, self.attitude.orientation.w])\n\n            # Get current yaw angle\n            yaw = curr_attitude[2]\n\n            # Calculate errors\n            self.error_pos = self.desired_pos - curr_pos\n            self.error_vel = self.desired_vel - curr_vel\n            self.error_acc = self.desired_acc - (self.error_vel - self.error_vel_prev) * 30\n            self.error_pos_sum += self.error_pos\n            self.error_vel_sum += self.error_vel\n\n            # Calculate control signal\n            u_pos = self.Kp_xy * self.error_pos[0:2] + self.Kd_xy * self.error_vel[0:2] + self.Ki_xy * self.error_pos_sum[0:2]\n            u_vel = self.Kp_z * self.error_pos[2] + self.Kd_z * self.error_vel[2] + self.Ki_z * self.error_pos_sum[2]\n\n            # Calculate desired roll and pitch angles\n            self.desired_roll = u_pos[1] * math.cos(yaw) + u_pos[0] * math.sin(yaw)\n            self.desired_pitch = -u_pos[0] * math.cos(yaw) + u_pos[1] * math.sin(yaw)\n\n            # Calculate desired roll rate and pitch rate\n            self.desired_roll_rate = u_vel[1] * math.cos(yaw) + u_vel[0] * math.sin(yaw)\n            self.desired_pitch_rate = -u_vel[0] * math.cos(yaw) + u_vel[1] * math.sin(yaw)\n\n            # Calculate desired yaw rate\n            self.desired_yaw_rate = self.desired_yaw\n\n            # Calculate desired thrust\n            self.thrust = u_vel[2]\n\n            # Update previous errors\n            self.error_pos_prev = self.error_pos\n            self.error_vel_prev = self.error_vel\n\n            # Publish control signals\n            self.desired_attitude.orientation.x = self.desired_roll\n            self.desired_attitude.orientation.y\n"
+    },
+    {
+      "index": 1,
+      "text": "#!/bin/bash\n\n# This script will create a new file\n\ntouch newfile\n\necho \"File Created\"\n\n"
+    },
+    {
+      "index": 2,
+      "text": "#!/bin/bash\n\n# This is a simple bash script to create a new file\n\necho \"Enter filename to create:\"\nread file_name\n\nif [ -f $file_name ]; then\n\techo \"File '$file_name' already exists\"\nelse\n\ttouch $file_name\n\techo \"File '$file_name' has been created\"\nfi\n"
+    }
+  ],
+  "created": 1650649270,
+  "object": "edit"
+}
+2022-04-22 17:41:49.792013 fix syntax errors 3 ['#!/usr/bin/env python\n# encoding: utf-8\n\nfrom __future__ import division\n\nimport math\nimport numpy as np\n\nimport rospy\nimport tf\nfrom geometry_msgs.msg import PoseStamped\nfrom geometry_msgs.msg import TwistStamped\nfrom geometry_msgs.msg import Vector3Stamped\nfrom mavros_msgs.msg import AttitudeTarget\nfrom mavros_msgs.msg import Thrust\nfrom mavros_msgs.srv import CommandBool\nfrom mavros_msgs.srv import SetMode\nfrom sensor_msgs.msg import Imu\nfrom std_msgs.msg import Float32\nfrom std_msgs.msg import Header\nfrom tf.transformations import euler_from_quaternion\n\n\nclass PositionController(object):\n\n    def __init__(self):\n        self.rate = rospy.Rate(30)\n        self.imu_sub = rospy.Subscriber("/mavros/imu/data", Imu, self.imu_callback)\n        self.local_pos_sub = rospy.Subscriber("/mavros/local_position/pose", PoseStamped, self.local_pos_callback)\n        self.local_vel_sub = rospy.Subscriber("/mavros/local_position/velocity_local", TwistStamped, self.local_vel_callback)\n        self.att_target_pub = rospy.Publisher("/mavros/setpoint_raw/attitude", AttitudeTarget, queue_size=10)\n        self.thrust_pub = rospy.Publisher("/mavros/setpoint_attitude/thrust", Thrust, queue_size=10)\n        self.arming_client = rospy.ServiceProxy("/mavros/cmd/arming", CommandBool)\n        self.set_mode_client = rospy.ServiceProxy("/mavros/set_mode", SetMode)\n\n        self.local_pos = PoseStamped()\n        self.local_vel = TwistStamped()\n        self.attitude = Imu()\n        self.thrust = 0.0\n\n        self.Kp_xy = np.array([1.5, 1.5, 0.0])\n        self.Kp_z = np.array([0.3, 0.3, 0.0])\n        self.Kd_xy = np.array([1.0, 1.0, 0.0])\n        self.Kd_z = np.array([0.2, 0.2, 0.0])\n        self.Ki_xy = np.array([0.0, 0.0, 0.0])\n        self.Ki_z = np.array([0.0, 0.0, 0.0])\n\n        self.desired_pos = np.array([0.0, 0.0, 1.0])\n        self.desired_vel = np.array([0.0, 0.0, 0.0])\n        self.desired_acc = np.array([0.0, 0.0, 0.0])\n        self.desired_yaw = 0.0\n\n        self.error_pos = np.array([0.0, 0.0, 0.0])\n        self.error_vel = np.array([0.0, 0.0, 0.0])\n        self.error_acc = np.array([0.0, 0.0, 0.0])\n        self.error_pos_prev = np.array([0.0, 0.0, 0.0])\n        self.error_vel_prev = np.array([0.0, 0.0, 0.0])\n        self.error_pos_sum = np.array([0.0, 0.0, 0.0])\n        self.error_vel_sum = np.array([0.0, 0.0, 0.0])\n\n        self.desired_attitude = AttitudeTarget()\n        self.desired_attitude.thrust = 0.0\n        self.desired_attitude.body_rate = Vector3Stamped()\n        self.desired_attitude.orientation = Vector3Stamped()\n        self.desired_attitude.type_mask = 7\n\n        self.desired_thrust = Thrust()\n\n        self.desired_yaw_rate = 0.0\n        self.desired_pitch = 0.0\n        self.desired_roll = 0.0\n        self.desired_pitch_rate = 0.0\n        self.desired_roll_rate = 0.0\n\n    def imu_callback(self, data):\n        self.attitude = data\n\n    def local_pos_callback(self, data):\n        self.local_pos = data\n\n    def local_vel_callback(self, data):\n        self.local_vel = data\n\n    def run(self):\n        while not rospy.is_shutdown():\n            # Get current position, velocity and attitude\n            curr_pos = np.array([self.local_pos.pose.position.x, self.local_pos.pose.position.y, self.local_pos.pose.position.z])\n            curr_vel = np.array([self.local_vel.twist.linear.x, self.local_vel.twist.linear.y, self.local_vel.twist.linear.z])\n            curr_attitude = euler_from_quaternion([self.attitude.orientation.x, self.attitude.orientation.y, self.attitude.orientation.z, self.attitude.orientation.w])\n\n            # Get current yaw angle\n            yaw = curr_attitude[2]\n\n            # Calculate errors\n            self.error_pos = self.desired_pos - curr_pos\n            self.error_vel = self.desired_vel - curr_vel\n            self.error_acc = self.desired_acc - (self.error_vel - self.error_vel_prev) * 30\n            self.error_pos_sum += self.error_pos\n            self.error_vel_sum += self.error_vel\n\n            # Calculate control signal\n            u_pos = self.Kp_xy * self.error_pos[0:2] + self.Kd_xy * self.error_vel[0:2] + self.Ki_xy * self.error_pos_sum[0:2]\n            u_vel = self.Kp_z * self.error_pos[2] + self.Kd_z * self.error_vel[2] + self.Ki_z * self.error_pos_sum[2]\n\n            # Calculate desired roll and pitch angles\n            self.desired_roll = u_pos[1] * math.cos(yaw) + u_pos[0] * math.sin(yaw)\n            self.desired_pitch = -u_pos[0] * math.cos(yaw) + u_pos[1] * math.sin(yaw)\n\n            # Calculate desired roll rate and pitch rate\n            self.desired_roll_rate = u_vel[1] * math.cos(yaw) + u_vel[0] * math.sin(yaw)\n            self.desired_pitch_rate = -u_vel[0] * math.cos(yaw) + u_vel[1] * math.sin(yaw)\n\n            # Calculate desired yaw rate\n            self.desired_yaw_rate = self.desired_yaw\n\n            # Calculate desired thrust\n            self.thrust = u_vel[2]\n\n            # Update previous errors\n            self.error_pos_prev = self.error_pos\n            self.error_vel_prev = self.error_vel\n\n            # Publish control signals\n            self.desired_attitude.orientation.x = self.desired_roll\n            self.desired_attitude.orientation.y\n', '#!/bin/bash\n\n# This script will create a new file\n\ntouch newfile\n\necho "File Created"\n\n', '#!/bin/bash\n\n# This is a simple bash script to create a new file\n\necho "Enter filename to create:"\nread file_name\n\nif [ -f $file_name ]; then\n\techo "File \'$file_name\' already exists"\nelse\n\ttouch $file_name\n\techo "File \'$file_name\' has been created"\nfi\n']
+2022-04-22 17:41:49.792395 using api key soukgp
+2022-04-22 17:41:55.515422 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    # Compute and print answer.\n    print(min(a))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "import sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    # Compute and print answer.\n    print(min(a))\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split(' ')]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650649309,
+  "object": "edit"
+}
+2022-04-22 17:41:55.515657 fix syntax errors 3 ["\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    # Compute and print answer.\n    print(min(a))\n\nif __name__ == '__main__':\n    main()\n", "import sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split()]\n\n    # Compute and print answer.\n    print(min(a))\n\nif __name__ == '__main__':\n    main()\n", "\n\nimport sys\n\ndef main():\n    # Read input.\n    a = [int(x) for x in sys.stdin.readline().split(' ')]\n    \n    # Compute and print answer.\n    print(min(a))\n    \nif __name__ == '__main__':\n    main()\n"]
+2022-04-22 17:41:55.515686 size on output set 6
+2022-04-22 17:41:55.515697 num operations 2
+2022-04-22 17:41:55.515703 size on input set 1
+2022-04-22 17:41:55.515887 using api key soukgp
+2022-04-22 17:42:00.221449 fix spelling mistakes {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650649315,
+  "object": "edit"
+}
+2022-04-22 17:42:00.221689 fix spelling mistakes 3 ["\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n", "\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n", "\n\n#SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-22 17:42:00.221726 size on output set 1
+2022-04-22 17:42:00.221735 size on input set 1
+2022-04-22 17:42:00.221885 using api key sunu
+2022-04-22 17:42:08.527668 fix syntax errors {
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]  # input the list of numbers\n    b = a[0]  # assign the first number to b\n    for i in range(1, len(a)):  # iterate through the list of numbers\n        b = lcm(b, a[i])  # assign the lcm of b and a[i] to b\n    print(b)  # print the lcm of the list of numbers\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 1,
+      "text": "\n\n# SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+      "index": 2,
+      "text": "\n\n# SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"
+    }
+  ],
+  "created": 1650649320,
+  "object": "edit"
+}
+2022-04-22 17:42:08.527955 fix syntax errors 3 ["\n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]  # input the list of numbers\n    b = a[0]  # assign the first number to b\n    for i in range(1, len(a)):  # iterate through the list of numbers\n        b = lcm(b, a[i])  # assign the lcm of b and a[i] to b\n    print(b)  # print the lcm of the list of numbers\n\nif __name__ == '__main__':\n    main()\n", "\n\n# SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n", "\n\n# SOLUTION \n\ndef gcd(a, b):\n    if b == 0:\n        return a\n    else:\n        return gcd(b, a % b)\n\ndef lcm(a, b):\n    return a * b // gcd(a, b)\n\ndef main():\n    a = [int(x) for x in input().split()]\n    b = a[0]\n    for i in range(1, len(a)):\n        b = lcm(b, a[i])\n    print(b)\n\nif __name__ == '__main__':\n    main()\n"]
+2022-04-22 17:42:08.527994 size on output set 2
