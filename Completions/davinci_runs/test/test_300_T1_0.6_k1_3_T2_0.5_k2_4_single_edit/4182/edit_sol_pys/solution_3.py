@@ -1,0 +1,14 @@
+n, m, x, y = map(int, input().split())
+p = list(map(int, input().split()))
+q = list(map(int, input().split()))
+
+if x >= y:
+    print("War")
+    exit()
+for i in range(x+1, y):
+    if i in p:
+        continue
+    if i not in q:
+        print("No War")
+        exit()
+print("War")

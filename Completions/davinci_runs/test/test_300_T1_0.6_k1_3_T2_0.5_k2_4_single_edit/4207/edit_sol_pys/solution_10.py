@@ -1,0 +1,46 @@
+def solve(n, a, b):
+    count = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if a[i] > a[j] and b[i] < b[j]:
+                count += 1
+
+
+def solve(n, a, b):
+    pos = []
+    neg = []
+    zero = []
+    for i in range(n):
+        if b[i] > 0:
+            pos.append(b[i] / a[i])
+        elif b[i] < 0:
+            neg.append(b[i] / a[i])
+        else:
+            zero.append(i)
+
+    pos.sort()
+    neg.sort()
+
+    res = 0
+    for i in range(len(pos)):
+        for j in range(len(neg)):
+            if pos[i] > neg[j]:
+                res += 1
+            else:
+                break
+
+    if len(zero) > 0:
+        res += len(zero) - 1
+
+    return res
+
+
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    b = list(map(int, input().split()))
+    print(solve(n, a, b))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,16 @@
+def main():
+    n, k = [int(x) for x in input().split()]
+    a = [int(x) for x in input().split()]
+    a.sort()
+    if a[0] == a[n - 1]:
+        print(n)
+    else:
+        i = 0
+        while a[i] < a[n - 1]:
+            a[i] = a[i] // 2
+            i += 1
+        print(i)
+
+
+if __name__ == '__main__':
+    main()

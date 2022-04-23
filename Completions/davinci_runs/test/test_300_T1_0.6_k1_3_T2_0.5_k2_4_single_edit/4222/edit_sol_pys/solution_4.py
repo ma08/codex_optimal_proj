@@ -1,0 +1,17 @@
+
+
+def main():
+
+    snuke_and_snack_count = [int(i) for i in input().split()]
+    snuke_count = snuke_and_snack_count[0]
+    snack_count = snuke_and_snack_count[1]
+    input_list = []
+    victim_list = []
+    for i in range(snack_count):
+        input_list += [int(i) for i in input().split()]
+    for i in range(1, snuke_count + 1):
+        if i not in input_list:
+            victim_list.append(i)
+    print(len(victim_list))
+if __name__ == '__main__':
+    main()

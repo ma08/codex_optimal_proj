@@ -1,0 +1,25 @@
+
+
+import sys
+
+sys.setrecursionlimit(10 ** 6)
+
+def dfs(v, parent = -1):
+    for u in g[v]:
+        if u != parent:
+            dfs(u, v)
+            dp1[v] += dp2[u]
+            dp2[v] += max(dp1[u], dp2[u])
+
+n = int(input())
+g = [set() for _ in range(n + 1)]
+for _ in range(n - 1):
+    a, b = map(int, input().split())
+    g[a].add(b)
+    g[b].add(a)
+
+dp1 = [0] * (n + 1)
+dp2 = [1] * (n + 1)
+dfs(1)
+
+print(max(dp1[1], dp2[1]))
