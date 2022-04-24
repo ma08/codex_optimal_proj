@@ -1,0 +1,20 @@
+
+import sys
+
+def main():
+    s = sys.stdin.readline().rstrip() # read a line and remove the new line character
+    max_len = 0
+    curr_len = 0
+    for c in s:
+        if c == 'A' or c == 'C' or c == 'G' or c == 'T':
+            curr_len += 1
+        else:
+            if curr_len > max_len:
+                max_len = curr_len
+            curr_len = 0
+    if curr_len > max_len:
+        max_len = curr_len
+    print(max_len)
+
+if __name__ == '__main__':
+    main()

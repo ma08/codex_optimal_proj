@@ -1,0 +1,74 @@
+2022-04-09 18:38:49.766957 """
+We will play a one-player game using a number line and N pieces.
+First, we place each of these pieces at some integer coordinate.
+Here, multiple pieces can be placed at the same coordinate.
+Our objective is to visit all of the M coordinates X_1, X_2, ..., X_M with these pieces, by repeating the following move:
+Move: Choose a piece and let x be its coordinate. Put that piece at coordinate x+1 or x-1.
+Note that the coordinates where we initially place the pieces are already regarded as visited.
+Find the minimum number of moves required to achieve the objective.
+
+-----Constraints-----
+ - All values in input are integers.
+ - 1 \leq N \leq 10^5
+ - 1 \leq M \leq 10^5
+ - -10^5 \leq X_i \leq 10^5
+ - X_1, X_2, ..., X_M are all different.
+
+-----Input-----
+Input is given from Standard Input in the following format:
+N M
+X_1 X_2 ... X_M
+
+-----Output-----
+Find the minimum number of moves required to achieve the objective.
+
+-----Sample Input-----
+2 5
+10 12 1 2 14
+
+-----Sample Output-----
+5
+
+The objective can be achieved in five moves as follows, and this is the minimum number of moves required.
+ - Initially, put the two pieces at coordinates 1 and 10.
+ - Move the piece at coordinate 1 to 2.
+ - Move the piece at coordinate 10 to 11.
+ - Move the piece at coordinate 11 to 12.
+ - Move the piece at coordinate 12 to 13.
+ - Move the piece at coordinate 13 to 14.
+"""
+2022-04-09 18:38:49.767006 --------------------------
+2022-04-09 18:39:26.901044 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\nn,m = map(int,sys.stdin.readline().rstrip().split(\" \"))\nx = list(map(int,sys.stdin.readline().rstrip().split(\" \")))\n\nx.sort()\n\nleft = x[0]\nright = x[-1]\n\nans = 0\n\nfor i in range(m):\n    ans += min(abs(x[i] - left),abs(x[i] - right))\n    left = min(left,x[i])\n    right = max(right,x[i])\n\nprint(ans)"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    x_s = list(map(int, input().split()))\n\n    x_s.sort()\n    min_x = x_s[0]\n    max_x = x_s[-1]\n\n    # \u6570\u5217\u306b\u304a\u3051\u308b\u5404\u6570\u5024\u306e\u4f4d\u7f6e\u3092\u8a18\u9332\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # position_dict[1] = 0\n    # position_dict[2] = 1\n    # position_dict[3] = 2\n    # position_dict[5] = 3\n    # position_dict[7] = 4\n    # position_dict[8] = 5\n    # position_dict[10] = 7\n    position_dict = dict()\n    for i, x in enumerate(x_s):\n        position_dict[x] = i\n\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # count_list[0] = 1\n    # count_list[1] = 1\n    # count_list[2] = 1\n    # count_list[3] = 1\n    # count_list[4] = 1\n    # count_list[5] = 2\n    # count_list[7] = 1\n    count_list = [0] * len(x_s)\n    count_list[0] = 1\n    for i in range(1, len(x_s)):\n        if x_s[i] == x_s[i - 1]:\n            count_list[i] = count_list[i - 1] + 1\n        else:\n            count_list[i] = 1\n\n    # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u8a18\u9332\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # move_list[0] = 1\n    # move_list[1] = 0\n    # move_list[2] = 0\n    # move_list[3] = 0\n    # move_list[4] = 0\n    # move_list[5] = 1\n    # move_list[7] = 0\n    move_list = [0] * len(x_s)\n    move_list[0] = 1\n    for i in range(1, len(x_s)):\n        if x_s[i] == x_s[i - 1]:\n            move_list[i] = move_list[i - 1]\n        else:\n            move_list[i] = move_list[i - 1] + 1\n\n    # \u79fb\u52d5\u56de\u6570\u3092\u8a08\u7b97\n    move_count = 0\n    for i in range(n):\n        # \u6570\u5217\u306b\u304a\u3051\u308b\u5404\u6570\u5024\u306e\u4f4d\u7f6e\u3092\u8a08\u7b97\n        pos = position_dict[min_x + i]\n\n        # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u8a08\u7b97\n        move_count += move_list[pos]\n\n        # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u66f4\u65b0\n        if count_list[pos] == 1:\n            move_list[pos] = 0\n        else:\n            move_list[pos] = move_list[pos] - 1\n\n    print(move_count)\n\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1649543930,
+  "id": "cmpl-4vE1C0jRqTqq9W4Rf1ZjjiQTc5rGM",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:39:26.901368 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\nn,m = map(int,sys.stdin.readline().rstrip().split(\" \"))\nx = list(map(int,sys.stdin.readline().rstrip().split(\" \")))\n\nx.sort()\n\nleft = x[0]\nright = x[-1]\n\nans = 0\n\nfor i in range(m):\n    ans += min(abs(x[i] - left),abs(x[i] - right))\n    left = min(left,x[i])\n    right = max(right,x[i])\n\nprint(ans)"
+}
+2022-04-09 18:39:26.901454 REASON stop
+2022-04-09 18:39:26.923005 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    n, m = map(int, input().split())\n    x_s = list(map(int, input().split()))\n\n    x_s.sort()\n    min_x = x_s[0]\n    max_x = x_s[-1]\n\n    # \u6570\u5217\u306b\u304a\u3051\u308b\u5404\u6570\u5024\u306e\u4f4d\u7f6e\u3092\u8a18\u9332\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # position_dict[1] = 0\n    # position_dict[2] = 1\n    # position_dict[3] = 2\n    # position_dict[5] = 3\n    # position_dict[7] = 4\n    # position_dict[8] = 5\n    # position_dict[10] = 7\n    position_dict = dict()\n    for i, x in enumerate(x_s):\n        position_dict[x] = i\n\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # count_list[0] = 1\n    # count_list[1] = 1\n    # count_list[2] = 1\n    # count_list[3] = 1\n    # count_list[4] = 1\n    # count_list[5] = 2\n    # count_list[7] = 1\n    count_list = [0] * len(x_s)\n    count_list[0] = 1\n    for i in range(1, len(x_s)):\n        if x_s[i] == x_s[i - 1]:\n            count_list[i] = count_list[i - 1] + 1\n        else:\n            count_list[i] = 1\n\n    # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u8a18\u9332\n    # \u4f8b\u3048\u3070\u3001\u6570\u5217\u304c[1, 2, 3, 5, 7, 8, 8, 10]\u3067\u3042\u308c\u3070\u3001\n    # move_list[0] = 1\n    # move_list[1] = 0\n    # move_list[2] = 0\n    # move_list[3] = 0\n    # move_list[4] = 0\n    # move_list[5] = 1\n    # move_list[7] = 0\n    move_list = [0] * len(x_s)\n    move_list[0] = 1\n    for i in range(1, len(x_s)):\n        if x_s[i] == x_s[i - 1]:\n            move_list[i] = move_list[i - 1]\n        else:\n            move_list[i] = move_list[i - 1] + 1\n\n    # \u79fb\u52d5\u56de\u6570\u3092\u8a08\u7b97\n    move_count = 0\n    for i in range(n):\n        # \u6570\u5217\u306b\u304a\u3051\u308b\u5404\u6570\u5024\u306e\u4f4d\u7f6e\u3092\u8a08\u7b97\n        pos = position_dict[min_x + i]\n\n        # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u8a08\u7b97\n        move_count += move_list[pos]\n\n        # \u5404\u6570\u5024\u306b\u304a\u3051\u308b\u79fb\u52d5\u56de\u6570\u3092\u66f4\u65b0\n        if count_list[pos] == 1:\n            move_list[pos] = 0\n        else:\n            move_list[pos] = move_list[pos] - 1\n\n    print(move_count)\n\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-09 18:39:26.923161 REASON stop

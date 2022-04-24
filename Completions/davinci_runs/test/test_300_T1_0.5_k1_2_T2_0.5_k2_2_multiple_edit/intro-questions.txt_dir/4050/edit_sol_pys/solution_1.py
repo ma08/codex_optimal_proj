@@ -1,0 +1,29 @@
+
+
+def main():
+    n = int(input())
+    a = [int(x) for x in input().split()]
+    sums = [0] * (n + 1)
+    for i in range(n):
+        sums[i + 1] = sums[i] + a[i]
+    blocks = []
+    for i in range(n-1):
+        for j in range(i+2, n+1):
+            blocks.append([i, j, sums[j] - sums[i]])
+    blocks.sort(key=lambda x: x[2])
+    blocks.sort(key=lambda x: x[1], reverse=True)
+    res = []
+    while len(blocks) > 0:
+        i = blocks[0][0]
+        j = blocks[0][1]
+        blocks.pop(0)
+        res.append([i, j])
+        for k in range(len(blocks)):
+            if blocks[k][0] < j:
+                blocks.pop(k)
+                k -= 1
+    print(len(res))
+    for i in res:
+        print(i[0] + 1, i[1])
+
+main()

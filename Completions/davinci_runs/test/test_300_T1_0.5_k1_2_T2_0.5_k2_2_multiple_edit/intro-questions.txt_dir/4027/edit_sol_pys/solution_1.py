@@ -1,0 +1,8 @@
+# this code is for even or odd number
+
+n = int(input())
+
+if n % 2 == 0:
+    print(0)
+else:
+    print(1)

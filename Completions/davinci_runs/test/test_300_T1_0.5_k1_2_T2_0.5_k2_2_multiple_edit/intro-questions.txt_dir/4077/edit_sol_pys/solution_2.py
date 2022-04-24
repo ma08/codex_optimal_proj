@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import sys
+
+
+def median(a):
+    n = len(a)
+    if n < 1:
+        return None
+    if n % 2 == 1:
+        return sorted(a)[n//2]
+    else:
+        return sum(sorted(a)[n//2-1:n//2+1])/2.0
+
+
+def main():
+    n, m = [int(x) for x in sys.stdin.readline().split()]
+    a = [int(x) for x in sys.stdin.readline().split()]
+    pairs = 0  # type: int
+    for i in range(n):
+        for j in range(i, n):
+            if median(a[i:j+1]) == m:
+                pairs += 1
+    print(pairs)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,20 @@
+def main():
+    n, m = map(int, input().split())
+    matrix = []
+    for _ in range(n):
+        matrix.append(list(map(int, input().split())))
+    print(solve(matrix))
+
+def solve(matrix):
+    n = len(matrix)
+    m = len(matrix[0])
+    # First, find the minimum value in each row
+    min_vals = [min(row) for row in matrix]
+    # Now, the max k is the max difference between any two elements in min_vals (i.e. any two rows)
+    max_k = 0
+    for i in range(m - 1):
+        max_k = max(max_k, abs(min_vals[i] - min_vals[i + 1]))
+    return max_k
+
+if __name__ == "__main__":
+    main()

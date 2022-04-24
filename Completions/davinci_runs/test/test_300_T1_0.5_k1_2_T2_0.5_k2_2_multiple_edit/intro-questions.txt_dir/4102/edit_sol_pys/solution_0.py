@@ -1,0 +1,8 @@
+
+# this is a comment
+num = input("Enter a number: ")
+
+if num[0] == num[2]:
+    print("Yes")
+else:
+    print("No")
