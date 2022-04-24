@@ -1,0 +1,21 @@
+
+
+import sys
+
+def main():
+	n = int(input().strip())
+	a = list(map(int,input().strip().split(' ')))
+	b = [0]*n
+	for i in range(n):
+		b[i] = a.count(i+1)
+	if (b[1] == n):
+		print("no")
+		sys.exit(0)
+	for i in range(n-1):
+		if (b[i+2] == n and b[i+1] == 1):
+			print("no")
+			sys.exit(0)
+	print("yes")
+
+if __name__ == '__main__':
+	main()

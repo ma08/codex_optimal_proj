@@ -1,0 +1,16 @@
+
+
+
+def main():
+    n, k = [int(x) for x in input().split()]
+    a = [int(x) for x in input().split()]
+    a.sort()
+    i = 0
+    while i < n:
+        a[i] = a[i] / 2
+        i += 1
+    print(i)
+
+
+if __name__ == '__main__':
+    main()

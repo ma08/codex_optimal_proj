@@ -1,0 +1,9 @@
+var fs = require('fs');
+
+var readStream = fs.createReadStream('file.txt', 'utf8');
+
+var writeStream = fs.createWriteStream('file_copy.txt');
+
+readStream.on('data', function(chunk){
+	writeStream.write(chunk);
+});

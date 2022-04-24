@@ -1,0 +1,22 @@
+
+
+def main():
+    N, M, Q = map(int, input().split())
+    a = [None] * Q
+    b = [None] * Q
+    c = [None] * Q
+    d = [None] * Q
+    for i in range(Q):
+        a[i], b[i], c[i], d[i] = map(int, input().split())
+    a = [a1 - 1 for a1 in a]
+    b = [b1 - 1 for b1 in b]
+    score = 0
+    for i in range(Q):
+        if a[i] < b[i] and M - c[i] > 0:
+            score += d[i]
+            score = max(score, score)
+    print(score)
+    return
+
+if __name__ == '__main__':
+    main()

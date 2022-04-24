@@ -1,0 +1,30 @@
+
+
+s = input()
+
+# count the number of black tiles
+counter = 0
+for c in s:
+    if c == 'B':
+        counter += 1
+
+# count the number of black tiles but ignoring the beginning and ending of the string
+# this is done by counting the number of consecutive 'B' characters starting from the beginning
+# and the number of consecutive 'B' characters starting from the end
+# we take the maximum of the two
+counter_ignore_ends = 0
+counter_end = 0
+for c in s:
+    if c == 'B':
+        counter_ignore_ends += 1
+    else:
+        break
+for c in reversed(s):
+    if c == 'B':
+        counter_end += 1
+    else:
+        break
+counter_ignore_ends = max(counter_ignore_ends, counter_end)
+
+# the answer is the minimum of the two
+print(min(counter, counter_ignore_ends))

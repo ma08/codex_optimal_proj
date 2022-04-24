@@ -1,0 +1,105 @@
+2022-04-18 04:02:10.728176 """
+The only difference between the easy and the hard versions is the maximum value of $k$.
+
+You are given an infinite sequence of form "112123123412345$\dots$" which consist of blocks of all consecutive positive integers written one after another. The first block consists of all numbers from $1$ to $1$, the second one — from $1$ to $2$, the third one — from $1$ to $3$, $\dots$, the $i$-th block consists of all numbers from $1$ to $i$. 
+
+So the first $56$ elements of the sequence are "11212312341234512345612345671234567812345678912345678910". Elements of the sequence are numbered from one. For example, the $1$-st element of the sequence is $1$, the $3$-rd element of the sequence is $2$, the $20$-th element of the sequence is $5$, the $38$-th element is $2$, the $56$-th element of the sequence is $0$.
+
+Your task is to answer $q$ independent queries. In the $i$-th query you are given one integer $k_i$. Calculate the digit at the position $k_i$ of the sequence.
+
+
+-----Input-----
+
+The first line of the input contains one integer $q$ ($1 \le q \le 500$) — the number of queries.
+
+The $i$-th of the following $q$ lines contains one integer $k_i$ $(1 \le k_i \le 10^9)$ — the description of the corresponding query.
+
+
+-----Output-----
+
+Print $q$ lines. In the $i$-th line print one digit $x_i$ $(0 \le x_i \le 9)$ — the answer to the query $i$, i.e. $x_i$ should be equal to the element at the position $k_i$ of the sequence.
+
+
+-----Examples-----
+Input
+5
+1
+3
+20
+38
+56
+
+Output
+1
+2
+5
+2
+0
+
+Input
+4
+2132
+506
+999999999
+1000000000
+
+Output
+8
+2
+9
+8
+
+
+
+-----Note-----
+
+Answers on queries from the first example are described in the problem statement.
+"""
+2022-04-18 04:02:10.728201 --------------------------
+2022-04-18 04:02:47.375144 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\ndef get_digit(k):\n    \"\"\"\n    Returns the digit at position k in the sequence\n    \"\"\"\n    if k == 1:\n        return 1\n    # Get the number of digits in the number that k corresponds to\n    # This is the number of digits in the block that k is in\n    num_digits = 1\n    while 10**num_digits < k:\n        num_digits += 1\n    # Get the index of the number that k corresponds to\n    # This is the index of the number in the block that k is in\n    num_index = (k - 10**(num_digits - 1)) // num_digits\n    # Get the number that k corresponds to\n    # This is the number in the block that k is in\n    num = 10**(num_digits - 1) + num_index\n    # Get the index of the digit that k corresponds to\n    # This is the index of the digit in the number that k is in\n    digit_index = (k - 10**(num_digits - 1)) % num_digits\n    # Get the digit that k corresponds to\n    # This is the digit in the number that k is in\n    digit = int(str(num)[digit_index])\n    return digit\n\nq = int(input())\nfor i in range(q):\n    k = int(input())\n    print(get_digit(k))"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\ndef solve(query, solution):\n\tif query == 1:\n\t\tsolution.append(1)\n\telif query == 2:\n\t\tsolution.append(2)\n\telse:\n\t\t# 1 + 2 + 3 + 4 + ... + n\n\t\tn = 1\n\t\twhile n*(n+1) < query*2:\n\t\t\tn += 1\n\t\tn -= 1\n\t\t# I need to find the digit at the position query-n in the block from 1 to n\n\t\t# So I find the position of query-n in the sequence\n\t\tpos = 0\n\t\tfor i in range(1, n+1):\n\t\t\tpos += i*(i+1)\n\t\tpos = query - pos\n\t\t\n\t\t# I find the number at this position\n\t\tnum = 0\n\t\twhile pos != 0:\n\t\t\tnum += 1\n\t\t\tif pos > num:\n\t\t\t\tpos -= num\n\t\t\telse:\n\t\t\t\tbreak\n\t\t# And finally I find the digit\n\t\tsolution.append(str(num)[pos-1])\n\t\t\n\treturn solution\n\t\ndef main():\n\tq = int(input())\n\tqueries = [int(input()) for _ in range(q)]\n\tsolution = []\n\tfor query in queries:\n\t\tsolve(query, solution)\n\tprint('\\n'.join(solution))\n\t\nmain()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 2,
+      "logprobs": null,
+      "text": "\n\nimport sys\n\ndef main():\n    q = int(input())\n    for i in range(q):\n        k = int(input())\n        print(solve(k))\n\ndef solve(k):\n    n = 1\n    while n*(n+1) < 2*k:\n        n += 1\n    if n*(n+1) == 2*k:\n        return 0\n    else:\n        m = n*(n+1)//2\n        return k-m\n\nif __name__ == \"__main__\":\n    main()"
+    }
+  ],
+  "created": 1650254530,
+  "id": "cmpl-4yCsUv0RREpEmeqNAILyjmyqxvTFc",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-18 04:02:47.375449 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\ndef get_digit(k):\n    \"\"\"\n    Returns the digit at position k in the sequence\n    \"\"\"\n    if k == 1:\n        return 1\n    # Get the number of digits in the number that k corresponds to\n    # This is the number of digits in the block that k is in\n    num_digits = 1\n    while 10**num_digits < k:\n        num_digits += 1\n    # Get the index of the number that k corresponds to\n    # This is the index of the number in the block that k is in\n    num_index = (k - 10**(num_digits - 1)) // num_digits\n    # Get the number that k corresponds to\n    # This is the number in the block that k is in\n    num = 10**(num_digits - 1) + num_index\n    # Get the index of the digit that k corresponds to\n    # This is the index of the digit in the number that k is in\n    digit_index = (k - 10**(num_digits - 1)) % num_digits\n    # Get the digit that k corresponds to\n    # This is the digit in the number that k is in\n    digit = int(str(num)[digit_index])\n    return digit\n\nq = int(input())\nfor i in range(q):\n    k = int(input())\n    print(get_digit(k))"
+}
+2022-04-18 04:02:47.375508 REASON stop
+2022-04-18 04:02:47.400141 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\ndef solve(query, solution):\n\tif query == 1:\n\t\tsolution.append(1)\n\telif query == 2:\n\t\tsolution.append(2)\n\telse:\n\t\t# 1 + 2 + 3 + 4 + ... + n\n\t\tn = 1\n\t\twhile n*(n+1) < query*2:\n\t\t\tn += 1\n\t\tn -= 1\n\t\t# I need to find the digit at the position query-n in the block from 1 to n\n\t\t# So I find the position of query-n in the sequence\n\t\tpos = 0\n\t\tfor i in range(1, n+1):\n\t\t\tpos += i*(i+1)\n\t\tpos = query - pos\n\t\t\n\t\t# I find the number at this position\n\t\tnum = 0\n\t\twhile pos != 0:\n\t\t\tnum += 1\n\t\t\tif pos > num:\n\t\t\t\tpos -= num\n\t\t\telse:\n\t\t\t\tbreak\n\t\t# And finally I find the digit\n\t\tsolution.append(str(num)[pos-1])\n\t\t\n\treturn solution\n\t\ndef main():\n\tq = int(input())\n\tqueries = [int(input()) for _ in range(q)]\n\tsolution = []\n\tfor query in queries:\n\t\tsolve(query, solution)\n\tprint('\\n'.join(solution))\n\t\nmain()"
+}
+2022-04-18 04:02:47.400238 REASON stop
+2022-04-18 04:02:47.400723 2 {
+  "finish_reason": "stop",
+  "index": 2,
+  "logprobs": null,
+  "text": "\n\nimport sys\n\ndef main():\n    q = int(input())\n    for i in range(q):\n        k = int(input())\n        print(solve(k))\n\ndef solve(k):\n    n = 1\n    while n*(n+1) < 2*k:\n        n += 1\n    if n*(n+1) == 2*k:\n        return 0\n    else:\n        m = n*(n+1)//2\n        return k-m\n\nif __name__ == \"__main__\":\n    main()"
+}
+2022-04-18 04:02:47.400781 REASON stop

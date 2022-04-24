@@ -1,0 +1,15 @@
+
+
+def main():
+    N, K = map(int, input().split())
+    R = list(map(int, input().split()))
+
+    if D == 0:
+        print(N)
+    elif D == 1:
+        print(100 * N)
+    else:
+        print(10000 * N)
+
+if __name__ == '__main__':
+    main()

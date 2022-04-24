@@ -1,0 +1,13 @@
+from decimal import Decimal
+
+
+def main():
+    n = int(input())
+    if n % 2 == 0:
+        print(0.5)
+    else:
+        print(Decimal((n+1) / (2 * n)))
+
+
+if __name__ == '__main__':
+    main()

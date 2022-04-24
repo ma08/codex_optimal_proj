@@ -1,0 +1,19 @@
+
+
+s = input()
+k = int(input())
+
+def calc(s, k, i=0):
+        s = s.replace('1', '11')
+    for i in range(k):
+        s = s.replace('2', '22')
+        s = s.replace('3', '333')
+        s = s.replace('4', '4444')
+        s = s.replace('5', '55555')
+        s = s.replace('6', '666666')
+        s = s.replace('7', '777777')
+        s = s.replace('8', '8888888')
+        s = s.replace('9', '99999999')
+    return s
+
+print(calc(s, k)[k])

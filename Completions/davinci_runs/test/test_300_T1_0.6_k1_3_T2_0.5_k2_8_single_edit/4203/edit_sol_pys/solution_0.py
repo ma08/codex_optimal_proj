@@ -1,0 +1,23 @@
+
+
+# My Answer
+
+s = input()
+
+if s[0] == 'A' and s[2:len(s) - 1].count('C') == 1:
+    for i in range(1, len(s)):
+        if i != 2 and s[i] not in 'abcdefghijklmnopqrstuvwxyz':
+            print('WA')
+            exit()
+    print('AC')
+else:
+    print('WA')
+
+# Best Answer
+
+s = input()
+
+if s[0] == 'A' and s[2:len(s) - 1].count('C') == 1 and s[1:].islower():
+    print('AC')
+else:
+    print('WA')

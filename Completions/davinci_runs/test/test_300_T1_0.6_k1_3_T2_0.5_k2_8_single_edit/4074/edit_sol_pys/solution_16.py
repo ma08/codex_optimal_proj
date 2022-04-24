@@ -1,0 +1,31 @@
+
+import sys
+
+sys.setrecursionlimit(10**6)
+
+
+def get_min_packets(shovels, types):
+    if shovels <= 0:
+        return None
+
+    min_packets = sys.maxsize
+        print(packets)
+        if packets is None:
+            continue
+        if packets < min_packets:
+            min_packets = packets
+
+    if min_packets == sys.maxsize:
+        packets = get_min_packets(shovels - t, types)
+    return min_packets + 1
+
+
+def main():
+    T = int(sys.stdin.readline().strip())
+    for t in range(T):
+        N, K = map(int, sys.stdin.readline().strip().split())
+        print(get_min_packets(N, K))
+
+
+if __name__ == "__main__":
+    main()
