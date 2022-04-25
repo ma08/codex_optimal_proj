@@ -3,7 +3,7 @@ import sys
 import openai
 
 NEW_DIR = "questions-w-gpt3-context"
-Q_FOLD = "question.txt"
+Q_FILE = "question.txt"
 best_fname = "q_w_best_ctxt"
 best_query = "\nWhat's the best way to solve this problem?"
 optml_fname = "q_w_optml_ctxt"
@@ -29,7 +29,8 @@ def run_gpt3(input_dir):
 	except OSError as error:
 		print(error)
 
-	orig_q = open(Q_FOLD, 'r').read()
+	infile = os.path.join(input_dir, Q_FILE)
+	orig_q = open(infile, 'r').read()
 	for fname, query in GPT_CTXT_QUERIES.items():
 		prefix = "-----PROBLEM-----\n\n"
 		input_prompt = f"\"\"\"\n{prefix}{orig_q}\n\"\"\"{query}"
