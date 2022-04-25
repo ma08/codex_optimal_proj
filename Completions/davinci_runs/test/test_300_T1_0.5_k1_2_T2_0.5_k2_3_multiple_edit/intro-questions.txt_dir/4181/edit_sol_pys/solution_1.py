@@ -1,0 +1,12 @@
+
+
+def main():
+    # n = int(input())
+    # a = list(map(int, input().split()))
+    # b = list(map(int, input().split()))
+    # print(sum(min(a[i], b[i]) for i in range(n)) + min(a[n], b[n-1]))
+    print(sum(min(int(input()), int(input())) for _ in range(int(input()))))
+
+if __name__ == '__main__':
+
+    main()

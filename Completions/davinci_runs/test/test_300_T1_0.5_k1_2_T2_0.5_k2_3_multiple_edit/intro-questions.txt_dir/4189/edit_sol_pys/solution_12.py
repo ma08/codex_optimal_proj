@@ -1,0 +1,26 @@
+
+
+# from collections import Counter
+# n = int(input())
+# c = Counter([input().split()[1] for _ in range(n)])
+# print(c['soft']*c['hard'])
+
+# n = int(input())
+# soft, hard = 0, 0
+# for _ in range(n):
+#     name, type_ = input().split()
+#     if type_ == 'soft':
+#         soft += 1
+#     elif type_ == 'hard':
+#         hard += 1
+# print(soft*hard)
+
+n = int(input())
+soft, hard = 0, 0
+for _ in range(n):
+    name, type_ = input().split() # type_ is a built-in function
+    if type_ == 'soft': # type_ is a built-in function
+        soft += 1
+    elif type_ == 'hard':
+        hard += 1
+print(soft*hard)

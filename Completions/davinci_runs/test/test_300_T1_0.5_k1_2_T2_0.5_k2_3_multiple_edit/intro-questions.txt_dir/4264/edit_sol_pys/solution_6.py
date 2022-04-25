@@ -1,0 +1,11 @@
+
+N = int(input())
+
+count = [0] * 10
+for i in range(1, N+1):  # 1~N
+    num = str(i)
+    for j in range(len(num)):
+        if int(num[j]) % 2 == 0:
+            count[int(num[j])] += 1
+
+print(count)

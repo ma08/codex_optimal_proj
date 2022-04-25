@@ -1,0 +1,83 @@
+
+
+
+def solve(pictures, k, x):
+    n = len(pictures)
+    # dp[i][j] = max sum of pictures from range [i, j]
+    # with j - i + 1 >= k
+    dp = [[0 for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        dp[i][i] = pictures[i]
+
+    for width in range(1, n):
+        for i in range(n - width):
+            j = i + width
+            if j - i + 1 < k:
+                dp[i][j] = 0
+            else:
+                dp[i][j] = max(dp[i][j - 1], dp[i + 1][j], dp[i][j - 1] + pictures[j])
+
+    # for row in dp:
+    #     print(row)
+
+    if x == n:
+        return dp[0][n - 1]
+    elif x > n:
+        return -1
+    else:
+        # dp[i][j] = max sum of pictures from range [i, j]
+        # with j - i + 1 >= k and j - i + 1 >= x
+        dp2 = [[0 for _ in range(n)] for _ in range(n)]
+
+        for i in range(n):
+            dp2[i][i] = pictures[i]
+
+        for width in range(1, n):
+            for i in range(n - width):
+                j = i + width
+                if j - i + 1 < k or j - i + 1 < x:
+                    dp2[i][j] = 0
+                else:
+                    dp2[i][j] = max(dp2[i][j - 1], dp2[i + 1][j], dp2[i][j - 1] + pictures[j])
+
+        # for row in dp2:
+        #     print(row)
+
+        return dp2[0][n - 1]
+
+
+# pictures = [3, 5, 2, 6]
+# k = 2
+# x = 3
+# print(solve(pictures, k, x))
+
+# pictures = [3, 2, 1]
+# k = 2
+# x = 2
+# print(solve(pictures, k, x))
+
+# pictures = [3, 2, 1]
+# k = 2
+# x = 3
+# print(solve(pictures, k, x))
+
+# pictures = [3, 2, 1]
+# k = 2
+# x = 4
+# print(solve(pictures, k, x))
+
+# pictures = [3, 2, 1]
+# k = 2
+# x = 1
+# print(solve(pictures, k, x))
+
+# pictures = [3, 2, 1]
+# k = 2
+# x = 0
+# print(solve(pictures, k, x))
+
+
+n, k, x = map(int, input().split())
+pictures = list(map(int, input().split()))
+print(solve(pictures, k, x))

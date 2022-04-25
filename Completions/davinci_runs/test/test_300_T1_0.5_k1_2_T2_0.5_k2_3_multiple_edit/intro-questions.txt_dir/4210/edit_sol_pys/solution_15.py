@@ -1,0 +1,19 @@
+
+n, k = map(int, input().split())
+a = list(map(int, input().split()))
+
+def concat(x, y):
+    return (x * 10**len(str(y))) + y
+
+def count_divisible(x, y):
+    count = 0
+    for i in range(n):
+        if concat(x, y[i]) % k == 0:
+            count += 1
+    return count
+
+total = 0
+for i in range(n):
+    total += count_divisible(a[i], a)
+
+print(total)

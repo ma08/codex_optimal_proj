@@ -1,0 +1,18 @@
+
+
+s = input() # input string
+k = int(input()) # input index
+
+    # replace single-digit numbers with their corresponding multi-digit representation
+for i in range(5):
+    s = s.replace("2", "22")
+    s = s.replace("3", "333")
+    s = s.replace("4", "4444")
+    s = s.replace("5", "55555")
+    s = s.replace("6", "666666")
+    s = s.replace("7", "7777777")
+    s = s.replace("8", "88888888")
+    s = s.replace("9", "999999999")
+# print the kth character
+
+print(s[k-1])

@@ -1,0 +1,104 @@
+2022-04-09 18:05:22.784342 """
+You are given an undirected unweighted connected graph consisting of $n$ vertices and $m$ edges. It is guaranteed that there are no self-loops or multiple edges in the given graph.
+
+Your task is to find any spanning tree of this graph such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$ (or say that there are no such spanning trees). Recall that the degree of a vertex is the number of edges incident to it.
+
+
+-----Input-----
+
+The first line contains three integers $n$, $m$ and $D$ ($2 \le n \le 2 \cdot 10^5$, $n - 1 \le m \le min(2 \cdot 10^5, \frac{n(n-1)}{2}), 1 \le D < n$) — the number of vertices, the number of edges and required degree of the first vertex, respectively.
+
+The following $m$ lines denote edges: edge $i$ is represented by a pair of integers $v_i$, $u_i$ ($1 \le v_i, u_i \le n$, $u_i \ne v_i$), which are the indices of vertices connected by the edge. There are no loops or multiple edges in the given graph, i. e. for each pair ($v_i, u_i$) there are no other pairs ($v_i, u_i$) or ($u_i, v_i$) in the list of edges, and for each pair $(v_i, u_i)$ the condition $v_i \ne u_i$ is satisfied.
+
+
+-----Output-----
+
+If there is no spanning tree satisfying the condition from the problem statement, print "NO" in the first line.
+
+Otherwise print "YES" in the first line and then print $n-1$ lines describing the edges of a spanning tree such that the degree of the first vertex (vertex with label $1$ on it) is equal to $D$. Make sure that the edges of the printed spanning tree form some subset of the input edges (order doesn't matter and edge $(v, u)$ is considered the same as the edge $(u, v)$).
+
+If there are multiple possible answers, print any of them.
+
+
+-----Examples-----
+Input
+4 5 1
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+2 1
+2 3
+3 4
+
+Input
+4 5 3
+1 2
+1 3
+1 4
+2 3
+3 4
+
+Output
+YES
+1 2
+1 3
+4 1
+
+Input
+4 4 3
+1 2
+1 4
+2 3
+3 4
+
+Output
+NO
+
+
+
+-----Note-----
+
+The picture corresponding to the first and second examples: [Image]
+
+The picture corresponding to the third example: [Image]
+"""
+2022-04-09 18:05:22.784362 --------------------------
+2022-04-09 18:06:06.067466 {
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "text": "\n\n\nfrom collections import defaultdict\n\n\ndef dfs(u, p):\n    for v in adj[u]:\n        if v != p:\n            dfs(v, u)\n            dp[u] += dp[v]\n\n\ndef solve(n, m, d):\n    global adj, dp\n    adj = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        adj[u].append(v)\n        adj[v].append(u)\n\n    dp = [1] * (n + 1)\n    dfs(1, -1)\n\n    for i in range(1, n + 1):\n        if dp[i] == d:\n            break\n    else:\n        return \"NO\"\n\n    ans = [\"YES\"]\n    for u in range(1, n + 1):\n        for v in adj[u]:\n            if u < v and dp[v] != d:\n                ans.append(f'{u} {v}')\n\n    return '\\n'.join(ans)\n\n\ndef main():\n    n, m, d = map(int, input().split())\n    print(solve(n, m, d))\n\n\nif __name__ == '__main__':\n    main()"
+    },
+    {
+      "finish_reason": "stop",
+      "index": 1,
+      "logprobs": null,
+      "text": "\n\nn, m, D = [int(x) for x in input().split()]\nedges = []\nfor i in range(m):\n    v, u = [int(x) for x in input().split()]\n    edges.append((v, u))\n    edges.append((u, v))\n\nif D > n - 1 or D < 1 or not m >= n - 1:\n    print(\"NO\")\n    exit()\n\nif D == 1:\n    print(\"YES\")\n    for i in range(n - 1):\n        print(edges[i][0], edges[i][1])\n    exit()\n\nif D == n - 1:\n    print(\"YES\")\n    for i in range(n - 1):\n        print(edges[i][1], edges[i][0])\n    exit()\n\n# D = 2\nif D == 2:\n    if n == 3:\n        print(\"YES\")\n        print(edges[0][0], edges[0][1])\n        print(edges[1][0], edges[1][1])\n        exit()\n    if n == 4:\n        if m == 3:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[3][0], edges[3][1])\n            exit()\n\n# D = 3\nif D == 3:\n    if n == 4:\n        if m == 3:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            exit()\n    if n == 5:\n        if m == 4:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[4][0], edges[4][1])\n            exit()\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[5][0], edges[5][1])\n            exit()\n\n# D = 4\nif D == 4:\n    if n == 5:\n        if m == 4:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            exit()\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[4][0], edges[4][1])\n            exit()\n\n# D = 5\nif D == 5:\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[4][0], edges[4][1])\n            exit()"
+    }
+  ],
+  "created": 1649541923,
+  "id": "cmpl-4vDUp7v6kInmjFnYTv2cfZ0lu9FTr",
+  "model": "code-davinci:002",
+  "object": "text_completion"
+}
+2022-04-09 18:06:06.067683 0 {
+  "finish_reason": "stop",
+  "index": 0,
+  "logprobs": null,
+  "text": "\n\n\nfrom collections import defaultdict\n\n\ndef dfs(u, p):\n    for v in adj[u]:\n        if v != p:\n            dfs(v, u)\n            dp[u] += dp[v]\n\n\ndef solve(n, m, d):\n    global adj, dp\n    adj = defaultdict(list)\n    for _ in range(m):\n        u, v = map(int, input().split())\n        adj[u].append(v)\n        adj[v].append(u)\n\n    dp = [1] * (n + 1)\n    dfs(1, -1)\n\n    for i in range(1, n + 1):\n        if dp[i] == d:\n            break\n    else:\n        return \"NO\"\n\n    ans = [\"YES\"]\n    for u in range(1, n + 1):\n        for v in adj[u]:\n            if u < v and dp[v] != d:\n                ans.append(f'{u} {v}')\n\n    return '\\n'.join(ans)\n\n\ndef main():\n    n, m, d = map(int, input().split())\n    print(solve(n, m, d))\n\n\nif __name__ == '__main__':\n    main()"
+}
+2022-04-09 18:06:06.067742 REASON stop
+2022-04-09 18:06:06.068869 1 {
+  "finish_reason": "stop",
+  "index": 1,
+  "logprobs": null,
+  "text": "\n\nn, m, D = [int(x) for x in input().split()]\nedges = []\nfor i in range(m):\n    v, u = [int(x) for x in input().split()]\n    edges.append((v, u))\n    edges.append((u, v))\n\nif D > n - 1 or D < 1 or not m >= n - 1:\n    print(\"NO\")\n    exit()\n\nif D == 1:\n    print(\"YES\")\n    for i in range(n - 1):\n        print(edges[i][0], edges[i][1])\n    exit()\n\nif D == n - 1:\n    print(\"YES\")\n    for i in range(n - 1):\n        print(edges[i][1], edges[i][0])\n    exit()\n\n# D = 2\nif D == 2:\n    if n == 3:\n        print(\"YES\")\n        print(edges[0][0], edges[0][1])\n        print(edges[1][0], edges[1][1])\n        exit()\n    if n == 4:\n        if m == 3:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[3][0], edges[3][1])\n            exit()\n\n# D = 3\nif D == 3:\n    if n == 4:\n        if m == 3:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            exit()\n    if n == 5:\n        if m == 4:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[4][0], edges[4][1])\n            exit()\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[5][0], edges[5][1])\n            exit()\n\n# D = 4\nif D == 4:\n    if n == 5:\n        if m == 4:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            exit()\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[4][0], edges[4][1])\n            exit()\n\n# D = 5\nif D == 5:\n    if n == 6:\n        if m == 5:\n            print(\"NO\")\n            exit()\n        else:\n            print(\"YES\")\n            print(edges[0][0], edges[0][1])\n            print(edges[1][0], edges[1][1])\n            print(edges[2][0], edges[2][1])\n            print(edges[3][0], edges[3][1])\n            print(edges[4][0], edges[4][1])\n            exit()"
+}
+2022-04-09 18:06:06.068966 REASON stop

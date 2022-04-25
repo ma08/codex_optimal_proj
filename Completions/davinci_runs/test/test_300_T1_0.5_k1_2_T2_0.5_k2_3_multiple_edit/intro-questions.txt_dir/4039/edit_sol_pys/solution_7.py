@@ -1,0 +1,106 @@
+
+def fix_spelling(dictionary, misspelled_word):
+    return dictionary.get(misspelled_word)
+
+
+def main():
+    dictionary = {'accomodation': 'accommodation',
+                  'acknowledgment': 'acknowledgement',
+                  'anemia': 'anaemia',
+                  'appologize': 'apologize',
+                  'archean': 'archaean',
+                  'athelete': 'athlete',
+                  'calender': 'calendar',
+                  'canceled': 'cancelled',
+                  'caraterized': 'characterized',
+                  'cemetary': 'cemetery',
+                  'committment': 'commitment',
+                  'definately': 'definitely',
+                  'dependance': 'dependence',
+                  'dissapear': 'disappear',
+                  'embarrass': 'embarrass',
+                  'enviroment': 'environment',
+                  'existance': 'existence',
+                  'foward': 'forward',
+                  'fulfillment': 'fulfilment',
+                  'inconvinient': 'inconvenient',
+                  'independant': 'independent',
+                  'judgement': 'judgment',
+                  'lieing': 'lying',
+                  'millenium': 'millennium',
+                  'occured': 'occurred',
+                  'occurence': 'occurrence',
+                  'paralell': 'parallel',
+                  'parl': 'pal',
+                  'persistance': 'persistence',
+                  'practise': 'practice',
+                  'questionaire': 'questionnaire',
+                  'recieve': 'receive',
+                  'recommend': 'recommend',
+                  'referred': 'referred',
+                  'refered': 'referred',
+                  'religous': 'religious',
+                  'remembered': 'remembered',
+                  'seperate': 'separate',
+                  'sence': 'sense',
+                  'succesful': 'successful',
+                  'superceed': 'supersede',
+                  'threshhold': 'threshold',
+                  'tommorow': 'tomorrow',
+                  'tounge': 'tongue',
+                  'truely': 'truly',
+                  'usefull': 'useful',
+                  'useing': 'using',
+                  'wierd': 'weird'}
+    print(fix_spelling(dictionary, 'accomodation'))
+    print(fix_spelling(dictionary, 'acknowledgment'))
+    print(fix_spelling(dictionary, 'anemia'))
+    print(fix_spelling(dictionary, 'appologize'))
+    print(fix_spelling(dictionary, 'archean'))
+    print(fix_spelling(dictionary, 'athelete'))
+    print(fix_spelling(dictionary, 'calender'))
+    print(fix_spelling(dictionary, 'canceled'))
+    print(fix_spelling(dictionary, 'caraterized'))
+    print(fix_spelling(dictionary, 'cemetary'))
+    print(fix_spelling(dictionary, 'committment'))
+    print(fix_spelling(dictionary, 'definately'))
+    print(fix_spelling(dictionary, 'dependance'))
+    print(fix_spelling(dictionary, 'dissapear'))
+    print(fix_spelling(dictionary, 'embarrass'))
+    print(fix_spelling(dictionary, 'enviroment'))
+    print(fix_spelling(dictionary, 'existance'))
+    print(fix_spelling(dictionary, 'foward'))
+    print(fix_spelling(dictionary, 'fulfillment'))
+    print(fix_spelling(dictionary, 'inconvinient'))
+    print(fix_spelling(dictionary, 'independant'))
+    print(fix_spelling(dictionary, 'judgement'))
+    print(fix_spelling(dictionary, 'lieing'))
+    print(fix_spelling(dictionary, 'millenium'))
+    print(fix_spelling(dictionary, 'occured'))
+    print(fix_spelling(dictionary, 'occurence'))
+    print(fix_spelling(dictionary, 'paralell'))
+    print(fix_spelling(dictionary, 'parl'))
+    print(fix_spelling(dictionary, 'persistance'))
+    print(fix_spelling(dictionary, 'practise'))
+    print(fix_spelling(dictionary, 'questionaire'))
+    print(fix_spelling(dictionary, 'recieve'))
+    print(fix_spelling(dictionary, 'recommend'))
+    print(fix_spelling(dictionary, 'referred'))
+    print(fix_spelling(dictionary, 'refered'))
+    print(fix_spelling(dictionary, 'religous'))
+    print(fix_spelling(dictionary, 'remembered'))
+    print(fix_spelling(dictionary, 'seperate'))
+    print(fix_spelling(dictionary, 'sence'))
+    print(fix_spelling(dictionary, 'succesful'))
+    print(fix_spelling(dictionary, 'superceed'))
+    print(fix_spelling(dictionary, 'threshhold'))
+    print(fix_spelling(dictionary, 'tommorow'))
+    print(fix_spelling(dictionary, 'tounge'))
+    print(fix_spelling(dictionary, 'truely'))
+    print(fix_spelling(dictionary, 'usefull'))
+    print(fix_spelling(dictionary, 'useing'))
+    print(fix_spelling(dictionary, 'wierd'))
+
+
+if __name__ == "__main__":
+    main()

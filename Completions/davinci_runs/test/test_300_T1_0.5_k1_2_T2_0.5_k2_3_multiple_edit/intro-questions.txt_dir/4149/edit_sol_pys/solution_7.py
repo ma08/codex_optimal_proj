@@ -1,0 +1,33 @@
+def is_prime(x):
+    for i in range(2, x):
+        if x % i == 0:
+            return False
+    return True
+
+
+def solve(n, b):
+    primes = []
+    i = 2
+    while len(primes) < n:
+        if is_prime(i):
+            primes.append(i)
+        i += 1
+    a = []
+    for i, val in enumerate(b):
+        if i % 2 == 0:
+            a.append(val)
+        else:
+            if val in primes:
+                a.append(primes.index(val) + 1)
+            else:
+                a.append(val)
+    return a
+
+def main():
+    n = int(input())
+    b = [int(i) for i in input().split(' ')]
+    a = solve(n, b)
+    print(' '.join([str(i) for i in a]))
+
+if __name__ == '__main__':
+    main()

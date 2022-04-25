@@ -1,0 +1,13 @@
+
+
+def minPowerStrips(A, B): #function to calculate the minimum number of power strips
+    return (B // A) + 1
+
+def main(): #function to take input and call the function
+    line = input().split()
+    A = int(line[0])
+    B = int(line[1])
+    print(minPowerStrips(A, B))
+
+if __name__ == '__main__':
+    main()
